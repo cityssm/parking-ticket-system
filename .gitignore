@@ -1,0 +1,10 @@
+
+app.min.js
+data/*.db
+data/*.min.js
+data/config.js
+helpers/*.min.js
+node_modules/
+public/images-custom/*
+routes/*.min.js
+*.pem

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top <%= (typeof(pageContainerIsFullWidth) === "boolean" && pageContainerIsFullWidth ? "is-fullwidth" : "") %>" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>
+    <%= headTitle %>: <%= configFns.getProperty("application.applicationName") %>
+  </title>
+
+  <link rel="icon" href="/images/favicon.png" />
+
+  <link rel="stylesheet" href="/stylesheets/style.min.css" />
+  <link rel="stylesheet" href="/fa/css/all.min.css" />
+</head>
+
+<body>
+  <nav class="navbar is-light is-fixed-top is-static-print" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/dashboard">
+          <img class="has-margin-right-10" src="<%= configFns.getProperty("application.logoURL") %>" alt="" height="28" />
+          <strong><%= configFns.getProperty("application.applicationName") %></strong>
+        </a>
+
+        <a class="navbar-burger burger is-hidden-print" id="navbar-burger--main" role="button" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu" id="navbar-menu--main">
+        <div class="navbar-start">
+
+          <a class="navbar-item" href="/tickets">
+            <span class="icon has-margin-right-5">
+              <i class="fas fa-fw fa-file-invoice" aria-hidden="true"></i>
+            </span>
+            <span>Tickets</span>
+          </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+
+            <a class="navbar-link is-arrowless" href="#">
+              <span>More</span>
+              <span class="icon has-margin-left-5">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="/offences">
+                <span class="icon has-margin-right-5">
+                  <i class="fas fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
+                </span>
+                <span>Parking Offences</span>
+              </a>
+              <a class="navbar-item" href="/locations">
+                <span class="icon has-margin-right-5">
+                  <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i>
+                </span>
+                <span>Parking Locations</span>
+              </a>
+              <a class="navbar-item" href="/plates">
+                <span class="icon has-margin-right-5">
+                  <i class="fas fa-fw fa-car" aria-hidden="true"></i>
+                </span>
+                <span>Licence Plate Lookup</span>
+              </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item" href="/reports">
+                <span class="icon has-margin-right-5">
+                  <i class="fas fa-fw fa-file" aria-hidden="true"></i>
+                </span>
+                <span>Reports</span>
+              </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item" href="/docs" target="_blank">
+                <span class="icon has-margin-right-5">
+                  <i class="fas fa-fw fa-question-circle" aria-hidden="true"></i>
+                </span>
+                <span>Help</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <a class="navbar-item is-logout-button" role="button" href="#">
+            <span class="icon has-margin-right-5">
+              <i class="fas fa-fw fa-sign-out-alt" aria-hidden="true"></i>
+            </span>
+            <span>Log Out <%=user.userName %></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container has-padding-top-10 has-padding-left-15 has-padding-right-15 has-margin-auto has-min-page-height"
+    data-can-create="<%= user.userProperties.canCreate ? "true" : "false" %>"
+    data-can-update="<%= user.userProperties.canUpdate ? "true" : "false" %>"
+    data-is-admin="<%= user.userProperties.isAdmin ? "true" : "false" %>">

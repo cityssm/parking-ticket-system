@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html class="has-background-grey" lang="en">
+
+<head>
+  <title>
+    Login: <%= configFns.getProperty("application.applicationName") %>
+  </title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" href="/images/favicon.png" />
+  <link rel="stylesheet" href="/stylesheets/style.min.css" />
+  <link rel="stylesheet" href="/fa/css/all.min.css" />
+</head>
+
+<body>
+  <div class="columns is-vcentered is-centered has-min-page-height">
+    <div class="column is-half-widescreen is-two-thirds-desktop is-three-quarters-tablet">
+      <div class="box has-margin-10">
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="<%= configFns.getProperty("application.logoURL") %>" alt="" />
+          </div>
+          <div class="column">
+            <h1 class="title is-3 has-text-centered">
+              <%= configFns.getProperty("application.applicationName") %>
+            </h1>
+            <form method="post" action="/login">
+              <input name="redirect" type="hidden" value="<%= redirect %>" />
+              <div class="field">
+                <label class="sr-only" for="login--userName">User Name</label>
+                <div class="control has-icons-left has-tooltip-right" data-tooltip="User Name">
+                  <input class="input" id="login--userName" name="userName" type="text" placeholder="User Name" value="<%= userName %>" autofocus required />
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="sr-only" for="login--password">Password</label>
+                <div class="control has-icons-left has-tooltip-right" data-tooltip="Password" >
+                  <input class="input" id="login--password" name="password" type="password" placeholder="Password" required />
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-key" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="level is-mobile">
+                <div class="level-left has-text-danger">
+                    <% if (message !== "") { %>
+                    <span class="icon">
+                      <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    </span>
+                    <span><%= message %></span>
+                  <% } %>
+                </div>
+                <div class="level-right has-text-right">
+                  <button class="button is-link" type="submit">
+                    <span class="icon">
+                      <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                    </span>
+                    <span>Log In</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="has-text-right has-margin-right-20">
+        Build <%= buildNumber %><br />
+        <a class="has-text-grey-dark" href="/docs" target="_blank">Help</a>
+        <a class="has-text-grey-dark has-margin-left-20" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    try {
+      window.localStorage.clear();
+    } catch (e) {}
+  </script>
+</body>
+
+</html>

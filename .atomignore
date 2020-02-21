@@ -1,0 +1,10 @@
+*.db-journal
+*.min.js
+app.d.ts
+app.js
+data/*.d.ts
+helpers/*.d.ts
+helpers/*.js
+routes/*.d.ts
+routes/*.js
+public/stylesheets/*.min.css

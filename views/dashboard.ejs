@@ -1,0 +1,288 @@
+<%- include('_header'); -%>
+
+<div class="level">
+  <div class="level-left has-flex-shrink-1">
+    <h1 class="title is-1">
+      <%= configFns.getProperty("application.applicationName") %>
+    </h1>
+  </div>
+  <% if (!user.userProperties.isDefaultAdmin) { %>
+    <div class="level-right has-text-right">
+      <button class="button is-change-password-button" type="button">
+        <span class="icon"><i class="fas fa-key" aria-hidden="true"></i></span>
+        <span>Change Password</span>
+      </button>
+    </div>
+  <% } %>
+</div>
+
+<% if (user.userProperties.isDefaultAdmin) { %>
+  <div class="message is-danger">
+    <p class="message-body">
+      <strong>You are currently logged into the admin user account using credentials in your config.js file.</strong><br />
+      It is highly recommended that you create a proper admin user under <a href="/admin/userManagement">User Management</a>.
+    </p>
+  </div>
+<% } %>
+
+<div class="columns">
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <i class="fas fa-3x fa-fw fa-file-invoice" aria-hidden="true"></i>
+          </div>
+          <div class="media-content has-text-black">
+            <h2 class="title is-4 is-marginless">
+              <a href="/tickets">Parking Tickets</a>
+            </h2>
+            <p>Track parking tickets.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-footer-item" href="/tickets">
+          <span class="icon">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </span>
+          Find
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <i class="fas fa-3x fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
+          </div>
+          <div class="media-content has-text-black">
+            <h2 class="title is-4 is-marginless">
+              <a href="/offences">Parking Offences</a>
+            </h2>
+            <p>Track parking offences.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-footer-item" href="/offences">
+          <span class="icon">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </span>
+          Find
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <i class="fas fa-3x fa-fw fa-car" aria-hidden="true"></i>
+          </div>
+          <div class="media-content has-text-black">
+            <h2 class="title is-4 is-marginless">
+              <a href="/plates">Licence Plate Lookup</a>
+            </h2>
+            <p>Look up licence plate owners.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-footer-item" href="/plates">
+          <span class="icon">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </span>
+          Find
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <i class="fas fa-3x fa-fw fa-file" aria-hidden="true"></i>
+          </div>
+          <div class="media-content has-text-black">
+            <h2 class="title is-4 is-marginless">
+              <a href="/reports">Report Library</a>
+            </h2>
+            <p>Produce reports and export data.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-footer-item" href="/reports">
+          <span class="icon">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </span>
+          Find
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <i class="fas fa-3x fa-fw fa-question-circle" aria-hidden="true"></i>
+          </div>
+          <div class="media-content has-text-black">
+            <h2 class="title is-4 is-marginless">
+              <a href="/docs" target="_blank">Help Documentation</a>
+            </h2>
+            <p>Instructions on how to use this application.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-footer-item" href="/docs" target="_blank">
+          <span class="icon">
+            <i class="fas fa-question-circle" aria-hidden="true"></i>
+          </span>
+          Help
+        </a>
+        <a class="card-footer-item has-tooltip-bottom" data-tooltip="Latest Updates, Issue Tracker, Say Hello (Opens in New Window)" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">
+          <span class="icon">
+            <i class="fab fa-github" aria-hidden="true"></i>
+          </span>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if (user.userProperties.isAdmin) { %>
+  <h2 class="title is-3">Administrator Tools</h2>
+
+  <div class="columns">
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <i class="fas fa-3x fa-fw fa-cogs" aria-hidden="true"></i>
+            </div>
+            <div class="media-content has-text-black">
+              <h2 class="title is-4 is-marginless">
+                <a href="/admin/applicationSettings">Application Settings</a>
+              </h2>
+              <p>Settings that affect the <%= configFns.getProperty("application.applicationName") %> application.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a class="card-footer-item" href="/admin/applicationSettings">
+            <span class="icon">
+              <i class="fas fa-cog" aria-hidden="true"></i>
+            </span>
+            Adjust Settings
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <i class="fas fa-3x fa-fw fa-user-cog" aria-hidden="true"></i>
+            </div>
+            <div class="media-content has-text-black">
+              <h2 class="title is-4 is-marginless">
+                <a href="/admin/userManagement">User Management</a>
+              </h2>
+              <p>Add users. Remove users. Grant permissions.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a class="card-footer-item" href="/admin/userManagement">
+            <span class="icon">
+              <i class="fas fa-cog" aria-hidden="true"></i>
+            </span>
+            Maintain Users
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<% if (!user.userProperties.isDefaultAdmin) { %>
+  <div class="modal" id="is-change-password-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <h3 class="modal-card-title">Change Password for <em><%= user.userName %></em></h3>
+        <button class="delete is-cancel-button" aria-label="close" type="button"></button>
+      </header>
+      <form>
+        <section class="modal-card-body">
+
+          <label class="label" for="changePassword--oldPassword">Current Password</label>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" id="changePassword--oldPassword" name="oldPassword" type="password" autocomplete="current-password" required />
+            </div>
+            <div class="control">
+              <button class="button is-toggle-visibility-button" type="button">
+                <i class="fas fa-eye-slash" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="message is-info">
+            <p class="message-body">
+              Might I suggest <em><%= stringFns.generatePassword() %></em> ?
+            </p>
+          </div>
+
+          <label class="label" for="changePassword--newPassword">New Password</label>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" id="changePassword--newPassword" name="newPassword" type="password" autocomplete="new-password" minlength="8" required />
+            </div>
+            <div class="control">
+              <button class="button is-toggle-visibility-button" type="button">
+                <i class="fas fa-eye-slash" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <label class="label" for="changePassword--newPasswordConfirm">Confirm New Password</label>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" id="changePassword--newPasswordConfirm" type="password" autocomplete="new-password" required />
+            </div>
+            <div class="control">
+              <button class="button is-toggle-visibility-button" type="button">
+                <i class="fas fa-eye-slash" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot justify-right">
+          <button class="button is-cancel-button" type="button">Cancel</button>
+          <button class="button is-primary" type="submit">Update Password</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+<% } %>
+
+<%- include('_footerA'); -%>
+
+<script src="/javascripts/dashboard.min.js"></script>
+
+<%- include('_footerB'); -%>
