@@ -45,7 +45,7 @@ declare type Config_ParkingTickets = {
 declare type Config_ParkingTicketStatus = {
     statusKey: string;
     status: string;
-    statusField: {
+    statusField?: {
         fieldLabel: string;
     };
     isFinalStatus: boolean;
@@ -58,6 +58,43 @@ export declare type RawRowsColumnsReturn = {
     rows: object[];
     columns: sqlite.ColumnDefinition[];
 };
+export declare type Record = {
+    recordType: "ticket" | "remark" | "status";
+    recordCreate_userName: string;
+    recordCreate_timeMillis: number;
+    recordUpdate_userName: string;
+    recordUpdate_timeMillis: number;
+    recordUpdate_dateString: string;
+    recordDelete_userName?: string;
+    recordDelete_timeMillis?: number;
+    recordDelete_dateString?: string;
+    canUpdate: boolean;
+};
+export declare type ParkingLocation = {
+    locationKey: string;
+    locationName: string;
+    locationClassKey: string;
+};
+export interface ParkingTicket extends Record, ParkingLocation {
+    recordType: "ticket";
+    ticketID: number;
+    ticketNumber: string;
+    issueDate: number;
+    issueDateString: string;
+    issueTime: number;
+    issueTimeString: string;
+    issuingOfficer: string;
+    licencePlateCountry: string;
+    licencePlateProvince: string;
+    licencePlateNumber: string;
+    bylawNumber: string;
+    locationDescription: string;
+    parkingOffence: string;
+    offenceAmount: number;
+    vehicleMakeModel: string;
+    resolvedDate: number;
+    resolvedDateString: string;
+}
 export declare type User = {
     userName: string;
     firstName?: string;

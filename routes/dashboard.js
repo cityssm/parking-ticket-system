@@ -1,6 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
+const configFns = require("../helpers/configFns");
 const usersDB = require("../helpers/usersDB");
 router.get("/", function (_req, res) {
     res.render("dashboard", {
@@ -15,6 +16,9 @@ router.post("/doChangePassword", function (req, res) {
     res.json(result);
 });
 router.all("/doGetDefaultConfigProperties", function (_req, res) {
-    res.json({});
+    res.json({
+        locationClasses: configFns.getProperty("locationClasses"),
+        ticketNumber_fieldLabel: configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"),
+    });
 });
 module.exports = router;

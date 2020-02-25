@@ -42,8 +42,10 @@ const configFallbackValues = {
     canCreate: false,
     canUpdate: false,
     isAdmin: false
-  }
+  },
 
+  "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
+  "locationClasses": []
 };
 
 export function getProperty(propertyName: string): any {

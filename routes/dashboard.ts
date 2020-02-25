@@ -3,6 +3,7 @@
 import express = require("express");
 const router = express.Router();
 
+import * as configFns from "../helpers/configFns";
 import * as usersDB from "../helpers/usersDB";
 
 
@@ -31,6 +32,8 @@ router.post("/doChangePassword", function(req, res) {
 router.all("/doGetDefaultConfigProperties", function(_req, res) {
 
   res.json({
+    locationClasses: configFns.getProperty("locationClasses"),
+    ticketNumber_fieldLabel: configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"),
   });
 
 });

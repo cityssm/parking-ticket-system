@@ -4,3 +4,82 @@
 //@import '../../node_modules/bulma-switch/src/sass/index';
 @import '../../node_modules/bulma-tooltip/src/sass/index';
 @import 'bulma-radio-checkbox';
+
+
+html.is-fullwidth {
+
+  .navbar > .container,
+  main.container,
+  .footer > .container {
+    max-width: none;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+
+@media screen {
+
+  .has-min-page-height {
+    min-height: 100vh;
+  }
+
+  .is-fixed-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+  }
+
+  .is-hidden-screen {
+    display: none !important;
+  }
+
+}
+
+
+@media print {
+
+  .is-hidden-print,
+  nav.breadcrumb {
+    display: none !important;
+  }
+
+  .is-block-print {
+    display: block !important;
+  }
+
+  .is-full-print {
+    flex: none;
+    width: 100% !important;
+  }
+
+  html.has-navbar-fixed-top {
+    padding-top: 0;
+  }
+
+  .is-static-print {
+    position: static !important;
+  }
+
+}
+
+
+/*
+ * Form elements
+ */
+
+.textarea {
+  resize: vertical;
+}
+
+.input[type='number'] {
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+}

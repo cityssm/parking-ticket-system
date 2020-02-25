@@ -23,7 +23,9 @@ const configFallbackValues = {
         canCreate: false,
         canUpdate: false,
         isAdmin: false
-    }
+    },
+    "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
+    "locationClasses": []
 };
 function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");

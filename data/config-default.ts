@@ -10,6 +10,10 @@ config.locationClasses = [
   {
     locationClassKey: "parkingLot",
     locationClass: "Parking Lot"
+  },
+  {
+    locationClassKey: "parkingMeter",
+    locationClass: "Parking Meter"
   }
 ];
 
@@ -29,19 +33,24 @@ config.parkingTicketStatuses = [
     isFinalStatus: true
   },
   {
-    statusKey: "cancel",
-    status: "Cancelled",
-    statusField: {
-      fieldLabel: "Reason for Cancelation"
-    },
-    isFinalStatus: true
-  },
-  {
     statusKey: "withdrawn",
     status: "Withdrawn",
     statusField: {
       fieldLabel: "Reason for Withdrawl"
     },
+    isFinalStatus: true
+  },
+  {
+    statusKey: "trial",
+    status: "Trial Requested",
+    statusField: {
+      fieldLabel: "Trial Date"
+    },
+    isFinalStatus: false
+  },
+  {
+    statusKey: "convicted",
+    status: "Convicted",
     isFinalStatus: true
   }
 ];

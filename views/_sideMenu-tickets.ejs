@@ -1,0 +1,25 @@
+<aside class="menu">
+  <p class="menu-label">
+    Parking Tickets
+  </p>
+  <ul class="menu-list">
+    <li>
+      <a class="<%= (headTitle === "Parking Tickets" ? "is-active" : "") %>" href="/tickets">
+        <span class="icon">
+          <i class="fas fa-file-invoice" aria-hidden="true"></i>
+        </span>
+        Parking Ticket Search
+      </a>
+    </li>
+    <% if (user.userProperties.canCreate) { %>
+      <li>
+        <a href="/tickets/new">
+          <span class="icon">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+          </span>
+          Create a New Ticket
+        </a>
+      </li>
+    <% } %>
+  </ul>
+</aside>
