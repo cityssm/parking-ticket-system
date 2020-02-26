@@ -8,6 +8,9 @@ export declare type Config = {
     parkingTickets?: Config_ParkingTickets;
     parkingTicketStatuses?: Config_ParkingTicketStatus[];
     genders?: Config_Gender[];
+    licencePlateCountryAliases: object;
+    licencePlateProvinceAliases: object;
+    licencePlateProvinces: object;
 };
 declare type Config_ApplicationConfig = {
     applicationName?: string;
@@ -94,6 +97,9 @@ export interface ParkingTicket extends Record, ParkingLocation {
     vehicleMakeModel: string;
     resolvedDate: number;
     resolvedDateString: string;
+    latestStatus_statusKey: string;
+    latestStatus_statusDate: number;
+    latestStatus_statusDateString: string;
 }
 export declare type User = {
     userName: string;

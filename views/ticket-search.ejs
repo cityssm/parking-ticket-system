@@ -19,15 +19,27 @@
     <form id="form--filters">
       <input id="filter--limit" name="limit" type="hidden" value="50" />
       <input id="filter--offset" name="offset" type="hidden" value="0" />
-      <div class="field">
-        <label class="label" for="filter--isResolved">Resolution Status</label>
-        <div class="control">
-          <div class="select">
-            <select id="filter--isResolved" name="isResolved">
-              <option value="">(All Resolution Statuses)</option>
-              <option value="0" selected>Unresolved Tickets</option>
-              <option value="1">Resolved Tickets</option>
-            </select>
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label" for="filter--licencePlateNumber">Licence Plate Number</label>
+            <div class="control">
+              <input class="input" id="filter--licencePlateNumber" name="licencePlateNumber" maxlength="15" />
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label" for="filter--isResolved">Resolution Status</label>
+            <div class="control">
+              <div class="select">
+                <select id="filter--isResolved" name="isResolved">
+                  <option value="">(All Resolution Statuses)</option>
+                  <option value="0" selected>Unresolved Tickets</option>
+                  <option value="1">Resolved Tickets</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -68,6 +68,7 @@ function canUpdateObject(obj: pts.Record, reqSession: Express.SessionData) {
 
 export type getParkingTickets_queryOptions = {
   isResolved?: boolean,
+  licencePlateNumber?: string,
   limit: number,
   offset: number
 };
@@ -75,9 +76,14 @@ export type getParkingTickets_queryOptions = {
 export function getParkingTickets(reqSession: Express.SessionData, queryOptions: getParkingTickets_queryOptions) {
 
   const addCalculatedFieldsFn = function(ele: pts.ParkingTicket) {
+
     ele.recordType = "ticket";
+
     ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
     ele.resolvedDateString = dateTimeFns.dateIntegerToString(ele.resolvedDate);
+
+    ele.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ele.latestStatus_statusDate);
+
     ele.canUpdate = canUpdateObject(ele, reqSession);
   };
 
@@ -100,6 +106,19 @@ export function getParkingTickets(reqSession: Express.SessionData, queryOptions:
     }
   }
 
+  if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
+
+    const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
+
+    for (let index = 0; index < licencePlateNumberPieces.length; index += 1) {
+
+      sqlWhereClause += " and instr(lower(t.licencePlateNumber), ?)";
+      sqlParams.push(licencePlateNumberPieces[index]);
+
+    }
+
+  }
+
   // get the count
 
   const count = db.prepare("select ifnull(count(*), 0) as cnt" +
@@ -114,9 +133,15 @@ export function getParkingTickets(reqSession: Express.SessionData, queryOptions:
     " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
     " l.locationName, l.locationClassKey, t.locationDescription," +
     " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
+    " s.statusDate as latestStatus_statusDate," +
+    " s.statusKey as latestStatus_statusKey," +
     " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
+
     " from ParkingTickets t" +
     " left join ParkingLocations l on t.locationKey = l.locationKey" +
+    (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
+
     sqlWhereClause +
     " order by t.issueDate desc, t.ticketNumber desc" +
     " limit " + queryOptions.limit +

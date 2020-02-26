@@ -45,7 +45,19 @@ const configFallbackValues = {
   },
 
   "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
-  "locationClasses": []
+
+  "parkingTicketStatuses": [],
+  
+  "locationClasses": [],
+
+  "licencePlateCountryAliases" : {
+    "CA": "Canada",
+    "US": "USA"
+  },
+
+  "licencePlateProvinceAliases": {},
+
+  "licencePlateProvinces": {}
 };
 
 export function getProperty(propertyName: string): any {

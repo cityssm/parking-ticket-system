@@ -58,4 +58,28 @@ config.genders = [
         gender: "Male"
     }
 ];
+config.licencePlateCountryAliases = {
+    "CA": "Canada",
+    "US": "USA"
+};
+config.licencePlateProvinceAliases = {
+    "Canada": {
+        "ON": "Ontario",
+        "ONT": "Ontario",
+        "QC": "Quebec",
+        "QB": "Quebec",
+        "PQ": "Quebec"
+    },
+    "USA": {
+        "MI": "Michigan"
+    }
+};
+config.licencePlateProvinces = {
+    "Canada": {
+        "Ontario": {
+            color: "#0661a4",
+            backgroundColor: "#fff"
+        }
+    }
+};
 module.exports = config;

@@ -9,7 +9,10 @@ export type Config = {
   locationClasses?: Config_LocationClass[],
   parkingTickets?: Config_ParkingTickets,
   parkingTicketStatuses?: Config_ParkingTicketStatus[],
-  genders?: Config_Gender[]
+  genders?: Config_Gender[],
+  licencePlateCountryAliases: object,
+  licencePlateProvinceAliases: object,
+  licencePlateProvinces: object
 };
 
 
@@ -131,7 +134,11 @@ export interface ParkingTicket extends Record, ParkingLocation {
   vehicleMakeModel: string,
 
   resolvedDate: number,
-  resolvedDateString: string
+  resolvedDateString: string,
+
+  latestStatus_statusKey: string,
+  latestStatus_statusDate: number,
+  latestStatus_statusDateString: string
 };
 
 

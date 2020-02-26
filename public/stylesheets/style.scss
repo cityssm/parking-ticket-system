@@ -6,6 +6,12 @@
 @import 'bulma-radio-checkbox';
 
 
+@font-face {
+  font-family: LicensePlate;
+  src: url('/fonts/licensePlate.woff');
+}
+
+
 html.is-fullwidth {
 
   .navbar > .container,
@@ -82,4 +88,29 @@ html.is-fullwidth {
     margin: 0;
     -webkit-appearance: none;
   }
+}
+
+
+.licence-plate {
+  color: var(--color);
+  text-align: center;
+  background-color: var(--backgroundColor);
+  border: 1px solid var(--color);
+  border-radius: 5px;
+}
+
+.licence-plate-number {
+  padding: 2px 5px;
+  font-family: LicensePlate, monospace;
+  font-size: 1.4em;
+  color: var(--color);
+}
+
+.licence-plate-province,
+.licence-plate-country {
+  font-size: 0.6em;
+  font-weight: bold;
+  opacity: 0.8;
+  background-color: var(--color);
+  color: var(--backgroundColor);
 }

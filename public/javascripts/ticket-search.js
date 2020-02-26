@@ -1,8 +1,11 @@
+/* global randomColor */
+
+
 "use strict";
 
 (function() {
 
-  let locationClassLookup = {};
+  const locationClassLookup = {};
   let ticketNumberFieldLabel = "";
 
   const formEle = document.getElementById("form--filters");
@@ -60,19 +63,70 @@
 
         const trEle = document.createElement("tr");
 
+        // Licence plate location properties
+
+        const locationProperties = pts.getLicencePlateLocationProperties(ticketObj.licencePlateCountry, ticketObj.licencePlateProvince);
+
+        // Location classes
+
+        let locationClass = "";
+
+        if (ticketObj.locationClassKey) {
+
+          const locationClassObj = locationClassLookup[ticketObj.locationClassKey];
+
+          if (locationClassObj) {
+
+            locationClass = locationClassObj.locationClass;
+
+          }
+
+        }
+
+        // Statuses
+
+        const ticketStatusObj = pts.getTicketStatus(ticketObj.latestStatus_statusKey);
+
+        // Output row
+
         trEle.innerHTML = "<td>" +
           "<a href=\"/tickets/" + ticketObj.ticketID + "\" data-tooltip=\"View Parking Ticket\">" +
           ticketObj.ticketNumber +
           "</a>" +
           "</td>" +
           "<td>" + ticketObj.issueDateString + "</td>" +
-          "<td>" + pts.escapeHTML(ticketObj.licencePlateNumber) + "</td>" +
-          "<td>" + pts.escapeHTML(ticketObj.locationDescription) + "</td>" +
+          ("<td>" +
+            "<div class=\"licence-plate\" style=\"--color:" + locationProperties.licencePlateProvince.color + ";--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
+
+            ("<div class=\"licence-plate-province\" data-tooltip=\"Province\">" +
+              locationProperties.licencePlateProvinceAlias +
+              "</div>") +
+
+            ("<div class=\"licence-plate-number\">" + pts.escapeHTML(ticketObj.licencePlateNumber) + "</div>") +
+
+            "</div>" +
+            "</td>") +
+          ("<td>" +
+            (ticketObj.locationDescription ?
+              pts.escapeHTML(ticketObj.locationDescription) + "<br />" :
+              "") +
+            (ticketObj.locationName ?
+              "<small class=\"has-tooltip-right\" data-tooltip=\"" + pts.escapeHTML(locationClass) + "\">" +
+              "<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i> " + ticketObj.locationName +
+              "</small>" :
+              "") +
+            "</td>") +
           "<td>" + pts.escapeHTML(ticketObj.parkingOffence) + "</td>" +
           "<td>" +
+
           (ticketObj.resolvedDateString === "" ?
             "Unresolved" :
-            "Resolved " + ticketObj.resolvedDateString) +
+            "<span class=\"sr-only\">Resolved</span>" +
+            "<i class=\"fas fa-check\" aria-hidden=\"true\"></i> " + ticketObj.resolvedDateString) +
+
+          (ticketObj.latestStatus_statusKey ?
+            "<br /><span class=\"tag is-light is-primary\">" + ticketStatusObj.status + "</span>" :
+            "") +
           "</td>";
 
         tbodyEle.insertAdjacentElement("beforeend", trEle);
@@ -154,6 +208,7 @@
 
   });
 
+  document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetTickets);
   document.getElementById("filter--isResolved").addEventListener("change", resetOffsetAndGetTickets);
 
 

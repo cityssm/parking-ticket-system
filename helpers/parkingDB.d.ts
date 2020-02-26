@@ -2,6 +2,7 @@
 import * as pts from "./ptsTypes";
 export declare type getParkingTickets_queryOptions = {
     isResolved?: boolean;
+    licencePlateNumber?: string;
     limit: number;
     offset: number;
 };

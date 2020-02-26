@@ -94,48 +94,180 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
  * CONFIG DEFAULTS
  */
 
-pts.getDefaultConfigProperty = function(propertyName, propertyValueCallbackFn) {
 
-  // Check local storage
+(function() {
 
-  try {
+  let defaultConfigProperties = {};
+  let defaultConfigPropertiesIsLoaded = false;
 
-    const defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
+  pts.loadDefaultConfigProperties = function(callbackFn) {
 
-    if (defaultConfigPropertiesString) {
+    if (defaultConfigPropertiesIsLoaded) {
 
-      const defaultConfigProperties = JSON.parse(defaultConfigPropertiesString);
+      callbackFn();
+
+    }
+
+    pts.postJSON(
+      "/dashboard/doGetDefaultConfigProperties", {},
+      function(defaultConfigPropertiesResult) {
+
+        defaultConfigProperties = defaultConfigPropertiesResult;
+        defaultConfigPropertiesIsLoaded = true;
+
+        try {
+
+          window.localStorage.setItem("defaultConfigProperties", JSON.stringify(defaultConfigProperties));
+
+        } catch (e) {
+          // Ignore
+        }
+
+        callbackFn();
+
+      }
+    );
+
+  };
+
+  pts.getDefaultConfigProperty = function(propertyName, propertyValueCallbackFn) {
+
+    // Check memory
+
+    if (defaultConfigPropertiesIsLoaded) {
 
       propertyValueCallbackFn(defaultConfigProperties[propertyName]);
-
       return;
 
     }
 
-  } catch (e) {
-    // Ignore
-  }
+    // Check local storage
 
-  // Populate local storage
+    try {
 
-  pts.postJSON(
-    "/dashboard/doGetDefaultConfigProperties", {},
-    function(defaultConfigProperties) {
+      const defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
 
-      try {
+      if (defaultConfigPropertiesString) {
 
-        window.localStorage.setItem("defaultConfigProperties", JSON.stringify(defaultConfigProperties));
+        defaultConfigProperties = JSON.parse(defaultConfigPropertiesString);
+        defaultConfigPropertiesIsLoaded = true;
 
-      } catch (e) {
-        // Ignore
+        propertyValueCallbackFn(defaultConfigProperties[propertyName]);
+
+        return;
+
       }
+
+    } catch (e) {
+      // Ignore
+    }
+
+    // Populate local storage
+
+    pts.loadDefaultConfigProperties(function() {
 
       propertyValueCallbackFn(defaultConfigProperties[propertyName]);
 
-    }
-  );
+    });
 
-};
+  };
+
+
+  pts.getLicencePlateLocationProperties =
+    function(originalLicencePlateCountry, originalLicencePlateProvince) {
+
+      if (!defaultConfigPropertiesIsLoaded) {
+
+        return {
+          licencePlateCountryAlias: originalLicencePlateCountry,
+          licencePlateProvinceAlias: originalLicencePlateProvince,
+          licencePlateProvince: {
+            color: "#000",
+            backgroundColor: "#fff"
+          }
+        };
+
+      }
+
+      // Get the country alias
+
+      const licencePlateCountryAlias =
+        defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry] ||
+        originalLicencePlateCountry;
+
+      // Get the province alias
+
+      let licencePlateProvinceAlias = originalLicencePlateProvince;
+
+      if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
+
+        licencePlateProvinceAlias =
+          defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince] ||
+          originalLicencePlateProvince;
+
+      }
+
+      // Get the province object
+
+      let licencePlateProvince = {
+        color: "#000",
+        backgroundColor: "#fff"
+      };
+
+      if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
+
+        licencePlateProvince =
+          defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias][licencePlateProvinceAlias] || {
+            color: "#000",
+            backgroundColor: "#fff"
+          };
+
+      }
+
+      // Return
+
+      return {
+        licencePlateCountryAlias: licencePlateCountryAlias,
+        licencePlateProvinceAlias: licencePlateProvinceAlias,
+        licencePlateProvince: licencePlateProvince
+      };
+
+    };
+
+  const ticketStatusKeyToObject = {};
+  let ticketStatusKeyToObjectIsLoaded = false;
+
+  pts.getTicketStatus = function(statusKey) {
+
+    const noResult = {
+      statusKey: statusKey,
+      status: statusKey
+    };
+
+    if (!defaultConfigPropertiesIsLoaded) {
+
+      return noResult;
+
+    }
+
+    if (!ticketStatusKeyToObjectIsLoaded) {
+
+      for (let index = 0; index < defaultConfigProperties.parkingTicketStatuses.length; index += 1) {
+
+        const ticketStatusObj = defaultConfigProperties.parkingTicketStatuses[index];
+        ticketStatusKeyToObject[ticketStatusObj.statusKey] = ticketStatusObj;
+
+      }
+
+      ticketStatusKeyToObjectIsLoaded = true;
+
+    }
+
+    return ticketStatusKeyToObject[statusKey] || noResult;
+
+  };
+
+}());
 
 
 /*

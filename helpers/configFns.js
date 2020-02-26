@@ -25,7 +25,14 @@ const configFallbackValues = {
         isAdmin: false
     },
     "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
-    "locationClasses": []
+    "parkingTicketStatuses": [],
+    "locationClasses": [],
+    "licencePlateCountryAliases": {
+        "CA": "Canada",
+        "US": "USA"
+    },
+    "licencePlateProvinceAliases": {},
+    "licencePlateProvinces": {}
 };
 function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");

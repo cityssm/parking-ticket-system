@@ -20,7 +20,8 @@ router.post("/doGetTickets", function(req, res) {
 
   let queryOptions: parkingDB.getParkingTickets_queryOptions = {
     limit: req.body.limit,
-    offset: req.body.offset
+    offset: req.body.offset,
+    licencePlateNumber: req.body.licencePlateNumber
   };
 
   if (req.body.isResolved !== "") {
