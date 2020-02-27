@@ -92,25 +92,32 @@ html.is-fullwidth {
 
 
 .licence-plate {
+  display: inline-block;
   color: var(--color);
   text-align: center;
   background-color: var(--backgroundColor);
   border: 1px solid var(--color);
   border-radius: 5px;
+
+  &.is-fullwidth {
+    width: 100%;
+  }
 }
 
 .licence-plate-number {
+  min-width: 5em;
   padding: 2px 5px;
   font-family: LicensePlate, monospace;
   font-size: 1.4em;
   color: var(--color);
+  white-space: nowrap;
 }
 
 .licence-plate-province,
 .licence-plate-country {
   font-size: 0.6em;
   font-weight: bold;
-  opacity: 0.8;
-  background-color: var(--color);
   color: var(--backgroundColor);
+  background-color: var(--color);
+  opacity: 0.8;
 }

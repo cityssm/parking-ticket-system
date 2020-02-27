@@ -47,7 +47,7 @@ const configFallbackValues = {
   "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
 
   "parkingTicketStatuses": [],
-  
+
   "locationClasses": [],
 
   "licencePlateCountryAliases" : {

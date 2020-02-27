@@ -1,0 +1,50 @@
+<%- include('_header'); -%>
+
+<nav class="breadcrumb">
+  <ul>
+    <li><a href="/dashboard">Home</a></li>
+    <li><a href="/tickets">Tickets</a></li>
+    <li class="is-active"><a href="#" aria-current="page">Ticket <%= ticket.ticketNumber %></a></li>
+  </ul>
+</nav>
+
+<h1 class="title is-1">
+  Ticket <%= ticket.ticketNumber %>
+</h1>
+
+<div class="panel">
+  <h2 class="panel-heading">
+    Vehicle Details
+  </h2>
+  <div class="panel-block">
+    <%
+      const licencePlateCountryAlias =
+        configFns.getProperty("licencePlateCountryAliases")[ticket.licencePlateCountry] || ticket.licencePlateCountry;
+
+      const licencePlateProvinceAlias =
+        (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})[ticket.licencePlateProvince] || ticket.licencePlateProvince;
+
+      const licencePlateProvince =
+        (configFns.getProperty("licencePlateProvinces")[licencePlateCountryAlias] || {})
+        [licencePlateProvinceAlias] || {
+          color: "#000",
+          backgroundColor: "#fff"
+        };
+    %>
+    <div class="columns">
+      <div class="column is-narrow">
+        <div class="licence-plate" style="--color:<%= licencePlateProvince.color %>;--backgroundColor:<%= licencePlateProvince.backgroundColor %>">
+          <div class="licence-plate-province"><%=licencePlateProvinceAlias %></div>
+          <div class="licence-plate-number"><%= ticket.licencePlateNumber %></div>
+        </div>
+      </div>
+      <div class="column">
+        <%= ticket.vehicleMakeModel %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<%- include('_footerB'); -%>

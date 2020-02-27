@@ -62,7 +62,7 @@ export declare type RawRowsColumnsReturn = {
     columns: sqlite.ColumnDefinition[];
 };
 export declare type Record = {
-    recordType: "ticket" | "remark" | "status";
+    recordType: "ticket" | "remark" | "status" | "owner";
     recordCreate_userName: string;
     recordCreate_timeMillis: number;
     recordUpdate_userName: string;
@@ -72,11 +72,6 @@ export declare type Record = {
     recordDelete_timeMillis?: number;
     recordDelete_dateString?: string;
     canUpdate: boolean;
-};
-export declare type ParkingLocation = {
-    locationKey: string;
-    locationName: string;
-    locationClassKey: string;
 };
 export interface ParkingTicket extends Record, ParkingLocation {
     recordType: "ticket";
@@ -100,6 +95,57 @@ export interface ParkingTicket extends Record, ParkingLocation {
     latestStatus_statusKey: string;
     latestStatus_statusDate: number;
     latestStatus_statusDateString: string;
+    licencePlateOwner: LicencePlateOwner;
+    location: ParkingLocation;
+    statusLog: ParkingTicketStatusLog[];
+    remarks: ParkingTicketRemark[];
+}
+export interface ParkingTicketStatusLog extends Record {
+    recordType: "status";
+    ticketID: number;
+    statusIndex: number;
+    statusDate: number;
+    statusDateString: string;
+    statusTime: number;
+    statusTimeString: string;
+    statusKey: string;
+    statusField: string;
+    statusNote: string;
+}
+export interface ParkingTicketRemark extends Record {
+    recordType: "remark";
+    ticketID: number;
+    remarkIndex: number;
+    remarkDate: number;
+    remarkDateString: string;
+    remarkTime: number;
+    remarkTimeString: string;
+    remark: string;
+}
+export declare type ParkingLocation = {
+    locationKey: string;
+    locationName: string;
+    locationClassKey: string;
+    isActive: boolean;
+};
+export interface LicencePlateOwner extends Record {
+    recordType: "owner";
+    licencePlateCountry: string;
+    licencePlateProvince: string;
+    licencePlateNumber: string;
+    recordDate: number;
+    recordDateString: string;
+    vehicleMakeModel: string;
+    ownerName1: string;
+    ownerName2: string;
+    ownerAddress: string;
+    ownerCity: string;
+    ownerProvince: string;
+    ownerPostalCode: string;
+    ownerGenderKey: string;
+    driverLicenceNumber: string;
+    driverLicenceExpiryDate: number;
+    driverLicenceExpiryDateString: string;
 }
 export declare type User = {
     userName: string;

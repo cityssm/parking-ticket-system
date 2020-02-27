@@ -1,6 +1,3 @@
-/* global randomColor */
-
-
 "use strict";
 
 (function() {
@@ -96,7 +93,7 @@
           "</td>" +
           "<td>" + ticketObj.issueDateString + "</td>" +
           ("<td>" +
-            "<div class=\"licence-plate\" style=\"--color:" + locationProperties.licencePlateProvince.color + ";--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
+            "<div class=\"licence-plate is-fullwidth\" style=\"--color:" + locationProperties.licencePlateProvince.color + ";--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
 
             ("<div class=\"licence-plate-province\" data-tooltip=\"Province\">" +
               locationProperties.licencePlateProvinceAlias +
@@ -208,7 +205,9 @@
 
   });
 
+  document.getElementById("filter--ticketNumber").addEventListener("change", resetOffsetAndGetTickets);
   document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetTickets);
+  document.getElementById("filter--location").addEventListener("change", resetOffsetAndGetTickets);
   document.getElementById("filter--isResolved").addEventListener("change", resetOffsetAndGetTickets);
 
 

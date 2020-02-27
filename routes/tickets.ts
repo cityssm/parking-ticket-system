@@ -6,6 +6,11 @@ const router = express.Router();
 import * as parkingDB from "../helpers/parkingDB";
 
 
+/*
+ * Ticket Search
+ */
+
+
 router.get("/", function(_req, res) {
 
   res.render("ticket-search", {
@@ -21,7 +26,9 @@ router.post("/doGetTickets", function(req, res) {
   let queryOptions: parkingDB.getParkingTickets_queryOptions = {
     limit: req.body.limit,
     offset: req.body.offset,
-    licencePlateNumber: req.body.licencePlateNumber
+    ticketNumber: req.body.ticketNumber,
+    licencePlateNumber: req.body.licencePlateNumber,
+    location: req.body.location
   };
 
   if (req.body.isResolved !== "") {
@@ -31,6 +38,25 @@ router.post("/doGetTickets", function(req, res) {
   res.json(parkingDB.getParkingTickets(req.session, queryOptions));
 
 });
+
+
+/*
+ * Ticket View
+ */
+
+
+ router.get("/:ticketID", function(req, res) {
+
+   const ticketID = parseInt(req.params.ticketID);
+
+   const ticket = parkingDB.getParkingTicket(ticketID, req.session);
+
+   res.render("ticket-view", {
+     headTitle: "Ticket " + ticket.ticketNumber,
+     ticket: ticket
+   });
+
+ });
 
 
 export = router;
