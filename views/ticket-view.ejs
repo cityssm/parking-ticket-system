@@ -8,39 +8,230 @@
   </ul>
 </nav>
 
-<h1 class="title is-1">
-  Ticket <%= ticket.ticketNumber %>
-</h1>
+<div class="level">
+  <div class="level-left">
+    <div class="level">
+      <div class="level-item">
+        <h1 class="title is-1">
+          Ticket <%= ticket.ticketNumber %>
+        </h1>
+      </div>
+      <% if (ticket.resolvedDate) { %>
+        <div class="level-item">
+          <span class="tag is-success">
+            <span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+            <span>Resolved</span>
+          </span>
+        </div>
+      <% } %>
+    </div>
+  </div>
+  <div class="level-right">
+    <% if (ticket.canUpdate) { %>
+      <a class="button is-primary" href="/tickets/<%=ticket.ticketID %>/edit">
+        <span class="icon">
+          <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+        </span>
+        <span>Edit this Ticket</span>
+      </a>
+    <% } %>
+  </div>
+</div>
 
-<div class="panel">
-  <h2 class="panel-heading">
-    Vehicle Details
-  </h2>
-  <div class="panel-block">
-    <%
-      const licencePlateCountryAlias =
-        configFns.getProperty("licencePlateCountryAliases")[ticket.licencePlateCountry] || ticket.licencePlateCountry;
-
-      const licencePlateProvinceAlias =
-        (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})[ticket.licencePlateProvince] || ticket.licencePlateProvince;
-
-      const licencePlateProvince =
-        (configFns.getProperty("licencePlateProvinces")[licencePlateCountryAlias] || {})
-        [licencePlateProvinceAlias] || {
-          color: "#000",
-          backgroundColor: "#fff"
-        };
-    %>
-    <div class="columns">
-      <div class="column is-narrow">
-        <div class="licence-plate" style="--color:<%= licencePlateProvince.color %>;--backgroundColor:<%= licencePlateProvince.backgroundColor %>">
-          <div class="licence-plate-province"><%=licencePlateProvinceAlias %></div>
-          <div class="licence-plate-number"><%= ticket.licencePlateNumber %></div>
+<div class="columns">
+  <div class="column is-4">
+    <div class="panel">
+      <h2 class="panel-heading">
+        Ticket Details
+      </h2>
+      <div class="panel-block is-block">
+        <strong>Issue Date/Time</strong><br />
+        <%= ticket.issueDateString + " " + ticket.issueTimeString %>
+      </div>
+      <div class="panel-block is-block">
+        <strong>Issuing Officer</strong><br />
+        <%= ticket.issuingOfficer %>
+      </div>
+      <div class="panel-block is-block">
+        <strong>Location</strong><br />
+        <%= ticket.locationDescription %>
+      </div>
+      <div class="panel-block is-block">
+        <strong>Parking Offence</strong><br />
+        <%= ticket.parkingOffence %>
+      </div>
+      <div class="panel-block is-block">
+        <div class="columns">
+          <div class="column">
+            <strong>Related By-Law</strong><br />
+            <%= ticket.bylawNumber %>
+          </div>
+          <div class="column">
+            <strong>Offence Amount</strong><br />
+            $ <%= ticket.offenceAmount.toFixed(2) %>
+          </div>
         </div>
       </div>
-      <div class="column">
-        <%= ticket.vehicleMakeModel %>
+    </div>
+  </div>
+  <div class="column">
+    <div class="panel">
+      <h2 class="panel-heading">
+        Vehicle Details
+      </h2>
+      <div class="panel-block is-block">
+        <%
+          const licencePlateCountryAlias =
+            configFns.getProperty("licencePlateCountryAliases")[ticket.licencePlateCountry] || ticket.licencePlateCountry;
+
+          const licencePlateProvinceAlias =
+            (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})[ticket.licencePlateProvince] || ticket.licencePlateProvince;
+
+          const licencePlateProvince =
+            (configFns.getProperty("licencePlateProvinces")[licencePlateCountryAlias] || {})
+            [licencePlateProvinceAlias] || {
+              color: "#000",
+              backgroundColor: "#fff"
+            };
+        %>
+        <div class="columns">
+          <div class="column is-narrow">
+            <div class="licence-plate" style="--color:<%= licencePlateProvince.color %>;--backgroundColor:<%= licencePlateProvince.backgroundColor %>">
+              <div class="licence-plate-province"><%= licencePlateProvinceAlias %></div>
+              <div class="licence-plate-number"><%= ticket.licencePlateNumber %></div>
+            </div>
+          </div>
+          <div class="column">
+            <p>
+              <strong>Vehicle Make/Model from Ticket</strong><br />
+              <%= ticket.vehicleMakeModel %></p>
+          </div>
+          <div class="column">
+            <%
+              if (ticket.licencePlateOwner) {
+            %>
+              <p>
+                <strong>
+                  Ownership Information
+                </strong>
+                <% if (ticket.licencePlateOwner.recordDate) { %>
+                  <span class="tag is-info">
+                    <%= ticket.licencePlateOwner.recordDateString %>
+                  </span>
+                  <% } else { %>
+                    <span class="tag is-warning">
+                      No Record Date
+                    </span>
+                  <% } %>
+                <br />
+                <span data-tooltip="Primary Owner" aria-label="Primary Owner">
+                  <i class="fas fa-fw fa-user" aria-hidden="true"></i> <%= ticket.licencePlateOwner.ownerName1 %>
+                </span>
+                <% if (ticket.licencePlateOwner.ownerName2) { %>
+                  <br />
+                  <span data-tooltip="Secondary Owner" aria-label="Secondary Label">
+                    <i class="fas fa-fw fa-user" aria-hidden="true"></i> <%= ticket.licencePlateOwner.ownerName2 %>
+                  </span>
+                <% } %>
+                <% if (ticket.licencePlateOwner.vehicleMakeModel) { %>
+                  <br />
+                  <span data-tooltip="Vehicle Make/Model from Ownership" aria-label="Vehicle Make/Model from Ownership">
+                    <i class="fas fa-fw fa-car-side" aria-hidden="true"></i> <%= ticket.licencePlateOwner.vehicleMakeModel %>
+                  </span>
+                <% } %>
+              </p>
+            <%
+              } else {
+            %>
+              <div class="message is-info is-small">
+                <p class="message-body">
+                  Ownership information is not available for this licence plate.
+                </p>
+              </div>
+            <%
+              }
+            %>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <div class="panel">
+      <h2 class="panel-heading">Remarks</h2>
+      <% if (ticket.remarks.length === 0) { %>
+        <div class="panel-block is-block">
+          <div class="message is-info is-small">
+            <p class="message-body">
+              There are no remarks recorded for this ticket.
+            </p>
+          </div>
+        </div>
+      <% } else { %>
+        <%
+          for (let index = 0; index < ticket.remarks.length; index += 1) {
+            const remarkObj = ticket.remarks[[index]];
+        %>
+          <div class="panel-block is-block">
+            <p class="has-newline-chars"><%= remarkObj.remark %></p>
+            <p class="is-size-7">
+              <%= remarkObj.recordUpdate_userName %>
+              -
+              <%= remarkObj.remarkDateString %>
+              <%= remarkObj.remarkTimeString %>
+          </div>
+        <%
+          }
+        %>
+      <% } %>
+    </div>
+  </div>
+  <div class="column">
+    <div class="panel">
+      <h2 class="panel-heading">Status</h2>
+      <div class="panel-block is-block">
+        <% if (ticket.resolvedDate) { %>
+          <div class="message is-success is-small">
+            <p class="message-body">
+              This ticket was <strong>resolved <%=ticket.resolvedDateString %></strong>.
+            </p>
+          </div>
+        <% } else { %>
+          <div class="message is-warning is-small">
+            <p class="message-body">
+              This ticket has not yet been resolved.
+            </p>
+          </div>
+        <% } %>
+      </div>
+      <%
+        for (let index = 0; index < ticket.statusLog.length; index += 1) {
+          const statusLogEntryObj = ticket.statusLog[index];
+          const statusObj = configFns.getParkingTicketStatus(statusLogEntryObj.statusKey) || {};
+      %>
+        <div class="panel-block is-block">
+          <div class="level has-margin-bottom-5">
+            <div class="level-left">
+              <strong><%= statusObj.status || statusLogEntryObj.statusKey %></strong>
+            </div>
+            <div class="level-right">
+              <%= statusLogEntryObj.statusDateString %>
+            </div>
+          </div>
+          <% if (statusLogEntryObj.statusField && statusLogEntryObj.statusField !== "") { %>
+            <div class="is-size-7">
+              <strong><%= (statusObj.statusField && statusObj.statusField.fieldLabel ? statusObj.statusField.fieldLabel + ":" : "") %></strong>
+              <%= statusLogEntryObj.statusField %>
+            </div>
+          <% } %>
+          <div class="has-newline-chars"><%= statusObj.statusNote %></div>
+        </div>
+      <%
+        }
+      %>
     </div>
   </div>
 </div>

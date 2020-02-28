@@ -45,7 +45,7 @@ declare type Config_ParkingTickets = {
         pattern?: RegExp;
     };
 };
-declare type Config_ParkingTicketStatus = {
+export declare type Config_ParkingTicketStatus = {
     statusKey: string;
     status: string;
     statusField?: {

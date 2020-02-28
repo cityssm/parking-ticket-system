@@ -1,4 +1,4 @@
-"use strict";
+import * as pts from "../helpers/ptsTypes";
 
 /*
  * LOAD CONFIGURATION
@@ -79,5 +79,29 @@ export function getProperty(propertyName: string): any {
   }
 
   return currentObj;
+
+}
+
+let parkingTicketStatusMap = {};
+let parkingTicketStatusMapIsLoaded = false;
+
+export function getParkingTicketStatus(statusKey: string) {
+
+  if (!parkingTicketStatusMapIsLoaded) {
+
+    const parkingTicketStatusList : pts.Config_ParkingTicketStatus[] = getProperty("parkingTicketStatuses");
+
+    for (let index = 0; index < parkingTicketStatusList.length; index += 1) {
+
+      const statusObj = parkingTicketStatusList[index];
+      parkingTicketStatusMap[statusObj.statusKey] = statusObj;
+
+    }
+
+    parkingTicketStatusMapIsLoaded = true;
+
+  }
+
+  return parkingTicketStatusMap[statusKey];
 
 }

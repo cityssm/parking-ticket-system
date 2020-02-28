@@ -245,6 +245,9 @@ export function getParkingTicket(ticketID: number, reqSession: Express.SessionDa
     .get(ticketID);
 
   ticket.recordType = "ticket";
+  ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+  ticket.issueTimeString = dateTimeFns.timeIntegerToString(ticket.issueTime);
+  ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
   ticket.canUpdate = canUpdateObject(ticket, reqSession);
 
   // Owner
@@ -281,7 +284,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.SessionDa
   // Remarks
 
   ticket.remarks = db.prepare("select * from ParkingTicketRemarks" +
-    " where recordDelete_timeMillis is not null" +
+    " where recordDelete_timeMillis is null" +
     " and ticketID = ?" +
     " order by remarkDate desc, remarkTime desc, remarkIndex desc")
     .all(ticketID);

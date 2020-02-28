@@ -46,3 +46,17 @@ function getProperty(propertyName) {
     return currentObj;
 }
 exports.getProperty = getProperty;
+let parkingTicketStatusMap = {};
+let parkingTicketStatusMapIsLoaded = false;
+function getParkingTicketStatus(statusKey) {
+    if (!parkingTicketStatusMapIsLoaded) {
+        const parkingTicketStatusList = getProperty("parkingTicketStatuses");
+        for (let index = 0; index < parkingTicketStatusList.length; index += 1) {
+            const statusObj = parkingTicketStatusList[index];
+            parkingTicketStatusMap[statusObj.statusKey] = statusObj;
+        }
+        parkingTicketStatusMapIsLoaded = true;
+    }
+    return parkingTicketStatusMap[statusKey];
+}
+exports.getParkingTicketStatus = getParkingTicketStatus;

@@ -143,6 +143,9 @@ function getParkingTicket(ticketID, reqSession) {
         " where ticketID = ?")
         .get(ticketID);
     ticket.recordType = "ticket";
+    ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+    ticket.issueTimeString = dateTimeFns.timeIntegerToString(ticket.issueTime);
+    ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
     ticket.canUpdate = canUpdateObject(ticket, reqSession);
     ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber);
     ticket.location = getParkingLocationWithDB(db, ticket.locationKey);
@@ -163,7 +166,7 @@ function getParkingTicket(ticketID, reqSession) {
         }
     }
     ticket.remarks = db.prepare("select * from ParkingTicketRemarks" +
-        " where recordDelete_timeMillis is not null" +
+        " where recordDelete_timeMillis is null" +
         " and ticketID = ?" +
         " order by remarkDate desc, remarkTime desc, remarkIndex desc")
         .all(ticketID);

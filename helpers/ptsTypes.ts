@@ -58,7 +58,7 @@ type Config_ParkingTickets = {
   }
 };
 
-type Config_ParkingTicketStatus = {
+export type Config_ParkingTicketStatus = {
   statusKey: string,
   status: string,
   statusField?: {
