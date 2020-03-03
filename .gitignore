@@ -3,6 +3,7 @@ app.min.js
 data/*.db
 data/*.min.js
 data/config.js
+data/config.ts
 helpers/*.min.js
 node_modules/
 public/images-custom/*

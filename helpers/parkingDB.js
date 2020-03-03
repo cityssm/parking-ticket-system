@@ -113,7 +113,7 @@ function getParkingTickets(reqSession, queryOptions) {
         .cnt;
     const rows = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
         " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
-        " l.locationName, l.locationClassKey, t.locationDescription," +
+        " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
         " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
         " s.statusDate as latestStatus_statusDate," +
         " s.statusKey as latestStatus_statusKey," +
@@ -142,6 +142,10 @@ function getParkingTicket(ticketID, reqSession) {
     const ticket = db.prepare("select * from ParkingTickets" +
         " where ticketID = ?")
         .get(ticketID);
+    if (!ticket) {
+        db.close();
+        return ticket;
+    }
     ticket.recordType = "ticket";
     ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
     ticket.issueTimeString = dateTimeFns.timeIntegerToString(ticket.issueTime);
@@ -185,3 +189,32 @@ function getParkingTicket(ticketID, reqSession) {
     return ticket;
 }
 exports.getParkingTicket = getParkingTicket;
+function getParkingLocations() {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const rows = db.prepare("select locationKey, locationName, locationClassKey" +
+        " from ParkingLocations" +
+        " where isActive = 1" +
+        " order by orderNumber, locationName")
+        .all();
+    db.close();
+    return rows;
+}
+exports.getParkingLocations = getParkingLocations;
+function getParkingOffences(locationKey) {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const rows = db.prepare("select o.bylawNumber, b.bylawDescription," +
+        " o.parkingOffence, o.offenceAmount" +
+        " from ParkingOffences o" +
+        " left join ParkingBylaws b on o.bylawNumber = b.bylawNumber" +
+        " where o.isActive = 1 and b.isActive = 1" +
+        " and o.locationKey = ?" +
+        " order by b.orderNumber, b.bylawNumber")
+        .all(locationKey);
+    db.close();
+    return rows;
+}
+exports.getParkingOffences = getParkingOffences;

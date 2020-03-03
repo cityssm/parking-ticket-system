@@ -10,9 +10,9 @@ export type Config = {
   parkingTickets?: Config_ParkingTickets,
   parkingTicketStatuses?: Config_ParkingTicketStatus[],
   genders?: Config_Gender[],
-  licencePlateCountryAliases: object,
-  licencePlateProvinceAliases: object,
-  licencePlateProvinces: object
+  licencePlateCountryAliases?: { [countryKey: string]: string },
+  licencePlateProvinceAliases?: { [country: string]: { [provinceKey: string]: string } },
+  licencePlateProvinces?: {[country: string]: Config_LicencePlateCountry}
 };
 
 
@@ -54,7 +54,8 @@ export type Config_LocationClass = {
 type Config_ParkingTickets = {
   ticketNumber: {
     fieldLabel: string,
-    pattern?: RegExp
+    pattern?: RegExp,
+    isUnique?: boolean
   }
 };
 
@@ -65,6 +66,17 @@ export type Config_ParkingTicketStatus = {
     fieldLabel: string
   },
   isFinalStatus: boolean
+};
+
+type Config_LicencePlateCountry = {
+  countryShortName: string,
+  provinces: {[province: string]: Config_LicencePlateProvince}
+};
+
+type Config_LicencePlateProvince = {
+  provinceShortName: string,
+  color: string,
+  backgroundColor: string
 };
 
 type Config_Gender = {
@@ -182,6 +194,20 @@ export type ParkingLocation = {
   locationClassKey: string,
   isActive: boolean
 
+};
+
+
+export type ParkingBylaw = {
+
+  bylawNumber: string,
+  bylawDescription: string
+};
+
+export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
+
+  parkingOffence: string,
+  offenceAmount: number,
+  accountNumber: string
 };
 
 

@@ -3,6 +3,7 @@
 import express = require("express");
 const router = express.Router();
 
+import * as dateTimeFns from "../helpers/dateTimeFns";
 import * as parkingDB from "../helpers/parkingDB";
 
 
@@ -41,22 +42,92 @@ router.post("/doGetTickets", function(req, res) {
 
 
 /*
+ * New Ticket
+ */
+
+
+ router.get("/new", function(req, res) {
+
+   if (!req.session.user.userProperties.canCreate) {
+     res.redirect ("/tickets/?error=accessDenied");
+     return;
+   }
+
+   res.render("ticket-edit", {
+     headTitle: "New Ticket",
+     pageContainerIsFullWidth: true,
+     isCreate: true,
+     ticket: {},
+     issueDateMaxString: dateTimeFns.dateToString(new Date())
+   });
+
+ });
+
+
+
+
+/*
  * Ticket View
  */
 
 
- router.get("/:ticketID", function(req, res) {
+router.get("/:ticketID", function(req, res) {
 
-   const ticketID = parseInt(req.params.ticketID);
+  const ticketID = parseInt(req.params.ticketID);
 
-   const ticket = parkingDB.getParkingTicket(ticketID, req.session);
+  const ticket = parkingDB.getParkingTicket(ticketID, req.session);
 
-   res.render("ticket-view", {
-     headTitle: "Ticket " + ticket.ticketNumber,
-     ticket: ticket
-   });
+  if (!ticket) {
+    res.redirect("/tickets/?error=ticketNotFound");
+    return;
+  }
 
- });
+  res.render("ticket-view", {
+    headTitle: "Ticket " + ticket.ticketNumber,
+    ticket: ticket
+  });
+
+});
+
+
+/*
+ * Ticket Edit
+ */
+
+
+router.get("/:ticketID/edit", function(req, res) {
+
+  const ticketID = parseInt(req.params.ticketID);
+
+  if (!req.session.user.userProperties.canCreate) {
+    res.redirect ("/tickets/" + ticketID);
+    return;
+  }
+
+
+  const ticket = parkingDB.getParkingTicket(ticketID, req.session);
+
+  if (!ticket) {
+
+    res.redirect("/tickets/?error=ticketNotFound");
+    return;
+
+  } else if (!ticket.canUpdate) {
+
+    res.redirect("/tickets/" + ticketID + "/?error=accessDenied");
+    return;
+
+  }
+
+  res.render("ticket-edit", {
+    headTitle: "Ticket " + ticket.ticketNumber,
+    pageContainerIsFullWidth: true,
+    isCreate: false,
+    ticket: ticket,
+    issueDateMaxString: dateTimeFns.dateToString(new Date())
+  });
+
+});
 
 
 export = router;

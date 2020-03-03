@@ -13,3 +13,5 @@ export declare function getParkingTickets(reqSession: Express.SessionData, query
     tickets: pts.ParkingTicket[];
 };
 export declare function getParkingTicket(ticketID: number, reqSession: Express.SessionData): pts.ParkingTicket;
+export declare function getParkingLocations(): pts.ParkingLocation[];
+export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];

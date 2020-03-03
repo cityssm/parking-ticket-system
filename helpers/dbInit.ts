@@ -66,17 +66,22 @@ export function initParkingDB() {
       " isActive bit not null default 1" +
       ") without rowid").run();
 
+    parkingDB.prepare("insert into ParkingLocations" +
+      " (locationKey, locationName, locationClassKey, orderNumber, isActive)" +
+      " values ('', '(No Location)', '', 0, 1)")
+      .run();
+
     /*
      * Bylaws
      */
 
-     parkingDB.prepare("create table if not exists ParkingBylaws (" +
+    parkingDB.prepare("create table if not exists ParkingBylaws (" +
 
-       "bylawNumber varchar(20) primary key not null," +
-       " bylawDescription varchar(200) not null," +
-       " orderNumber integer not null default 0," +
-       " isActive bit not null default 1" +
-       ") without rowid").run();
+      "bylawNumber varchar(20) primary key not null," +
+      " bylawDescription varchar(200) not null," +
+      " orderNumber integer not null default 0," +
+      " isActive bit not null default 1" +
+      ") without rowid").run();
 
     /*
      * Offences

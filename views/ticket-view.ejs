@@ -8,35 +8,27 @@
   </ul>
 </nav>
 
-<div class="level">
-  <div class="level-left">
-    <div class="level">
-      <div class="level-item">
-        <h1 class="title is-1">
-          Ticket <%= ticket.ticketNumber %>
-        </h1>
-      </div>
-      <% if (ticket.resolvedDate) { %>
-        <div class="level-item">
-          <span class="tag is-success">
-            <span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>
-            <span>Resolved</span>
-          </span>
-        </div>
-      <% } %>
-    </div>
+<h1 class="title is-1">
+  Ticket <%= ticket.ticketNumber %>
+</h1>
+
+<% if (ticket.resolvedDate) { %>
+  <div class="message is-success">
+    <p class="message-body has-text-weight-bold">
+      This ticket was resolved <%= ticket.resolvedDateString %>.
+    </p>
   </div>
-  <div class="level-right">
-    <% if (ticket.canUpdate) { %>
-      <a class="button is-primary" href="/tickets/<%=ticket.ticketID %>/edit">
-        <span class="icon">
-          <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-        </span>
-        <span>Edit this Ticket</span>
-      </a>
-    <% } %>
+<% } %>
+
+
+<% if (ticket.canUpdate) { %>
+  <div class="fixed-container is-fixed-bottom-right has-margin-20 has-text-right is-hidden-print">
+    <a class="button is-circle is-primary has-tooltip-left" data-tooltip="Edit this Ticket" href="/tickets/<%=ticket.ticketID %>/edit">
+      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+      <span class="sr-only">Edit this Ticket</span>
+    </a>
   </div>
-</div>
+<% } %>
 
 <div class="columns">
   <div class="column is-4">
@@ -81,23 +73,12 @@
       </h2>
       <div class="panel-block is-block">
         <%
-          const licencePlateCountryAlias =
-            configFns.getProperty("licencePlateCountryAliases")[ticket.licencePlateCountry] || ticket.licencePlateCountry;
-
-          const licencePlateProvinceAlias =
-            (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})[ticket.licencePlateProvince] || ticket.licencePlateProvince;
-
-          const licencePlateProvince =
-            (configFns.getProperty("licencePlateProvinces")[licencePlateCountryAlias] || {})
-            [licencePlateProvinceAlias] || {
-              color: "#000",
-              backgroundColor: "#fff"
-            };
+          const licencePlateLocationObj = configFns.getLicencePlateLocationProperties(ticket.licencePlateCountry, ticket.licencePlateProvince);
         %>
         <div class="columns">
           <div class="column is-narrow">
-            <div class="licence-plate" style="--color:<%= licencePlateProvince.color %>;--backgroundColor:<%= licencePlateProvince.backgroundColor %>">
-              <div class="licence-plate-province"><%= licencePlateProvinceAlias %></div>
+            <div class="licence-plate" style="--color:<%= licencePlateLocationObj.licencePlateProvince.color %>;--backgroundColor:<%= licencePlateLocationObj.licencePlateProvince.backgroundColor %>">
+              <div class="licence-plate-province"><%= licencePlateLocationObj.licencePlateProvinceAlias %></div>
               <div class="licence-plate-number"><%= ticket.licencePlateNumber %></div>
             </div>
           </div>
@@ -191,21 +172,24 @@
   </div>
   <div class="column">
     <div class="panel">
-      <h2 class="panel-heading">Status</h2>
-      <div class="panel-block is-block">
-        <% if (ticket.resolvedDate) { %>
-          <div class="message is-success is-small">
-            <p class="message-body">
-              This ticket was <strong>resolved <%=ticket.resolvedDateString %></strong>.
-            </p>
+      <div class="panel-heading">
+        <div class="level">
+          <div class="level-left">
+            <h2 class="has-text-weight-bold">Status</h2>
           </div>
-        <% } else { %>
-          <div class="message is-warning is-small">
-            <p class="message-body">
-              This ticket has not yet been resolved.
-            </p>
+          <div class="level-right">
+            <% if (ticket.resolvedDate) { %>
+              <span class="tag is-success">
+                <span class="icon is-small"><i class="fas fa-check" aria-hidden="true"></i></span>
+                <span>Resolved <%=ticket.resolvedDateString %></span>
+              </span>
+            <% } else { %>
+              <span class="tag is-warning">
+                Open
+              </span>
+            <% } %>
           </div>
-        <% } %>
+        </div>
       </div>
       <%
         for (let index = 0; index < ticket.statusLog.length; index += 1) {

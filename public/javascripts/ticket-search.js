@@ -107,7 +107,7 @@
             (ticketObj.locationDescription ?
               pts.escapeHTML(ticketObj.locationDescription) + "<br />" :
               "") +
-            (ticketObj.locationName ?
+            (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName ?
               "<small class=\"has-tooltip-right\" data-tooltip=\"" + pts.escapeHTML(locationClass) + "\">" +
               "<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i> " + ticketObj.locationName +
               "</small>" :
@@ -126,7 +126,7 @@
             "") +
           "</td>";
 
-        tbodyEle.insertAdjacentElement("beforeend", trEle);
+        tbodyEle.appendChild(trEle);
 
       }
 
@@ -161,7 +161,7 @@
 
           });
 
-          paginationEle.insertAdjacentElement("beforeend", previousEle);
+          paginationEle.appendChild(previousEle);
 
         }
 
@@ -169,7 +169,7 @@
 
           const nextEle = document.createElement("a");
           nextEle.className = "button has-margin-left-10";
-          nextEle.innerHTML = "<span>Next Licences</span><span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
+          nextEle.innerHTML = "<span>Next Tickets</span><span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
           nextEle.addEventListener("click", function(clickEvent) {
 
             clickEvent.preventDefault();
@@ -178,11 +178,11 @@
 
           });
 
-          paginationEle.insertAdjacentElement("beforeend", nextEle);
+          paginationEle.appendChild(nextEle);
 
         }
 
-        searchResultsEle.getElementsByClassName("level")[0].insertAdjacentElement("beforeend", paginationEle);
+        searchResultsEle.getElementsByClassName("level")[0].appendChild(paginationEle);
 
       }
 

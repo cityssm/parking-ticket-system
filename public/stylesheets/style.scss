@@ -1,6 +1,6 @@
 @import '../../node_modules/bulma/bulma';
 @import '../../node_modules/bulma-helpers/bulma-helpers';
-//@import '../../node_modules/bulma-divider/src/sass/index';
+@import '../../node_modules/bulma-divider/src/sass/index';
 //@import '../../node_modules/bulma-switch/src/sass/index';
 @import '../../node_modules/bulma-tooltip/src/sass/index';
 @import 'bulma-radio-checkbox';
@@ -42,6 +42,15 @@ html.is-fullwidth {
     display: none !important;
   }
 
+  .fixed-container {
+    position: fixed;
+    display: inline-block;
+
+    &.is-fixed-bottom-right {
+      right: 0;
+      bottom: 0;
+    }
+  }
 }
 
 
@@ -94,6 +103,27 @@ html.is-fullwidth {
     margin: 0;
     -webkit-appearance: none;
   }
+}
+
+.is-readonly {
+  cursor: not-allowed !important;
+  background-color: $light !important;
+}
+
+select.is-readonly {
+  pointer-events: none;
+}
+
+
+/*
+ * Circle Button
+ */
+
+.button.is-circle {
+  width: 2.3em;
+  height: 2.3em;
+  font-size: 2em;
+  border-radius: 50%;
 }
 
 

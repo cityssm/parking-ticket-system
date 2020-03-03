@@ -8,9 +8,17 @@ export declare type Config = {
     parkingTickets?: Config_ParkingTickets;
     parkingTicketStatuses?: Config_ParkingTicketStatus[];
     genders?: Config_Gender[];
-    licencePlateCountryAliases: object;
-    licencePlateProvinceAliases: object;
-    licencePlateProvinces: object;
+    licencePlateCountryAliases?: {
+        [countryKey: string]: string;
+    };
+    licencePlateProvinceAliases?: {
+        [country: string]: {
+            [provinceKey: string]: string;
+        };
+    };
+    licencePlateProvinces?: {
+        [country: string]: Config_LicencePlateCountry;
+    };
 };
 declare type Config_ApplicationConfig = {
     applicationName?: string;
@@ -43,6 +51,7 @@ declare type Config_ParkingTickets = {
     ticketNumber: {
         fieldLabel: string;
         pattern?: RegExp;
+        isUnique?: boolean;
     };
 };
 export declare type Config_ParkingTicketStatus = {
@@ -52,6 +61,17 @@ export declare type Config_ParkingTicketStatus = {
         fieldLabel: string;
     };
     isFinalStatus: boolean;
+};
+declare type Config_LicencePlateCountry = {
+    countryShortName: string;
+    provinces: {
+        [province: string]: Config_LicencePlateProvince;
+    };
+};
+declare type Config_LicencePlateProvince = {
+    provinceShortName: string;
+    color: string;
+    backgroundColor: string;
 };
 declare type Config_Gender = {
     genderKey: string;
@@ -128,6 +148,15 @@ export declare type ParkingLocation = {
     locationClassKey: string;
     isActive: boolean;
 };
+export declare type ParkingBylaw = {
+    bylawNumber: string;
+    bylawDescription: string;
+};
+export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
+    parkingOffence: string;
+    offenceAmount: number;
+    accountNumber: string;
+}
 export interface LicencePlateOwner extends Record {
     recordType: "owner";
     licencePlateCountry: string;

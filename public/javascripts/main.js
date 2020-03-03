@@ -176,15 +176,18 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
   pts.getLicencePlateLocationProperties =
     function(originalLicencePlateCountry, originalLicencePlateProvince) {
 
+      const licencePlateProvinceDefault = {
+        provinceShortName: originalLicencePlateProvince,
+        color: "#000",
+        backgroundColor: "#fff"
+      };
+
       if (!defaultConfigPropertiesIsLoaded) {
 
         return {
           licencePlateCountryAlias: originalLicencePlateCountry,
           licencePlateProvinceAlias: originalLicencePlateProvince,
-          licencePlateProvince: {
-            color: "#000",
-            backgroundColor: "#fff"
-          }
+          licencePlateProvince: licencePlateProvinceDefault
         };
 
       }
@@ -192,7 +195,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
       // Get the country alias
 
       const licencePlateCountryAlias =
-        defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry] ||
+        defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
         originalLicencePlateCountry;
 
       // Get the province alias
@@ -202,25 +205,19 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
       if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
 
         licencePlateProvinceAlias =
-          defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince] ||
+          defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
           originalLicencePlateProvince;
 
       }
 
       // Get the province object
 
-      let licencePlateProvince = {
-        color: "#000",
-        backgroundColor: "#fff"
-      };
+      let licencePlateProvince = licencePlateProvinceDefault;
 
       if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
 
         licencePlateProvince =
-          defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias][licencePlateProvinceAlias] || {
-            color: "#000",
-            backgroundColor: "#fff"
-          };
+          defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
 
       }
 

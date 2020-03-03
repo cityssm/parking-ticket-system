@@ -4,7 +4,6 @@ import sqlite = require("better-sqlite3");
 const dbPath = "data/parking.db";
 
 import * as dateTimeFns from "./dateTimeFns";
-import * as stringFns from "./stringFns";
 import * as configFns from "./configFns";
 import * as pts from "./ptsTypes";
 
@@ -207,7 +206,7 @@ export function getParkingTickets(reqSession: Express.SessionData, queryOptions:
 
   const rows: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
     " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
-    " l.locationName, l.locationClassKey, t.locationDescription," +
+    " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
     " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
     " s.statusDate as latestStatus_statusDate," +
     " s.statusKey as latestStatus_statusKey," +
@@ -243,6 +242,11 @@ export function getParkingTicket(ticketID: number, reqSession: Express.SessionDa
   const ticket: pts.ParkingTicket = db.prepare("select * from ParkingTickets" +
     " where ticketID = ?")
     .get(ticketID);
+
+  if (!ticket) {
+    db.close();
+    return ticket;
+  }
 
   ticket.recordType = "ticket";
   ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
@@ -308,4 +312,41 @@ export function getParkingTicket(ticketID: number, reqSession: Express.SessionDa
 
   return ticket;
 
+}
+
+export function getParkingLocations() {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const rows: pts.ParkingLocation[] = db.prepare("select locationKey, locationName, locationClassKey" +
+    " from ParkingLocations" +
+    " where isActive = 1" +
+    " order by orderNumber, locationName")
+    .all();
+
+  db.close();
+
+  return rows;
+}
+
+export function getParkingOffences(locationKey: string) {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const rows: pts.ParkingOffence[] = db.prepare("select o.bylawNumber, b.bylawDescription," +
+    " o.parkingOffence, o.offenceAmount" +
+    " from ParkingOffences o" +
+    " left join ParkingBylaws b on o.bylawNumber = b.bylawNumber" +
+    " where o.isActive = 1 and b.isActive = 1" +
+    " and o.locationKey = ?" +
+    " order by b.orderNumber, b.bylawNumber")
+    .all(locationKey);
+
+  db.close();
+
+  return rows;
 }

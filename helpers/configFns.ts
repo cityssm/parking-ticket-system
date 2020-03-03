@@ -45,6 +45,7 @@ const configFallbackValues = {
   },
 
   "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
+  "parkingTickets.ticketNumber.pattern": /^[\d\w -]{1,10}$/,
 
   "parkingTicketStatuses": [],
 
@@ -105,3 +106,51 @@ export function getParkingTicketStatus(statusKey: string) {
   return parkingTicketStatusMap[statusKey];
 
 }
+
+
+export function getLicencePlateLocationProperties(originalLicencePlateCountry: string, originalLicencePlateProvince: string) {
+
+  const licencePlateProvinceDefault = {
+    provinceShortName: originalLicencePlateProvince,
+    color: "#000",
+    backgroundColor: "#fff"
+  };
+
+  // Get the country alias
+
+  const licencePlateCountryAlias: string =
+    getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()] ||
+    originalLicencePlateCountry;
+
+  // Get the province alias
+
+  let licencePlateProvinceAlias = originalLicencePlateProvince;
+
+  if (getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
+
+    licencePlateProvinceAlias =
+      getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+      originalLicencePlateProvince;
+
+  }
+
+  // Get the province object
+
+  let licencePlateProvince = licencePlateProvinceDefault;
+
+  if (getProperty("licencePlateProvinces").hasOwnProperty(licencePlateCountryAlias)) {
+
+    licencePlateProvince =
+      getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+
+  }
+
+  // Return
+
+  return {
+    licencePlateCountryAlias: licencePlateCountryAlias,
+    licencePlateProvinceAlias: licencePlateProvinceAlias,
+    licencePlateProvince: licencePlateProvince
+  };
+
+};
