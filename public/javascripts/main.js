@@ -100,11 +100,42 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
   let defaultConfigProperties = {};
   let defaultConfigPropertiesIsLoaded = false;
 
+  const loadConfigPropertiesFromStorage = function() {
+
+    try {
+
+      const defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
+
+      if (defaultConfigPropertiesString) {
+
+        defaultConfigProperties = JSON.parse(defaultConfigPropertiesString);
+        defaultConfigPropertiesIsLoaded = true;
+
+        return true;
+
+      }
+
+    } catch (e) {
+      // Ignore
+    }
+
+    return false;
+
+  };
+
   pts.loadDefaultConfigProperties = function(callbackFn) {
 
     if (defaultConfigPropertiesIsLoaded) {
 
       callbackFn();
+      return;
+
+    }
+
+    if (loadConfigPropertiesFromStorage()) {
+
+      callbackFn();
+      return;
 
     }
 
@@ -130,6 +161,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
   };
 
+
   pts.getDefaultConfigProperty = function(propertyName, propertyValueCallbackFn) {
 
     // Check memory
@@ -143,23 +175,11 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
     // Check local storage
 
-    try {
+    if (loadConfigPropertiesFromStorage()) {
 
-      const defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
+      propertyValueCallbackFn(defaultConfigProperties[propertyName]);
+      return;
 
-      if (defaultConfigPropertiesString) {
-
-        defaultConfigProperties = JSON.parse(defaultConfigPropertiesString);
-        defaultConfigPropertiesIsLoaded = true;
-
-        propertyValueCallbackFn(defaultConfigProperties[propertyName]);
-
-        return;
-
-      }
-
-    } catch (e) {
-      // Ignore
     }
 
     // Populate local storage
@@ -172,6 +192,27 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
   };
 
+  pts.getLicencePlateCountryProperties = function(originalLicencePlateCountry) {
+
+    if (!defaultConfigPropertiesIsLoaded) {
+
+      return {};
+
+    }
+
+    const licencePlateCountryAlias =
+      defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
+      originalLicencePlateCountry;
+
+    if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
+
+      return defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias];
+
+    }
+
+    return {};
+
+  };
 
   pts.getLicencePlateLocationProperties =
     function(originalLicencePlateCountry, originalLicencePlateProvince) {

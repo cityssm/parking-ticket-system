@@ -42,6 +42,7 @@ declare type Config_AdminDefaults = {
 };
 declare type Config_DefaultsConfig = {
     province: string;
+    country: string;
 };
 export declare type Config_LocationClass = {
     locationClassKey: string;
@@ -49,9 +50,10 @@ export declare type Config_LocationClass = {
 };
 declare type Config_ParkingTickets = {
     ticketNumber: {
-        fieldLabel: string;
+        fieldLabel?: string;
         pattern?: RegExp;
         isUnique?: boolean;
+        nextTicketNumberFn?: (currentTicketNumber: string) => string;
     };
 };
 export declare type Config_ParkingTicketStatus = {

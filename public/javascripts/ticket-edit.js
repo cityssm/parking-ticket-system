@@ -5,6 +5,64 @@
   const ticketID = document.getElementById("ticket--ticketID").value;
   const isCreate = (ticketID === "");
 
+  // Form Management
+
+  {
+    const formMessageEle = document.getElementById("container--form-message");
+
+    let hasUnsavedChanges = false;
+
+    const setUnsavedChangesFn = function(changeEvent) {
+
+      pts.enableNavBlocker();
+
+      hasUnsavedChanges = true;
+
+      formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+        "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
+        " <span>Unsaved Changes</span>" +
+        "</div>";
+
+    };
+
+    const inputEles = document.querySelectorAll(".input, .select, .textarea");
+
+    for (let inputIndex = 0; inputIndex < inputEles.length; inputIndex += 1) {
+
+      inputEles[inputIndex].addEventListener("change", setUnsavedChangesFn);
+
+    }
+
+    document.getElementById("form--ticket").addEventListener("submit", function(formEvent) {
+
+      formEvent.preventDefault();
+
+      formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+        "<span>Saving ticket... </span>" +
+        " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
+        "</div>";
+
+      pts.postJSON(
+        (isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"),
+        formEvent.currentTarget,
+        function(responseJSON) {
+
+          if (responseJSON.success) {
+
+            hasUnsavedChanges = false;
+            formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
+              "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+              " <span>Saved Successfully</span>" +
+              "</div>";
+
+          }
+          
+        }
+      );
+
+    });
+  }
+
   // Location Lookup
   pts.getDefaultConfigProperty("locationClasses", function(locationClassesList) {
 
@@ -200,6 +258,36 @@
 
     document.getElementById("is-bylaw-lookup-button").addEventListener("click", openBylawLookupModalFn);
     document.getElementById("ticket--bylawNumber").addEventListener("dblclick", openBylawLookupModalFn);
+
+  }
+
+  {
+
+    const populateLicencePlateProvinceDatalistFn = function() {
+
+      const datalistEle = document.getElementById("datalist--licencePlateProvince");
+      pts.clearElement(datalistEle);
+
+      const countryProperties = pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
+
+      if (countryProperties && countryProperties.provinces) {
+
+        const provincesList = Object.values(countryProperties.provinces);
+
+        for (let index = 0; index < provincesList.length; index += 1) {
+
+          const optionEle = document.createElement("option");
+          optionEle.setAttribute("value", provincesList[index].provinceShortName);
+          datalistEle.appendChild(optionEle);
+
+        }
+
+      }
+
+    };
+
+    document.getElementById("ticket--licencePlateCountry").addEventListener("change", populateLicencePlateProvinceDatalistFn);
+    pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFn);
 
   }
 

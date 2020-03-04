@@ -26,6 +26,10 @@ const configFallbackValues = {
     },
     "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
     "parkingTickets.ticketNumber.pattern": /^[\d\w -]{1,10}$/,
+    "parkingTickets.ticketNumber.isUnique": true,
+    "parkingTickets.ticketNumber.nextTicketNumberFn": function (currentTicketNumber) {
+        return "";
+    },
     "parkingTicketStatuses": [],
     "locationClasses": [],
     "licencePlateCountryAliases": {

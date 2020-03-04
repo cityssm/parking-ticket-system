@@ -116,10 +116,7 @@
               </span>
             </div>
             <div class="control">
-              <button class="button is-unlock-field-button"
-                data-unlock="input" data-tooltip="Unlock Offence Amount Field"
-                type="button"
-                <%= (isCreate ? "disabled" : "") %>>
+              <button class="button is-unlock-field-button" data-unlock="input" data-tooltip="Unlock Offence Amount Field" type="button">
                 <span class="sr-only">Unlock Field</span>
                 <i class="fas fa-unlock" aria-hidden="false"></i>
               </button>
@@ -140,8 +137,60 @@
     <h2 class="panel-heading">
       Vehicle Details
     </h2>
-  </div>
 
+    <div class="panel-block is-block">
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label" for="ticket--licencePlateCountry">Licence Plate Country Code</label>
+            <div class="control">
+              <input class="input" id="ticket--licencePlateCountry" name="licencePlateCountry" type="text" value="<%= ticket.licencePlateCountry %>" maxlength="2" list="datalist--licencePlateCountry" autocomplete="off" required />
+              <datalist id="datalist--licencePlateCountry">
+                <%
+                  const licencePlateCountries = Object.values(configFns.getProperty("licencePlateProvinces"));
+                  for (let countryObj of licencePlateCountries) {
+                %>
+                  <option value="<%= countryObj.countryShortName %>"></option>
+                <%
+                  }
+                %>
+              </datalist>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label" for="ticket--licencePlateProvince">Licence Plate Province</label>
+            <div class="control">
+              <input class="input" id="ticket--licencePlateProvince" name="licencePlateProvince" type="text" value="<%= ticket.licencePlateProvince %>" maxlength="15" list="datalist--licencePlateProvince" autocomplete="off" required />
+              <datalist id="datalist--licencePlateProvince"></datalist>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label" for="ticket--licencePlateNumber">Licence Plate Number</label>
+            <div class="control">
+              <input class="input" id="ticket--licencePlateNumber" name="licencePlateNumber" type="text" value="<%= ticket.licencePlateNumber %>" maxlength="15" pattern="^[A-Z0-9 ]+$" autocomplete="off" required />
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label" for="ticket--vehicleMakeModel">Vehicle Make/Model from Ticket</label>
+            <div class="control">
+              <input class="input" id="ticket--vehicleMakeModel" name="vehicleMakeModel" type="text" value="<%= ticket.vehicleMakeModel %>" maxlength="30" list="datalist--vehicleMakeModel" />
+              <datalist id="datalist--vehicleMakeModel">
+                <% for (let makeIndex = 0; makeIndex < vehicleMakeModelDatalist.length; makeIndex += 1) { %>
+                  <option value="<%= vehicleMakeModelDatalist[makeIndex] %>"></option>
+                <% } %>
+              </datalist>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="is-fixed-bottom has-padding-10 has-background-grey-light is-hidden-print">
     <div class="level">

@@ -1,6 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
+const configFns = require("../helpers/configFns");
 const dateTimeFns = require("../helpers/dateTimeFns");
 const parkingDB = require("../helpers/parkingDB");
 router.get("/", function (_req, res) {
@@ -22,18 +23,45 @@ router.post("/doGetTickets", function (req, res) {
     }
     res.json(parkingDB.getParkingTickets(req.session, queryOptions));
 });
-router.get("/new", function (req, res) {
+router.get([
+    "/new",
+    "/new/:ticketNumber"
+], function (req, res) {
     if (!req.session.user.userProperties.canCreate) {
         res.redirect("/tickets/?error=accessDenied");
         return;
     }
+    const ticketNumber = req.params.ticketNumber;
+    const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
     res.render("ticket-edit", {
         headTitle: "New Ticket",
         pageContainerIsFullWidth: true,
         isCreate: true,
-        ticket: {},
-        issueDateMaxString: dateTimeFns.dateToString(new Date())
+        ticket: {
+            ticketNumber: ticketNumber,
+            licencePlateCountry: configFns.getProperty("defaults.country"),
+            licencePlateProvince: configFns.getProperty("defaults.province")
+        },
+        issueDateMaxString: dateTimeFns.dateToString(new Date()),
+        vehicleMakeModelDatalist: vehicleMakeModelDatalist
     });
+});
+router.post("/doCreateTicket", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.createParkingTicket(req.body, req.session);
+    if (result.success) {
+        const ticketNumber = req.body.ticketNumber;
+        result.nextTicketNumber = configFns.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(ticketNumber);
+    }
+    res.json(result);
 });
 router.get("/:ticketID", function (req, res) {
     const ticketID = parseInt(req.params.ticketID);
@@ -62,12 +90,14 @@ router.get("/:ticketID/edit", function (req, res) {
         res.redirect("/tickets/" + ticketID + "/?error=accessDenied");
         return;
     }
+    const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
     res.render("ticket-edit", {
         headTitle: "Ticket " + ticket.ticketNumber,
         pageContainerIsFullWidth: true,
         isCreate: false,
         ticket: ticket,
-        issueDateMaxString: dateTimeFns.dateToString(new Date())
+        issueDateMaxString: dateTimeFns.dateToString(new Date()),
+        vehicleMakeModelDatalist: vehicleMakeModelDatalist
     });
 });
 module.exports = router;

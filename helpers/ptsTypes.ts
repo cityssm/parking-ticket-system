@@ -41,7 +41,8 @@ type Config_AdminDefaults = {
 };
 
 type Config_DefaultsConfig = {
-  province: string
+  province: string,
+  country: string
 };
 
 export type Config_LocationClass = {
@@ -53,9 +54,10 @@ export type Config_LocationClass = {
 
 type Config_ParkingTickets = {
   ticketNumber: {
-    fieldLabel: string,
+    fieldLabel?: string,
     pattern?: RegExp,
-    isUnique?: boolean
+    isUnique?: boolean,
+    nextTicketNumberFn?: (currentTicketNumber: string) => string
   }
 };
 

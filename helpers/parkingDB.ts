@@ -314,6 +314,107 @@ export function getParkingTicket(ticketID: number, reqSession: Express.SessionDa
 
 }
 
+export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.SessionData) {
+
+  const db = sqlite(dbPath);
+
+  const nowMillis = Date.now();
+
+  const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
+
+  if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
+
+    // Ensure ticket number has not been used in the last two years
+
+    const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
+      " where recordDelete_timeMillis is null" +
+      " and ticketNumber = ?" +
+      " and abs(issueDate - ?) <= 20000")
+      .get(reqBody.ticketNumber, issueDate);
+
+    if (duplicateTicket) {
+
+      db.close();
+
+      return {
+        success: false,
+        message: "A ticket with the same ticket number was seen in the last two years."
+      };
+
+    }
+
+  }
+
+  const info = db.prepare("insert into ParkingTickets" +
+    " (ticketNumber, issueDate, issueTime, issuingOfficer," +
+    " locationKey, locationDescription," +
+    " bylawNumber, parkingOffence, offenceAmount," +
+    " licencePlateCountry, licencePlateProvince, licencePlateNumber, vehicleMakeModel," +
+    " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    .run(reqBody.ticketNumber,
+      issueDate,
+      dateTimeFns.timeStringToInteger(reqBody.issueTimeString),
+      reqBody.issuingOfficer,
+      reqBody.locationKey,
+      reqBody.locationDescription,
+      reqBody.bylawNumber,
+      reqBody.parkingOffence,
+      reqBody.offenceAmount,
+      reqBody.licencePlateCountry,
+      reqBody.licencePlateProvince,
+      reqBody.licencePlateNumber,
+      reqBody.vehicleMakeModel,
+      reqSession.user.userName,
+      nowMillis,
+      reqSession.user.userName,
+      nowMillis
+    );
+
+  db.close();
+
+  return {
+    success: true,
+    ticketID: info.lastInsertRowid,
+    nextTicketNumber: ""
+  };
+}
+
+
+export function getRecentParkingTicketVehicleMakeModelValues() {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  const issueDate = dateTimeFns.dateToInteger(sixMonthsAgo);
+
+  const rows = db.prepare("select vehicleMakeModel" +
+    " from ParkingTickets" +
+    " where recordDelete_timeMillis is null" +
+    " and issueDate > ?" +
+    " group by vehicleMakeModel" +
+    " having count(vehicleMakeModel) > 3" +
+    " order by vehicleMakeModel")
+    .all(issueDate);
+
+  db.close();
+
+  const vehicleMakeModelList = [];
+
+  for (let index = 0; index < rows.length; index += 1) {
+
+    vehicleMakeModelList.push(rows[index].vehicleMakeModel);
+  }
+
+  return vehicleMakeModelList;
+
+}
+
+
 export function getParkingLocations() {
 
   const db = sqlite(dbPath, {

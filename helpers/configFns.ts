@@ -46,12 +46,16 @@ const configFallbackValues = {
 
   "parkingTickets.ticketNumber.fieldLabel": "Ticket Number",
   "parkingTickets.ticketNumber.pattern": /^[\d\w -]{1,10}$/,
+  "parkingTickets.ticketNumber.isUnique": true,
+  "parkingTickets.ticketNumber.nextTicketNumberFn": function(currentTicketNumber) {
+    return "";
+  },
 
   "parkingTicketStatuses": [],
 
   "locationClasses": [],
 
-  "licencePlateCountryAliases" : {
+  "licencePlateCountryAliases": {
     "CA": "Canada",
     "US": "USA"
   },
@@ -90,7 +94,7 @@ export function getParkingTicketStatus(statusKey: string) {
 
   if (!parkingTicketStatusMapIsLoaded) {
 
-    const parkingTicketStatusList : pts.Config_ParkingTicketStatus[] = getProperty("parkingTicketStatuses");
+    const parkingTicketStatusList: pts.Config_ParkingTicketStatus[] = getProperty("parkingTicketStatuses");
 
     for (let index = 0; index < parkingTicketStatusList.length; index += 1) {
 

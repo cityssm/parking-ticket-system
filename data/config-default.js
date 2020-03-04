@@ -1,6 +1,7 @@
 "use strict";
 const config = {};
 config.defaults = {
+    country: "CA",
     province: "ON"
 };
 config.locationClasses = [

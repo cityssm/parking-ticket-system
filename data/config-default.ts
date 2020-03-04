@@ -3,6 +3,7 @@ import * as pts from "../helpers/ptsTypes";
 const config: pts.Config = {};
 
 config.defaults = {
+  country: "CA",
   province: "ON"
 };
 

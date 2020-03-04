@@ -3,6 +3,7 @@
 import express = require("express");
 const router = express.Router();
 
+import * as configFns from "../helpers/configFns";
 import * as dateTimeFns from "../helpers/dateTimeFns";
 import * as parkingDB from "../helpers/parkingDB";
 
@@ -46,24 +47,63 @@ router.post("/doGetTickets", function(req, res) {
  */
 
 
- router.get("/new", function(req, res) {
+router.get([
+  "/new",
+  "/new/:ticketNumber"
+], function(req, res) {
 
-   if (!req.session.user.userProperties.canCreate) {
-     res.redirect ("/tickets/?error=accessDenied");
-     return;
-   }
+  if (!req.session.user.userProperties.canCreate) {
+    res.redirect("/tickets/?error=accessDenied");
+    return;
+  }
 
-   res.render("ticket-edit", {
-     headTitle: "New Ticket",
-     pageContainerIsFullWidth: true,
-     isCreate: true,
-     ticket: {},
-     issueDateMaxString: dateTimeFns.dateToString(new Date())
-   });
+  const ticketNumber = req.params.ticketNumber;
 
- });
+  const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
+
+  res.render("ticket-edit", {
+    headTitle: "New Ticket",
+    pageContainerIsFullWidth: true,
+    isCreate: true,
+    ticket: {
+      ticketNumber: ticketNumber,
+      licencePlateCountry: configFns.getProperty("defaults.country"),
+      licencePlateProvince: configFns.getProperty("defaults.province")
+    },
+    issueDateMaxString: dateTimeFns.dateToString(new Date()),
+    vehicleMakeModelDatalist: vehicleMakeModelDatalist
+  });
+
+});
 
 
+router.post("/doCreateTicket", function(req, res) {
+
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const result = parkingDB.createParkingTicket(req.body, req.session);
+
+  if (result.success) {
+
+    const ticketNumber = req.body.ticketNumber;
+    result.nextTicketNumber = configFns.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(ticketNumber);
+
+  }
+
+  res.json(result);
+
+});
 
 
 /*
@@ -100,10 +140,9 @@ router.get("/:ticketID/edit", function(req, res) {
   const ticketID = parseInt(req.params.ticketID);
 
   if (!req.session.user.userProperties.canCreate) {
-    res.redirect ("/tickets/" + ticketID);
+    res.redirect("/tickets/" + ticketID);
     return;
   }
-
 
   const ticket = parkingDB.getParkingTicket(ticketID, req.session);
 
@@ -119,12 +158,15 @@ router.get("/:ticketID/edit", function(req, res) {
 
   }
 
+  const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
+
   res.render("ticket-edit", {
     headTitle: "Ticket " + ticket.ticketNumber,
     pageContainerIsFullWidth: true,
     isCreate: false,
     ticket: ticket,
-    issueDateMaxString: dateTimeFns.dateToString(new Date())
+    issueDateMaxString: dateTimeFns.dateToString(new Date()),
+    vehicleMakeModelDatalist: vehicleMakeModelDatalist
   });
 
 });
