@@ -452,29 +452,34 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
     const cancelButtonHTML = modalOptions.cancelButtomHTML || "Cancel";
     const okButtonHTML = modalOptions.okButtonHTML || "OK";
 
-    const contextualColorIsDark = !(contextualColorName === "warning");
-
     modalEle.innerHTML = "<div class=\"modal-background\"></div>" +
-      "<div class=\"modal-card\">" +
-      ("<header class=\"modal-card-head has-background-" + contextualColorName + "\">" +
-        "<h3 class=\"modal-card-title" + (contextualColorIsDark ? " has-text-white" : "") + "\"></h3>" +
+      "<div class=\"modal-content\">" +
+      "<div class=\"message is-" + contextualColorName + "\">" +
+
+      ("<header class=\"message-header\">" +
+        "<span></span>" +
         "</header>") +
-      (bodyHTML === "" ?
-        "" :
-        "<section class=\"modal-card-body\">" + bodyHTML + "</section>") +
-      ("<footer class=\"modal-card-foot justify-flex-end\">" +
-        (modalOptions.hideCancelButton ?
-          "" :
-          "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
-          cancelButtonHTML +
-          "</button>") +
-        ("<button class=\"button is-ok-button is-" + contextualColorName + "\" type=\"button\" aria-label=\"OK\">" +
-          okButtonHTML +
-          "</button>") +
-        "</footer>") +
+
+      ("<section class=\"message-body\">" +
+        (bodyHTML === "" ? "" : "<div class=\"has-margin-bottom-10\">" + bodyHTML + "</div>") +
+
+        ("<div class=\"buttons justify-flex-end\">" +
+          (modalOptions.hideCancelButton ?
+            "" :
+            "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
+            cancelButtonHTML +
+            "</button>") +
+          ("<button class=\"button is-ok-button is-" + contextualColorName + "\" type=\"button\" aria-label=\"OK\">" +
+            okButtonHTML +
+            "</button>") +
+          "</div>") +
+
+        "</section>") +
+
+      "</div>" +
       "</div>";
 
-    modalEle.getElementsByClassName("modal-card-title")[0].innerText = titleString;
+    modalEle.getElementsByClassName("message-header")[0].getElementsByTagName("span")[0].innerText = titleString;
 
     if (!modalOptions.hideCancelButton) {
 

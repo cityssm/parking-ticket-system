@@ -123,7 +123,7 @@ function getParkingTickets(reqSession, queryOptions) {
         (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
             " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
         sqlWhereClause +
-        " order by t.issueDate desc, t.issueTime desc, t.ticketNumber desc" +
+        " order by t.issueDate desc, t.ticketNumber desc" +
         " limit " + queryOptions.limit +
         " offset " + queryOptions.offset)
         .all(sqlParams);
@@ -223,6 +223,58 @@ function createParkingTicket(reqBody, reqSession) {
     };
 }
 exports.createParkingTicket = createParkingTicket;
+function updateParkingTicket(reqBody, reqSession) {
+    const db = sqlite(dbPath);
+    const nowMillis = Date.now();
+    const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
+    if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
+        const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
+            " where recordDelete_timeMillis is null" +
+            " and ticketNumber = ?" +
+            " and ticketID != ?" +
+            " and abs(issueDate - ?) <= 20000")
+            .get(reqBody.ticketNumber, reqBody.ticketID, issueDate);
+        if (duplicateTicket) {
+            db.close();
+            return {
+                success: false,
+                message: "A ticket with the same ticket number was seen in the last two years."
+            };
+        }
+    }
+    const info = db.prepare("update ParkingTickets" +
+        " set ticketNumber = ?," +
+        " issueDate = ?," +
+        " issueTime = ?," +
+        " issuingOfficer = ?," +
+        " locationKey = ?," +
+        " locationDescription = ?," +
+        " bylawNumber = ?," +
+        " parkingOffence = ?," +
+        " offenceAmount = ?," +
+        " licencePlateCountry = ?," +
+        " licencePlateProvince = ?," +
+        " licencePlateNumber = ?," +
+        " vehicleMakeModel = ?," +
+        " recordUpdate_userName = ?," +
+        " recordUpdate_timeMillis = ?" +
+        " where ticketID = ?" +
+        " and recordDelete_timeMillis is null")
+        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, reqBody.vehicleMakeModel, reqSession.user.userName, nowMillis, reqBody.ticketID);
+    db.close();
+    if (info.changes) {
+        return {
+            success: true
+        };
+    }
+    else {
+        return {
+            success: false,
+            message: "An error occurred saving this ticket.  Please try again."
+        };
+    }
+}
+exports.updateParkingTicket = updateParkingTicket;
 function getRecentParkingTicketVehicleMakeModelValues() {
     const db = sqlite(dbPath, {
         readonly: true
@@ -246,6 +298,69 @@ function getRecentParkingTicketVehicleMakeModelValues() {
     return vehicleMakeModelList;
 }
 exports.getRecentParkingTicketVehicleMakeModelValues = getRecentParkingTicketVehicleMakeModelValues;
+function getLicencePlates(queryOptions) {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    let sqlParams = [];
+    let sqlInnerWhereClause = " where recordDelete_timeMillis is null";
+    if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
+        const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
+        for (let index = 0; index < licencePlateNumberPieces.length; index += 1) {
+            sqlInnerWhereClause += " and instr(lower(licencePlateNumber), ?)";
+            sqlParams.push(licencePlateNumberPieces[index]);
+        }
+    }
+    sqlParams = sqlParams.concat(sqlParams);
+    let sqlHavingClause = " having 1 = 1";
+    if (queryOptions.hasOwnProperty("hasOwnerRecord")) {
+        if (queryOptions.hasOwnerRecord) {
+            sqlHavingClause += " and hasOwnerRecord = 1";
+        }
+        else {
+            sqlHavingClause += " and hasOwnerRecord = 0";
+        }
+    }
+    if (queryOptions.hasOwnProperty("hasUnresolvedTickets")) {
+        if (queryOptions.hasUnresolvedTickets) {
+            sqlHavingClause += " and unresolvedTicketCount > 0";
+        }
+        else {
+            sqlHavingClause += " and unresolvedTicketCount = 0";
+        }
+    }
+    const innerSql = "select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+        " sum(unresolvedTicketCountInternal) as unresolvedTicketCount," +
+        " cast(sum(hasOwnerRecordInternal) as bit) as hasOwnerRecord from (" +
+        "select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+        " 0 as unresolvedTicketCountInternal, 1 as hasOwnerRecordInternal" +
+        " from LicencePlateOwners" +
+        sqlInnerWhereClause +
+        " union" +
+        " select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+        " count(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
+        " from ParkingTickets" +
+        sqlInnerWhereClause +
+        " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
+        ")" +
+        " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
+        sqlHavingClause;
+    const count = db.prepare("select ifnull(count(*), 0) as cnt" +
+        " from (" + innerSql + ")")
+        .get(sqlParams)
+        .cnt;
+    const rows = db.prepare(innerSql +
+        " order by licencePlateNumber, licencePlateProvince, licencePlateCountry" +
+        " limit " + queryOptions.limit +
+        " offset " + queryOptions.offset)
+        .all(sqlParams);
+    db.close();
+    return {
+        count: count,
+        licencePlates: rows
+    };
+}
+exports.getLicencePlates = getLicencePlates;
 function getParkingLocations() {
     const db = sqlite(dbPath, {
         readonly: true

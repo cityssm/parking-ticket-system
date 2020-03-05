@@ -106,6 +106,28 @@ router.post("/doCreateTicket", function(req, res) {
 });
 
 
+router.post("/doUpdateTicket", function(req, res) {
+
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const result = parkingDB.updateParkingTicket(req.body, req.session);
+
+  res.json(result);
+
+});
+
+
 /*
  * Ticket View
  */

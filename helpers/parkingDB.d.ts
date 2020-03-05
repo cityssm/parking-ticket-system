@@ -25,6 +25,24 @@ export declare function createParkingTicket(reqBody: pts.ParkingTicket, reqSessi
     nextTicketNumber: string;
     message?: undefined;
 };
+export declare function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.SessionData): {
+    success: boolean;
+    message: string;
+} | {
+    success: boolean;
+    message?: undefined;
+};
 export declare function getRecentParkingTicketVehicleMakeModelValues(): any[];
+export declare type getLicencePlates_queryOptions = {
+    licencePlateNumber?: string;
+    hasOwnerRecord?: boolean;
+    hasUnresolvedTickets?: boolean;
+    limit: number;
+    offset: number;
+};
+export declare function getLicencePlates(queryOptions: getLicencePlates_queryOptions): {
+    count: any;
+    licencePlates: any[];
+};
 export declare function getParkingLocations(): pts.ParkingLocation[];
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];

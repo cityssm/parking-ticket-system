@@ -36,6 +36,7 @@
                 value="<%= ticket.ticketNumber %>"
                 pattern="<%= configFns.getProperty("parkingTickets.ticketNumber.pattern").source %>"
                 maxlength="10"
+                autocomplete="off"
                 <%= (isCreate ? "" : "readonly") %>
                 required />
             </div>

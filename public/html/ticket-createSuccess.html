@@ -1,27 +1,29 @@
 <div class="modal">
   <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <h3 class="modal-card-title">Ticket Recorded Successfully</h3>
-    </header>
-    <section class="modal-card-body">
-      <div class="message is-success">
-        <p class="message-body">
-          <strong>Ticket <span id="createSuccess--ticketNumber"></span> was saved successfully.</strong><br />
+  <div class="modal-content">
+    <div class="message is-success">
+      <div class="message-header">
+        <span>Ticket <span id="createSuccess--ticketNumber"></span> was saved successfully.</span>
+      </div>
+      <div class="message-body">
+        <p class="has-margin-bottom-15 has-text-centered">
           How would you like to continue?
         </p>
+        <div class="columns">
+          <div class="column">
+            <a class="button is-fullwidth is-inline-block has-height-auto" id="createSuccess--editTicketButton" href="#">
+              <i class="fas fa-3x fa-pencil-alt has-padding-bottom-5" aria-hidden="true"></i><br />
+              <span>Edit this Ticket Record</span>
+            </a>
+          </div>
+          <div class="column">
+            <a class="button is-fullwidth is-inline-block has-height-auto" id="createSuccess--newTicketButton" href="#">
+              <i class="fas fa-3x fa-plus has-padding-bottom-5" aria-hidden="true"></i><br />
+              <span>Create a New Ticket Record</span>
+            </a>
+          </div>
+        </div>
       </div>
-    </section>
-    <footer class="modal-card-foot justify-right">
-      <a class="button" id="createSuccess--editTicketButton" href="#">
-        <span class="icon"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span><br />
-        <span>Edit this Ticket Record</span>
-      </a>
-
-      <a class="button" id="createSuccess--newTicketButton" href="#">
-        <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span><br />
-        <span>Create a New Ticket Record</span>
-      </a>
-    </footer>
+    </div>
   </div>
 </div>

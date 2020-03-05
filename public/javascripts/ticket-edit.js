@@ -37,6 +37,8 @@
 
       formEvent.preventDefault();
 
+      const ticketNumber = document.getElementById("ticket--ticketNumber").value;
+
       formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
         "<span>Saving ticket... </span>" +
         " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
@@ -49,14 +51,35 @@
 
           if (responseJSON.success) {
 
+            pts.disableNavBlocker();
             hasUnsavedChanges = false;
+
             formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
               "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
               " <span>Saved Successfully</span>" +
               "</div>";
 
+          } else {
+
+            setUnsavedChangesFn();
+            pts.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
+
           }
-          
+
+          if (responseJSON.success && isCreate) {
+
+            pts.openHtmlModal("ticket-createSuccess", {
+              onshow: function() {
+
+                document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
+                document.getElementById("createSuccess--editTicketButton").setAttribute("href", "/tickets/" + responseJSON.ticketID + "/edit");
+                document.getElementById("createSuccess--newTicketButton").setAttribute("href", "/tickets/new/" + responseJSON.nextTicketNumber);
+
+              }
+            });
+
+          }
+
         }
       );
 

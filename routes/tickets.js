@@ -63,6 +63,19 @@ router.post("/doCreateTicket", function (req, res) {
     }
     res.json(result);
 });
+router.post("/doUpdateTicket", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.updateParkingTicket(req.body, req.session);
+    res.json(result);
+});
 router.get("/:ticketID", function (req, res) {
     const ticketID = parseInt(req.params.ticketID);
     const ticket = parkingDB.getParkingTicket(ticketID, req.session);

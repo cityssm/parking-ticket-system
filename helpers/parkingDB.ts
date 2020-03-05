@@ -218,7 +218,7 @@ export function getParkingTickets(reqSession: Express.SessionData, queryOptions:
       " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
 
     sqlWhereClause +
-    " order by t.issueDate desc, t.issueTime desc, t.ticketNumber desc" +
+    " order by t.issueDate desc, t.ticketNumber desc" +
     " limit " + queryOptions.limit +
     " offset " + queryOptions.offset)
     .all(sqlParams);
@@ -380,6 +380,94 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
   };
 }
 
+export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.SessionData) {
+
+  const db = sqlite(dbPath);
+
+  const nowMillis = Date.now();
+
+  const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
+
+  if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
+
+    // Ensure ticket number has not been used in the last two years
+
+    const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
+      " where recordDelete_timeMillis is null" +
+      " and ticketNumber = ?" +
+      " and ticketID != ?" +
+      " and abs(issueDate - ?) <= 20000")
+      .get(reqBody.ticketNumber,
+        reqBody.ticketID,
+        issueDate);
+
+    if (duplicateTicket) {
+
+      db.close();
+
+      return {
+        success: false,
+        message: "A ticket with the same ticket number was seen in the last two years."
+      };
+
+    }
+
+  }
+
+  const info = db.prepare("update ParkingTickets" +
+    " set ticketNumber = ?," +
+    " issueDate = ?," +
+    " issueTime = ?," +
+    " issuingOfficer = ?," +
+    " locationKey = ?," +
+    " locationDescription = ?," +
+    " bylawNumber = ?," +
+    " parkingOffence = ?," +
+    " offenceAmount = ?," +
+    " licencePlateCountry = ?," +
+    " licencePlateProvince = ?," +
+    " licencePlateNumber = ?," +
+    " vehicleMakeModel = ?," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where ticketID = ?" +
+    " and recordDelete_timeMillis is null")
+    .run(reqBody.ticketNumber,
+      issueDate,
+      dateTimeFns.timeStringToInteger(reqBody.issueTimeString),
+      reqBody.issuingOfficer,
+      reqBody.locationKey,
+      reqBody.locationDescription,
+      reqBody.bylawNumber,
+      reqBody.parkingOffence,
+      reqBody.offenceAmount,
+      reqBody.licencePlateCountry,
+      reqBody.licencePlateProvince,
+      reqBody.licencePlateNumber,
+      reqBody.vehicleMakeModel,
+      reqSession.user.userName,
+      nowMillis,
+      reqBody.ticketID
+    );
+
+  db.close();
+
+  if (info.changes) {
+
+    return {
+      success: true
+    };
+
+  } else {
+
+    return {
+      success: false,
+      message: "An error occurred saving this ticket.  Please try again."
+    };
+
+  }
+
+}
 
 export function getRecentParkingTicketVehicleMakeModelValues() {
 
@@ -414,6 +502,110 @@ export function getRecentParkingTicketVehicleMakeModelValues() {
 
 }
 
+
+export type getLicencePlates_queryOptions = {
+  licencePlateNumber?: string,
+  hasOwnerRecord?: boolean,
+  hasUnresolvedTickets?: boolean,
+  limit: number,
+  offset: number
+};
+
+export function getLicencePlates(queryOptions: getLicencePlates_queryOptions) {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  // build where clause
+
+  let sqlParams = [];
+
+  let sqlInnerWhereClause = " where recordDelete_timeMillis is null";
+
+  if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
+
+    const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
+
+    for (let index = 0; index < licencePlateNumberPieces.length; index += 1) {
+
+      sqlInnerWhereClause += " and instr(lower(licencePlateNumber), ?)";
+      sqlParams.push(licencePlateNumberPieces[index]);
+
+    }
+
+  }
+
+  sqlParams = sqlParams.concat(sqlParams);
+
+  // build having clause
+
+  let sqlHavingClause = " having 1 = 1";
+
+  if (queryOptions.hasOwnProperty("hasOwnerRecord")) {
+
+    if (queryOptions.hasOwnerRecord) {
+      sqlHavingClause += " and hasOwnerRecord = 1";
+    } else {
+      sqlHavingClause += " and hasOwnerRecord = 0";
+    }
+
+  }
+
+  if (queryOptions.hasOwnProperty("hasUnresolvedTickets")) {
+
+    if (queryOptions.hasUnresolvedTickets) {
+      sqlHavingClause += " and unresolvedTicketCount > 0";
+    } else {
+      sqlHavingClause += " and unresolvedTicketCount = 0";
+    }
+
+  }
+
+  // get the count
+
+  const innerSql = "select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+    " sum(unresolvedTicketCountInternal) as unresolvedTicketCount," +
+    " cast(sum(hasOwnerRecordInternal) as bit) as hasOwnerRecord from (" +
+
+    "select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+    " 0 as unresolvedTicketCountInternal, 1 as hasOwnerRecordInternal" +
+    " from LicencePlateOwners" +
+    sqlInnerWhereClause +
+
+    " union" +
+
+    " select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+    " count(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
+    " from ParkingTickets" +
+    sqlInnerWhereClause +
+    " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
+
+    ")" +
+    " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
+    sqlHavingClause;
+
+  const count = db.prepare("select ifnull(count(*), 0) as cnt" +
+    " from (" + innerSql + ")")
+    .get(sqlParams)
+    .cnt;
+
+  // do query
+
+  const rows = db.prepare(innerSql +
+    " order by licencePlateNumber, licencePlateProvince, licencePlateCountry" +
+    " limit " + queryOptions.limit +
+    " offset " + queryOptions.offset)
+    .all(sqlParams);
+
+  db.close();
+
+  return {
+    count: count,
+    licencePlates: rows
+  };
+
+}
 
 export function getParkingLocations() {
 
