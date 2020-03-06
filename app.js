@@ -21,6 +21,7 @@ const stringFns = require("./helpers/stringFns");
 const dbInit = require("./helpers/dbInit");
 dbInit.initUsersDB();
 dbInit.initParkingDB();
+dbInit.initNHTSADB();
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

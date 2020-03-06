@@ -41,6 +41,7 @@ import * as stringFns from "./helpers/stringFns";
 import * as dbInit from "./helpers/dbInit";
 dbInit.initUsersDB();
 dbInit.initParkingDB();
+dbInit.initNHTSADB();
 
 
 /*

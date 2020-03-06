@@ -166,3 +166,26 @@ function initParkingDB() {
     return false;
 }
 exports.initParkingDB = initParkingDB;
+function initNHTSADB() {
+    const nhtsaDB = sqlite("data/nhtsa.db");
+    const row = nhtsaDB.prepare("select name from sqlite_master where type = 'table' and name = 'MakeModel'").get();
+    if (!row) {
+        console.warn("Creating nhtsa.db.");
+        nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +
+            "searchString varchar(50) primary key not null," +
+            " resultCount integer not null," +
+            " searchExpiryMillis integer not null" +
+            ") without rowid").run();
+        nhtsaDB.prepare("create table if not exists MakeModel (" +
+            "makeID integer, makeName varchar(50), modelID integer, modelName varchar(50)," +
+            " recordCreate_timeMillis integer not null," +
+            " recordUpdate_timeMillis integer not null," +
+            " recordDelete_timeMillis integer," +
+            " primary key (makeName, modelName)" +
+            ") without rowid").run();
+        return true;
+    }
+    return false;
+}
+exports.initNHTSADB = initNHTSADB;
+;
