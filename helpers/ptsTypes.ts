@@ -20,7 +20,9 @@ type Config_ApplicationConfig = {
   applicationName?: string,
   logoURL?: string,
   httpPort?: number,
-  https?: Config_HttpsConfig
+  https?: Config_HttpsConfig,
+
+  feature_mtoExportImport?: boolean
 };
 
 export type Config_HttpsConfig = {
@@ -67,7 +69,8 @@ export type Config_ParkingTicketStatus = {
   statusField?: {
     fieldLabel: string
   },
-  isFinalStatus: boolean
+  isFinalStatus: boolean,
+  isUserSettable: boolean
 };
 
 type Config_LicencePlateCountry = {

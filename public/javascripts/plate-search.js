@@ -43,7 +43,7 @@
         "<th>Province</th>" +
         "<th>Country</th>" +
         "<th>Ownership Record</th>" +
-        "<th>Oustanding Tickets</th>" +
+        "<th>Outstanding Tickets</th>" +
         "</tr></thead>" +
         "<tbody></tbody>" +
         "</table>";
@@ -58,13 +58,29 @@
 
         // Output row
 
+        const url = "/plates/" +
+          (plateObj.licencePlateCountry === "" ? "_" : plateObj.licencePlateCountry) +
+          "/" +
+          (plateObj.licencePlateProvince === "" ? "_" : plateObj.licencePlateProvince) +
+          "/" +
+          (plateObj.licencePlateNumber === "" ? "_" : plateObj.licencePlateNumber);
+
+
         trEle.innerHTML = "<td>" +
-          "<a href=\"/plates/" + plateObj.licencePlateCountry + "/" + plateObj.licencePlateProvince + "/" + plateObj.licencePlateNumber + "\" data-tooltip=\"View Licence Plate\">" +
-          plateObj.licencePlateNumber +
+          "<a href=\"" + url + "\" data-tooltip=\"View Licence Plate\">" +
+          (plateObj.licencePlateNumber === "" ? "(Blank)" : plateObj.licencePlateNumber) +
           "</a>" +
           "</td>" +
-          "<td>" + plateObj.licencePlateProvince + "</td>" +
-          "<td>" + plateObj.licencePlateCountry + "</td>" +
+          ("<td>" +
+            (plateObj.licencePlateProvince === "" ?
+              "<span class=\"has-text-grey\">(Blank)</span>" :
+              plateObj.licencePlateProvince) +
+            "</td>") +
+          ("<td>" +
+            (plateObj.licencePlateCountry === "" ?
+              "<span class=\"has-text-grey\">(Blank)</span>" :
+              plateObj.licencePlateCountry) +
+            "</td>") +
           ("<td>" +
             plateObj.hasOwnerRecord +
             "</td>") +

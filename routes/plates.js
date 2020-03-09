@@ -1,6 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
+const vehicleFns = require("../helpers/vehicleFns");
 const parkingDB = require("../helpers/parkingDB");
 router.get("/", function (_req, res) {
     res.render("plate-search", {
@@ -20,6 +21,12 @@ router.post("/doGetLicencePlates", function (req, res) {
         queryOptions.hasUnresolvedTickets = (req.body.hasUnresolvedTickets === "1");
     }
     res.json(parkingDB.getLicencePlates(queryOptions));
+});
+router.post("/doGetModelsByMake", function (req, res) {
+    vehicleFns.getModelsByMake(req.body.vehicleMake, function (makeModelList) {
+        res.json(makeModelList);
+        return;
+    });
 });
 router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", function (req, res) {
     const licencePlateCountry = req.params.licencePlateCountry;

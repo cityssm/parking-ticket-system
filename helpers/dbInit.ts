@@ -179,6 +179,7 @@ export function initParkingDB() {
     parkingDB.prepare("create table if not exists LicencePlateLookupBatches (" +
       "batchID integer primary key autoincrement," +
       " batchDate integer not null," +
+      " lockDate integer," +
       " sentDate integer," +
       " receivedDate integer," +
 

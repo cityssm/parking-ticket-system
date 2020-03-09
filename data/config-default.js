@@ -1,5 +1,9 @@
 "use strict";
+const base = require("../data/config-base");
 const config = {};
+config.application = {
+    feature_mtoExportImport: true
+};
 config.defaults = {
     country: "CA",
     province: "ON"
@@ -19,37 +23,18 @@ config.parkingTickets = {
         fieldLabel: "Ticket Number"
     }
 };
-config.parkingTicketStatuses = [
-    {
-        statusKey: "paid",
-        status: "Paid",
-        statusField: {
-            fieldLabel: "Receipt Number"
-        },
-        isFinalStatus: true
-    },
-    {
-        statusKey: "withdrawn",
-        status: "Withdrawn",
-        statusField: {
-            fieldLabel: "Reason for Withdrawl"
-        },
-        isFinalStatus: true
-    },
+const defaultParkingTicketStatuses = [
     {
         statusKey: "trial",
         status: "Trial Requested",
         statusField: {
             fieldLabel: "Trial Date"
         },
-        isFinalStatus: false
-    },
-    {
-        statusKey: "convicted",
-        status: "Convicted",
-        isFinalStatus: true
+        isFinalStatus: false,
+        isUserSettable: true
     }
 ];
+config.parkingTicketStatuses = base.baseParkingTicketStatuses.concat(defaultParkingTicketStatuses);
 config.genders = [
     {
         genderKey: "F",

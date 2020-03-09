@@ -1,6 +1,11 @@
 import * as pts from "../helpers/ptsTypes";
+import * as base from "../data/config-base";
 
 const config: pts.Config = {};
+
+config.application = {
+  feature_mtoExportImport: true
+};
 
 config.defaults = {
   country: "CA",
@@ -24,37 +29,19 @@ config.parkingTickets = {
   }
 }
 
-config.parkingTicketStatuses = [
-  {
-    statusKey: "paid",
-    status: "Paid",
-    statusField: {
-      fieldLabel: "Receipt Number"
-    },
-    isFinalStatus: true
-  },
-  {
-    statusKey: "withdrawn",
-    status: "Withdrawn",
-    statusField: {
-      fieldLabel: "Reason for Withdrawl"
-    },
-    isFinalStatus: true
-  },
+const defaultParkingTicketStatuses : pts.Config_ParkingTicketStatus[] = [
   {
     statusKey: "trial",
     status: "Trial Requested",
     statusField: {
       fieldLabel: "Trial Date"
     },
-    isFinalStatus: false
-  },
-  {
-    statusKey: "convicted",
-    status: "Convicted",
-    isFinalStatus: true
+    isFinalStatus: false,
+    isUserSettable: true
   }
 ];
+
+config.parkingTicketStatuses = base.baseParkingTicketStatuses.concat(defaultParkingTicketStatuses);
 
 config.genders = [
   {

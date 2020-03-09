@@ -12,25 +12,28 @@
       </a>
     </li>
   </ul>
-  <p class="menu-label">
-    Plate Lookups
-  </p>
-  <ul class="menu-list">
-    <li>
-      <a class="<%= (headTitle === "Export Licence Plates" ? "is-active" : "") %>" href="/plates/export">
-        <span class="icon">
-          <i class="fas fa-file-export" aria-hidden="true"></i>
-        </span>
-        Export Licence Plates
-      </a>
-    </li>
-    <li>
-      <a class="<%= (headTitle === "Import Licence Plate Ownership" ? "is-active" : "") %>" href="/plates/import">
-        <span class="icon">
-          <i class="fas fa-file-import" aria-hidden="true"></i>
-        </span>
-        Import Licence Plate Ownership
-      </a>
-    </li>
-  </ul>
+
+  <% if (configFns.getProperty("application.feature_mtoExportImport")) { %>
+    <p class="menu-label">
+      MTO Integration
+    </p>
+    <ul class="menu-list">
+      <li>
+        <a class="<%= (headTitle === "Export Licence Plates" ? "is-active" : "") %>" href="/plates/mtoExport">
+          <span class="icon">
+            <i class="fas fa-file-export" aria-hidden="true"></i>
+          </span>
+          Export Licence Plates
+        </a>
+      </li>
+      <li>
+        <a class="<%= (headTitle === "Import Licence Plate Ownership" ? "is-active" : "") %>" href="/plates/mtoImport">
+          <span class="icon">
+            <i class="fas fa-file-import" aria-hidden="true"></i>
+          </span>
+          Import Licence Plate Ownership
+        </a>
+      </li>
+    </ul>
+  <% } %>
 </aside>

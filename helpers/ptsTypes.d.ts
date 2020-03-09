@@ -25,6 +25,7 @@ declare type Config_ApplicationConfig = {
     logoURL?: string;
     httpPort?: number;
     https?: Config_HttpsConfig;
+    feature_mtoExportImport?: boolean;
 };
 export declare type Config_HttpsConfig = {
     port: number;
@@ -63,6 +64,7 @@ export declare type Config_ParkingTicketStatus = {
         fieldLabel: string;
     };
     isFinalStatus: boolean;
+    isUserSettable: boolean;
 };
 declare type Config_LicencePlateCountry = {
     countryShortName: string;

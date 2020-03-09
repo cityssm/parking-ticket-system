@@ -3,6 +3,7 @@
 import express = require("express");
 const router = express.Router();
 
+import * as vehicleFns from "../helpers/vehicleFns";
 import * as parkingDB from "../helpers/parkingDB";
 
 
@@ -33,6 +34,17 @@ router.post("/doGetLicencePlates", function(req, res) {
 
   res.json(parkingDB.getLicencePlates(queryOptions));
 
+});
+
+
+router.post("/doGetModelsByMake", function(req, res) {
+
+  vehicleFns.getModelsByMake(req.body.vehicleMake, function(makeModelList) {
+
+    res.json(makeModelList);
+    return;
+    
+  });
 });
 
 

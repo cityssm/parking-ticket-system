@@ -390,3 +390,6 @@ function getParkingOffences(locationKey) {
     return rows;
 }
 exports.getParkingOffences = getParkingOffences;
+function getParkingTicketsForLookupBatch(includeBatchID) {
+}
+exports.getParkingTicketsForLookupBatch = getParkingTicketsForLookupBatch;

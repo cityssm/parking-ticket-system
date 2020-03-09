@@ -643,3 +643,24 @@ export function getParkingOffences(locationKey: string) {
 
   return rows;
 }
+
+export function getParkingTicketsForLookupBatch(includeBatchID: number) {
+
+  /*
+
+  select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, b.batchID
+  from ParkingTickets t
+  left join LicencePlateLookupBatchEntries e on t.ticketID = e.ticketID
+  left join LicencePlateLookupBatches b on e.batchID = b.batchID
+  where t.recordDelete_timeMillis is NULL
+  and t.licencePlateCountry = 'CA'
+  and t.licencePlateProvince = 'ON'
+  and t.licencePlateNumber != ''
+  and t.resolvedDate is null
+  and (b.batchID is null or b.recordDelete_timeMillis is not null)
+  and not exists (select 1 from ParkingTicketStatusLog s where t.ticketID = s.ticketID and s.recordDelete_timeMillis is null and s.statusKey in ('ownerLookupPending', 'ownerLookupMatch', 'ownerLookupError'))
+  and t.issueDate >= 20200101
+
+
+   */
+}
