@@ -1,21 +1,33 @@
-{
+/*
+ * SOURCES
+ * http://jour210.h.media.illinois.edu/vehicles.pdf
+ * https://vpic.nhtsa.dot.gov/api/
+ *
+ * Wherever possible, the company name is formatted for compatibility with the NHTSA Vehicle API.
+ * This may mean removed punctuation (i.e. Harley Davidson instead of Harley-Davidson),
+ * removed company identifiers (i.e. Bombardier instead of Bombardier, Inc.),
+ * and abbreviations or expansions (i.e. GMC instead of General Motors).
+ */
+
+
+export const autoNCIC = {
   "ABAR": "Abarth",
   "AC": "A C",
   "ACAD": "Acadian (GM of Canada)",
   "ACUR": "Acura",
   "ADET": "Adette",
   "AERA": "Aerocar",
-  "AERO": "Aero",
   "AETA": "Aeta",
   "ALFA": "Alfa Romeo",
   "ALLA": "Allard",
   "ALLF": "Allison's Fiberglass Mfg., Inc",
   "ALLS": "All State",
   "ALMA": "Alma",
-  "ALPI": "Alphine",
+  "ALPI": "Alpine",
   "ALTA": "Alta",
   "ALVI": "Alvis",
   "AMER": "American Motors",
+  "AMGN": "AM General",
   "AMPH": "Amphicar",
   "ARGO": "Argonaut State Limousine",
   "ARIT": "Arista",
@@ -89,8 +101,10 @@
   "CONU": "Consulier",
   "COOP": "Cooper",
   "CORD": "Cord",
+  "CORS": "Corsair Div.",
   "CROF": "Crofton Cub",
   "CROS": "Crosley",
+  "CRUI": "Cruisaire Motor Corp.",
   "CUBS": "Cubster",
   "CUNN": "Cunningham",
 
@@ -116,10 +130,12 @@
   "DKW": "DKW",
   "DODG": "Dodge",
   "DONG": "Dong Feng",
+  "DUCA": "Ducati",
   "DUEL": "Duel",
   "DUES": "Duesenberg",
   "DURA": "Durant",
 
+  "ECON": "Economy-Wisconsin",
   "EDSE": "Edsel",
   "EGIL": "Eagle",
   "ELVA": "Elva",
@@ -149,6 +165,7 @@
   "FRAN": "Franklin",
   "FRAZ": "Frazier",
   "FREF": "French Ford",
+  "FRHT": "Freightliner",
   "FRIS": "Frisky",
   "FRNA": "Frazer-NashPage",
 
@@ -160,7 +177,7 @@
   "GITA": "Gitane",
   "GLAS": "Glas",
   "GLSC": "Glassic",
-  "GMC": "General Motors",
+  "GMC": "GMC",
   "GOLI": "Goliath",
   "GORD": "Gordon",
   "GRAC": "Graciela",
@@ -186,7 +203,6 @@
   "HUME": "Humbee Surrey",
   "HUMM": "Hummer",
   "HUPM": "Hupmobile",
-  "HYN": "Hyundai",
   "HYUN": "Hyundai",
 
   "IAME": "I.A.M.E.",
@@ -195,6 +211,7 @@
   "IMPE": "Imperial",
   "INFI": "Infiniti",
   "INME": "Intermeccanica",
+  "INTL": "International Harvester",
   "INNO": "Innocenti",
   "ISET": "Isetta",
   "ISO": "ISO",
@@ -203,13 +220,18 @@
   "ITAI": "Italia",
 
   "JAGU": "Jaguar",
+  "JEEP": "Jeep",
   "JENS": "Jenson",
   "JETM": "Jetmobile",
   "JOWE": "Jowett",
 
   "KAIS": "Kaiser",
+  "KARG": "Karmann-Ghia",
+  "KAWK": "Kawasaki",
+  "KENN": "Kenron Corp.",
   "KIA": "Kia Motors Corporation",
   "KIMI": "King Midget",
+  "KTM": "KTM",
   "KURT": "Kurtis Kraft",
 
   "LADA": "Lada",
@@ -223,13 +245,17 @@
   "LINC": "Lincoln-Continental",
   "LLOY": "Lloyd",
   "LNCI": "Lancia",
+  "LNDR": "Land Rover",
   "LOCO": "Locomobile",
   "LOLA": "Lola",
   "LOND": "London Motors",
   "LOOD": "Loodcraft",
   "LOTU": "Lotus",
 
+  "MASE": "Maserati",
+  "MAZD": "Mazda",
   "MDNA": "Modena",
+  "MERC": "Mercury",
   "MERK": "Merkur",
   "MERZ": "Mercedes-Benz",
   "MESS": "Messerschmitt",
@@ -240,6 +266,7 @@
   "MIKR": "Mikrus",
   "MIST": "Mistral",
   "MITS": "Mitsubishi",
+  "MNNI": "Mini",
   "MODE": "Model A & Model T Motor Car",
   "MONA": "Monarch",
   "MORE": "Moretti",
@@ -252,6 +279,10 @@
 
   "NARD": "Mardi-Danese",
   "NASH": "Nash",
+  "NISS": "Nissan",
+
+  "OLDS": "Oldsmobile",
+  "OPEL": "Opel",
 
   "PEER": "Peerless",
   "PEGA": "Pegaso",
@@ -288,6 +319,7 @@
   "RYCS": "Rycsa",
 
   "SAA": "SAAB",
+  "SAAB": "SAAB",
   "SABR": "Sabra",
   "SATR": "Saturn",
   "SEAT": "Seat",
@@ -298,7 +330,9 @@
   "SIM": "Simca",
   "SIN": "Singer",
   "SKOD": "Skoda",
+  "SMRT": "SMART",
   "SOVA": "Sovam",
+  "SPNR": "Sprinter",
   "STAN": "Standard",
   "STAR": "Star",
   "STEY": "Steyr-Puch",
@@ -318,6 +352,7 @@
   "TATR": "Tatra",
   "TAUN": "Taunus",
   "TCHA": "Tchaika",
+  "TESL": "Tesla",
   "TJAA": "Tjaarda",
   "TORN": "Tornado",
   "TOYP": "Toyopet",
@@ -372,4 +407,115 @@
   "ZIMR": "Zimmerman Automobiles",
   "ZUND": "Zundapp",
   "ZWIC": "Zwickau"
-}
+};
+
+
+export const constructionNCIC = {
+  "BOMB": "Bombardier",
+  "GMC": "GMC",
+  "HOND": "Honda",
+  "MITS": "Mitsubishi",
+  "NISS": "Nissan",
+  "TOYT": "Toyota",
+};
+
+
+
+export const motorcycleNCIC = {
+  "BMW": "BMW",
+  "BOMB": "Bombardier",
+  "BOND": "Bond",
+  "HD": "Harley Davidson",
+  "HEIN": "Heinkel",
+  "HOMD": "Homemade Motorcycle",
+  "HOND": "Honda",
+  "MINI": "Miniscooter",
+  "PEUG": "Peugeot",
+  "SPOR": "Sportsman",
+  "SUZI": "Suzuki",
+  "TEMP": "Tempo",
+  "TITN": "Titan",
+  "VESP": "Vespa",
+  "YAMA": "Yamaha"
+};
+
+
+export const trailerNCIC = {
+  "BOMB": "Bombardier",
+  "CARG": "Carriage, Inc.",
+  "CHRV": "Chateau Recreational Vehicle Div./LaStrada",
+  "EAGL": "Eagle Trailer Mfg., Inc.",
+  "EASY": "Easyown Mfg. Co.",
+  "ESCO": "Exco Boat Trailers",
+  "FORF": "Foreman Mfg. Co.",
+  "FREE": "Freeway Travelers, Inc.",
+  "GENE": "General Trailer Co., Inc.",
+  "GLEN": "Glenhill Road Machinery",
+  "GREA": "Great Divide Coach Mfg.",
+  "HARL": "Hartline Travel Trailers",
+  "HAUL": "Haulette Trailer",
+  "HOME": "Aly Alliance/Homette Homes",
+  "HURR": "Hurricane Cargo",
+  "INTE": "International Coach Mfg.",
+  "INTL": "International Harvester",
+  "INTP": "Interstate Products",
+  "INTR": "International Trailer Corp.",
+  "KARA": "Karavan Trailers, Inc.",
+  "KENW": "Kenway Campers, Inc.",
+  "LAND": "Landcraft Corp.",
+  "LGND": "Legend Trailers, Inc.",
+  "MAJE": "Majestic Corp.",
+  "MARK": "Marking Mfg.",
+  "MIDA": "Midas Mini Motor Home",
+  "PETE": "Peterson",
+  "POLA": "Polar Mfg. Co.",
+  "PONE": "Ponderosa Inds.",
+  "PROW": "Prowler Inds.",
+  "ROYA": "Royal Brothers",
+  "SATU": "Saturn Homes",
+  "SMAR": "Smartlee",
+  "TEEN": "Tee Nee Trailer Co.",
+  "THRU": "Thru-Air Trailers, LLC",
+  "TOYO": "Toyocar Van Container Trailer",
+  "USCA": "U.S. Cargo, Inc.",
+  "VW": "Veenema & Wiegers, Inc.",
+  "WELL": "Wells Cargo, Inc."
+};
+
+
+export const truckNCIC = {
+  "ACUR": "Acura",
+  "AMGN": "AM General",
+  "AUST": "Austin",
+  "AUTO": "Autocar",
+  "BMC": "BMC",
+  "BOMB": "Bombardier",
+  "CHEV": "Chevrolet",
+  "FRHT": "Freightliner",
+  "GMC": "GMC",
+  "HOND": "Honda",
+  "INTL": "International Harvester",
+  "JOUR": "Journey Motor Homes, Inc.",
+  "KIA": "Kia",
+  "KW": "Kenworth",
+  "MACK": "Mack",
+  "MAZD": "Mazda",
+  "MITS": "Mitsubishi",
+  "NISS": "Nissan",
+  "OLDS": "Oldsmobile",
+  "PLYM": "Plymouth",
+  "PONT": "Pontiac",
+  "PTRB": "Perterbilt",
+  "STU": "Studebaker-Worthington, Inc.",
+  "TRAV": "Travoy Motor Home",
+  "VOLK": "Volkswagen",
+  "VOLV": "Volvo",
+  "WILL": "Willys-Overland",
+  "WSTR": "Western Star"
+};
+
+
+export const vehicleNCIC = Object.assign({}, autoNCIC, motorcycleNCIC, truckNCIC, constructionNCIC);
+
+
+export const allNCIC = Object.assign({}, vehicleNCIC, trailerNCIC);

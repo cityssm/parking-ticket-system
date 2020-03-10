@@ -43,22 +43,41 @@ router.post("/doGetModelsByMake", function(req, res) {
 
     res.json(makeModelList);
     return;
-    
+
   });
 });
 
 
 router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", function(req, res) {
 
-  const licencePlateCountry = req.params.licencePlateCountry;
-  const licencePlateProvince = req.params.licencePlateProvince;
-  const licencePlateNumber = req.params.licencePlateNumber;
+  let licencePlateCountry = req.params.licencePlateCountry;
+
+  if (licencePlateCountry === "_") {
+    licencePlateCountry = "";
+  }
+
+  let licencePlateProvince = req.params.licencePlateProvince;
+
+  if (licencePlateProvince === "_") {
+    licencePlateProvince = "";
+  }
+
+  let licencePlateNumber = req.params.licencePlateNumber;
+
+  if (licencePlateNumber === "_") {
+    licencePlateNumber = "";
+  }
+
+  const owner = parkingDB.getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
   res.render("plate-view", {
     headTitle: "Licence Plate " + licencePlateNumber,
+
     licencePlateNumber: licencePlateNumber,
     licencePlateProvince: licencePlateProvince,
-    licencePlateCountry: licencePlateCountry
+    licencePlateCountry: licencePlateCountry,
+
+    owner: owner
   });
 });
 

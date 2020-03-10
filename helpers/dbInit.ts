@@ -212,7 +212,8 @@ export function initParkingDB() {
       " licencePlateNumber varchar(15) not null," +
       " recordDate integer not null," +
 
-      " vehicleMakeModel varchar(30)," +
+      " vehicleNCIC varchar(5)," +
+      " vehicleColor varchar(15)," +
 
       " ownerName1 varchar(50)," +
       " ownerName2 varchar(50)," +

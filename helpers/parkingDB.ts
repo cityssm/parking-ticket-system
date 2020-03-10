@@ -607,6 +607,20 @@ export function getLicencePlates(queryOptions: getLicencePlates_queryOptions) {
 
 }
 
+export function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber);
+
+  db.close();
+
+  return ownerRecord;
+
+}
+
 export function getParkingLocations() {
 
   const db = sqlite(dbPath, {

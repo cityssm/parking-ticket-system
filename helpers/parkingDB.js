@@ -361,6 +361,15 @@ function getLicencePlates(queryOptions) {
     };
 }
 exports.getLicencePlates = getLicencePlates;
+function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber) {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber);
+    db.close();
+    return ownerRecord;
+}
+exports.getLicencePlateOwner = getLicencePlateOwner;
 function getParkingLocations() {
     const db = sqlite(dbPath, {
         readonly: true

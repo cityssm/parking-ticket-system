@@ -1,0 +1,82 @@
+<%- include('_header'); -%>
+
+<nav class="breadcrumb">
+  <ul>
+    <li><a href="/dashboard">Home</a></li>
+    <li><a href="/plates">Licence Plates</a></li>
+    <li class="is-active"><a href="#" aria-current="page"><%= licencePlateNumber %></a></li>
+  </ul>
+</nav>
+
+<h1 class="title is-1">
+  Licence Plate <%= licencePlateNumber %>
+</h1>
+
+<div class="columns">
+  <div class="column is-4">
+    <div class="panel">
+      <div class="panel-block">
+        <p>
+          <strong>Licence Plate Number</strong><br />
+          <%= licencePlateNumber %>
+        </p>
+      </div>
+      <div class="panel-block">
+        <p>
+          <strong>Province</strong><br />
+          <%= licencePlateProvince %>
+        </p>
+      </div>
+      <div class="panel-block">
+        <p>
+          <strong>Country</strong><br />
+          <%= licencePlateCountry %>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="panel">
+      <h2 class="panel-heading">
+        Ownership <%= (owner && owner.recordDate ? " as of " + owner.recordDateString : "") %>
+      </h2>
+      <% if (!owner) { %>
+        <div class="panel-block is-block">
+          <div class="message is-info">
+            <p class="message-body">
+              There is no ownsership information available for this licence plate.
+            </p>
+          </div>
+        </div>
+      <% } else if (!owner.recordDate) { %>
+        <div class="panel-block is-block">
+          <div class="message is-warning">
+            <p class="message-body">
+              There is no record date associated with the ownership information.
+              It may be out of date.
+            </p>
+          </div>
+        </div>
+      <% } %>
+      <% if (owner) { %>
+        <div class="panel-block">
+          <p>
+            <%= owner.ownerName1 %>
+            <%- (owner.ownerName2 && owner.ownerName2 !== "" ? "<br />" : "") %>
+            <%= owner.ownerName2 %>
+            <br />
+            <%= owner.ownerAddress %><br />
+            <%= owner.ownerCity %>, <%= owner.ownerProvince %><br />
+            <%= owner.ownerPostalCode %>
+          </p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<!-- <script src="/javascripts/plate-view.min.js"></script> -->
+
+<%- include('_footerB'); -%>

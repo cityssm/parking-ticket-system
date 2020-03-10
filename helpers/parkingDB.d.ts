@@ -44,6 +44,7 @@ export declare function getLicencePlates(queryOptions: getLicencePlates_queryOpt
     count: any;
     licencePlates: any[];
 };
+export declare function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner;
 export declare function getParkingLocations(): pts.ParkingLocation[];
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];
 export declare function getParkingTicketsForLookupBatch(includeBatchID: number): void;

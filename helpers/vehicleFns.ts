@@ -1,11 +1,24 @@
-import sqlite = require("better-sqlite3");
-const dbPath = "data/nhtsa.db";
+/*
+ * API
+ */
 
 import fetch = require("node-fetch");
-
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
+
+/*
+ * API Cache
+ */
+
+import sqlite = require("better-sqlite3");
+const dbPath = "data/nhtsa.db";
+
+/*
+ * More Data
+ */
+
+import * as ncic from "../data/ncicCodes";
 
 
 function getModelsByMakeFromDB(makeSearchString: string, db: sqlite.Database) {
@@ -22,8 +35,6 @@ function getModelsByMakeFromDB(makeSearchString: string, db: sqlite.Database) {
 export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Function) {
 
   const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
-
-  console.log("searchString = " + makeSearchString);
 
   const db = sqlite(dbPath)
 
@@ -73,9 +84,7 @@ export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Fu
 
   if (useAPI) {
 
-    console.log("API call");
-
-    fetch(nhtsaApiURL + "getmodelsformake/" + makeSearchString + "?format=json")
+    fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
       .then(response => response.json())
       .then(data => {
 
@@ -130,5 +139,21 @@ export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Fu
     return;
 
   }
+
+}
+
+
+export function getMakeFromNCIC(vehicleNCIC: string): string {
+  return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
+}
+
+
+export function isNCICExclusivelyTrailer(vehicleNCIC: string) {
+
+  if (ncic.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
+    return true;
+  }
+
+  return false;
 
 }

@@ -59,11 +59,11 @@
         // Output row
 
         const url = "/plates/" +
-          (plateObj.licencePlateCountry === "" ? "_" : plateObj.licencePlateCountry) +
+          (plateObj.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObj.licencePlateCountry)) +
           "/" +
-          (plateObj.licencePlateProvince === "" ? "_" : plateObj.licencePlateProvince) +
+          (plateObj.licencePlateProvince === "" ? "_" : encodeURIComponent(plateObj.licencePlateProvince)) +
           "/" +
-          (plateObj.licencePlateNumber === "" ? "_" : plateObj.licencePlateNumber);
+          (plateObj.licencePlateNumber === "" ? "_" : encodeURIComponent(plateObj.licencePlateNumber));
 
 
         trEle.innerHTML = "<td>" +

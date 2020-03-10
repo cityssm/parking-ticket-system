@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sqlite = require("better-sqlite3");
-const dbPath = "data/nhtsa.db";
 const fetch = require("node-fetch");
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
+const sqlite = require("better-sqlite3");
+const dbPath = "data/nhtsa.db";
+const ncic = require("../data/ncicCodes");
 function getModelsByMakeFromDB(makeSearchString, db) {
     return db.prepare("select makeID, makeName, modelID, modelName" +
         " from MakeModel" +
@@ -15,7 +16,6 @@ function getModelsByMakeFromDB(makeSearchString, db) {
 }
 function getModelsByMake(makeSearchStringOriginal, callbackFn) {
     const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
-    console.log("searchString = " + makeSearchString);
     const db = sqlite(dbPath);
     const queryCloseCallbackFn = function () {
         const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
@@ -44,8 +44,7 @@ function getModelsByMake(makeSearchStringOriginal, callbackFn) {
             .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis);
     }
     if (useAPI) {
-        console.log("API call");
-        fetch(nhtsaApiURL + "getmodelsformake/" + makeSearchString + "?format=json")
+        fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
             .then(response => response.json())
             .then(data => {
             db.prepare("update MakeModelSearchHistory" +
@@ -81,3 +80,14 @@ function getModelsByMake(makeSearchStringOriginal, callbackFn) {
     }
 }
 exports.getModelsByMake = getModelsByMake;
+function getMakeFromNCIC(vehicleNCIC) {
+    return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
+}
+exports.getMakeFromNCIC = getMakeFromNCIC;
+function isNCICExclusivelyTrailer(vehicleNCIC) {
+    if (ncic.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
+        return true;
+    }
+    return false;
+}
+exports.isNCICExclusivelyTrailer = isNCICExclusivelyTrailer;
