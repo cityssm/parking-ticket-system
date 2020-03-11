@@ -7,4 +7,6 @@ helpers/*.d.ts
 helpers/*.js
 routes/*.d.ts
 routes/*.js
+tasks/*.d.ts
+tasks/*.js
 public/stylesheets/*.min.css

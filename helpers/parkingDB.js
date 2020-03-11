@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqlite = require("better-sqlite3");
 const dbPath = "data/parking.db";
+const vehicleFns = require("./vehicleFns");
 const dateTimeFns = require("./dateTimeFns");
 const configFns = require("./configFns");
 function canUpdateObject(obj, reqSession) {
@@ -57,6 +58,7 @@ function getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvinc
         if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {
             possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
             possibleOwnerObj.driverLicenceExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.driverLicenceExpiryDate);
+            possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
             return possibleOwnerObj;
         }
     }
@@ -135,6 +137,39 @@ function getParkingTickets(reqSession, queryOptions) {
     };
 }
 exports.getParkingTickets = getParkingTickets;
+function getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, reqSession) {
+    const addCalculatedFieldsFn = function (ele) {
+        ele.recordType = "ticket";
+        ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
+        ele.resolvedDateString = dateTimeFns.dateIntegerToString(ele.resolvedDate);
+        ele.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ele.latestStatus_statusDate);
+        ele.canUpdate = canUpdateObject(ele, reqSession);
+    };
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const tickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
+        " t.vehicleMakeModel," +
+        " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
+        " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
+        " s.statusDate as latestStatus_statusDate," +
+        " s.statusKey as latestStatus_statusKey," +
+        " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
+        " from ParkingTickets t" +
+        " left join ParkingLocations l on t.locationKey = l.locationKey" +
+        (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+            " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
+        " where t.recordDelete_timeMillis is null" +
+        " and t.licencePlateCountry = ?" +
+        " and t.licencePlateProvince = ?" +
+        " and t.licencePlateNumber = ?" +
+        " order by t.issueDate desc, t.ticketNumber desc")
+        .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+    db.close();
+    tickets.forEach(addCalculatedFieldsFn);
+    return tickets;
+}
+exports.getParkingTicketsByLicencePlate = getParkingTicketsByLicencePlate;
 function getParkingTicket(ticketID, reqSession) {
     const db = sqlite(dbPath, {
         readonly: true
@@ -338,7 +373,7 @@ function getLicencePlates(queryOptions) {
         sqlInnerWhereClause +
         " union" +
         " select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
-        " count(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
+        " sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
         " from ParkingTickets" +
         sqlInnerWhereClause +
         " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
@@ -370,6 +405,20 @@ function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licence
     return ownerRecord;
 }
 exports.getLicencePlateOwner = getLicencePlateOwner;
+function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate) {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const rows = db.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +
+        " from LicencePlateOwners" +
+        " where recordDate >= ?" +
+        " group by vehicleNCIC" +
+        " order by recordDateMax desc")
+        .all(cutoffDate);
+    db.close();
+    return rows;
+}
+exports.getDistinctLicencePlateOwnerVehicleNCICs = getDistinctLicencePlateOwnerVehicleNCICs;
 function getParkingLocations() {
     const db = sqlite(dbPath, {
         readonly: true

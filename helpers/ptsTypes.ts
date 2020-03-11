@@ -22,7 +22,14 @@ type Config_ApplicationConfig = {
   httpPort?: number,
   https?: Config_HttpsConfig,
 
-  feature_mtoExportImport?: boolean
+  feature_mtoExportImport?: boolean,
+
+  task_nhtsa?: Config_ApplicationTask
+};
+
+export type Config_ApplicationTask = {
+  runTask: boolean,
+  executeHour: number
 };
 
 export type Config_HttpsConfig = {
@@ -227,7 +234,8 @@ export interface LicencePlateOwner extends Record {
   recordDate: number,
   recordDateString: string,
 
-  vehicleMakeModel: string,
+  vehicleNCIC: string,
+  vehicleMake: string,
 
   ownerName1: string,
   ownerName2: string,

@@ -42,12 +42,14 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
         licencePlateNumber = "";
     }
     const owner = parkingDB.getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+    const tickets = parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
     res.render("plate-view", {
         headTitle: "Licence Plate " + licencePlateNumber,
         licencePlateNumber: licencePlateNumber,
         licencePlateProvince: licencePlateProvince,
         licencePlateCountry: licencePlateCountry,
-        owner: owner
+        owner: owner,
+        tickets: tickets
     });
 });
 module.exports = router;

@@ -7,6 +7,7 @@ const compression = require("compression");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const { spawn } = require("child_process");
 const session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session);
 const buildNumber = require("./buildNumber.json");
@@ -101,6 +102,9 @@ const httpPort = configFns.getProperty("application.httpPort");
 if (httpPort) {
     app.listen(httpPort, function () {
         console.log("HTTP listening on port " + httpPort);
+        if (configFns.getProperty("application.task_nhtsa.runTask")) {
+            require("./tasks/nhtsaTask").scheduleRun();
+        }
     });
 }
 const httpsConfig = configFns.getProperty("application.https");

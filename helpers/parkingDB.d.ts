@@ -13,6 +13,7 @@ export declare function getParkingTickets(reqSession: Express.SessionData, query
     count: any;
     tickets: pts.ParkingTicket[];
 };
+export declare function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session): pts.ParkingTicket[];
 export declare function getParkingTicket(ticketID: number, reqSession: Express.SessionData): pts.ParkingTicket;
 export declare function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.SessionData): {
     success: boolean;
@@ -45,6 +46,7 @@ export declare function getLicencePlates(queryOptions: getLicencePlates_queryOpt
     licencePlates: any[];
 };
 export declare function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner;
+export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number): any[];
 export declare function getParkingLocations(): pts.ParkingLocation[];
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];
 export declare function getParkingTicketsForLookupBatch(includeBatchID: number): void;

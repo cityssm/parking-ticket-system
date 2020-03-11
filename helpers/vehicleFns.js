@@ -14,6 +14,14 @@ function getModelsByMakeFromDB(makeSearchString, db) {
         " order by makeName, modelName")
         .all(makeSearchString);
 }
+function getModelsByMakeFromCache(makeSearchStringOriginal) {
+    const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
+    const db = sqlite(dbPath);
+    const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
+    db.close();
+    return makeModelResults;
+}
+exports.getModelsByMakeFromCache = getModelsByMakeFromCache;
 function getModelsByMake(makeSearchStringOriginal, callbackFn) {
     const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
     const db = sqlite(dbPath);

@@ -70,6 +70,8 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
 
   const owner = parkingDB.getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
+  const tickets = parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
+
   res.render("plate-view", {
     headTitle: "Licence Plate " + licencePlateNumber,
 
@@ -77,7 +79,8 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
     licencePlateProvince: licencePlateProvince,
     licencePlateCountry: licencePlateCountry,
 
-    owner: owner
+    owner: owner,
+    tickets: tickets
   });
 });
 

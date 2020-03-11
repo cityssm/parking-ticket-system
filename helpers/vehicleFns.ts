@@ -32,11 +32,25 @@ function getModelsByMakeFromDB(makeSearchString: string, db: sqlite.Database) {
 }
 
 
+export function getModelsByMakeFromCache(makeSearchStringOriginal: string) {
+
+  const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
+
+  const db = sqlite(dbPath);
+
+  const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
+
+  db.close();
+
+  return makeModelResults;
+}
+
+
 export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Function) {
 
   const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
 
-  const db = sqlite(dbPath)
+  const db = sqlite(dbPath);
 
   const queryCloseCallbackFn = function() {
 

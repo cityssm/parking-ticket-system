@@ -11,6 +11,8 @@ import path = require("path");
 import cookieParser = require("cookie-parser");
 import logger = require("morgan");
 
+const { spawn } = require("child_process");
+
 import { Config_HttpsConfig } from "./helpers/ptsTypes";
 
 
@@ -113,7 +115,7 @@ app.use(function(req, res, next) {
 });
 
 // Redirect logged in users
-const sessionChecker = function(req: express.Request, res : express.Response, next : express.NextFunction) {
+const sessionChecker = function(req: express.Request, res: express.Response, next: express.NextFunction) {
 
   if (req.session.user && req.cookies[sessionCookieName]) {
 
@@ -183,7 +185,7 @@ app.use(function(_req, _res, next) {
 });
 
 // Error handler
-app.use(function(err, req: express.Request, res: express.Response, _next : express.NextFunction) {
+app.use(function(err, req: express.Request, res: express.Response, _next: express.NextFunction) {
 
   // Set locals, only providing error in development
   res.locals.message = err.message;
@@ -210,6 +212,10 @@ if (httpPort) {
     // eslint-disable-next-line no-console
     console.log("HTTP listening on port " + httpPort);
 
+    if (configFns.getProperty("application.task_nhtsa.runTask")) {
+      require("./tasks/nhtsaTask").scheduleRun();
+    }
+
   });
 
 }
@@ -229,6 +235,12 @@ if (httpsConfig) {
   console.log("HTTPS listening on port " + httpsConfig.port);
 
 }
+
+
+/*
+ * Initialize workers
+ */
+
 
 
 export = app;

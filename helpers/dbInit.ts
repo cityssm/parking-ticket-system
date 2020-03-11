@@ -112,7 +112,7 @@ export function initParkingDB() {
       " issueTime integer," +
       " issuingOfficer varchar(30)," +
       " licencePlateCountry varchar(2)," +
-      " licencePlateProvince varchar(15)," +
+      " licencePlateProvince varchar(5)," +
       " licencePlateNumber varchar(15)," +
       " bylawNumber varchar(20)," +
       " locationKey varchar(20)," +
@@ -194,7 +194,7 @@ export function initParkingDB() {
     parkingDB.prepare("create table if not exists LicencePlateLookupBatchEntries (" +
       "batchID integer not null," +
       " licencePlateCountry varchar(2) not null," +
-      " licencePlateProvince varchar(15) not null," +
+      " licencePlateProvince varchar(5) not null," +
       " licencePlateNumber varchar(15) not null," +
       " ticketID integer," +
       " primary key (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber)," +
@@ -208,7 +208,7 @@ export function initParkingDB() {
 
     parkingDB.prepare("create table if not exists LicencePlateOwners (" +
       "licencePlateCountry varchar(2) not null," +
-      " licencePlateProvince varchar(15) not null," +
+      " licencePlateProvince varchar(5) not null," +
       " licencePlateNumber varchar(15) not null," +
       " recordDate integer not null," +
 

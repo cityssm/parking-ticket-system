@@ -2,7 +2,11 @@
 const base = require("../data/config-base");
 const config = {};
 config.application = {
-    feature_mtoExportImport: true
+    feature_mtoExportImport: true,
+    task_nhtsa: {
+        runTask: true,
+        executeHour: 1
+    }
 };
 config.defaults = {
     country: "CA",
@@ -51,32 +55,71 @@ config.licencePlateCountryAliases = {
 config.licencePlateProvinceAliases = {
     "Canada": {
         "AB": "Alberta",
-        "ALB": "Alberta",
         "BC": "British Columbia",
         "MB": "Manitoba",
         "NB": "New Brunswick",
-        "NF": "Newfoundland and Labrador",
         "NL": "Newfoundland and Labrador",
-        "NFL": "Newfoundland and Labrador",
-        "NFLD": "Newfoundland and Labrador",
-        "NS": "Nova Scotia",
-        "NOVA": "Nova Scotia",
         "NT": "Northwest Territories",
-        "NWT": "Northwest Territories",
+        "NS": "Nova Scotia",
         "NU": "Nunavut",
-        "NVT": "Nunavut",
         "ON": "Ontario",
-        "ONT": "Ontario",
         "PE": "Prince Edward Island",
-        "PEI": "Prince Edward Island",
         "QC": "Quebec",
-        "QB": "Quebec",
-        "PQ": "Quebec",
-        "SASK": "Saskatchewan"
+        "SK": "Saskatchewan",
+        "YT": "Yukon"
     },
     "USA": {
-        "MI": "Michigan",
-        "NY": "New York"
+        AL: "Alabama",
+        AK: "Alaska",
+        AZ: "Arizona",
+        AR: "Arkansas",
+        CA: "California",
+        CO: "Colorado",
+        CT: "Connecticut",
+        DE: "Delaware",
+        DC: "District of Columbia",
+        FL: "Florida",
+        GA: "Georgia",
+        HI: "Hawaii",
+        ID: "Idaho",
+        IL: "Illinois",
+        IN: "Indiana",
+        IA: "Iowa",
+        KS: "Kansas",
+        KY: "Kentucky",
+        LA: "Louisiana",
+        ME: "Maine",
+        MD: "Maryland",
+        MA: "Massachusetts",
+        MI: "Michigan",
+        MN: "Minnesota",
+        MS: "Mississippi",
+        MO: "Missouri",
+        MT: "Montana",
+        NE: "Nebraska",
+        NV: "Nevada",
+        NH: "New Hampshire",
+        NJ: "New Jersey",
+        NM: "New Mexico",
+        NY: "New York",
+        NC: "North Carolina",
+        ND: "North Dakota",
+        OH: "Ohio",
+        OK: "Oklahoma",
+        OR: "Oregon",
+        PA: "Pennsylvania",
+        RI: "Rhode Island",
+        SC: "South Carolina",
+        SD: "South Dakota",
+        TN: "Tennessee",
+        TX: "Texas",
+        UT: "Utah",
+        VT: "Vermont",
+        VA: "Virginia",
+        WA: "Washington",
+        WV: "West Virginia",
+        WI: "Wisconsin",
+        WY: "Wyoming"
     }
 };
 config.licencePlateProvinces = {

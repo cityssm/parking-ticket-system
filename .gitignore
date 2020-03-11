@@ -1,6 +1,7 @@
 
 app.min.js
 data/*.db
+data/*.db-journal
 data/*.min.js
 data/config.js
 data/config.ts

@@ -33,6 +33,8 @@ const configFallbackValues = {
 
   "application.feature_mtoExportImport": false,
 
+  "application.task_nhtsa.runTask": false,
+
   "session.cookieName": "parking-ticket-system-user-sid",
   "session.secret": "cityssm/parking-ticket-system",
   "session.maxAgeMillis": 60 * 60 * 1000,

@@ -3,6 +3,7 @@
 import sqlite = require("better-sqlite3");
 const dbPath = "data/parking.db";
 
+import * as vehicleFns from "./vehicleFns";
 import * as dateTimeFns from "./dateTimeFns";
 import * as configFns from "./configFns";
 import * as pts from "./ptsTypes";
@@ -101,8 +102,11 @@ function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: st
       [possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
 
     if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {
+
       possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
       possibleOwnerObj.driverLicenceExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.driverLicenceExpiryDate);
+      possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
+
       return possibleOwnerObj;
     }
   }
@@ -231,6 +235,50 @@ export function getParkingTickets(reqSession: Express.SessionData, queryOptions:
     count: count,
     tickets: rows
   };
+}
+
+export function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) {
+
+  const addCalculatedFieldsFn = function(ele: pts.ParkingTicket) {
+
+    ele.recordType = "ticket";
+
+    ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
+    ele.resolvedDateString = dateTimeFns.dateIntegerToString(ele.resolvedDate);
+
+    ele.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ele.latestStatus_statusDate);
+
+    ele.canUpdate = canUpdateObject(ele, reqSession);
+  };
+
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const tickets: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
+    " t.vehicleMakeModel," +
+    " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
+    " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
+    " s.statusDate as latestStatus_statusDate," +
+    " s.statusKey as latestStatus_statusKey," +
+    " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
+    " from ParkingTickets t" +
+    " left join ParkingLocations l on t.locationKey = l.locationKey" +
+    (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
+    " where t.recordDelete_timeMillis is null" +
+    " and t.licencePlateCountry = ?" +
+    " and t.licencePlateProvince = ?" +
+    " and t.licencePlateNumber = ?" +
+    " order by t.issueDate desc, t.ticketNumber desc")
+    .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+
+    db.close();
+
+    tickets.forEach(addCalculatedFieldsFn);
+
+    return tickets;
 }
 
 export function getParkingTicket(ticketID: number, reqSession: Express.SessionData) {
@@ -576,7 +624,7 @@ export function getLicencePlates(queryOptions: getLicencePlates_queryOptions) {
     " union" +
 
     " select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
-    " count(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
+    " sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
     " from ParkingTickets" +
     sqlInnerWhereClause +
     " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
@@ -618,6 +666,25 @@ export function getLicencePlateOwner(licencePlateCountry: string, licencePlatePr
   db.close();
 
   return ownerRecord;
+
+}
+
+export function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number) {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const rows = db.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +
+    " from LicencePlateOwners" +
+    " where recordDate >= ?" +
+    " group by vehicleNCIC" +
+    " order by recordDateMax desc")
+    .all(cutoffDate);
+
+  db.close();
+
+  return rows;
 
 }
 
