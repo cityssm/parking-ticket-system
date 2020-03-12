@@ -39,12 +39,9 @@ router.post("/doGetLicencePlates", function(req, res) {
 
 router.post("/doGetModelsByMake", function(req, res) {
 
-  vehicleFns.getModelsByMake(req.body.vehicleMake, function(makeModelList) {
+  const makeModelList = vehicleFns.getModelsByMakeFromCache(req.body.vehicleMake);
 
-    res.json(makeModelList);
-    return;
-
-  });
+  res.json(makeModelList);
 });
 
 

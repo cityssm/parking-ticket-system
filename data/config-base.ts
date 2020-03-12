@@ -25,7 +25,7 @@ export const baseParkingTicketStatuses : pts.Config_ParkingTicketStatus[] = [
     isFinalStatus: true,
     isUserSettable: true
   },
-  
+
   {
     statusKey: "ownerLookupPending",
     status: "Ownership Lookup - Pending",
@@ -38,12 +38,18 @@ export const baseParkingTicketStatuses : pts.Config_ParkingTicketStatus[] = [
   {
     statusKey: "ownerLookupMatch",
     status: "Ownership Lookup - Match Found",
+    statusField: {
+      fieldLabel: "Lookup Vehicle NCIC"
+    },
     isFinalStatus: false,
     isUserSettable: false
   },
   {
     statusKey: "ownerLookupError",
     status: "Ownership Lookup - Error",
+    statusField: {
+      fieldLabel: "Lookup Vehicle NCIC"
+    },
     isFinalStatus: false,
     isUserSettable: false
   }

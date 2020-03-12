@@ -37,12 +37,18 @@ exports.baseParkingTicketStatuses = [
     {
         statusKey: "ownerLookupMatch",
         status: "Ownership Lookup - Match Found",
+        statusField: {
+            fieldLabel: "Lookup Vehicle NCIC"
+        },
         isFinalStatus: false,
         isUserSettable: false
     },
     {
         statusKey: "ownerLookupError",
         status: "Ownership Lookup - Error",
+        statusField: {
+            fieldLabel: "Lookup Vehicle NCIC"
+        },
         isFinalStatus: false,
         isUserSettable: false
     }

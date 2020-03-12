@@ -23,10 +23,8 @@ router.post("/doGetLicencePlates", function (req, res) {
     res.json(parkingDB.getLicencePlates(queryOptions));
 });
 router.post("/doGetModelsByMake", function (req, res) {
-    vehicleFns.getModelsByMake(req.body.vehicleMake, function (makeModelList) {
-        res.json(makeModelList);
-        return;
-    });
+    const makeModelList = vehicleFns.getModelsByMakeFromCache(req.body.vehicleMake);
+    res.json(makeModelList);
 });
 router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", function (req, res) {
     let licencePlateCountry = req.params.licencePlateCountry;

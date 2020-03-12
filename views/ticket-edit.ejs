@@ -163,7 +163,7 @@
           <div class="field">
             <label class="label" for="ticket--licencePlateProvince">Licence Plate Province</label>
             <div class="control">
-              <input class="input" id="ticket--licencePlateProvince" name="licencePlateProvince" type="text" value="<%= ticket.licencePlateProvince %>" maxlength="15" list="datalist--licencePlateProvince" autocomplete="off" required />
+              <input class="input" id="ticket--licencePlateProvince" name="licencePlateProvince" type="text" value="<%= ticket.licencePlateProvince %>" maxlength="5" list="datalist--licencePlateProvince" autocomplete="off" required />
               <datalist id="datalist--licencePlateProvince"></datalist>
             </div>
           </div>
@@ -241,8 +241,18 @@
 <% if (!isCreate) { %>
   <div class="columns">
     <div class="column">
-      <div class="panel">
-        <h2 class="panel-heading">Remarks</h2>
+      <div class="panel" id="is-remark-panel">
+        <div class="panel-heading">
+          <div class="level">
+            <h2 class="level-left has-text-weight-bold">Remarks</h2>
+            <div class="level-right">
+              <button class="button is-small" id="is-add-remark-button" type="button">
+                <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                <span>Add Remark</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="column">
@@ -255,6 +265,10 @@
 
 <%- include('_footerA'); -%>
 
+<script>
+  pts.ticketRemarksInit = <%- JSON.stringify(ticket.remarks) %>;
+  pts.ticketStatusLogInit = <%- JSON.stringify(ticket.statusLog) %>;
+</script>
 <script src="/javascripts/ticket-edit.min.js"></script>
 
 <%- include('_footerB'); -%>

@@ -19,6 +19,7 @@ const routerOffences = require("./routes/offences");
 const routerPlates = require("./routes/plates");
 const configFns = require("./helpers/configFns");
 const stringFns = require("./helpers/stringFns");
+const vehicleFns = require("./helpers/vehicleFns");
 const dbInit = require("./helpers/dbInit");
 dbInit.initUsersDB();
 dbInit.initParkingDB();
@@ -67,6 +68,7 @@ app.use(function (req, res, next) {
     res.locals.user = req.session.user;
     res.locals.configFns = configFns;
     res.locals.stringFns = stringFns;
+    res.locals.vehicleFns = vehicleFns;
     next();
 });
 app.get("/", sessionChecker, function (_req, res) {

@@ -67,20 +67,44 @@ config.licencePlateCountryAliases = {
 
 config.licencePlateProvinceAliases = {
 
+  // https://en.wikipedia.org/wiki/Canadian_postal_abbreviations_for_provinces_and_territories
   "Canada": {
-    "AB": "Alberta",
-    "BC": "British Columbia",
-    "MB": "Manitoba",
-    "NB": "New Brunswick",
-    "NL": "Newfoundland and Labrador",
-    "NT": "Northwest Territories",
-    "NS": "Nova Scotia",
-    "NU": "Nunavut",
-    "ON": "Ontario",
-    "PE": "Prince Edward Island",
-    "QC": "Quebec",
-    "SK": "Saskatchewan",
-    "YT": "Yukon"
+    AB: "Alberta",
+    ALB: "Alberta",
+    ALTA: "Alberta",
+
+    BC: "British Columbia",
+
+    MB: "Manitoba",
+    MAN: "Manitoba",
+
+    NB: "New Brunswick",
+
+    NL: "Newfoundland and Labrador",
+
+    NS: "Nova Scotia",
+
+    NT: "Northwest Territories",
+    NWT: "Northwest Territories",
+
+    NU: "Nunavut",
+    NVT: "Nunavut",
+
+    ON: "Ontario",
+    ONT: "Ontario",
+
+    PE: "Prince Edward Island",
+    PEI: "Prince Edward Island",
+
+    QC: "Quebec",
+    QUE: "Quebec",
+
+    SK: "Saskatchewan",
+    SASK: "Saskatchewan",
+
+    YT: "Yukon",
+    YUK: "Yukon",
+    YN: "Yukon"
   },
   "USA": {
     AL: "Alabama",

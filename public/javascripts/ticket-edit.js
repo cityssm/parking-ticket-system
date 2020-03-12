@@ -5,7 +5,9 @@
   const ticketID = document.getElementById("ticket--ticketID").value;
   const isCreate = (ticketID === "");
 
-  // Form Management
+  /*
+   * Form Management
+   */
 
   {
     const formMessageEle = document.getElementById("container--form-message");
@@ -72,8 +74,16 @@
               onshow: function() {
 
                 document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
-                document.getElementById("createSuccess--editTicketButton").setAttribute("href", "/tickets/" + responseJSON.ticketID + "/edit");
-                document.getElementById("createSuccess--newTicketButton").setAttribute("href", "/tickets/new/" + responseJSON.nextTicketNumber);
+
+                document.getElementById("createSuccess--editTicketButton").setAttribute(
+                  "href",
+                  "/tickets/" + responseJSON.ticketID + "/edit"
+                );
+
+                document.getElementById("createSuccess--newTicketButton").setAttribute(
+                  "href",
+                  "/tickets/new/" + responseJSON.nextTicketNumber
+                );
 
               }
             });
@@ -84,9 +94,13 @@
       );
 
     });
+
   }
 
-  // Location Lookup
+  /*
+   * Location Lookup
+   */
+
   pts.getDefaultConfigProperty("locationClasses", function(locationClassesList) {
 
     let locationLookupCloseModalFn;
@@ -182,7 +196,10 @@
 
   });
 
-  // By-law / Offence Lookup
+  /*
+   * By-law / Offence Lookup
+   */
+
   {
 
     let bylawLookupCloseModalFn;
@@ -284,6 +301,10 @@
 
   }
 
+  /*
+   * Licence Plate Province Datalist
+   */
+
   {
 
     const populateLicencePlateProvinceDatalistFn = function() {
@@ -309,12 +330,131 @@
 
     };
 
-    document.getElementById("ticket--licencePlateCountry").addEventListener("change", populateLicencePlateProvinceDatalistFn);
+    document.getElementById("ticket--licencePlateCountry")
+      .addEventListener("change", populateLicencePlateProvinceDatalistFn);
+
     pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFn);
 
   }
 
-  // Unlock Buttons
+  /*
+   * Remarks
+   */
+
+  {
+
+    const remarkPanelEle = document.getElementById("is-remark-panel");
+
+    let remarkList = pts.ticketRemarksInit;
+    delete pts.ticketRemarksInit;
+
+    const clearRemarksPanelFn = function() {
+
+      const panelBlockEles = remarkPanelEle.getElementsByClassName("panel-block");
+
+      for (let index = 0; index < panelBlockEles.length; index += 1) {
+
+        panelBlockEles[index].remove();
+
+      }
+
+    };
+
+    const populateRemarksPanelFn = function() {
+
+      clearRemarksPanelFn();
+
+      if (remarkList.length === 0) {
+
+        remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel is-block\">" +
+          "<div class=\"message is-info\">" +
+          "<p class=\"message-body\">" +
+          "There are no remarks associated with this ticket." +
+          "</p>" +
+          "</div>" +
+          "</div>");
+
+        return;
+
+      }
+
+      for (let index = 0; index < remarkList.length; index += 1) {
+
+        const remarkObj = remarkList[index];
+
+        const panelBlockEle = document.createElement("div");
+        panelBlockEle.className = "panel-block is-block";
+
+        panelBlockEle.innerHTML = "<div class=\"columns\">" +
+          ("<div class=\"column\">" +
+
+            "<p class=\"has-newline-chars\">" +
+            pts.escapeHTML(remarkObj.remark) +
+            "</p>" +
+            "<p class=\"is-size-7\">" +
+            (remarkObj.recordCreate_timeMillis === remarkObj.recordUpdate_timeMillis ?
+              "" :
+              "<i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i> ") +
+            remarkObj.recordUpdate_userName + " - " +
+            remarkObj.remarkDateString + " " + remarkObj.remarkTimeString +
+            "</p>" +
+            "</div>") +
+
+          ("<div class=\"column is-narrow\">" +
+            "<div class=\"buttons\">" +
+            "<button class=\"button is-small is-edit-remark-button\" data-index=\"" + index + "\" type=\"button\">" +
+            "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
+            " <span>Edit</span>" +
+            "</button>" +
+            "</div>" +
+            "</div>") +
+          "</div>";
+
+        remarkPanelEle.appendChild(panelBlockEle);
+
+      }
+
+    };
+
+    const getRemarksFn = function() {
+
+      clearRemarksPanelFn();
+
+      remarkPanelEle.insertAdjacentHTML(
+        "beforeend",
+        "<div class=\"panel-block is-block\">" +
+        "<p class=\"has-text-centered has-text-grey-lighter\">" +
+        "<i class=\"fas fa-2x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
+        "<em>Loading remarks..." +
+        "</p>" +
+        "</div>"
+      );
+
+      pts.postJSON("/tickets/doGetRemarks", {
+        ticketID: ticketID
+      }, function(resultList) {
+
+        remarkList = resultList;
+        populateRemarksPanelFn();
+
+      });
+
+    };
+
+    document.getElementById("is-add-remark-button").addEventListener("click", function(clickEvent) {
+
+      clickEvent.preventDefault();
+
+    });
+
+    populateRemarksPanelFn();
+
+  }
+
+  /*
+   * Unlock Buttons
+   */
+
   {
 
     const unlockFieldFn = function(unlockBtnClickEvent) {

@@ -45,6 +45,7 @@ html.is-fullwidth {
   .fixed-container {
     position: fixed;
     display: inline-block;
+    z-index: 100;
 
     &.is-fixed-bottom-right {
       right: 0;
@@ -87,6 +88,10 @@ html.is-fullwidth {
 
 .has-height-auto {
   height: auto;
+}
+
+.has-margin-bottom-0 {
+  margin-bottom: 0 !important;
 }
 
 

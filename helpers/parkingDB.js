@@ -123,7 +123,7 @@ function getParkingTickets(reqSession, queryOptions) {
         " from ParkingTickets t" +
         " left join ParkingLocations l on t.locationKey = l.locationKey" +
         (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-            " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
+            " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
         sqlWhereClause +
         " order by t.issueDate desc, t.ticketNumber desc" +
         " limit " + queryOptions.limit +
@@ -158,7 +158,7 @@ function getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvin
         " from ParkingTickets t" +
         " left join ParkingLocations l on t.locationKey = l.locationKey" +
         (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-            " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
+            " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
         " where t.recordDelete_timeMillis is null" +
         " and t.licencePlateCountry = ?" +
         " and t.licencePlateProvince = ?" +

@@ -114,10 +114,14 @@
                     <i class="fas fa-fw fa-user" aria-hidden="true"></i> <%= ticket.licencePlateOwner.ownerName2 %>
                   </span>
                 <% } %>
-                <% if (ticket.licencePlateOwner.vehicleMakeModel) { %>
+                <% if (ticket.licencePlateOwner.vehicleNCIC) { %>
                   <br />
-                  <span data-tooltip="Vehicle Make/Model from Ownership" aria-label="Vehicle Make/Model from Ownership">
-                    <i class="fas fa-fw fa-car-side" aria-hidden="true"></i> <%= ticket.licencePlateOwner.vehicleMakeModel %>
+                  <span data-tooltip="Vehicle Make/NCIC from Ownership" aria-label="Vehicle Make/NCIC from Ownership">
+                    <i class="fas fa-fw fa-car-side" aria-hidden="true"></i>
+                    <%= ticket.licencePlateOwner.vehicleMake %>
+                    <% if (ticket.licencePlateOwner.vehicleNCIC !== ticket.licencePlateOwner.vehicleMake) { %>
+                      (<%= ticket.licencePlateOwner.vehicleNCIC %>)
+                    <% } %>
                   </span>
                 <% } %>
               </p>

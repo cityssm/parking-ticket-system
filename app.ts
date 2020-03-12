@@ -33,6 +33,7 @@ import routerPlates = require("./routes/plates");
 
 import * as configFns from "./helpers/configFns";
 import * as stringFns from "./helpers/stringFns";
+import * as vehicleFns from "./helpers/vehicleFns";
 
 
 /*
@@ -140,6 +141,7 @@ app.use(function(req, res, next) {
   res.locals.user = req.session.user;
   res.locals.configFns = configFns;
   res.locals.stringFns = stringFns;
+  res.locals.vehicleFns = vehicleFns;
 
   next();
 

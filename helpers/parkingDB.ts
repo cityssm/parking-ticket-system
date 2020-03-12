@@ -219,7 +219,7 @@ export function getParkingTickets(reqSession: Express.SessionData, queryOptions:
     " from ParkingTickets t" +
     " left join ParkingLocations l on t.locationKey = l.locationKey" +
     (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
+      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
 
     sqlWhereClause +
     " order by t.issueDate desc, t.ticketNumber desc" +
@@ -266,7 +266,7 @@ export function getParkingTicketsByLicencePlate(licencePlateCountry: string, lic
     " from ParkingTickets t" +
     " left join ParkingLocations l on t.locationKey = l.locationKey" +
     (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusIndex limit 1)") +
+      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
     " where t.recordDelete_timeMillis is null" +
     " and t.licencePlateCountry = ?" +
     " and t.licencePlateProvince = ?" +
@@ -274,11 +274,11 @@ export function getParkingTicketsByLicencePlate(licencePlateCountry: string, lic
     " order by t.issueDate desc, t.ticketNumber desc")
     .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
-    db.close();
+  db.close();
 
-    tickets.forEach(addCalculatedFieldsFn);
+  tickets.forEach(addCalculatedFieldsFn);
 
-    return tickets;
+  return tickets;
 }
 
 export function getParkingTicket(ticketID: number, reqSession: Express.SessionData) {
