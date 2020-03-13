@@ -265,10 +265,13 @@
 
 <%- include('_footerA'); -%>
 
-<script>
-  pts.ticketRemarksInit = <%- JSON.stringify(ticket.remarks) %>;
-  pts.ticketStatusLogInit = <%- JSON.stringify(ticket.statusLog) %>;
-</script>
+<% if (!isCreate) { %>
+  <script>
+    pts.ticketRemarksInit = <%- JSON.stringify(ticket.remarks) %>;
+    pts.ticketStatusLogInit = <%- JSON.stringify(ticket.statusLog) %>;
+  </script>
+<% } %>
+
 <script src="/javascripts/ticket-edit.min.js"></script>
 
 <%- include('_footerB'); -%>

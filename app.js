@@ -17,6 +17,7 @@ const routerDashboard = require("./routes/dashboard");
 const routerTickets = require("./routes/tickets");
 const routerOffences = require("./routes/offences");
 const routerPlates = require("./routes/plates");
+const routerReports = require("./routes/reports");
 const configFns = require("./helpers/configFns");
 const stringFns = require("./helpers/stringFns");
 const vehicleFns = require("./helpers/vehicleFns");
@@ -79,6 +80,7 @@ app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/plates", sessionChecker, routerPlates);
+app.use("/reports", sessionChecker, routerReports);
 app.use("/login", routerLogin);
 app.get("/logout", function (req, res) {
     if (req.session.user && req.cookies[sessionCookieName]) {

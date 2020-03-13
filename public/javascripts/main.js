@@ -309,6 +309,72 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
 
 /*
+ * TABS
+ */
+
+
+pts.initializeTabs = function(tabsListEle, callbackFns) {
+
+  if (!tabsListEle) {
+
+    return;
+
+  }
+
+  const isPanelOrMenuListTabs = tabsListEle.classList.contains("panel-tabs") || tabsListEle.classList.contains("menu-list");
+
+
+  const listItemEles = tabsListEle.getElementsByTagName(isPanelOrMenuListTabs ? "a" : "li");
+  const tabLinkEles = (isPanelOrMenuListTabs ? listItemEles : tabsListEle.getElementsByTagName("a"));
+
+  function tabClickFn(clickEvent) {
+
+    clickEvent.preventDefault();
+
+    const tabLinkEle = clickEvent.currentTarget;
+    const tabContentEle = document.getElementById(tabLinkEle.getAttribute("href").substring(1));
+
+    for (let index = 0; index < listItemEles.length; index += 1) {
+
+      listItemEles[index].classList.remove("is-active");
+      tabLinkEles[index].setAttribute("aria-selected", "false");
+
+    }
+
+    // Add is-active to the selected tab
+    (isPanelOrMenuListTabs ? tabLinkEle : tabLinkEle.parentNode).classList.add("is-active");
+    tabLinkEle.setAttribute("aria-selected", "true");
+
+    const tabContentEles = tabContentEle.parentNode.getElementsByClassName("tab-content");
+
+    for (let index = 0; index < tabContentEles.length; index += 1) {
+
+      tabContentEles[index].classList.remove("is-active");
+
+    }
+
+    tabContentEle.classList.add("is-active");
+
+    if (callbackFns && callbackFns.onshown) {
+
+      callbackFns.onshown(tabContentEle);
+
+    }
+
+  }
+
+  for (let index = 0; index < listItemEles.length; index += 1) {
+
+    (isPanelOrMenuListTabs ?
+      listItemEles[index] :
+      listItemEles[index].getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
+
+  }
+
+};
+
+
+/*
  * MODAL TOGGLES
  */
 

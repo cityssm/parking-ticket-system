@@ -1,0 +1,144 @@
+<%- include('_header'); -%>
+
+<div class="columns">
+  <div class="column is-3 is-hidden-print">
+    <aside class="menu">
+      <p class="menu-label">
+        Reports
+      </p>
+      <ul class="menu-list" id="tabs--reports" role="tablist">
+        <li role="presentation">
+          <a class="is-active" id="tab--ticketReports" role="tab" href="#tabContent--ticketReports" aria-selected="true">
+            <span class="icon">
+              <i class="fas fa-file-invoice" aria-hidden="true"></i>
+            </span>
+            Parking Tickets
+          </a>
+        </li>
+        <li role="presentation">
+          <a id="tab--licencePlateReports" role="tab" href="#tabContent--licencePlateReports">
+            <span class="icon">
+              <i class="fas fa-car" aria-hidden="true"></i>
+            </span>
+            Licence Plates
+          </a>
+        </li>
+      </ul>
+    </aside>
+    <div class="message is-info has-margin-top-10">
+      <p class="message-body">
+        Note that more export options are available when viewing individual records.
+      </p>
+    </div>
+  </div>
+  <div class="column">
+
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Reports</a></li>
+      </ul>
+    </nav>
+
+    <div class="tab-container">
+      <div class="tab-content is-active" id="tabContent--ticketReports" role="tabpanel" aria-labelledby="tab--ticketReports">
+        <h1 class="title is-1">
+          Parking Ticket Reports
+        </h1>
+        <div class="columns">
+          <div class="column">
+            <div class="panel">
+              <a class="panel-block align-items-flex-start" href="/reports/#" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-file " aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Sample</h3>
+                  <p>
+                    Sample
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="column">
+            <div class="panel">
+              <a class="panel-block align-items-flex-start" href="/reports/#" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-table" aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Sample</h3>
+                  <p>
+                    Sample.
+                  </p>
+                  <p class="is-size-7 is-italic">
+                    Includes deleted records that have not been fully purged.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tabContent--licencePlateReports" role="tabpanel" aria-labelledby="tab--licencePlateReports">
+        <h1 class="title is-1">
+          Licence Plate Reports
+        </h1>
+        <div class="columns">
+          <div class="column">
+            <div class="panel">
+              <a class="panel-block align-items-flex-start" href="/reports/#" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-file " aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Sample</h3>
+                  <p>
+                    Sample
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="column">
+            <div class="panel">
+              <a class="panel-block align-items-flex-start" href="/reports/#" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-table" aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Sample</h3>
+                  <p>
+                    Sample.
+                  </p>
+                  <p class="is-size-7 is-italic">
+                    Includes deleted records that have not been fully purged.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<script src="/javascripts/report-search.min.js"></script>
+
+<%- include('_footerB'); -%>

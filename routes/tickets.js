@@ -76,6 +76,48 @@ router.post("/doUpdateTicket", function (req, res) {
     const result = parkingDB.updateParkingTicket(req.body, req.session);
     res.json(result);
 });
+router.post("/doGetRemarks", function (req, res) {
+    res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
+});
+router.post("/doAddRemark", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.createParkingTicketRemark(req.body, req.session);
+    res.json(result);
+});
+router.post("/doUpdateRemark", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.updateParkingTicketRemark(req.body, req.session);
+    res.json(result);
+});
+router.post("/doDeleteRemark", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.deleteParkingTicketRemark(req.body.ticketID, req.body.remarkIndex, req.session);
+    res.json(result);
+});
 router.get("/:ticketID", function (req, res) {
     const ticketID = parseInt(req.params.ticketID);
     const ticket = parkingDB.getParkingTicket(ticketID, req.session);

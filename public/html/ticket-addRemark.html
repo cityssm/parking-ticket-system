@@ -1,0 +1,24 @@
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <h3 class="modal-card-title">Add a Remark</h3>
+      <button class="delete is-close-modal-button" aria-label="close" type="button"></button>
+    </header>
+    <form>
+      <section class="modal-card-body">
+        <input id="addRemark--ticketID" name="ticketID" type="hidden" />
+        <div class="field">
+          <label class="label" for="addRemark--remark">New Remark</label>
+          <div class="control">
+            <textarea class="textarea" id="addRemark--remark" name="remark"></textarea>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot justify-right">
+        <button class="button is-close-modal-button" type="button">Cancel</button>
+        <button class="button is-success" type="submit">Add Remark</button>
+      </footer>
+    </form>
+  </div>
+</div>

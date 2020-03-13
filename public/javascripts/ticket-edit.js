@@ -10,6 +10,7 @@
    */
 
   {
+
     const formMessageEle = document.getElementById("container--form-message");
 
     let hasUnsavedChanges = false;
@@ -341,20 +342,103 @@
    * Remarks
    */
 
-  {
+  if (!isCreate) {
 
     const remarkPanelEle = document.getElementById("is-remark-panel");
 
     let remarkList = pts.ticketRemarksInit;
     delete pts.ticketRemarksInit;
 
+    let getRemarksFn;
+
+    const confirmDeleteRemarkFn = function(clickEvent) {
+
+      const remarkIndex = clickEvent.currentTarget.getAttribute("data-remark-index");
+
+      const deleteFn = function() {
+
+        pts.postJSON("/tickets/doDeleteRemark", {
+          ticketID: ticketID,
+          remarkIndex: remarkIndex
+        }, function(resultJSON) {
+
+          if (resultJSON.success) {
+
+            getRemarksFn();
+
+          }
+
+        });
+
+      };
+
+      pts.confirmModal(
+        "Delete Remark?",
+        "Are you sure you want to delete this remark?",
+        "Yes, Delete",
+        "warning",
+        deleteFn
+      );
+
+    };
+
+    const openEditRemarkModalFn = function(clickEvent) {
+
+      clickEvent.preventDefault();
+
+      let editRemarkCloseModalFn;
+
+      const index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+
+      const remarkObj = remarkList[index];
+
+      const submitFn = function(formEvent) {
+
+        formEvent.preventDefault();
+
+        pts.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget, function(responseJSON) {
+
+          if (responseJSON.success) {
+
+            editRemarkCloseModalFn();
+            getRemarksFn();
+
+          }
+
+        });
+
+      };
+
+      pts.openHtmlModal("ticket-editRemark", {
+
+        onshow: function(modalEle) {
+
+          document.getElementById("editRemark--ticketID").value = ticketID;
+          document.getElementById("editRemark--remarkIndex").value = remarkObj.remarkIndex;
+          document.getElementById("editRemark--remark").value = remarkObj.remark;
+          document.getElementById("editRemark--remarkDateString").value = remarkObj.remarkDateString;
+          document.getElementById("editRemark--remarkTimeString").value = remarkObj.remarkTimeString;
+
+          modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+
+        },
+        onshown: function(modalEle, closeModalFn) {
+
+          editRemarkCloseModalFn = closeModalFn;
+
+        }
+
+      });
+
+    };
+
     const clearRemarksPanelFn = function() {
 
       const panelBlockEles = remarkPanelEle.getElementsByClassName("panel-block");
 
-      for (let index = 0; index < panelBlockEles.length; index += 1) {
+      while (panelBlockEles.length > 0) {
 
-        panelBlockEles[index].remove();
+        panelBlockEles[0].remove();
 
       }
 
@@ -366,7 +450,7 @@
 
       if (remarkList.length === 0) {
 
-        remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel is-block\">" +
+        remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
           "<div class=\"message is-info\">" +
           "<p class=\"message-body\">" +
           "There are no remarks associated with this ticket." +
@@ -400,15 +484,28 @@
             "</p>" +
             "</div>") +
 
-          ("<div class=\"column is-narrow\">" +
-            "<div class=\"buttons\">" +
-            "<button class=\"button is-small is-edit-remark-button\" data-index=\"" + index + "\" type=\"button\">" +
+          (remarkObj.canUpdate ?
+            "<div class=\"column is-narrow\">" +
+            "<div class=\"buttons is-right has-addons\">" +
+            "<button class=\"button is-small is-edit-remark-button\" data-tooltip=\"Edit Remark\" data-index=\"" + index + "\" type=\"button\">" +
             "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
             " <span>Edit</span>" +
             "</button>" +
+            "<button class=\"button is-small has-text-danger is-delete-remark-button\" data-tooltip=\"Delete Remark\" data-remark-index=\"" + remarkObj.remarkIndex + "\" type=\"button\">" +
+            "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
+            "<span class=\"sr-only\">Delete</span>" +
+            "</button>" +
             "</div>" +
-            "</div>") +
+            "</div>" :
+            "") +
           "</div>";
+
+        if (remarkObj.canUpdate) {
+
+          panelBlockEle.getElementsByClassName("is-edit-remark-button")[0].addEventListener("click", openEditRemarkModalFn);
+          panelBlockEle.getElementsByClassName("is-delete-remark-button")[0].addEventListener("click", confirmDeleteRemarkFn);
+
+        }
 
         remarkPanelEle.appendChild(panelBlockEle);
 
@@ -416,7 +513,7 @@
 
     };
 
-    const getRemarksFn = function() {
+    getRemarksFn = function() {
 
       clearRemarksPanelFn();
 
@@ -444,6 +541,41 @@
     document.getElementById("is-add-remark-button").addEventListener("click", function(clickEvent) {
 
       clickEvent.preventDefault();
+
+      let addRemarkCloseModalFn;
+
+      const submitFn = function(formEvent) {
+
+        formEvent.preventDefault();
+
+        pts.postJSON("/tickets/doAddRemark", formEvent.currentTarget, function(responseJSON) {
+
+          if (responseJSON.success) {
+
+            addRemarkCloseModalFn();
+            getRemarksFn();
+
+          }
+
+        });
+
+      };
+
+      pts.openHtmlModal("ticket-addRemark", {
+
+        onshow: function(modalEle) {
+
+          document.getElementById("addRemark--ticketID").value = ticketID;
+          modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+
+        },
+        onshown: function(modalEle, closeModalFn) {
+
+          addRemarkCloseModalFn = closeModalFn;
+
+        }
+
+      });
 
     });
 

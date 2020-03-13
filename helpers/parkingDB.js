@@ -37,6 +37,22 @@ function canUpdateObject(obj, reqSession) {
     }
     return canUpdate;
 }
+function getRawRowsColumns(sql, params) {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const stmt = db.prepare(sql);
+    stmt.raw(true);
+    const rows = stmt.all(params);
+    const columns = stmt.columns();
+    stmt.raw(false);
+    db.close();
+    return {
+        rows: rows,
+        columns: columns
+    };
+}
+exports.getRawRowsColumns = getRawRowsColumns;
 function getParkingLocationWithDB(db, locationKey) {
     const location = db.prepare("select locationKey, locationName, locationClassKey, isActive" +
         " from ParkingLocations" +
@@ -333,6 +349,80 @@ function getRecentParkingTicketVehicleMakeModelValues() {
     return vehicleMakeModelList;
 }
 exports.getRecentParkingTicketVehicleMakeModelValues = getRecentParkingTicketVehicleMakeModelValues;
+function getParkingTicketRemarks(ticketID, reqSession) {
+    const addCalculatedFieldsFn = function (remark) {
+        remark.recordType = "remark";
+        remark.remarkDateString = dateTimeFns.dateIntegerToString(remark.remarkDate);
+        remark.remarkTimeString = dateTimeFns.timeIntegerToString(remark.remarkTime);
+        remark.canUpdate = canUpdateObject(remark, reqSession);
+    };
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const remarkRows = db.prepare("select remarkIndex, remarkDate, remarkTime, remark," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
+        " from ParkingTicketRemarks" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?" +
+        " order by remarkDate desc, remarkTime desc, remarkIndex desc")
+        .all(ticketID);
+    db.close();
+    remarkRows.forEach(addCalculatedFieldsFn);
+    return remarkRows;
+}
+exports.getParkingTicketRemarks = getParkingTicketRemarks;
+function createParkingTicketRemark(reqBody, reqSession) {
+    const db = sqlite(dbPath);
+    const remarkIndexNew = db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
+        " from ParkingTicketRemarks" +
+        " where ticketID = ?")
+        .get(reqBody.ticketID)
+        .remarkIndexMax + 1;
+    const rightNow = new Date();
+    const info = db.prepare("insert into ParkingTicketRemarks" +
+        " (ticketID, remarkIndex, remarkDate, remarkTime, remark," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .run(reqBody.ticketID, remarkIndexNew, dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), reqBody.remark, reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.createParkingTicketRemark = createParkingTicketRemark;
+function updateParkingTicketRemark(reqBody, reqSession) {
+    const db = sqlite(dbPath);
+    const info = db.prepare("update ParkingTicketRemarks" +
+        " set remarkDate = ?," +
+        " remarkTime = ?," +
+        " remark = ?," +
+        " recordUpdate_userName = ?," +
+        " recordUpdate_timeMillis = ?" +
+        " where ticketID = ?" +
+        " and remarkIndex = ?" +
+        " and recordDelete_timeMillis is null")
+        .run(dateTimeFns.dateStringToInteger(reqBody.remarkDateString), dateTimeFns.timeStringToInteger(reqBody.remarkTimeString), reqBody.remark, reqSession.user.userName, Date.now(), reqBody.ticketID, reqBody.remarkIndex);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.updateParkingTicketRemark = updateParkingTicketRemark;
+function deleteParkingTicketRemark(ticketID, remarkIndex, reqSession) {
+    const db = sqlite(dbPath);
+    const info = db.prepare("update ParkingTicketRemarks" +
+        " set recordDelete_userName = ?," +
+        " recordDelete_timeMillis = ?" +
+        " where ticketID = ?" +
+        " and remarkIndex = ?" +
+        " and recordDelete_timeMillis is null")
+        .run(reqSession.user.userName, Date.now(), ticketID, remarkIndex);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.deleteParkingTicketRemark = deleteParkingTicketRemark;
 function getLicencePlates(queryOptions) {
     const db = sqlite(dbPath, {
         readonly: true

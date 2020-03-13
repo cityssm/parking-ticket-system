@@ -166,3 +166,17 @@ select.is-readonly {
   background-color: var(--color);
   opacity: 0.8;
 }
+
+
+/*
+ * Tabs
+ */
+
+
+.tab-content {
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+}

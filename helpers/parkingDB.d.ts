@@ -1,6 +1,7 @@
 /// <reference types="express-session" />
 /// <reference types="integer" />
 import * as pts from "./ptsTypes";
+export declare function getRawRowsColumns(sql: string, params: any[]): pts.RawRowsColumnsReturn;
 export declare type getParkingTickets_queryOptions = {
     isResolved?: boolean;
     ticketNumber?: string;
@@ -9,13 +10,13 @@ export declare type getParkingTickets_queryOptions = {
     limit: number;
     offset: number;
 };
-export declare function getParkingTickets(reqSession: Express.SessionData, queryOptions: getParkingTickets_queryOptions): {
+export declare function getParkingTickets(reqSession: Express.Session, queryOptions: getParkingTickets_queryOptions): {
     count: any;
     tickets: pts.ParkingTicket[];
 };
 export declare function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session): pts.ParkingTicket[];
-export declare function getParkingTicket(ticketID: number, reqSession: Express.SessionData): pts.ParkingTicket;
-export declare function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.SessionData): {
+export declare function getParkingTicket(ticketID: number, reqSession: Express.Session): pts.ParkingTicket;
+export declare function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.Session): {
     success: boolean;
     message: string;
     ticketID?: undefined;
@@ -26,7 +27,7 @@ export declare function createParkingTicket(reqBody: pts.ParkingTicket, reqSessi
     nextTicketNumber: string;
     message?: undefined;
 };
-export declare function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.SessionData): {
+export declare function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.Session): {
     success: boolean;
     message: string;
 } | {
@@ -34,6 +35,16 @@ export declare function updateParkingTicket(reqBody: pts.ParkingTicket, reqSessi
     message?: undefined;
 };
 export declare function getRecentParkingTicketVehicleMakeModelValues(): any[];
+export declare function getParkingTicketRemarks(ticketID: number, reqSession: Express.Session): pts.ParkingTicketRemark[];
+export declare function createParkingTicketRemark(reqBody: pts.ParkingTicketRemark, reqSession: Express.Session): {
+    success: boolean;
+};
+export declare function updateParkingTicketRemark(reqBody: pts.ParkingTicketRemark, reqSession: Express.Session): {
+    success: boolean;
+};
+export declare function deleteParkingTicketRemark(ticketID: number, remarkIndex: number, reqSession: Express.Session): {
+    success: boolean;
+};
 export declare type getLicencePlates_queryOptions = {
     licencePlateNumber?: string;
     hasOwnerRecord?: boolean;

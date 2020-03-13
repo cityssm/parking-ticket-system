@@ -29,6 +29,7 @@ import routerDashboard = require("./routes/dashboard");
 import routerTickets = require("./routes/tickets");
 import routerOffences = require("./routes/offences");
 import routerPlates = require("./routes/plates");
+import routerReports = require("./routes/reports");
 
 
 import * as configFns from "./helpers/configFns";
@@ -158,6 +159,7 @@ app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/plates", sessionChecker, routerPlates);
+app.use("/reports", sessionChecker, routerReports);
 
 app.use("/login", routerLogin);
 
