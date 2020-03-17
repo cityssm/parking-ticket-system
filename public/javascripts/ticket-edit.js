@@ -342,6 +342,18 @@
    * Remarks
    */
 
+  const clearPanelFn = function(panelEle) {
+
+    const panelBlockEles = panelEle.getElementsByClassName("panel-block");
+
+    while (panelBlockEles.length > 0) {
+
+      panelBlockEles[0].remove();
+
+    }
+
+  };
+
   if (!isCreate) {
 
     const remarkPanelEle = document.getElementById("is-remark-panel");
@@ -432,21 +444,9 @@
 
     };
 
-    const clearRemarksPanelFn = function() {
-
-      const panelBlockEles = remarkPanelEle.getElementsByClassName("panel-block");
-
-      while (panelBlockEles.length > 0) {
-
-        panelBlockEles[0].remove();
-
-      }
-
-    };
-
     const populateRemarksPanelFn = function() {
 
-      clearRemarksPanelFn();
+      clearPanelFn(remarkPanelEle);
 
       if (remarkList.length === 0) {
 
@@ -515,7 +515,7 @@
 
     getRemarksFn = function() {
 
-      clearRemarksPanelFn();
+      clearPanelFn(remarkPanelEle);
 
       remarkPanelEle.insertAdjacentHTML(
         "beforeend",
@@ -580,6 +580,267 @@
     });
 
     populateRemarksPanelFn();
+
+  }
+
+  /*
+   * Statuses
+   */
+
+  if (!isCreate) {
+
+    const statusPanelEle = document.getElementById("is-status-panel");
+
+    let statusList = pts.ticketStatusLogInit;
+    delete pts.ticketStatusLogInit;
+
+    let getStatusesFn;
+
+    const confirmDeleteStatusFn = function(clickEvent) {
+
+    };
+
+    const openEditStatusModalFn = function(clickEvent) {
+
+    };
+
+    const populateStatusesPanelFn = function() {
+
+      clearPanelFn(statusPanelEle);
+
+      if (statusList.length === 0) {
+
+        statusPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
+          "<div class=\"message is-info\">" +
+          "<p class=\"message-body\">" +
+          "There are no statuses associated with this ticket." +
+          "</p>" +
+          "</div>" +
+          "</div>");
+
+        return;
+
+      }
+
+      for (let index = 0; index < statusList.length; index += 1) {
+
+        const statusObj = statusList[index];
+        const statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
+
+
+        if (index === 0 && statusDefinitionObj && statusDefinitionObj.isFinalStatus) {
+
+          const finalizePanelBlockEle = document.createElement("div");
+          finalizePanelBlockEle.className = "panel-block is-block";
+
+          finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
+            "<div class=\"message-body\">" +
+
+            "<div class=\"columns\">" +
+
+            "<div class=\"column\">" +
+            "<strong>This ticket is able to be marked as resolved.</strong>" +
+            "</div>" +
+
+            "<div class=\"column is-narrow\">" +
+            "<button class=\"button is-info\" type=\"button\">" +
+            "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+            "<span>Resolve Ticket</span>" +
+            "</button>" +
+            "</div>" +
+
+            "</div>" +
+            "</div>" +
+            "</div>";
+
+          statusPanelEle.appendChild(finalizePanelBlockEle);
+
+        }
+
+
+        const panelBlockEle = document.createElement("div");
+        panelBlockEle.className = "panel-block is-block";
+
+
+        panelBlockEle.innerHTML = "<div class=\"columns\">" +
+          ("<div class=\"column\">" +
+
+            ("<div class=\"level has-margin-bottom-5\">" +
+              "<div class=\"level-left\">" +
+              "<strong>" + (statusDefinitionObj ? statusDefinitionObj.status : statusObj.statusKey) + "</strong>" +
+              "</div>" +
+              "<div class=\"level-right\">" + statusObj.statusDateString + "</div>" +
+              "</div>") +
+
+            (statusObj.statusField === "" ?
+              "" :
+              "<p class=\"is-size-7\">" +
+              "<strong>" +
+              (statusDefinitionObj && statusDefinitionObj.statusField ?
+                statusDefinitionObj.statusField.fieldLabel :
+                "") +
+              ":</strong> " +
+              statusObj.statusField +
+              "</p>") +
+
+            "<p class=\"is-size-7\">" + statusObj.statusNote + "</p>" +
+
+            "</div>") +
+
+          (statusObj.canUpdate && index === 0 ?
+            "<div class=\"column is-narrow\">" +
+            "<div class=\"buttons is-right has-addons\">" +
+            "<button class=\"button is-small is-edit-status-button\" data-tooltip=\"Edit Status\" data-index=\"" + index + "\" type=\"button\">" +
+            "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
+            " <span>Edit</span>" +
+            "</button>" +
+            "<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\" data-status-index=\"" + statusObj.statusIndex + "\" type=\"button\">" +
+            "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
+            "<span class=\"sr-only\">Delete</span>" +
+            "</button>" +
+            "</div>" +
+            "</div>" :
+            "") +
+
+          "</div>";
+
+        if (statusObj.canUpdate && index === 0) {
+
+          panelBlockEle.getElementsByClassName("is-edit-status-button")[0].addEventListener("click", openEditStatusModalFn);
+          panelBlockEle.getElementsByClassName("is-delete-status-button")[0].addEventListener("click", confirmDeleteStatusFn);
+
+        }
+
+        statusPanelEle.appendChild(panelBlockEle);
+
+      }
+
+    };
+
+    getStatusesFn = function() {
+
+      clearPanelFn(statusPanelEle);
+
+      statusPanelEle.insertAdjacentHTML(
+        "beforeend",
+        "<div class=\"panel-block is-block\">" +
+        "<p class=\"has-text-centered has-text-grey-lighter\">" +
+        "<i class=\"fas fa-2x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
+        "<em>Loading statuses..." +
+        "</p>" +
+        "</div>"
+      );
+
+      pts.postJSON("/tickets/doGetStatuses", {
+        ticketID: ticketID
+      }, function(resultList) {
+
+        statusList = resultList;
+        populateStatusesPanelFn();
+
+      });
+
+    };
+
+    document.getElementById("is-add-status-button").addEventListener("click", function(clickEvent) {
+
+      clickEvent.preventDefault();
+
+      let addStatusCloseModalFn;
+
+      const submitFn = function(formEvent) {
+
+        formEvent.preventDefault();
+
+        pts.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function(responseJSON) {
+
+          if (responseJSON.success) {
+
+            addStatusCloseModalFn();
+            getStatusesFn();
+
+          }
+
+        });
+
+      };
+
+      const statusKeyChangeFn = function(changeEvent) {
+
+        const statusObj = pts.getTicketStatus(changeEvent.currentTarget.value);
+
+        const statusFieldEle = document.getElementById("addStatus--statusField");
+        statusFieldEle.value = "";
+
+        if (statusObj && statusObj.statusField) {
+
+          const fieldEle = statusFieldEle.closest(".field");
+          fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField.fieldLabel;
+          fieldEle.classList.remove("is-hidden");
+
+        } else {
+
+          statusFieldEle.closest(".field").classList.add("is-hidden");
+
+        }
+
+        const resolveTicketEle = document.getElementById("addStatus--resolveTicket");
+        resolveTicketEle.checked = false;
+
+        if (statusObj && statusObj.isFinalStatus) {
+
+          resolveTicketEle.closest(".field").classList.remove("is-hidden");
+
+        } else {
+
+          resolveTicketEle.closest(".field").classList.add("is-hidden");
+
+        }
+
+      };
+
+      pts.openHtmlModal("ticket-addStatus", {
+
+        onshow: function(modalEle) {
+
+          document.getElementById("addStatus--ticketID").value = ticketID;
+
+          pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses) {
+
+            const statusKeyEle = document.getElementById("addStatus--statusKey");
+
+            for (let index = 0; index < parkingTicketStatuses.length; index += 1) {
+
+              const statusObj = parkingTicketStatuses[index];
+
+              if (statusObj.isUserSettable) {
+
+                statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
+                  statusObj.status +
+                  "</option>");
+
+              }
+
+            }
+
+            statusKeyEle.addEventListener("change", statusKeyChangeFn);
+
+          });
+
+          modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+
+        },
+        onshown: function(modalEle, closeModalFn) {
+
+          addStatusCloseModalFn = closeModalFn;
+
+        }
+
+      });
+
+    });
+
+    pts.loadDefaultConfigProperties(populateStatusesPanelFn);
 
   }
 

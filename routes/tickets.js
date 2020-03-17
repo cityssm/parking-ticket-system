@@ -118,6 +118,22 @@ router.post("/doDeleteRemark", function (req, res) {
     const result = parkingDB.deleteParkingTicketRemark(req.body.ticketID, req.body.remarkIndex, req.session);
     res.json(result);
 });
+router.post("/doGetStatuses", function (req, res) {
+    res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
+});
+router.post("/doAddStatus", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
+    res.json(result);
+});
 router.get("/:ticketID", function (req, res) {
     const ticketID = parseInt(req.params.ticketID);
     const ticket = parkingDB.getParkingTicket(ticketID, req.session);

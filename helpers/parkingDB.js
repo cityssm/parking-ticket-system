@@ -423,6 +423,57 @@ function deleteParkingTicketRemark(ticketID, remarkIndex, reqSession) {
     };
 }
 exports.deleteParkingTicketRemark = deleteParkingTicketRemark;
+function getParkingTicketStatuses(ticketID, reqSession) {
+    const addCalculatedFieldsFn = function (status) {
+        status.recordType = "status";
+        status.statusDateString = dateTimeFns.dateIntegerToString(status.statusDate);
+        status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime);
+        status.canUpdate = canUpdateObject(status, reqSession);
+    };
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const statusRows = db.prepare("select statusIndex, statusDate, statusTime," +
+        " statusKey, statusField, statusNote," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
+        " from ParkingTicketStatusLog" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?" +
+        " order by statusDate desc, statusTime desc, statusIndex desc")
+        .all(ticketID);
+    db.close();
+    statusRows.forEach(addCalculatedFieldsFn);
+    return statusRows;
+}
+exports.getParkingTicketStatuses = getParkingTicketStatuses;
+function createParkingTicketStatus(reqBody, reqSession, resolveTicket) {
+    const db = sqlite(dbPath);
+    const statusIndexNew = db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
+        " from ParkingTicketStatusLog" +
+        " where ticketID = ?")
+        .get(reqBody.ticketID)
+        .statusIndexMax + 1;
+    const rightNow = new Date();
+    const info = db.prepare("insert into ParkingTicketStatusLog" +
+        " (ticketID, statusIndex, statusDate, statusTime, statusKey," +
+        " statusField, statusNote," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .run(reqBody.ticketID, statusIndexNew, dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), reqBody.statusKey, reqBody.statusField, reqBody.statusNote, reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
+    if (info.changes > 0 && resolveTicket) {
+        db.prepare("update ParkingTickets" +
+            " set resolvedDate = ?" +
+            " where ticketID = ?" +
+            " and resolvedDate is null" +
+            " and recordDelete_timeMillis is null")
+            .run(dateTimeFns.dateToInteger(rightNow), reqBody.ticketID);
+    }
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.createParkingTicketStatus = createParkingTicketStatus;
 function getLicencePlates(queryOptions) {
     const db = sqlite(dbPath, {
         readonly: true

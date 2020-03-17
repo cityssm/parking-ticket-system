@@ -1,0 +1,55 @@
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <h3 class="modal-card-title">Add a Status</h3>
+      <button class="delete is-close-modal-button" aria-label="close" type="button"></button>
+    </header>
+    <form>
+      <section class="modal-card-body">
+        <input id="addStatus--ticketID" name="ticketID" type="hidden" />
+
+        <div class="field">
+          <label class="label" for="addStatus--statusKey">Status</label>
+          <div class="control is-expanded">
+            <div class="select is-fullwidth">
+              <select id="addStatus--statusKey" name="statusKey" required>
+                <option value="">(Select One)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-hidden">
+          <label class="label" for="addStatus--statusField"></label>
+          <div class="control">
+            <input class="input" id="addStatus--statusField" name="statusField" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="addStatus--statusNote">Notes</label>
+          <div class="control">
+            <textarea class="textarea" id="addStatus--statusNote" name="statusNote"></textarea>
+          </div>
+        </div>
+
+        <div class="field is-clearfix">
+          <div class="control is-pulled-right">
+            <div class="b-checkbox is-primary">
+              <input id="addStatus--resolveTicket" name="resolveTicket" type="checkbox" />
+              <label for="addStatus--resolveTicket">
+                Resolve Ticket
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </section>
+      <footer class="modal-card-foot justify-right">
+        <button class="button is-close-modal-button" type="button">Cancel</button>
+        <button class="button is-success" type="submit">Add Status</button>
+      </footer>
+    </form>
+  </div>
+</div>
