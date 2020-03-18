@@ -16,18 +16,26 @@ router.all("/:reportName", function (req, res) {
     let sql = "";
     let params = [];
     switch (reportName) {
-        case "locations-all":
-            sql = "select * from Locations";
+        case "tickets-all":
+            sql = "select * from ParkingTickets";
             break;
-        case "representatives-byOrganization":
-            sql = "select organizationID, representativeIndex," +
-                " representativeName, representativeTitle," +
-                " representativeAddress1, representativeAddress2, representativeCity, representativeProvince," +
-                " representativePostalCode, representativePhoneNumber, representativeEmailAddress," +
-                " isDefault" +
-                " from OrganizationRepresentatives" +
-                " where organizationID = ?";
-            params = [req.query.organizationID];
+        case "tickets-unresolved":
+            sql = "select t.ticketID, t.ticketNumber, t.issueDate," +
+                " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
+                " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
+                " t.parkingOffence, t.offenceAmount," +
+                " s.statusDate as latestStatus_statusDate," +
+                " s.statusKey as latestStatus_statusKey," +
+                " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
+                " from ParkingTickets t" +
+                " left join ParkingLocations l on t.locationKey = l.locationKey" +
+                (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+                    " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
+                " where t.recordDelete_timeMillis is null" +
+                " and t.resolvedDate is null";
+            break;
+        case "owners-all":
+            sql = "select * from LicencePlateOwners";
             break;
     }
     if (sql === "") {

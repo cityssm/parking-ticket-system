@@ -505,6 +505,7 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
     " recordUpdate_userName = ?," +
     " recordUpdate_timeMillis = ?" +
     " where ticketID = ?" +
+    " and resolvedDate is null" +
     " and recordDelete_timeMillis is null")
     .run(reqBody.ticketNumber,
       issueDate,
@@ -542,6 +543,105 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
   }
 
 }
+
+export function deleteParkingTicket(ticketID: number, reqSession: Express.Session) {
+
+  const db = sqlite(dbPath);
+
+  const info = db.prepare("update ParkingTickets" +
+    " set recordDelete_userName = ?," +
+    " recordDelete_timeMillis = ?" +
+    " where ticketID = ?" +
+    " and recordDelete_timeMillis is null")
+    .run(reqSession.user.userName,
+      Date.now(),
+      ticketID);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+export function resolveParkingTicket(ticketID: number, reqSession: Express.Session) {
+
+  const db = sqlite(dbPath);
+
+  const rightNow = new Date();
+
+  const info = db.prepare("update ParkingTickets" +
+    " set resolvedDate = ?," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where ticketID = ?" +
+    " and resolvedDate is null" +
+    " and recordDelete_timeMillis is null")
+    .run(dateTimeFns.dateToInteger(rightNow),
+      reqSession.user.userName,
+      rightNow.getTime(),
+      ticketID);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+export function unresolveParkingTicket(ticketID: number, reqSession: Express.Session) {
+
+  const db = sqlite(dbPath);
+
+  // Check if the ticket is in the window
+
+  const ticketObj = db.prepare("select recordUpdate_timeMillis from ParkingTickets" +
+    " where ticketID = ?" +
+    " and recordDelete_timeMillis is null" +
+    " and resolvedDate is not null")
+    .get(ticketID);
+
+  if (!ticketObj) {
+
+    db.close();
+
+    return {
+      success: false,
+      message: "The ticket has either been deleted, or is no longer marked as resolved."
+    };
+
+  } else if (ticketObj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") < Date.now()) {
+
+    db.close();
+
+    return {
+      success: false,
+      message: "The ticket is outside of the window for removing the resolved status."
+    };
+
+  }
+
+  const info = db.prepare("update ParkingTickets" +
+    " set resolvedDate = null," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where ticketID = ?" +
+    " and resolvedDate is not null" +
+    " and recordDelete_timeMillis is null")
+    .run(reqSession.user.userName,
+      Date.now(),
+      ticketID);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
 
 export function getRecentParkingTicketVehicleMakeModelValues() {
 
@@ -780,12 +880,17 @@ export function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
   if (info.changes > 0 && resolveTicket) {
 
     db.prepare("update ParkingTickets" +
-      " set resolvedDate = ?" +
+      " set resolvedDate = ?," +
+      " recordUpdate_userName = ?," +
+      " recordUpdate_timeMillis = ?" +
       " where ticketID = ?" +
       " and resolvedDate is null" +
       " and recordDelete_timeMillis is null")
-      .run(dateTimeFns.dateToInteger(rightNow), reqBody.ticketID);
-      
+      .run(dateTimeFns.dateToInteger(rightNow),
+        reqSession.user.userName,
+        rightNow.getTime(),
+        reqBody.ticketID);
+
   }
 
   db.close();
@@ -794,6 +899,29 @@ export function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
     success: (info.changes > 0)
   };
 
+}
+
+
+export function deleteParkingTicketStatus(ticketID: number, statusIndex: number, reqSession: Express.Session) {
+
+  const db = sqlite(dbPath);
+
+  const info = db.prepare("update ParkingTicketStatusLog" +
+    " set recordDelete_userName = ?," +
+    " recordDelete_timeMillis = ?" +
+    " where ticketID = ?" +
+    " and statusIndex = ?" +
+    " and recordDelete_timeMillis is null")
+    .run(reqSession.user.userName,
+      Date.now(),
+      ticketID,
+      statusIndex);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
 }
 
 

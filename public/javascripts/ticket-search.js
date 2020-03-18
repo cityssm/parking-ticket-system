@@ -95,7 +95,7 @@
           ("<td>" +
             "<div class=\"licence-plate is-fullwidth\" style=\"--color:" + locationProperties.licencePlateProvince.color + ";--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
 
-            ("<div class=\"licence-plate-province\" data-tooltip=\"Province\">" +
+            ("<div class=\"licence-plate-province\">" +
               locationProperties.licencePlateProvinceAlias +
               "</div>") +
 

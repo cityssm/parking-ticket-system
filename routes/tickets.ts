@@ -128,9 +128,68 @@ router.post("/doUpdateTicket", function(req, res) {
 });
 
 
-router.post("/doGetRemarks", function(req, res) {
+router.post("/doDeleteTicket", function(req, res) {
 
-  res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const result = parkingDB.deleteParkingTicket(req.body.ticketID, req.session);
+
+  res.json(result);
+
+});
+
+
+router.post("/doResolveTicket", function(req, res) {
+
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const result = parkingDB.resolveParkingTicket(req.body.ticketID, req.session);
+
+  res.json(result);
+
+});
+
+
+router.post("/doUnresolveTicket", function(req, res) {
+
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const result = parkingDB.unresolveParkingTicket(req.body.ticketID, req.session);
+
+  res.json(result);
 
 });
 
@@ -138,6 +197,13 @@ router.post("/doGetRemarks", function(req, res) {
 /*
  * Ticket Remarks
  */
+
+
+router.post("/doGetRemarks", function(req, res) {
+
+  res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
+
+});
 
 
 router.post("/doAddRemark", function(req, res) {
@@ -233,11 +299,37 @@ router.post("/doAddStatus", function(req, res) {
 
   }
 
+  console.log(req.body.resolveTicket);
+  console.log(req.body.resolveTicket === "1");
+
   const result = parkingDB.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
 
   res.json(result);
 
 });
+
+
+router.post("/doDeleteStatus", function(req, res) {
+
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const result = parkingDB.deleteParkingTicketStatus(req.body.ticketID, req.body.statusIndex, req.session);
+
+  res.json(result);
+
+});
+
 
 /*
  * Ticket View
@@ -284,7 +376,7 @@ router.get("/:ticketID/edit", function(req, res) {
     res.redirect("/tickets/?error=ticketNotFound");
     return;
 
-  } else if (!ticket.canUpdate) {
+  } else if (!ticket.canUpdate || ticket.resolvedDate) {
 
     res.redirect("/tickets/" + ticketID + "/?error=accessDenied");
     return;

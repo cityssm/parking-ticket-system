@@ -321,7 +321,8 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 
   }
 
-  const isPanelOrMenuListTabs = tabsListEle.classList.contains("panel-tabs") || tabsListEle.classList.contains("menu-list");
+  const isPanelOrMenuListTabs =
+    tabsListEle.classList.contains("panel-tabs") || tabsListEle.classList.contains("menu-list");
 
 
   const listItemEles = tabsListEle.getElementsByTagName(isPanelOrMenuListTabs ? "a" : "li");
@@ -523,7 +524,7 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
       "<div class=\"message is-" + contextualColorName + "\">" +
 
       ("<header class=\"message-header\">" +
-        "<span></span>" +
+        "<span class=\"is-size-5\"></span>" +
         "</header>") +
 
       ("<section class=\"message-body\">" +

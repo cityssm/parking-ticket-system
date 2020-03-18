@@ -11,8 +11,6 @@ import path = require("path");
 import cookieParser = require("cookie-parser");
 import logger = require("morgan");
 
-const { spawn } = require("child_process");
-
 import { Config_HttpsConfig } from "./helpers/ptsTypes";
 
 
@@ -26,6 +24,7 @@ const buildNumber = require("./buildNumber.json");
 import routerDocs = require("./routes/docs");
 import routerLogin = require("./routes/login");
 import routerDashboard = require("./routes/dashboard");
+import routerAdmin = require("./routes/admin");
 import routerTickets = require("./routes/tickets");
 import routerOffences = require("./routes/offences");
 import routerPlates = require("./routes/plates");
@@ -160,6 +159,7 @@ app.use("/tickets", sessionChecker, routerTickets);
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/plates", sessionChecker, routerPlates);
 app.use("/reports", sessionChecker, routerReports);
+app.use("/admin", sessionChecker, routerAdmin);
 
 app.use("/login", routerLogin);
 

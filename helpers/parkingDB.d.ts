@@ -34,6 +34,19 @@ export declare function updateParkingTicket(reqBody: pts.ParkingTicket, reqSessi
     success: boolean;
     message?: undefined;
 };
+export declare function deleteParkingTicket(ticketID: number, reqSession: Express.Session): {
+    success: boolean;
+};
+export declare function resolveParkingTicket(ticketID: number, reqSession: Express.Session): {
+    success: boolean;
+};
+export declare function unresolveParkingTicket(ticketID: number, reqSession: Express.Session): {
+    success: boolean;
+    message: string;
+} | {
+    success: boolean;
+    message?: undefined;
+};
 export declare function getRecentParkingTicketVehicleMakeModelValues(): any[];
 export declare function getParkingTicketRemarks(ticketID: number, reqSession: Express.Session): pts.ParkingTicketRemark[];
 export declare function createParkingTicketRemark(reqBody: pts.ParkingTicketRemark, reqSession: Express.Session): {
@@ -47,6 +60,9 @@ export declare function deleteParkingTicketRemark(ticketID: number, remarkIndex:
 };
 export declare function getParkingTicketStatuses(ticketID: number, reqSession: Express.Session): any[];
 export declare function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean): {
+    success: boolean;
+};
+export declare function deleteParkingTicketStatus(ticketID: number, statusIndex: number, reqSession: Express.Session): {
     success: boolean;
 };
 export declare type getLicencePlates_queryOptions = {

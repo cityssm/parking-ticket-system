@@ -1,0 +1,225 @@
+<%- include('_header'); -%>
+
+<div class="columns">
+  <div class="column is-3 is-hidden-print">
+    <%- include("_sideMenu-admin"); -%>
+  </div>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li class="is-active">
+          <a href="#" aria-current="page">
+            <span class="icon is-small"><i class="fas fa-cog" aria-hidden="true"></i></span>
+            <span>User Management</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="level">
+      <div class="level-left">
+        <h1 class="title is-1">
+          User Management
+        </h1>
+      </div>
+      <div class="level-right has-text-right is-hidden-print">
+        <button class="button is-primary" id="is-create-user-button" type="button">
+          <span class="icon is-small">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+          </span>
+          <span>Create a User</span>
+        </button>
+      </div>
+    </div>
+
+    <table class="table is-striped is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>User Name</th>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th><span class="sr-only">Options</span></th>
+        </tr>
+      </thead>
+      <tbody id="container--users">
+        <%
+          for (let userIndex = 0; userIndex < users.length; userIndex += 1) {
+            const userObj = users[userIndex];
+        %>
+          <tr>
+            <td>
+              <a class="is-update-user-button" data-user-name="<%= userObj.userName %>" data-first-name="<%= userObj.firstName %>" data-last-name="<%= userObj.lastName %>">
+                <%= userObj.userName %>
+              </a>
+            </td>
+            <td>
+              <%= userObj.firstName %>
+            </td>
+            <td>
+              <%= userObj.lastName %>
+            </td>
+            <td class="has-text-right">
+              <% if (userObj.userName === user.userName) { %>
+                <span class="tag is-primary">
+                  <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+                  <span>Current Account</span>
+                </span>
+              <% } else { %>
+                <button class="button is-danger is-small is-delete-user-button" data-user-name="<%=userObj.userName %>" type="button">
+                  <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
+                  <span>Delete</span>
+                </button>
+              <% } %>
+            </td>
+          </tr>
+        <%
+          }
+        %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal" id="is-create-user-modal">
+  <div class="modal-background"></div>
+  <form>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <h3 class="modal-card-title">Create a New User</h3>
+        <button class="delete is-cancel-button" aria-label="close" type="button"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="field">
+          <label class="label" for="createUser--userName">New User Name</label>
+          <div class="control has-icons-left">
+            <input class="input" id="createUser--userName" name="userName" type="text" maxlength="30" required />
+            <span class="icon is-left">
+              <i class="fas fa-user" aria-hidden="true"></i>
+            </span>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label" for="createUser--firstName">First Name</label>
+              <div class="control">
+                <input class="input" id="createUser--firstName" name="firstName" type="text" maxlength="50" required />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label" for="createUser--lastName">Last Name</label>
+              <div class="control">
+                <input class="input" id="createUser--lastName" name="lastName" type="text" maxlength="50" required />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot justify-right">
+        <button class="button is-cancel-button" type="button">Cancel</button>
+        <button class="button is-primary" type="submit">Create User</button>
+      </footer>
+    </div>
+  </form>
+</div>
+
+<div class="modal" id="is-update-user-modal">
+  <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <h3 class="modal-card-title">Update User <em class="container--userName"></em></h3>
+        <button class="delete is-cancel-button" aria-label="close" type="button"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="tabs">
+          <ul>
+            <li class="is-active">
+              <a href="#tab--updateUser-name">User Name</a>
+            </li>
+            <li>
+              <a href="#tab--updateUser-properties">User Properties</a>
+            </li>
+            <li>
+              <a href="#tab--updateUser-password">Password</a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-container">
+          <div class="tab-content is-active" id="tab--updateUser-name">
+            <form>
+              <div class="field">
+                <label class="label" for="updateUser--userName">User Name</label>
+                <div class="control has-icons-left">
+                  <input class="input has-background-light has-cursor-not-allowed" id="updateUser--userName" name="userName" type="text" maxlength="30" required readonly />
+                  <span class="icon is-left">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="columns">
+                <div class="column">
+                  <div class="field">
+                    <label class="label" for="updateUser--firstName">First Name</label>
+                    <div class="control">
+                      <input class="input" id="updateUser--firstName" name="firstName" type="text" maxlength="50" required />
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="field">
+                    <label class="label" for="updateUser--lastName">Last Name</label>
+                    <div class="control">
+                      <input class="input" id="updateUser--lastName" name="lastName" type="text" maxlength="50" required />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-primary" type="submit">Update User</button>
+              </div>
+            </form>
+          </div>
+          <div class="tab-content" id="tab--updateUser-properties">
+            <form>
+              <div id="container--userProperties"></div>
+            </form>
+          </div>
+          <div class="tab-content" id="tab--updateUser-password">
+            <form>
+              <input id="resetPassword--userName" name="userName" type="hidden" />
+              <div class="message is-warning">
+                <p class="message-body">
+                  Are you sure you want to reset the password for <em class="container--userName"></em>?<br />
+                  Once reset, the password will be shown on screen for you to relay to the user.
+                </p>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-warning" type="submit">Reset Password</button>
+              </div>
+              <div class="message is-info has-margin-top-10" hidden>
+                <div class="message-body">
+                  <p>
+                    The password for <em class="container--userName"></em> has been reset.
+                    The new password is:
+                  </p>
+                  <p class="has-text-centered has-text-weight-bold" id="resetPassword--newPassword"></p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot justify-right">
+        <button class="button is-cancel-button" type="button">Close</button>
+      </footer>
+    </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<script src="/javascripts/admin-userManagement.min.js"></script>
+
+<%- include('_footerB'); -%>

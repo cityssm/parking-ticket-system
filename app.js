@@ -7,13 +7,13 @@ const compression = require("compression");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const { spawn } = require("child_process");
 const session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session);
 const buildNumber = require("./buildNumber.json");
 const routerDocs = require("./routes/docs");
 const routerLogin = require("./routes/login");
 const routerDashboard = require("./routes/dashboard");
+const routerAdmin = require("./routes/admin");
 const routerTickets = require("./routes/tickets");
 const routerOffences = require("./routes/offences");
 const routerPlates = require("./routes/plates");
@@ -81,6 +81,7 @@ app.use("/tickets", sessionChecker, routerTickets);
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/plates", sessionChecker, routerPlates);
 app.use("/reports", sessionChecker, routerReports);
+app.use("/admin", sessionChecker, routerAdmin);
 app.use("/login", routerLogin);
 app.get("/logout", function (req, res) {
     if (req.session.user && req.cookies[sessionCookieName]) {

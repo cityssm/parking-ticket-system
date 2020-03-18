@@ -29,18 +29,46 @@ router.all("/:reportName", function(req, res) {
   switch (reportName) {
 
     /*
-     * Locations
+     * Parking Tickets
      */
 
-    case "locations-all":
+    case "tickets-all":
 
-      sql = "select * from Locations";
+      sql = "select * from ParkingTickets";
+      break;
+
+    case "tickets-unresolved":
+
+      sql = "select t.ticketID, t.ticketNumber, t.issueDate," +
+        " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
+        " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
+        " t.parkingOffence, t.offenceAmount," +
+        " s.statusDate as latestStatus_statusDate," +
+        " s.statusKey as latestStatus_statusKey," +
+        " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
+
+        " from ParkingTickets t" +
+        " left join ParkingLocations l on t.locationKey = l.locationKey" +
+        (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+          " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
+
+        " where t.recordDelete_timeMillis is null" +
+        " and t.resolvedDate is null";
+
       break;
 
 
     /*
-     * Organization Representatives
+     * Licence Plates
      */
+
+    case "owners-all":
+
+      sql = "select * from LicencePlateOwners";
+      break;
+
+    /*
+    Sample for lottery-licence-manager that uses parameters
 
     case "representatives-byOrganization":
 
@@ -55,6 +83,7 @@ router.all("/:reportName", function(req, res) {
       params = [req.query.organizationID];
 
       break;
+    */
 
   }
 

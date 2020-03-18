@@ -42,8 +42,8 @@
         "<th>Licence Plate Number</th>" +
         "<th>Province</th>" +
         "<th>Country</th>" +
-        "<th>Ownership Record</th>" +
-        "<th>Outstanding Tickets</th>" +
+        "<th class=\"has-text-right\">Ownership Record</th>" +
+        "<th class=\"has-text-right\">Unresolved Tickets</th>" +
         "</tr></thead>" +
         "<tbody></tbody>" +
         "</table>";
@@ -81,10 +81,13 @@
               "<span class=\"has-text-grey\">(Blank)</span>" :
               plateObj.licencePlateCountry) +
             "</td>") +
-          ("<td>" +
-            plateObj.hasOwnerRecord +
+          ("<td class=\"has-text-right\">" +
+            (plateObj.hasOwnerRecord ?
+              "<span data-tooltip=\"Has Ownership Record\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+              "<span class=\"sr-only\">Has Ownership Record</span>" :
+              "") +
             "</td>") +
-          ("<td>" +
+          ("<td class=\"has-text-right\">" +
             plateObj.unresolvedTicketCount +
             "</td>");
 

@@ -98,6 +98,42 @@
 
   }
 
+  if (!isCreate) {
+
+    document.getElementById("is-delete-ticket-button").addEventListener("click", function(clickEvent) {
+
+      clickEvent.preventDefault();
+
+      pts.confirmModal(
+        "Delete Ticket?",
+        "Are you sure you want to delete this ticket record?",
+        "Yes, Delete Ticket",
+        "danger",
+        function() {
+
+          pts.postJSON(
+            "/tickets/doDeleteTicket", {
+              ticketID: ticketID
+            },
+            function(responseJSON) {
+
+              if (responseJSON.success) {
+
+                window.location.href = "/tickets";
+
+              }
+
+            }
+
+          );
+
+        }
+      );
+
+    });
+
+  }
+
   /*
    * Location Lookup
    */
@@ -367,29 +403,27 @@
 
       const remarkIndex = clickEvent.currentTarget.getAttribute("data-remark-index");
 
-      const deleteFn = function() {
-
-        pts.postJSON("/tickets/doDeleteRemark", {
-          ticketID: ticketID,
-          remarkIndex: remarkIndex
-        }, function(resultJSON) {
-
-          if (resultJSON.success) {
-
-            getRemarksFn();
-
-          }
-
-        });
-
-      };
-
       pts.confirmModal(
         "Delete Remark?",
         "Are you sure you want to delete this remark?",
         "Yes, Delete",
         "warning",
-        deleteFn
+        function() {
+
+          pts.postJSON("/tickets/doDeleteRemark", {
+            ticketID: ticketID,
+            remarkIndex: remarkIndex
+          }, function(resultJSON) {
+
+            if (resultJSON.success) {
+
+              getRemarksFn();
+
+            }
+
+          });
+
+        }
       );
 
     };
@@ -596,7 +630,63 @@
 
     let getStatusesFn;
 
+    const confirmResolveTicketFn = function(clickEvent) {
+
+      clickEvent.preventDefault();
+
+      pts.confirmModal(
+        "Mark Ticket as Resolved?",
+        "Once resolved, you will no longer be able to make changes to the ticket.",
+        "Yes, Resolve Ticket",
+        "info",
+        function() {
+
+          pts.postJSON(
+            "/tickets/doResolveTicket", {
+              ticketID: ticketID
+            },
+            function(responseJSON) {
+
+              if (responseJSON.success) {
+
+                window.location.href = "/tickets/" + ticketID;
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+    };
+
     const confirmDeleteStatusFn = function(clickEvent) {
+
+      const statusIndex = clickEvent.currentTarget.getAttribute("data-status-index");
+
+      pts.confirmModal(
+        "Delete Remark?",
+        "Are you sure you want to delete this status?",
+        "Yes, Delete",
+        "warning",
+        function() {
+
+          pts.postJSON("/tickets/doDeleteStatus", {
+            ticketID: ticketID,
+            statusIndex: statusIndex
+          }, function(resultJSON) {
+
+            if (resultJSON.success) {
+
+              getStatusesFn();
+
+            }
+
+          });
+
+        }
+      );
 
     };
 
@@ -652,6 +742,8 @@
             "</div>" +
             "</div>" +
             "</div>";
+
+          finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn);
 
           statusPanelEle.appendChild(finalizePanelBlockEle);
 
@@ -752,12 +844,23 @@
 
         formEvent.preventDefault();
 
+        const resolveTicket = document.getElementById("addStatus--resolveTicket").checked;
+
         pts.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function(responseJSON) {
 
           if (responseJSON.success) {
 
             addStatusCloseModalFn();
-            getStatusesFn();
+
+            if (resolveTicket) {
+
+              window.location.href = "/tickets/" + ticketID;
+
+            } else {
+
+              getStatusesFn();
+
+            }
 
           }
 
