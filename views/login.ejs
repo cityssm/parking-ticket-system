@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="has-background-grey" lang="en">
+<html class="has-background-grey" id="is-login-page" lang="en">
 
 <head>
   <title>
@@ -15,12 +15,12 @@
 </head>
 
 <body>
-  <div class="columns is-vcentered is-centered has-min-page-height">
+  <div class="columns is-vcentered is-centered has-min-page-height is-marginless">
     <div class="column is-half-widescreen is-two-thirds-desktop is-three-quarters-tablet">
       <div class="box has-margin-10">
-        <div class="columns is-vcentered">
+        <div class="columns">
           <div class="column has-text-centered">
-            <img src="<%= configFns.getProperty("application.logoURL") %>" alt="" />
+            <img src="<%= configFns.getProperty("application.logoURL") %>" alt="" style="max-height:250px" />
           </div>
           <div class="column">
             <h1 class="title is-3 has-text-centered">
@@ -30,7 +30,7 @@
               <input name="redirect" type="hidden" value="<%= redirect %>" />
               <div class="field">
                 <label class="sr-only" for="login--userName">User Name</label>
-                <div class="control has-icons-left has-tooltip-right" data-tooltip="User Name">
+                <div class="control has-icons-left">
                   <input class="input" id="login--userName" name="userName" type="text" placeholder="User Name" value="<%= userName %>" autofocus required />
                   <span class="icon is-small is-left">
                     <i class="fas fa-user" aria-hidden="true"></i>
@@ -39,7 +39,7 @@
               </div>
               <div class="field">
                 <label class="sr-only" for="login--password">Password</label>
-                <div class="control has-icons-left has-tooltip-right" data-tooltip="Password" >
+                <div class="control has-icons-left">
                   <input class="input" id="login--password" name="password" type="password" placeholder="Password" required />
                   <span class="icon is-small is-left">
                     <i class="fas fa-key" aria-hidden="true"></i>
@@ -66,13 +66,14 @@
                 </div>
               </div>
             </form>
+            <hr />
+            <div class="has-text-right is-size-7">
+              Build <%= buildNumber %><br />
+              <a class="has-text-grey-dark" href="/docs" target="_blank">Help</a>
+              <a class="has-text-grey-dark has-margin-left-20" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="has-text-right has-margin-right-20">
-        Build <%= buildNumber %><br />
-        <a class="has-text-grey-dark" href="/docs" target="_blank">Help</a>
-        <a class="has-text-grey-dark has-margin-left-20" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">GitHub</a>
       </div>
     </div>
   </div>

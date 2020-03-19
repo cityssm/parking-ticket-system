@@ -1,0 +1,61 @@
+=<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <h3 class="modal-card-title">Edit a Status</h3>
+      <button class="delete is-close-modal-button" aria-label="close" type="button"></button>
+    </header>
+    <form>
+      <section class="modal-card-body">
+        <input id="editStatus--ticketID" name="ticketID" type="hidden" />
+        <input id="editStatus--statusIndex" name="statusIndex" type="hidden" />
+
+        <div class="field">
+          <label class="label" for="editStatus--statusKey">Status</label>
+          <div class="control is-expanded">
+            <div class="select is-fullwidth">
+              <select id="editStatus--statusKey" name="statusKey" required></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-hidden">
+          <label class="label" for="editStatus--statusField"></label>
+          <div class="control">
+            <input class="input" id="editStatus--statusField" name="statusField" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="editStatus--statusNote">Notes</label>
+          <div class="control">
+            <textarea class="textarea" id="editStatus--statusNote" name="statusNote"></textarea>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label" for="editStatus--statusDateString">Status Date</label>
+              <div class="control">
+                <input class="input" id="editStatus--statusDateString" name="statusDateString" type="date" required />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label" for="editStatus--statusTimeString">Status Time</label>
+              <div class="control">
+                <input class="input" id="editStatus--statusTimeString" name="statusTimeString" type="time" required />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot justify-right">
+        <button class="button is-close-modal-button" type="button">Cancel</button>
+        <button class="button is-success" type="submit">Update Status</button>
+      </footer>
+    </form>
+  </div>
+</div>

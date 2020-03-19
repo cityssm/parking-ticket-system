@@ -128,6 +128,19 @@ const sessionChecker = function(req: express.Request, res: express.Response, nex
 
 };
 
+// Redirect non-admin users
+const adminChecker = function(req: express.Request, res: express.Response, next: express.NextFunction) {
+
+  if (req.session.user.userProperties.isAdmin) {
+
+    return next();
+
+  }
+
+  return res.redirect("/login?redirect=" + req.originalUrl);
+
+};
+
 
 /*
  * ROUTES
@@ -156,10 +169,11 @@ app.use("/docs", routerDocs);
 
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
-app.use("/offences", sessionChecker, routerOffences);
 app.use("/plates", sessionChecker, routerPlates);
 app.use("/reports", sessionChecker, routerReports);
-app.use("/admin", sessionChecker, routerAdmin);
+
+app.use("/offences", sessionChecker, adminChecker, routerOffences);
+app.use("/admin", sessionChecker, adminChecker, routerAdmin);
 
 app.use("/login", routerLogin);
 

@@ -543,6 +543,26 @@ function createParkingTicketStatus(reqBody, reqSession, resolveTicket) {
     };
 }
 exports.createParkingTicketStatus = createParkingTicketStatus;
+function updateParkingTicketStatus(reqBody, reqSession) {
+    const db = sqlite(dbPath);
+    const info = db.prepare("update ParkingTicketStatusLog" +
+        " set statusDate = ?," +
+        " statusTime = ?," +
+        " statusKey = ?," +
+        " statusField = ?," +
+        " statusNote = ?," +
+        " recordUpdate_userName = ?," +
+        " recordUpdate_timeMillis = ?" +
+        " where ticketID = ?" +
+        " and statusIndex = ?" +
+        " and recordDelete_timeMillis is null")
+        .run(dateTimeFns.dateStringToInteger(reqBody.statusDateString), dateTimeFns.timeStringToInteger(reqBody.statusTimeString), reqBody.statusKey, reqBody.statusField, reqBody.statusNote, reqSession.user.userName, Date.now(), reqBody.ticketID, reqBody.statusIndex);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.updateParkingTicketStatus = updateParkingTicketStatus;
 function deleteParkingTicketStatus(ticketID, statusIndex, reqSession) {
     const db = sqlite(dbPath);
     const info = db.prepare("update ParkingTicketStatusLog" +

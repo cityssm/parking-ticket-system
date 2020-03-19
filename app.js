@@ -64,6 +64,12 @@ const sessionChecker = function (req, res, next) {
     }
     return res.redirect("/login?redirect=" + req.originalUrl);
 };
+const adminChecker = function (req, res, next) {
+    if (req.session.user.userProperties.isAdmin) {
+        return next();
+    }
+    return res.redirect("/login?redirect=" + req.originalUrl);
+};
 app.use(function (req, res, next) {
     res.locals.buildNumber = buildNumber;
     res.locals.user = req.session.user;
@@ -78,10 +84,10 @@ app.get("/", sessionChecker, function (_req, res) {
 app.use("/docs", routerDocs);
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
-app.use("/offences", sessionChecker, routerOffences);
 app.use("/plates", sessionChecker, routerPlates);
 app.use("/reports", sessionChecker, routerReports);
-app.use("/admin", sessionChecker, routerAdmin);
+app.use("/offences", sessionChecker, adminChecker, routerOffences);
+app.use("/admin", sessionChecker, adminChecker, routerAdmin);
 app.use("/login", routerLogin);
 app.get("/logout", function (req, res) {
     if (req.session.user && req.cookies[sessionCookieName]) {

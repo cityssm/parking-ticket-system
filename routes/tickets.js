@@ -175,6 +175,19 @@ router.post("/doAddStatus", function (req, res) {
     const result = parkingDB.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
     res.json(result);
 });
+router.post("/doUpdateStatus", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.updateParkingTicketStatus(req.body, req.session);
+    res.json(result);
+});
 router.post("/doDeleteStatus", function (req, res) {
     if (!req.session.user.userProperties.canCreate) {
         res

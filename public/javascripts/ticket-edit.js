@@ -692,6 +692,127 @@
 
     const openEditStatusModalFn = function(clickEvent) {
 
+      clickEvent.preventDefault();
+
+      let editStatusCloseModalFn;
+
+      const index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+
+      const statusObj = statusList[index];
+
+      const submitFn = function(formEvent) {
+
+        formEvent.preventDefault();
+
+        pts.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget, function(responseJSON) {
+
+          if (responseJSON.success) {
+
+            editStatusCloseModalFn();
+            getStatusesFn();
+
+          }
+
+        });
+
+      };
+
+      const statusKeyChangeFn = function(changeEvent) {
+
+        const statusKeyObj = pts.getTicketStatus(changeEvent.currentTarget.value);
+
+        const statusFieldEle = document.getElementById("editStatus--statusField");
+        statusFieldEle.value = "";
+
+        if (statusKeyObj && statusKeyObj.statusField) {
+
+          const fieldEle = statusFieldEle.closest(".field");
+          fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
+          fieldEle.classList.remove("is-hidden");
+
+        } else {
+
+          statusFieldEle.closest(".field").classList.add("is-hidden");
+
+        }
+
+      };
+
+      pts.openHtmlModal("ticket-editStatus", {
+
+        onshow: function(modalEle) {
+
+          document.getElementById("editStatus--ticketID").value = ticketID;
+          document.getElementById("editStatus--statusIndex").value = statusObj.statusIndex;
+
+          document.getElementById("editStatus--statusField").value = statusObj.statusField;
+          document.getElementById("editStatus--statusNote").value = statusObj.statusNote;
+
+          const statusDateEle = document.getElementById("editStatus--statusDateString");
+          statusDateEle.value = statusObj.statusDateString;
+          statusDateEle.setAttribute("max", pts.dateToString(new Date()));
+
+          document.getElementById("editStatus--statusTimeString").value = statusObj.statusTimeString;
+
+          pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses) {
+
+            let statusKeyFound = false;
+
+            const statusKeyEle = document.getElementById("editStatus--statusKey");
+
+            for (let statusKeyIndex = 0; statusKeyIndex < parkingTicketStatuses.length; statusKeyIndex += 1) {
+
+              const statusKeyObj = parkingTicketStatuses[statusKeyIndex];
+
+              if (statusKeyObj.isUserSettable || statusKeyObj.statusKey === statusObj.statusKey) {
+
+                statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusKeyObj.statusKey + "\">" +
+                  statusKeyObj.status +
+                  "</option>");
+
+                if (statusKeyObj.statusKey === statusObj.statusKey) {
+
+                  statusKeyFound = true;
+
+                  if (statusKeyObj.statusField) {
+
+                    const fieldEle = document.getElementById("editStatus--statusField").closest(".field");
+                    fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
+                    fieldEle.classList.remove("is-hidden");
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            if (!statusKeyFound) {
+
+              statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
+                statusObj.statusKey +
+                "</option>");
+
+            }
+
+            statusKeyEle.value = statusObj.statusKey;
+
+            statusKeyEle.addEventListener("change", statusKeyChangeFn);
+
+          });
+
+          modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+
+        },
+        onshown: function(modalEle, closeModalFn) {
+
+          editStatusCloseModalFn = closeModalFn;
+
+        }
+
+      });
+
     };
 
     const populateStatusesPanelFn = function() {
@@ -732,7 +853,7 @@
             "<strong>This ticket is able to be marked as resolved.</strong>" +
             "</div>" +
 
-            "<div class=\"column is-narrow\">" +
+            "<div class=\"column is-narrow has-text-right\">" +
             "<button class=\"button is-info\" type=\"button\">" +
             "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
             "<span>Resolve Ticket</span>" +

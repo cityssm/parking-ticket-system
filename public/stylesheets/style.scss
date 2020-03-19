@@ -94,6 +94,10 @@ html.is-fullwidth {
   margin-bottom: 0 !important;
 }
 
+.is-nowrap {
+  white-space: nowrap;
+}
+
 
 
 /*
@@ -179,4 +183,16 @@ select.is-readonly {
   &.is-active {
     display: block;
   }
+}
+
+
+/*
+ * Login
+ */
+
+#is-login-page {
+  overflow: auto;
+  background-image: url('/images/login.jpg');
+  background-position: bottom right;
+  background-size: cover;
 }

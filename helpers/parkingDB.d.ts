@@ -62,6 +62,9 @@ export declare function getParkingTicketStatuses(ticketID: number, reqSession: E
 export declare function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean): {
     success: boolean;
 };
+export declare function updateParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session): {
+    success: boolean;
+};
 export declare function deleteParkingTicketStatus(ticketID: number, statusIndex: number, reqSession: Express.Session): {
     success: boolean;
 };

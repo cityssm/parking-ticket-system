@@ -309,6 +309,28 @@ router.post("/doAddStatus", function(req, res) {
 });
 
 
+router.post("/doUpdateStatus", function(req, res) {
+
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const result = parkingDB.updateParkingTicketStatus(req.body, req.session);
+
+  res.json(result);
+
+});
+
+
 router.post("/doDeleteStatus", function(req, res) {
 
   if (!req.session.user.userProperties.canCreate) {

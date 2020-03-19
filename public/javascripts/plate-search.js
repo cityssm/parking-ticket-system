@@ -134,7 +134,8 @@
 
           const nextEle = document.createElement("a");
           nextEle.className = "button has-margin-left-10";
-          nextEle.innerHTML = "<span>Next Licence Plates</span><span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
+          nextEle.innerHTML = "<span>Next Licence Plates</span>" +
+            "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
           nextEle.addEventListener("click", function(clickEvent) {
 
             clickEvent.preventDefault();

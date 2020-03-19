@@ -12,7 +12,7 @@ catch (e) {
 }
 const configFallbackValues = {
     "application.applicationName": "Parking Ticket System",
-    "application.logoURL": "/images/noParking.png",
+    "application.logoURL": "/images/noParking.svg",
     "application.httpPort": 4000,
     "application.feature_mtoExportImport": false,
     "application.task_nhtsa.runTask": false,

@@ -902,6 +902,40 @@ export function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
 }
 
 
+export function updateParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session) {
+
+  const db = sqlite(dbPath);
+
+  const info = db.prepare("update ParkingTicketStatusLog" +
+    " set statusDate = ?," +
+    " statusTime = ?," +
+    " statusKey = ?," +
+    " statusField = ?," +
+    " statusNote = ?," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where ticketID = ?" +
+    " and statusIndex = ?" +
+    " and recordDelete_timeMillis is null")
+    .run(
+      dateTimeFns.dateStringToInteger(reqBody.statusDateString),
+      dateTimeFns.timeStringToInteger(reqBody.statusTimeString),
+      reqBody.statusKey,
+      reqBody.statusField,
+      reqBody.statusNote,
+      reqSession.user.userName,
+      Date.now(),
+      reqBody.ticketID,
+      reqBody.statusIndex);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+}
+
+
 export function deleteParkingTicketStatus(ticketID: number, statusIndex: number, reqSession: Express.Session) {
 
   const db = sqlite(dbPath);
