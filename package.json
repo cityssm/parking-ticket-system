@@ -19,7 +19,7 @@
     "fresh-password": "^1.0.0",
     "html-pdf": "^2.2.0",
     "http-errors": "^1.7.3",
-    "marked": "^0.8.0",
+    "marked": "^0.8.1",
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.0"
   },

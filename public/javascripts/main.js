@@ -281,7 +281,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
     };
 
-  const ticketStatusKeyToObject = {};
+  const ticketStatusKeyToObject = new Map();
   let ticketStatusKeyToObjectIsLoaded = false;
 
   pts.getTicketStatus = function(statusKey) {
@@ -302,7 +302,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
       for (let index = 0; index < defaultConfigProperties.parkingTicketStatuses.length; index += 1) {
 
         const ticketStatusObj = defaultConfigProperties.parkingTicketStatuses[index];
-        ticketStatusKeyToObject[ticketStatusObj.statusKey] = ticketStatusObj;
+        ticketStatusKeyToObject.set(ticketStatusObj.statusKey, ticketStatusObj);
 
       }
 
@@ -310,7 +310,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
     }
 
-    return ticketStatusKeyToObject[statusKey] || noResult;
+    return ticketStatusKeyToObject.has(statusKey) ? ticketStatusKeyToObject.get(statusKey) : noResult;
 
   };
 
