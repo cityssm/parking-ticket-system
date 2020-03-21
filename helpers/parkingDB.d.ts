@@ -83,4 +83,20 @@ export declare function getLicencePlateOwner(licencePlateCountry: string, licenc
 export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number): any[];
 export declare function getParkingLocations(): pts.ParkingLocation[];
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];
+export declare function getLicencePlateLookupBatch(batchID_or_negOne: number): pts.LicencePlateLookupBatch;
+export declare function getUnsentLicencePlateLookupBatches(): pts.LicencePlateLookupBatch[];
+export declare function createLicencePlateLookupBatch(reqSession: Express.Session): {
+    success: boolean;
+    batch: {
+        batchID: import("integer").IntLike;
+        batchDate: number;
+        batchDateString: string;
+        lockDate: any;
+        lockDateString: string;
+        batchEntries: any[];
+    };
+} | {
+    success: boolean;
+    batch?: undefined;
+};
 export declare function getParkingTicketsForLookupBatch(includeBatchID: number): void;

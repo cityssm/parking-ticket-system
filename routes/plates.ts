@@ -3,6 +3,8 @@
 import express = require("express");
 const router = express.Router();
 
+import * as configFns from "../helpers/configFns";
+
 import * as vehicleFns from "../helpers/vehicleFns";
 import * as parkingDB from "../helpers/parkingDB";
 
@@ -37,10 +39,65 @@ router.post("/doGetLicencePlates", function(req, res) {
 });
 
 
+/*
+ * MTO Export / Import
+ */
+
+
+if (configFns.getProperty("application.feature_mtoExportImport")) {
+
+  router.get("/mtoExport", function(_req, res) {
+
+    const latestUnlockedBatch = parkingDB.getLicencePlateLookupBatch(-1);
+
+    res.render("mto-plateExport", {
+      headTitle: "MTO Licence Plate Export",
+      batch: latestUnlockedBatch
+    });
+
+  });
+
+  router.get("/mtoImport", function(_req, res) {
+
+    res.render("mto-plateImport", {
+      headTitle: "MTO Licence Plate Ownership Import"
+    });
+
+  });
+}
+
+
+router.post("/doGetUnsentLicencePlateLookupBatches", function(_req, res) {
+
+  const batches = parkingDB.getUnsentLicencePlateLookupBatches();
+  res.json(batches);
+});
+
+router.post("/doCreateLookupBatch", function(req, res) {
+
+  if (!req.session.user.userProperties.canCreate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const createBatchResponse = parkingDB.createLicencePlateLookupBatch(req.session);
+
+  res.json(createBatchResponse);
+
+});
+
+
 router.post("/doGetModelsByMake", function(req, res) {
 
   const makeModelList = vehicleFns.getModelsByMakeFromCache(req.body.vehicleMake);
-
   res.json(makeModelList);
 });
 

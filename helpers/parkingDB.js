@@ -693,6 +693,91 @@ function getParkingOffences(locationKey) {
     return rows;
 }
 exports.getParkingOffences = getParkingOffences;
+function getLicencePlateLookupBatch(batchID_or_negOne) {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const baseBatchSQL = "select batchID, batchDate, lockDate, sentDate, receivedDate," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
+        " from LicencePlateLookupBatches" +
+        " where recordDelete_timeMillis is null";
+    let batch;
+    if (batchID_or_negOne == -1) {
+        batch = db.prepare(baseBatchSQL +
+            " and lockDate is null" +
+            " order by batchID desc" +
+            " limit 1")
+            .get();
+    }
+    else {
+        batch = db.prepare(baseBatchSQL +
+            " and batchID = ?")
+            .get(batchID_or_negOne);
+    }
+    if (!batch) {
+        return null;
+    }
+    batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
+    batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
+    batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
+    batch.receivedDateString = dateTimeFns.dateIntegerToString(batch.receivedDate);
+    batch.batchEntries = db.prepare("select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
+        " e.ticketID, t.ticketNumber" +
+        " from LicencePlateLookupBatchEntries e" +
+        " left join ParkingTickets t on e.ticketID = t.ticketID" +
+        " where e.batchID = ?" +
+        " order by e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber")
+        .all(batch.batchID);
+    db.close();
+    return batch;
+}
+exports.getLicencePlateLookupBatch = getLicencePlateLookupBatch;
+function getUnsentLicencePlateLookupBatches() {
+    const addCalculatedFieldsFn = function (batch) {
+        batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
+        batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
+    };
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const batches = db.prepare("select b.batchID, b.batchDate, b.lockDate, count(e.batchID) as batchEntryCount" +
+        " from LicencePlateLookupBatches b" +
+        " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
+        " where b.recordDelete_timeMillis is null" +
+        " and b.sentDate is null" +
+        " group by b.batchID, b.batchDate, b.lockDate" +
+        " order by b.batchID desc")
+        .all();
+    db.close();
+    batches.forEach(addCalculatedFieldsFn);
+    return batches;
+}
+exports.getUnsentLicencePlateLookupBatches = getUnsentLicencePlateLookupBatches;
+function createLicencePlateLookupBatch(reqSession) {
+    const db = sqlite(dbPath);
+    const rightNow = new Date();
+    const info = db.prepare("insert into LicencePlateLookupBatches" +
+        " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+        " values (?, ?, ?, ?, ?)")
+        .run(dateTimeFns.dateToInteger(rightNow), reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
+    if (info.changes > 0) {
+        return {
+            success: true,
+            batch: {
+                batchID: info.lastInsertRowid,
+                batchDate: dateTimeFns.dateToInteger(rightNow),
+                batchDateString: dateTimeFns.dateToString(rightNow),
+                lockDate: null,
+                lockDateString: "",
+                batchEntries: []
+            }
+        };
+    }
+    else {
+        return { success: false };
+    }
+}
+exports.createLicencePlateLookupBatch = createLicencePlateLookupBatch;
 function getParkingTicketsForLookupBatch(includeBatchID) {
 }
 exports.getParkingTicketsForLookupBatch = getParkingTicketsForLookupBatch;

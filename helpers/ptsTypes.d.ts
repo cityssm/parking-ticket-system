@@ -102,7 +102,12 @@ export declare type Record = {
     recordDelete_dateString?: string;
     canUpdate: boolean;
 };
-export interface ParkingTicket extends Record, ParkingLocation {
+export declare type LicencePlate = {
+    licencePlateCountry: string;
+    licencePlateProvince: string;
+    licencePlateNumber: string;
+};
+export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     recordType: "ticket";
     ticketID: number;
     ticketNumber: string;
@@ -111,9 +116,6 @@ export interface ParkingTicket extends Record, ParkingLocation {
     issueTime: number;
     issueTimeString: string;
     issuingOfficer: string;
-    licencePlateCountry: string;
-    licencePlateProvince: string;
-    licencePlateNumber: string;
     bylawNumber: string;
     locationDescription: string;
     parkingOffence: string;
@@ -166,11 +168,8 @@ export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
     offenceAmount: number;
     accountNumber: string;
 }
-export interface LicencePlateOwner extends Record {
+export interface LicencePlateOwner extends Record, LicencePlate {
     recordType: "owner";
-    licencePlateCountry: string;
-    licencePlateProvince: string;
-    licencePlateNumber: string;
     recordDate: number;
     recordDateString: string;
     vehicleNCIC: string;
@@ -185,6 +184,21 @@ export interface LicencePlateOwner extends Record {
     driverLicenceNumber: string;
     driverLicenceExpiryDate: number;
     driverLicenceExpiryDateString: string;
+}
+export interface LicencePlateLookupBatch extends Record {
+    batchID: number;
+    batchDate: number;
+    batchDateString: string;
+    lockDate: number;
+    lockDateString: string;
+    sentDate: number;
+    sentDateString: string;
+    receivedDate: number;
+    receivedDateString: string;
+    batchEntries: LicencePlateLookupBatchEntry[];
+}
+export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {
+    batchID: number;
 }
 export declare type User = {
     userName: string;

@@ -125,7 +125,14 @@ export type Record = {
   canUpdate: boolean
 };
 
-export interface ParkingTicket extends Record, ParkingLocation {
+export type LicencePlate = {
+
+  licencePlateCountry: string,
+  licencePlateProvince: string,
+  licencePlateNumber: string
+};
+
+export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
 
   recordType: "ticket",
 
@@ -139,10 +146,6 @@ export interface ParkingTicket extends Record, ParkingLocation {
   issueTimeString: string
 
   issuingOfficer: string,
-
-  licencePlateCountry: string,
-  licencePlateProvince: string,
-  licencePlateNumber: string,
 
   bylawNumber: string,
 
@@ -223,13 +226,9 @@ export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
 };
 
 
-export interface LicencePlateOwner extends Record {
+export interface LicencePlateOwner extends Record, LicencePlate {
 
   recordType: "owner",
-
-  licencePlateCountry: string,
-  licencePlateProvince: string,
-  licencePlateNumber: string,
 
   recordDate: number,
   recordDateString: string,
@@ -251,6 +250,29 @@ export interface LicencePlateOwner extends Record {
   driverLicenceExpiryDateString: string
 };
 
+
+export interface LicencePlateLookupBatch extends Record {
+
+  batchID: number,
+
+  batchDate: number,
+  batchDateString: string,
+
+  lockDate: number,
+  lockDateString: string,
+
+  sentDate: number,
+  sentDateString: string,
+
+  receivedDate: number,
+  receivedDateString: string
+
+  batchEntries: LicencePlateLookupBatchEntry[]
+};
+
+export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {
+  batchID: number
+};
 
 /*
  * USER DB TYPES

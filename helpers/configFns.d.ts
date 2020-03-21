@@ -1,6 +1,7 @@
+import * as pts from "../helpers/ptsTypes";
 export declare let config: {};
 export declare function getProperty(propertyName: string): any;
-export declare function getParkingTicketStatus(statusKey: string): any;
+export declare function getParkingTicketStatus(statusKey: string): pts.Config_ParkingTicketStatus;
 export declare function getLicencePlateLocationProperties(originalLicencePlateCountry: string, originalLicencePlateProvince: string): {
     licencePlateCountryAlias: string;
     licencePlateProvinceAlias: string;
