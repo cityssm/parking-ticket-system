@@ -52,6 +52,7 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
     res.render("mto-plateExport", {
       headTitle: "MTO Licence Plate Export",
+      pageContainerIsFullWidth: true,
       batch: latestUnlockedBatch
     });
 
@@ -62,6 +63,14 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
     res.render("mto-plateImport", {
       headTitle: "MTO Licence Plate Ownership Import"
     });
+
+  });
+
+  router.post("/mto_doGetPlatesAvailableForLookup", function(req, res) {
+
+    const issueDaysAgo = parseInt(req.body.issueDaysAgo);
+    const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo);
+    res.json(availablePlates);
 
   });
 }
@@ -92,6 +101,12 @@ router.post("/doCreateLookupBatch", function(req, res) {
 
   res.json(createBatchResponse);
 
+});
+
+router.post("/doGetLookupBatch", function(req, res) {
+
+  const batch = parkingDB.getLicencePlateLookupBatch(req.body.batchID);
+  res.json(batch);
 });
 
 

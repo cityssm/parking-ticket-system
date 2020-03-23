@@ -156,7 +156,8 @@ select.is-readonly {
 .licence-plate-number {
   min-width: 5em;
   padding: 2px 5px;
-  font-family: LicensePlate, monospace;
+  //font-family: LicensePlate, monospace;
+  font-family: monospace;
   font-size: 1.4em;
   color: var(--color);
   white-space: nowrap;

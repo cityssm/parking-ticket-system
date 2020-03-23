@@ -376,6 +376,20 @@ router.get("/:ticketID", function(req, res) {
 
 });
 
+router.get("/byTicketNumber/:ticketNumber", function(req, res) {
+
+  const ticketNumber = req.params.ticketNumber;
+
+  const ticketID = parkingDB.getParkingTicketID(ticketNumber);
+
+  if (ticketID) {
+    res.redirect("/tickets/" + ticketID);
+  } else {
+    res.redirect("/tickets/?error=ticketNotFound");
+  }
+
+});
+
 
 /*
  * Ticket Edit

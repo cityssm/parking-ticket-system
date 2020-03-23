@@ -28,6 +28,7 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
         const latestUnlockedBatch = parkingDB.getLicencePlateLookupBatch(-1);
         res.render("mto-plateExport", {
             headTitle: "MTO Licence Plate Export",
+            pageContainerIsFullWidth: true,
             batch: latestUnlockedBatch
         });
     });
@@ -35,6 +36,11 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
         res.render("mto-plateImport", {
             headTitle: "MTO Licence Plate Ownership Import"
         });
+    });
+    router.post("/mto_doGetPlatesAvailableForLookup", function (req, res) {
+        const issueDaysAgo = parseInt(req.body.issueDaysAgo);
+        const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo);
+        res.json(availablePlates);
     });
 }
 router.post("/doGetUnsentLicencePlateLookupBatches", function (_req, res) {
@@ -53,6 +59,10 @@ router.post("/doCreateLookupBatch", function (req, res) {
     }
     const createBatchResponse = parkingDB.createLicencePlateLookupBatch(req.session);
     res.json(createBatchResponse);
+});
+router.post("/doGetLookupBatch", function (req, res) {
+    const batch = parkingDB.getLicencePlateLookupBatch(req.body.batchID);
+    res.json(batch);
 });
 router.post("/doGetModelsByMake", function (req, res) {
     const makeModelList = vehicleFns.getModelsByMakeFromCache(req.body.vehicleMake);

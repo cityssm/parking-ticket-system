@@ -240,6 +240,24 @@ function getParkingTicket(ticketID, reqSession) {
     return ticket;
 }
 exports.getParkingTicket = getParkingTicket;
+function getParkingTicketID(ticketNumber) {
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    const ticketRow = db.prepare("select ticketID" +
+        " from ParkingTickets" +
+        " where ticketNumber = ?" +
+        " and recordDelete_timeMillis is null" +
+        " order by ticketID desc" +
+        " limit 1")
+        .get(ticketNumber);
+    db.close();
+    if (ticketRow) {
+        return ticketRow.ticketID;
+    }
+    return null;
+}
+exports.getParkingTicketID = getParkingTicketID;
 function createParkingTicket(reqBody, reqSession) {
     const db = sqlite(dbPath);
     const nowMillis = Date.now();
@@ -778,6 +796,45 @@ function createLicencePlateLookupBatch(reqSession) {
     }
 }
 exports.createLicencePlateLookupBatch = createLicencePlateLookupBatch;
-function getParkingTicketsForLookupBatch(includeBatchID) {
+function mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo) {
+    const addCalculatedFieldsFn = function (plateRecord) {
+        plateRecord.issueDateMinString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMin);
+        plateRecord.issueDateMaxString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMax);
+        plateRecord.ticketNumbers = plateRecord.ticketNumbersConcat.split(":");
+        delete plateRecord.ticketNumbersConcat;
+    };
+    const db = sqlite(dbPath, {
+        readonly: true
+    });
+    let issueDateNumber = 0;
+    if (issueDaysAgo !== -1) {
+        let issueDate = new Date();
+        issueDate.setDate(issueDate.getDate() - issueDaysAgo);
+        issueDateNumber = dateTimeFns.dateToInteger(issueDate);
+    }
+    const plates = db.prepare("select t.licencePlateNumber," +
+        " count(t.ticketID) as ticketCount," +
+        " group_concat(t.ticketNumber, ':') as ticketNumbersConcat," +
+        " min(t.issueDate) as issueDateMin," +
+        " max(t.issueDate) as issueDateMax" +
+        " from ParkingTickets t" +
+        " left join LicencePlateLookupBatchEntries e on t.ticketID = e.ticketID and t.licencePlateNumber = e.licencePlateNumber" +
+        " where t.recordDelete_timeMillis is null" +
+        " and t.licencePlateCountry = 'CA'" +
+        " and t.licencePlateProvince = 'ON'" +
+        " and t.licencePlateNumber != ''" +
+        " and t.resolvedDate is null" +
+        " and e.batchID is null" +
+        (" and not exists (" +
+            "select 1 from ParkingTicketStatusLog s" +
+            " where t.ticketID = s.ticketID and s.recordDelete_timeMillis is null" +
+            " and s.statusKey in ('ownerLookupPending', 'ownerLookupMatch', 'ownerLookupError'))") +
+        " and t.issueDate <= ?" +
+        " group by t.licencePlateNumber" +
+        " order by t.licencePlateNumber")
+        .all(issueDateNumber);
+    db.close();
+    plates.forEach(addCalculatedFieldsFn);
+    return plates;
 }
-exports.getParkingTicketsForLookupBatch = getParkingTicketsForLookupBatch;
+exports.mto_getLicencePlatesAvailableForLookupBatch = mto_getLicencePlatesAvailableForLookupBatch;

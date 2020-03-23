@@ -17,29 +17,92 @@
       MTO Licence Plate Export
     </h1>
 
-    <div class="card">
-      <div class="card-content">
-        <div class="field has-addons">
-          <div class="control is-expanded">
-            <span class="button is-fullwidth is-static justify-flex-start" id="batchSelector--batch">(No Batch Selected)</span>
+    <div class="columns">
+      <div class="column">
+        <h2 class="title is-3">Available Licence Plates</h2>
+
+        <div class="panel">
+          <div class="panel-heading is-size-6">
+            <div class="level">
+              <div class="level-left">
+                Licence Plate Filters
+              </div>
+              <div class="level-right has-text-right">
+                <button class="button is-small" id="is-more-available-filters-toggle" type="button">
+                  <span class="icon is-small"><i class="fas fa-cog" aria-hidden="true"></i></span>
+                  <span>Adjust</span>
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="control">
-            <button class="button" id="is-select-batch-button" type="button">
-              <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-              <span>Select</span>
-            </button>
+          <div class="panel-block is-hidden" id="is-more-available-filters">
+            <div class="message is-info is-small">
+              <div class="message-body content">
+                <p>All available licence plates displayed are automatically filtered in the following ways:</p>
+                <ul>
+                  <li>Plates must be from Ontario, Canada.</li>
+                  <li>Plates must be from unresolved tickets.</li>
+                  <li>Plates must not be from tickets included in a previous batch.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label" for="available--issueDaysAgo">Issued Date Offset</label>
+              <div class="control is-expanded">
+                <div class="select is-fullwidth">
+                  <select id="available--issueDaysAgo">
+                    <option value="-1">All Available Plates</option>
+                    <option value="7">7 Days and Older</option>
+                    <option value="14" selected>14 Days and Older</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="control">
-            <button class="button" id="is-create-batch-button" type="button">
-              <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
-              <span>Create</span>
-            </button>
+          <div class="panel-block is-block">
+            <div class="field">
+              <div class="control has-icons-left">
+                <input class="input" id="available--licencePlateNumber" type="text" placeholder="Filter Licence Plates" />
+                <span class="icon is-small is-left">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
+
+        <div id="is-available-plates-container"></div>
+      </div>
+      <div class="is-divider-vertical"></div>
+      <div class="column">
+        <h2 class="title is-3">Target Batch</h2>
+
+        <div class="panel">
+          <div class="panel-heading is-size-6">
+            <div class="level">
+              <div class="level-left" id="batchSelector--batchID">(No Batch Selected)</div>
+              <div class="level-right">
+                <div class="buttons">
+                  <button class="button is-small" id="is-select-batch-button" type="button">
+                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                    <span>Select</span>
+                  </button>
+                  <button class="button is-small" id="is-create-batch-button" type="button">
+                    <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                    <span>Create</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-block">
+            <span id="batchSelector--batchDetails">(No Batch Selected)</span>
+          </div>
+        </div>
+
+        <div id="is-batch-entries-container"></div>
       </div>
     </div>
-
-    <div id="is-batch-entries-container"></div>
 
   </div>
 </div>

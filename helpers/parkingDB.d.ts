@@ -16,6 +16,7 @@ export declare function getParkingTickets(reqSession: Express.Session, queryOpti
 };
 export declare function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session): pts.ParkingTicket[];
 export declare function getParkingTicket(ticketID: number, reqSession: Express.Session): pts.ParkingTicket;
+export declare function getParkingTicketID(ticketNumber: string): any;
 export declare function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.Session): {
     success: boolean;
     message: string;
@@ -99,4 +100,15 @@ export declare function createLicencePlateLookupBatch(reqSession: Express.Sessio
     success: boolean;
     batch?: undefined;
 };
-export declare function getParkingTicketsForLookupBatch(includeBatchID: number): void;
+declare type MTO_AvailableLicencePlate = {
+    licencePlateNumber: string;
+    ticketCount: number;
+    issueDateMin: number;
+    issueDateMinString: string;
+    issueDateMax: number;
+    issueDateMaxString: string;
+    ticketNumbersConcat: string;
+    ticketNumbers: string[];
+};
+export declare function mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo: number): MTO_AvailableLicencePlate[];
+export {};

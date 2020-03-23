@@ -213,6 +213,16 @@ router.get("/:ticketID", function (req, res) {
         ticket: ticket
     });
 });
+router.get("/byTicketNumber/:ticketNumber", function (req, res) {
+    const ticketNumber = req.params.ticketNumber;
+    const ticketID = parkingDB.getParkingTicketID(ticketNumber);
+    if (ticketID) {
+        res.redirect("/tickets/" + ticketID);
+    }
+    else {
+        res.redirect("/tickets/?error=ticketNotFound");
+    }
+});
 router.get("/:ticketID/edit", function (req, res) {
     const ticketID = parseInt(req.params.ticketID);
     if (!req.session.user.userProperties.canCreate) {
