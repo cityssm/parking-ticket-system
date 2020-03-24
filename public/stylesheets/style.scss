@@ -7,8 +7,15 @@
 
 
 @font-face {
-  font-family: LicensePlate;
-  src: url('/fonts/licensePlate.woff');
+  font-family: 'PT Mono';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('PT Mono Regular '),
+    local('PT Mono-Regular'),
+    url('/typeface-pt-mono/pt-mono-latin-400.woff2'),
+    url('/typeface-pt-mono/pt-mono-latin-400.woff');
+  font-display: swap;
 }
 
 
@@ -156,8 +163,7 @@ select.is-readonly {
 .licence-plate-number {
   min-width: 5em;
   padding: 2px 5px;
-  //font-family: LicensePlate, monospace;
-  font-family: monospace;
+  font-family: 'PT Mono', monospace;
   font-size: 1.4em;
   color: var(--color);
   white-space: nowrap;

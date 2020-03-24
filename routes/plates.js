@@ -38,8 +38,9 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
         });
     });
     router.post("/mto_doGetPlatesAvailableForLookup", function (req, res) {
+        const batchID = parseInt(req.body.batchID);
         const issueDaysAgo = parseInt(req.body.issueDaysAgo);
-        const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo);
+        const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(batchID, issueDaysAgo);
         res.json(availablePlates);
     });
 }
@@ -63,6 +64,66 @@ router.post("/doCreateLookupBatch", function (req, res) {
 router.post("/doGetLookupBatch", function (req, res) {
     const batch = parkingDB.getLicencePlateLookupBatch(req.body.batchID);
     res.json(batch);
+});
+router.post("/doAddLicencePlateToLookupBatch", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.addLicencePlateToLookupBatch(req.body, req.session);
+    if (result.success) {
+        result.batch = parkingDB.getLicencePlateLookupBatch(req.body.batchID);
+    }
+    res.json(result);
+});
+router.post("/doAddAllLicencePlatesToLookupBatch", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    console.log(req.body.licencePlateNumbers.length);
+    const result = parkingDB.addAllLicencePlatesToLookupBatch(req.body, req.session);
+    res.json(result);
+});
+router.post("/doRemoveLicencePlateFromLookupBatch", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.removeLicencePlateFromLookupBatch(req.body, req.session);
+    res.json(result);
+});
+router.post("/doClearLookupBatch", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const batchID = parseInt(req.body.batchID);
+    const result = parkingDB.clearLookupBatch(batchID, req.session);
+    if (result.success) {
+        result.batch = parkingDB.getLicencePlateLookupBatch(batchID);
+    }
+    res.json(result);
 });
 router.post("/doGetModelsByMake", function (req, res) {
     const makeModelList = vehicleFns.getModelsByMakeFromCache(req.body.vehicleMake);

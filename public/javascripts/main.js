@@ -50,9 +50,7 @@ pts.dateToString = function(dateObj) {
 };
 
 
-/*
- * FETCH HELPERS
- */
+// FETCH HELPERS
 
 pts.responseToJSON = function(response) {
 
@@ -99,10 +97,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 };
 
 
-/*
- * CONFIG DEFAULTS
- */
-
+// CONFIG DEFAULTS
 
 (function() {
 
@@ -317,10 +312,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 }());
 
 
-/*
- * TABS
- */
-
+// TABS
 
 pts.initializeTabs = function(tabsListEle, callbackFns) {
 
@@ -384,9 +376,7 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 };
 
 
-/*
- * MODAL TOGGLES
- */
+// MODAL TOGGLES
 
 pts.showModal = function(modalEle) {
 
@@ -508,12 +498,9 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
 };
 
 
+// ALERT / CONFIRM MODALS
+
 (function() {
-
-
-  /*
-   * CONFIRM MODAL
-   */
 
   function confirmModalFn(modalOptions) {
 
@@ -609,10 +596,12 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
 
   };
 
+}());
 
-  /*
-   * NAV BLOCKER
-   */
+
+// NAV BLOCKER
+
+(function() {
 
   let isNavBlockerEnabled = false;
 
@@ -646,6 +635,40 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
 
   };
 
+}());
+
+
+// SIDE MENU INIT
+
+(function() {
+
+  const collapseButtonEle = document.getElementById("is-sidemenu-collapse-button");
+  const collapseSidemenuEle = document.getElementById("is-sidemenu-collapsed");
+
+  const expandButtonEle = document.getElementById("is-sidemenu-expand-button");
+  const expandSidemenuEle = document.getElementById("is-sidemenu-expanded");
+
+  if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
+
+    collapseButtonEle.addEventListener("click", function() {
+
+      expandSidemenuEle.classList.add("is-hidden");
+      collapseSidemenuEle.classList.remove("is-hidden");
+
+    });
+
+    expandButtonEle.addEventListener("click", function() {
+
+      collapseSidemenuEle.classList.add("is-hidden");
+      expandSidemenuEle.classList.remove("is-hidden");
+
+    });
+
+  }
+
+}());
+
+(function() {
 
   /*
    * NAVBAR TOGGLE

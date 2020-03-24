@@ -750,6 +750,141 @@ function getLicencePlateLookupBatch(batchID_or_negOne) {
     return batch;
 }
 exports.getLicencePlateLookupBatch = getLicencePlateLookupBatch;
+function addLicencePlateToLookupBatch(reqBody, reqSession) {
+    const db = sqlite(dbPath);
+    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+        " set recordUpdate_userName = ?," +
+        " recordUpdate_timeMillis = ?" +
+        " where batchID = ?" +
+        " and recordDelete_timeMillis is null" +
+        " and lockDate is null")
+        .run(reqSession.user.userName, Date.now(), reqBody.batchID).changes;
+    if (canUpdateBatch === 0) {
+        db.close();
+        return {
+            success: false,
+            message: "Batch cannot be updated."
+        };
+    }
+    const info = db.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
+        " (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)" +
+        " values (?, ?, ?, ?, ?)")
+        .run(reqBody.batchID, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, reqBody.ticketID);
+    db.close();
+    if (info.changes > 0) {
+        return {
+            success: true
+        };
+    }
+    else {
+        return {
+            success: false,
+            message: "Licence plate not added to the batch.  It may be already part of the batch."
+        };
+    }
+}
+exports.addLicencePlateToLookupBatch = addLicencePlateToLookupBatch;
+function addAllLicencePlatesToLookupBatch(reqBody, reqSession) {
+    const db = sqlite(dbPath);
+    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+        " set recordUpdate_userName = ?," +
+        " recordUpdate_timeMillis = ?" +
+        " where batchID = ?" +
+        " and recordDelete_timeMillis is null" +
+        " and lockDate is null")
+        .run(reqSession.user.userName, Date.now(), reqBody.batchID).changes;
+    if (canUpdateBatch === 0) {
+        db.close();
+        return {
+            success: false,
+            message: "Batch cannot be updated."
+        };
+    }
+    const insertStmt = db.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
+        " (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)" +
+        " values (?, ?, ?, ?, ?)");
+    let changeCount = 0;
+    for (let index = 0; index < reqBody.licencePlateNumbers.length; index += 1) {
+        const info = insertStmt
+            .run(reqBody.batchID, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumbers[index][0], reqBody.licencePlateNumbers[index][1]);
+        changeCount += info.changes;
+    }
+    db.close();
+    if (changeCount > 0) {
+        return {
+            success: true,
+            batch: getLicencePlateLookupBatch(reqBody.batchID)
+        };
+    }
+    else {
+        return {
+            success: false,
+            message: "Licence plate not added to the batch.  It may be already part of the batch."
+        };
+    }
+}
+exports.addAllLicencePlatesToLookupBatch = addAllLicencePlatesToLookupBatch;
+function removeLicencePlateFromLookupBatch(reqBody, reqSession) {
+    const db = sqlite(dbPath);
+    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+        " set recordUpdate_userName = ?," +
+        " recordUpdate_timeMillis = ?" +
+        " where batchID = ?" +
+        " and recordDelete_timeMillis is null" +
+        " and lockDate is null")
+        .run(reqSession.user.userName, Date.now(), reqBody.batchID).changes;
+    if (canUpdateBatch === 0) {
+        db.close();
+        return {
+            success: false,
+            message: "Batch cannot be updated."
+        };
+    }
+    const info = db.prepare("delete from LicencePlateLookupBatchEntries" +
+        " where batchID = ?" +
+        " and licencePlateCountry = ?" +
+        " and licencePlateProvince = ?" +
+        " and licencePlateNumber = ?")
+        .run(reqBody.batchID, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber);
+    db.close();
+    if (info.changes > 0) {
+        return {
+            success: true
+        };
+    }
+    else {
+        return {
+            success: false,
+            message: "Licence plate not removed from the batch."
+        };
+    }
+}
+exports.removeLicencePlateFromLookupBatch = removeLicencePlateFromLookupBatch;
+function clearLookupBatch(batchID, reqSession) {
+    const db = sqlite(dbPath);
+    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+        " set recordUpdate_userName = ?," +
+        " recordUpdate_timeMillis = ?" +
+        " where batchID = ?" +
+        " and recordDelete_timeMillis is null" +
+        " and lockDate is null")
+        .run(reqSession.user.userName, Date.now(), batchID).changes;
+    if (canUpdateBatch === 0) {
+        db.close();
+        return {
+            success: false,
+            message: "Batch cannot be updated."
+        };
+    }
+    db.prepare("delete from LicencePlateLookupBatchEntries" +
+        " where batchID = ?")
+        .run(batchID);
+    db.close();
+    return {
+        success: true
+    };
+}
+exports.clearLookupBatch = clearLookupBatch;
 function getUnsentLicencePlateLookupBatches() {
     const addCalculatedFieldsFn = function (batch) {
         batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
@@ -796,7 +931,7 @@ function createLicencePlateLookupBatch(reqSession) {
     }
 }
 exports.createLicencePlateLookupBatch = createLicencePlateLookupBatch;
-function mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo) {
+function mto_getLicencePlatesAvailableForLookupBatch(currentBatchID, issueDaysAgo) {
     const addCalculatedFieldsFn = function (plateRecord) {
         plateRecord.issueDateMinString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMin);
         plateRecord.issueDateMaxString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMax);
@@ -806,19 +941,20 @@ function mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo) {
     const db = sqlite(dbPath, {
         readonly: true
     });
-    let issueDateNumber = 0;
+    let issueDateNumber = 99999999;
     if (issueDaysAgo !== -1) {
         let issueDate = new Date();
         issueDate.setDate(issueDate.getDate() - issueDaysAgo);
         issueDateNumber = dateTimeFns.dateToInteger(issueDate);
     }
     const plates = db.prepare("select t.licencePlateNumber," +
+        " min(t.ticketID) as ticketIDMin," +
         " count(t.ticketID) as ticketCount," +
         " group_concat(t.ticketNumber, ':') as ticketNumbersConcat," +
         " min(t.issueDate) as issueDateMin," +
         " max(t.issueDate) as issueDateMax" +
         " from ParkingTickets t" +
-        " left join LicencePlateLookupBatchEntries e on t.ticketID = e.ticketID and t.licencePlateNumber = e.licencePlateNumber" +
+        " left join LicencePlateLookupBatchEntries e on t.licencePlateNumber = e.licencePlateNumber and (t.ticketID = e.ticketID or e.batchID = ?)" +
         " where t.recordDelete_timeMillis is null" +
         " and t.licencePlateCountry = 'CA'" +
         " and t.licencePlateProvince = 'ON'" +
@@ -832,7 +968,7 @@ function mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo) {
         " and t.issueDate <= ?" +
         " group by t.licencePlateNumber" +
         " order by t.licencePlateNumber")
-        .all(issueDateNumber);
+        .all(currentBatchID, issueDateNumber);
     db.close();
     plates.forEach(addCalculatedFieldsFn);
     return plates;

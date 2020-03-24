@@ -85,6 +85,40 @@ export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: num
 export declare function getParkingLocations(): pts.ParkingLocation[];
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];
 export declare function getLicencePlateLookupBatch(batchID_or_negOne: number): pts.LicencePlateLookupBatch;
+declare type addLicencePlateToLookupBatch_return = {
+    success: boolean;
+    message?: string;
+    batch?: pts.LicencePlateLookupBatch;
+};
+export declare function addLicencePlateToLookupBatch(reqBody: any, reqSession: Express.Session): addLicencePlateToLookupBatch_return;
+declare type addAllLicencePlatesToLookupBatch_body = {
+    batchID: number;
+    licencePlateCountry: string;
+    licencePlateProvince: string;
+    licencePlateNumbers: [string, number][];
+};
+export declare function addAllLicencePlatesToLookupBatch(reqBody: addAllLicencePlatesToLookupBatch_body, reqSession: Express.Session): {
+    success: boolean;
+    message: string;
+    batch?: undefined;
+} | {
+    success: boolean;
+    batch: pts.LicencePlateLookupBatch;
+    message?: undefined;
+};
+export declare function removeLicencePlateFromLookupBatch(reqBody: any, reqSession: Express.Session): {
+    success: boolean;
+    message: string;
+} | {
+    success: boolean;
+    message?: undefined;
+};
+declare type clearLookupBatch_return = {
+    success: boolean;
+    message?: string;
+    batch?: pts.LicencePlateLookupBatch;
+};
+export declare function clearLookupBatch(batchID: number, reqSession: Express.Session): clearLookupBatch_return;
 export declare function getUnsentLicencePlateLookupBatches(): pts.LicencePlateLookupBatch[];
 export declare function createLicencePlateLookupBatch(reqSession: Express.Session): {
     success: boolean;
@@ -110,5 +144,5 @@ declare type MTO_AvailableLicencePlate = {
     ticketNumbersConcat: string;
     ticketNumbers: string[];
 };
-export declare function mto_getLicencePlatesAvailableForLookupBatch(issueDaysAgo: number): MTO_AvailableLicencePlate[];
+export declare function mto_getLicencePlatesAvailableForLookupBatch(currentBatchID: number, issueDaysAgo: number): MTO_AvailableLicencePlate[];
 export {};

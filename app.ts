@@ -76,6 +76,7 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/fa", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
+app.use("/typeface-pt-mono", express.static(path.join(__dirname, "node_modules", "typeface-pt-mono", "files")));
 
 
 /*
