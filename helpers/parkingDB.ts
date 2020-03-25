@@ -1200,7 +1200,7 @@ export function getLicencePlateLookupBatch(batchID_or_negOne: number) {
   batch.receivedDateString = dateTimeFns.dateIntegerToString(batch.receivedDate);
 
   batch.batchEntries = db.prepare("select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
-    " e.ticketID, t.ticketNumber" +
+    " e.ticketID, t.ticketNumber, t.issueDate" +
     " from LicencePlateLookupBatchEntries e" +
     " left join ParkingTickets t on e.ticketID = t.ticketID" +
     " where e.batchID = ?" +
@@ -1394,12 +1394,13 @@ export function removeLicencePlateFromLookupBatch(reqBody, reqSession: Express.S
 
 }
 
-type clearLookupBatch_return = {
+type lookupBatch_return = {
   success: boolean,
   message?: string,
   batch?: pts.LicencePlateLookupBatch
 };
-export function clearLookupBatch(batchID: number, reqSession: Express.Session): clearLookupBatch_return {
+
+export function clearLookupBatch(batchID: number, reqSession: Express.Session): lookupBatch_return {
 
   const db = sqlite(dbPath);
 
@@ -1437,11 +1438,103 @@ export function clearLookupBatch(batchID: number, reqSession: Express.Session): 
   };
 }
 
-export function getUnsentLicencePlateLookupBatches() {
+export function lockLookupBatch(batchID: number, reqSession: Express.Session): lookupBatch_return {
+
+  const db = sqlite(dbPath);
+
+  const rightNow = new Date();
+
+  const info = db.prepare("update LicencePlateLookupBatches" +
+    " set lockDate = ?," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where batchID = ?" +
+    " and recordDelete_timeMillis is null" +
+    " and lockDate is null")
+    .run(
+      dateTimeFns.dateToInteger(rightNow),
+      reqSession.user.userName,
+      rightNow.getTime(),
+      batchID);
+
+  if (info.changes > 0) {
+
+    db.prepare("insert into ParkingTicketStatusLog" +
+      " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
+      " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+
+      " select t.ticketID," +
+      " ifnull(max(s.statusIndex), 0) + 1 as statusIndex," +
+      " ? as statusDate," +
+      " ? as statusTime," +
+      " 'ownerLookupPending' as statusKey," +
+      " e.batchID as statusField," +
+      " 'Looking up '||e.licencePlateNumber||' '||e.licencePlateProvince||' '||e.licencePlateCountry as statusNote," +
+      " ? as recordCreate_userName," +
+      " ? as recordCreate_timeMillis," +
+      " ? as recordUpdate_userName," +
+      " ? as recordUpdate_timeMillis" +
+      " from LicencePlateLookupBatchEntries e" +
+      " left join ParkingTickets t" +
+      " on e.licencePlateCountry = t.licencePlateCountry" +
+      " and e.licencePlateProvince = t.licencePlateProvince" +
+      " and e.licencePlateNumber = t.licencePlateNumber" +
+      " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+      " where e.batchID = ?" +
+      " and (e.ticketID = t.ticketID or (t.recordDelete_timeMillis is null and t.resolvedDate is null))" +
+      " group by t.ticketID, e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber, e.batchID" +
+      " having max(" +
+      "case when s.statusKey in ('ownerLookupPending', 'ownerLookupMatch', 'ownerLookupError') and s.recordDelete_timeMillis is null then 1" +
+      " else 0" +
+      " end) = 0")
+      .run(dateTimeFns.dateToInteger(rightNow),
+        dateTimeFns.dateToTimeInteger(rightNow),
+        reqSession.user.userName,
+        rightNow.getTime(),
+        reqSession.user.userName,
+        rightNow.getTime(),
+        batchID);
+
+  }
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+export function markLookupBatchAsSent(batchID: number, reqSession: Express.Session) {
+
+  const db = sqlite(dbPath);
+
+  const rightNow = new Date();
+
+  const info = db.prepare("update LicencePlateLookupBatches" +
+    " set sentDate = ?," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where batchID = ?" +
+    " and recordDelete_timeMillis is null" +
+    " and lockDate is not null" +
+    " and sentDate is null")
+    .run(dateTimeFns.dateToInteger(rightNow),
+      reqSession.user.userName,
+      rightNow.getTime(),
+      batchID);
+
+  db.close();
+
+  return (info.changes > 0);
+}
+
+export function getUnreceivedLicencePlateLookupBatches() {
 
   const addCalculatedFieldsFn = function(batch: pts.LicencePlateLookupBatch) {
     batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
     batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
+    batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
   };
 
   const db = sqlite(dbPath, {
@@ -1449,12 +1542,12 @@ export function getUnsentLicencePlateLookupBatches() {
   });
 
   const batches: pts.LicencePlateLookupBatch[] = db.prepare(
-    "select b.batchID, b.batchDate, b.lockDate, count(e.batchID) as batchEntryCount" +
+    "select b.batchID, b.batchDate, b.lockDate, b.sentDate, count(e.batchID) as batchEntryCount" +
     " from LicencePlateLookupBatches b" +
     " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
     " where b.recordDelete_timeMillis is null" +
-    " and b.sentDate is null" +
-    " group by b.batchID, b.batchDate, b.lockDate" +
+    " and b.receivedDate is null" +
+    " group by b.batchID, b.batchDate, b.lockDate, b.sentDate" +
     " order by b.batchID desc")
     .all();
 

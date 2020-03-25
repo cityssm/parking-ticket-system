@@ -215,4 +215,5 @@ config.licencePlateProvinces = {
         }
     }
 };
+config.mtoExportImport = {};
 module.exports = config;

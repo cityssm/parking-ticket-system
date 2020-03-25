@@ -12,7 +12,8 @@ export type Config = {
   genders?: Config_Gender[],
   licencePlateCountryAliases?: { [countryKey: string]: string },
   licencePlateProvinceAliases?: { [country: string]: { [provinceKey: string]: string } },
-  licencePlateProvinces?: {[country: string]: Config_LicencePlateCountry}
+  licencePlateProvinces?: {[country: string]: Config_LicencePlateCountry},
+  mtoExportImport?: Config_MTOExportImport
 };
 
 
@@ -94,6 +95,10 @@ type Config_LicencePlateProvince = {
 type Config_Gender = {
   genderKey: string,
   gender: string
+};
+
+type Config_MTOExportImport = {
+  authorizedUser?: string
 };
 
 

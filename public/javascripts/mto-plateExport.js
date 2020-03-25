@@ -3,13 +3,15 @@
 (function() {
 
   let batchID = -1;
+  let batchIsLocked = true;
+  let batchIsSent = false;
 
   let fn_populateBatchView;
   let fn_refreshAvailablePlates;
 
-  /*
-   * Available Plates
-   */
+
+  // Available Plates
+
 
   const availableIssueDaysAgoEle = document.getElementById("available--issueDaysAgo");
   const availablePlatesContainerEle = document.getElementById("is-available-plates-container");
@@ -23,11 +25,14 @@
 
     clickEvent.preventDefault();
 
-    const recordIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+    const buttonEle = clickEvent.currentTarget;
+    buttonEle.setAttribute("disabled", "disabled");
+
+    const recordIndex = parseInt(buttonEle.getAttribute("data-index"));
 
     const plateRecord = availablePlatesList[recordIndex];
 
-    const plateContainerEle = clickEvent.currentTarget.closest(".is-plate-container");
+    const plateContainerEle = buttonEle.closest(".is-plate-container");
 
     pts.postJSON(
       "/plates/doAddLicencePlateToLookupBatch", {
@@ -49,6 +54,10 @@
 
           fn_populateBatchView(responseJSON.batch);
 
+        } else {
+
+          buttonEle.removeAttribute("disabled");
+
         }
 
       }
@@ -60,11 +69,14 @@
 
     clickEvent.preventDefault();
 
-    const recordIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+    const buttonEle = clickEvent.currentTarget;
+    buttonEle.setAttribute("disabled", "disabled");
+
+    const recordIndex = parseInt(buttonEle.getAttribute("data-index"));
 
     const batchEntry = batchEntriesList[recordIndex];
 
-    const entryContainerEle = clickEvent.currentTarget.closest(".is-entry-container");
+    const entryContainerEle = buttonEle.closest(".is-entry-container");
 
     pts.postJSON(
       "/plates/doRemoveLicencePlateFromLookupBatch", {
@@ -81,6 +93,10 @@
           entryContainerEle.remove();
 
           fn_refreshAvailablePlates();
+
+        } else {
+
+          buttonEle.removeAttribute("disabled");
 
         }
 
@@ -116,6 +132,35 @@
       "Yes, Clear the Batch",
       "warning",
       clearFn
+    );
+
+  }
+
+  function clickFn_downloadBatch(clickEvent) {
+
+    clickEvent.preventDefault();
+
+    const downloadFn = function() {
+
+      window.open("/plates/mtoExport/" + batchID);
+      batchIsSent = true;
+
+    };
+
+    if (batchIsSent) {
+
+      downloadFn();
+      return;
+
+    }
+
+    pts.confirmModal(
+      "Download Batch?",
+      "<strong>You are about to download this batch for the first time.</strong><br />" +
+      "The date of this download will be tracked as part of the batch record.",
+      "OK, Download the File",
+      "warning",
+      downloadFn
     );
 
   }
@@ -270,6 +315,16 @@
 
   fn_refreshAvailablePlates = function() {
 
+    if (batchIsLocked) {
+
+      availablePlatesContainerEle.innerHTML = "<div class=\"message is-info\">" +
+        "<div class=\"message-body\">Licence Plates cannot be added to a locked batch.</div>" +
+        "</div>";
+
+      return;
+
+    }
+
     availablePlatesContainerEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
       "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
       "<em>Loading licence plates..." +
@@ -304,9 +359,11 @@
 
   availableIssueDaysAgoEle.addEventListener("change", fn_refreshAvailablePlates);
 
-  /*
-   * Current Batch
-   */
+
+  // Current Batch
+
+
+  const lockBatchButtonEle = document.getElementById("is-lock-batch-button");
 
   const batchEntriesContainerEle = document.getElementById("is-batch-entries-container");
 
@@ -315,9 +372,29 @@
     batchID = batch.batchID;
     batchEntriesList = batch.batchEntries;
 
+    batchIsLocked = !(batch.lockDate == null);
+    batchIsSent = !(batch.sentDate == null);
+
+    if (batchIsLocked) {
+
+      lockBatchButtonEle.setAttribute("disabled", "disabled");
+
+    } else {
+
+      lockBatchButtonEle.removeAttribute("disabled");
+
+    }
+
     document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID;
 
-    document.getElementById("batchSelector--batchDetails").innerHTML = "Created " + batch.batchDateString;
+    document.getElementById("batchSelector--batchDetails").innerHTML =
+      "<span class=\"icon is-small\"><i class=\"fas fa-calendar\"></i></span>" +
+      "<span>" + batch.batchDateString + "</span>" +
+      (batchIsLocked ?
+        " <span class=\"tag is-light\">" +
+        "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span> <span>" + batch.lockDateString + "</span>" +
+        "</span>" :
+        "");
 
     pts.clearElement(batchEntriesContainerEle);
 
@@ -349,7 +426,9 @@
           "<div class=\"licence-plate-number\">" + pts.escapeHTML(batchEntry.licencePlateNumber) + "</div>" +
           "</div>" +
           "</div>") +
-        ("<div class=\"level-right\">" +
+        (batchIsLocked ?
+          "" :
+          "<div class=\"level-right\">" +
           "<button class=\"button is-small\" data-index=\"" + index + "\" type=\"button\">" +
           "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
           "<span>Remove</span>" +
@@ -357,20 +436,49 @@
           "</div>") +
         "</div>";
 
-      panelBlockEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_removeLicencePlateFromBatch);
+      if (!batchIsLocked) {
+
+        panelBlockEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_removeLicencePlateFromBatch);
+
+      }
 
       panelEle.appendChild(panelBlockEle);
 
     }
 
-    const clearAllButtonEle = document.createElement("button");
-    clearAllButtonEle.className = "button is-fullwidth has-margin-bottom-10";
-    clearAllButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
-      "<span>Clear " + batchEntriesList.length + " Entr" + (batchEntriesList.length === 1 ? "y" : "ies") + " from Batch</span>";
+    if (batchIsLocked) {
 
-    clearAllButtonEle.addEventListener("click", clickFn_clearBatch);
+      const downloadFileButtonEle = document.createElement("button");
+      downloadFileButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      downloadFileButtonEle.innerHTML =
+        "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
+        "<span>Download File for MTO</span>";
 
-    batchEntriesContainerEle.appendChild(clearAllButtonEle);
+      downloadFileButtonEle.addEventListener("click", clickFn_downloadBatch);
+
+      batchEntriesContainerEle.appendChild(downloadFileButtonEle);
+
+      batchEntriesContainerEle.insertAdjacentHTML(
+        "beforeend",
+        "<a class=\"button is-fullwidth has-margin-bottom-10\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
+        "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
+        "<span>MTO ARIS Login</span>" +
+        "</a>"
+      );
+
+    } else {
+
+      const clearAllButtonEle = document.createElement("button");
+      clearAllButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      clearAllButtonEle.innerHTML =
+        "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
+        "<span>Clear Batch</span>";
+
+      clearAllButtonEle.addEventListener("click", clickFn_clearBatch);
+
+      batchEntriesContainerEle.appendChild(clearAllButtonEle);
+
+    }
 
     batchEntriesContainerEle.appendChild(panelEle);
 
@@ -382,10 +490,14 @@
       "/plates/doGetLookupBatch", {
         batchID: batchID
       },
-      fn_populateBatchView
+      function(batch) {
+
+        fn_populateBatchView(batch);
+        fn_refreshAvailablePlates();
+
+      }
     );
 
-    fn_refreshAvailablePlates();
 
   }
 
@@ -409,7 +521,7 @@
 
     const fn_loadBatches = function() {
 
-      pts.postJSON("/plates/doGetUnsentLicencePlateLookupBatches", {}, function(batchList) {
+      pts.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, function(batchList) {
 
         if (batchList.length === 0) {
 
@@ -435,8 +547,15 @@
           linkEle.innerHTML = "<div class=\"columns\">" +
             "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
             "<div class=\"column has-text-right\">" +
-            batch.batchDateString +
-            (batch.lockDate ? "<br /><span class=\"tag\">Locked</span>" : "") +
+            batch.batchDateString + "<br />" +
+            ("<div class=\"tags justify-flex-end\">" +
+              (batch.lockDate ?
+                "<span class=\"tag\"><span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span><span>Locked</span></span>" :
+                "") +
+              (batch.sentDate ?
+                "<span class=\"tag\"><span class=\"icon is-small\"><i class=\"fas fa-share\" aria-hidden=\"true\"></i></span><span>Sent to MTO</span></span>" :
+                "") +
+              "</div>") +
             "</div>" +
             "</div>";
 
@@ -493,6 +612,42 @@
       "Yes, Create a Batch",
       "info",
       createFn
+    );
+
+  });
+
+  lockBatchButtonEle.addEventListener("click", function() {
+
+    if (batchIsLocked) {
+
+      return;
+
+    }
+
+    const lockFn = function() {
+
+      pts.postJSON("/plates/doLockLookupBatch", {
+        batchID: batchID
+      }, function(responseJSON) {
+
+        if (responseJSON.success) {
+
+          fn_populateBatchView(responseJSON.batch);
+
+        }
+
+      });
+
+    };
+
+    pts.confirmModal(
+      "Lock Batch?",
+      "<strong>Are you sure you want to lock the batch?</strong><br />" +
+      "Once the batch is locked, no licence plates can be added or deleted from the batch." +
+      " All tickets related to the licence plates in the batch will be updated with a \"Pending Lookup\" status.",
+      "Yes, Lock the Batch",
+      "info",
+      lockFn
     );
 
   });

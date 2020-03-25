@@ -19,6 +19,7 @@ export declare type Config = {
     licencePlateProvinces?: {
         [country: string]: Config_LicencePlateCountry;
     };
+    mtoExportImport?: Config_MTOExportImport;
 };
 declare type Config_ApplicationConfig = {
     applicationName?: string;
@@ -85,6 +86,9 @@ declare type Config_LicencePlateProvince = {
 declare type Config_Gender = {
     genderKey: string;
     gender: string;
+};
+declare type Config_MTOExportImport = {
+    authorizedUser?: string;
 };
 export declare type RawRowsColumnsReturn = {
     rows: object[];

@@ -32,6 +32,40 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
             batch: latestUnlockedBatch
         });
     });
+    router.get("/mtoExport/:batchID", function (req, res) {
+        const batchID = parseInt(req.params.batchID);
+        parkingDB.markLookupBatchAsSent(batchID, req.session);
+        const batch = parkingDB.getLicencePlateLookupBatch(batchID);
+        const newline = "\n";
+        let output = "";
+        let recordCount = 0;
+        const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
+        for (let index = 0; index < batch.batchEntries.length; index += 1) {
+            const entry = batch.batchEntries[index];
+            if (entry.ticketID === null) {
+                continue;
+            }
+            recordCount += 1;
+            output += "PKTD" +
+                (entry.licencePlateNumber + "          ").substring(0, 10) +
+                entry.issueDate.toString().slice(-6) +
+                (entry.ticketNumber + "                       ").substring(0, 23) +
+                authorizedUserPadded + newline;
+        }
+        const recordCountPadded = ("000000" + recordCount.toString()).slice(-6);
+        output = "PKTA" +
+            "    1" +
+            batch.sentDate.toString().slice(-6) +
+            recordCountPadded +
+            "Y" +
+            "N" + newline +
+            output;
+        output += "PKTZ" +
+            recordCountPadded + newline;
+        res.setHeader("Content-Disposition", "attachment; filename=batch-" + batchID + ".txt");
+        res.setHeader("Content-Type", "text/plain");
+        res.send(output);
+    });
     router.get("/mtoImport", function (_req, res) {
         res.render("mto-plateImport", {
             headTitle: "MTO Licence Plate Ownership Import"
@@ -44,8 +78,8 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
         res.json(availablePlates);
     });
 }
-router.post("/doGetUnsentLicencePlateLookupBatches", function (_req, res) {
-    const batches = parkingDB.getUnsentLicencePlateLookupBatches();
+router.post("/doGetUnreceivedLicencePlateLookupBatches", function (_req, res) {
+    const batches = parkingDB.getUnreceivedLicencePlateLookupBatches();
     res.json(batches);
 });
 router.post("/doCreateLookupBatch", function (req, res) {
@@ -120,6 +154,23 @@ router.post("/doClearLookupBatch", function (req, res) {
     }
     const batchID = parseInt(req.body.batchID);
     const result = parkingDB.clearLookupBatch(batchID, req.session);
+    if (result.success) {
+        result.batch = parkingDB.getLicencePlateLookupBatch(batchID);
+    }
+    res.json(result);
+});
+router.post("/doLockLookupBatch", function (req, res) {
+    if (!req.session.user.userProperties.canCreate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const batchID = parseInt(req.body.batchID);
+    const result = parkingDB.lockLookupBatch(batchID, req.session);
     if (result.success) {
         result.batch = parkingDB.getLicencePlateLookupBatch(batchID);
     }

@@ -113,13 +113,15 @@ export declare function removeLicencePlateFromLookupBatch(reqBody: any, reqSessi
     success: boolean;
     message?: undefined;
 };
-declare type clearLookupBatch_return = {
+declare type lookupBatch_return = {
     success: boolean;
     message?: string;
     batch?: pts.LicencePlateLookupBatch;
 };
-export declare function clearLookupBatch(batchID: number, reqSession: Express.Session): clearLookupBatch_return;
-export declare function getUnsentLicencePlateLookupBatches(): pts.LicencePlateLookupBatch[];
+export declare function clearLookupBatch(batchID: number, reqSession: Express.Session): lookupBatch_return;
+export declare function lockLookupBatch(batchID: number, reqSession: Express.Session): lookupBatch_return;
+export declare function markLookupBatchAsSent(batchID: number, reqSession: Express.Session): boolean;
+export declare function getUnreceivedLicencePlateLookupBatches(): pts.LicencePlateLookupBatch[];
 export declare function createLicencePlateLookupBatch(reqSession: Express.Session): {
     success: boolean;
     batch: {

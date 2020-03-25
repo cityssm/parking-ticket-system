@@ -85,6 +85,9 @@ function initParkingDB() {
             " recordDelete_timeMillis integer," +
             " foreign key (locationKey) references ParkingLocations (locationKey)" +
             ")").run();
+        parkingDB.prepare("create index if not exists ParkingTickets_LicencePlateIndex on ParkingTickets" +
+            " (licencePlateCountry, licencePlateProvince, licencePlateNumber)")
+            .run();
         parkingDB.prepare("create table if not exists ParkingTicketRemarks (" +
             "ticketID integer not null," +
             " remarkIndex integer not null," +

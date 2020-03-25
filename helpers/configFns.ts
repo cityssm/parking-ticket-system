@@ -70,6 +70,8 @@ configFallbackValues.set("licencePlateProvinceAliases", {});
 
 configFallbackValues.set("licencePlateProvinces", {});
 
+configFallbackValues.set("config.mtoExportImport.authorizedUser", "");
+
 
 export function getProperty(propertyName: string): any {
 
