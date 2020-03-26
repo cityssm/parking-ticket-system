@@ -136,6 +136,22 @@ select.is-readonly {
 
 
 /*
+ * Side Menu
+ */
+
+.menu-list {
+
+  a {
+    display: flex;
+  }
+
+  .icon {
+    margin-right: 5px;
+  }
+}
+
+
+/*
  * Circle Button
  */
 

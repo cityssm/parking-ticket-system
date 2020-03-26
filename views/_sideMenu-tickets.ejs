@@ -6,18 +6,28 @@
     <li>
       <a class="<%= (headTitle === "Parking Tickets" ? "is-active" : "") %>" href="/tickets">
         <span class="icon">
-          <i class="fas fa-file-invoice" aria-hidden="true"></i>
+          <i class="fas fa-fw fa-file-invoice" aria-hidden="true"></i>
         </span>
-        Parking Ticket Search
+        <span>Parking Ticket Search</span>
       </a>
     </li>
     <% if (user.userProperties.canCreate) { %>
       <li>
         <a href="/tickets/new">
           <span class="icon">
-            <i class="fas fa-plus" aria-hidden="true"></i>
+            <i class="fas fa-fw fa-plus" aria-hidden="true"></i>
           </span>
-          Create a New Ticket
+          <span>Create a New Ticket</span>
+        </a>
+      </li>
+    <% } %>
+    <% if (user.userProperties.canUpdate) { %>
+      <li>
+        <a class="<%= (headTitle === "Convict Parking Tickets" ? "is-active" : "") %>" href="/tickets/convict">
+          <span class="icon">
+            <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
+          </span>
+          <span>Convict Parking Tickets</span>
         </a>
       </li>
     <% } %>
