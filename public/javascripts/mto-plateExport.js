@@ -550,10 +550,16 @@
             batch.batchDateString + "<br />" +
             ("<div class=\"tags justify-flex-end\">" +
               (batch.lockDate ?
-                "<span class=\"tag\"><span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span><span>Locked</span></span>" :
+                "<span class=\"tag\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+                "<span>Locked</span>" +
+                "</span>" :
                 "") +
               (batch.sentDate ?
-                "<span class=\"tag\"><span class=\"icon is-small\"><i class=\"fas fa-share\" aria-hidden=\"true\"></i></span><span>Sent to MTO</span></span>" :
+                "<span class=\"tag\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-share\" aria-hidden=\"true\"></i></span>" +
+                "<span>Sent to MTO</span>" +
+                "</span>" :
                 "") +
               "</div>") +
             "</div>" +
