@@ -158,11 +158,14 @@ select.is-readonly {
   &.is-fullwidth {
     width: 100%;
   }
+
+  > .licence-plate-number {
+    min-width: 5em;
+    padding: 2px 5px;
+  }
 }
 
 .licence-plate-number {
-  min-width: 5em;
-  padding: 2px 5px;
   font-family: 'PT Mono', monospace;
   font-size: 1.4em;
   color: var(--color);

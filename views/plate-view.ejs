@@ -4,12 +4,14 @@
   <ul>
     <li><a href="/dashboard">Home</a></li>
     <li><a href="/plates">Licence Plates</a></li>
-    <li class="is-active"><a href="#" aria-current="page"><%= licencePlateNumber %></a></li>
+    <li class="is-active"><a href="#" aria-current="page">
+      <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
+    </a></li>
   </ul>
 </nav>
 
 <h1 class="title is-1">
-  Licence Plate <%= licencePlateNumber %>
+  Licence Plate <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
 </h1>
 
 <%
@@ -22,19 +24,19 @@
       <div class="panel-block">
         <p>
           <strong>Licence Plate Number</strong><br />
-          <%= licencePlateNumber %>
+          <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
         </p>
       </div>
       <div class="panel-block">
         <p>
           <strong>Province</strong><br />
-          <%= licencePlateProvince %>
+          <%= (licencePlateProvince === "" ? "(Blank)" : licencePlateProvince) %>
         </p>
       </div>
       <div class="panel-block">
         <p>
           <strong>Country</strong><br />
-          <%= licencePlateCountry %>
+          <%= (licencePlateCountry === "" ? "(Blank)" : licencePlateCountry) %>
         </p>
       </div>
     </div>

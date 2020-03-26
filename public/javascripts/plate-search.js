@@ -68,7 +68,9 @@
 
         trEle.innerHTML = "<td>" +
           "<a href=\"" + url + "\" data-tooltip=\"View Licence Plate\">" +
-          (plateObj.licencePlateNumber === "" ? "(Blank)" : plateObj.licencePlateNumber) +
+          (plateObj.licencePlateNumber === "" ?
+          "(Blank)" :
+          "<span class=\"licence-plate-number\">" + plateObj.licencePlateNumber + "</span>") +
           "</a>" +
           "</td>" +
           ("<td>" +
