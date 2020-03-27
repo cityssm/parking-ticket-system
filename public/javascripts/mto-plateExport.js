@@ -605,6 +605,7 @@
         if (responseJSON.success) {
 
           fn_populateBatchView(responseJSON.batch);
+          fn_refreshAvailablePlates();
 
         }
 
