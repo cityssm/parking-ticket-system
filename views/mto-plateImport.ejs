@@ -1,0 +1,126 @@
+<%- include('_header'); -%>
+
+<div class="columns is-block-print">
+  <div class="column is-3 is-hidden-print" id="is-sidemenu-expanded">
+    <%- include("_sideMenu-plates"); -%>
+    <button class="button is-light is-fullwidth has-margin-top-20" id="is-sidemenu-collapse-button">
+      <span class="icon is-small"><i class="fas fa-angle-double-left" aria-hidden="true"></i></span>
+      <span>Hide Side Menu</span>
+    </button>
+  </div>
+  <div class="column is-narrow is-hidden-print is-hidden" id="is-sidemenu-collapsed">
+    <button class="button is-light has-tooltip-right" id="is-sidemenu-expand-button" data-tooltip="Expand Side Menu">
+      <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+      <span class="sr-only">Expand Side Menu</span>
+    </button>
+  </div>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/plates">Licence Plates</a></li>
+        <li class="is-active"><a href="#" aria-current="page">MTO Licence Plate Ownership Import</a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title is-1">
+      MTO Licence Plate Ownership Import
+    </h1>
+
+
+    <div class="card">
+      <div class="card-content">
+        <ul class="steps">
+          <li class="step-item is-active" id="step-item--upload">
+            <div class="step-marker">
+              <span class="icon">
+                <i class="fas fa-file-upload" aria-hidden="true"></i>
+              </span>
+            </div>
+            <div class="step-details">
+              <p class="step-title">Step 1</p>
+              <p>Upload File from ARIS</p>
+            </div>
+          </li>
+          <li class="step-item" id="step-item--update">
+            <div class="step-marker"></div>
+            <div class="step-details">
+              <p class="step-title">Step 2</p>
+              <p>Update Ownership Records</p>
+            </div>
+          </li>
+          <li class="step-item" id="step-item--results">
+            <div class="step-marker"></div>
+            <div class="step-details">
+              <p class="step-title">Step 3</p>
+              <p>Results</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="card-content" id="step--upload">
+        <form id="form--mtoImport">
+          <div class="field has-addons">
+            <div class="control">
+              <label class="button is-static" for="mtoImport--batchID">Unreceived Batch</label>
+            </div>
+            <div class="control is-expanded">
+              <div class="select is-fullwidth">
+                <select id="mtoImport--batchID" name="batchID" required>
+                  <option value="">(Select the Corresponding Batch)</option>
+                  <%
+                    for (let index = 0; index < batches.length; index += 1) {
+                      let batch = batches[index];
+                      if (batch.sentDate) {
+                  %>
+                      <option value="<%= batch.batchID %>">Batch #<%= batch.batchID %>, Sent <%= batch.sentDateString %></option>
+                  <%
+                      }
+                    }
+                  %>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="file has-name is-fullwidth">
+            <label class="file-label">
+              <input class="file-input" id="mtoImport--importFile" name="importFile" type="file" accept=".txt,text/plain" required />
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-folder-open" aria-hidden="true"></i>
+                </span>
+                <span class="file-label">Choose a file...</span>
+              </span>
+              <span class="file-name" id="mtoImport--importFileName">
+                (No File Selected)
+              </span>
+            </label>
+          </div>
+          <div class="level has-margin-top-10">
+            <div class="level-left" id="mtoImport--importFileMessage"></div>
+            <div class="level-right">
+              <button class="button is-success" type="submit">
+                <span class="icon is-small">
+                  <i class="fas fa-file-upload" aria-hidden="true"></i>
+                </span>
+                <span>Upload File</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="card-content has-text-centered is-hidden" id="step--update">
+        <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
+        Processing ownership file...
+      </div>
+      <div class="card-content has-text-centered is-hidden" id="step--results"></div>
+    </div>
+
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<script src="/javascripts/mto-plateImport.min.js"></script>
+
+<%- include('_footerB'); -%>

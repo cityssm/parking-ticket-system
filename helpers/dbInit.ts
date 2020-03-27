@@ -1,7 +1,3 @@
-/* eslint-disable no-console */
-
-"use strict";
-
 import sqlite = require("better-sqlite3");
 
 

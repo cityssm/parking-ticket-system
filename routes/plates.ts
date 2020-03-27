@@ -3,10 +3,18 @@
 import express = require("express");
 const router = express.Router();
 
+import * as mtoFns from "../helpers/mtoFns";
+
 import * as configFns from "../helpers/configFns";
 
 import * as vehicleFns from "../helpers/vehicleFns";
 import * as parkingDB from "../helpers/parkingDB";
+
+
+
+var multer = require('multer');
+var storage = multer.memoryStorage();
+var upload = multer({storage: storage});
 
 
 router.get("/", function(_req, res) {
@@ -55,6 +63,16 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
       pageContainerIsFullWidth: true,
       batch: latestUnlockedBatch
     });
+
+  });
+
+  router.post("/mto_doGetPlatesAvailableForLookup", function(req, res) {
+
+    const batchID = parseInt(req.body.batchID);
+    const issueDaysAgo = parseInt(req.body.issueDaysAgo);
+
+    const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(batchID, issueDaysAgo);
+    res.json(availablePlates);
 
   });
 
@@ -140,20 +158,24 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
   router.get("/mtoImport", function(_req, res) {
 
+    const unreceivedBatches = parkingDB.getUnreceivedLicencePlateLookupBatches();
+
     res.render("mto-plateImport", {
-      headTitle: "MTO Licence Plate Ownership Import"
+      headTitle: "MTO Licence Plate Ownership Import",
+      batches: unreceivedBatches
     });
 
   });
 
-  router.post("/mto_doGetPlatesAvailableForLookup", function(req, res) {
+  router.post("/mto_doImportUpload", upload.single("importFile"), function(req, res) {
 
-    const batchID = parseInt(req.body.batchID);
-    const issueDaysAgo = parseInt(req.body.issueDaysAgo);
+    const batchID = req.body.batchID;
 
-    const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(batchID, issueDaysAgo);
-    res.json(availablePlates);
+    const ownershipData = req.file.buffer.toString();
 
+    const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData);
+
+    res.json({ success: true });
   });
 }
 

@@ -21,6 +21,7 @@
     "http-errors": "^1.7.3",
     "marked": "^0.8.2",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "node-fetch": "^2.6.0",
     "typeface-pt-mono": "0.0.72"
   },
@@ -37,10 +38,12 @@
     "@types/http-errors": "^1.6.3",
     "@types/marked": "^0.7.3",
     "@types/morgan": "^1.9.0",
+    "@types/multer": "^1.4.2",
     "@types/node-fetch": "^2.5.5",
     "bulma": "^0.8.1",
     "bulma-divider": "^0.2.0",
     "bulma-helpers": "^0.3.10",
+    "bulma-steps": "^2.2.1",
     "bulma-switch": "^2.0.0",
     "bulma-tooltip": "^3.0.2",
     "github-markdown-css": "^4.0.0"

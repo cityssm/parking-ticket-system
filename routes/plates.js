@@ -1,9 +1,13 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
+const mtoFns = require("../helpers/mtoFns");
 const configFns = require("../helpers/configFns");
 const vehicleFns = require("../helpers/vehicleFns");
 const parkingDB = require("../helpers/parkingDB");
+var multer = require('multer');
+var storage = multer.memoryStorage();
+var upload = multer({ storage: storage });
 router.get("/", function (_req, res) {
     res.render("plate-search", {
         headTitle: "Licence Plates"
@@ -31,6 +35,12 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
             pageContainerIsFullWidth: true,
             batch: latestUnlockedBatch
         });
+    });
+    router.post("/mto_doGetPlatesAvailableForLookup", function (req, res) {
+        const batchID = parseInt(req.body.batchID);
+        const issueDaysAgo = parseInt(req.body.issueDaysAgo);
+        const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(batchID, issueDaysAgo);
+        res.json(availablePlates);
     });
     router.get("/mtoExport/:batchID", function (req, res) {
         const batchID = parseInt(req.params.batchID);
@@ -67,15 +77,17 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
         res.send(output);
     });
     router.get("/mtoImport", function (_req, res) {
+        const unreceivedBatches = parkingDB.getUnreceivedLicencePlateLookupBatches();
         res.render("mto-plateImport", {
-            headTitle: "MTO Licence Plate Ownership Import"
+            headTitle: "MTO Licence Plate Ownership Import",
+            batches: unreceivedBatches
         });
     });
-    router.post("/mto_doGetPlatesAvailableForLookup", function (req, res) {
-        const batchID = parseInt(req.body.batchID);
-        const issueDaysAgo = parseInt(req.body.issueDaysAgo);
-        const availablePlates = parkingDB.mto_getLicencePlatesAvailableForLookupBatch(batchID, issueDaysAgo);
-        res.json(availablePlates);
+    router.post("/mto_doImportUpload", upload.single("importFile"), function (req, res) {
+        const batchID = req.body.batchID;
+        const ownershipData = req.file.buffer.toString();
+        const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData);
+        res.json({ success: true });
     });
 }
 router.post("/doGetUnreceivedLicencePlateLookupBatches", function (_req, res) {

@@ -75,7 +75,16 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
     if (formEleOrObj.tagName && formEleOrObj.tagName === "FORM") {
 
-      fetchOptions.body = new URLSearchParams(new FormData(formEleOrObj));
+      if (formEleOrObj.querySelector("input[name][type='file']")) {
+
+        fetchOptions.body = new FormData(formEleOrObj);
+
+      } else {
+
+        fetchOptions.body = new URLSearchParams(new FormData(formEleOrObj));
+        
+      }
+
 
     } else if (formEleOrObj.constructor === Object) {
 
