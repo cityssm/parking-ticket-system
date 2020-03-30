@@ -1,5 +1,6 @@
 /// <reference types="express-session" />
 /// <reference types="integer" />
+export declare const dbPath = "data/parking.db";
 import * as pts from "./ptsTypes";
 export declare function getRawRowsColumns(sql: string, params: any[]): pts.RawRowsColumnsReturn;
 export declare type getParkingTickets_queryOptions = {

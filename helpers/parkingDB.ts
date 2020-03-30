@@ -1,7 +1,7 @@
 "use strict";
 
 import sqlite = require("better-sqlite3");
-const dbPath = "data/parking.db";
+export const dbPath = "data/parking.db";
 
 import * as vehicleFns from "./vehicleFns";
 import * as dateTimeFns from "./dateTimeFns";
@@ -130,7 +130,7 @@ function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: st
     if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {
 
       possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
-      possibleOwnerObj.driverLicenceExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.driverLicenceExpiryDate);
+      possibleOwnerObj.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
       possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
 
       return possibleOwnerObj;

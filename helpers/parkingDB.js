@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqlite = require("better-sqlite3");
-const dbPath = "data/parking.db";
+exports.dbPath = "data/parking.db";
 const vehicleFns = require("./vehicleFns");
 const dateTimeFns = require("./dateTimeFns");
 const configFns = require("./configFns");
@@ -38,7 +38,7 @@ function canUpdateObject(obj, reqSession) {
     return canUpdate;
 }
 function getRawRowsColumns(sql, params) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const stmt = db.prepare(sql);
@@ -73,7 +73,7 @@ function getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvinc
         const ownerPlateProvinceAlias = (configFns.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})[possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
         if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {
             possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
-            possibleOwnerObj.driverLicenceExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.driverLicenceExpiryDate);
+            possibleOwnerObj.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
             possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
             return possibleOwnerObj;
         }
@@ -88,7 +88,7 @@ function getParkingTickets(reqSession, queryOptions) {
         ele.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ele.latestStatus_statusDate);
         ele.canUpdate = canUpdateObject(ele, reqSession);
     };
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const sqlParams = [];
@@ -161,7 +161,7 @@ function getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvin
         ele.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ele.latestStatus_statusDate);
         ele.canUpdate = canUpdateObject(ele, reqSession);
     };
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const tickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
@@ -187,7 +187,7 @@ function getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvin
 }
 exports.getParkingTicketsByLicencePlate = getParkingTicketsByLicencePlate;
 function getParkingTicket(ticketID, reqSession) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const ticket = db.prepare("select * from ParkingTickets" +
@@ -241,7 +241,7 @@ function getParkingTicket(ticketID, reqSession) {
 }
 exports.getParkingTicket = getParkingTicket;
 function getParkingTicketID(ticketNumber) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const ticketRow = db.prepare("select ticketID" +
@@ -259,7 +259,7 @@ function getParkingTicketID(ticketNumber) {
 }
 exports.getParkingTicketID = getParkingTicketID;
 function createParkingTicket(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
     if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
@@ -293,7 +293,7 @@ function createParkingTicket(reqBody, reqSession) {
 }
 exports.createParkingTicket = createParkingTicket;
 function updateParkingTicket(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
     if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
@@ -346,7 +346,7 @@ function updateParkingTicket(reqBody, reqSession) {
 }
 exports.updateParkingTicket = updateParkingTicket;
 function deleteParkingTicket(ticketID, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const info = db.prepare("update ParkingTickets" +
         " set recordDelete_userName = ?," +
         " recordDelete_timeMillis = ?" +
@@ -360,7 +360,7 @@ function deleteParkingTicket(ticketID, reqSession) {
 }
 exports.deleteParkingTicket = deleteParkingTicket;
 function resolveParkingTicket(ticketID, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const rightNow = new Date();
     const info = db.prepare("update ParkingTickets" +
         " set resolvedDate = ?," +
@@ -377,7 +377,7 @@ function resolveParkingTicket(ticketID, reqSession) {
 }
 exports.resolveParkingTicket = resolveParkingTicket;
 function unresolveParkingTicket(ticketID, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const ticketObj = db.prepare("select recordUpdate_timeMillis from ParkingTickets" +
         " where ticketID = ?" +
         " and recordDelete_timeMillis is null" +
@@ -412,7 +412,7 @@ function unresolveParkingTicket(ticketID, reqSession) {
 }
 exports.unresolveParkingTicket = unresolveParkingTicket;
 function getRecentParkingTicketVehicleMakeModelValues() {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const sixMonthsAgo = new Date();
@@ -441,7 +441,7 @@ function getParkingTicketRemarks(ticketID, reqSession) {
         remark.remarkTimeString = dateTimeFns.timeIntegerToString(remark.remarkTime);
         remark.canUpdate = canUpdateObject(remark, reqSession);
     };
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const remarkRows = db.prepare("select remarkIndex, remarkDate, remarkTime, remark," +
@@ -457,7 +457,7 @@ function getParkingTicketRemarks(ticketID, reqSession) {
 }
 exports.getParkingTicketRemarks = getParkingTicketRemarks;
 function createParkingTicketRemark(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const remarkIndexNew = db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
         " from ParkingTicketRemarks" +
         " where ticketID = ?")
@@ -476,7 +476,7 @@ function createParkingTicketRemark(reqBody, reqSession) {
 }
 exports.createParkingTicketRemark = createParkingTicketRemark;
 function updateParkingTicketRemark(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const info = db.prepare("update ParkingTicketRemarks" +
         " set remarkDate = ?," +
         " remarkTime = ?," +
@@ -494,7 +494,7 @@ function updateParkingTicketRemark(reqBody, reqSession) {
 }
 exports.updateParkingTicketRemark = updateParkingTicketRemark;
 function deleteParkingTicketRemark(ticketID, remarkIndex, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const info = db.prepare("update ParkingTicketRemarks" +
         " set recordDelete_userName = ?," +
         " recordDelete_timeMillis = ?" +
@@ -515,7 +515,7 @@ function getParkingTicketStatuses(ticketID, reqSession) {
         status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime);
         status.canUpdate = canUpdateObject(status, reqSession);
     };
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const statusRows = db.prepare("select statusIndex, statusDate, statusTime," +
@@ -532,7 +532,7 @@ function getParkingTicketStatuses(ticketID, reqSession) {
 }
 exports.getParkingTicketStatuses = getParkingTicketStatuses;
 function createParkingTicketStatus(reqBody, reqSession, resolveTicket) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const statusIndexNew = db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
         " from ParkingTicketStatusLog" +
         " where ticketID = ?")
@@ -562,7 +562,7 @@ function createParkingTicketStatus(reqBody, reqSession, resolveTicket) {
 }
 exports.createParkingTicketStatus = createParkingTicketStatus;
 function updateParkingTicketStatus(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const info = db.prepare("update ParkingTicketStatusLog" +
         " set statusDate = ?," +
         " statusTime = ?," +
@@ -582,7 +582,7 @@ function updateParkingTicketStatus(reqBody, reqSession) {
 }
 exports.updateParkingTicketStatus = updateParkingTicketStatus;
 function deleteParkingTicketStatus(ticketID, statusIndex, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const info = db.prepare("update ParkingTicketStatusLog" +
         " set recordDelete_userName = ?," +
         " recordDelete_timeMillis = ?" +
@@ -597,7 +597,7 @@ function deleteParkingTicketStatus(ticketID, statusIndex, reqSession) {
 }
 exports.deleteParkingTicketStatus = deleteParkingTicketStatus;
 function getLicencePlates(queryOptions) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     let sqlParams = [];
@@ -660,7 +660,7 @@ function getLicencePlates(queryOptions) {
 }
 exports.getLicencePlates = getLicencePlates;
 function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber);
@@ -669,7 +669,7 @@ function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licence
 }
 exports.getLicencePlateOwner = getLicencePlateOwner;
 function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const rows = db.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +
@@ -683,7 +683,7 @@ function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate) {
 }
 exports.getDistinctLicencePlateOwnerVehicleNCICs = getDistinctLicencePlateOwnerVehicleNCICs;
 function getParkingLocations() {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const rows = db.prepare("select locationKey, locationName, locationClassKey" +
@@ -696,7 +696,7 @@ function getParkingLocations() {
 }
 exports.getParkingLocations = getParkingLocations;
 function getParkingOffences(locationKey) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const rows = db.prepare("select o.bylawNumber, b.bylawDescription," +
@@ -712,7 +712,7 @@ function getParkingOffences(locationKey) {
 }
 exports.getParkingOffences = getParkingOffences;
 function getLicencePlateLookupBatch(batchID_or_negOne) {
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const baseBatchSQL = "select batchID, batchDate, lockDate, sentDate, receivedDate," +
@@ -751,7 +751,7 @@ function getLicencePlateLookupBatch(batchID_or_negOne) {
 }
 exports.getLicencePlateLookupBatch = getLicencePlateLookupBatch;
 function addLicencePlateToLookupBatch(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
@@ -785,7 +785,7 @@ function addLicencePlateToLookupBatch(reqBody, reqSession) {
 }
 exports.addLicencePlateToLookupBatch = addLicencePlateToLookupBatch;
 function addAllLicencePlatesToLookupBatch(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
@@ -825,7 +825,7 @@ function addAllLicencePlatesToLookupBatch(reqBody, reqSession) {
 }
 exports.addAllLicencePlatesToLookupBatch = addAllLicencePlatesToLookupBatch;
 function removeLicencePlateFromLookupBatch(reqBody, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
@@ -861,7 +861,7 @@ function removeLicencePlateFromLookupBatch(reqBody, reqSession) {
 }
 exports.removeLicencePlateFromLookupBatch = removeLicencePlateFromLookupBatch;
 function clearLookupBatch(batchID, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
@@ -886,7 +886,7 @@ function clearLookupBatch(batchID, reqSession) {
 }
 exports.clearLookupBatch = clearLookupBatch;
 function lockLookupBatch(batchID, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const rightNow = new Date();
     const info = db.prepare("update LicencePlateLookupBatches" +
         " set lockDate = ?," +
@@ -933,7 +933,7 @@ function lockLookupBatch(batchID, reqSession) {
 }
 exports.lockLookupBatch = lockLookupBatch;
 function markLookupBatchAsSent(batchID, reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const rightNow = new Date();
     const info = db.prepare("update LicencePlateLookupBatches" +
         " set sentDate = ?," +
@@ -954,7 +954,7 @@ function getUnreceivedLicencePlateLookupBatches() {
         batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
         batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
     };
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     const batches = db.prepare("select b.batchID, b.batchDate, b.lockDate, b.sentDate, count(e.batchID) as batchEntryCount" +
@@ -971,7 +971,7 @@ function getUnreceivedLicencePlateLookupBatches() {
 }
 exports.getUnreceivedLicencePlateLookupBatches = getUnreceivedLicencePlateLookupBatches;
 function createLicencePlateLookupBatch(reqSession) {
-    const db = sqlite(dbPath);
+    const db = sqlite(exports.dbPath);
     const rightNow = new Date();
     const info = db.prepare("insert into LicencePlateLookupBatches" +
         " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
@@ -1002,7 +1002,7 @@ function mto_getLicencePlatesAvailableForLookupBatch(currentBatchID, issueDaysAg
         plateRecord.ticketNumbers = plateRecord.ticketNumbersConcat.split(":");
         delete plateRecord.ticketNumbersConcat;
     };
-    const db = sqlite(dbPath, {
+    const db = sqlite(exports.dbPath, {
         readonly: true
     });
     let issueDateNumber = 99999999;

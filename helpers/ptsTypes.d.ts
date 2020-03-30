@@ -176,6 +176,8 @@ export interface LicencePlateOwner extends Record, LicencePlate {
     recordType: "owner";
     recordDate: number;
     recordDateString: string;
+    licencePlateExpiryDate: number;
+    licencePlateExpiryDateString: string;
     vehicleNCIC: string;
     vehicleMake: string;
     ownerName1: string;
@@ -186,8 +188,6 @@ export interface LicencePlateOwner extends Record, LicencePlate {
     ownerPostalCode: string;
     ownerGenderKey: string;
     driverLicenceNumber: string;
-    driverLicenceExpiryDate: number;
-    driverLicenceExpiryDateString: string;
 }
 export interface LicencePlateLookupBatch extends Record {
     batchID: number;

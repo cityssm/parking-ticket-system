@@ -200,7 +200,7 @@ export function initParkingDB() {
       " primary key (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber)," +
       " foreign key (batchID) references LicencePlateLookupBatches (batchID)," +
       " foreign key (ticketID) references ParkingTickets (ticketID)" +
-      ")").run();
+      ") without rowid").run();
 
     /*
      * Owners
@@ -213,7 +213,9 @@ export function initParkingDB() {
       " recordDate integer not null," +
 
       " vehicleNCIC varchar(5)," +
+      " vehicleYear integer," +
       " vehicleColor varchar(15)," +
+      " licencePlateExpiryDate integer," +
 
       " ownerName1 varchar(50)," +
       " ownerName2 varchar(50)," +
@@ -224,7 +226,6 @@ export function initParkingDB() {
       " ownerGenderKey varchar(2)," +
 
       " driverLicenceNumber varchar(20)," +
-      " driverLicenceExpiryDate integer," +
 
       " recordCreate_userName varchar(30) not null," +
       " recordCreate_timeMillis integer not null," +
@@ -234,6 +235,26 @@ export function initParkingDB() {
       " recordDelete_timeMillis integer," +
 
       " primary key (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)" +
+      ") without rowid").run();
+
+    /*
+     * Lookup Errors
+     */
+
+    parkingDB.prepare("create table if not exists LicencePlateLookupErrorLog (" +
+      " logID integer primary key autoincrement," +
+      " licencePlateCountry varchar(2) not null," +
+      " licencePlateProvince varchar(5) not null," +
+      " licencePlateNumber varchar(15) not null," +
+      " recordDate integer not null," +
+      " errorCode varchar(10)," +
+      " errorMessage varchar(100)," +
+      " recordCreate_userName varchar(30) not null," +
+      " recordCreate_timeMillis integer not null," +
+      " recordUpdate_userName varchar(30) not null," +
+      " recordUpdate_timeMillis integer not null," +
+      " recordDelete_userName varchar(30)," +
+      " recordDelete_timeMillis integer" +
       ")").run();
   }
 

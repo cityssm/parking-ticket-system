@@ -175,6 +175,8 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
     const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData);
 
+    console.log(results);
+
     res.json({ success: true });
   });
 }
