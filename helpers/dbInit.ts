@@ -256,6 +256,10 @@ export function initParkingDB() {
       " recordDelete_userName varchar(30)," +
       " recordDelete_timeMillis integer" +
       ")").run();
+
+      parkingDB.prepare("create unique index if not exists LicencePlateLookupErrorLog_LicencePlateIndex on LicencePlateLookupErrorLog" +
+        " (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)")
+        .run();
   }
 
   return false;

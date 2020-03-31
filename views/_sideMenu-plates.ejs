@@ -1,6 +1,6 @@
 <aside class="menu">
   <p class="menu-label">
-    Parking Tickets
+    Licence Plates
   </p>
   <ul class="menu-list">
     <li>
@@ -11,6 +11,16 @@
         <span>Licence Plate Search</span>
       </a>
     </li>
+    <% if (user.userProperties.canUpdate) { %>
+      <li>
+        <a class="<%= (headTitle === "Ownership Reconciliation" ? "is-active" : "") %>" href="/plates">
+          <span class="icon">
+            <i class="fas fa-fw fa-people-arrows" aria-hidden="true"></i>
+          </span>
+          <span>Ownership Reconciliation</span>
+        </a>
+      </li>
+    <% } %>
   </ul>
 
   <% if (configFns.getProperty("application.feature_mtoExportImport")) { %>

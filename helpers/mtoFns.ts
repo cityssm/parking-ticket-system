@@ -1,6 +1,7 @@
 import sqlite = require("better-sqlite3");
-import { dbPath } from "./parkingDB";
+import { dbPath, markLookupBatchAsSent, getLicencePlateLookupBatch } from "./parkingDB";
 
+import * as configFns from "./configFns";
 import * as dateTimeFns from "./dateTimeFns";
 
 
@@ -220,7 +221,7 @@ function parsePKRD(rowData: string) {
 }
 
 
-export function importLicencePlateOwnership(batchID: number, ownershipData: string) {
+export function importLicencePlateOwnership(batchID: number, ownershipData: string, reqSession: Express.Session) {
 
   // Split the file into rows
 
@@ -279,11 +280,166 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 
   // Look through record rows
 
+  let rowCount = 0;
+
+  let errorCount = 0;
+  let insertedErrorCount = 0;
+
+  let recordCount = 0;
+  let insertedRecordCount = 0;
+
+  const rightNowMillis = Date.now();
+
   for (let recordIndex = 1; recordIndex < ownershipDataRows.length - 1; recordIndex += 1) {
 
     const recordRow = parsePKRD(ownershipDataRows[recordIndex]);
 
-    console.log(recordRow);
+    if (recordRow) {
+
+      rowCount += 1;
+
+      if (recordRow.errorCode !== "") {
+
+        errorCount += 1;
+
+        insertedErrorCount += db.prepare("insert or ignore into LicencePlateLookupErrorLog (" +
+          "licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate," +
+          " errorCode, errorMessage," +
+          " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+          " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+          .run("CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate,
+            recordRow.errorCode, recordRow.errorMessage,
+            reqSession.user.userName, rightNowMillis,
+            reqSession.user.userName, rightNowMillis
+          ).changes;
+
+      }
+
+      if (recordRow.ownerName1 !== "") {
+
+        recordCount += 1;
+
+        insertedRecordCount += db.prepare("insert or ignore into LicencePlateOwners (" +
+          "licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate," +
+          " vehicleNCIC, vehicleYear, vehicleColor, licencePlateExpiryDate," +
+          " ownerName1, ownerName2," +
+          " ownerAddress, ownerCity, ownerProvince, ownerPostalCode, ownerGenderKey," +
+          " driverLicenceNumber," +
+          " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+          " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+          .run("CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate,
+            recordRow.vehicleNCIC, recordRow.vehicleYear, recordRow.vehicleColor,
+            recordRow.licencePlateExpiryDate,
+            recordRow.ownerName1, recordRow.ownerName2,
+            recordRow.ownerAddress, recordRow.ownerCity, recordRow.ownerProvince, recordRow.ownerPostalCode, recordRow.ownerGenderKey,
+            recordRow.driverLicenceNumber,
+            reqSession.user.userName, rightNowMillis,
+            reqSession.user.userName, rightNowMillis
+          ).changes;
+
+      }
+
+    }
 
   }
+
+  // Update batch
+
+  db.prepare("update LicencePlateLookupBatches" +
+    " set receivedDate = ?," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where batchID = ?")
+    .run(headerRow.recordDate,
+      reqSession.user.userName,
+      rightNowMillis,
+      batchID);
+
+  db.close();
+
+  return {
+    success: true,
+    rowCount: rowCount,
+    errorCount: errorCount,
+    insertedErrorCount: insertedErrorCount,
+    recordCount: recordCount,
+    insertedRecordCount: insertedRecordCount
+
+  }
+}
+
+
+export function exportLicencePlateBatch(batchID: number, reqSession: Express.Session) {
+
+  markLookupBatchAsSent(batchID, reqSession);
+
+  const batch = getLicencePlateLookupBatch(batchID);
+
+  const newline = "\n";
+
+  let output = "";
+
+  let recordCount = 0;
+
+  /*
+   * RECORD ROWS
+   * -----------
+   * Record ID       | 4 characters  | "PKTD"
+   * Plate Number    | 10 characters | "XXXX111   "
+   * Issue Date      | 6 numbers     | YYMMDD
+   * Ticket Number   | 23 characters | "XX00000                  "
+   * Authorized User | 4 characters  | "XX00"
+   */
+
+  const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
+
+  for (let index = 0; index < batch.batchEntries.length; index += 1) {
+
+    const entry = batch.batchEntries[index];
+
+    if (entry.ticketID === null) {
+      continue;
+    }
+
+    recordCount += 1;
+
+    output += "PKTD" +
+      (entry.licencePlateNumber + "          ").substring(0, 10) +
+      entry.issueDate.toString().slice(-6) +
+      (entry.ticketNumber + "                       ").substring(0, 23) +
+      authorizedUserPadded + newline;
+  }
+
+  const recordCountPadded = ("000000" + recordCount.toString()).slice(-6);
+
+  /*
+   * HEADER ROW
+   * ----------
+   * Record ID    | 4 characters           | "PKTA"
+   * Unknown      | 5 characters           | "    1"
+   * Export Date  | 6 numbers              | YYMMDD
+   * Record Count | 6 numbers, zero padded | 000201
+   * RET-TAPE     | 1 character, Y or N    | Y
+   * CERT-LABEL   | 1 character, Y or N    | N
+   */
+
+  output = "PKTA" +
+    "    1" +
+    batch.sentDate.toString().slice(-6) +
+    recordCountPadded +
+    "Y" +
+    "N" + newline +
+    output;
+
+  /*
+   * FOOTER ROW
+   * ----------
+   * Record ID    | 4 characters           | "PKTZ"
+   * Record Count | 6 numbers, zero padded | 000201
+   */
+
+  output += "PKTZ" +
+    recordCountPadded + newline;
+
+  return output;
 }

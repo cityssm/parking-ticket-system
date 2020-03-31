@@ -44,34 +44,7 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
     });
     router.get("/mtoExport/:batchID", function (req, res) {
         const batchID = parseInt(req.params.batchID);
-        parkingDB.markLookupBatchAsSent(batchID, req.session);
-        const batch = parkingDB.getLicencePlateLookupBatch(batchID);
-        const newline = "\n";
-        let output = "";
-        let recordCount = 0;
-        const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
-        for (let index = 0; index < batch.batchEntries.length; index += 1) {
-            const entry = batch.batchEntries[index];
-            if (entry.ticketID === null) {
-                continue;
-            }
-            recordCount += 1;
-            output += "PKTD" +
-                (entry.licencePlateNumber + "          ").substring(0, 10) +
-                entry.issueDate.toString().slice(-6) +
-                (entry.ticketNumber + "                       ").substring(0, 23) +
-                authorizedUserPadded + newline;
-        }
-        const recordCountPadded = ("000000" + recordCount.toString()).slice(-6);
-        output = "PKTA" +
-            "    1" +
-            batch.sentDate.toString().slice(-6) +
-            recordCountPadded +
-            "Y" +
-            "N" + newline +
-            output;
-        output += "PKTZ" +
-            recordCountPadded + newline;
+        const output = mtoFns.exportLicencePlateBatch(batchID, req.session);
         res.setHeader("Content-Disposition", "attachment; filename=batch-" + batchID + ".txt");
         res.setHeader("Content-Type", "text/plain");
         res.send(output);
@@ -86,9 +59,9 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
     router.post("/mto_doImportUpload", upload.single("importFile"), function (req, res) {
         const batchID = req.body.batchID;
         const ownershipData = req.file.buffer.toString();
-        const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData);
+        const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData, req.session);
         console.log(results);
-        res.json({ success: true });
+        res.json(results);
     });
 }
 router.post("/doGetUnreceivedLicencePlateLookupBatches", function (_req, res) {
@@ -188,6 +161,15 @@ router.post("/doLockLookupBatch", function (req, res) {
         result.batch = parkingDB.getLicencePlateLookupBatch(batchID);
     }
     res.json(result);
+});
+router.post("/reconcile", function (req, res) {
+    if (!req.session.user.userProperties.canUpdate) {
+        res.redirect("/plates/?error=accessDenied");
+        return;
+    }
+    res.render("plate-reconcile", {
+        headTitle: "Ownership Reconciliation"
+    });
 });
 router.post("/doGetModelsByMake", function (req, res) {
     const makeModelList = vehicleFns.getModelsByMakeFromCache(req.body.vehicleMake);

@@ -14,7 +14,7 @@ import * as parkingDB from "../helpers/parkingDB";
 
 var multer = require('multer');
 var storage = multer.memoryStorage();
-var upload = multer({storage: storage});
+var upload = multer({ storage: storage });
 
 
 router.get("/", function(_req, res) {
@@ -80,75 +80,7 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
     const batchID = parseInt(req.params.batchID);
 
-    parkingDB.markLookupBatchAsSent(batchID, req.session);
-
-    const batch = parkingDB.getLicencePlateLookupBatch(batchID);
-
-    const newline = "\n";
-
-    let output = "";
-
-    let recordCount = 0;
-
-    /*
-     * RECORD ROWS
-     * -----------
-     * Record ID       | 4 characters  | "PKTD"
-     * Plate Number    | 10 characters | "XXXX111   "
-     * Issue Date      | 6 numbers     | YYMMDD
-     * Ticket Number   | 23 characters | "XX00000                  "
-     * Authorized User | 4 characters  | "XX00"
-     */
-
-    const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
-
-    for (let index = 0; index < batch.batchEntries.length; index += 1) {
-
-      const entry = batch.batchEntries[index];
-
-      if (entry.ticketID === null) {
-        continue;
-      }
-
-      recordCount += 1;
-
-      output += "PKTD" +
-        (entry.licencePlateNumber + "          ").substring(0, 10) +
-        entry.issueDate.toString().slice(-6) +
-        (entry.ticketNumber + "                       ").substring(0, 23) +
-        authorizedUserPadded + newline;
-    }
-
-    const recordCountPadded = ("000000" + recordCount.toString()).slice(-6);
-
-    /*
-     * HEADER ROW
-     * ----------
-     * Record ID    | 4 characters           | "PKTA"
-     * Unknown      | 5 characters           | "    1"
-     * Export Date  | 6 numbers              | YYMMDD
-     * Record Count | 6 numbers, zero padded | 000201
-     * RET-TAPE     | 1 character, Y or N    | Y
-     * CERT-LABEL   | 1 character, Y or N    | N
-     */
-
-    output = "PKTA" +
-      "    1" +
-      batch.sentDate.toString().slice(-6) +
-      recordCountPadded +
-      "Y" +
-      "N" + newline +
-      output;
-
-    /*
-     * FOOTER ROW
-     * ----------
-     * Record ID    | 4 characters           | "PKTZ"
-     * Record Count | 6 numbers, zero padded | 000201
-     */
-
-    output += "PKTZ" +
-      recordCountPadded + newline;
+    const output = mtoFns.exportLicencePlateBatch(batchID, req.session);
 
     res.setHeader("Content-Disposition", "attachment; filename=batch-" + batchID + ".txt");
     res.setHeader("Content-Type", "text/plain");
@@ -173,11 +105,11 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
     const ownershipData = req.file.buffer.toString();
 
-    const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData);
+    const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData, req.session);
 
     console.log(results);
 
-    res.json({ success: true });
+    res.json(results);
   });
 }
 
@@ -337,6 +269,23 @@ router.post("/doLockLookupBatch", function(req, res) {
   }
 
   res.json(result);
+
+});
+
+// Ownership Reconciliation
+
+router.post("/reconcile", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res.redirect("/plates/?error=accessDenied");
+    return;
+
+  }
+
+  res.render("plate-reconcile", {
+    headTitle: "Ownership Reconciliation"
+  });
 
 });
 

@@ -9,7 +9,7 @@
 
     if (fileChangeEvent.currentTarget.files.length > 0) {
 
-      const fileName = fileChangeEvent.currentTarget.files[0].name
+      const fileName = fileChangeEvent.currentTarget.files[0].name;
 
       fileNameEle.innerText = fileName;
 
@@ -43,14 +43,55 @@
     uploadStepItemEle.getElementsByClassName("icon")[0].innerHTML =
       "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>";
 
-    document.getElementById("step-item--update").classList.add("is-active");
+    const updateStepItemEle = document.getElementById("step-item--update");
+    updateStepItemEle.classList.add("is-active");
+    updateStepItemEle.getElementsByClassName("step-marker")[0].innerHTML = "<span class=\"icon\">" +
+      "<i class=\"fas fa-cogs\" aria-hidden=\"true\"></i>" +
+      "</span>";
 
     document.getElementById("step--upload").classList.add("is-hidden");
     document.getElementById("step--update").classList.remove("is-hidden");
 
     pts.postJSON("/plates/mto_doImportUpload", formEle, function(responseJSON) {
 
-      console.log(responseJSON);
+      updateStepItemEle.classList.add("is-completed");
+      updateStepItemEle.classList.remove("is-active");
+
+      const resultsMessageEle = document.getElementById("mtoImport--message");
+
+      if (responseJSON.success) {
+
+        updateStepItemEle.classList.add("is-success");
+
+        updateStepItemEle.getElementsByClassName("icon")[0].innerHTML =
+          "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>";
+
+        resultsMessageEle.classList.add("is-success");
+
+        resultsMessageEle.innerHTML = "<div class=\"message-body\">" +
+          "<p><strong>The file was imported successfully.</strong></p>" +
+          "</div>";
+
+      } else {
+
+        updateStepItemEle.classList.add("is-danger");
+
+        updateStepItemEle.getElementsByClassName("icon")[0].innerHTML =
+          "<i class=\"fas fa-exclamation\" aria-hidden=\"true\"></i>";
+
+        resultsMessageEle.classList.add("is-danger");
+
+        resultsMessageEle.innerHTML = "<div class=\"message-body\">" +
+          "<p><strong>An error occurred while importing the file.</strong></p>" +
+          "<p>" + pts.escapeHTML(responseJSON.message) + "</p>" +
+          "</div>";
+
+      }
+
+      document.getElementById("step-item--results").classList.add("is-active");
+
+      document.getElementById("step--update").classList.add("is-hidden");
+      document.getElementById("step--results").classList.remove("is-hidden");
 
     });
 
