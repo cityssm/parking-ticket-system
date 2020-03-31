@@ -274,7 +274,7 @@ router.post("/doLockLookupBatch", function(req, res) {
 
 // Ownership Reconciliation
 
-router.post("/reconcile", function(req, res) {
+router.get("/reconcile", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -283,8 +283,11 @@ router.post("/reconcile", function(req, res) {
 
   }
 
+  const reconciliationRecords = parkingDB.getOwnershipReconciliationRecords();
+
   res.render("plate-reconcile", {
-    headTitle: "Ownership Reconciliation"
+    headTitle: "Ownership Reconciliation",
+    records: reconciliationRecords
   });
 
 });
