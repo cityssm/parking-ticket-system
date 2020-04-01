@@ -61,8 +61,9 @@ export declare function deleteParkingTicketRemark(ticketID: number, remarkIndex:
     success: boolean;
 };
 export declare function getParkingTicketStatuses(ticketID: number, reqSession: Express.Session): any[];
-export declare function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean): {
+export declare function createParkingTicketStatus(reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean): {
     success: boolean;
+    statusIndex: any;
 };
 export declare function updateParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session): {
     success: boolean;
@@ -81,7 +82,7 @@ export declare function getLicencePlates(queryOptions: getLicencePlates_queryOpt
     count: any;
     licencePlates: any[];
 };
-export declare function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner;
+export declare function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number): pts.LicencePlateOwner;
 export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number): any[];
 export declare function getParkingLocations(): pts.ParkingLocation[];
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];
@@ -157,6 +158,7 @@ interface ReconciliationRecord extends pts.LicencePlate {
     owner_recordDate: number;
     owner_recordDateString: string;
     owner_vehicleNCIC: string;
+    owner_vehicleNCICMake: string;
     owner_vehicleYear: number;
     owner_vehicleColor: string;
     owner_ownerName1: string;
@@ -165,6 +167,7 @@ interface ReconciliationRecord extends pts.LicencePlate {
     owner_ownerCity: string;
     owner_ownerProvince: string;
     owner_ownerPostalCode: string;
+    dateDifference: number;
 }
 export declare function getOwnershipReconciliationRecords(): ReconciliationRecord[];
 export {};

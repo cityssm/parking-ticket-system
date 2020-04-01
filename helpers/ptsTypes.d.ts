@@ -96,15 +96,15 @@ export declare type RawRowsColumnsReturn = {
 };
 export declare type Record = {
     recordType: "ticket" | "remark" | "status" | "owner";
-    recordCreate_userName: string;
-    recordCreate_timeMillis: number;
-    recordUpdate_userName: string;
-    recordUpdate_timeMillis: number;
-    recordUpdate_dateString: string;
+    recordCreate_userName?: string;
+    recordCreate_timeMillis?: number;
+    recordUpdate_userName?: string;
+    recordUpdate_timeMillis?: number;
+    recordUpdate_dateString?: string;
     recordDelete_userName?: string;
     recordDelete_timeMillis?: number;
     recordDelete_dateString?: string;
-    canUpdate: boolean;
+    canUpdate?: boolean;
 };
 export declare type LicencePlate = {
     licencePlateCountry: string;
@@ -138,11 +138,11 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
 export interface ParkingTicketStatusLog extends Record {
     recordType: "status";
     ticketID: number;
-    statusIndex: number;
-    statusDate: number;
-    statusDateString: string;
-    statusTime: number;
-    statusTimeString: string;
+    statusIndex?: number;
+    statusDate?: number;
+    statusDateString?: string;
+    statusTime?: number;
+    statusTimeString?: string;
     statusKey: string;
     statusField: string;
     statusNote: string;

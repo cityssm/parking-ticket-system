@@ -4,6 +4,7 @@ import express = require("express");
 const router = express.Router();
 
 import * as configFns from "../helpers/configFns";
+import * as ownerFns from "../helpers/ownerFns";
 import * as dateTimeFns from "../helpers/dateTimeFns";
 import * as parkingDB from "../helpers/parkingDB";
 
@@ -39,6 +40,129 @@ router.post("/doGetTickets", function(req, res) {
 
   res.json(parkingDB.getParkingTickets(req.session, queryOptions));
 
+});
+
+
+// Ownership Reconciliation
+
+
+router.get("/reconcile", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res.redirect("/tickets/?error=accessDenied");
+    return;
+
+  }
+
+  const reconciliationRecords = parkingDB.getOwnershipReconciliationRecords();
+
+  res.render("ticket-reconcile", {
+    headTitle: "Ownership Reconciliation",
+    records: reconciliationRecords
+  });
+
+});
+
+router.post("/doReconcileAsMatch", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const ownerRecord = parkingDB.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
+
+  if (!ownerRecord) {
+
+    res.json({
+      success: false,
+      message: "Ownership record not found."
+    });
+
+    return;
+  }
+
+  const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
+
+  const statusResponse = parkingDB.createParkingTicketStatus({
+    recordType: "status",
+    ticketID: parseInt(req.body.ticketID),
+    statusKey: "ownerLookupMatch",
+    statusField: ownerRecord.recordDateString,
+    statusNote: ownerAddress
+
+  }, req.session, false);
+
+  res.json(statusResponse)
+
+});
+
+
+router.post("/doReconcileAsError", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const ownerRecord = parkingDB.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
+
+  if (!ownerRecord) {
+
+    res.json({
+      success: false,
+      message: "Ownership record not found."
+    });
+
+    return;
+  }
+
+  const statusResponse = parkingDB.createParkingTicketStatus({
+    recordType: "status",
+    ticketID: parseInt(req.body.ticketID),
+    statusKey: "ownerLookupError",
+    statusField: ownerRecord.vehicleNCIC,
+    statusNote: ""
+
+  }, req.session, false);
+
+  res.json(statusResponse)
+
+});
+
+
+router.post("/doQuickReconcileMatches", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+  
 });
 
 

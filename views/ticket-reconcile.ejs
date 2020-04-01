@@ -1,0 +1,135 @@
+<%- include('_header'); -%>
+
+<div class="columns is-block-print">
+  <div class="column is-3 is-hidden-print" id="is-sidemenu-expanded">
+    <%- include("_sideMenu-tickets"); -%>
+    <button class="button is-light is-fullwidth has-margin-top-20" id="is-sidemenu-collapse-button">
+      <span class="icon is-small"><i class="fas fa-angle-double-left" aria-hidden="true"></i></span>
+      <span>Hide Side Menu</span>
+    </button>
+  </div>
+  <div class="column is-narrow is-hidden-print is-hidden" id="is-sidemenu-collapsed">
+    <button class="button is-light has-tooltip-right" id="is-sidemenu-expand-button" data-tooltip="Expand Side Menu">
+      <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+      <span class="sr-only">Expand Side Menu</span>
+    </button>
+  </div>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/tickets">Tickets</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Ownership Reconciliation</a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title is-1">
+      Ownership Reconciliation
+    </h1>
+
+    <% if (records.length === 0) { %>
+      <div class="message is-info">
+        <div class="message-body">
+          <p class="has-text-weight-bold">There are no parking tickets that can be reconciled with ownership information at this time.</p>
+          <p>Check back after recording additional parking tickets or after importing ownership records.</p>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="message is-info">
+        <div class="message-body">
+          <p class="has-text-weight-bold">
+            There <%= (records.length === 1 ? "is one parking ticket" : "are " + records.length + " parking tickets") %>
+            that can be reconciled at this time.
+          </p>
+          <p class="has-text-right">
+            <button class="button is-success" id="is-quick-reconcile-matches-button" type="button">
+              <span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+              <span>Quick Reconcile Matches</span>
+            </button>
+          </p>
+        </div>
+      </div>
+      <table class="table is-fullwidth is-striped is-hoverable">
+        <thead>
+          <tr>
+            <th class="has-border-right-width-2">Licence Plate</th>
+            <th class="has-border-right-width-2" colspan="3">Unresolved Parking Ticket</th>
+            <th class="has-border-right-width-2" colspan="2">Ownership</th>
+            <th class="has-width-150">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%
+            for (let index = 0; index < records.length; index += 1) {
+              const record = records[index];
+
+              const isProbableMatch =
+                (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCICMake.toLowerCase()) ||
+                (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
+          %>
+              <tr
+                data-licence-plate-country="<%= record.licencePlateCountry %>"
+                data-licence-plate-province="<%= record.licencePlateProvince %>"
+                data-licence-plate-number="<%= record.licencePlateNumber %>"
+                data-ticket-id="<%= record.ticket_ticketID %>"
+                data-ticket-vehicle="<%= record.ticket_vehicleMakeModel %>"
+                data-owner-vehicle="<%= record.owner_vehicleNCICMake %>"
+                data-record-date="<%= record.owner_recordDate %>"
+                <%= (isProbableMatch ? "data-is-probable-match": "") %>>
+
+                <td class="has-text-weight-bold has-border-right-width-2 licence-plate-number"><%= record.licencePlateNumber %></td>
+
+                <td>
+                  <a href="/tickets/<%= record.ticket_ticketID %>" target="_blank">
+                    <%= record.ticket_ticketNumber %>
+                  </a>
+                </td>
+                <td><%= record.ticket_issueDateString %></td>
+                <td class="has-border-right-width-2"><%= record.ticket_vehicleMakeModel %></td>
+
+                <td>
+                  <%= record.owner_vehicleNCICMake %>
+                  <% if (record.owner_vehicleNCIC !== record.owner_vehicleNCICMake) { %>
+                    <br />
+                    <small><%= record.owner_vehicleNCIC %></small>
+                  <% } %>
+                </td>
+                <td class="has-border-right-width-2">
+                  <%= record.owner_recordDateString %><br />
+                  <% if (record.dateDifference === 0) { %>
+                    <span class="tag is-info">Same Day</span>
+                  <% } else { %>
+                    <span class="tag"><%= record.dateDifference %> <%= (record.dateDifference === 1 ? "Day" : "Days") %></span>
+                  <% } %>
+                </td>
+
+                <td class="is-nowrap is-options-cell">
+                  <button class="button is-success is-ownership-match-button" type="button">
+                    <span class="icon">
+                      <i class="fas fa-check" aria-hidden="true"></i>
+                    </span>
+                    <span>Match</span>
+                  </button>
+                  <button class="button is-danger is-ownership-error-button" type="button">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <span class="sr-only">Error</span>
+                  </button>
+                </td>
+              </tr>
+          <%
+            }
+          %>
+        </tbody>
+      </table>
+    <% } %>
+
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<% if (records.length > 0) { %>
+  <script src="/javascripts/ticket-reconcile.min.js"></script>
+<% } %>
+
+<%- include('_footerB'); -%>

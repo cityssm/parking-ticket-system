@@ -24,6 +24,17 @@ function dateStringToInteger(dateString) {
     return parseInt(("0" + dateString).replace(/-/g, ""));
 }
 exports.dateStringToInteger = dateStringToInteger;
+function dateStringToDate(dateString) {
+    const datePieces = dateString.split("-");
+    return new Date(parseInt(datePieces[0]), parseInt(datePieces[1]) - 1, parseInt(datePieces[2]), 0, 0, 0, 0);
+}
+function dateDifferenceInDays(fromDateObj, toDateObj) {
+    return Math.round((toDateObj.getTime() - fromDateObj.getTime()) / (86400 * 1000.0));
+}
+function dateStringDifferenceInDays(fromDateString, toDateString) {
+    return dateDifferenceInDays(dateStringToDate(fromDateString), dateStringToDate(toDateString));
+}
+exports.dateStringDifferenceInDays = dateStringDifferenceInDays;
 exports.months = [
     "January",
     "February",

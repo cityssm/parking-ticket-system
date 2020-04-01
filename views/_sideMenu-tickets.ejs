@@ -21,15 +21,28 @@
         </a>
       </li>
     <% } %>
-    <% if (user.userProperties.canUpdate) { %>
-      <li>
-        <a class="<%= (headTitle === "Convict Parking Tickets" ? "is-active" : "") %>" href="/tickets/convict">
-          <span class="icon">
-            <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
-          </span>
-          <span>Convict Parking Tickets</span>
-        </a>
-      </li>
-    <% } %>
   </ul>
+    <% if (user.userProperties.canUpdate) { %>
+      <p class="menu-label">
+        Ticket Actions
+      </p>
+      <ul class="menu-list">
+        <li>
+          <a class="<%= (headTitle === "Ownership Reconciliation" ? "is-active" : "") %>" href="/tickets/reconcile">
+            <span class="icon">
+              <i class="fas fa-fw fa-people-arrows" aria-hidden="true"></i>
+            </span>
+            <span>Ownership Reconciliation</span>
+          </a>
+        </li>
+        <li>
+          <a class="<%= (headTitle === "Convict Parking Tickets" ? "is-active" : "") %>" href="/tickets/convict">
+            <span class="icon">
+              <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
+            </span>
+            <span>Convict Parking Tickets</span>
+          </a>
+        </li>
+      </ul>
+    <% } %>
 </aside>

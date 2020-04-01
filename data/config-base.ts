@@ -39,7 +39,7 @@ export const baseParkingTicketStatuses : pts.Config_ParkingTicketStatus[] = [
     statusKey: "ownerLookupMatch",
     status: "Ownership Lookup - Match Found",
     statusField: {
-      fieldLabel: "Lookup Vehicle NCIC"
+      fieldLabel: "Lookup Record Date"
     },
     isFinalStatus: false,
     isUserSettable: false

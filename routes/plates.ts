@@ -272,26 +272,6 @@ router.post("/doLockLookupBatch", function(req, res) {
 
 });
 
-// Ownership Reconciliation
-
-router.get("/reconcile", function(req, res) {
-
-  if (!req.session.user.userProperties.canUpdate) {
-
-    res.redirect("/plates/?error=accessDenied");
-    return;
-
-  }
-
-  const reconciliationRecords = parkingDB.getOwnershipReconciliationRecords();
-
-  res.render("plate-reconcile", {
-    headTitle: "Ownership Reconciliation",
-    records: reconciliationRecords
-  });
-
-});
-
 
 router.post("/doGetModelsByMake", function(req, res) {
 

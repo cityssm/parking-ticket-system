@@ -38,6 +38,23 @@ export function dateStringToInteger(dateString: string): number {
 
 }
 
+function dateStringToDate(dateString: string) {
+
+  const datePieces = dateString.split("-");
+
+  return new Date(parseInt(datePieces[0]), parseInt(datePieces[1]) - 1, parseInt(datePieces[2]), 0, 0, 0, 0);
+}
+
+function dateDifferenceInDays(fromDateObj: Date, toDateObj: Date) {
+
+  return Math.round((toDateObj.getTime() - fromDateObj.getTime()) / (86400 * 1000.0));
+}
+
+export function dateStringDifferenceInDays(fromDateString: string, toDateString: string) {
+
+  return dateDifferenceInDays(dateStringToDate(fromDateString), dateStringToDate(toDateString));
+}
+
 export const months = [
   "January",
   "February",

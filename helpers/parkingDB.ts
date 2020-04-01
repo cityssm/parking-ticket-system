@@ -104,7 +104,7 @@ function getParkingLocationWithDB(db: sqlite.Database, locationKey: string) {
 }
 
 
-function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) {
+function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number) {
 
   const licencePlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
 
@@ -114,8 +114,10 @@ function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: st
 
   const possibleOwners: pts.LicencePlateOwner[] = db.prepare("select * from LicencePlateOwners" +
     " where recordDelete_timeMillis is null" +
-    " and licencePlateNumber = ?")
-    .all(licencePlateNumber);
+    " and licencePlateNumber = ?" +
+    " and recordDate >= ?" +
+    " order by recordDate")
+    .all(licencePlateNumber, recordDateOrBefore);
 
   for (let index = 0; index < possibleOwners.length; index += 1) {
 
@@ -330,7 +332,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
 
   // Owner
 
-  ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber);
+  ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, ticket.issueDate);
 
   // Location
 
@@ -867,7 +869,7 @@ export function getParkingTicketStatuses(ticketID: number, reqSession: Express.S
 }
 
 
-export function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) {
+export function createParkingTicketStatus(reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) {
 
   const db = sqlite(dbPath);
 
@@ -876,7 +878,7 @@ export function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
   const statusIndexNew = db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
     " from ParkingTicketStatusLog" +
     " where ticketID = ?")
-    .get(reqBody.ticketID)
+    .get(reqBodyOrObj.ticketID)
     .statusIndexMax + 1;
 
   // Create the record
@@ -888,13 +890,13 @@ export function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
     " statusField, statusNote," +
     " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
     " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    .run(reqBody.ticketID,
+    .run(reqBodyOrObj.ticketID,
       statusIndexNew,
       dateTimeFns.dateToInteger(rightNow),
       dateTimeFns.dateToTimeInteger(rightNow),
-      reqBody.statusKey,
-      reqBody.statusField,
-      reqBody.statusNote,
+      reqBodyOrObj.statusKey,
+      reqBodyOrObj.statusField,
+      reqBodyOrObj.statusNote,
       reqSession.user.userName,
       rightNow.getTime(),
       reqSession.user.userName,
@@ -912,14 +914,15 @@ export function createParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
       .run(dateTimeFns.dateToInteger(rightNow),
         reqSession.user.userName,
         rightNow.getTime(),
-        reqBody.ticketID);
+        reqBodyOrObj.ticketID);
 
   }
 
   db.close();
 
   return {
-    success: (info.changes > 0)
+    success: (info.changes > 0),
+    statusIndex: statusIndexNew
   };
 
 }
@@ -1086,13 +1089,13 @@ export function getLicencePlates(queryOptions: getLicencePlates_queryOptions) {
 
 }
 
-export function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) {
+export function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number) {
 
   const db = sqlite(dbPath, {
     readonly: true
   });
 
-  const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber);
+  const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
 
   db.close();
 
@@ -1668,6 +1671,7 @@ interface ReconciliationRecord extends pts.LicencePlate {
   owner_recordDateString: string,
 
   owner_vehicleNCIC: string,
+  owner_vehicleNCICMake: string,
   owner_vehicleYear: number,
   owner_vehicleColor: string,
 
@@ -1676,7 +1680,9 @@ interface ReconciliationRecord extends pts.LicencePlate {
   owner_ownerAddress: string,
   owner_ownerCity: string,
   owner_ownerProvince: string,
-  owner_ownerPostalCode: string
+  owner_ownerPostalCode: string,
+
+  dateDifference: number
 };
 
 export function getOwnershipReconciliationRecords() {
@@ -1685,6 +1691,10 @@ export function getOwnershipReconciliationRecords() {
 
     record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
     record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
+
+    record.owner_vehicleNCICMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
+
+    record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
   };
 
   const db = sqlite(dbPath, {
@@ -1731,9 +1741,9 @@ export function getOwnershipReconciliationRecords() {
       " and s.recordDelete_timeMillis is null)"))
     .all();
 
-    db.close();
+  db.close();
 
-    records.forEach(addCalculatedFieldsFn);
+  records.forEach(addCalculatedFieldsFn);
 
-    return records;
+  return records;
 }
