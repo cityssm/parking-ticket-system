@@ -37,7 +37,7 @@
         buttonEle.removeAttribute("disabled");
 
       }
-      
+
     });
 
   }
@@ -310,85 +310,91 @@
 
   }
 
-  document.getElementById("is-quick-reconcile-matches-button").addEventListener("click", function(clickEvent) {
+  const quickReconcilieButtonEle = document.getElementById("is-quick-reconcile-matches-button");
 
-    clickEvent.preventDefault();
+  if (quickReconcilieButtonEle) {
 
-    let loadingCloseModalFn;
+    quickReconcilieButtonEle.addEventListener("click", function(clickEvent) {
 
-    const reconcileFn = function() {
+      clickEvent.preventDefault();
 
-      pts.postJSON("/tickets/doQuickReconcileMatches", {}, function(responseJSON) {
+      let loadingCloseModalFn;
 
-        loadingCloseModalFn();
+      const reconcileFn = function() {
 
-        if (responseJSON.success) {
+        pts.postJSON("/tickets/doQuickReconcileMatches", {}, function(responseJSON) {
 
-          pts.alertModal(
-            "Quick Reconcile Complete",
-            (responseJSON.statusRecords.length === 1 ?
-              "One record was successfully reconciled as a match." :
-              responseJSON.statusRecords.length + " records were successfully reconciled as matches."),
-            "OK",
-            "success"
-          );
+          loadingCloseModalFn();
 
-          for (let index = 0; index < responseJSON.statusRecords.length; index += 1) {
+          if (responseJSON.success) {
 
-            const statusRecord = responseJSON.statusRecords[index];
+            pts.alertModal(
+              "Quick Reconcile Complete",
+              (responseJSON.statusRecords.length === 1 ?
+                "One record was successfully reconciled as a match." :
+                responseJSON.statusRecords.length + " records were successfully reconciled as matches."),
+              "OK",
+              "success"
+            );
 
-            const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
+            for (let index = 0; index < responseJSON.statusRecords.length; index += 1) {
 
-            if (optionsTdEle) {
+              const statusRecord = responseJSON.statusRecords[index];
 
-              pts.clearElement(optionsTdEle);
+              const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
 
-              optionsTdEle.innerHTML =
-                "<div class=\"tags has-addons\">" +
-                ("<span class=\"tag is-light is-success\">" +
-                  "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span><span>Match</span>" +
-                  "</span>") +
-                "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + statusRecord.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
-                "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
-                "<span class=\"sr-only\">Remove Match</span>" +
-                "</a>" +
-                "</div>";
+              if (optionsTdEle) {
 
-              optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+                pts.clearElement(optionsTdEle);
+
+                optionsTdEle.innerHTML =
+                  "<div class=\"tags has-addons\">" +
+                  ("<span class=\"tag is-light is-success\">" +
+                    "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span><span>Match</span>" +
+                    "</span>") +
+                  "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + statusRecord.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+                  "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
+                  "<span class=\"sr-only\">Remove Match</span>" +
+                  "</a>" +
+                  "</div>";
+
+                optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+
+              }
 
             }
 
           }
 
-        }
+        });
 
-      });
+      };
 
-    };
+      const loadingFn = function() {
 
-    const loadingFn = function() {
+        pts.openHtmlModal("loading", {
+          onshown: function(modalEle, closeModalFn) {
 
-      pts.openHtmlModal("loading", {
-        onshown: function(modalEle, closeModalFn) {
+            document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
+            loadingCloseModalFn = closeModalFn;
 
-          document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
-          loadingCloseModalFn = closeModalFn;
+            reconcileFn();
 
-          reconcileFn();
+          }
+        });
 
-        }
-      });
+      };
 
-    };
+      pts.confirmModal(
+        "Quick Reconcile Matches",
+        "Are you sure you want to mark all parking tickets with matching vehicle makes as matched?",
+        "Yes, Mark All Matches as Matched",
+        "info",
+        loadingFn
+      );
 
-    pts.confirmModal(
-      "Quick Reconcile Matches",
-      "Are you sure you want to mark all parking tickets with matching vehicle makes as matched?",
-      "Yes, Mark All Matches as Matched",
-      "info",
-      loadingFn
-    );
+    });
 
-  });
+  }
 
 }());
