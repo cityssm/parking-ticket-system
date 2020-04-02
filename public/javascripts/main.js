@@ -82,7 +82,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
       } else {
 
         fetchOptions.body = new URLSearchParams(new FormData(formEleOrObj));
-        
+
       }
 
 
@@ -383,6 +383,36 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
   }
 
 };
+
+
+// TOGGLE CONTAINERS
+
+(function() {
+
+  function toggleHiddenFn(clickEvent) {
+
+    clickEvent.preventDefault();
+
+    const href = clickEvent.currentTarget.href;
+    const divID = href.substring(href.indexOf("#") + 1);
+
+    document.getElementById(divID).classList.toggle("is-hidden");
+
+  }
+
+  pts.initializeToggleHiddenLinks = function(searchContainerEle) {
+
+    const linkEles = searchContainerEle.getElementsByClassName("is-toggle-hidden-link");
+
+    for (let index = 0; index < linkEles.length; index += 1) {
+
+      linkEles[index].addEventListener("click", toggleHiddenFn);
+
+    }
+
+  };
+}());
+
 
 
 // MODAL TOGGLES
