@@ -896,7 +896,7 @@
               statusObj.statusField +
               "</p>") +
 
-            "<p class=\"is-size-7\">" + statusObj.statusNote + "</p>" +
+            "<p class=\"has-newline-chars is-size-7\">" + statusObj.statusNote + "</p>" +
 
             "</div>") +
 
