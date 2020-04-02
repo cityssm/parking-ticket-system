@@ -171,4 +171,19 @@ export interface ReconciliationRecord extends pts.LicencePlate {
     isProbableMatch: boolean;
 }
 export declare function getOwnershipReconciliationRecords(): ReconciliationRecord[];
+interface LookupErrorLogEntry extends pts.LicencePlate {
+    batchID: number;
+    logIndex: number;
+    recordDate: number;
+    recordDateString: string;
+    errorCode: string;
+    errorMessage: string;
+    ticketID: number;
+    ticketNumber: string;
+    issueDate: number;
+    issueDateString: string;
+    vehicleMakeModel: string;
+}
+export declare function getUnacknowledgedLicencePlateLookupErrorLog(batchID_or_negOne: number, logIndex_or_negOne: number): LookupErrorLogEntry[];
+export declare function markLicencePlateLookupErrorLogEntryAcknowledged(batchID: number, logIndex: number, reqSession: Express.Session): boolean;
 export {};

@@ -104,7 +104,7 @@ function initParkingDB() {
             " foreign key (ticketID) references ParkingTickets (ticketID)" +
             ") without rowid").run();
         parkingDB.prepare("create table if not exists ParkingTicketStatusLog (" +
-            " ticketID integer not null," +
+            "ticketID integer not null," +
             " statusIndex integer not null," +
             " statusDate integer not null," +
             " statusTime integer not null," +
@@ -169,20 +169,24 @@ function initParkingDB() {
             " primary key (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)" +
             ") without rowid").run();
         parkingDB.prepare("create table if not exists LicencePlateLookupErrorLog (" +
-            " logID integer primary key autoincrement," +
+            "batchID integer not null," +
+            " logIndex integer not null," +
             " licencePlateCountry varchar(2) not null," +
             " licencePlateProvince varchar(5) not null," +
             " licencePlateNumber varchar(15) not null," +
             " recordDate integer not null," +
             " errorCode varchar(10)," +
             " errorMessage varchar(100)," +
+            " isAcknowledged bit not null default 0," +
             " recordCreate_userName varchar(30) not null," +
             " recordCreate_timeMillis integer not null," +
             " recordUpdate_userName varchar(30) not null," +
             " recordUpdate_timeMillis integer not null," +
             " recordDelete_userName varchar(30)," +
-            " recordDelete_timeMillis integer" +
-            ")").run();
+            " recordDelete_timeMillis integer," +
+            " primary key (batchID, logIndex)," +
+            " foreign key (batchID) references LicencePlateLookupBatches (batchID)" +
+            ") without rowid").run();
         parkingDB.prepare("create unique index if not exists LicencePlateLookupErrorLog_LicencePlateIndex on LicencePlateLookupErrorLog" +
             " (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)")
             .run();

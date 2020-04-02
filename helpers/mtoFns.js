@@ -154,6 +154,9 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
             message: "The sent date in the batch record does not match the sent date in the file."
         };
     }
+    db.prepare("delete from LicencePlateLookupErrorLog" +
+        " where batchID = ?")
+        .run(batchID);
     let rowCount = 0;
     let errorCount = 0;
     let insertedErrorCount = 0;
@@ -167,11 +170,12 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
             if (recordRow.errorCode !== "") {
                 errorCount += 1;
                 insertedErrorCount += db.prepare("insert or ignore into LicencePlateLookupErrorLog (" +
-                    "licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate," +
+                    "batchID, logIndex," +
+                    " licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate," +
                     " errorCode, errorMessage," +
                     " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-                    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-                    .run("CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate, recordRow.errorCode, recordRow.errorMessage, reqSession.user.userName, rightNowMillis, reqSession.user.userName, rightNowMillis).changes;
+                    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                    .run(batchID, errorCount, "CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate, recordRow.errorCode, recordRow.errorMessage, reqSession.user.userName, rightNowMillis, reqSession.user.userName, rightNowMillis).changes;
             }
             if (recordRow.ownerName1 !== "") {
                 recordCount += 1;

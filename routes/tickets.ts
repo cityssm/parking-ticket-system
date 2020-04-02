@@ -57,12 +57,76 @@ router.get("/reconcile", function(req, res) {
 
   const reconciliationRecords = parkingDB.getOwnershipReconciliationRecords();
 
+  const lookupErrors = parkingDB.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1)
+
   res.render("ticket-reconcile", {
     headTitle: "Ownership Reconciliation",
-    records: reconciliationRecords
+    records: reconciliationRecords,
+    errorLog: lookupErrors
   });
 
 });
+
+
+router.post("/doAcknowledgeLookupError", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  // Get log entry
+
+  const logEntries = parkingDB.getUnacknowledgedLicencePlateLookupErrorLog(req.body.batchID, req.body.logIndex);
+
+  if (logEntries.length === 0) {
+
+    res.json({
+      success: false,
+      message: "Log entry not found.  It may have already been acknowledged."
+    });
+    return;
+
+  }
+
+  // Set status on parking ticket
+
+  const statusResponse = parkingDB.createParkingTicketStatus({
+    recordType: "status",
+    ticketID: logEntries[0].ticketID,
+    statusKey: "ownerLookupError",
+    statusField: "",
+    statusNote: logEntries[0].errorMessage + " (" + logEntries[0].errorCode + ")"
+
+  }, req.session, false);
+
+  if (!statusResponse.success) {
+
+    res.json({
+      success: false,
+      message: "Unable to update the status on the parking ticket.  It may have been resolved."
+    });
+    return;
+  }
+
+  // Mark log entry as acknowledged
+
+  const success = parkingDB.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
+
+  res.json({
+    success: success
+  });
+
+});
+
 
 router.post("/doReconcileAsMatch", function(req, res) {
 
@@ -458,9 +522,6 @@ router.post("/doAddStatus", function(req, res) {
     return;
 
   }
-
-  console.log(req.body.resolveTicket);
-  console.log(req.body.resolveTicket === "1");
 
   const result = parkingDB.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
 

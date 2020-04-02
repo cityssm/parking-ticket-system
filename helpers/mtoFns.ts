@@ -278,6 +278,10 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 
   }
 
+  db.prepare("delete from LicencePlateLookupErrorLog" +
+    " where batchID = ?")
+    .run(batchID);
+
   // Look through record rows
 
   let rowCount = 0;
@@ -303,11 +307,13 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
         errorCount += 1;
 
         insertedErrorCount += db.prepare("insert or ignore into LicencePlateLookupErrorLog (" +
-          "licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate," +
+          "batchID, logIndex," +
+          " licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate," +
           " errorCode, errorMessage," +
           " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-          " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-          .run("CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate,
+          " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+          .run(batchID, errorCount,
+            "CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate,
             recordRow.errorCode, recordRow.errorMessage,
             reqSession.user.userName, rightNowMillis,
             reqSession.user.userName, rightNowMillis

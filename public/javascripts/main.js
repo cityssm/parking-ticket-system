@@ -411,8 +411,8 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
     }
 
   };
-}());
 
+}());
 
 
 // MODAL TOGGLES

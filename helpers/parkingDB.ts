@@ -1728,6 +1728,7 @@ export function getOwnershipReconciliationRecords() {
       " and t.licencePlateProvince = o.licencePlateProvince" +
       " and t.licencePlateNumber = o.licencePlateNumber" +
       " and o.recordDelete_timeMillis is null" +
+      " and o.vehicleNCIC <> ''" +
       (" and o.recordDate = (" +
         "select o2.recordDate from LicencePlateOwners o2" +
         " where t.licencePlateCountry = o2.licencePlateCountry" +
@@ -1751,4 +1752,91 @@ export function getOwnershipReconciliationRecords() {
   records.forEach(addCalculatedFieldsFn);
 
   return records;
+}
+
+interface LookupErrorLogEntry extends pts.LicencePlate {
+  batchID: number,
+  logIndex: number,
+  recordDate: number,
+  recordDateString: string,
+  errorCode: string,
+  errorMessage: string,
+  ticketID: number,
+  ticketNumber: string,
+  issueDate: number,
+  issueDateString: string,
+  vehicleMakeModel: string
+};
+
+export function getUnacknowledgedLicencePlateLookupErrorLog(batchID_or_negOne: number, logIndex_or_negOne: number) {
+
+  const addCalculatedFieldsFn = function(record: LookupErrorLogEntry) {
+    record.recordDateString = dateTimeFns.dateIntegerToString(record.recordDate);
+    record.issueDateString = dateTimeFns.dateIntegerToString(record.issueDate);
+  };
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  let params = [];
+
+  if (batchID_or_negOne !== -1 && logIndex_or_negOne !== -1) {
+    params = [batchID_or_negOne, logIndex_or_negOne];
+  }
+
+  const logEntries: LookupErrorLogEntry[] = db.prepare("select l.batchID, l.logIndex," +
+    " l.licencePlateCountry, l.licencePlateProvince, l.licencePlateNumber, l.recordDate," +
+    " l.errorCode, l.errorMessage," +
+    " e.ticketID, t.ticketNumber, t.issueDate, t.vehicleMakeModel" +
+    " from LicencePlateLookupErrorLog l" +
+    (" inner join LicencePlateLookupBatches b" +
+      " on l.batchID = b.batchID" +
+      " and b.recordDelete_timeMillis is null") +
+    (" inner join LicencePlateLookupBatchEntries e" +
+      " on b.batchID = e.batchID" +
+      " and l.licencePlateCountry = e.licencePlateCountry" +
+      " and l.licencePlateProvince = e.licencePlateProvince" +
+      " and l.licencePlateNumber = e.licencePlateNumber") +
+    (" inner join ParkingTickets t" +
+      " on e.ticketID = t.ticketID" +
+      " and e.licencePlateCountry = t.licencePlateCountry" +
+      " and e.licencePlateProvince = t.licencePlateProvince" +
+      " and e.licencePlateNumber = t.licencePlateNumber" +
+      " and t.recordDelete_timeMillis is null" +
+      " and t.resolvedDate is null") +
+    " where l.recordDelete_timeMillis is null" +
+    " and l.isAcknowledged = 0" +
+    (params.length > 0 ? " and l.batchID = ? and l.logIndex = ?" : "")
+  )
+    .all(params);
+
+  db.close();
+
+  logEntries.forEach(addCalculatedFieldsFn);
+
+  return logEntries;
+}
+
+
+export function markLicencePlateLookupErrorLogEntryAcknowledged(batchID: number, logIndex: number, reqSession: Express.Session) {
+
+  const db = sqlite(dbPath);
+
+  const info = db.prepare("update LicencePlateLookupErrorLog" +
+    " set isAcknowledged = 1," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where recordDelete_timeMillis is null" +
+    " and batchID = ?" +
+    " and logIndex = ?" +
+    " and isAcknowledged = 0")
+    .run(reqSession.user.userName,
+      Date.now(),
+      batchID,
+      logIndex);
+
+  db.close();
+
+  return info.changes > 0;
 }

@@ -2,6 +2,56 @@
 
 (function() {
 
+  pts.initializeToggleHiddenLinks(document.getElementsByTagName("main")[0]);
+
+  // ERROR LOG TABLE
+
+  function clickFn_acknowledgeError(clickEvent) {
+
+    clickEvent.preventDefault();
+
+    const buttonEle = clickEvent.currentTarget;
+    buttonEle.setAttribute("disabled", "disabled");
+
+    const batchID = buttonEle.getAttribute("data-batch-id");
+    const logIndex = buttonEle.getAttribute("data-log-index");
+
+    pts.postJSON("/tickets/doAcknowledgeLookupError", {
+      batchID: batchID,
+      logIndex: logIndex
+    }, function(responseJSON) {
+
+      if (responseJSON.success) {
+
+        const tdEle = buttonEle.closest("td");
+
+        pts.clearElement(tdEle);
+
+        tdEle.innerHTML = "<span class=\"tag is-light is-warning\">" +
+          "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+          "<span>Acknowledged</span>" +
+          "</span>";
+
+      } else {
+
+        buttonEle.removeAttribute("disabled");
+
+      }
+      
+    });
+
+  }
+
+  const acknowledgeButtonEles = document.getElementsByClassName("is-acknowledge-error-button");
+
+  for (let index = 0; index < acknowledgeButtonEles.length; index += 1) {
+
+    acknowledgeButtonEles[index].addEventListener("click", clickFn_acknowledgeError);
+
+  }
+
+  // RECONCILE TABLE
+
   let clickFn_markAsMatch;
   let clickFn_markAsError;
 
@@ -243,7 +293,6 @@
     }
 
   };
-
 
   const matchButtonEles = document.getElementsByClassName("is-ownership-match-button");
 

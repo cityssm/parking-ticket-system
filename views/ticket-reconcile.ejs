@@ -27,99 +27,178 @@
       Ownership Reconciliation
     </h1>
 
-    <% if (records.length === 0) { %>
-      <div class="message is-info">
-        <div class="message-body">
-          <p class="has-text-weight-bold">There are no parking tickets that can be reconciled with ownership information at this time.</p>
-          <p>Check back after recording additional parking tickets or after importing ownership records.</p>
+    <h2 class="title is-4">
+      <a class="is-toggle-hidden-link" href="#toggle-hidden--errorLog">
+        <i class="fas fa-caret-down" aria-hidden="true"></i>
+        Lookup Errors
+      </a>
+      <span class="tag is-rounded is-medium"><%= errorLog.length %></span>
+    </h2>
+
+    <div
+      class="has-margin-bottom-20 <%= (errorLog.length === 0 ? "is-hidden" : "") %>"
+      id="toggle-hidden--errorLog">
+      <% if (errorLog.length === 0) { %>
+        <div class="message is-info">
+          <div class="message-body">
+            <p>There are no unacknowledged lookup errors.</p>
+          </div>
         </div>
-      </div>
-    <% } else { %>
-      <div class="message is-info">
-        <div class="message-body">
-          <p class="has-text-weight-bold">
-            There <%= (records.length === 1 ? "is one parking ticket" : "are " + records.length + " parking tickets") %>
-            that can be reconciled at this time.
-          </p>
-          <p class="has-text-right">
-            <button class="button is-success" id="is-quick-reconcile-matches-button" type="button">
-              <span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>
-              <span>Quick Reconcile Matches</span>
-            </button>
-          </p>
+      <% } else { %>
+        <table class="table is-fullwidth is-striped is-hoverable">
+          <thead>
+            <tr>
+              <th class="has-border-right-width-2">Licence Plate</th>
+              <th class="has-border-right-width-2" colspan="3">Affected Parking Ticket</th>
+              <th class="has-border-right-width-2">Error Message</th>
+              <th class="has-width-100">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%
+              for (let index = 0; index < errorLog.length; index += 1) {
+                const logEntry = errorLog[index];
+            %>
+                <tr>
+                  <td class="has-border-right-width-2 licence-plate-number">
+                    <%= logEntry.licencePlateNumber %>
+                  </td>
+                  <td>
+                    <a href="/tickets/<%= logEntry.ticketID %>" target="_blank">
+                      <%= logEntry.ticketNumber %>
+                    </a>
+                  </td>
+                  <td><%= logEntry.issueDateString %></td>
+                  <td class="has-border-right-width-2"><%= logEntry.vehicleMakeModel %></td>
+                  <td class="has-border-right-width-2">
+                    <%= logEntry.errorMessage %><br />
+                    <small><%= logEntry.errorCode %></small>
+                  </td>
+                  <td>
+                    <button class="button is-warning is-acknowledge-error-button"
+                      data-batch-id="<%= logEntry.batchID %>"
+                      data-log-index="<%= logEntry.logIndex %>"
+                      type="button">
+                      <span class="icon is-small">
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                      </span>
+                      <span>Acknowledge</span>
+                    </button>
+                  </td>
+                </tr>
+            <%
+              }
+            %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <h2 class="title is-4">
+      <a class="is-toggle-hidden-link" href="#toggle-hidden--reconcile">
+        <i class="fas fa-caret-down" aria-hidden="true"></i>
+        Record to Reconcile
+      </a>
+      <span class="tag is-rounded is-medium"><%= records.length %></span>
+    </h2>
+
+    <div
+      <%- (errorLog.length !== 0 ? "class=\"is-hidden\"" : "") %>
+      id="toggle-hidden--reconcile">
+
+      <% if (records.length === 0) { %>
+        <div class="message is-info">
+          <div class="message-body">
+            <p class="has-text-weight-bold">There are no parking tickets that can be reconciled with ownership information at this time.</p>
+            <p>Check back after recording additional parking tickets or after importing ownership records.</p>
+          </div>
         </div>
-      </div>
-      <table class="table is-fullwidth is-striped is-hoverable">
-        <thead>
-          <tr>
-            <th class="has-border-right-width-2">Licence Plate</th>
-            <th class="has-border-right-width-2" colspan="3">Unresolved Parking Ticket</th>
-            <th class="has-border-right-width-2" colspan="2">Ownership</th>
-            <th class="has-width-150">Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%
-            for (let index = 0; index < records.length; index += 1) {
-              const record = records[index];
-          %>
-              <tr
-                data-licence-plate-country="<%= record.licencePlateCountry %>"
-                data-licence-plate-province="<%= record.licencePlateProvince %>"
-                data-licence-plate-number="<%= record.licencePlateNumber %>"
-                data-ticket-id="<%= record.ticket_ticketID %>"
-                data-ticket-vehicle="<%= record.ticket_vehicleMakeModel %>"
-                data-owner-vehicle="<%= record.owner_vehicleNCICMake %>"
-                data-record-date="<%= record.owner_recordDate %>"
-                <%= (record.isProbableMatch ? "data-is-probable-match": "") %>>
+      <% } else { %>
+        <div class="message is-info">
+          <div class="message-body">
+            <p class="has-text-weight-bold">
+              There <%= (records.length === 1 ? "is one parking ticket" : "are " + records.length + " parking tickets") %>
+              that can be reconciled at this time.
+            </p>
+            <p class="has-text-right">
+              <button class="button is-success" id="is-quick-reconcile-matches-button" type="button">
+                <span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+                <span>Quick Reconcile Matches</span>
+              </button>
+            </p>
+          </div>
+        </div>
+        <table class="table is-fullwidth is-striped is-hoverable">
+          <thead>
+            <tr>
+              <th class="has-border-right-width-2">Licence Plate</th>
+              <th class="has-border-right-width-2" colspan="3">Unresolved Parking Ticket</th>
+              <th class="has-border-right-width-2" colspan="2">Ownership</th>
+              <th class="has-width-150">Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%
+              for (let index = 0; index < records.length; index += 1) {
+                const record = records[index];
+            %>
+                <tr
+                  data-licence-plate-country="<%= record.licencePlateCountry %>"
+                  data-licence-plate-province="<%= record.licencePlateProvince %>"
+                  data-licence-plate-number="<%= record.licencePlateNumber %>"
+                  data-ticket-id="<%= record.ticket_ticketID %>"
+                  data-ticket-vehicle="<%= record.ticket_vehicleMakeModel %>"
+                  data-owner-vehicle="<%= record.owner_vehicleNCICMake %>"
+                  data-record-date="<%= record.owner_recordDate %>"
+                  <%= (record.isProbableMatch ? "data-is-probable-match": "") %>>
 
-                <td class="has-text-weight-bold has-border-right-width-2 licence-plate-number"><%= record.licencePlateNumber %></td>
+                  <td class="has-text-weight-bold has-border-right-width-2 licence-plate-number"><%= record.licencePlateNumber %></td>
 
-                <td>
-                  <a href="/tickets/<%= record.ticket_ticketID %>" target="_blank">
-                    <%= record.ticket_ticketNumber %>
-                  </a>
-                </td>
-                <td><%= record.ticket_issueDateString %></td>
-                <td class="has-border-right-width-2"><%= record.ticket_vehicleMakeModel %></td>
+                  <td>
+                    <a href="/tickets/<%= record.ticket_ticketID %>" target="_blank">
+                      <%= record.ticket_ticketNumber %>
+                    </a>
+                  </td>
+                  <td><%= record.ticket_issueDateString %></td>
+                  <td class="has-border-right-width-2"><%= record.ticket_vehicleMakeModel %></td>
 
-                <td>
-                  <%= record.owner_vehicleNCICMake %>
-                  <%- (record.isProbableMatch ? "<span data-tooltip=\"Perfect Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
-                  <% if (record.owner_vehicleNCIC !== record.owner_vehicleNCICMake) { %>
-                    <br />
-                    <small><%= record.owner_vehicleNCIC %></small>
-                  <% } %>
-                </td>
-                <td class="has-border-right-width-2">
-                  <%= record.owner_recordDateString %><br />
-                  <% if (record.dateDifference === 0) { %>
-                    <span class="tag is-info">Same Day</span>
-                  <% } else { %>
-                    <span class="tag"><%= record.dateDifference %> <%= (record.dateDifference === 1 ? "Day" : "Days") %></span>
-                  <% } %>
-                </td>
+                  <td>
+                    <%= record.owner_vehicleNCICMake %>
+                    <%- (record.isProbableMatch ? "<span data-tooltip=\"Perfect Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
+                    <% if (record.owner_vehicleNCIC !== record.owner_vehicleNCICMake) { %>
+                      <br />
+                      <small><%= record.owner_vehicleNCIC %></small>
+                    <% } %>
+                  </td>
+                  <td class="has-border-right-width-2">
+                    <%= record.owner_recordDateString %><br />
+                    <% if (record.dateDifference === 0) { %>
+                      <span class="tag is-info">Same Day</span>
+                    <% } else { %>
+                      <span class="tag"><%= record.dateDifference %> <%= (record.dateDifference === 1 ? "Day" : "Days") %></span>
+                    <% } %>
+                  </td>
 
-                <td class="is-nowrap is-options-cell" id="is-options-cell--<%= record.ticket_ticketID %>">
-                  <button class="button is-success is-ownership-match-button" type="button">
-                    <span class="icon">
-                      <i class="fas fa-check" aria-hidden="true"></i>
-                    </span>
-                    <span>Match</span>
-                  </button>
-                  <button class="button is-danger is-ownership-error-button" type="button">
-                    <i class="fas fa-times" aria-hidden="true"></i>
-                    <span class="sr-only">Error</span>
-                  </button>
-                </td>
-              </tr>
-          <%
-            }
-          %>
-        </tbody>
-      </table>
-    <% } %>
-
+                  <td class="is-nowrap is-options-cell" id="is-options-cell--<%= record.ticket_ticketID %>">
+                    <button class="button is-success is-ownership-match-button" type="button">
+                      <span class="icon">
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                      </span>
+                      <span>Match</span>
+                    </button>
+                    <button class="button is-danger is-ownership-error-button" type="button">
+                      <i class="fas fa-times" aria-hidden="true"></i>
+                      <span class="sr-only">Error</span>
+                    </button>
+                  </td>
+                </tr>
+            <%
+              }
+            %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
   </div>
 </div>
 
