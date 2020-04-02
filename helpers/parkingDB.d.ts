@@ -149,7 +149,7 @@ declare type MTO_AvailableLicencePlate = {
     ticketNumbers: string[];
 };
 export declare function mto_getLicencePlatesAvailableForLookupBatch(currentBatchID: number, issueDaysAgo: number): MTO_AvailableLicencePlate[];
-interface ReconciliationRecord extends pts.LicencePlate {
+export interface ReconciliationRecord extends pts.LicencePlate {
     ticket_ticketID: number;
     ticket_ticketNumber: string;
     ticket_issueDate: number;
@@ -168,6 +168,7 @@ interface ReconciliationRecord extends pts.LicencePlate {
     owner_ownerProvince: string;
     owner_ownerPostalCode: string;
     dateDifference: number;
+    isProbableMatch: boolean;
 }
 export declare function getOwnershipReconciliationRecords(): ReconciliationRecord[];
 export {};

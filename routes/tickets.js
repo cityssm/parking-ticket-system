@@ -100,6 +100,32 @@ router.post("/doQuickReconcileMatches", function (req, res) {
         });
         return;
     }
+    const records = parkingDB.getOwnershipReconciliationRecords();
+    let statusRecords = [];
+    for (let recordIndex = 0; recordIndex < records.length; recordIndex += 1) {
+        const record = records[recordIndex];
+        if (!record.isProbableMatch) {
+            continue;
+        }
+        const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
+        const statusResponse = parkingDB.createParkingTicketStatus({
+            recordType: "status",
+            ticketID: record.ticket_ticketID,
+            statusKey: "ownerLookupMatch",
+            statusField: record.owner_recordDateString,
+            statusNote: ownerAddress
+        }, req.session, false);
+        if (statusResponse.success) {
+            statusRecords.push({
+                ticketID: record.ticket_ticketID,
+                statusIndex: statusResponse.statusIndex
+            });
+        }
+    }
+    return res.json({
+        success: true,
+        statusRecords: statusRecords
+    });
 });
 router.get([
     "/new",

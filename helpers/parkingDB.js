@@ -1048,6 +1048,9 @@ function getOwnershipReconciliationRecords() {
         record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
         record.owner_vehicleNCICMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
         record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
+        record.isProbableMatch =
+            (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCICMake.toLowerCase()) ||
+                (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
     };
     const db = sqlite(exports.dbPath, {
         readonly: true

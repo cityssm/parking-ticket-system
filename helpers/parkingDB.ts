@@ -1659,7 +1659,7 @@ export function mto_getLicencePlatesAvailableForLookupBatch(currentBatchID: numb
 
 }
 
-interface ReconciliationRecord extends pts.LicencePlate {
+export interface ReconciliationRecord extends pts.LicencePlate {
 
   ticket_ticketID: number,
   ticket_ticketNumber: string,
@@ -1682,7 +1682,8 @@ interface ReconciliationRecord extends pts.LicencePlate {
   owner_ownerProvince: string,
   owner_ownerPostalCode: string,
 
-  dateDifference: number
+  dateDifference: number,
+  isProbableMatch: boolean
 };
 
 export function getOwnershipReconciliationRecords() {
@@ -1695,6 +1696,10 @@ export function getOwnershipReconciliationRecords() {
     record.owner_vehicleNCICMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
 
     record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
+
+    record.isProbableMatch =
+      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCICMake.toLowerCase()) ||
+      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
   };
 
   const db = sqlite(dbPath, {

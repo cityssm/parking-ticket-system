@@ -263,15 +263,82 @@
 
   document.getElementById("is-quick-reconcile-matches-button").addEventListener("click", function(clickEvent) {
 
+    clickEvent.preventDefault();
+
+    let loadingCloseModalFn;
+
     const reconcileFn = function() {
+
+      pts.postJSON("/tickets/doQuickReconcileMatches", {}, function(responseJSON) {
+
+        loadingCloseModalFn();
+
+        if (responseJSON.success) {
+
+          pts.alertModal(
+            "Quick Reconcile Complete",
+            (responseJSON.statusRecords.length === 1 ?
+              "One record was successfully reconciled as a match." :
+              responseJSON.statusRecords.length + " records were successfully reconciled as matches."),
+            "OK",
+            "success"
+          );
+
+          for (let index = 0; index < responseJSON.statusRecords.length; index += 1) {
+
+            const statusRecord = responseJSON.statusRecords[index];
+
+            const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
+
+            if (optionsTdEle) {
+
+              pts.clearElement(optionsTdEle);
+
+              optionsTdEle.innerHTML =
+                "<div class=\"tags has-addons\">" +
+                ("<span class=\"tag is-light is-success\">" +
+                  "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span><span>Match</span>" +
+                  "</span>") +
+                "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + statusRecord.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+                "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
+                "<span class=\"sr-only\">Remove Match</span>" +
+                "</a>" +
+                "</div>";
+
+              optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+
+            }
+
+          }
+
+        }
+
+      });
 
     };
 
-    pts.confirmModal("Quick Reconcile Matches",
+    const loadingFn = function() {
+
+      pts.openHtmlModal("loading", {
+        onshown: function(modalEle, closeModalFn) {
+
+          document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
+          loadingCloseModalFn = closeModalFn;
+
+          reconcileFn();
+
+        }
+      });
+
+    };
+
+    pts.confirmModal(
+      "Quick Reconcile Matches",
       "Are you sure you want to mark all parking tickets with matching vehicle makes as matched?",
       "Yes, Mark All Matches as Matched",
       "info",
-      reconcileFn);
+      loadingFn
+    );
 
   });
 

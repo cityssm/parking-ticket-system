@@ -1,2 +1,3 @@
 import { LicencePlateOwner } from "./ptsTypes";
-export declare function getFormattedOwnerAddress(owner: LicencePlateOwner): string;
+import { ReconciliationRecord } from "./parkingDB";
+export declare function getFormattedOwnerAddress(owner: LicencePlateOwner | ReconciliationRecord): string;

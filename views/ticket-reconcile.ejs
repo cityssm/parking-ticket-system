@@ -62,10 +62,6 @@
           <%
             for (let index = 0; index < records.length; index += 1) {
               const record = records[index];
-
-              const isProbableMatch =
-                (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCICMake.toLowerCase()) ||
-                (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
           %>
               <tr
                 data-licence-plate-country="<%= record.licencePlateCountry %>"
@@ -75,7 +71,7 @@
                 data-ticket-vehicle="<%= record.ticket_vehicleMakeModel %>"
                 data-owner-vehicle="<%= record.owner_vehicleNCICMake %>"
                 data-record-date="<%= record.owner_recordDate %>"
-                <%= (isProbableMatch ? "data-is-probable-match": "") %>>
+                <%= (record.isProbableMatch ? "data-is-probable-match": "") %>>
 
                 <td class="has-text-weight-bold has-border-right-width-2 licence-plate-number"><%= record.licencePlateNumber %></td>
 
@@ -89,6 +85,7 @@
 
                 <td>
                   <%= record.owner_vehicleNCICMake %>
+                  <%- (record.isProbableMatch ? "<span data-tooltip=\"Perfect Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
                   <% if (record.owner_vehicleNCIC !== record.owner_vehicleNCICMake) { %>
                     <br />
                     <small><%= record.owner_vehicleNCIC %></small>
@@ -103,7 +100,7 @@
                   <% } %>
                 </td>
 
-                <td class="is-nowrap is-options-cell">
+                <td class="is-nowrap is-options-cell" id="is-options-cell--<%= record.ticket_ticketID %>">
                   <button class="button is-success is-ownership-match-button" type="button">
                     <span class="icon">
                       <i class="fas fa-check" aria-hidden="true"></i>
