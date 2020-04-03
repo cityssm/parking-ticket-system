@@ -41,6 +41,13 @@
             <span>Tickets</span>
           </a>
 
+          <a class="navbar-item" href="/plates">
+            <span class="icon has-margin-right-5">
+              <i class="fas fa-fw fa-car" aria-hidden="true"></i>
+            </span>
+            <span>Licence Plates</span>
+          </a>
+
           <div class="navbar-item has-dropdown is-hoverable">
 
             <a class="navbar-link is-arrowless" href="#">
@@ -50,12 +57,7 @@
               </span>
             </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item" href="/plates">
-                <span class="icon has-margin-right-5">
-                  <i class="fas fa-fw fa-car" aria-hidden="true"></i>
-                </span>
-                <span>Licence Plates</span>
-              </a>
+
               <% if (user.userProperties.isAdmin) { %>
                 <a class="navbar-item" href="/offences">
                   <span class="icon has-margin-right-5">
@@ -63,9 +65,21 @@
                   </span>
                   <span>Parking Offences</span>
                 </a>
+                <a class="navbar-item" href="/offences/locations">
+                  <span class="icon has-margin-right-5">
+                    <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i>
+                  </span>
+                  <span>Parking Locations</span>
+                </a>
+                <a class="navbar-item" href="/offences/bylaws">
+                  <span class="icon has-margin-right-5">
+                    <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
+                  </span>
+                  <span>Parking By-Laws</span>
+                </a>
+                <hr class="navbar-divider" />
               <% } %>
 
-              <hr class="navbar-divider" />
               <a class="navbar-item" href="/reports">
                 <span class="icon has-margin-right-5">
                   <i class="fas fa-fw fa-file" aria-hidden="true"></i>

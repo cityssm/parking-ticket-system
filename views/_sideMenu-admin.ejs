@@ -1,15 +1,27 @@
-<aside class="menu">
-  <p class="menu-label">
-    Administrator Tools
-  </p>
-  <ul class="menu-list">
-    <li>
-      <a class="<%= (headTitle === "User Management" ? "is-active" : "") %>" href="/admin/userManagement">
-        <span class="icon">
-          <i class="fas fa-user-cog" aria-hidden="true"></i>
-        </span>
-        User Management
-      </a>
-    </li>
-  </ul>
-</aside>
+<div class="column is-3 is-hidden-print" id="is-sidemenu-expanded">
+  <aside class="menu">
+    <p class="menu-label">
+      Administrator Tools
+    </p>
+    <ul class="menu-list">
+      <li>
+        <a class="<%= (headTitle === "User Management" ? "is-active" : "") %>" href="/admin/userManagement">
+          <span class="icon">
+            <i class="fas fa-user-cog" aria-hidden="true"></i>
+          </span>
+          User Management
+        </a>
+      </li>
+    </ul>
+  </aside>
+  <button class="button is-light is-fullwidth has-margin-top-20" id="is-sidemenu-collapse-button">
+    <span class="icon is-small"><i class="fas fa-angle-double-left" aria-hidden="true"></i></span>
+    <span>Hide Side Menu</span>
+  </button>
+</div>
+<div class="column is-narrow is-hidden-print is-hidden" id="is-sidemenu-collapsed">
+  <button class="button is-light has-tooltip-right" id="is-sidemenu-expand-button" data-tooltip="Expand Side Menu">
+    <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+    <span class="sr-only">Expand Side Menu</span>
+  </button>
+</div>

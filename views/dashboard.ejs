@@ -37,7 +37,12 @@
             <h2 class="title is-4 is-marginless">
               <a href="/tickets">Parking Tickets</a>
             </h2>
-            <p>Track parking tickets.</p>
+            <p>
+              Track parking tickets.
+              <% if (user.userProperties.canUpdate) { %>
+                Reconcile ownership records.
+              <% } %>
+            </p>
           </div>
         </div>
       </div>
@@ -48,6 +53,14 @@
           </span>
           Find Tickets
         </a>
+        <% if (user.userProperties.canCreate) { %>
+          <a class="card-footer-item" href="/tickets/new">
+            <span class="icon">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+            </span>
+            New Ticket
+          </a>
+        <% } %>
       </div>
     </div>
   </div>
@@ -62,7 +75,12 @@
             <h2 class="title is-4 is-marginless">
               <a href="/plates">Licence Plate Lookup</a>
             </h2>
-            <p>Look up licence plate owners.</p>
+            <p>
+              Look up licence plate owners.
+              <% if (user.userProperties.canUpdate && configFns.getProperty("application.feature_mtoExportImport")) { %>
+                Manage exports to and imports from the MTO.
+              <% } %>
+            </p>
           </div>
         </div>
       </div>
