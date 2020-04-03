@@ -165,6 +165,15 @@ router.post("/doQuickReconcileMatches", function (req, res) {
         statusRecords: statusRecords
     });
 });
+router.get("/convict", function (req, res) {
+    if (!req.session.user.userProperties.canUpdate) {
+        res.redirect("/tickets/?error=accessDenied");
+        return;
+    }
+    res.render("ticket-convict", {
+        headTitle: "Convict Parking Tickets"
+    });
+});
 router.get([
     "/new",
     "/new/:ticketNumber"
