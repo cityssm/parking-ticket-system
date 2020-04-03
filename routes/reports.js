@@ -34,8 +34,23 @@ router.all("/:reportName", function (req, res) {
                 " where t.recordDelete_timeMillis is null" +
                 " and t.resolvedDate is null";
             break;
+        case "statuses-all":
+            sql = "select * from ParkingTicketStatusLog";
+            break;
+        case "statuses-byTicketID":
+            sql = "select * from ParkingTicketStatusLog" +
+                " where recordDelete_timeMillis is null" +
+                " and ticketID = ?";
+            params = [req.query.ticketID];
+            break;
+        case "remarks-all":
+            sql = "select * from ParkingTicketRemarks";
+            break;
         case "owners-all":
             sql = "select * from LicencePlateOwners";
+            break;
+        case "lookupErrorLog-all":
+            sql = "select * from LicencePlateLookupErrorLog";
             break;
     }
     if (sql === "") {

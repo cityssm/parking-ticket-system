@@ -57,6 +57,26 @@ router.all("/:reportName", function(req, res) {
 
       break;
 
+    case "statuses-all":
+
+      sql = "select * from ParkingTicketStatusLog";
+      break;
+
+    case "statuses-byTicketID":
+
+      sql = "select * from ParkingTicketStatusLog" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?";
+
+      params = [req.query.ticketID];
+
+      break;
+
+    case "remarks-all":
+
+      sql = "select * from ParkingTicketRemarks";
+      break;
+
 
     /*
      * Licence Plates
@@ -67,23 +87,10 @@ router.all("/:reportName", function(req, res) {
       sql = "select * from LicencePlateOwners";
       break;
 
-    /*
-    Sample for lottery-licence-manager that uses parameters
+    case "lookupErrorLog-all":
 
-    case "representatives-byOrganization":
-
-      sql = "select organizationID, representativeIndex," +
-        " representativeName, representativeTitle," +
-        " representativeAddress1, representativeAddress2, representativeCity, representativeProvince," +
-        " representativePostalCode, representativePhoneNumber, representativeEmailAddress," +
-        " isDefault" +
-        " from OrganizationRepresentatives" +
-        " where organizationID = ?";
-
-      params = [req.query.organizationID];
-
+      sql = "select * from LicencePlateLookupErrorLog";
       break;
-    */
 
   }
 
