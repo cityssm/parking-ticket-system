@@ -83,6 +83,7 @@ export declare function getLicencePlates(queryOptions: getLicencePlates_queryOpt
     licencePlates: any[];
 };
 export declare function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number): pts.LicencePlateOwner;
+export declare function getAllLicencePlateOwners(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner[];
 export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number): any[];
 export declare function getParkingLocations(): pts.ParkingLocation[];
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];
@@ -158,7 +159,7 @@ export interface ReconciliationRecord extends pts.LicencePlate {
     owner_recordDate: number;
     owner_recordDateString: string;
     owner_vehicleNCIC: string;
-    owner_vehicleNCICMake: string;
+    owner_vehicleMake: string;
     owner_vehicleYear: number;
     owner_vehicleColor: string;
     owner_ownerName1: string;

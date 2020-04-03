@@ -1103,6 +1103,34 @@ export function getLicencePlateOwner(licencePlateCountry: string, licencePlatePr
 
 }
 
+export function getAllLicencePlateOwners(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) {
+
+  const addCalculatedFieldsFn = function(record: pts.LicencePlateOwner) {
+    record.recordDateString = dateTimeFns.dateIntegerToString(record.recordDate);
+    record.vehicleMake = vehicleFns.getMakeFromNCIC(record.vehicleNCIC);
+  };
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const owners: pts.LicencePlateOwner[] = db.prepare("select recordDate, vehicleNCIC, vehicleYear, vehicleColor," +
+    " ownerName1, ownerName2, ownerAddress, ownerCity, ownerProvince, ownerPostalCode" +
+    " from LicencePlateOwners" +
+    " where recordDelete_timeMillis is null" +
+    " and licencePlateCountry = ?" +
+    " and licencePlateProvince = ?" +
+    " and licencePlateNumber = ?" +
+    " order by recordDate desc")
+    .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+
+  db.close();
+
+  owners.forEach(addCalculatedFieldsFn);
+
+  return owners;
+}
+
 export function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number) {
 
   const db = sqlite(dbPath, {
@@ -1671,7 +1699,7 @@ export interface ReconciliationRecord extends pts.LicencePlate {
   owner_recordDateString: string,
 
   owner_vehicleNCIC: string,
-  owner_vehicleNCICMake: string,
+  owner_vehicleMake: string,
   owner_vehicleYear: number,
   owner_vehicleColor: string,
 
@@ -1693,12 +1721,12 @@ export function getOwnershipReconciliationRecords() {
     record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
     record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
 
-    record.owner_vehicleNCICMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
+    record.owner_vehicleMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
 
     record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
 
     record.isProbableMatch =
-      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCICMake.toLowerCase()) ||
+      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
       (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
   };
 

@@ -1,5 +1,3 @@
-"use strict";
-
 import { RawRowsColumnsReturn } from "./ptsTypes";
 
 const goodWords = require("../node_modules/fresh-password/lib/words/good.json");

@@ -1,5 +1,3 @@
-"use strict";
-
 import express = require("express");
 const router = express.Router();
 
@@ -8,10 +6,27 @@ import * as parkingDB from "../helpers/parkingDB";
 
 router.get("/", function(_req, res) {
 
-  res.render("offence-search", {
+  res.render("offence-maint", {
     headTitle: "Parking Offences"
   });
 
+});
+
+
+router.get("/locations", function(_req, res) {
+
+  res.render("location-maint", {
+    headTitle: "Parking Location Maintenance"
+  });
+
+});
+
+
+router.get("/bylaws", function(_req, res) {
+
+  res.render("bylaw-maint", {
+    headTitle: "By-Law Maintenance"
+  });
 });
 
 

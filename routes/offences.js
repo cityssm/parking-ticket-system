@@ -3,8 +3,18 @@ const express = require("express");
 const router = express.Router();
 const parkingDB = require("../helpers/parkingDB");
 router.get("/", function (_req, res) {
-    res.render("offence-search", {
+    res.render("offence-maint", {
         headTitle: "Parking Offences"
+    });
+});
+router.get("/locations", function (_req, res) {
+    res.render("location-maint", {
+        headTitle: "Parking Location Maintenance"
+    });
+});
+router.get("/bylaws", function (_req, res) {
+    res.render("bylaw-maint", {
+        headTitle: "By-Law Maintenance"
     });
 });
 router.post("/doGetAllLocations", function (_req, res) {

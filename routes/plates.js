@@ -179,14 +179,14 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
     if (licencePlateNumber === "_") {
         licencePlateNumber = "";
     }
-    const owner = parkingDB.getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+    const owners = parkingDB.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
     const tickets = parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
     res.render("plate-view", {
         headTitle: "Licence Plate " + licencePlateNumber,
         licencePlateNumber: licencePlateNumber,
         licencePlateProvince: licencePlateProvince,
         licencePlateCountry: licencePlateCountry,
-        owner: owner,
+        owners: owners,
         tickets: tickets
     });
 });

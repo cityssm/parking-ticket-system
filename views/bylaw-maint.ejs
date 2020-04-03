@@ -1,0 +1,24 @@
+<%- include('_header'); -%>
+
+<div class="columns is-block-print">
+  <%- include("_sideMenu-offences"); -%>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/offences">Parking Offences</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Parking By-Laws</a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title is-1">
+      Parking By-Laws
+    </h1>
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<script src="/javascripts/bylaw-maint.min.js"></script>
+
+<%- include('_footerB'); -%>

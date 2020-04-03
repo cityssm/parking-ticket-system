@@ -1,277 +1,282 @@
 <%- include('_header'); -%>
 
-<nav class="breadcrumb">
-  <ul>
-    <li><a href="/dashboard">Home</a></li>
-    <li><a href="/tickets">Tickets</a></li>
-    <% if (isCreate) { %>
-      <li class="is-active"><a href="#" aria-current="page">New Ticket</a></li>
-    <% } else { %>
-      <li><a href="/tickets/<%= ticket.ticketID %>">Ticket <%=ticket.ticketNumber %></a></li>
-      <li class="is-active"><a href="#" aria-current="page">Edit</a></li>
-    <% } %>
-  </ul>
-</nav>
+<div class="columns is-block-print">
+  <%- include("_sideMenu-tickets"); -%>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/tickets">Tickets</a></li>
+        <% if (isCreate) { %>
+          <li class="is-active"><a href="#" aria-current="page">New Ticket</a></li>
+        <% } else { %>
+          <li><a href="/tickets/<%= ticket.ticketID %>">Ticket <%=ticket.ticketNumber %></a></li>
+          <li class="is-active"><a href="#" aria-current="page">Edit</a></li>
+        <% } %>
+      </ul>
+    </nav>
 
-<h1 class="title is-1">
-  <%= (isCreate ? "New Ticket" : "Ticket " + ticket.ticketNumber) %>
-</h1>
+    <h1 class="title is-1">
+      <%= (isCreate ? "New Ticket" : "Ticket " + ticket.ticketNumber) %>
+    </h1>
 
-<form id="form--ticket">
-  <input id="ticket--ticketID" name="ticketID" type="hidden" value="<%=ticket.ticketID %>" />
+    <form id="form--ticket">
+      <input id="ticket--ticketID" name="ticketID" type="hidden" value="<%=ticket.ticketID %>" />
 
-  <div class="panel">
-    <h2 class="panel-heading">
-      Ticket Details
-    </h2>
-    <div class="panel-block is-block">
-      <div class="columns">
-        <div class="column">
-          <label class="label" for="ticket--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input
-                class="input <%= (isCreate ? "" : "is-readonly") %>"
-                id="ticket--ticketNumber" name="ticketNumber" type="text"
-                value="<%= ticket.ticketNumber %>"
-                pattern="<%= configFns.getProperty("parkingTickets.ticketNumber.pattern").source %>"
-                maxlength="10"
-                autocomplete="off"
-                <%= (isCreate ? "" : "readonly") %>
-                required />
-            </div>
-            <div class="control">
-              <button class="button is-unlock-field-button"
-                data-unlock="input" data-tooltip="Unlock Ticket Number Field"
-                type="button"
-                <%= (isCreate ? "disabled" : "") %>>
-                <span class="sr-only">Unlock Field</span>
-                <i class="fas fa-unlock" aria-hidden="false"></i>
-              </button>
-            </div>
-          </div>
-
+      <div class="panel">
+        <h2 class="panel-heading">
+          Ticket Details
+        </h2>
+        <div class="panel-block is-block">
           <div class="columns">
             <div class="column">
-              <div class="field">
-                <label class="label" for="ticket--issueDateString">Issue Date</label>
-                <input class="input" id="ticket--issueDateString" name="issueDateString" type="date" value="<%= ticket.issueDateString %>" max="<%= issueDateMaxString %>" required />
+              <label class="label" for="ticket--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
+              <div class="field has-addons">
+                <div class="control is-expanded">
+                  <input
+                    class="input <%= (isCreate ? "" : "is-readonly") %>"
+                    id="ticket--ticketNumber" name="ticketNumber" type="text"
+                    value="<%= ticket.ticketNumber %>"
+                    pattern="<%= configFns.getProperty("parkingTickets.ticketNumber.pattern").source %>"
+                    maxlength="10"
+                    autocomplete="off"
+                    <%= (isCreate ? "" : "readonly") %>
+                    required />
+                </div>
+                <div class="control">
+                  <button class="button is-unlock-field-button"
+                    data-unlock="input" data-tooltip="Unlock Ticket Number Field"
+                    type="button"
+                    <%= (isCreate ? "disabled" : "") %>>
+                    <span class="sr-only">Unlock Field</span>
+                    <i class="fas fa-unlock" aria-hidden="false"></i>
+                  </button>
+                </div>
               </div>
+
+              <div class="columns">
+                <div class="column">
+                  <div class="field">
+                    <label class="label" for="ticket--issueDateString">Issue Date</label>
+                    <input class="input" id="ticket--issueDateString" name="issueDateString" type="date" value="<%= ticket.issueDateString %>" max="<%= issueDateMaxString %>" required />
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="field">
+                    <label class="label" for="ticket--issueTimeString">Issue Time</label>
+                    <input class="input" id="ticket--issueTimeString" name="issueTimeString" type="time" value="<%= ticket.issueTimeString %>" required />
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="ticket--issuingOfficer">Issuing Officer</label>
+                <input class="input" id="ticket--issuingOfficer" name="issuingOfficer" type="text" value="<%= ticket.issuingOfficer %>" maxlength="30" required />
+              </div>
+
             </div>
+            <div class="is-divider-vertical"></div>
             <div class="column">
+              <label class="label" for="ticket--locationName">Location</label>
+              <input id="ticket--locationKey" name="locationKey" type="hidden" value="<%= ticket.locationKey %>" />
+              <div class="field has-addons">
+                <div class="control is-expanded">
+                  <input class="input is-readonly" id="ticket--locationName" type="text" value="<%= (ticket.location || {}).locationName %>" readonly />
+                </div>
+                <div class="control">
+                  <button class="button" id="is-location-lookup-button" type="button">
+                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                    <span>Lookup</span>
+                  </button>
+                </div>
+              </div>
               <div class="field">
-                <label class="label" for="ticket--issueTimeString">Issue Time</label>
-                <input class="input" id="ticket--issueTimeString" name="issueTimeString" type="time" value="<%= ticket.issueTimeString %>" required />
+                <label class="label" for="ticket--locationDescription">Location Description</label>
+                <textarea class="textarea" id="ticket--locationDescription" name="locationDescription"><%= ticket.locationDescription %></textarea>
               </div>
             </div>
-          </div>
+            <div class="is-divider-vertical"></div>
+            <div class="column">
 
-          <div class="field">
-            <label class="label" for="ticket--issuingOfficer">Issuing Officer</label>
-            <input class="input" id="ticket--issuingOfficer" name="issuingOfficer" type="text" value="<%= ticket.issuingOfficer %>" maxlength="30" required />
-          </div>
+              <label class="label" for="ticket--bylawNumber">By-law Number</label>
+              <div class="field has-addons">
+                <div class="control is-expanded">
+                  <input class="input is-readonly" id="ticket--bylawNumber" name="bylawNumber" type="text" value="<%= ticket.bylawNumber %>" maxlength="20" readonly required />
+                </div>
+                <div class="control">
+                  <button class="button" id="is-bylaw-lookup-button" type="button">
+                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                    <span>Lookup</span>
+                  </button>
+                </div>
+              </div>
 
-        </div>
-        <div class="is-divider-vertical"></div>
-        <div class="column">
-          <label class="label" for="ticket--locationName">Location</label>
-          <input id="ticket--locationKey" name="locationKey" type="hidden" value="<%= ticket.locationKey %>" />
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input class="input is-readonly" id="ticket--locationName" type="text" value="<%= (ticket.location || {}).locationName %>" readonly />
-            </div>
-            <div class="control">
-              <button class="button" id="is-location-lookup-button" type="button">
-                <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                <span>Lookup</span>
-              </button>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label" for="ticket--locationDescription">Location Description</label>
-            <textarea class="textarea" id="ticket--locationDescription" name="locationDescription"><%= ticket.locationDescription %></textarea>
-          </div>
-        </div>
-        <div class="is-divider-vertical"></div>
-        <div class="column">
-
-          <label class="label" for="ticket--bylawNumber">By-law Number</label>
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input class="input is-readonly" id="ticket--bylawNumber" name="bylawNumber" type="text" value="<%= ticket.bylawNumber %>" maxlength="20" readonly required />
-            </div>
-            <div class="control">
-              <button class="button" id="is-bylaw-lookup-button" type="button">
-                <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                <span>Lookup</span>
-              </button>
-            </div>
-          </div>
-
-          <label class="label" for="ticket--offenceAmount">Offence Amount</label>
-          <div class="field has-addons">
-            <div class="control is-expanded has-icons-left">
-              <input class="input is-readonly has-text-right" id="ticket--offenceAmount" name="offenceAmount" type="number" value="<%= ticket.offenceAmount %>" min="0" step="0.01" required readonly onwheel="return false;" />
-              <span class="icon is-small is-left">
-                <i class="fas fa-dollar-sign" aria-hidden="true"></i>
-              </span>
-            </div>
-            <div class="control">
-              <button class="button is-unlock-field-button" data-unlock="input" data-tooltip="Unlock Offence Amount Field" type="button">
-                <span class="sr-only">Unlock Field</span>
-                <i class="fas fa-unlock" aria-hidden="false"></i>
-              </button>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label" for="ticket--parkingOffence">Parking Offence</label>
-            <div class="control">
-              <textarea class="textarea" id="ticket--parkingOffence" name="parkingOffence"><%= ticket.parkingOffence %></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h2 class="panel-heading">
-      Vehicle Details
-    </h2>
-
-    <div class="panel-block is-block">
-      <div class="columns">
-        <div class="column">
-          <div class="field">
-            <label class="label" for="ticket--licencePlateCountry">Licence Plate Country Code</label>
-            <div class="control">
-              <input class="input" id="ticket--licencePlateCountry" name="licencePlateCountry" type="text" value="<%= ticket.licencePlateCountry %>" maxlength="2" list="datalist--licencePlateCountry" autocomplete="off" required />
-              <datalist id="datalist--licencePlateCountry">
-                <%
-                  const licencePlateCountries = Object.values(configFns.getProperty("licencePlateProvinces"));
-                  for (let countryObj of licencePlateCountries) {
-                %>
-                  <option value="<%= countryObj.countryShortName %>"></option>
-                <%
-                  }
-                %>
-              </datalist>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="ticket--licencePlateProvince">Licence Plate Province</label>
-            <div class="control">
-              <input class="input" id="ticket--licencePlateProvince" name="licencePlateProvince" type="text" value="<%= ticket.licencePlateProvince %>" maxlength="5" list="datalist--licencePlateProvince" autocomplete="off" required />
-              <datalist id="datalist--licencePlateProvince"></datalist>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="ticket--licencePlateNumber">Licence Plate Number</label>
-            <div class="control">
-              <input class="input" id="ticket--licencePlateNumber" name="licencePlateNumber" type="text" value="<%= ticket.licencePlateNumber %>" maxlength="15" pattern="^[A-Z0-9 ]+$" autocomplete="off" required />
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="ticket--vehicleMakeModel">Vehicle Make/Model from Ticket</label>
-            <div class="control">
-              <input class="input" id="ticket--vehicleMakeModel" name="vehicleMakeModel" type="text" value="<%= ticket.vehicleMakeModel %>" maxlength="30" list="datalist--vehicleMakeModel" />
-              <datalist id="datalist--vehicleMakeModel">
-                <% for (let makeIndex = 0; makeIndex < vehicleMakeModelDatalist.length; makeIndex += 1) { %>
-                  <option value="<%= vehicleMakeModelDatalist[makeIndex] %>"></option>
-                <% } %>
-              </datalist>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="is-fixed-bottom has-padding-10 has-background-grey-light is-hidden-print">
-    <div class="level">
-      <div class="level-left">
-        <span id="container--form-message"></span>
-      </div>
-      <div class="level-right">
-        <div class="buttons justify-flex-end">
-          <% if (isCreate) { %>
-            <a class="button" href="/tickets">
-              Cancel
-            </a>
-          <% } %>
-          <button class="button is-success" type="submit">
-            <span class="icon">
-              <i class="fas fa-save" aria-hidden="true"></i>
-            </span>
-            <span><%= (isCreate ? "Create New Ticket and Continue" : "Update Ticket") %></span>
-          </button>
-          <% if (!isCreate) { %>
-            <div class="dropdown is-hoverable is-right is-up">
-              <div class="dropdown-trigger">
-                <button class="button" type="button" aria-haspopup="true">
-                  <span>Options</span>
-                  <span class="icon">
-                    <i class="fas fa-angle-up" aria-hidden="true"></i>
+              <label class="label" for="ticket--offenceAmount">Offence Amount</label>
+              <div class="field has-addons">
+                <div class="control is-expanded has-icons-left">
+                  <input class="input is-readonly has-text-right" id="ticket--offenceAmount" name="offenceAmount" type="number" value="<%= ticket.offenceAmount %>" min="0" step="0.01" required readonly onwheel="return false;" />
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-dollar-sign" aria-hidden="true"></i>
                   </span>
-                </button>
+                </div>
+                <div class="control">
+                  <button class="button is-unlock-field-button" data-unlock="input" data-tooltip="Unlock Offence Amount Field" type="button">
+                    <span class="sr-only">Unlock Field</span>
+                    <i class="fas fa-unlock" aria-hidden="false"></i>
+                  </button>
+                </div>
               </div>
-              <div class="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                  <a class="dropdown-item" id="is-delete-ticket-button" href="#">
-                    <span class="icon"><i class="fas fa-trash has-text-danger" aria-hidden="true"></i></span>
-                    <span>Delete Ticket</span>
-                  </a>
+              <div class="field">
+                <label class="label" for="ticket--parkingOffence">Parking Offence</label>
+                <div class="control">
+                  <textarea class="textarea" id="ticket--parkingOffence" name="parkingOffence"><%= ticket.parkingOffence %></textarea>
                 </div>
               </div>
             </div>
-          <% } %>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
-</form>
+      <div class="panel">
+        <h2 class="panel-heading">
+          Vehicle Details
+        </h2>
 
-<% if (!isCreate) { %>
-  <div class="columns">
-    <div class="column">
-      <div class="panel" id="is-remark-panel">
-        <div class="panel-heading">
-          <div class="level">
-            <h2 class="level-left has-text-weight-bold">Remarks</h2>
-            <div class="level-right">
-              <button class="button is-small" id="is-add-remark-button" type="button">
-                <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                <span>Add Remark</span>
-              </button>
+        <div class="panel-block is-block">
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label" for="ticket--licencePlateCountry">Licence Plate Country Code</label>
+                <div class="control">
+                  <input class="input" id="ticket--licencePlateCountry" name="licencePlateCountry" type="text" value="<%= ticket.licencePlateCountry %>" maxlength="2" list="datalist--licencePlateCountry" autocomplete="off" required />
+                  <datalist id="datalist--licencePlateCountry">
+                    <%
+                      const licencePlateCountries = Object.values(configFns.getProperty("licencePlateProvinces"));
+                      for (let countryObj of licencePlateCountries) {
+                    %>
+                      <option value="<%= countryObj.countryShortName %>"></option>
+                    <%
+                      }
+                    %>
+                  </datalist>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="field">
+                <label class="label" for="ticket--licencePlateProvince">Licence Plate Province</label>
+                <div class="control">
+                  <input class="input" id="ticket--licencePlateProvince" name="licencePlateProvince" type="text" value="<%= ticket.licencePlateProvince %>" maxlength="5" list="datalist--licencePlateProvince" autocomplete="off" required />
+                  <datalist id="datalist--licencePlateProvince"></datalist>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="field">
+                <label class="label" for="ticket--licencePlateNumber">Licence Plate Number</label>
+                <div class="control">
+                  <input class="input" id="ticket--licencePlateNumber" name="licencePlateNumber" type="text" value="<%= ticket.licencePlateNumber %>" maxlength="15" pattern="^[A-Z0-9 ]+$" autocomplete="off" required />
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="field">
+                <label class="label" for="ticket--vehicleMakeModel">Vehicle Make/Model from Ticket</label>
+                <div class="control">
+                  <input class="input" id="ticket--vehicleMakeModel" name="vehicleMakeModel" type="text" value="<%= ticket.vehicleMakeModel %>" maxlength="30" list="datalist--vehicleMakeModel" />
+                  <datalist id="datalist--vehicleMakeModel">
+                    <% for (let makeIndex = 0; makeIndex < vehicleMakeModelDatalist.length; makeIndex += 1) { %>
+                      <option value="<%= vehicleMakeModelDatalist[makeIndex] %>"></option>
+                    <% } %>
+                  </datalist>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="column">
-      <div class="panel" id="is-status-panel">
-        <div class="panel-heading">
-          <div class="level">
-            <h2 class="level-left has-text-weight-bold">Status</h2>
-            <div class="level-right">
-              <button class="button is-small" id="is-add-status-button" type="button">
-                <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                <span>Add Status</span>
+
+      <div class="is-fixed-bottom has-padding-10 has-background-grey-light is-hidden-print">
+        <div class="level">
+          <div class="level-left">
+            <span id="container--form-message"></span>
+          </div>
+          <div class="level-right">
+            <div class="buttons justify-flex-end">
+              <% if (isCreate) { %>
+                <a class="button" href="/tickets">
+                  Cancel
+                </a>
+              <% } %>
+              <button class="button is-success" type="submit">
+                <span class="icon">
+                  <i class="fas fa-save" aria-hidden="true"></i>
+                </span>
+                <span><%= (isCreate ? "Create New Ticket and Continue" : "Update Ticket") %></span>
               </button>
+              <% if (!isCreate) { %>
+                <div class="dropdown is-hoverable is-right is-up">
+                  <div class="dropdown-trigger">
+                    <button class="button" type="button" aria-haspopup="true">
+                      <span>Options</span>
+                      <span class="icon">
+                        <i class="fas fa-angle-up" aria-hidden="true"></i>
+                      </span>
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <a class="dropdown-item" id="is-delete-ticket-button" href="#">
+                        <span class="icon"><i class="fas fa-trash has-text-danger" aria-hidden="true"></i></span>
+                        <span>Delete Ticket</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+    </form>
+
+    <% if (!isCreate) { %>
+      <div class="columns">
+        <div class="column">
+          <div class="panel" id="is-remark-panel">
+            <div class="panel-heading">
+              <div class="level">
+                <h2 class="level-left has-text-weight-bold">Remarks</h2>
+                <div class="level-right">
+                  <button class="button is-small" id="is-add-remark-button" type="button">
+                    <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                    <span>Add Remark</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="panel" id="is-status-panel">
+            <div class="panel-heading">
+              <div class="level">
+                <h2 class="level-left has-text-weight-bold">Status</h2>
+                <div class="level-right">
+                  <button class="button is-small" id="is-add-status-button" type="button">
+                    <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                    <span>Add Status</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
   </div>
-<% } %>
+</div>
 
 <%- include('_footerA'); -%>
 

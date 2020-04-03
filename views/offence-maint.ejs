@@ -1,0 +1,23 @@
+<%- include('_header'); -%>
+
+<div class="columns is-block-print">
+  <%- include("_sideMenu-offences"); -%>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Parking Offences</a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title is-1">
+      Parking Offences
+    </h1>
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<script src="/javascripts/offence-maint.min.js"></script>
+
+<%- include('_footerB'); -%>

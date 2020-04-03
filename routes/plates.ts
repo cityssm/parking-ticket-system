@@ -11,7 +11,6 @@ import * as vehicleFns from "../helpers/vehicleFns";
 import * as parkingDB from "../helpers/parkingDB";
 
 
-
 var multer = require('multer');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
@@ -300,7 +299,7 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
     licencePlateNumber = "";
   }
 
-  const owner = parkingDB.getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+  const owners = parkingDB.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
   const tickets = parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
 
@@ -311,7 +310,7 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
     licencePlateProvince: licencePlateProvince,
     licencePlateCountry: licencePlateCountry,
 
-    owner: owner,
+    owners: owners,
     tickets: tickets
   });
 });

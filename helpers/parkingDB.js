@@ -671,6 +671,28 @@ function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licence
     return ownerRecord;
 }
 exports.getLicencePlateOwner = getLicencePlateOwner;
+function getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber) {
+    const addCalculatedFieldsFn = function (record) {
+        record.recordDateString = dateTimeFns.dateIntegerToString(record.recordDate);
+        record.vehicleMake = vehicleFns.getMakeFromNCIC(record.vehicleNCIC);
+    };
+    const db = sqlite(exports.dbPath, {
+        readonly: true
+    });
+    const owners = db.prepare("select recordDate, vehicleNCIC, vehicleYear, vehicleColor," +
+        " ownerName1, ownerName2, ownerAddress, ownerCity, ownerProvince, ownerPostalCode" +
+        " from LicencePlateOwners" +
+        " where recordDelete_timeMillis is null" +
+        " and licencePlateCountry = ?" +
+        " and licencePlateProvince = ?" +
+        " and licencePlateNumber = ?" +
+        " order by recordDate desc")
+        .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+    db.close();
+    owners.forEach(addCalculatedFieldsFn);
+    return owners;
+}
+exports.getAllLicencePlateOwners = getAllLicencePlateOwners;
 function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate) {
     const db = sqlite(exports.dbPath, {
         readonly: true
@@ -1046,10 +1068,10 @@ function getOwnershipReconciliationRecords() {
     const addCalculatedFieldsFn = function (record) {
         record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
         record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
-        record.owner_vehicleNCICMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
+        record.owner_vehicleMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
         record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
         record.isProbableMatch =
-            (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCICMake.toLowerCase()) ||
+            (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
                 (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
     };
     const db = sqlite(exports.dbPath, {

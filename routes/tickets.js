@@ -351,6 +351,7 @@ router.get("/:ticketID", function (req, res) {
     }
     res.render("ticket-view", {
         headTitle: "Ticket " + ticket.ticketNumber,
+        pageContainerIsFullWidth: true,
         ticket: ticket
     });
 });

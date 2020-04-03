@@ -1,183 +1,189 @@
 <%- include('_header'); -%>
 
-<nav class="breadcrumb">
-  <ul>
-    <li><a href="/dashboard">Home</a></li>
-    <li><a href="/plates">Licence Plates</a></li>
-    <li class="is-active"><a href="#" aria-current="page">
-      <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
-    </a></li>
-  </ul>
-</nav>
-
-<h1 class="title is-1">
-  Licence Plate <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
-</h1>
-
-<%
-  let ownershipRowDisplayed = false;
-%>
-
-<div class="columns">
-  <div class="column is-4">
-    <div class="panel">
-      <div class="panel-block">
-        <p>
-          <strong>Licence Plate Number</strong><br />
+<div class="columns is-block-print">
+  <%- include("_sideMenu-plates"); -%>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/plates">Licence Plates</a></li>
+        <li class="is-active"><a href="#" aria-current="page">
           <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
-        </p>
+        </a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title is-1">
+      Licence Plate <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
+    </h1>
+
+    <%
+      let ownershipRowDisplayed = false;
+      let owner = (owners.length > 0 ? owners[0] : null);
+    %>
+
+    <div class="columns">
+      <div class="column is-4">
+        <div class="panel">
+          <div class="panel-block">
+            <p>
+              <strong>Licence Plate Number</strong><br />
+              <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
+            </p>
+          </div>
+          <div class="panel-block">
+            <p>
+              <strong>Province</strong><br />
+              <%= (licencePlateProvince === "" ? "(Blank)" : licencePlateProvince) %>
+            </p>
+          </div>
+          <div class="panel-block">
+            <p>
+              <strong>Country</strong><br />
+              <%= (licencePlateCountry === "" ? "(Blank)" : licencePlateCountry) %>
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="panel-block">
-        <p>
-          <strong>Province</strong><br />
-          <%= (licencePlateProvince === "" ? "(Blank)" : licencePlateProvince) %>
-        </p>
-      </div>
-      <div class="panel-block">
-        <p>
-          <strong>Country</strong><br />
-          <%= (licencePlateCountry === "" ? "(Blank)" : licencePlateCountry) %>
-        </p>
+      <div class="column">
+        <div class="panel">
+          <h2 class="panel-heading">
+            Ownership <%= (owner && owner.recordDate ? " as of " + owner.recordDateString : "") %>
+          </h2>
+          <% if (!owner) { %>
+            <% ownershipRowDisplayed = true; %>
+            <div class="panel-block is-block">
+              <div class="message is-info">
+                <p class="message-body">
+                  There is no ownership information available for this licence plate.
+                </p>
+              </div>
+            </div>
+          <% } else if (!owner.recordDate) { %>
+            <% ownershipRowDisplayed = true; %>
+            <div class="panel-block is-block">
+              <div class="message is-warning">
+                <p class="message-body">
+                  There is no record date associated with the ownership information.
+                  It may be out of date.
+                </p>
+              </div>
+            </div>
+          <% } %>
+          <% if (owner) { %>
+            <div class="panel-block is-block">
+              <div class="columns">
+                <div class="column">
+                  <p>
+                    <%= owner.ownerName1 %>
+                    <%- (owner.ownerName2 && owner.ownerName2 !== "" ? "<br />" : "") %>
+                    <%= owner.ownerName2 %>
+                    <br />
+                    <%= owner.ownerAddress %><br />
+                    <%= owner.ownerCity %>, <%= owner.ownerProvince %><br />
+                    <%= owner.ownerPostalCode %>
+                  </p>
+                </div>
+                <div class="column">
+                  <p>
+                    <%= owner.vehicleMake %>
+                    <%= (owner.vehicleMake === owner.vehicleNCIC ? "" : " (" + owner.vehicleNCIC + ")") %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="column">
+
     <div class="panel">
       <h2 class="panel-heading">
-        Ownership <%= (owner && owner.recordDate ? " as of " + owner.recordDateString : "") %>
+        Ticket History
       </h2>
-      <% if (!owner) { %>
-        <% ownershipRowDisplayed = true; %>
+      <% if (tickets.length === 0) { %>
         <div class="panel-block is-block">
           <div class="message is-info">
             <p class="message-body">
-              There is no ownership information available for this licence plate.
+              There are no tickets recorded that are associated with this licence plate.
             </p>
           </div>
         </div>
-      <% } else if (!owner.recordDate) { %>
-        <% ownershipRowDisplayed = true; %>
-        <div class="panel-block is-block">
-          <div class="message is-warning">
-            <p class="message-body">
-              There is no record date associated with the ownership information.
-              It may be out of date.
-            </p>
-          </div>
-        </div>
-      <% } %>
-      <% if (owner) { %>
-        <div class="panel-block is-block">
-          <div class="columns">
-            <div class="column">
-              <p>
-                <%= owner.ownerName1 %>
-                <%- (owner.ownerName2 && owner.ownerName2 !== "" ? "<br />" : "") %>
-                <%= owner.ownerName2 %>
-                <br />
-                <%= owner.ownerAddress %><br />
-                <%= owner.ownerCity %>, <%= owner.ownerProvince %><br />
-                <%= owner.ownerPostalCode %>
-              </p>
-            </div>
-            <div class="column">
-              <p>
-                <%= owner.vehicleMake %>
-                <%= (owner.vehicleMake === owner.vehicleNCIC ? "" : " (" + owner.vehicleNCIC + ")") %>
-              </p>
-            </div>
-          </div>
-        </div>
+      <% } else { %>
+        <table class="table is-fullwidth is-striped is-hoverable">
+          <thead>
+            <tr>
+              <th>Ticket Number</th>
+              <th>Issue Date</th>
+              <th>Location</th>
+              <th>Offence</th>
+              <th>Vehicle Make/Model on Ticket</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%
+
+
+              for (let index = 0; index < tickets.length; index += 1) {
+                const ticketObj = tickets[index];
+
+                if (!ownershipRowDisplayed && owner.recordDate > ticketObj.issueDate) {
+                  ownershipRowDisplayed = true;
+            %>
+              <tr class="is-selected has-text-weight-bold">
+                <td class="has-text-centered" colspan="6">
+                  <small>Ownership Lookup</small><br />
+                  <%= owner.recordDateString %> -
+                  <%= owner.vehicleMake %>
+                  <%= (owner.vehicleMake === owner.vehicleNCIC ? "" : " (" + owner.vehicleNCIC + ")") %>
+                </td>
+              </tr>
+            <%
+                }
+            %>
+              <tr>
+                <td>
+                  <a href="/tickets/<%= ticketObj.ticketID %>">
+                    <%= ticketObj.ticketNumber %>
+                  </a>
+                </td>
+                <td><%= ticketObj.issueDateString %></td>
+                <td>
+                  <%= ticketObj.locationDescription %>
+                  <% if (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName) { %>
+                    <br />
+                    <small>
+                      <i class="fas fa-map-marker-alt" aria-hidden="true"></i> <%=ticketObj.locationName %>
+                    </small>
+                  <% } %>
+                </td>
+                <td><%= ticketObj.parkingOffence %></td>
+                <td><%= ticketObj.vehicleMakeModel %></td>
+                <td>
+                  <% if (ticketObj.resolvedDateString === "") { %>
+                    Unresolved
+                  <% } else { %>
+                    <span class="sr-only">Resolved</span>
+                    <i class="fas fa-check" aria-hidden="true"></i> <%= ticketObj.resolvedDateString %>
+                  <% } %>
+                  <% if (ticketObj.latestStatus_statusKey) { %>
+                    <%
+                      const ticketStatus = configFns.getParkingTicketStatus(ticketObj.latestStatus_statusKey);
+                    %>
+                    <br />
+                    <span class="tag is-light is-primary"><%= (ticketStatus ? ticketStatus.status : ticketObj.latestStatus_statusKey) %></span>
+                  <% } %>
+                </td>
+              </tr>
+            <%
+              }
+            %>
+          </tbody>
+        </table>
       <% } %>
     </div>
   </div>
-</div>
-
-<div class="panel">
-  <h2 class="panel-heading">
-    Ticket History
-  </h2>
-  <% if (tickets.length === 0) { %>
-    <div class="panel-block is-block">
-      <div class="message is-info">
-        <p class="message-body">
-          There are no tickets recorded that are associated with this licence plate.
-        </p>
-      </div>
-    </div>
-  <% } else { %>
-    <table class="table is-fullwidth is-striped is-hoverable">
-      <thead>
-        <tr>
-          <th>Ticket Number</th>
-          <th>Issue Date</th>
-          <th>Location</th>
-          <th>Offence</th>
-          <th>Vehicle Make/Model on Ticket</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%
-
-
-          for (let index = 0; index < tickets.length; index += 1) {
-            const ticketObj = tickets[index];
-
-            if (!ownershipRowDisplayed && owner.recordDate > ticketObj.issueDate) {
-              ownershipRowDisplayed = true;
-        %>
-          <tr class="is-selected has-text-weight-bold">
-            <td class="has-text-centered" colspan="6">
-              <small>Ownership Lookup</small><br />
-              <%= owner.recordDateString %> -
-              <%= owner.vehicleMake %>
-              <%= (owner.vehicleMake === owner.vehicleNCIC ? "" : " (" + owner.vehicleNCIC + ")") %>
-            </td>
-          </tr>
-        <%
-            }
-        %>
-          <tr>
-            <td>
-              <a href="/tickets/<%= ticketObj.ticketID %>">
-                <%= ticketObj.ticketNumber %>
-              </a>
-            </td>
-            <td><%= ticketObj.issueDateString %></td>
-            <td>
-              <%= ticketObj.locationDescription %>
-              <% if (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName) { %>
-                <br />
-                <small>
-                  <i class="fas fa-map-marker-alt" aria-hidden="true"></i> <%=ticketObj.locationName %>
-                </small>
-              <% } %>
-            </td>
-            <td><%= ticketObj.parkingOffence %></td>
-            <td><%= ticketObj.vehicleMakeModel %></td>
-            <td>
-              <% if (ticketObj.resolvedDateString === "") { %>
-                Unresolved
-              <% } else { %>
-                <span class="sr-only">Resolved</span>
-                <i class="fas fa-check" aria-hidden="true"></i> <%= ticketObj.resolvedDateString %>
-              <% } %>
-              <% if (ticketObj.latestStatus_statusKey) { %>
-                <%
-                  const ticketStatus = configFns.getParkingTicketStatus(ticketObj.latestStatus_statusKey);
-                %>
-                <br />
-                <span class="tag is-light is-primary"><%= (ticketStatus ? ticketStatus.status : ticketObj.latestStatus_statusKey) %></span>
-              <% } %>
-            </td>
-          </tr>
-        <%
-          }
-        %>
-      </tbody>
-    </table>
-  <% } %>
 </div>
 
 <%- include('_footerA'); -%>

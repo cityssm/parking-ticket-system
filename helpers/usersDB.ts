@@ -1,5 +1,3 @@
-"use strict";
-
 import sqlite = require("better-sqlite3");
 const dbPath = "data/users.db";
 
