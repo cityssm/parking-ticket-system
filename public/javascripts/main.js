@@ -681,27 +681,61 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
 
 (function() {
 
+  const localStoragePropertyName = "collapseSidemenu";
+
   const collapseButtonEle = document.getElementById("is-sidemenu-collapse-button");
   const collapseSidemenuEle = document.getElementById("is-sidemenu-collapsed");
 
   const expandButtonEle = document.getElementById("is-sidemenu-expand-button");
   const expandSidemenuEle = document.getElementById("is-sidemenu-expanded");
 
+  const collapseFn = function() {
+
+    expandSidemenuEle.classList.add("is-hidden");
+    collapseSidemenuEle.classList.remove("is-hidden");
+
+    try {
+
+      window.localStorage.setItem(localStoragePropertyName, "true");
+
+    } catch (e) {
+      // ignore
+    }
+
+  };
+
+  const expandFn = function() {
+
+    collapseSidemenuEle.classList.add("is-hidden");
+    expandSidemenuEle.classList.remove("is-hidden");
+
+    try {
+
+      window.localStorage.removeItem(localStoragePropertyName);
+
+    } catch (e) {
+      // Ignore
+    }
+
+  };
+
   if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
 
-    collapseButtonEle.addEventListener("click", function() {
+    collapseButtonEle.addEventListener("click", collapseFn);
 
-      expandSidemenuEle.classList.add("is-hidden");
-      collapseSidemenuEle.classList.remove("is-hidden");
+    expandButtonEle.addEventListener("click", expandFn);
 
-    });
+    try {
 
-    expandButtonEle.addEventListener("click", function() {
+      if (window.localStorage.getItem(localStoragePropertyName)) {
 
-      collapseSidemenuEle.classList.add("is-hidden");
-      expandSidemenuEle.classList.remove("is-hidden");
+        collapseFn();
 
-    });
+      }
+
+    } catch (e) {
+      // Ignore
+    }
 
   }
 
