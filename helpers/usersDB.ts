@@ -99,6 +99,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
       case "canCreate":
       case "canUpdate":
       case "isAdmin":
+      case "isOperator":
 
         userProperties[propertyName] = (propertyValue === "true");
         break;

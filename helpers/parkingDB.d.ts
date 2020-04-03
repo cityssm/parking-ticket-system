@@ -124,7 +124,7 @@ declare type lookupBatch_return = {
 export declare function clearLookupBatch(batchID: number, reqSession: Express.Session): lookupBatch_return;
 export declare function lockLookupBatch(batchID: number, reqSession: Express.Session): lookupBatch_return;
 export declare function markLookupBatchAsSent(batchID: number, reqSession: Express.Session): boolean;
-export declare function getUnreceivedLicencePlateLookupBatches(): pts.LicencePlateLookupBatch[];
+export declare function getUnreceivedLicencePlateLookupBatches(includeUnlocked: boolean): pts.LicencePlateLookupBatch[];
 export declare function createLicencePlateLookupBatch(reqSession: Express.Session): {
     success: boolean;
     batch: {

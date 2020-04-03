@@ -295,5 +295,6 @@ export type UserProperties = {
   isDefaultAdmin: boolean,
   canCreate: boolean,
   canUpdate: boolean,
-  isAdmin: boolean
+  isAdmin: boolean,
+  isOperator: boolean
 };

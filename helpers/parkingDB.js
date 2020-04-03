@@ -973,7 +973,7 @@ function markLookupBatchAsSent(batchID, reqSession) {
     return (info.changes > 0);
 }
 exports.markLookupBatchAsSent = markLookupBatchAsSent;
-function getUnreceivedLicencePlateLookupBatches() {
+function getUnreceivedLicencePlateLookupBatches(includeUnlocked) {
     const addCalculatedFieldsFn = function (batch) {
         batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
         batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
@@ -987,6 +987,7 @@ function getUnreceivedLicencePlateLookupBatches() {
         " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
         " where b.recordDelete_timeMillis is null" +
         " and b.receivedDate is null" +
+        (includeUnlocked ? "" : " and b.lockDate is not null") +
         " group by b.batchID, b.batchDate, b.lockDate, b.sentDate" +
         " order by b.batchID desc")
         .all();

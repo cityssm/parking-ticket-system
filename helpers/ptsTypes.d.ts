@@ -215,5 +215,6 @@ export declare type UserProperties = {
     canCreate: boolean;
     canUpdate: boolean;
     isAdmin: boolean;
+    isOperator: boolean;
 };
 export {};

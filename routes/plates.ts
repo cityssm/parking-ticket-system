@@ -53,7 +53,12 @@ router.post("/doGetLicencePlates", function(req, res) {
 
 if (configFns.getProperty("application.feature_mtoExportImport")) {
 
-  router.get("/mtoExport", function(_req, res) {
+  router.get("/mtoExport", function(req, res) {
+
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+      res.redirect ("/plates/?error=accessDenied");
+      return;
+    }
 
     const latestUnlockedBatch = parkingDB.getLicencePlateLookupBatch(-1);
 
@@ -67,6 +72,19 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
   router.post("/mto_doGetPlatesAvailableForLookup", function(req, res) {
 
+    if (!req.session.user.userProperties.canUpdate) {
+
+      res
+        .status(403)
+        .json({
+          success: false,
+          message: "Forbidden"
+        });
+
+      return;
+
+    }
+
     const batchID = parseInt(req.body.batchID);
     const issueDaysAgo = parseInt(req.body.issueDaysAgo);
 
@@ -76,6 +94,11 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
   });
 
   router.get("/mtoExport/:batchID", function(req, res) {
+
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+      res.redirect ("/plates/?error=accessDenied");
+      return;
+    }
 
     const batchID = parseInt(req.params.batchID);
 
@@ -87,9 +110,14 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
   });
 
-  router.get("/mtoImport", function(_req, res) {
+  router.get("/mtoImport", function(req, res) {
 
-    const unreceivedBatches = parkingDB.getUnreceivedLicencePlateLookupBatches();
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+      res.redirect ("/plates/?error=accessDenied");
+      return;
+    }
+
+    const unreceivedBatches = parkingDB.getUnreceivedLicencePlateLookupBatches(false);
 
     res.render("mto-plateImport", {
       headTitle: "MTO Licence Plate Ownership Import",
@@ -100,28 +128,53 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
   router.post("/mto_doImportUpload", upload.single("importFile"), function(req, res) {
 
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+
+      res
+        .status(403)
+        .json({
+          success: false,
+          message: "Forbidden"
+        });
+
+      return;
+
+    }
+
     const batchID = req.body.batchID;
 
     const ownershipData = req.file.buffer.toString();
 
     const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData, req.session);
 
-    console.log(results);
-
     res.json(results);
   });
 }
 
 
-router.post("/doGetUnreceivedLicencePlateLookupBatches", function(_req, res) {
+router.post("/doGetUnreceivedLicencePlateLookupBatches", function(req, res) {
 
-  const batches = parkingDB.getUnreceivedLicencePlateLookupBatches();
+  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const batches = parkingDB.getUnreceivedLicencePlateLookupBatches(req.session.user.userProperties.canUpdate);
   res.json(batches);
+
 });
 
 router.post("/doCreateLookupBatch", function(req, res) {
 
-  if (!req.session.user.userProperties.canCreate) {
+  if (!req.session.user.userProperties.canUpdate) {
 
     res
       .status(403)
@@ -142,13 +195,26 @@ router.post("/doCreateLookupBatch", function(req, res) {
 
 router.post("/doGetLookupBatch", function(req, res) {
 
+  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
   const batch = parkingDB.getLicencePlateLookupBatch(req.body.batchID);
   res.json(batch);
 });
 
 router.post("/doAddLicencePlateToLookupBatch", function(req, res) {
 
-  if (!req.session.user.userProperties.canCreate) {
+  if (!req.session.user.userProperties.canUpdate) {
 
     res
       .status(403)
@@ -173,7 +239,7 @@ router.post("/doAddLicencePlateToLookupBatch", function(req, res) {
 
 router.post("/doAddAllLicencePlatesToLookupBatch", function(req, res) {
 
-  if (!req.session.user.userProperties.canCreate) {
+  if (!req.session.user.userProperties.canUpdate) {
 
     res
       .status(403)
@@ -196,7 +262,7 @@ router.post("/doAddAllLicencePlatesToLookupBatch", function(req, res) {
 
 router.post("/doRemoveLicencePlateFromLookupBatch", function(req, res) {
 
-  if (!req.session.user.userProperties.canCreate) {
+  if (!req.session.user.userProperties.canUpdate) {
 
     res
       .status(403)
@@ -217,7 +283,7 @@ router.post("/doRemoveLicencePlateFromLookupBatch", function(req, res) {
 
 router.post("/doClearLookupBatch", function(req, res) {
 
-  if (!req.session.user.userProperties.canCreate) {
+  if (!req.session.user.userProperties.canUpdate) {
 
     res
       .status(403)
@@ -244,7 +310,7 @@ router.post("/doClearLookupBatch", function(req, res) {
 
 router.post("/doLockLookupBatch", function(req, res) {
 
-  if (!req.session.user.userProperties.canCreate) {
+  if (!req.session.user.userProperties.canUpdate) {
 
     res
       .status(403)

@@ -25,7 +25,8 @@ configFallbackValues.set("user.createUpdateWindowMillis", 60 * 60 * 1000);
 configFallbackValues.set("user.defaultProperties", Object.freeze({
     canCreate: false,
     canUpdate: false,
-    isAdmin: false
+    isAdmin: false,
+    isOperator: false
 }));
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
 configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);

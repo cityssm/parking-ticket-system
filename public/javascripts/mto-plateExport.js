@@ -2,6 +2,9 @@
 
 (function() {
 
+  const canUpdate =
+    document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
+
   let batchID = -1;
   let batchIsLocked = true;
   let batchIsSent = false;
@@ -375,14 +378,18 @@
     batchIsLocked = !(batch.lockDate == null);
     batchIsSent = !(batch.sentDate == null);
 
-    if (batchIsLocked) {
+    if (canUpdate) {
 
-      lockBatchButtonEle.setAttribute("disabled", "disabled");
+      if (batchIsLocked) {
 
-    } else {
+        lockBatchButtonEle.setAttribute("disabled", "disabled");
 
-      lockBatchButtonEle.removeAttribute("disabled");
+      } else {
 
+        lockBatchButtonEle.removeAttribute("disabled");
+
+      }
+      
     }
 
     document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID;
@@ -596,68 +603,72 @@
 
   document.getElementById("is-select-batch-button").addEventListener("click", clickFn_openSelectBatchModal);
 
-  document.getElementById("is-create-batch-button").addEventListener("click", function() {
+  if (canUpdate) {
 
-    const createFn = function() {
+    document.getElementById("is-create-batch-button").addEventListener("click", function() {
 
-      pts.postJSON("/plates/doCreateLookupBatch", {}, function(responseJSON) {
+      const createFn = function() {
 
-        if (responseJSON.success) {
+        pts.postJSON("/plates/doCreateLookupBatch", {}, function(responseJSON) {
 
-          fn_populateBatchView(responseJSON.batch);
-          fn_refreshAvailablePlates();
+          if (responseJSON.success) {
 
-        }
+            fn_populateBatchView(responseJSON.batch);
+            fn_refreshAvailablePlates();
 
-      });
+          }
 
-    };
+        });
 
-    pts.confirmModal(
-      "Create a New Batch?",
-      "Are you sure you want to create a new licence plate lookup batch?",
-      "Yes, Create a Batch",
-      "info",
-      createFn
-    );
+      };
 
-  });
+      pts.confirmModal(
+        "Create a New Batch?",
+        "Are you sure you want to create a new licence plate lookup batch?",
+        "Yes, Create a Batch",
+        "info",
+        createFn
+      );
 
-  lockBatchButtonEle.addEventListener("click", function() {
+    });
 
-    if (batchIsLocked) {
+    lockBatchButtonEle.addEventListener("click", function() {
 
-      return;
+      if (batchIsLocked) {
 
-    }
+        return;
 
-    const lockFn = function() {
+      }
 
-      pts.postJSON("/plates/doLockLookupBatch", {
-        batchID: batchID
-      }, function(responseJSON) {
+      const lockFn = function() {
 
-        if (responseJSON.success) {
+        pts.postJSON("/plates/doLockLookupBatch", {
+          batchID: batchID
+        }, function(responseJSON) {
 
-          fn_populateBatchView(responseJSON.batch);
+          if (responseJSON.success) {
 
-        }
+            fn_populateBatchView(responseJSON.batch);
 
-      });
+          }
 
-    };
+        });
 
-    pts.confirmModal(
-      "Lock Batch?",
-      "<strong>Are you sure you want to lock the batch?</strong><br />" +
-      "Once the batch is locked, no licence plates can be added or deleted from the batch." +
-      " All tickets related to the licence plates in the batch will be updated with a \"Pending Lookup\" status.",
-      "Yes, Lock the Batch",
-      "info",
-      lockFn
-    );
+      };
 
-  });
+      pts.confirmModal(
+        "Lock Batch?",
+        "<strong>Are you sure you want to lock the batch?</strong><br />" +
+        "Once the batch is locked, no licence plates can be added or deleted from the batch." +
+        " All tickets related to the licence plates in the batch will be updated with a \"Pending Lookup\" status.",
+        "Yes, Lock the Batch",
+        "info",
+        lockFn
+      );
+
+    });
+
+  }
 
   if (pts.plateExportBatch) {
 
