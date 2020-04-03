@@ -1,12 +1,12 @@
 <%- include('_header'); -%>
 
-<div class="columns is-block-print">
+<div class="columns is-variable is-4-mobile is-4-tablet is-block-print" id="is-site-layout">
   <%- include("_sideMenu-tickets"); -%>
   <div class="column">
     <nav class="breadcrumb">
       <ul>
         <li><a href="/dashboard">Home</a></li>
-        <li><a href="/tickets">Tickets</a></li>
+        <li><a href="/tickets">Parking Tickets</a></li>
         <% if (isCreate) { %>
           <li class="is-active"><a href="#" aria-current="page">New Ticket</a></li>
         <% } else { %>

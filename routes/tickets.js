@@ -7,8 +7,7 @@ const dateTimeFns = require("../helpers/dateTimeFns");
 const parkingDB = require("../helpers/parkingDB");
 router.get("/", function (_req, res) {
     res.render("ticket-search", {
-        headTitle: "Parking Tickets",
-        pageContainerIsFullWidth: true
+        headTitle: "Parking Tickets"
     });
 });
 router.post("/doGetTickets", function (req, res) {
@@ -178,7 +177,6 @@ router.get([
     const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
     res.render("ticket-edit", {
         headTitle: "New Ticket",
-        pageContainerIsFullWidth: true,
         isCreate: true,
         ticket: {
             ticketNumber: ticketNumber,
@@ -351,7 +349,6 @@ router.get("/:ticketID", function (req, res) {
     }
     res.render("ticket-view", {
         headTitle: "Ticket " + ticket.ticketNumber,
-        pageContainerIsFullWidth: true,
         ticket: ticket
     });
 });
@@ -383,7 +380,6 @@ router.get("/:ticketID/edit", function (req, res) {
     const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
     res.render("ticket-edit", {
         headTitle: "Ticket " + ticket.ticketNumber,
-        pageContainerIsFullWidth: true,
         isCreate: false,
         ticket: ticket,
         issueDateMaxString: dateTimeFns.dateToString(new Date()),

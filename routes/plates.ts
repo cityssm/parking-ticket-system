@@ -64,7 +64,6 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
     res.render("mto-plateExport", {
       headTitle: "MTO Licence Plate Export",
-      pageContainerIsFullWidth: true,
       batch: latestUnlockedBatch
     });
 

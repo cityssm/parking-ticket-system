@@ -36,7 +36,6 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
         const latestUnlockedBatch = parkingDB.getLicencePlateLookupBatch(-1);
         res.render("mto-plateExport", {
             headTitle: "MTO Licence Plate Export",
-            pageContainerIsFullWidth: true,
             batch: latestUnlockedBatch
         });
     });
