@@ -1,0 +1,44 @@
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <h3 class="modal-card-title">Add a Location</h3>
+      <button class="delete is-close-modal-button" aria-label="close" type="button"></button>
+    </header>
+    <form>
+      <section class="modal-card-body">
+        <div class="field">
+          <label class="label" for="addLocation--locationKey">Location Key</label>
+          <div class="control">
+            <input class="input" id="addLocation--locationKey" name="locationKey" type="text" minlength="2" maxlength="20" pattern="^[\w-]+$" required />
+          </div>
+          <p class="help">
+            Used behind the scenes to identify the location.
+            Can include numbers, letters, hyphens, and underscores.
+            Must be unique.
+          </p>
+        </div>
+        <div class="field">
+          <label class="label" for="addLocation--locationClassKey">Location Class</label>
+          <div class="control is-expanded">
+            <div class="select is-fullwidth">
+              <select id="addLocation--locationClassKey" name="locationClassKey" required>
+                <option value="">(Select One)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="addLocation--locationName">Location Name</label>
+          <div class="control">
+            <input class="input" id="addLocation--locationName" name="locationName" type="text" maxlength="200" required />
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot justify-right">
+        <button class="button is-close-modal-button" type="button">Cancel</button>
+        <button class="button is-success" type="submit">Add Location</button>
+      </footer>
+    </form>
+  </div>
+</div>

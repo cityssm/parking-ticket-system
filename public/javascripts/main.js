@@ -174,7 +174,6 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
   };
 
-
   pts.getDefaultConfigProperty = function(propertyName, propertyValueCallbackFn) {
 
     // Check memory

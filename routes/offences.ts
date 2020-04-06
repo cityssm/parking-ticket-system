@@ -15,9 +15,54 @@ router.get("/", function(_req, res) {
 
 router.get("/locations", function(_req, res) {
 
+  const locations = parkingDB.getParkingLocations();
+
   res.render("location-maint", {
-    headTitle: "Parking Location Maintenance"
+    headTitle: "Parking Location Maintenance",
+    locations: locations
   });
+
+});
+
+router.post("/doAddLocation", function(req, res) {
+
+  const results = parkingDB.addParkingLocation(req.body);
+
+  if (results.success) {
+
+    results.locations = parkingDB.getParkingLocations();
+
+  }
+
+  res.json(results);
+
+});
+
+router.post("/doUpdateLocation", function(req, res) {
+
+  const results = parkingDB.updateParkingLocation(req.body);
+
+  if (results.success) {
+
+    results.locations = parkingDB.getParkingLocations();
+
+  }
+
+  res.json(results);
+
+});
+
+router.post("/doDeleteLocation", function(req, res) {
+
+  const results = parkingDB.deleteParkingLocation(req.body.locationKey);
+
+  if (results.success) {
+
+    results.locations = parkingDB.getParkingLocations();
+
+  }
+
+  res.json(results);
 
 });
 

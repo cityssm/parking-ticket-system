@@ -86,6 +86,14 @@ export declare function getLicencePlateOwner(licencePlateCountry: string, licenc
 export declare function getAllLicencePlateOwners(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner[];
 export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number): any[];
 export declare function getParkingLocations(): pts.ParkingLocation[];
+declare type addUpdateParkingLocation_return = {
+    success: boolean;
+    message?: string;
+    locations?: pts.ParkingLocation[];
+};
+export declare function addParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return;
+export declare function updateParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return;
+export declare function deleteParkingLocation(locationKey: string): addUpdateParkingLocation_return;
 export declare function getParkingOffences(locationKey: string): pts.ParkingOffence[];
 export declare function getLicencePlateLookupBatch(batchID_or_negOne: number): pts.LicencePlateLookupBatch;
 declare type addLicencePlateToLookupBatch_return = {

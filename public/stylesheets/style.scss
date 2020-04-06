@@ -1,9 +1,15 @@
+$family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+
 @import '../../node_modules/bulma/bulma';
 @import '../../node_modules/bulma-helpers/bulma-helpers';
 @import '../../node_modules/bulma-divider/src/sass/index';
 @import '../../node_modules/bulma-tooltip/src/sass/index';
 @import '../../node_modules/bulma-steps/src/sass/index';
 @import 'bulma-radio-checkbox';
+
+
+// FONT - PT MONO
+// Used for licence plate numbers
 
 
 @font-face {
@@ -16,6 +22,171 @@
     url('/typeface-pt-mono/pt-mono-latin-400.woff2'),
     url('/typeface-pt-mono/pt-mono-latin-400.woff');
   font-display: swap;
+}
+
+
+// FONT - INTER
+
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-Thin.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-Thin.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-ThinItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-ThinItalic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-ExtraLight.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-ExtraLight.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-ExtraLightItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-ExtraLightItalic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-Light.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-Light.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-LightItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-LightItalic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-Regular.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-Regular.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-Italic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-Italic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-Medium.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-Medium.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-MediumItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-MediumItalic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-SemiBold.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-SemiBold.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-SemiBoldItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-SemiBoldItalic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-Bold.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-Bold.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-BoldItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-BoldItalic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-ExtraBold.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-ExtraBold.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-ExtraBoldItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-ExtraBoldItalic.woff?v=3.12") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-Black.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-Black.woff?v=3.12") format("woff");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/typeface-inter/Inter-BlackItalic.woff2?v=3.12") format("woff2"),
+       url("/typeface-inter/Inter-BlackItalic.woff?v=3.12") format("woff");
+}
+
+
+// HTML
+
+
+html {
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 
@@ -52,7 +223,7 @@ html.is-fullwidth {
   .fixed-container {
     position: fixed;
     display: inline-block;
-    z-index: 100;
+    z-index: 30;
 
     &.is-fixed-bottom-right {
       right: 0;
@@ -132,6 +303,16 @@ html.is-fullwidth {
 
 select.is-readonly {
   pointer-events: none;
+}
+
+
+/*
+ * Tables
+ */
+
+
+.table.is-fixed {
+  table-layout: fixed;
 }
 
 
@@ -221,4 +402,9 @@ select.is-readonly {
   background-image: url('/images/login.jpg');
   background-position: bottom right;
   background-size: cover;
+
+  body > .columns {
+    min-height: 100vh;
+
+  }
 }

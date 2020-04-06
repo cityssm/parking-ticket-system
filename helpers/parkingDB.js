@@ -720,6 +720,59 @@ function getParkingLocations() {
     return rows;
 }
 exports.getParkingLocations = getParkingLocations;
+function addParkingLocation(reqBody) {
+    const db = sqlite(exports.dbPath);
+    const locationRecord = db.prepare("select locationName, isActive" +
+        " from ParkingLocations" +
+        " where locationKey = ?")
+        .get(reqBody.locationKey);
+    if (locationRecord) {
+        db.close();
+        return {
+            success: false,
+            message: "The location key \"" + reqBody.locationKey + "\"" +
+                " is already associated with the " +
+                (locationRecord.isActive ? "" : "inactive ") +
+                " record \"" + locationRecord.locationName + "\"."
+        };
+    }
+    const info = db.prepare("insert into ParkingLocations (" +
+        "locationKey, locationName, locationClassKey, orderNumber, isActive)" +
+        " values (?, ?, ?, 0, 1)")
+        .run(reqBody.locationKey, reqBody.locationName, reqBody.locationClassKey);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.addParkingLocation = addParkingLocation;
+function updateParkingLocation(reqBody) {
+    const db = sqlite(exports.dbPath);
+    const info = db.prepare("update ParkingLocations" +
+        " set locationName = ?," +
+        " locationClassKey = ?" +
+        " where locationKey = ?" +
+        " and isActive = 1")
+        .run(reqBody.locationName, reqBody.locationClassKey, reqBody.locationKey);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.updateParkingLocation = updateParkingLocation;
+function deleteParkingLocation(locationKey) {
+    const db = sqlite(exports.dbPath);
+    const info = db.prepare("update ParkingLocations" +
+        " set isActive = 0" +
+        " where locationKey = ?" +
+        " and isActive = 1")
+        .run(locationKey);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.deleteParkingLocation = deleteParkingLocation;
 function getParkingOffences(locationKey) {
     const db = sqlite(exports.dbPath, {
         readonly: true
