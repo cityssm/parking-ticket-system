@@ -13,7 +13,7 @@ router.post("/doGetAllLocations", function(_req, res) {
 
 router.post("/doGetOffencesByLocation", function(req, res) {
 
-  res.json(parkingDB.getParkingOffences(req.body.locationKey));
+  res.json(parkingDB.getParkingOffencesByLocationKey(req.body.locationKey));
 
 });
 

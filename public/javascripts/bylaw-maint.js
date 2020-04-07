@@ -109,7 +109,8 @@
 
       for (let searchIndex = 0; searchIndex < bylawFilterSplit.length; searchIndex += 1) {
 
-        if (bylawNumberLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1 && bylawDescriptionLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1) {
+        if (bylawNumberLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1 &&
+          bylawDescriptionLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1) {
 
           showRecord = false;
           break;

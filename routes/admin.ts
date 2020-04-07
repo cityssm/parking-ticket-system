@@ -197,8 +197,15 @@ router.post("/doDeleteUser", function(req, res) {
 
 router.get("/offences", function(_req, res) {
 
+  const locations = parkingDB.getParkingLocations();
+  const bylaws = parkingDB.getParkingBylaws();
+  const offences = parkingDB.getParkingOffences();
+
   res.render("offence-maint", {
-    headTitle: "Parking Offences"
+    headTitle: "Parking Offences",
+    locations: locations,
+    bylaws: bylaws,
+    offences: offences
   });
 
 });

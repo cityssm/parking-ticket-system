@@ -849,7 +849,22 @@ function deleteParkingBylaw(bylawNumber) {
     };
 }
 exports.deleteParkingBylaw = deleteParkingBylaw;
-function getParkingOffences(locationKey) {
+function getParkingOffences() {
+    const db = sqlite(exports.dbPath, {
+        readonly: true
+    });
+    const rows = db.prepare("select o.bylawNumber, o.locationKey, o.parkingOffence, o.offenceAmount, o.accountNumber" +
+        " from ParkingOffences o" +
+        " left join ParkingLocations l on o.locationKey = l.locationKey" +
+        " where o.isActive = 1 and l.isActive" +
+        " and o.bylawNumber in (select b.bylawNumber from ParkingBylaws b where b.isActive = 1)" +
+        " order by o.bylawNumber, l.locationName")
+        .all();
+    db.close();
+    return rows;
+}
+exports.getParkingOffences = getParkingOffences;
+function getParkingOffencesByLocationKey(locationKey) {
     const db = sqlite(exports.dbPath, {
         readonly: true
     });
@@ -864,7 +879,7 @@ function getParkingOffences(locationKey) {
     db.close();
     return rows;
 }
-exports.getParkingOffences = getParkingOffences;
+exports.getParkingOffencesByLocationKey = getParkingOffencesByLocationKey;
 function getLicencePlateLookupBatch(batchID_or_negOne) {
     const db = sqlite(exports.dbPath, {
         readonly: true

@@ -1387,12 +1387,30 @@ export function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_r
 }
 
 
-
-
 // Parking Offences
 
 
-export function getParkingOffences(locationKey: string) {
+export function getParkingOffences() {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const rows: pts.ParkingOffence[] = db.prepare(
+    "select o.bylawNumber, o.locationKey, o.parkingOffence, o.offenceAmount, o.accountNumber" +
+    " from ParkingOffences o" +
+    " left join ParkingLocations l on o.locationKey = l.locationKey" +
+    " where o.isActive = 1 and l.isActive" +
+    " and o.bylawNumber in (select b.bylawNumber from ParkingBylaws b where b.isActive = 1)" +
+    " order by o.bylawNumber, l.locationName")
+    .all();
+
+  db.close();
+
+  return rows;
+}
+
+export function getParkingOffencesByLocationKey(locationKey: string) {
 
   const db = sqlite(dbPath, {
     readonly: true
