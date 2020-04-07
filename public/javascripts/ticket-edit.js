@@ -173,7 +173,7 @@
         locationList = locationListRes;
 
         const listEle = document.createElement("div");
-        listEle.className = "list is-hoverable";
+        listEle.className = "list is-hoverable has-margin-bottom-20";
 
         for (let index = 0; index < locationList.length; index += 1) {
 
@@ -212,7 +212,7 @@
 
       clickEvent.preventDefault();
 
-      pts.openHtmlModal("ticket-setLocation", {
+      pts.openHtmlModal("location-select", {
         onshown: function(modalEle, closeModalFn) {
 
           locationLookupCloseModalFn = closeModalFn;
@@ -254,7 +254,8 @@
 
       offenceAmountEle.classList.add("is-readonly");
       offenceAmountEle.setAttribute("readonly", "readonly");
-      offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0].removeAttribute("disabled");
+      offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+        .removeAttribute("disabled");
       offenceAmountEle.value = offenceObj.offenceAmount;
 
       document.getElementById("ticket--parkingOffence").value = offenceObj.bylawDescription;
@@ -268,7 +269,7 @@
     const populateBylawsFn = function() {
 
       const locationKey = document.getElementById("ticket--locationKey").value;
-      const locationName = document.getElementById("ticket--locationName").value;
+      // const locationName = document.getElementById("ticket--locationName").value;
 
       pts.postJSON("/offences/doGetOffencesByLocation", {
         locationKey: locationKey
@@ -349,7 +350,8 @@
       const datalistEle = document.getElementById("datalist--licencePlateProvince");
       pts.clearElement(datalistEle);
 
-      const countryProperties = pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
+      const countryProperties =
+        pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
 
       if (countryProperties && countryProperties.provinces) {
 
@@ -521,14 +523,16 @@
           (remarkObj.canUpdate ?
             "<div class=\"column is-narrow\">" +
             "<div class=\"buttons is-right has-addons\">" +
-            "<button class=\"button is-small is-edit-remark-button\" data-tooltip=\"Edit Remark\" data-index=\"" + index + "\" type=\"button\">" +
-            "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
-            " <span>Edit</span>" +
-            "</button>" +
-            "<button class=\"button is-small has-text-danger is-delete-remark-button\" data-tooltip=\"Delete Remark\" data-remark-index=\"" + remarkObj.remarkIndex + "\" type=\"button\">" +
-            "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
-            "<span class=\"sr-only\">Delete</span>" +
-            "</button>" +
+            ("<button class=\"button is-small is-edit-remark-button\"" +
+              " data-tooltip=\"Edit Remark\" data-index=\"" + index + "\" type=\"button\">" +
+              "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
+              " <span>Edit</span>" +
+              "</button>") +
+            ("<button class=\"button is-small has-text-danger is-delete-remark-button\"" +
+              " data-tooltip=\"Delete Remark\" data-remark-index=\"" + remarkObj.remarkIndex + "\" type=\"button\">" +
+              "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
+              "<span class=\"sr-only\">Delete</span>" +
+              "</button>") +
             "</div>" +
             "</div>" :
             "") +
@@ -536,8 +540,11 @@
 
         if (remarkObj.canUpdate) {
 
-          panelBlockEle.getElementsByClassName("is-edit-remark-button")[0].addEventListener("click", openEditRemarkModalFn);
-          panelBlockEle.getElementsByClassName("is-delete-remark-button")[0].addEventListener("click", confirmDeleteRemarkFn);
+          panelBlockEle.getElementsByClassName("is-edit-remark-button")[0]
+            .addEventListener("click", openEditRemarkModalFn);
+
+          panelBlockEle.getElementsByClassName("is-delete-remark-button")[0]
+            .addEventListener("click", confirmDeleteRemarkFn);
 
         }
 
@@ -919,8 +926,11 @@
 
         if (statusObj.canUpdate && index === 0) {
 
-          panelBlockEle.getElementsByClassName("is-edit-status-button")[0].addEventListener("click", openEditStatusModalFn);
-          panelBlockEle.getElementsByClassName("is-delete-status-button")[0].addEventListener("click", confirmDeleteStatusFn);
+          panelBlockEle.getElementsByClassName("is-edit-status-button")[0]
+            .addEventListener("click", openEditStatusModalFn);
+
+          panelBlockEle.getElementsByClassName("is-delete-status-button")[0]
+            .addEventListener("click", confirmDeleteStatusFn);
 
         }
 
