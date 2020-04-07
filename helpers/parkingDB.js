@@ -773,6 +773,82 @@ function deleteParkingLocation(locationKey) {
     };
 }
 exports.deleteParkingLocation = deleteParkingLocation;
+function getParkingBylaws() {
+    const db = sqlite(exports.dbPath, {
+        readonly: true
+    });
+    const rows = db.prepare("select bylawNumber, bylawDescription" +
+        " from ParkingBylaws" +
+        " where isActive = 1" +
+        " order by orderNumber, bylawNumber")
+        .all();
+    db.close();
+    return rows;
+}
+exports.getParkingBylaws = getParkingBylaws;
+function addParkingBylaw(reqBody) {
+    const db = sqlite(exports.dbPath);
+    const bylawRecord = db.prepare("select bylawDescription, isActive" +
+        " from ParkingBylaws" +
+        " where bylawNumber = ?")
+        .get(reqBody.bylawNumber);
+    if (bylawRecord) {
+        if (bylawRecord.isActive) {
+            db.close();
+            return {
+                success: false,
+                message: "By-law number \"" + reqBody.bylawNumber + "\"" +
+                    " is already associated with the " +
+                    " record \"" + bylawRecord.bylawDescription + "\"."
+            };
+        }
+        const info = db.prepare("update ParkingBylaws" +
+            " set isActive = 1" +
+            " where bylawNumber = ?")
+            .run(reqBody.bylawNumber);
+        db.close();
+        return {
+            success: (info.changes > 0),
+            message: "By-law number \"" + reqBody.bylawNumber + "\" is associated with a previously removed record." +
+                " That record has been restored with the original description."
+        };
+    }
+    const info = db.prepare("insert into ParkingBylaws (" +
+        "bylawNumber, bylawDescription, orderNumber, isActive)" +
+        " values (?, ?, 0, 1)")
+        .run(reqBody.bylawNumber, reqBody.bylawDescription);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.addParkingBylaw = addParkingBylaw;
+function updateParkingBylaw(reqBody) {
+    const db = sqlite(exports.dbPath);
+    const info = db.prepare("update ParkingBylaws" +
+        " set bylawDescription = ?" +
+        " where bylawNumber = ?" +
+        " and isActive = 1")
+        .run(reqBody.bylawDescription, reqBody.bylawNumber);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.updateParkingBylaw = updateParkingBylaw;
+function deleteParkingBylaw(bylawNumber) {
+    const db = sqlite(exports.dbPath);
+    const info = db.prepare("update ParkingBylaws" +
+        " set isActive = 0" +
+        " where bylawNumber = ?" +
+        " and isActive = 1")
+        .run(bylawNumber);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.deleteParkingBylaw = deleteParkingBylaw;
 function getParkingOffences(locationKey) {
     const db = sqlite(exports.dbPath, {
         readonly: true

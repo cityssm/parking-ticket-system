@@ -220,7 +220,8 @@ export type ParkingLocation = {
 export type ParkingBylaw = {
 
   bylawNumber: string,
-  bylawDescription: string
+  bylawDescription: string,
+  isActive: boolean
 };
 
 export interface ParkingOffence extends ParkingLocation, ParkingBylaw {

@@ -1150,6 +1150,10 @@ export function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number) {
 
 }
 
+
+// Parking Locations
+
+
 export function getParkingLocations() {
 
   const db = sqlite(dbPath, {
@@ -1173,7 +1177,7 @@ type addUpdateParkingLocation_return = {
   locations?: pts.ParkingLocation[]
 };
 
-export function addParkingLocation(reqBody: pts.ParkingLocation) : addUpdateParkingLocation_return {
+export function addParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return {
 
   const db = sqlite(dbPath);
 
@@ -1214,7 +1218,7 @@ export function addParkingLocation(reqBody: pts.ParkingLocation) : addUpdatePark
 
 }
 
-export function updateParkingLocation(reqBody: pts.ParkingLocation) : addUpdateParkingLocation_return {
+export function updateParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return {
 
   const db = sqlite(dbPath);
 
@@ -1235,7 +1239,7 @@ export function updateParkingLocation(reqBody: pts.ParkingLocation) : addUpdateP
 
 }
 
-export function deleteParkingLocation(locationKey: string) : addUpdateParkingLocation_return {
+export function deleteParkingLocation(locationKey: string): addUpdateParkingLocation_return {
 
   const db = sqlite(dbPath);
 
@@ -1254,6 +1258,139 @@ export function deleteParkingLocation(locationKey: string) : addUpdateParkingLoc
   };
 
 }
+
+
+// Parking By-Laws
+
+
+export function getParkingBylaws() {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const rows: pts.ParkingBylaw[] = db.prepare("select bylawNumber, bylawDescription" +
+    " from ParkingBylaws" +
+    " where isActive = 1" +
+    " order by orderNumber, bylawNumber")
+    .all();
+
+  db.close();
+
+  return rows;
+
+}
+
+type addUpdateParkingBylaw_return = {
+  success: boolean,
+  message?: string,
+  bylaws?: pts.ParkingBylaw[]
+};
+
+export function addParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return {
+
+  const db = sqlite(dbPath);
+
+  // Check if key is already used
+
+  const bylawRecord: pts.ParkingBylaw = db.prepare("select bylawDescription, isActive" +
+    " from ParkingBylaws" +
+    " where bylawNumber = ?")
+    .get(reqBody.bylawNumber);
+
+  if (bylawRecord) {
+
+    if (bylawRecord.isActive) {
+
+      db.close();
+
+      return {
+        success: false,
+        message:
+          "By-law number \"" + reqBody.bylawNumber + "\"" +
+          " is already associated with the " +
+          " record \"" + bylawRecord.bylawDescription + "\"."
+      }
+
+    }
+
+    // Do update
+
+    const info = db.prepare("update ParkingBylaws" +
+      " set isActive = 1" +
+      " where bylawNumber = ?")
+      .run(reqBody.bylawNumber);
+
+    db.close();
+
+    return {
+      success: (info.changes > 0),
+      message: "By-law number \"" + reqBody.bylawNumber + "\" is associated with a previously removed record." +
+        " That record has been restored with the original description."
+    };
+
+  }
+
+  // Do insert
+
+  const info = db.prepare("insert into ParkingBylaws (" +
+    "bylawNumber, bylawDescription, orderNumber, isActive)" +
+    " values (?, ?, 0, 1)")
+    .run(reqBody.bylawNumber, reqBody.bylawDescription);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+export function updateParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return {
+
+  const db = sqlite(dbPath);
+
+  // Do update
+
+  const info = db.prepare("update ParkingBylaws" +
+    " set bylawDescription = ?" +
+    " where bylawNumber = ?" +
+    " and isActive = 1")
+    .run(reqBody.bylawDescription, reqBody.bylawNumber);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+export function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_return {
+
+  const db = sqlite(dbPath);
+
+  // Do update
+
+  const info = db.prepare("update ParkingBylaws" +
+    " set isActive = 0" +
+    " where bylawNumber = ?" +
+    " and isActive = 1")
+    .run(bylawNumber);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+
+
+
+// Parking Offences
+
 
 export function getParkingOffences(locationKey: string) {
 
@@ -1276,9 +1413,7 @@ export function getParkingOffences(locationKey: string) {
 }
 
 
-/*
- * Licence Plate Export
- */
+// Licence Plate Export
 
 
 export function getLicencePlateLookupBatch(batchID_or_negOne: number) {
