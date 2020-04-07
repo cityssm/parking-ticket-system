@@ -4,6 +4,7 @@ import express = require("express");
 const router = express.Router();
 
 import * as usersDB from "../helpers/usersDB";
+import * as parkingDB from "../helpers/parkingDB";
 
 
 // User Management
@@ -26,7 +27,6 @@ router.get("/userManagement", function(req, res) {
   });
 
 });
-
 
 router.post("/doCreateUser", function(req, res) {
 
@@ -63,7 +63,6 @@ router.post("/doCreateUser", function(req, res) {
 
 });
 
-
 router.post("/doUpdateUser", function(req, res) {
 
   if (!req.session.user.userProperties.isAdmin) {
@@ -87,7 +86,6 @@ router.post("/doUpdateUser", function(req, res) {
 
 });
 
-
 router.post("/doUpdateUserProperty", function(req, res) {
 
   if (!req.session.user.userProperties.isAdmin) {
@@ -110,7 +108,6 @@ router.post("/doUpdateUserProperty", function(req, res) {
   });
 
 });
-
 
 router.post("/doResetPassword", function(req, res) {
 
@@ -136,7 +133,6 @@ router.post("/doResetPassword", function(req, res) {
 
 });
 
-
 router.post("/doGetUserProperties", function(req, res) {
 
   if (!req.session.user.userProperties.isAdmin) {
@@ -156,7 +152,6 @@ router.post("/doGetUserProperties", function(req, res) {
   res.json(userProperties);
 
 });
-
 
 router.post("/doDeleteUser", function(req, res) {
 
@@ -195,5 +190,86 @@ router.post("/doDeleteUser", function(req, res) {
   })
 
 });
+
+
+// Offence Maintenance
+
+
+router.get("/offences", function(_req, res) {
+
+  res.render("offence-maint", {
+    headTitle: "Parking Offences"
+  });
+
+});
+
+
+// Location Maintenance
+
+
+router.get("/locations", function(_req, res) {
+
+  const locations = parkingDB.getParkingLocations();
+
+  res.render("location-maint", {
+    headTitle: "Parking Location Maintenance",
+    locations: locations
+  });
+
+});
+
+router.post("/doAddLocation", function(req, res) {
+
+  const results = parkingDB.addParkingLocation(req.body);
+
+  if (results.success) {
+
+    results.locations = parkingDB.getParkingLocations();
+
+  }
+
+  res.json(results);
+
+});
+
+router.post("/doUpdateLocation", function(req, res) {
+
+  const results = parkingDB.updateParkingLocation(req.body);
+
+  if (results.success) {
+
+    results.locations = parkingDB.getParkingLocations();
+
+  }
+
+  res.json(results);
+
+});
+
+router.post("/doDeleteLocation", function(req, res) {
+
+  const results = parkingDB.deleteParkingLocation(req.body.locationKey);
+
+  if (results.success) {
+
+    results.locations = parkingDB.getParkingLocations();
+
+  }
+
+  res.json(results);
+
+});
+
+
+// By-Law Maintenance
+
+
+router.get("/bylaws", function(_req, res) {
+
+  res.render("bylaw-maint", {
+    headTitle: "By-Law Maintenance"
+  });
+});
+
 
 export = router;

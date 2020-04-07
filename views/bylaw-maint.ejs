@@ -1,13 +1,17 @@
 <%- include('_header'); -%>
 
 <div class="columns is-variable is-4-mobile is-4-tablet is-block-print" id="is-site-layout">
-  <%- include("_sideMenu-offences"); -%>
+  <%- include("_sideMenu-admin"); -%>
   <div class="column">
     <nav class="breadcrumb">
       <ul>
         <li><a href="/dashboard">Home</a></li>
-        <li><a href="/offences">Parking Offences</a></li>
-        <li class="is-active"><a href="#" aria-current="page">Parking By-Laws</a></li>
+        <li class="is-active">
+          <a href="#" aria-current="page">
+            <span class="icon is-small"><i class="fas fa-cog" aria-hidden="true"></i></span>
+            <span>Parking By-Laws</span>
+          </a>
+        </li>
       </ul>
     </nav>
 

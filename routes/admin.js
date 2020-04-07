@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const usersDB = require("../helpers/usersDB");
+const parkingDB = require("../helpers/parkingDB");
 router.get("/userManagement", function (req, res) {
     if (!req.session.user.userProperties.isAdmin) {
         res.redirect("/dashboard/?error=accessDenied");
@@ -119,6 +120,44 @@ router.post("/doDeleteUser", function (req, res) {
     const success = usersDB.inactivateUser(userNameToDelete);
     res.json({
         success: success
+    });
+});
+router.get("/offences", function (_req, res) {
+    res.render("offence-maint", {
+        headTitle: "Parking Offences"
+    });
+});
+router.get("/locations", function (_req, res) {
+    const locations = parkingDB.getParkingLocations();
+    res.render("location-maint", {
+        headTitle: "Parking Location Maintenance",
+        locations: locations
+    });
+});
+router.post("/doAddLocation", function (req, res) {
+    const results = parkingDB.addParkingLocation(req.body);
+    if (results.success) {
+        results.locations = parkingDB.getParkingLocations();
+    }
+    res.json(results);
+});
+router.post("/doUpdateLocation", function (req, res) {
+    const results = parkingDB.updateParkingLocation(req.body);
+    if (results.success) {
+        results.locations = parkingDB.getParkingLocations();
+    }
+    res.json(results);
+});
+router.post("/doDeleteLocation", function (req, res) {
+    const results = parkingDB.deleteParkingLocation(req.body.locationKey);
+    if (results.success) {
+        results.locations = parkingDB.getParkingLocations();
+    }
+    res.json(results);
+});
+router.get("/bylaws", function (_req, res) {
+    res.render("bylaw-maint", {
+        headTitle: "By-Law Maintenance"
     });
 });
 module.exports = router;

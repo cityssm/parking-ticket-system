@@ -87,8 +87,8 @@ app.use("/docs", routerDocs);
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
 app.use("/plates", sessionChecker, routerPlates);
+app.use("/offences", sessionChecker, routerOffences);
 app.use("/reports", sessionChecker, routerReports);
-app.use("/offences", sessionChecker, adminChecker, routerOffences);
 app.use("/admin", sessionChecker, adminChecker, routerAdmin);
 app.use("/login", routerLogin);
 app.get("/logout", function (req, res) {

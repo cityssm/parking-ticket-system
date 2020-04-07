@@ -26,7 +26,7 @@
 
     const deleteFn = function() {
 
-      pts.postJSON("/offences/doDeleteLocation", {
+      pts.postJSON("/admin/doDeleteLocation", {
         locationKey: location.locationKey
       }, function(responseJSON) {
 
@@ -60,7 +60,7 @@
 
       formEvent.preventDefault();
 
-      pts.postJSON("/offences/doUpdateLocation", formEvent.currentTarget, function(responseJSON) {
+      pts.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, function(responseJSON) {
 
         if (responseJSON.success) {
 
@@ -239,7 +239,7 @@
 
       formEvent.preventDefault();
 
-      pts.postJSON("/offences/doAddLocation", formEvent.currentTarget, function(responseJSON) {
+      pts.postJSON("/admin/doAddLocation", formEvent.currentTarget, function(responseJSON) {
 
         if (responseJSON.success) {
 
