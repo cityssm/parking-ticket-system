@@ -31,9 +31,10 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
 configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);
 configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);
-configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", function (currentTicketNumber) {
+configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", function (_currentTicketNumber) {
     return "";
 });
+configFallbackValues.set("parkingTickets.licencePlateExpiryDate.includeDay", false);
 configFallbackValues.set("parkingTicketStatuses", []);
 configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\d\w -]{1,20}$/);
 configFallbackValues.set("locationClasses", []);

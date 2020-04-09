@@ -63,6 +63,9 @@ declare type Config_ParkingTickets = {
         isUnique?: boolean;
         nextTicketNumberFn?: (currentTicketNumber: string) => string;
     };
+    licencePlateExpiryDate: {
+        includeDay?: boolean;
+    };
 };
 export declare type Config_ParkingTicketStatus = {
     statusKey: string;
@@ -116,6 +119,11 @@ export declare type LicencePlate = {
     licencePlateCountry: string;
     licencePlateProvince: string;
     licencePlateNumber: string;
+    licencePlateExpiryDate: number;
+    licencePlateExpiryDateString: string;
+    licencePlateExpiryYear: number | string;
+    licencePlateExpiryMonth: number | string;
+    licencePlateExpiryDay: number;
 };
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     recordType: "ticket";
@@ -183,8 +191,6 @@ export interface LicencePlateOwner extends Record, LicencePlate {
     recordType: "owner";
     recordDate: number;
     recordDateString: string;
-    licencePlateExpiryDate: number;
-    licencePlateExpiryDateString: string;
     vehicleNCIC: string;
     vehicleMake: string;
     ownerName1: string;

@@ -202,6 +202,11 @@ function getParkingTicket(ticketID, reqSession) {
     ticket.recordType = "ticket";
     ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
     ticket.issueTimeString = dateTimeFns.timeIntegerToString(ticket.issueTime);
+    ticket.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(ticket.licencePlateExpiryDate);
+    if (ticket.licencePlateExpiryDateString !== "") {
+        ticket.licencePlateExpiryYear = parseInt(ticket.licencePlateExpiryDateString.substring(0, 4));
+        ticket.licencePlateExpiryMonth = parseInt(ticket.licencePlateExpiryDateString.substring(5, 7));
+    }
     ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
     ticket.canUpdate = canUpdateObject(ticket, reqSession);
     ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, ticket.issueDate);
@@ -278,14 +283,33 @@ function createParkingTicket(reqBody, reqSession) {
             };
         }
     }
+    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
+    if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
+        let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear) || 0;
+        let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth) || 0;
+        if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
+            licencePlateExpiryDate = 0;
+        }
+        else if (licencePlateExpiryYear === 0 || licencePlateExpiryMonth === 0) {
+            db.close();
+            return {
+                success: false,
+                message: "The licence plate expiry date fields must both be blank or both be completed."
+            };
+        }
+        else {
+            const dateObj = new Date(licencePlateExpiryYear, (licencePlateExpiryMonth - 1) + 1, (1 - 1), 0, 0, 0, 0);
+            licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObj);
+        }
+    }
     const info = db.prepare("insert into ParkingTickets" +
         " (ticketNumber, issueDate, issueTime, issuingOfficer," +
         " locationKey, locationDescription," +
         " bylawNumber, parkingOffence, offenceAmount," +
-        " licencePlateCountry, licencePlateProvince, licencePlateNumber, vehicleMakeModel," +
+        " licencePlateCountry, licencePlateProvince, licencePlateNumber, licencePlateExpiryDate, vehicleMakeModel," +
         " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, reqBody.vehicleMakeModel, reqSession.user.userName, nowMillis, reqSession.user.userName, nowMillis);
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, licencePlateExpiryDate, reqBody.vehicleMakeModel, reqSession.user.userName, nowMillis, reqSession.user.userName, nowMillis);
     db.close();
     return {
         success: true,
@@ -313,6 +337,25 @@ function updateParkingTicket(reqBody, reqSession) {
             };
         }
     }
+    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
+    if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
+        let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear) || 0;
+        let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth) || 0;
+        if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
+            licencePlateExpiryDate = 0;
+        }
+        else if (licencePlateExpiryYear === 0 || licencePlateExpiryMonth === 0) {
+            db.close();
+            return {
+                success: false,
+                message: "The licence plate expiry date fields must both be blank or both be completed."
+            };
+        }
+        else {
+            const dateObj = new Date(licencePlateExpiryYear, (licencePlateExpiryMonth - 1) + 1, (1 - 1), 0, 0, 0, 0);
+            licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObj);
+        }
+    }
     const info = db.prepare("update ParkingTickets" +
         " set ticketNumber = ?," +
         " issueDate = ?," +
@@ -326,13 +369,14 @@ function updateParkingTicket(reqBody, reqSession) {
         " licencePlateCountry = ?," +
         " licencePlateProvince = ?," +
         " licencePlateNumber = ?," +
+        " licencePlateExpiryDate = ?," +
         " vehicleMakeModel = ?," +
         " recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
         " where ticketID = ?" +
         " and resolvedDate is null" +
         " and recordDelete_timeMillis is null")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, reqBody.vehicleMakeModel, reqSession.user.userName, nowMillis, reqBody.ticketID);
+        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, licencePlateExpiryDate, reqBody.vehicleMakeModel, reqSession.user.userName, nowMillis, reqBody.ticketID);
     db.close();
     if (info.changes) {
         return {
@@ -1297,12 +1341,13 @@ exports.mto_getLicencePlatesAvailableForLookupBatch = mto_getLicencePlatesAvaila
 function getOwnershipReconciliationRecords() {
     const addCalculatedFieldsFn = function (record) {
         record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
+        record.ticket_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.ticket_licencePlateExpiryDate);
         record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
+        record.owner_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.owner_licencePlateExpiryDate);
         record.owner_vehicleMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
         record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
-        record.isProbableMatch =
-            (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
-                (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
+        record.isProbableMatch = (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate) && ((record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
+            (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase()));
     };
     const db = sqlite(exports.dbPath, {
         readonly: true
@@ -1312,10 +1357,12 @@ function getOwnershipReconciliationRecords() {
         " t.ticketNumber as ticket_ticketNumber," +
         " t.issueDate as ticket_issueDate," +
         " t.vehicleMakeModel as ticket_vehicleMakeModel," +
+        " t.licencePlateExpiryDate as ticket_licencePlateExpiryDate," +
         " o.recordDate as owner_recordDate," +
         " o.vehicleNCIC as owner_vehicleNCIC," +
         " o.vehicleYear as owner_vehicleYear," +
         " o.vehicleColor as owner_vehicleColor," +
+        " o.licencePlateExpiryDate as owner_licencePlateExpiryDate," +
         " o.ownerName1 as owner_ownerName1," +
         " o.ownerName2 as owner_ownerName2," +
         " o.ownerAddress as owner_ownerAddress," +

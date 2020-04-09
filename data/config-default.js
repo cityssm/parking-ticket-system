@@ -25,6 +25,9 @@ config.locationClasses = [
 config.parkingTickets = {
     ticketNumber: {
         fieldLabel: "Ticket Number"
+    },
+    licencePlateExpiryDate: {
+        includeDay: false
     }
 };
 const defaultParkingTicketStatuses = [

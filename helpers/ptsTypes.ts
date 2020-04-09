@@ -69,6 +69,9 @@ type Config_ParkingTickets = {
     pattern?: RegExp,
     isUnique?: boolean,
     nextTicketNumberFn?: (currentTicketNumber: string) => string
+  },
+  licencePlateExpiryDate: {
+    includeDay?: boolean
   }
 };
 
@@ -141,7 +144,13 @@ export type LicencePlate = {
 
   licencePlateCountry: string,
   licencePlateProvince: string,
-  licencePlateNumber: string
+  licencePlateNumber: string,
+
+  licencePlateExpiryDate: number,
+  licencePlateExpiryDateString: string,
+  licencePlateExpiryYear: number | string,
+  licencePlateExpiryMonth: number | string,
+  licencePlateExpiryDay: number
 };
 
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
@@ -245,9 +254,6 @@ export interface LicencePlateOwner extends Record, LicencePlate {
 
   recordDate: number,
   recordDateString: string,
-
-  licencePlateExpiryDate: number,
-  licencePlateExpiryDateString: string,
 
   vehicleNCIC: string,
   vehicleMake: string,

@@ -148,7 +148,7 @@
 
         editOffenceModalCloseFn = closeModalFn;
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+        document.getElementById("form--offenceEdit").addEventListener("submit", submitFn);
 
         modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
 
@@ -570,7 +570,7 @@
 
   }
 
-  document.getElementById("is-select-location-filter-button").addEventListener("click", function() {
+  function openSelectLocationFilterModal() {
 
     let selectLocationCloseModalFn;
 
@@ -635,7 +635,10 @@
       }
     });
 
-  });
+  }
+
+  locationInputEle.addEventListener("dblclick", openSelectLocationFilterModal);
+  document.getElementById("is-select-location-filter-button").addEventListener("click", openSelectLocationFilterModal);
 
   document.getElementById("is-clear-location-filter-button").addEventListener("click", function() {
 
@@ -664,7 +667,7 @@
 
   }
 
-  document.getElementById("is-select-bylaw-filter-button").addEventListener("click", function() {
+  function openSelectBylawFilterModal() {
 
     let selectBylawCloseModalFn;
 
@@ -722,7 +725,10 @@
       }
     });
 
-  });
+  }
+
+  bylawInputEle.addEventListener("dblclick", openSelectBylawFilterModal);
+  document.getElementById("is-select-bylaw-filter-button").addEventListener("click", openSelectBylawFilterModal);
 
   document.getElementById("is-clear-bylaw-filter-button").addEventListener("click", function() {
 

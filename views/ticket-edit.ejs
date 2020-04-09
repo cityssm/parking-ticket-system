@@ -179,7 +179,47 @@
                 </div>
               </div>
             </div>
-            <div class="column">
+          </div>
+          <div class="columns">
+            <% if (configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) { %>
+              <div class="column">
+                <div class="field">
+                  <label class="label" for="ticket--licencePlateExpiryDateString">Licence Plate Expiry Date</label>
+                  <div class="control">
+                    <input class="input" id="ticket--licencePlateExpiryDateString" name="licencePlateExpiryDateString" type="date" value="<%= ticket.licencePlateExpiryDateString %>" />
+                  </div>
+                </div>
+              </div>
+            <% } else { %>
+              <div class="column">
+                <div class="field">
+                  <label class="label" for="ticket--licencePlateExpiryYear">Licence Plate Expiry Year</label>
+                  <div class="control">
+                    <input class="input" id="ticket--licencePlateExpiryYear" name="licencePlateExpiryYear" type="number" value="<%= ticket.licencePlateExpiryYear %>" min="1900" step="1" onwheel="return false" />
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label" for="ticket--licencePlateExpiryMonth">Expiry Month</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select id="ticket--licencePlateExpiryMonth" name="licencePlateExpiryMonth">
+                        <option value="">(No Month Select)</option>
+                        <% for (let monthIndex = 0; monthIndex < dateTimeFns.months.length; monthIndex += 1) { %>
+                          <option
+                            value="<%= (monthIndex + 1) %>"
+                            <%= (ticket.licencePlateExpiryMonth === (monthIndex + 1) ? " selected" : "") %>>
+                            <%= dateTimeFns.months[monthIndex] %>
+                          </option>
+                        <% } %>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+            <div class="column is-6">
               <div class="field">
                 <label class="label" for="ticket--vehicleMakeModel">Vehicle Make/Model from Ticket</label>
                 <div class="control">

@@ -32,6 +32,7 @@ import routerReports = require("./routes/reports");
 
 
 import * as configFns from "./helpers/configFns";
+import * as dateTimeFns from "./helpers/dateTimeFns";
 import * as stringFns from "./helpers/stringFns";
 import * as vehicleFns from "./helpers/vehicleFns";
 
@@ -157,6 +158,7 @@ app.use(function(req, res, next) {
   res.locals.buildNumber = buildNumber;
   res.locals.user = req.session.user;
   res.locals.configFns = configFns;
+  res.locals.dateTimeFns = dateTimeFns;
   res.locals.stringFns = stringFns;
   res.locals.vehicleFns = vehicleFns;
 

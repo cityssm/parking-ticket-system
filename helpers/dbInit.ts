@@ -110,6 +110,7 @@ export function initParkingDB() {
       " licencePlateCountry varchar(2)," +
       " licencePlateProvince varchar(5)," +
       " licencePlateNumber varchar(15)," +
+      " licencePlateExpiryDate integer," +
       " bylawNumber varchar(20)," +
       " locationKey varchar(20)," +
       " locationDescription text," +

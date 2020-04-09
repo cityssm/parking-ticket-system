@@ -5,8 +5,8 @@
       <h3 class="modal-card-title">Update a Location</h3>
       <button class="delete is-close-modal-button" aria-label="close" type="button"></button>
     </header>
-    <form>
-      <section class="modal-card-body">
+    <section class="modal-card-body">
+      <form id="form--editLocation">
         <input id="editLocation--locationKey" name="locationKey" type="hidden" />
 
         <div class="field">
@@ -23,12 +23,12 @@
             <input class="input" id="editLocation--locationName" name="locationName" maxlength="200" required />
           </div>
         </div>
-      </section>
-      <footer class="modal-card-foot justify-right">
-        <button class="button is-close-modal-button" type="button">Cancel</button>
-        <button class="button is-success" type="submit">Update Location</button>
-        <button class="button is-danger is-delete-button" type="button">Remove Location</button>
-      </footer>
-    </form>
+      </form>
+    </section>
+    <footer class="modal-card-foot justify-right">
+      <button class="button is-close-modal-button" type="button">Cancel</button>
+      <button class="button is-success" type="submit" form="form--editLocation">Update Location</button>
+      <button class="button is-danger is-delete-button" type="button">Remove Location</button>
+    </footer>
   </div>
 </div>

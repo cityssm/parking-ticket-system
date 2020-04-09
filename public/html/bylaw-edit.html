@@ -5,8 +5,8 @@
       <h3 class="modal-card-title">Update a By-Law</h3>
       <button class="delete is-close-modal-button" aria-label="close" type="button"></button>
     </header>
-    <form>
-      <section class="modal-card-body">
+    <section class="modal-card-body">
+      <form id="form--editBylaw">
         <input id="editBylaw--bylawNumber" name="bylawNumber" type="hidden" />
 
         <div class="field">
@@ -15,12 +15,12 @@
             <input class="input" id="editBylaw--bylawDescription" name="bylawDescription" maxlength="200" required />
           </div>
         </div>
-      </section>
-      <footer class="modal-card-foot justify-right">
-        <button class="button is-close-modal-button" type="button">Cancel</button>
-        <button class="button is-success" type="submit">Update By-Law</button>
-        <button class="button is-danger is-delete-button" type="button">Remove By-Law</button>
-      </footer>
-    </form>
+      </form>
+    </section>
+    <footer class="modal-card-foot justify-right">
+      <button class="button is-close-modal-button" type="button">Cancel</button>
+      <button class="button is-success" type="submit" form="fomr--editBylaw">Update By-Law</button>
+      <button class="button is-danger is-delete-button" type="button">Remove By-Law</button>
+    </footer>
   </div>
 </div>

@@ -19,6 +19,7 @@ const routerOffences = require("./routes/offences");
 const routerPlates = require("./routes/plates");
 const routerReports = require("./routes/reports");
 const configFns = require("./helpers/configFns");
+const dateTimeFns = require("./helpers/dateTimeFns");
 const stringFns = require("./helpers/stringFns");
 const vehicleFns = require("./helpers/vehicleFns");
 const dbInit = require("./helpers/dbInit");
@@ -76,6 +77,7 @@ app.use(function (req, res, next) {
     res.locals.buildNumber = buildNumber;
     res.locals.user = req.session.user;
     res.locals.configFns = configFns;
+    res.locals.dateTimeFns = dateTimeFns;
     res.locals.stringFns = stringFns;
     res.locals.vehicleFns = vehicleFns;
     next();

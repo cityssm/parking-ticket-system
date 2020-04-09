@@ -103,7 +103,7 @@
 
         editLocationCloseModalFn = closeModalFn;
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", editFn);
+        document.getElementById("form--editLocation").addEventListener("submit", editFn);
 
         modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
 
@@ -271,7 +271,7 @@
         document.getElementById("addLocation--locationClassKey")
           .insertAdjacentHTML("beforeend", locationClassKeyOptionsHTML);
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", addFn);
+        document.getElementById("form--addLocation").addEventListener("submit", addFn);
 
       }
 
