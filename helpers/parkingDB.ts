@@ -1430,6 +1430,145 @@ export function getParkingOffencesByLocationKey(locationKey: string) {
   return rows;
 }
 
+type addUpdateParkingOffence_return = {
+  success: boolean,
+  message?: string,
+  offences?: pts.ParkingOffence[]
+};
+
+export function addParkingOffence(reqBody: pts.ParkingOffence): addUpdateParkingOffence_return {
+
+  const db = sqlite(dbPath);
+
+  // Check if offence already exists
+
+  const existingOffenceRecord: pts.ParkingOffence = db.prepare("select isActive" +
+    " from ParkingOffences" +
+    " where bylawNumber = ?" +
+    " and locationKey = ?")
+    .get(reqBody.bylawNumber, reqBody.locationKey);
+
+  if (existingOffenceRecord) {
+
+    if (existingOffenceRecord.isActive) {
+
+      db.close();
+
+      return {
+        success: false,
+        message: "An active offence already exists for the same location and by-law."
+      };
+
+    } else {
+
+      const info = db.prepare("update ParkingOffences" +
+        " set isActive = 1" +
+        " where bylawNumber = ?" +
+        " and locationKey = ?").
+        run(reqBody.bylawNumber, reqBody.locationKey);
+
+      db.close();
+
+      return {
+        success: (info.changes > 0),
+        message: "A previously deleted offence for the same location and by-law has been restored."
+      };
+
+    }
+
+  }
+
+  // Check if another offence exists for the same by-law
+  // If so, use the same offenceAmount
+
+  let offenceAmount = 0;
+
+  if (reqBody.hasOwnProperty("offenceAmount")) {
+
+    offenceAmount = reqBody.offenceAmount;
+
+  } else {
+
+    const offenceAmountRecord: pts.ParkingOffence = db.prepare("select offenceAmount" +
+      " from ParkingOffences" +
+      " where bylawNumber = ?" +
+      " and isActive = 1" +
+      " group by offenceAmount" +
+      " order by count(locationKey) desc, offenceAmount desc" +
+      " limit 1")
+      .get(reqBody.bylawNumber);
+
+    if (offenceAmountRecord) {
+      offenceAmount = offenceAmountRecord.offenceAmount;
+    }
+  }
+
+  // Insert record
+
+  const info = db.prepare("insert into ParkingOffences" +
+    " (bylawNumber, locationKey, parkingOffence, offenceAmount, accountNumber, isActive)" +
+    " values (?, ?, ?, ?, ?, 1)")
+    .run(reqBody.bylawNumber,
+      reqBody.locationKey,
+      reqBody.parkingOffence || "",
+      offenceAmount,
+      reqBody.accountNumber || "");
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+}
+
+export function updateParkingOffence(reqBody: pts.ParkingOffence): addUpdateParkingOffence_return {
+
+  const db = sqlite(dbPath);
+
+  // Do update
+
+  const info = db.prepare("update ParkingOffences" +
+    " set parkingOffence = ?," +
+    " offenceAmount = ?," +
+    " accountNumber = ?" +
+    " where bylawNumber = ?" +
+    " and locationKey = ?" +
+    " and isActive = 1")
+    .run(reqBody.parkingOffence,
+      reqBody.offenceAmount,
+      reqBody.accountNumber,
+      reqBody.bylawNumber,
+      reqBody.locationKey);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+export function deleteParkingOffence(bylawNumber: string, locationKey: string): addUpdateParkingOffence_return {
+
+  const db = sqlite(dbPath);
+
+  // Do update
+
+  const info = db.prepare("update ParkingOffences" +
+    " set isActive = 0" +
+    " where bylawNumber = ?" +
+    " and locationKey = ?" +
+    " and isActive = 1")
+    .run(bylawNumber, locationKey);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
 
 // Licence Plate Export
 

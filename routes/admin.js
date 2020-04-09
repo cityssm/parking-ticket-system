@@ -133,6 +133,27 @@ router.get("/offences", function (_req, res) {
         offences: offences
     });
 });
+router.post("/doAddOffence", function (req, res) {
+    const results = parkingDB.addParkingOffence(req.body);
+    if (results.success && req.body.returnOffences) {
+        results.offences = parkingDB.getParkingOffences();
+    }
+    res.json(results);
+});
+router.post("/doUpdateOffence", function (req, res) {
+    const results = parkingDB.updateParkingOffence(req.body);
+    if (results.success) {
+        results.offences = parkingDB.getParkingOffences();
+    }
+    res.json(results);
+});
+router.post("/doDeleteOffence", function (req, res) {
+    const results = parkingDB.deleteParkingOffence(req.body.bylawNumber, req.body.locationKey);
+    if (results.success) {
+        results.offences = parkingDB.getParkingOffences();
+    }
+    res.json(results);
+});
 router.get("/locations", function (_req, res) {
     const locations = parkingDB.getParkingLocations();
     res.render("location-maint", {

@@ -105,6 +105,14 @@ export declare function updateParkingBylaw(reqBody: pts.ParkingBylaw): addUpdate
 export declare function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_return;
 export declare function getParkingOffences(): pts.ParkingOffence[];
 export declare function getParkingOffencesByLocationKey(locationKey: string): pts.ParkingOffence[];
+declare type addUpdateParkingOffence_return = {
+    success: boolean;
+    message?: string;
+    offences?: pts.ParkingOffence[];
+};
+export declare function addParkingOffence(reqBody: pts.ParkingOffence): addUpdateParkingOffence_return;
+export declare function updateParkingOffence(reqBody: pts.ParkingOffence): addUpdateParkingOffence_return;
+export declare function deleteParkingOffence(bylawNumber: string, locationKey: string): addUpdateParkingOffence_return;
 export declare function getLicencePlateLookupBatch(batchID_or_negOne: number): pts.LicencePlateLookupBatch;
 declare type addLicencePlateToLookupBatch_return = {
     success: boolean;

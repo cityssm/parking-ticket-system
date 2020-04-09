@@ -7,6 +7,7 @@ export declare type Config = {
     locationClasses?: Config_LocationClass[];
     parkingTickets?: Config_ParkingTickets;
     parkingTicketStatuses?: Config_ParkingTicketStatus[];
+    parkingOffences?: Config_ParkingOffences;
     genders?: Config_Gender[];
     licencePlateCountryAliases?: {
         [countryKey: string]: string;
@@ -71,6 +72,11 @@ export declare type Config_ParkingTicketStatus = {
     };
     isFinalStatus: boolean;
     isUserSettable: boolean;
+};
+export declare type Config_ParkingOffences = {
+    accountNumber: {
+        pattern?: RegExp;
+    };
 };
 declare type Config_LicencePlateCountry = {
     countryShortName: string;

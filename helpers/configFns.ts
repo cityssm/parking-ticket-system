@@ -60,6 +60,8 @@ configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", funct
 
 configFallbackValues.set("parkingTicketStatuses", []);
 
+configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\d\w -]{1,20}$/);
+
 configFallbackValues.set("locationClasses", []);
 
 configFallbackValues.set("licencePlateCountryAliases", Object.freeze({

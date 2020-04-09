@@ -19,6 +19,13 @@
       Parking Offences
     </h1>
 
+    <div class="fixed-container is-fixed-bottom-right has-margin-20 has-text-right is-hidden-print">
+      <button class="button is-circle is-primary has-tooltip-left" id="is-add-offence-button" data-tooltip="Create a New Offence" type="button">
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        <span class="sr-only">Create a New Offence</span>
+      </button>
+    </div>
+
     <div class="card">
       <div class="card-content">
         <div class="columns">
@@ -98,6 +105,8 @@
   pts.locationsInit = <%- JSON.stringify(locations) -%>;
   pts.bylawsInit = <%- JSON.stringify(bylaws) -%>;
   pts.offencesInit = <%- JSON.stringify(offences) -%>;
+
+  pts.accountNumberPatternInit = <%- JSON.stringify(configFns.getProperty("parkingOffences.accountNumber.pattern").source) -%>;
 </script>
 
 <script src="/javascripts/offence-maint.min.js"></script>

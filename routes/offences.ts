@@ -18,4 +18,11 @@ router.post("/doGetOffencesByLocation", function(req, res) {
 });
 
 
+router.post("/doGetAllOffences", function(req, res) {
+
+  res.json(parkingDB.getParkingOffences());
+
+});
+
+
 export = router;

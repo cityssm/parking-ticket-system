@@ -9,6 +9,7 @@ export type Config = {
   locationClasses?: Config_LocationClass[],
   parkingTickets?: Config_ParkingTickets,
   parkingTicketStatuses?: Config_ParkingTicketStatus[],
+  parkingOffences?: Config_ParkingOffences,
   genders?: Config_Gender[],
   licencePlateCountryAliases?: { [countryKey: string]: string },
   licencePlateProvinceAliases?: { [country: string]: { [provinceKey: string]: string } },
@@ -79,6 +80,12 @@ export type Config_ParkingTicketStatus = {
   },
   isFinalStatus: boolean,
   isUserSettable: boolean
+};
+
+export type Config_ParkingOffences = {
+  accountNumber: {
+    pattern?: RegExp
+  }
 };
 
 type Config_LicencePlateCountry = {

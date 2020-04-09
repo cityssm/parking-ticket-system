@@ -8,4 +8,7 @@ router.post("/doGetAllLocations", function (_req, res) {
 router.post("/doGetOffencesByLocation", function (req, res) {
     res.json(parkingDB.getParkingOffencesByLocationKey(req.body.locationKey));
 });
+router.post("/doGetAllOffences", function (req, res) {
+    res.json(parkingDB.getParkingOffences());
+});
 module.exports = router;

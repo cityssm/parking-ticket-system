@@ -48,6 +48,10 @@ const defaultParkingTicketStatuses: pts.Config_ParkingTicketStatus[] = [
 
 config.parkingTicketStatuses = base.baseParkingTicketStatuses.concat(defaultParkingTicketStatuses);
 
+config.parkingOffences = {
+  accountNumber: {}
+};
+
 config.genders = [
   {
     genderKey: "F",

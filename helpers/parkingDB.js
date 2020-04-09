@@ -880,6 +880,91 @@ function getParkingOffencesByLocationKey(locationKey) {
     return rows;
 }
 exports.getParkingOffencesByLocationKey = getParkingOffencesByLocationKey;
+function addParkingOffence(reqBody) {
+    const db = sqlite(exports.dbPath);
+    const existingOffenceRecord = db.prepare("select isActive" +
+        " from ParkingOffences" +
+        " where bylawNumber = ?" +
+        " and locationKey = ?")
+        .get(reqBody.bylawNumber, reqBody.locationKey);
+    if (existingOffenceRecord) {
+        if (existingOffenceRecord.isActive) {
+            db.close();
+            return {
+                success: false,
+                message: "An active offence already exists for the same location and by-law."
+            };
+        }
+        else {
+            const info = db.prepare("update ParkingOffences" +
+                " set isActive = 1" +
+                " where bylawNumber = ?" +
+                " and locationKey = ?").
+                run(reqBody.bylawNumber, reqBody.locationKey);
+            db.close();
+            return {
+                success: (info.changes > 0),
+                message: "A previously deleted offence for the same location and by-law has been restored."
+            };
+        }
+    }
+    let offenceAmount = 0;
+    if (reqBody.hasOwnProperty("offenceAmount")) {
+        offenceAmount = reqBody.offenceAmount;
+    }
+    else {
+        const offenceAmountRecord = db.prepare("select offenceAmount" +
+            " from ParkingOffences" +
+            " where bylawNumber = ?" +
+            " and isActive = 1" +
+            " group by offenceAmount" +
+            " order by count(locationKey) desc, offenceAmount desc" +
+            " limit 1")
+            .get(reqBody.bylawNumber);
+        if (offenceAmountRecord) {
+            offenceAmount = offenceAmountRecord.offenceAmount;
+        }
+    }
+    const info = db.prepare("insert into ParkingOffences" +
+        " (bylawNumber, locationKey, parkingOffence, offenceAmount, accountNumber, isActive)" +
+        " values (?, ?, ?, ?, ?, 1)")
+        .run(reqBody.bylawNumber, reqBody.locationKey, reqBody.parkingOffence || "", offenceAmount, reqBody.accountNumber || "");
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.addParkingOffence = addParkingOffence;
+function updateParkingOffence(reqBody) {
+    const db = sqlite(exports.dbPath);
+    const info = db.prepare("update ParkingOffences" +
+        " set parkingOffence = ?," +
+        " offenceAmount = ?," +
+        " accountNumber = ?" +
+        " where bylawNumber = ?" +
+        " and locationKey = ?" +
+        " and isActive = 1")
+        .run(reqBody.parkingOffence, reqBody.offenceAmount, reqBody.accountNumber, reqBody.bylawNumber, reqBody.locationKey);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.updateParkingOffence = updateParkingOffence;
+function deleteParkingOffence(bylawNumber, locationKey) {
+    const db = sqlite(exports.dbPath);
+    const info = db.prepare("update ParkingOffences" +
+        " set isActive = 0" +
+        " where bylawNumber = ?" +
+        " and locationKey = ?" +
+        " and isActive = 1")
+        .run(bylawNumber, locationKey);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.deleteParkingOffence = deleteParkingOffence;
 function getLicencePlateLookupBatch(batchID_or_negOne) {
     const db = sqlite(exports.dbPath, {
         readonly: true
