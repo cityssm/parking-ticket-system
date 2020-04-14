@@ -192,8 +192,17 @@ function getParkingTicket(ticketID, reqSession) {
     const db = sqlite(exports.dbPath, {
         readonly: true
     });
-    const ticket = db.prepare("select * from ParkingTickets" +
-        " where ticketID = ?")
+    const ticket = db.prepare("select t.*," +
+        " s.statusKey as ownerLookup_statusKey," +
+        " s.statusField as ownerLookup_statusField" +
+        " from ParkingTickets t" +
+        (" left join ParkingTicketStatusLog s" +
+            " on t.ticketID = s.ticketID" +
+            " and s.statusKey in ('ownerLookupPending', 'ownerLookupError', 'ownerLookupMatch')" +
+            " and s.recordDelete_timeMillis is null") +
+        " where t.ticketID = ?" +
+        " order by s.statusDate desc, s.statusIndex desc" +
+        " limit 1")
         .get(ticketID);
     if (!ticket) {
         db.close();
@@ -209,7 +218,9 @@ function getParkingTicket(ticketID, reqSession) {
     }
     ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
     ticket.canUpdate = canUpdateObject(ticket, reqSession);
-    ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, ticket.issueDate);
+    if (ticket.ownerLookup_statusKey === "ownerLookupMatch") {
+        ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, parseInt(ticket.ownerLookup_statusField));
+    }
     ticket.location = getParkingLocationWithDB(db, ticket.locationKey);
     ticket.statusLog = db.prepare("select * from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +

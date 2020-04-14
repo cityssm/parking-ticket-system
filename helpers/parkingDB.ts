@@ -315,8 +315,17 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     readonly: true
   });
 
-  const ticket: pts.ParkingTicket = db.prepare("select * from ParkingTickets" +
-    " where ticketID = ?")
+  const ticket: pts.ParkingTicket = db.prepare("select t.*," +
+    " s.statusKey as ownerLookup_statusKey," +
+    " s.statusField as ownerLookup_statusField" +
+    " from ParkingTickets t" +
+    (" left join ParkingTicketStatusLog s" +
+      " on t.ticketID = s.ticketID" +
+      " and s.statusKey in ('ownerLookupPending', 'ownerLookupError', 'ownerLookupMatch')" +
+      " and s.recordDelete_timeMillis is null") +
+    " where t.ticketID = ?" +
+    " order by s.statusDate desc, s.statusIndex desc" +
+    " limit 1")
     .get(ticketID);
 
   if (!ticket) {
@@ -340,7 +349,11 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
 
   // Owner
 
-  ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, ticket.issueDate);
+  if (ticket.ownerLookup_statusKey === "ownerLookupMatch") {
+    ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db,
+      ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber,
+      parseInt(ticket.ownerLookup_statusField));
+  }
 
   // Location
 

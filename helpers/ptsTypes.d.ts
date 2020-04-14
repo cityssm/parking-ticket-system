@@ -144,6 +144,8 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     latestStatus_statusKey: string;
     latestStatus_statusDate: number;
     latestStatus_statusDateString: string;
+    ownerLookup_statusKey: "ownerLookupPending" | "ownerLookupError" | "ownerLookupMatch";
+    ownerLookup_statusField: string;
     licencePlateOwner: LicencePlateOwner;
     location: ParkingLocation;
     statusLog: ParkingTicketStatusLog[];
