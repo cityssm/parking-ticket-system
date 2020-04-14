@@ -199,7 +199,8 @@ export interface ReconciliationRecord extends pts.LicencePlate {
     owner_ownerProvince: string;
     owner_ownerPostalCode: string;
     dateDifference: number;
-    isProbableMatch: boolean;
+    isVehicleMakeMatch: boolean;
+    isLicencePlateExpiryDateMatch: boolean;
 }
 export declare function getOwnershipReconciliationRecords(): ReconciliationRecord[];
 interface LookupErrorLogEntry extends pts.LicencePlate {

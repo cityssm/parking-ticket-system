@@ -234,7 +234,7 @@ router.post("/doQuickReconcileMatches", function(req, res) {
 
     const record = records[recordIndex];
 
-    if (!record.isProbableMatch) {
+    if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
       continue;
     }
 

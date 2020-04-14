@@ -142,7 +142,7 @@ router.post("/doQuickReconcileMatches", function (req, res) {
     let statusRecords = [];
     for (let recordIndex = 0; recordIndex < records.length; recordIndex += 1) {
         const record = records[recordIndex];
-        if (!record.isProbableMatch) {
+        if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
             continue;
         }
         const ownerAddress = ownerFns.getFormattedOwnerAddress(record);

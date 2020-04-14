@@ -119,10 +119,18 @@
         <table class="table is-fullwidth is-striped is-hoverable">
           <thead>
             <tr>
-              <th class="has-border-right-width-2">Licence Plate</th>
+              <th class="has-border-right-width-2" rowspan="2">Licence Plate</th>
               <th class="has-border-right-width-2" colspan="3">Unresolved Parking Ticket</th>
-              <th class="has-border-right-width-2" colspan="2">Ownership</th>
-              <th class="has-width-150">Options</th>
+              <th class="has-border-right-width-2" colspan="3">Ownership</th>
+              <th class="has-width-150" rowspan="2">Options</th>
+            </tr>
+            <tr>
+              <th>Ticket Number</th>
+              <th>Vehicle Make</th>
+              <th class="has-border-right-width-2">Plate Expiry Date</th>
+              <th>Vehicle Make</th>
+              <th>Plate Expiry Date</th>
+              <th class="has-border-right-width-2">Record Date Difference</th>
             </tr>
           </thead>
           <tbody>
@@ -136,34 +144,52 @@
                   data-licence-plate-number="<%= record.licencePlateNumber %>"
                   data-ticket-id="<%= record.ticket_ticketID %>"
                   data-ticket-vehicle="<%= record.ticket_vehicleMakeModel %>"
+                  data-ticket-expiry-date="<%= record.ticket_licencePlateExpiryDateString %>"
                   data-owner-vehicle="<%= record.owner_vehicleMake %>"
+                  data-owner-expiry-date="<%= record.owner_licencePlateExpiryDateString %>"
                   data-record-date="<%= record.owner_recordDate %>"
-                  <%= (record.isProbableMatch ? "data-is-probable-match": "") %>>
+                  <%= (record.isVehicleMakeMatch ? " data-is-vehicle-make-match": "") %>
+                  <%= (record.isLicencePlateExpiryDateMatch ? " data-is-licence-plate-expiry-date-match": "") %>>
 
                   <td class="has-text-weight-bold has-border-right-width-2 licence-plate-number"><%= record.licencePlateNumber %></td>
 
                   <td>
                     <a href="/tickets/<%= record.ticket_ticketID %>" target="_blank">
                       <%= record.ticket_ticketNumber %>
-                    </a>
+                    </a><br />
+                    <small><%= record.ticket_issueDateString %></small>
                   </td>
-                  <td><%= record.ticket_issueDateString %></td>
-                  <td class="has-border-right-width-2"><%= record.ticket_vehicleMakeModel %></td>
+                  <td><%= record.ticket_vehicleMakeModel %></td>
+                  <td class="has-border-right-width-2">
+                    <% if (record.ticket_licencePlateExpiryDateString === "") { %>
+                      <span class="has-text-grey">(Not Set)</span>
+                    <% } else { %>
+                      <%= record.ticket_licencePlateExpiryDateString %>
+                    <% } %>
+                  </td>
 
                   <td>
                     <%= record.owner_vehicleMake %>
-                    <%- (record.isProbableMatch ? "<span data-tooltip=\"Perfect Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
+                    <%- (record.isVehicleMakeMatch ? "<span data-tooltip=\"Vehicle Make Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
                     <% if (record.owner_vehicleNCIC !== record.owner_vehicleMake) { %>
                       <br />
                       <small><%= record.owner_vehicleNCIC %></small>
                     <% } %>
                   </td>
                   <td class="has-border-right-width-2">
-                    <%= record.owner_recordDateString %><br />
-                    <% if (record.dateDifference === 0) { %>
-                      <span class="tag is-info">Same Day</span>
+                    <% if (record.owner_licencePlateExpiryDateString === "") { %>
+                      <span class="has-text-grey">(Not Set)</span>
                     <% } else { %>
-                      <span class="tag"><%= record.dateDifference %> <%= (record.dateDifference === 1 ? "Day" : "Days") %></span>
+                      <%= record.owner_licencePlateExpiryDateString %>
+                      <%- (record.isLicencePlateExpiryDateMatch ? "<span data-tooltip=\"Expiry Date Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
+                    <% } %>
+                  </td>
+                  <td class="has-border-right-width-2">
+                    <% if (record.dateDifference === 0) { %>
+                      Same Day
+                    <% } else { %>
+                      <%= record.dateDifference %>
+                      <%= (record.dateDifference === 1 ? "Day" : "Days") %>
                     <% } %>
                   </td>
 

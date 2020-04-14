@@ -456,8 +456,8 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear) || 0;
-    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth) || 0;
+    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string) || 0;
+    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;
@@ -557,8 +557,8 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear) || 0;
-    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth) || 0;
+    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string) || 0;
+    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;
@@ -2171,7 +2171,9 @@ export interface ReconciliationRecord extends pts.LicencePlate {
   owner_ownerPostalCode: string,
 
   dateDifference: number,
-  isProbableMatch: boolean
+
+  isVehicleMakeMatch: boolean,
+  isLicencePlateExpiryDateMatch: boolean
 };
 
 export function getOwnershipReconciliationRecords() {
@@ -2188,10 +2190,11 @@ export function getOwnershipReconciliationRecords() {
 
     record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
 
-    record.isProbableMatch = (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate) && (
-      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
-      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase())
-    );
+    record.isVehicleMakeMatch = (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
+      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
+
+    record.isLicencePlateExpiryDateMatch = (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate);
+
   };
 
   const db = sqlite(dbPath, {

@@ -170,26 +170,35 @@
 
     };
 
-    if (trEle.hasAttribute("data-is-probable-match")) {
+    if (trEle.hasAttribute("data-is-vehicle-make-match") && trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
 
       matchFn();
 
     } else {
 
       const ticketVehicle = trEle.getAttribute("data-ticket-vehicle");
+      const ticketExpiryDate = trEle.getAttribute("data-ticket-expiry-date");
       const ownerVehicle = trEle.getAttribute("data-owner-vehicle");
+      const ownerExpiryDate = trEle.getAttribute("data-owner-expiry-date");
 
       pts.confirmModal(
         "Confirm Match",
-        "<p>Are you sure the details on the parking ticket match the details on the ownership record?</p>" +
+        "<p class=\"has-text-centered\">Are you sure the details on the parking ticket match the details on the ownership record?</p>" +
         "<div class=\"columns has-margin-top-5\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ticketVehicle) + "</span>" +
+          "<span class=\"is-size-4\">" + pts.escapeHTML(ticketVehicle) + "</span><br />" +
+          "<span class=\"is-size-5\">" +
+          (ticketExpiryDate === "" ?
+            "(Not Set)" :
+            pts.escapeHTML(ticketExpiryDate)
+          ) +
+          "</span>" +
           "</div>") +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Ownership Record</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ownerVehicle) + "</span>" +
+          "<span class=\"is-size-4\">" + pts.escapeHTML(ownerVehicle) + "</span><br />" +
+          "<span class=\"is-size-5\">" + pts.escapeHTML(ownerExpiryDate) + "</span>" +
           "</div>") +
         "</div>",
         "Yes, Confirm Match",
@@ -263,22 +272,31 @@
 
     };
 
-    if (trEle.hasAttribute("data-is-probable-match")) {
+    if (trEle.hasAttribute("data-is-vehicle-make-match") || trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
 
       const ticketVehicle = trEle.getAttribute("data-ticket-vehicle");
+      const ticketExpiryDate = trEle.getAttribute("data-ticket-expiry-date");
       const ownerVehicle = trEle.getAttribute("data-owner-vehicle");
+      const ownerExpiryDate = trEle.getAttribute("data-owner-expiry-date");
 
       pts.confirmModal(
         "Confirm Error",
-        "<p>Are you sure you want to mark an error between the details on the parking ticket and the details on the ownership record?</p>" +
+        "<p class=\"has-text-centered\">Are you sure you want to mark an error between the details on the parking ticket and the details on the ownership record?</p>" +
         "<div class=\"columns has-margin-top-5\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ticketVehicle) + "</span>" +
+          "<span class=\"is-size-4\">" + pts.escapeHTML(ticketVehicle) + "</span><br />" +
+          "<span class=\"is-size-5\">" +
+          (ticketExpiryDate === "" ?
+            "(Not Set)" :
+            pts.escapeHTML(ticketExpiryDate)
+          ) +
+          "</span>" +
           "</div>") +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Ownership Record</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ownerVehicle) + "</span>" +
+          "<span class=\"is-size-4\">" + pts.escapeHTML(ownerVehicle) + "</span><br />" +
+          "<span class=\"is-size-5\">" + pts.escapeHTML(ownerExpiryDate) + "</span>" +
           "</div>") +
         "</div>",
         "Yes, Confirm Error",
@@ -350,7 +368,8 @@
                 optionsTdEle.innerHTML =
                   "<div class=\"tags has-addons\">" +
                   ("<span class=\"tag is-light is-success\">" +
-                    "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span><span>Match</span>" +
+                    "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+                    "<span>Match</span>" +
                     "</span>") +
                   "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + statusRecord.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
                   "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
@@ -387,7 +406,8 @@
 
       pts.confirmModal(
         "Quick Reconcile Matches",
-        "Are you sure you want to mark all parking tickets with matching vehicle makes as matched?",
+        "Are you sure you want to mark all parking tickets" +
+        " with matching vehicle makes and plate expiry dates as matched?",
         "Yes, Mark All Matches as Matched",
         "info",
         loadingFn
