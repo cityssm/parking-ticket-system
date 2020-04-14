@@ -85,18 +85,28 @@
               const licencePlateLocationObj = configFns.getLicencePlateLocationProperties(ticket.licencePlateCountry, ticket.licencePlateProvince);
             %>
             <div class="columns">
-              <div class="column is-narrow">
+              <div class="column is-narrow has-text-centered">
                 <div class="licence-plate" style="--color:<%= licencePlateLocationObj.licencePlateProvince.color %>;--backgroundColor:<%= licencePlateLocationObj.licencePlateProvince.backgroundColor %>">
                   <div class="licence-plate-province"><%= licencePlateLocationObj.licencePlateProvinceAlias %></div>
                   <div class="licence-plate-number"><%= ticket.licencePlateNumber %></div>
-                </div>
+                </div><br />
+                <% if (ticket.licencePlateExpiryDateString === "") { %>
+                  <span class="is-size-7 has-text-grey">(No Expiry Date)</span>
+                <% } else { %>
+                  <span class="is-size-7">
+                    Expires<br />
+                    <%=
+                      (configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay") ?
+                        ticket.licencePlateExpiryDateString :
+                        ticket.licencePlateExpiryDateString.substring(0, ticket.licencePlateExpiryDateString.lastIndexOf("-")))
+                    %>
+                  </span>
+                <% } %>
               </div>
               <div class="column">
                 <p>
                   <strong>Vehicle Make/Model from Ticket</strong><br />
                   <%= ticket.vehicleMakeModel %>
-                  <br />
-                  <%= ticket.licencePlateExpiryDateString %>
                 </p>
               </div>
               <div class="column">
@@ -111,14 +121,15 @@
                       <span class="tag is-info">
                         <%= ticket.licencePlateOwner.recordDateString %>
                       </span>
-                      <% } else { %>
-                        <span class="tag is-warning">
-                          No Record Date
-                        </span>
-                      <% } %>
+                    <% } else { %>
+                      <span class="tag is-warning">
+                        No Record Date
+                      </span>
+                    <% } %>
                     <br />
                     <span data-tooltip="Primary Owner" aria-label="Primary Owner">
-                      <i class="fas fa-fw fa-user" aria-hidden="true"></i> <%= ticket.licencePlateOwner.ownerName1 %>
+                      <i class="fas fa-fw fa-user" aria-hidden="true"></i>
+                      <%= ticket.licencePlateOwner.ownerName1.replace(/,/g, ", ") %>
                     </span>
                     <% if (ticket.licencePlateOwner.ownerName2) { %>
                       <br />
