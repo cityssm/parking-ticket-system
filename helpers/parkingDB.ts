@@ -1715,7 +1715,7 @@ type addLicencePlateToLookupBatch_return = {
   message?: string,
   batch?: pts.LicencePlateLookupBatch
 }
-export function addLicencePlateToLookupBatch(reqBody, reqSession: Express.Session): addLicencePlateToLookupBatch_return {
+export function addLicencePlateToLookupBatch(reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session): addLicencePlateToLookupBatch_return {
 
   const db = sqlite(dbPath);
 
@@ -1838,7 +1838,7 @@ export function addAllLicencePlatesToLookupBatch(reqBody: addAllLicencePlatesToL
 }
 
 
-export function removeLicencePlateFromLookupBatch(reqBody, reqSession: Express.Session) {
+export function removeLicencePlateFromLookupBatch(reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session) {
 
   const db = sqlite(dbPath);
 

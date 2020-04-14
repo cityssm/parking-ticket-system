@@ -119,7 +119,7 @@ declare type addLicencePlateToLookupBatch_return = {
     message?: string;
     batch?: pts.LicencePlateLookupBatch;
 };
-export declare function addLicencePlateToLookupBatch(reqBody: any, reqSession: Express.Session): addLicencePlateToLookupBatch_return;
+export declare function addLicencePlateToLookupBatch(reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session): addLicencePlateToLookupBatch_return;
 declare type addAllLicencePlatesToLookupBatch_body = {
     batchID: number;
     licencePlateCountry: string;
@@ -135,7 +135,7 @@ export declare function addAllLicencePlatesToLookupBatch(reqBody: addAllLicenceP
     batch: pts.LicencePlateLookupBatch;
     message?: undefined;
 };
-export declare function removeLicencePlateFromLookupBatch(reqBody: any, reqSession: Express.Session): {
+export declare function removeLicencePlateFromLookupBatch(reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session): {
     success: boolean;
     message: string;
 } | {
