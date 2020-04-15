@@ -46,6 +46,12 @@ router.all("/:reportName", function (req, res) {
         case "remarks-all":
             sql = "select * from ParkingTicketRemarks";
             break;
+        case "remarks-byTicketID":
+            sql = "select * from ParkingTicketRemarks" +
+                " where recordDelete_timeMillis is null" +
+                " and ticketID = ?";
+            params = [req.query.ticketID];
+            break;
         case "owners-all":
             sql = "select * from LicencePlateOwners";
             break;

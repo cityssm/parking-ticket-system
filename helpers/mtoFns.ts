@@ -164,7 +164,7 @@ function parsePKRD(rowData: string) {
 
     record.ownerGenderKey = rowData.substring(53, 54);
 
-    record.ownerName1 = rowData.substring(54, 104).trim();
+    record.ownerName1 = rowData.substring(54, 104).replace(/,/g, ", ").trim();
 
     if (record.ownerName1.indexOf("/") !== -1) {
 

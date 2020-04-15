@@ -224,7 +224,7 @@
 
       }
 
-      resetOffsetAndGetTickets();
+      getTickets();
 
     });
 
