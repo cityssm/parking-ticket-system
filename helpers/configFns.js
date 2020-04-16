@@ -20,6 +20,7 @@ configFallbackValues.set("application.task_nhtsa.runTask", false);
 configFallbackValues.set("session.cookieName", "parking-ticket-system-user-sid");
 configFallbackValues.set("session.secret", "cityssm/parking-ticket-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
+configFallbackValues.set("session.doKeepAlive", false);
 configFallbackValues.set("admin.defaultPassword", "");
 configFallbackValues.set("user.createUpdateWindowMillis", 60 * 60 * 1000);
 configFallbackValues.set("user.defaultProperties", Object.freeze({
@@ -44,7 +45,7 @@ configFallbackValues.set("licencePlateCountryAliases", Object.freeze({
 }));
 configFallbackValues.set("licencePlateProvinceAliases", {});
 configFallbackValues.set("licencePlateProvinces", {});
-configFallbackValues.set("config.mtoExportImport.authorizedUser", "");
+configFallbackValues.set("mtoExportImport.authorizedUser", "");
 function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");
     let currentObj = exports.config;
@@ -57,6 +58,9 @@ function getProperty(propertyName) {
     return currentObj;
 }
 exports.getProperty = getProperty;
+exports.keepAliveMillis = getProperty("session.doKeepAlive") ?
+    Math.max(getProperty("session.maxAgeMillis") / 2, getProperty("session.maxAgeMillis") - (10 * 60 * 1000)) :
+    0;
 let parkingTicketStatusMap = new Map();
 let parkingTicketStatusMapIsLoaded = false;
 function getParkingTicketStatus(statusKey) {

@@ -40,6 +40,7 @@ configFallbackValues.set("application.task_nhtsa.runTask", false);
 configFallbackValues.set("session.cookieName", "parking-ticket-system-user-sid");
 configFallbackValues.set("session.secret", "cityssm/parking-ticket-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
+configFallbackValues.set("session.doKeepAlive", false);
 
 configFallbackValues.set("admin.defaultPassword", "");
 
@@ -75,7 +76,7 @@ configFallbackValues.set("licencePlateProvinceAliases", {});
 
 configFallbackValues.set("licencePlateProvinces", {});
 
-configFallbackValues.set("config.mtoExportImport.authorizedUser", "");
+configFallbackValues.set("mtoExportImport.authorizedUser", "");
 
 
 export function getProperty(propertyName: string): any {
@@ -97,6 +98,16 @@ export function getProperty(propertyName: string): any {
   return currentObj;
 
 }
+
+
+export const keepAliveMillis =
+  getProperty("session.doKeepAlive") ?
+    Math.max(
+      getProperty("session.maxAgeMillis") / 2,
+      getProperty("session.maxAgeMillis") - (10 * 60 * 1000)
+    ) :
+    0;
+
 
 let parkingTicketStatusMap = new Map<string, pts.Config_ParkingTicketStatus>();
 let parkingTicketStatusMapIsLoaded = false;

@@ -42,9 +42,10 @@ export type Config_HttpsConfig = {
 };
 
 type Config_SessionConfig = {
-  cookieName: string,
-  secret: string,
-  maxAgeMillis: number
+  cookieName?: string,
+  secret?: string,
+  maxAgeMillis?: number,
+  doKeepAlive?: boolean
 };
 
 type Config_AdminDefaults = {

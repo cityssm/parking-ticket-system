@@ -8,6 +8,7 @@ config.application = {
         executeHour: 1
     }
 };
+config.session = {};
 config.defaults = {
     country: "CA",
     province: "ON"

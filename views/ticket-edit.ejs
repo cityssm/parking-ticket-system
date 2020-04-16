@@ -58,20 +58,26 @@
                 <div class="column">
                   <div class="field">
                     <label class="label" for="ticket--issueDateString">Issue Date</label>
-                    <input class="input" id="ticket--issueDateString" name="issueDateString" type="date" value="<%= ticket.issueDateString %>" max="<%= issueDateMaxString %>" required />
+                    <div class="control">
+                      <input class="input" id="ticket--issueDateString" name="issueDateString" type="date" value="<%= ticket.issueDateString %>" max="<%= issueDateMaxString %>" required />
+                    </div>
                   </div>
                 </div>
                 <div class="column">
                   <div class="field">
                     <label class="label" for="ticket--issueTimeString">Issue Time</label>
-                    <input class="input" id="ticket--issueTimeString" name="issueTimeString" type="time" value="<%= ticket.issueTimeString %>" required />
+                    <div class="control">
+                      <input class="input" id="ticket--issueTimeString" name="issueTimeString" type="time" value="<%= ticket.issueTimeString %>" required />
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="field">
                 <label class="label" for="ticket--issuingOfficer">Issuing Officer</label>
-                <input class="input" id="ticket--issuingOfficer" name="issuingOfficer" type="text" value="<%= ticket.issuingOfficer %>" maxlength="30" required />
+                <div class="control">
+                  <input class="input" id="ticket--issuingOfficer" name="issuingOfficer" type="text" value="<%= ticket.issuingOfficer %>" maxlength="30" required />
+                </div>
               </div>
 
             </div>

@@ -41,9 +41,10 @@ export declare type Config_HttpsConfig = {
     passphrase: string;
 };
 declare type Config_SessionConfig = {
-    cookieName: string;
-    secret: string;
-    maxAgeMillis: number;
+    cookieName?: string;
+    secret?: string;
+    maxAgeMillis?: number;
+    doKeepAlive?: boolean;
 };
 declare type Config_AdminDefaults = {
     defaultPassword?: string;

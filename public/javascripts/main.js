@@ -562,7 +562,7 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
         "</header>") +
 
       ("<section class=\"message-body\">" +
-        (bodyHTML === "" ? "" : "<div class=\"has-margin-bottom-10\">" + bodyHTML + "</div>") +
+        (bodyHTML === "" ? "" : "<div class=\"has-margin-bottom-20\">" + bodyHTML + "</div>") +
 
         ("<div class=\"buttons justify-flex-end\">" +
           (modalOptions.hideCancelButton ?
@@ -672,6 +672,33 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
     }
 
   };
+
+}());
+
+
+// KEEP ALIVE
+
+(function() {
+
+  const keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
+
+  if (keepAliveMillis !== "0") {
+
+    const keepAliveFn = function() {
+
+      pts.postJSON("/keepAlive", {
+        t: Date.now()
+      }, function() {
+
+        // No action
+
+      });
+
+    };
+
+    window.setInterval(keepAliveFn, parseInt(keepAliveMillis));
+
+  }
 
 }());
 

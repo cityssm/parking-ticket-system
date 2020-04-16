@@ -12,6 +12,8 @@ config.application = {
   }
 };
 
+config.session = {};
+
 config.defaults = {
   country: "CA",
   province: "ON"

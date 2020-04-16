@@ -92,6 +92,9 @@ app.use("/plates", sessionChecker, routerPlates);
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/reports", sessionChecker, routerReports);
 app.use("/admin", sessionChecker, adminChecker, routerAdmin);
+app.all("/keepAlive", function (_req, res) {
+    res.json(true);
+});
 app.use("/login", routerLogin);
 app.get("/logout", function (req, res) {
     if (req.session.user && req.cookies[sessionCookieName]) {

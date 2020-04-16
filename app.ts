@@ -156,7 +156,9 @@ const adminChecker = function(req: express.Request, res: express.Response, next:
 app.use(function(req, res, next) {
 
   res.locals.buildNumber = buildNumber;
+
   res.locals.user = req.session.user;
+
   res.locals.configFns = configFns;
   res.locals.dateTimeFns = dateTimeFns;
   res.locals.stringFns = stringFns;
@@ -180,6 +182,10 @@ app.use("/offences", sessionChecker, routerOffences);
 app.use("/reports", sessionChecker, routerReports);
 
 app.use("/admin", sessionChecker, adminChecker, routerAdmin);
+
+app.all("/keepAlive", function(_req, res) {
+  res.json(true);
+});
 
 app.use("/login", routerLogin);
 
