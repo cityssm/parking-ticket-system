@@ -5,7 +5,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "@cityssm/bulma-webapp-js": "^0.0.1",
+    "@cityssm/bulma-webapp-js": "^0.1.0",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "bcrypt": "^4.0.1",
     "better-sqlite3": "^6.0.1",
@@ -27,7 +27,7 @@
     "typeface-pt-mono": "0.0.72"
   },
   "devDependencies": {
-    "@cityssm/bulma-webapp-css": "0.0.1",
+    "@cityssm/bulma-webapp-css": "^0.0.2",
     "@types/bcrypt": "^3.0.0",
     "@types/better-sqlite3": "^5.4.0",
     "@types/compression": "^1.7.0",
