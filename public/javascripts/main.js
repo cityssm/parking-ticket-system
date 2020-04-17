@@ -3,109 +3,6 @@
 window.pts = {};
 
 
-/*
- * HELPERS
- */
-
-
-/**
- * Clears the content of an element.
- *
- * @param {HTMLElement} ele Element to clear
- */
-pts.clearElement = function(ele) {
-
-  while (ele.firstChild) {
-
-    ele.removeChild(ele.firstChild);
-
-  }
-
-};
-
-
-/**
- * Escapes a potentially unsafe string.
- *
- * @param  {string} str A string potentially containing characters unsafe for writing on a webpage.
- * @returns {string}    A string with unsafe characters escaped.
- */
-pts.escapeHTML = function(str) {
-
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-
-};
-
-
-pts.dateToString = function(dateObj) {
-
-  return dateObj.getFullYear() + "-" +
-    ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
-    ("0" + (dateObj.getDate())).slice(-2);
-
-};
-
-
-// FETCH HELPERS
-
-pts.responseToJSON = function(response) {
-
-  return response.json();
-
-};
-
-/**
- * @param {string} fetchUrl
- * @param {Element | Object} formEleOrObj
- * @param {function} responseFn
- */
-pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
-
-  const fetchOptions = {
-    method: "POST",
-    credentials: "include"
-  };
-
-
-  if (formEleOrObj) {
-
-    if (formEleOrObj.tagName && formEleOrObj.tagName === "FORM") {
-
-      if (formEleOrObj.querySelector("input[name][type='file']")) {
-
-        fetchOptions.body = new FormData(formEleOrObj);
-
-      } else {
-
-        fetchOptions.body = new URLSearchParams(new FormData(formEleOrObj));
-
-      }
-
-
-    } else if (formEleOrObj.constructor === Object) {
-
-      fetchOptions.headers = {
-        "Content-Type": "application/json"
-      };
-
-      fetchOptions.body = JSON.stringify(formEleOrObj);
-
-    }
-
-  }
-
-
-  window.fetch(fetchUrl, fetchOptions)
-    .then(pts.responseToJSON)
-    .then(responseFn);
-
-};
-
-
 // CONFIG DEFAULTS
 
 (function() {
@@ -152,7 +49,7 @@ pts.postJSON = function(fetchUrl, formEleOrObj, responseFn) {
 
     }
 
-    pts.postJSON(
+    cityssm.postJSON(
       "/dashboard/doGetDefaultConfigProperties", {},
       function(defaultConfigPropertiesResult) {
 
@@ -414,128 +311,6 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 }());
 
 
-// MODAL TOGGLES
-
-pts.showModal = function(modalEle) {
-
-  modalEle.classList.add("is-active");
-
-};
-
-pts.hideModal = function(internalEle_or_internalEvent) {
-
-  const internalEle = internalEle_or_internalEvent.currentTarget || internalEle_or_internalEvent;
-
-  const modalEle = (internalEle.classList.contains("modal") ? internalEle : internalEle.closest(".modal"));
-
-  modalEle.classList.remove("is-active");
-
-};
-
-pts.openHtmlModal = function(htmlFileName, callbackFns) {
-
-  // eslint-disable-next-line capitalized-comments
-  /*
-   * callbackFns
-   *
-   * - onshow(modalEle)
-   *     loaded, part of DOM, not yet visible
-   * - onshown(modalEle, closeModalFn)
-   *     use closeModalFn() to close the modal properly when not using the close buttons
-   * - onhide(modalEle)
-   *     return false to cancel hide
-   * - onhidden(modalEle)
-   *     hidden, but still part of the DOM
-   * - onremoved()
-   *     no longer part of the DOM
-   */
-
-  window.fetch("/html/" + htmlFileName + ".html")
-    .then(function(response) {
-
-      return response.text();
-
-    })
-    .then(function(modalHTML) {
-
-      // Append the modal to the end of the body
-
-      const modalContainerEle = document.createElement("div");
-      modalContainerEle.innerHTML = modalHTML;
-
-      const modalEle = modalContainerEle.getElementsByClassName("modal")[0];
-
-      document.body.insertAdjacentElement("beforeend", modalContainerEle);
-
-      // Call onshow()
-
-      if (callbackFns && callbackFns.onshow) {
-
-        callbackFns.onshow(modalEle);
-
-      }
-
-      // Show the modal
-
-      modalEle.classList.add("is-active");
-
-      const closeModalFn = function() {
-
-        const modalWasShown = modalEle.classList.contains("is-active");
-
-        if (callbackFns && callbackFns.onhide && modalWasShown) {
-
-          const doHide = callbackFns.onhide(modalEle);
-
-          if (doHide) {
-
-            return;
-
-          }
-
-        }
-
-        modalEle.classList.remove("is-active");
-
-        if (callbackFns && callbackFns.onhidden && modalWasShown) {
-
-          callbackFns.onhidden(modalEle);
-
-        }
-
-        modalContainerEle.remove();
-
-        if (callbackFns && callbackFns.onremoved) {
-
-          callbackFns.onremoved();
-
-        }
-
-      };
-
-      // Call onshown()
-
-      if (callbackFns && callbackFns.onshown) {
-
-        callbackFns.onshown(modalEle, closeModalFn);
-
-      }
-
-      // Set up close buttons
-
-      const closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
-
-      for (let btnIndex = 0; btnIndex < closeModalBtnEles.length; btnIndex += 1) {
-
-        closeModalBtnEles[btnIndex].addEventListener("click", closeModalFn);
-
-      }
-
-    });
-
-};
-
-
 // ALERT / CONFIRM MODALS
 
 (function() {
@@ -686,7 +461,7 @@ pts.openHtmlModal = function(htmlFileName, callbackFns) {
 
     const keepAliveFn = function() {
 
-      pts.postJSON("/keepAlive", {
+      cityssm.postJSON("/keepAlive", {
         t: Date.now()
       }, function() {
 

@@ -15,7 +15,7 @@
 
       if (/^\d+[.]txt$/igm.test(fileName)) {
 
-        pts.clearElement(messageEle);
+        cityssm.clearElement(messageEle);
 
       } else {
 
@@ -52,7 +52,7 @@
     document.getElementById("step--upload").classList.add("is-hidden");
     document.getElementById("step--update").classList.remove("is-hidden");
 
-    pts.postJSON("/plates/mto_doImportUpload", formEle, function(responseJSON) {
+    cityssm.postJSON("/plates/mto_doImportUpload", formEle, function(responseJSON) {
 
       updateStepItemEle.classList.add("is-completed");
       updateStepItemEle.classList.remove("is-active");
@@ -83,7 +83,7 @@
 
         resultsMessageEle.innerHTML = "<div class=\"message-body\">" +
           "<p><strong>An error occurred while importing the file.</strong></p>" +
-          "<p>" + pts.escapeHTML(responseJSON.message) + "</p>" +
+          "<p>" + cityssm.escapeHTML(responseJSON.message) + "</p>" +
           "</div>";
 
       }

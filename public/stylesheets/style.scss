@@ -1,10 +1,6 @@
 $family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
-@import '../../node_modules/bulma/bulma';
-@import '../../node_modules/bulma-helpers/bulma-helpers';
-@import '../../node_modules/bulma-divider/src/sass/index';
-@import '../../node_modules/bulma-tooltip/src/sass/index';
-@import '../../node_modules/bulma-steps/src/sass/index';
+@import 'cityssm-bulma-webapp-libraries/cityssm';
 @import 'bulma-radio-checkbox';
 
 

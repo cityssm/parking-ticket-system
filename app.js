@@ -40,6 +40,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/fa", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
 app.use("/typeface-inter", express.static(path.join(__dirname, "node_modules", "typeface-inter", "Inter (web)")));
 app.use("/typeface-pt-mono", express.static(path.join(__dirname, "node_modules", "typeface-pt-mono", "files")));
+app.use("/cityssm-bulma-webapp-libraries", express.static(path.join(__dirname, "node_modules", "cityssm-bulma-webapp-libraries")));
 const sessionCookieName = configFns.getProperty("session.cookieName");
 app.use(session({
     store: new SQLiteStore({

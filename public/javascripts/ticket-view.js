@@ -19,7 +19,7 @@
         "warning",
         function() {
 
-          pts.postJSON("/tickets/doUnresolveTicket", {
+          cityssm.postJSON("/tickets/doUnresolveTicket", {
             ticketID: ticketID
           }, function(responseJSON) {
 

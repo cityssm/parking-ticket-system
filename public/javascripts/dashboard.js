@@ -12,14 +12,14 @@
 
       const formEle = formEvent.currentTarget;
 
-      pts.postJSON(
+      cityssm.postJSON(
         "/dashboard/doChangePassword",
         formEle,
         function(responseJSON) {
 
           if (responseJSON.success) {
 
-            pts.hideModal(changePasswordModalEle);
+            cityssm.hideModal(changePasswordModalEle);
             pts.alertModal("Password Updated Successfully", "", "OK", "success");
 
           }
@@ -33,7 +33,7 @@
     document.getElementsByClassName("is-change-password-button")[0].addEventListener("click", function() {
 
       changePasswordModalEle.getElementsByTagName("form")[0].reset();
-      pts.showModal(changePasswordModalEle);
+      cityssm.showModal(changePasswordModalEle);
       document.getElementById("changePassword--oldPassword").focus();
 
     });
@@ -61,7 +61,7 @@
 
     for (let buttonIndex = 0; buttonIndex < cancelButtonEles.length; buttonIndex += 1) {
 
-      cancelButtonEles[buttonIndex].addEventListener("click", pts.hideModal);
+      cancelButtonEles[buttonIndex].addEventListener("click", cityssm.hideModal);
 
     }
 

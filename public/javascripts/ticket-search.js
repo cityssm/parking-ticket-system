@@ -18,12 +18,14 @@
     const currentLimit = parseInt(limitEle.value);
     const currentOffset = parseInt(offsetEle.value);
 
+    cityssm.clearElement(searchResultsEle);
+
     searchResultsEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
       "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
       "<em>Loading tickets..." +
       "</p>";
 
-    pts.postJSON("/tickets/doGetTickets", formEle, function(ticketResults) {
+    cityssm.postJSON("/tickets/doGetTickets", formEle, function(ticketResults) {
 
       const ticketList = ticketResults.tickets;
 
@@ -42,7 +44,7 @@
 
       searchResultsEle.innerHTML = "<table class=\"table is-fullwidth is-striped is-hoverable\">" +
         "<thead><tr>" +
-        "<th>" + pts.escapeHTML(ticketNumberFieldLabel) + "</th>" +
+        "<th>" + cityssm.escapeHTML(ticketNumberFieldLabel) + "</th>" +
         "<th>Issue Date</th>" +
         "<th>Plate Number</th>" +
         "<th>Location</th>" +
@@ -99,21 +101,21 @@
               locationProperties.licencePlateProvinceAlias +
               "</div>") +
 
-            ("<div class=\"licence-plate-number\">" + pts.escapeHTML(ticketObj.licencePlateNumber) + "</div>") +
+            ("<div class=\"licence-plate-number\">" + cityssm.escapeHTML(ticketObj.licencePlateNumber) + "</div>") +
 
             "</div>" +
             "</td>") +
           ("<td>" +
             (ticketObj.locationDescription ?
-              pts.escapeHTML(ticketObj.locationDescription) + "<br />" :
+              cityssm.escapeHTML(ticketObj.locationDescription) + "<br />" :
               "") +
             (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName ?
-              "<small class=\"has-tooltip-right\" data-tooltip=\"" + pts.escapeHTML(locationClass) + "\">" +
+              "<small class=\"has-tooltip-right\" data-tooltip=\"" + cityssm.escapeHTML(locationClass) + "\">" +
               "<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i> " + ticketObj.locationName +
               "</small>" :
               "") +
             "</td>") +
-          "<td>" + pts.escapeHTML(ticketObj.parkingOffence) + "</td>" +
+          "<td>" + cityssm.escapeHTML(ticketObj.parkingOffence) + "</td>" +
           "<td>" +
 
           (ticketObj.resolvedDateString === "" ?

@@ -3,3 +3,4 @@ env:
   es6: true
 globals:
   pts: false
+  cityssm: false

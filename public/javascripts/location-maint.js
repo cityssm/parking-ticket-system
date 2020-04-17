@@ -26,7 +26,7 @@
 
     const deleteFn = function() {
 
-      pts.postJSON("/admin/doDeleteLocation", {
+      cityssm.postJSON("/admin/doDeleteLocation", {
         locationKey: location.locationKey
       }, function(responseJSON) {
 
@@ -60,7 +60,7 @@
 
       formEvent.preventDefault();
 
-      pts.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, function(responseJSON) {
 
         if (responseJSON.success) {
 
@@ -74,7 +74,7 @@
 
     };
 
-    pts.openHtmlModal("location-edit", {
+    cityssm.openHtmlModal("location-edit", {
       onshow: function() {
 
         document.getElementById("editLocation--locationKey").value = location.locationKey;
@@ -87,8 +87,8 @@
 
           locationClassKeyEditSelectEle.insertAdjacentHTML(
             "beforeend",
-            "<option value=\"" + pts.escapeHTML(location.locationClassKey) + "\">" +
-            pts.escapeHTML(location.locationClassKey) +
+            "<option value=\"" + cityssm.escapeHTML(location.locationClassKey) + "\">" +
+            cityssm.escapeHTML(location.locationClassKey) +
             "</option>"
           );
 
@@ -163,10 +163,10 @@
       trEle.innerHTML =
         "<td>" +
         "<a data-index=\"" + locationIndex + "\" href=\"#\">" +
-        pts.escapeHTML(location.locationName) +
+        cityssm.escapeHTML(location.locationName) +
         "</a>" +
         "</td>" +
-        "<td>" + pts.escapeHTML(locationClass) + "</td>";
+        "<td>" + cityssm.escapeHTML(locationClass) + "</td>";
 
       trEle.getElementsByTagName("a")[0].addEventListener("click", openEditLocationModal);
 
@@ -174,7 +174,7 @@
 
     }
 
-    pts.clearElement(locationResultsEle);
+    cityssm.clearElement(locationResultsEle);
 
     if (displayCount === 0) {
 
@@ -214,7 +214,7 @@
 
       locationClassKeyOptionsHTML +=
         "<option value=\"" + locationClass.locationClassKey + "\">" +
-        pts.escapeHTML(locationClass.locationClass) +
+        cityssm.escapeHTML(locationClass.locationClass) +
         "</option>";
 
       locationClassKeyMap.set(locationClass.locationClassKey, locationClass);
@@ -239,7 +239,7 @@
 
       formEvent.preventDefault();
 
-      pts.postJSON("/admin/doAddLocation", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, function(responseJSON) {
 
         if (responseJSON.success) {
 
@@ -262,7 +262,7 @@
 
     };
 
-    pts.openHtmlModal("location-add", {
+    cityssm.openHtmlModal("location-add", {
 
       onshown: function(modalEle, closeModalFn) {
 

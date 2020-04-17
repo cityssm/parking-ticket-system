@@ -16,7 +16,7 @@
     const batchID = buttonEle.getAttribute("data-batch-id");
     const logIndex = buttonEle.getAttribute("data-log-index");
 
-    pts.postJSON("/tickets/doAcknowledgeLookupError", {
+    cityssm.postJSON("/tickets/doAcknowledgeLookupError", {
       batchID: batchID,
       logIndex: logIndex
     }, function(responseJSON) {
@@ -25,7 +25,7 @@
 
         const tdEle = buttonEle.closest("td");
 
-        pts.clearElement(tdEle);
+        cityssm.clearElement(tdEle);
 
         tdEle.innerHTML = "<span class=\"tag is-light is-warning\">" +
           "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
@@ -66,7 +66,7 @@
 
     const clearFn = function() {
 
-      pts.postJSON(
+      cityssm.postJSON(
         "/tickets/doDeleteStatus", {
           ticketID: trEle.getAttribute("data-ticket-id"),
           statusIndex: anchorEle.getAttribute("data-status-index")
@@ -75,7 +75,7 @@
 
           if (responseJSON.success) {
 
-            pts.clearElement(optionsTdEle);
+            cityssm.clearElement(optionsTdEle);
 
             optionsTdEle.classList.remove("has-width-200");
 
@@ -128,7 +128,7 @@
       const ticketID = trEle.getAttribute("data-ticket-id");
       const recordDate = trEle.getAttribute("data-record-date");
 
-      pts.postJSON("/tickets/doReconcileAsMatch", {
+      cityssm.postJSON("/tickets/doReconcileAsMatch", {
         licencePlateCountry: licencePlateCountry,
         licencePlateProvince: licencePlateProvince,
         licencePlateNumber: licencePlateNumber,
@@ -138,7 +138,7 @@
 
         if (responseJSON.success) {
 
-          pts.clearElement(optionsTdEle);
+          cityssm.clearElement(optionsTdEle);
 
           optionsTdEle.innerHTML =
             "<div class=\"tags has-addons\">" +
@@ -187,18 +187,18 @@
         "<div class=\"columns has-margin-top-5\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ticketVehicle) + "</span><br />" +
+          "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +
           "<span class=\"is-size-5\">" +
           (ticketExpiryDate === "" ?
             "(Not Set)" :
-            pts.escapeHTML(ticketExpiryDate)
+            cityssm.escapeHTML(ticketExpiryDate)
           ) +
           "</span>" +
           "</div>") +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Ownership Record</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ownerVehicle) + "</span><br />" +
-          "<span class=\"is-size-5\">" + pts.escapeHTML(ownerExpiryDate) + "</span>" +
+          "<span class=\"is-size-4\">" + cityssm.escapeHTML(ownerVehicle) + "</span><br />" +
+          "<span class=\"is-size-5\">" + cityssm.escapeHTML(ownerExpiryDate) + "</span>" +
           "</div>") +
         "</div>",
         "Yes, Confirm Match",
@@ -230,7 +230,7 @@
       const ticketID = trEle.getAttribute("data-ticket-id");
       const recordDate = trEle.getAttribute("data-record-date");
 
-      pts.postJSON("/tickets/doReconcileAsError", {
+      cityssm.postJSON("/tickets/doReconcileAsError", {
         licencePlateCountry: licencePlateCountry,
         licencePlateProvince: licencePlateProvince,
         licencePlateNumber: licencePlateNumber,
@@ -240,7 +240,7 @@
 
         if (responseJSON.success) {
 
-          pts.clearElement(optionsTdEle);
+          cityssm.clearElement(optionsTdEle);
 
           optionsTdEle.innerHTML =
             "<div class=\"tags has-addons\">" +
@@ -285,18 +285,18 @@
         "<div class=\"columns has-margin-top-5\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ticketVehicle) + "</span><br />" +
+          "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +
           "<span class=\"is-size-5\">" +
           (ticketExpiryDate === "" ?
             "(Not Set)" :
-            pts.escapeHTML(ticketExpiryDate)
+            cityssm.escapeHTML(ticketExpiryDate)
           ) +
           "</span>" +
           "</div>") +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Ownership Record</strong><br />" +
-          "<span class=\"is-size-4\">" + pts.escapeHTML(ownerVehicle) + "</span><br />" +
-          "<span class=\"is-size-5\">" + pts.escapeHTML(ownerExpiryDate) + "</span>" +
+          "<span class=\"is-size-4\">" + cityssm.escapeHTML(ownerVehicle) + "</span><br />" +
+          "<span class=\"is-size-5\">" + cityssm.escapeHTML(ownerExpiryDate) + "</span>" +
           "</div>") +
         "</div>",
         "Yes, Confirm Error",
@@ -340,7 +340,7 @@
 
       const reconcileFn = function() {
 
-        pts.postJSON("/tickets/doQuickReconcileMatches", {}, function(responseJSON) {
+        cityssm.postJSON("/tickets/doQuickReconcileMatches", {}, function(responseJSON) {
 
           loadingCloseModalFn();
 
@@ -363,7 +363,7 @@
 
               if (optionsTdEle) {
 
-                pts.clearElement(optionsTdEle);
+                cityssm.clearElement(optionsTdEle);
 
                 optionsTdEle.innerHTML =
                   "<div class=\"tags has-addons\">" +
@@ -391,7 +391,7 @@
 
       const loadingFn = function() {
 
-        pts.openHtmlModal("loading", {
+        cityssm.openHtmlModal("loading", {
           onshown: function(modalEle, closeModalFn) {
 
             document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";

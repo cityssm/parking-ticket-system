@@ -20,7 +20,7 @@
       "<em>Loading licence plates..." +
       "</p>";
 
-    pts.postJSON("/plates/doGetLicencePlates", formEle, function(licencePlateResults) {
+    cityssm.postJSON("/plates/doGetLicencePlates", formEle, function(licencePlateResults) {
 
       const plateList = licencePlateResults.licencePlates;
 

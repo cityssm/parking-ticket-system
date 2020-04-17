@@ -47,7 +47,7 @@
         " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
         "</div>";
 
-      pts.postJSON(
+      cityssm.postJSON(
         (isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"),
         formEvent.currentTarget,
         function(responseJSON) {
@@ -71,7 +71,7 @@
 
           if (responseJSON.success && isCreate) {
 
-            pts.openHtmlModal("ticket-createSuccess", {
+            cityssm.openHtmlModal("ticket-createSuccess", {
               onshow: function() {
 
                 document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
@@ -111,7 +111,7 @@
         "danger",
         function() {
 
-          pts.postJSON(
+          cityssm.postJSON(
             "/tickets/doDeleteTicket", {
               ticketID: ticketID
             },
@@ -168,7 +168,7 @@
 
     const populateLocationsFn = function() {
 
-      pts.postJSON("/offences/doGetAllLocations", {}, function(locationListRes) {
+      cityssm.postJSON("/offences/doGetAllLocations", {}, function(locationListRes) {
 
         locationList = locationListRes;
 
@@ -188,10 +188,10 @@
           linkEle.addEventListener("click", setLocationFn);
           linkEle.innerHTML =
             "<div class=\"level\">" +
-            "<div class=\"level-left\">" + pts.escapeHTML(locationObj.locationName) + "</div>" +
+            "<div class=\"level-left\">" + cityssm.escapeHTML(locationObj.locationName) + "</div>" +
             (locationClassObj ?
               "<div class=\"level-right\">" +
-              "<span class=\"tag is-primary\">" + pts.escapeHTML(locationClassObj.locationClass) + "</span>" +
+              "<span class=\"tag is-primary\">" + cityssm.escapeHTML(locationClassObj.locationClass) + "</span>" +
               "</div>" :
               "") +
             "</div>";
@@ -201,7 +201,7 @@
         }
 
         const containerEle = document.getElementById("container--parkingLocations");
-        pts.clearElement(containerEle);
+        cityssm.clearElement(containerEle);
         containerEle.insertAdjacentElement("beforeend", listEle);
 
       });
@@ -212,7 +212,7 @@
 
       clickEvent.preventDefault();
 
-      pts.openHtmlModal("location-select", {
+      cityssm.openHtmlModal("location-select", {
         onshown: function(modalEle, closeModalFn) {
 
           locationLookupCloseModalFn = closeModalFn;
@@ -271,7 +271,7 @@
       const locationKey = document.getElementById("ticket--locationKey").value;
       // const locationName = document.getElementById("ticket--locationName").value;
 
-      pts.postJSON("/offences/doGetOffencesByLocation", {
+      cityssm.postJSON("/offences/doGetOffencesByLocation", {
         locationKey: locationKey
       }, function(offenceListRes) {
 
@@ -292,8 +292,8 @@
           linkEle.innerHTML =
             "<div class=\"columns\">" +
             ("<div class=\"column\">" +
-              pts.escapeHTML(offenceObj.bylawNumber) + "<br />" +
-              "<small>" + pts.escapeHTML(offenceObj.bylawDescription) + "</small>" +
+              cityssm.escapeHTML(offenceObj.bylawNumber) + "<br />" +
+              "<small>" + cityssm.escapeHTML(offenceObj.bylawDescription) + "</small>" +
               "</div>") +
             ("<div class=\"column is-narrow\">" +
               "$ " + offenceObj.offenceAmount.toFixed(2) +
@@ -305,7 +305,7 @@
         }
 
         const containerEle = document.getElementById("container--bylawNumbers");
-        pts.clearElement(containerEle);
+        cityssm.clearElement(containerEle);
         containerEle.appendChild(listEle);
 
       });
@@ -316,7 +316,7 @@
 
       clickEvent.preventDefault();
 
-      pts.openHtmlModal("ticket-setBylawOffence", {
+      cityssm.openHtmlModal("ticket-setBylawOffence", {
         onshown: function(modalEle, closeModalFn) {
 
           bylawLookupCloseModalFn = closeModalFn;
@@ -348,7 +348,7 @@
     const populateLicencePlateProvinceDatalistFn = function() {
 
       const datalistEle = document.getElementById("datalist--licencePlateProvince");
-      pts.clearElement(datalistEle);
+      cityssm.clearElement(datalistEle);
 
       const countryProperties =
         pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
@@ -412,7 +412,7 @@
         "warning",
         function() {
 
-          pts.postJSON("/tickets/doDeleteRemark", {
+          cityssm.postJSON("/tickets/doDeleteRemark", {
             ticketID: ticketID,
             remarkIndex: remarkIndex
           }, function(resultJSON) {
@@ -444,7 +444,7 @@
 
         formEvent.preventDefault();
 
-        pts.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget, function(responseJSON) {
+        cityssm.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget, function(responseJSON) {
 
           if (responseJSON.success) {
 
@@ -457,7 +457,7 @@
 
       };
 
-      pts.openHtmlModal("ticket-editRemark", {
+      cityssm.openHtmlModal("ticket-editRemark", {
 
         onshow: function(modalEle) {
 
@@ -509,7 +509,7 @@
           ("<div class=\"column\">" +
 
             "<p class=\"has-newline-chars\">" +
-            pts.escapeHTML(remarkObj.remark) +
+            cityssm.escapeHTML(remarkObj.remark) +
             "</p>" +
             "<p class=\"is-size-7\">" +
             (remarkObj.recordCreate_timeMillis === remarkObj.recordUpdate_timeMillis ?
@@ -568,7 +568,7 @@
         "</div>"
       );
 
-      pts.postJSON("/tickets/doGetRemarks", {
+      cityssm.postJSON("/tickets/doGetRemarks", {
         ticketID: ticketID
       }, function(resultList) {
 
@@ -589,7 +589,7 @@
 
         formEvent.preventDefault();
 
-        pts.postJSON("/tickets/doAddRemark", formEvent.currentTarget, function(responseJSON) {
+        cityssm.postJSON("/tickets/doAddRemark", formEvent.currentTarget, function(responseJSON) {
 
           if (responseJSON.success) {
 
@@ -602,7 +602,7 @@
 
       };
 
-      pts.openHtmlModal("ticket-addRemark", {
+      cityssm.openHtmlModal("ticket-addRemark", {
 
         onshow: function(modalEle) {
 
@@ -648,7 +648,7 @@
         "info",
         function() {
 
-          pts.postJSON(
+          cityssm.postJSON(
             "/tickets/doResolveTicket", {
               ticketID: ticketID
             },
@@ -679,7 +679,7 @@
         "warning",
         function() {
 
-          pts.postJSON("/tickets/doDeleteStatus", {
+          cityssm.postJSON("/tickets/doDeleteStatus", {
             ticketID: ticketID,
             statusIndex: statusIndex
           }, function(resultJSON) {
@@ -711,7 +711,7 @@
 
         formEvent.preventDefault();
 
-        pts.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget, function(responseJSON) {
+        cityssm.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget, function(responseJSON) {
 
           if (responseJSON.success) {
 
@@ -745,7 +745,7 @@
 
       };
 
-      pts.openHtmlModal("ticket-editStatus", {
+      cityssm.openHtmlModal("ticket-editStatus", {
 
         onshow: function(modalEle) {
 
@@ -757,7 +757,7 @@
 
           const statusDateEle = document.getElementById("editStatus--statusDateString");
           statusDateEle.value = statusObj.statusDateString;
-          statusDateEle.setAttribute("max", pts.dateToString(new Date()));
+          statusDateEle.setAttribute("max", cityssm.dateToString(new Date()));
 
           document.getElementById("editStatus--statusTimeString").value = statusObj.statusTimeString;
 
@@ -954,7 +954,7 @@
         "</div>"
       );
 
-      pts.postJSON("/tickets/doGetStatuses", {
+      cityssm.postJSON("/tickets/doGetStatuses", {
         ticketID: ticketID
       }, function(resultList) {
 
@@ -977,7 +977,7 @@
 
         const resolveTicket = document.getElementById("addStatus--resolveTicket").checked;
 
-        pts.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function(responseJSON) {
+        cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function(responseJSON) {
 
           if (responseJSON.success) {
 
@@ -1033,7 +1033,7 @@
 
       };
 
-      pts.openHtmlModal("ticket-addStatus", {
+      cityssm.openHtmlModal("ticket-addStatus", {
 
         onshow: function(modalEle) {
 

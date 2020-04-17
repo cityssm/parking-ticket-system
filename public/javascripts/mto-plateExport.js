@@ -37,7 +37,7 @@
 
     const plateContainerEle = buttonEle.closest(".is-plate-container");
 
-    pts.postJSON(
+    cityssm.postJSON(
       "/plates/doAddLicencePlateToLookupBatch", {
         batchID: batchID,
         licencePlateCountry: "CA",
@@ -81,7 +81,7 @@
 
     const entryContainerEle = buttonEle.closest(".is-entry-container");
 
-    pts.postJSON(
+    cityssm.postJSON(
       "/plates/doRemoveLicencePlateFromLookupBatch", {
         batchID: batchID,
         licencePlateCountry: "CA",
@@ -114,7 +114,7 @@
 
     const clearFn = function() {
 
-      pts.postJSON("/plates/doClearLookupBatch", {
+      cityssm.postJSON("/plates/doClearLookupBatch", {
         batchID: batchID
       }, function(responseJSON) {
 
@@ -172,14 +172,14 @@
 
     return soFar + "<a class=\"tag has-tooltip-bottom\" data-tooltip=\"View Ticket (Opens in New Window)\"" +
       " href=\"/tickets/byTicketNumber/" + encodeURIComponent(ticketNumber) + "\" target=\"_blank\">" +
-      pts.escapeHTML(ticketNumber) +
+      cityssm.escapeHTML(ticketNumber) +
       "</a> ";
 
   }
 
   function fn_populateAvailablePlatesView() {
 
-    pts.clearElement(availablePlatesContainerEle);
+    cityssm.clearElement(availablePlatesContainerEle);
 
     const resultsPanelEle = document.createElement("div");
     resultsPanelEle.className = "panel";
@@ -232,7 +232,7 @@
       resultEle.innerHTML = "<div class=\"level is-marginless\">" +
         ("<div class=\"level-left\">" +
           "<div class=\"licence-plate\">" +
-          "<div class=\"licence-plate-number\">" + pts.escapeHTML(plateRecord.licencePlateNumber) + "</div>" +
+          "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(plateRecord.licencePlateNumber) + "</div>" +
           "</div>" +
           "</div>") +
         ("<div class=\"level-right\">" +
@@ -272,13 +272,13 @@
 
       addAllButtonEle.addEventListener("click", function() {
 
-        pts.openHtmlModal("loading", {
+        cityssm.openHtmlModal("loading", {
           onshown: function(modalEle, closeModalFn) {
 
             document.getElementById("is-loading-modal-message").innerText =
               "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
 
-            pts.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
+            cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
               batchID: batchID,
               licencePlateCountry: "CA",
               licencePlateProvince: "ON",
@@ -333,7 +333,7 @@
       "<em>Loading licence plates..." +
       "</p>";
 
-    pts.postJSON(
+    cityssm.postJSON(
       "/plates/mto_doGetPlatesAvailableForLookup", {
         batchID: batchID,
         issueDaysAgo: availableIssueDaysAgoEle.value
@@ -389,7 +389,7 @@
         lockBatchButtonEle.removeAttribute("disabled");
 
       }
-      
+
     }
 
     document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID;
@@ -403,7 +403,7 @@
         "</span>" :
         "");
 
-    pts.clearElement(batchEntriesContainerEle);
+    cityssm.clearElement(batchEntriesContainerEle);
 
     if (batchEntriesList.length === 0) {
 
@@ -415,7 +415,7 @@
 
     }
 
-    pts.clearElement(batchEntriesContainerEle);
+    cityssm.clearElement(batchEntriesContainerEle);
 
     const panelEle = document.createElement("div");
     panelEle.className = "panel";
@@ -430,7 +430,7 @@
       panelBlockEle.innerHTML = "<div class=\"level\">" +
         ("<div class=\"level-left\">" +
           "<div class=\"licence-plate\">" +
-          "<div class=\"licence-plate-number\">" + pts.escapeHTML(batchEntry.licencePlateNumber) + "</div>" +
+          "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</div>" +
           "</div>" +
           "</div>") +
         (batchIsLocked ?
@@ -493,7 +493,7 @@
 
   function fn_refreshBatch() {
 
-    pts.postJSON(
+    cityssm.postJSON(
       "/plates/doGetLookupBatch", {
         batchID: batchID
       },
@@ -528,7 +528,7 @@
 
     const fn_loadBatches = function() {
 
-      pts.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, function(batchList) {
+      cityssm.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, function(batchList) {
 
         if (batchList.length === 0) {
 
@@ -578,14 +578,14 @@
 
         }
 
-        pts.clearElement(resultsContainerEle);
+        cityssm.clearElement(resultsContainerEle);
         resultsContainerEle.appendChild(listEle);
 
       });
 
     };
 
-    pts.openHtmlModal("mto-selectBatch", {
+    cityssm.openHtmlModal("mto-selectBatch", {
       onshow: function(modalEle) {
 
         resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
@@ -609,7 +609,7 @@
 
       const createFn = function() {
 
-        pts.postJSON("/plates/doCreateLookupBatch", {}, function(responseJSON) {
+        cityssm.postJSON("/plates/doCreateLookupBatch", {}, function(responseJSON) {
 
           if (responseJSON.success) {
 
@@ -642,7 +642,7 @@
 
       const lockFn = function() {
 
-        pts.postJSON("/plates/doLockLookupBatch", {
+        cityssm.postJSON("/plates/doLockLookupBatch", {
           batchID: batchID
         }, function(responseJSON) {
 

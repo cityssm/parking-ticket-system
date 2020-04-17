@@ -21,7 +21,7 @@
 
     const deleteFn = function() {
 
-      pts.postJSON("/admin/doDeleteBylaw", {
+      cityssm.postJSON("/admin/doDeleteBylaw", {
         bylawNumber: bylaw.bylawNumber
       }, function(responseJSON) {
 
@@ -55,7 +55,7 @@
 
       formEvent.preventDefault();
 
-      pts.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, function(responseJSON) {
 
         if (responseJSON.success) {
 
@@ -69,7 +69,7 @@
 
     };
 
-    pts.openHtmlModal("bylaw-edit", {
+    cityssm.openHtmlModal("bylaw-edit", {
       onshow: function() {
 
         document.getElementById("editBylaw--bylawNumber").value = bylaw.bylawNumber;
@@ -132,10 +132,10 @@
       trEle.innerHTML =
         "<td>" +
         "<a data-index=\"" + bylawIndex + "\" href=\"#\">" +
-        pts.escapeHTML(bylaw.bylawNumber) +
+        cityssm.escapeHTML(bylaw.bylawNumber) +
         "</a>" +
         "</td>" +
-        "<td>" + pts.escapeHTML(bylaw.bylawDescription) + "</td>";
+        "<td>" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>";
 
       trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModal);
 
@@ -143,7 +143,7 @@
 
     }
 
-    pts.clearElement(bylawResultsEle);
+    cityssm.clearElement(bylawResultsEle);
 
     if (displayCount === 0) {
 
@@ -187,7 +187,7 @@
 
       formEvent.preventDefault();
 
-      pts.postJSON("/admin/doAddBylaw", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doAddBylaw", formEvent.currentTarget, function(responseJSON) {
 
         if (responseJSON.success) {
 
@@ -222,7 +222,7 @@
 
     };
 
-    pts.openHtmlModal("bylaw-add", {
+    cityssm.openHtmlModal("bylaw-add", {
 
       onshown: function(modalEle, closeModalFn) {
 
