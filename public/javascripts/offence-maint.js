@@ -91,7 +91,7 @@
 
       deleteClickEvent.preventDefault();
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Remove Offence?",
         "Are you sure you want to remove this offence?",
         "Yes, Remove Offence",
@@ -489,7 +489,7 @@
       const bylaw = bylawMap.get(bylawNumberFilter);
       const location = locationMap.get(locationKeyFilter);
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Create Offence?",
         "<p class=\"has-text-centered\">Are you sure you want to create the offence record below?</p>" +
         "<div class=\"columns has-margin-top-20 has-margin-bottom-20\">" +
@@ -516,7 +516,7 @@
 
             if (!responseJSON.success) {
 
-              pts.alertModal(
+              cityssm.alertModal(
                 "Offence Not Added",
                 responseJSON.message,
                 "OK",
@@ -525,7 +525,7 @@
 
             } else if (responseJSON.message) {
 
-              pts.alertModal(
+              cityssm.alertModal(
                 "Offence Added Successfully",
                 responseJSON.message,
                 "OK",
@@ -545,7 +545,7 @@
 
     } else {
 
-      pts.alertModal(
+      cityssm.alertModal(
         "How to Add an Offence",
         "To add an offence, use the main filters to select either a location, a by-law, or both.",
         "OK",

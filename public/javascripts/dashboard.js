@@ -20,7 +20,7 @@
           if (responseJSON.success) {
 
             cityssm.hideModal(changePasswordModalEle);
-            pts.alertModal("Password Updated Successfully", "", "OK", "success");
+            cityssm.alertModal("Password Updated Successfully", "", "OK", "success");
 
           }
 

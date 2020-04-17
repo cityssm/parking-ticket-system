@@ -311,107 +311,6 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 }());
 
 
-// ALERT / CONFIRM MODALS
-
-(function() {
-
-  function confirmModalFn(modalOptions) {
-
-    const modalEle = document.createElement("div");
-    modalEle.className = "modal is-active";
-
-    const contextualColorName = modalOptions.contextualColorName || "info";
-
-    const titleString = modalOptions.titleString || "";
-    const bodyHTML = modalOptions.bodyHTML || "";
-
-    const cancelButtonHTML = modalOptions.cancelButtomHTML || "Cancel";
-    const okButtonHTML = modalOptions.okButtonHTML || "OK";
-
-    modalEle.innerHTML = "<div class=\"modal-background\"></div>" +
-      "<div class=\"modal-content\">" +
-      "<div class=\"message is-" + contextualColorName + "\">" +
-
-      ("<header class=\"message-header\">" +
-        "<span class=\"is-size-5\"></span>" +
-        "</header>") +
-
-      ("<section class=\"message-body\">" +
-        (bodyHTML === "" ? "" : "<div class=\"has-margin-bottom-20\">" + bodyHTML + "</div>") +
-
-        ("<div class=\"buttons justify-flex-end\">" +
-          (modalOptions.hideCancelButton ?
-            "" :
-            "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
-            cancelButtonHTML +
-            "</button>") +
-          ("<button class=\"button is-ok-button is-" + contextualColorName + "\" type=\"button\" aria-label=\"OK\">" +
-            okButtonHTML +
-            "</button>") +
-          "</div>") +
-
-        "</section>") +
-
-      "</div>" +
-      "</div>";
-
-    modalEle.getElementsByClassName("message-header")[0].getElementsByTagName("span")[0].innerText = titleString;
-
-    if (!modalOptions.hideCancelButton) {
-
-      modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", function() {
-
-        modalEle.remove();
-
-      });
-
-    }
-
-    const okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
-    okButtonEle.addEventListener("click", function() {
-
-      modalEle.remove();
-      if (modalOptions.callbackFn) {
-
-        modalOptions.callbackFn();
-
-      }
-
-    });
-
-    document.body.insertAdjacentElement("beforeend", modalEle);
-
-    okButtonEle.focus();
-
-  }
-
-  pts.confirmModal = function(titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) {
-
-    confirmModalFn({
-      contextualColorName: contextualColorName,
-      titleString: titleString,
-      bodyHTML: bodyHTML,
-      okButtonHTML: okButtonHTML,
-      callbackFn: callbackFn
-    });
-
-  };
-
-  pts.alertModal = function(titleString, bodyHTML, okButtonHTML, contextualColorName) {
-
-    confirmModalFn({
-      contextualColorName: contextualColorName,
-      titleString: titleString,
-      bodyHTML: bodyHTML,
-      hideCancelButton: true,
-      okButtonHTML: okButtonHTML
-    });
-
-  };
-
-}());
-
-
 // KEEP ALIVE
 
 (function() {
@@ -525,7 +424,7 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
   function openLogoutModal(clickEvent) {
 
     clickEvent.preventDefault();
-    pts.confirmModal(
+    cityssm.confirmModal(
       "Log Out?",
       "<p>Are you sure you want to log out?</p>",
       "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>",

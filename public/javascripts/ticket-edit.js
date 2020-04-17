@@ -65,7 +65,7 @@
           } else {
 
             setUnsavedChangesFn();
-            pts.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
+            cityssm.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
 
           }
 
@@ -104,7 +104,7 @@
 
       clickEvent.preventDefault();
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Delete Ticket?",
         "Are you sure you want to delete this ticket record?",
         "Yes, Delete Ticket",
@@ -405,7 +405,7 @@
 
       const remarkIndex = clickEvent.currentTarget.getAttribute("data-remark-index");
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Delete Remark?",
         "Are you sure you want to delete this remark?",
         "Yes, Delete",
@@ -641,7 +641,7 @@
 
       clickEvent.preventDefault();
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Mark Ticket as Resolved?",
         "Once resolved, you will no longer be able to make changes to the ticket.",
         "Yes, Resolve Ticket",
@@ -672,7 +672,7 @@
 
       const statusIndex = clickEvent.currentTarget.getAttribute("data-status-index");
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Delete Remark?",
         "Are you sure you want to delete this status?",
         "Yes, Delete",

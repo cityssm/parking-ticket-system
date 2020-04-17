@@ -46,7 +46,7 @@
 
       deleteClickEvent.preventDefault();
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Delete Location",
         "Are you sure you want to remove \"" + location.locationName + "\" from the list of available options?",
         "Yes, Remove Location",
@@ -249,7 +249,7 @@
 
         } else {
 
-          pts.alertModal(
+          cityssm.alertModal(
             "Location Not Added",
             responseJSON.message,
             "OK",

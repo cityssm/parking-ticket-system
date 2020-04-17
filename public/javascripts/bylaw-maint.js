@@ -41,7 +41,7 @@
 
       deleteClickEvent.preventDefault();
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Delete By-Law",
         "Are you sure you want to by-law \"" + bylaw.bylawNumber + "\" from the list of available options?",
         "Yes, Remove By-Law",
@@ -195,7 +195,7 @@
 
           if (responseJSON.message) {
 
-            pts.alertModal(
+            cityssm.alertModal(
               "By-Law Added",
               responseJSON.message,
               "OK",
@@ -209,7 +209,7 @@
 
         } else {
 
-          pts.alertModal(
+          cityssm.alertModal(
             "By-Law Not Added",
             responseJSON.message,
             "OK",

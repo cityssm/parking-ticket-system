@@ -129,7 +129,7 @@
 
     };
 
-    pts.confirmModal(
+    cityssm.confirmModal(
       "Clear Batch?",
       "Are you sure you want to remove all licence plates from the batch?",
       "Yes, Clear the Batch",
@@ -157,7 +157,7 @@
 
     }
 
-    pts.confirmModal(
+    cityssm.confirmModal(
       "Download Batch?",
       "<strong>You are about to download this batch for the first time.</strong><br />" +
       "The date of this download will be tracked as part of the batch record.",
@@ -622,7 +622,7 @@
 
       };
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Create a New Batch?",
         "Are you sure you want to create a new licence plate lookup batch?",
         "Yes, Create a Batch",
@@ -656,7 +656,7 @@
 
       };
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Lock Batch?",
         "<strong>Are you sure you want to lock the batch?</strong><br />" +
         "Once the batch is locked, no licence plates can be added or deleted from the batch." +

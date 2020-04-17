@@ -98,7 +98,7 @@
 
     };
 
-    pts.confirmModal(
+    cityssm.confirmModal(
       "Clear Status",
       "Are you sure you want to undo this status?",
       "Yes, Remove the Status",
@@ -157,7 +157,7 @@
 
           buttonEle.removeAttribute("disabled");
 
-          pts.alertModal(
+          cityssm.alertModal(
             "Record Not Updated",
             responseJSON.message,
             "OK",
@@ -181,7 +181,7 @@
       const ownerVehicle = trEle.getAttribute("data-owner-vehicle");
       const ownerExpiryDate = trEle.getAttribute("data-owner-expiry-date");
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Confirm Match",
         "<p class=\"has-text-centered\">Are you sure the details on the parking ticket match the details on the ownership record?</p>" +
         "<div class=\"columns has-margin-top-5\">" +
@@ -259,7 +259,7 @@
 
           buttonEle.removeAttribute("disabled");
 
-          pts.alertModal(
+          cityssm.alertModal(
             "Record Not Updated",
             responseJSON.message,
             "OK",
@@ -279,7 +279,7 @@
       const ownerVehicle = trEle.getAttribute("data-owner-vehicle");
       const ownerExpiryDate = trEle.getAttribute("data-owner-expiry-date");
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Confirm Error",
         "<p class=\"has-text-centered\">Are you sure you want to mark an error between the details on the parking ticket and the details on the ownership record?</p>" +
         "<div class=\"columns has-margin-top-5\">" +
@@ -346,7 +346,7 @@
 
           if (responseJSON.success) {
 
-            pts.alertModal(
+            cityssm.alertModal(
               "Quick Reconcile Complete",
               (responseJSON.statusRecords.length === 1 ?
                 "One record was successfully reconciled as a match." :
@@ -404,7 +404,7 @@
 
       };
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Quick Reconcile Matches",
         "Are you sure you want to mark all parking tickets" +
         " with matching vehicle makes and plate expiry dates as matched?",

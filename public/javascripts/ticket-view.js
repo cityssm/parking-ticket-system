@@ -12,7 +12,7 @@
 
       const ticketID = clickEvent.currentTarget.getAttribute("data-ticket-id");
 
-      pts.confirmModal(
+      cityssm.confirmModal(
         "Remove Resolved Status?",
         "Are you sure you want to remove the resolved status from this ticket?",
         "Yes, Mark as Unresolved",
