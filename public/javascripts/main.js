@@ -412,45 +412,6 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 }());
 
 
-// NAV BLOCKER
-
-(function() {
-
-  let isNavBlockerEnabled = false;
-
-  function navBlockerEventFn(e) {
-
-    const confirmationMessage = "You have unsaved changes that may be lost.";
-    e.returnValue = confirmationMessage;
-    return confirmationMessage;
-
-  }
-
-  pts.enableNavBlocker = function() {
-
-    if (!isNavBlockerEnabled) {
-
-      window.addEventListener("beforeunload", navBlockerEventFn);
-      isNavBlockerEnabled = true;
-
-    }
-
-  };
-
-  pts.disableNavBlocker = function() {
-
-    if (isNavBlockerEnabled) {
-
-      window.removeEventListener("beforeunload", navBlockerEventFn);
-      isNavBlockerEnabled = false;
-
-    }
-
-  };
-
-}());
-
-
 // KEEP ALIVE
 
 (function() {

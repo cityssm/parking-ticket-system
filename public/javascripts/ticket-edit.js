@@ -17,7 +17,7 @@
 
     const setUnsavedChangesFn = function(changeEvent) {
 
-      pts.enableNavBlocker();
+      cityssm.enableNavBlocker();
 
       hasUnsavedChanges = true;
 
@@ -54,7 +54,7 @@
 
           if (responseJSON.success) {
 
-            pts.disableNavBlocker();
+            cityssm.disableNavBlocker();
             hasUnsavedChanges = false;
 
             formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +

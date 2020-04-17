@@ -5,10 +5,10 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@cityssm/bulma-webapp-js": "^0.0.1",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "bcrypt": "^4.0.1",
     "better-sqlite3": "^6.0.1",
-    "cityssm-bulma-webapp-libraries": "^0.1.0",
     "compression": "^1.7.4",
     "connect-sqlite3": "^0.9.11",
     "convert-array-to-csv": "^1.0.11",
@@ -27,6 +27,7 @@
     "typeface-pt-mono": "0.0.72"
   },
   "devDependencies": {
+    "@cityssm/bulma-webapp-css": "0.0.1",
     "@types/bcrypt": "^3.0.0",
     "@types/better-sqlite3": "^5.4.0",
     "@types/compression": "^1.7.0",
@@ -41,11 +42,6 @@
     "@types/morgan": "^1.9.0",
     "@types/multer": "^1.4.2",
     "@types/node-fetch": "^2.5.6",
-    "bulma-divider": "^0.2.0",
-    "bulma-helpers": "^0.3.10",
-    "bulma-steps": "^2.2.1",
-    "bulma-switch": "^2.0.0",
-    "bulma-tooltip": "^3.0.2",
     "github-markdown-css": "^4.0.0"
   }
 }
