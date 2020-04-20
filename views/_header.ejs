@@ -16,7 +16,7 @@
 </head>
 
 <body>
-  <nav class="navbar is-light is-fixed-top is-static-print" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-light is-fixed-top is-static-print" id="cityssm-theme--navbar" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
         <a class="navbar-item" href="/dashboard">
@@ -24,14 +24,14 @@
           <strong><%= configFns.getProperty("application.applicationName") %></strong>
         </a>
 
-        <a class="navbar-burger burger is-hidden-print" id="navbar-burger--main" role="button" aria-label="menu" aria-expanded="false">
+        <a class="navbar-burger burger is-hidden-print" role="button" aria-label="menu" aria-expanded="false">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
 
-      <div class="navbar-menu" id="navbar-menu--main">
+      <div class="navbar-menu">
         <div class="navbar-start">
 
           <a class="navbar-item" href="/tickets">
@@ -99,7 +99,7 @@
         </div>
 
         <div class="navbar-end">
-          <a class="navbar-item is-logout-button" role="button" href="#">
+          <a class="navbar-item" id="cityssm-theme--logout-button" role="button" href="#">
             <span class="icon has-margin-right-5">
               <i class="fas fa-fw fa-sign-out-alt" aria-hidden="true"></i>
             </span>
