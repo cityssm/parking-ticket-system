@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const configFns = require("../helpers/configFns");
 const ownerFns = require("../helpers/ownerFns");
-const dateTimeFns = require("../helpers/dateTimeFns");
+const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB = require("../helpers/parkingDB");
 router.get("/", function (_req, res) {
     res.render("ticket-search", {

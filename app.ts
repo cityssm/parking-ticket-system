@@ -32,7 +32,7 @@ import routerReports = require("./routes/reports");
 
 
 import * as configFns from "./helpers/configFns";
-import * as dateTimeFns from "./helpers/dateTimeFns";
+import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 import * as stringFns from "./helpers/stringFns";
 import * as vehicleFns from "./helpers/vehicleFns";
 

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sqlite = require("better-sqlite3");
 const parkingDB_1 = require("./parkingDB");
 const configFns = require("./configFns");
-const dateTimeFns = require("./dateTimeFns");
+const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 let currentDate = new Date();
 let currentDateNumber;
 let currentDatePrefix;

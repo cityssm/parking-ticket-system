@@ -4,7 +4,7 @@ import sqlite = require("better-sqlite3");
 export const dbPath = "data/parking.db";
 
 import * as vehicleFns from "./vehicleFns";
-import * as dateTimeFns from "./dateTimeFns";
+import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 import * as configFns from "./configFns";
 import * as pts from "./ptsTypes";
 

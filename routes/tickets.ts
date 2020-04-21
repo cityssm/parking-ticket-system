@@ -5,7 +5,7 @@ const router = express.Router();
 
 import * as configFns from "../helpers/configFns";
 import * as ownerFns from "../helpers/ownerFns";
-import * as dateTimeFns from "../helpers/dateTimeFns";
+import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 import * as parkingDB from "../helpers/parkingDB";
 
 

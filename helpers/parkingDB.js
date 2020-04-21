@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sqlite = require("better-sqlite3");
 exports.dbPath = "data/parking.db";
 const vehicleFns = require("./vehicleFns");
-const dateTimeFns = require("./dateTimeFns");
+const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const configFns = require("./configFns");
 function canUpdateObject(obj, reqSession) {
     const userProperties = reqSession.user.userProperties;

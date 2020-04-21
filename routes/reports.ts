@@ -5,7 +5,7 @@ const router = express.Router();
 
 import * as parkingDB from "../helpers/parkingDB";
 import { rawToCSV } from "../helpers/stringFns";
-import * as dateTimeFns from "../helpers/dateTimeFns";
+import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 
 router.get("/", function(_req, res) {
 

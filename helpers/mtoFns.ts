@@ -2,7 +2,7 @@ import sqlite = require("better-sqlite3");
 import { dbPath, markLookupBatchAsSent, getLicencePlateLookupBatch } from "./parkingDB";
 
 import * as configFns from "./configFns";
-import * as dateTimeFns from "./dateTimeFns";
+import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 
 
 let currentDate = new Date();
