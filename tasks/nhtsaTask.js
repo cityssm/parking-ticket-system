@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const parkingDB = require("../helpers/parkingDB");
 const vehicleFns = require("../helpers/vehicleFns");
 const configFns = require("../helpers/configFns");
-const dateTimeFns = require("../helpers/dateTimeFns");
+const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 let initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);

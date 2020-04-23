@@ -187,33 +187,6 @@ html {
 
 
 
-@media screen {
-
-  .fixed-container {
-    position: fixed;
-    z-index: 30;
-    display: inline-block;
-
-    &.is-fixed-bottom-right {
-      right: 0;
-      bottom: 0;
-    }
-  }
-}
-
-
-/*
- * Circle Button
- */
-
-.button.is-circle {
-  width: 2.2em;
-  height: 2.2em;
-  font-size: 2em;
-  border-radius: 50%;
-}
-
-
 .licence-plate {
   display: inline-block;
   color: var(--color);
