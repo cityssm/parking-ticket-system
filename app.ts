@@ -18,8 +18,7 @@ import session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session);
 
 
-const buildNumber = require("./buildNumber.json");
-
+import packageJSON = require("./package.json");
 
 import routerDocs = require("./routes/docs");
 import routerLogin = require("./routes/login");
@@ -156,7 +155,7 @@ const adminChecker = function(req: express.Request, res: express.Response, next:
 // Make the user and config objects available to the templates
 app.use(function(req, res, next) {
 
-  res.locals.buildNumber = buildNumber;
+  res.locals.buildNumber = packageJSON.version;
 
   res.locals.user = req.session.user;
 

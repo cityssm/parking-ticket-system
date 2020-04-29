@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session);
-const buildNumber = require("./buildNumber.json");
+const packageJSON = require("./package.json");
 const routerDocs = require("./routes/docs");
 const routerLogin = require("./routes/login");
 const routerDashboard = require("./routes/dashboard");
@@ -75,7 +75,7 @@ const adminChecker = function (req, res, next) {
     return res.redirect("/login?redirect=" + req.originalUrl);
 };
 app.use(function (req, res, next) {
-    res.locals.buildNumber = buildNumber;
+    res.locals.buildNumber = packageJSON.version;
     res.locals.user = req.session.user;
     res.locals.configFns = configFns;
     res.locals.dateTimeFns = dateTimeFns;
