@@ -1,11 +1,10 @@
-"use strict";
-
-import express = require("express");
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
 import * as parkingDB from "../helpers/parkingDB";
-import { rawToCSV } from "../helpers/stringFns";
-import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
+import { rawToCSV } from "@cityssm/expressjs-server-js/stringFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+
 
 router.get("/", function(_req, res) {
 

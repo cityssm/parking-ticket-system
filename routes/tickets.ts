@@ -1,11 +1,9 @@
-"use strict";
-
-import express = require("express");
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
 import * as configFns from "../helpers/configFns";
 import * as ownerFns from "../helpers/ownerFns";
-import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as parkingDB from "../helpers/parkingDB";
 
 
@@ -668,6 +666,5 @@ router.get("/:ticketID/edit", function(req, res) {
   });
 
 });
-
 
 export = router;

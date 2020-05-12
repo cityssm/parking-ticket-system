@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fetch = require("node-fetch");
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
-const sqlite = require("better-sqlite3");
 const dbPath = "data/nhtsa.db";
+const sqlite = require("better-sqlite3");
 const ncic = require("../data/ncicCodes");
 function getModelsByMakeFromDB(makeSearchString, db) {
     return db.prepare("select makeID, makeName, modelID, modelName" +

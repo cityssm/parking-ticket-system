@@ -1,8 +1,8 @@
 "use strict";
-const express = require("express");
-const router = express.Router();
+const express_1 = require("express");
+const router = express_1.Router();
 const parkingDB = require("../helpers/parkingDB");
-const stringFns_1 = require("../helpers/stringFns");
+const stringFns_1 = require("@cityssm/expressjs-server-js/stringFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 router.get("/", function (_req, res) {
     const rightNow = new Date();

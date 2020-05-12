@@ -1,6 +1,6 @@
 "use strict";
-const express = require("express");
-const router = express.Router();
+const express_1 = require("express");
+const router = express_1.Router();
 const usersDB = require("../helpers/usersDB");
 const parkingDB = require("../helpers/parkingDB");
 router.get("/userManagement", function (req, res) {

@@ -1,6 +1,6 @@
 "use strict";
-const express = require("express");
-const router = express.Router();
+const express_1 = require("express");
+const router = express_1.Router();
 const createError = require("http-errors");
 const fs = require("fs");
 const path = require("path");

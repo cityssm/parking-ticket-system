@@ -1,12 +1,10 @@
-"use strict";
+import { Router } from "express";
+const router = Router();
 
-import express = require("express");
-const router = express.Router();
-
-import createError = require("http-errors");
-import fs = require("fs");
-import path = require("path");
-import marked = require("marked");
+import * as createError from "http-errors";
+import * as fs from "fs";
+import * as path from "path";
+import * as marked from "marked";
 
 import * as configFns from "../helpers/configFns";
 

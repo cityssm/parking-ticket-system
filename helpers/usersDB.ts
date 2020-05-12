@@ -1,9 +1,9 @@
-import sqlite = require("better-sqlite3");
 const dbPath = "data/users.db";
+import * as sqlite from "better-sqlite3";
 
-import bcrypt = require("bcrypt");
+import * as bcrypt from "bcrypt";
 
-import * as stringFns from "./stringFns";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
 import * as configFns from "./configFns";
 import { User, UserProperties } from "./ptsTypes";
 

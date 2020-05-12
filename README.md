@@ -1,6 +1,6 @@
 # Parking Ticket System
 
-The Parking Ticket System is a project by the
+The Parking Ticket System is a web application project by the
 [City of Sault Ste. Marie](https://saultstemarie.ca/)
 to track parking tickets issued in our municipality.
 
@@ -15,8 +15,10 @@ looking to move away from older, legacy systems.
 **This project is incomplete and under active development.
 Significant, breaking changes are happening with each commit.
 It is not ready to run in a live environment yet.
-Completion is expecting by the end of 2020.**
+Completion is expected in early 2021.**
 
 It is being shared in it's current state to start the dialog among
 other Ontario municipalities and present an option to those who may be looking
 to refresh their own parking ticket management systems in the near future.
+
+[Documentation So Far](/docs)

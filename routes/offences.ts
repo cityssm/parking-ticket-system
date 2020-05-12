@@ -1,5 +1,5 @@
-import express = require("express");
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
 import * as parkingDB from "../helpers/parkingDB";
 
@@ -18,11 +18,10 @@ router.post("/doGetOffencesByLocation", function(req, res) {
 });
 
 
-router.post("/doGetAllOffences", function(req, res) {
+router.post("/doGetAllOffences", function(_req, res) {
 
   res.json(parkingDB.getParkingOffences());
 
 });
-
 
 export = router;

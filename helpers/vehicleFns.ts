@@ -2,7 +2,7 @@
  * API
  */
 
-import fetch = require("node-fetch");
+import * as fetch from "node-fetch";
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
@@ -11,8 +11,8 @@ const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
  * API Cache
  */
 
-import sqlite = require("better-sqlite3");
 const dbPath = "data/nhtsa.db";
+import * as sqlite from "better-sqlite3";
 
 /*
  * More Data

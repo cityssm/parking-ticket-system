@@ -14,59 +14,61 @@
       Licence Plate Search
     </h1>
 
-    <form id="form--filters">
-      <input id="filter--limit" name="limit" type="hidden" value="20" />
-      <input id="filter--offset" name="offset" type="hidden" value="0" />
-      <div class="columns">
-        <div class="column">
-          <div class="field">
-            <label class="label" for="filter--licencePlateNumber">Licence Plate Number</label>
-            <div class="control has-icons-left">
-              <input class="input" id="filter--licencePlateNumber" name="licencePlateNumber" maxlength="15" />
-              <span class="icon is-left is-small">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="filter--hasOwnerRecord">Ownership Record</label>
-            <div class="control is-expanded has-icons-left">
-              <div class="select is-fullwidth">
-                <select id="filter--hasOwnerRecord" name="hasOwnerRecord">
-                  <option value="">(All Statuses)</option>
-                  <option value="1">Has an Ownership Record</option>
-                  <option value="0">No Ownership Recorded</option>
-                </select>
+    <div class="box">
+      <form id="form--filters">
+        <input id="filter--limit" name="limit" type="hidden" value="20" />
+        <input id="filter--offset" name="offset" type="hidden" value="0" />
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label" for="filter--licencePlateNumber">Licence Plate Number</label>
+              <div class="control has-icons-left">
+                <input class="input" id="filter--licencePlateNumber" name="licencePlateNumber" maxlength="15" />
+                <span class="icon is-left is-small">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
               </div>
-              <span class="icon is-left is-small">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
             </div>
           </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="filter--hasUnresolvedTickets">Parking Ticket Records</label>
-            <div class="control is-expanded has-icons-left">
-              <div class="select is-fullwidth">
-                <select id="filter--hasUnresolvedTickets" name="hasUnresolvedTickets">
-                  <option value="">(All Statuses)</option>
-                  <option value="1">Has Unresolved Tickets</option>
-                  <option value="0">No Outstanding Tickkets</option>
-                </select>
+          <div class="column">
+            <div class="field">
+              <label class="label" for="filter--hasOwnerRecord">Ownership Record</label>
+              <div class="control is-expanded has-icons-left">
+                <div class="select is-fullwidth">
+                  <select id="filter--hasOwnerRecord" name="hasOwnerRecord">
+                    <option value="">(All Statuses)</option>
+                    <option value="1">Has an Ownership Record</option>
+                    <option value="0">No Ownership Recorded</option>
+                  </select>
+                </div>
+                <span class="icon is-left is-small">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
               </div>
-              <span class="icon is-left is-small">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label" for="filter--hasUnresolvedTickets">Parking Ticket Records</label>
+              <div class="control is-expanded has-icons-left">
+                <div class="select is-fullwidth">
+                  <select id="filter--hasUnresolvedTickets" name="hasUnresolvedTickets">
+                    <option value="">(All Statuses)</option>
+                    <option value="1">Has Unresolved Tickets</option>
+                    <option value="0">No Outstanding Tickkets</option>
+                  </select>
+                </div>
+                <span class="icon is-left is-small">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
 
-    <div class="has-margin-top-20" id="container--searchResults"></div>
+    <div id="container--searchResults"></div>
   </div>
 </div>
 

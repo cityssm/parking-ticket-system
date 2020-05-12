@@ -69,8 +69,8 @@
         trEle.innerHTML = "<td>" +
           "<a href=\"" + url + "\" data-tooltip=\"View Licence Plate\">" +
           (plateObj.licencePlateNumber === "" ?
-          "(Blank)" :
-          "<span class=\"licence-plate-number\">" + plateObj.licencePlateNumber + "</span>") +
+            "(Blank)" :
+            "<span class=\"licence-plate-number\">" + plateObj.licencePlateNumber + "</span>") +
           "</a>" +
           "</td>" +
           ("<td>" +
@@ -119,7 +119,8 @@
 
           const previousEle = document.createElement("a");
           previousEle.className = "button";
-          previousEle.innerText = "Previous";
+          previousEle.innerHTML = "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
+            "<span>Previous</span>";
           previousEle.addEventListener("click", function(clickEvent) {
 
             clickEvent.preventDefault();

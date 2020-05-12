@@ -1,6 +1,6 @@
 "use strict";
-const express = require("express");
-const router = express.Router();
+const express_1 = require("express");
+const router = express_1.Router();
 const configFns = require("../helpers/configFns");
 const usersDB = require("../helpers/usersDB");
 router.route("/")

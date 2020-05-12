@@ -52,7 +52,7 @@
     document.getElementById("step--upload").classList.add("is-hidden");
     document.getElementById("step--update").classList.remove("is-hidden");
 
-    cityssm.postJSON("/plates/mto_doImportUpload", formEle, function(responseJSON) {
+    cityssm.postJSON("/plates-ontario/doMTOImportUpload", formEle, function(responseJSON) {
 
       updateStepItemEle.classList.add("is-completed");
       updateStepItemEle.classList.remove("is-active");

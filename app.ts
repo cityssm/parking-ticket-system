@@ -1,38 +1,36 @@
-/* eslint-env node */
+import * as createError from "http-errors";
+import * as express from "express";
+import * as https from "https";
+import * as fs from "fs";
+import * as compression from "compression";
+import * as path from "path";
+import * as cookieParser from "cookie-parser";
+import * as logger from "morgan";
 
-"use strict";
 
-import createError = require("http-errors");
-import express = require("express");
-import https = require("https");
-import fs = require("fs");
-import compression = require("compression");
-import path = require("path");
-import cookieParser = require("cookie-parser");
-import logger = require("morgan");
+import * as session from "express-session";
+import * as sqlite from "connect-sqlite3";
+const SQLiteStore = sqlite(session);
+
+
+import { version as buildNumber } from "./package.json";
+
+import * as routerDocs from "./routes/docs";
+import * as routerLogin from "./routes/login";
+import * as routerDashboard from "./routes/dashboard";
+import * as routerAdmin from "./routes/admin";
+import * as routerTickets from "./routes/tickets";
+import * as routerOffences from "./routes/offences";
+import * as routerPlates from "./routes/plates";
+import * as routePlatesOntario from "./routes/plates-ontario";
+import * as routerReports from "./routes/reports";
+
 
 import { Config_HttpsConfig } from "./helpers/ptsTypes";
-
-
-import session = require("express-session");
-const SQLiteStore = require("connect-sqlite3")(session);
-
-
-import packageJSON = require("./package.json");
-
-import routerDocs = require("./routes/docs");
-import routerLogin = require("./routes/login");
-import routerDashboard = require("./routes/dashboard");
-import routerAdmin = require("./routes/admin");
-import routerTickets = require("./routes/tickets");
-import routerOffences = require("./routes/offences");
-import routerPlates = require("./routes/plates");
-import routerReports = require("./routes/reports");
-
-
 import * as configFns from "./helpers/configFns";
-import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-import * as stringFns from "./helpers/stringFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
+import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns";
 import * as vehicleFns from "./helpers/vehicleFns";
 
 
@@ -77,10 +75,18 @@ app.use(cookieParser());
 
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/fa", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
-app.use("/typeface-inter", express.static(path.join(__dirname, "node_modules", "typeface-inter", "Inter (web)")));
-app.use("/typeface-pt-mono", express.static(path.join(__dirname, "node_modules", "typeface-pt-mono", "files")));
-app.use("/cityssm-bulma-webapp-js", express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js")));
+
+app.use("/fa",
+  express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
+
+app.use("/typeface-inter",
+  express.static(path.join(__dirname, "node_modules", "typeface-inter", "Inter (web)")));
+
+app.use("/typeface-pt-mono",
+  express.static(path.join(__dirname, "node_modules", "typeface-pt-mono", "files")));
+
+app.use("/cityssm-bulma-webapp-js",
+  express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js")));
 
 
 /*
@@ -155,13 +161,14 @@ const adminChecker = function(req: express.Request, res: express.Response, next:
 // Make the user and config objects available to the templates
 app.use(function(req, res, next) {
 
-  res.locals.buildNumber = packageJSON.version;
+  res.locals.buildNumber = buildNumber;
 
   res.locals.user = req.session.user;
 
   res.locals.configFns = configFns;
   res.locals.dateTimeFns = dateTimeFns;
   res.locals.stringFns = stringFns;
+  res.locals.htmlFns = htmlFns;
   res.locals.vehicleFns = vehicleFns;
 
   next();
@@ -177,7 +184,16 @@ app.use("/docs", routerDocs);
 
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
+
 app.use("/plates", sessionChecker, routerPlates);
+
+if (configFns.getProperty("application.feature_mtoExportImport")) {
+
+
+  app.use("/plates-ontario", sessionChecker, routePlatesOntario);
+
+}
+
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/reports", sessionChecker, routerReports);
 
@@ -265,12 +281,6 @@ if (httpsConfig) {
   console.log("HTTPS listening on port " + httpsConfig.port);
 
 }
-
-
-/*
- * Initialize workers
- */
-
 
 
 export = app;

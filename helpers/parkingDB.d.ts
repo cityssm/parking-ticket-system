@@ -2,7 +2,8 @@
 /// <reference types="integer" />
 export declare const dbPath = "data/parking.db";
 import * as pts from "./ptsTypes";
-export declare function getRawRowsColumns(sql: string, params: any[]): pts.RawRowsColumnsReturn;
+import { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
+export declare function getRawRowsColumns(sql: string, params: any[]): RawRowsColumnsReturn;
 export declare type getParkingTickets_queryOptions = {
     isResolved?: boolean;
     ticketNumber?: string;
@@ -165,17 +166,6 @@ export declare function createLicencePlateLookupBatch(reqSession: Express.Sessio
     success: boolean;
     batch?: undefined;
 };
-declare type MTO_AvailableLicencePlate = {
-    licencePlateNumber: string;
-    ticketCount: number;
-    issueDateMin: number;
-    issueDateMinString: string;
-    issueDateMax: number;
-    issueDateMaxString: string;
-    ticketNumbersConcat: string;
-    ticketNumbers: string[];
-};
-export declare function mto_getLicencePlatesAvailableForLookupBatch(currentBatchID: number, issueDaysAgo: number): MTO_AvailableLicencePlate[];
 export interface ReconciliationRecord extends pts.LicencePlate {
     ticket_ticketID: number;
     ticket_ticketNumber: string;

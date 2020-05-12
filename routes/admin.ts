@@ -1,7 +1,5 @@
-"use strict";
-
-import express = require("express");
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
 import * as usersDB from "../helpers/usersDB";
 import * as parkingDB from "../helpers/parkingDB";
@@ -364,6 +362,5 @@ router.post("/doDeleteBylaw", function(req, res) {
   res.json(results);
 
 });
-
 
 export = router;

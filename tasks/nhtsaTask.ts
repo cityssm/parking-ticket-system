@@ -2,7 +2,7 @@ import * as parkingDB from "../helpers/parkingDB";
 import * as vehicleFns from "../helpers/vehicleFns";
 
 import * as configFns from "../helpers/configFns";
-import dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 let initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);

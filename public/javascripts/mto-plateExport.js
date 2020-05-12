@@ -145,7 +145,7 @@
 
     const downloadFn = function() {
 
-      window.open("/plates/mtoExport/" + batchID);
+      window.open("/plates-ontario/mtoExport/" + batchID);
       batchIsSent = true;
 
     };
@@ -334,7 +334,7 @@
       "</p>";
 
     cityssm.postJSON(
-      "/plates/mto_doGetPlatesAvailableForLookup", {
+      "/plates-ontario/doGetPlatesAvailableForMTOLookup", {
         batchID: batchID,
         issueDaysAgo: availableIssueDaysAgoEle.value
       },

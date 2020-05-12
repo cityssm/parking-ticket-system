@@ -14,64 +14,66 @@
       Find a Parking Ticket
     </h1>
 
-    <form id="form--filters">
-      <input id="filter--limit" name="limit" type="hidden" value="50" />
-      <input id="filter--offset" name="offset" type="hidden" value="0" />
-      <div class="columns">
-        <div class="column">
-          <div class="field">
-            <label class="label" for="filter--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
-            <div class="control has-icons-left">
-              <input class="input" id="filter--ticketNumber" name="ticketNumber" maxlength="10" />
-              <span class="icon is-left is-small">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="filter--licencePlateNumber">Licence Plate Number</label>
-            <div class="control has-icons-left">
-              <input class="input" id="filter--licencePlateNumber" name="licencePlateNumber" maxlength="15" />
-              <span class="icon is-left is-small">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="filter--location">Location</label>
-            <div class="control has-icons-left">
-              <input class="input" id="filter--location" name="location" maxlength="10" />
-              <span class="icon is-left is-small">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label" for="filter--isResolved">Resolution Status</label>
-            <div class="control is-expanded has-icons-left">
-              <div class="select is-fullwidth">
-                <select id="filter--isResolved" name="isResolved">
-                  <option value="">(All Resolution Statuses)</option>
-                  <option value="0" selected>Unresolved Tickets</option>
-                  <option value="1">Resolved Tickets</option>
-                </select>
+    <div class="box">
+      <form id="form--filters">
+        <input id="filter--limit" name="limit" type="hidden" value="50" />
+        <input id="filter--offset" name="offset" type="hidden" value="0" />
+        <div class="columns is-multiline is-tablet">
+          <div class="column is-one-quarter-widescreen is-half-tablet">
+            <div class="field">
+              <label class="label" for="filter--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
+              <div class="control has-icons-left">
+                <input class="input" id="filter--ticketNumber" name="ticketNumber" maxlength="10" />
+                <span class="icon is-left is-small">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
               </div>
-              <span class="icon is-left is-small">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
+            </div>
+          </div>
+          <div class="column is-one-quarter-widescreen is-half-tablet">
+            <div class="field">
+              <label class="label" for="filter--licencePlateNumber">Licence Plate Number</label>
+              <div class="control has-icons-left">
+                <input class="input" id="filter--licencePlateNumber" name="licencePlateNumber" maxlength="15" />
+                <span class="icon is-left is-small">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="column is-one-quarter-widescreen is-half-tablet">
+            <div class="field">
+              <label class="label" for="filter--location">Location</label>
+              <div class="control has-icons-left">
+                <input class="input" id="filter--location" name="location" maxlength="10" />
+                <span class="icon is-left is-small">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="column is-one-quarter-widescreen is-half-tablet">
+            <div class="field">
+              <label class="label" for="filter--isResolved">Resolution Status</label>
+              <div class="control is-expanded has-icons-left">
+                <div class="select is-fullwidth">
+                  <select id="filter--isResolved" name="isResolved">
+                    <option value="">(All Resolution Statuses)</option>
+                    <option value="0" selected>Unresolved Tickets</option>
+                    <option value="1">Resolved Tickets</option>
+                  </select>
+                </div>
+                <span class="icon is-left is-small">
+                  <i class="fas fa-filter" aria-hidden="true"></i>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
 
-    <div class="has-margin-top-20" id="container--searchResults"></div>
+    <div id="container--searchResults"></div>
   </div>
 </div>
 

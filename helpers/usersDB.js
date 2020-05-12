@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sqlite = require("better-sqlite3");
 const dbPath = "data/users.db";
+const sqlite = require("better-sqlite3");
 const bcrypt = require("bcrypt");
-const stringFns = require("./stringFns");
+const stringFns = require("@cityssm/expressjs-server-js/stringFns");
 const configFns = require("./configFns");
 function getUser(userNameSubmitted, passwordPlain) {
     const db = sqlite(dbPath);

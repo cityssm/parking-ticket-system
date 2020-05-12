@@ -1,4 +1,3 @@
-import sqlite = require("better-sqlite3");
 export declare type Config = {
     application?: Config_ApplicationConfig;
     session?: Config_SessionConfig;
@@ -99,10 +98,6 @@ declare type Config_Gender = {
 };
 declare type Config_MTOExportImport = {
     authorizedUser?: string;
-};
-export declare type RawRowsColumnsReturn = {
-    rows: object[];
-    columns: sqlite.ColumnDefinition[];
 };
 export declare type Record = {
     recordType: "ticket" | "remark" | "status" | "owner";

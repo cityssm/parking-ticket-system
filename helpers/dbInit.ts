@@ -1,4 +1,4 @@
-import sqlite = require("better-sqlite3");
+import * as sqlite from "better-sqlite3";
 
 
 export function initUsersDB() {

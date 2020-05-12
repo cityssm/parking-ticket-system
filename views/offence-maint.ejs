@@ -26,68 +26,66 @@
       </button>
     </div>
 
-    <div class="card">
-      <div class="card-content">
-        <div class="columns">
-          <div class="column">
-            <label class="label" for="offenceFilter--location">Location</label>
-            <div class="field has-addons">
-              <div class="control is-expanded has-icons-left">
-                <input class="input is-readonly" id="offenceFilter--location" type="text" placeholder="(All Locations)" readonly />
-                <span class="icon is-left">
-                  <i class="fas fa-filter" aria-hidden="true"></i>
-                </span>
-              </div>
-              <div class="control">
-                <button class="button" id="is-select-location-filter-button" type="button">
-                  <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                  <span>Select</span>
-                </button>
-              </div>
-              <div class="control">
-                <button class="button" id="is-clear-location-filter-button" type="button">
-                  <i class="fas fa-times" aria-hidden="true"></i>
-                  <span class="sr-only">Clear</span>
-                </button>
-              </div>
+    <div class="box">
+      <div class="columns">
+        <div class="column">
+          <label class="label" for="offenceFilter--location">Location</label>
+          <div class="field has-addons">
+            <div class="control is-expanded has-icons-left">
+              <input class="input is-readonly" id="offenceFilter--location" type="text" placeholder="(All Locations)" readonly />
+              <span class="icon is-left">
+                <i class="fas fa-filter" aria-hidden="true"></i>
+              </span>
             </div>
-            <p class="help" id="offenceFilter--locationText"></p>
-          </div>
-          <div class="column">
-            <label class="label" for="offenceFilter--bylaw">By-Law</label>
-            <div class="field has-addons">
-              <div class="control is-expanded has-icons-left">
-                <input class="input is-readonly" id="offenceFilter--bylaw" type="text" placeholder="(All By-Laws)" readonly />
-                <span class="icon is-left">
-                  <i class="fas fa-filter" aria-hidden="true"></i>
-                </span>
-              </div>
-              <div class="control">
-                <button class="button" id="is-select-bylaw-filter-button" type="button">
-                  <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                  <span>Select</span>
-                </button>
-              </div>
-              <div class="control">
-                <button class="button" id="is-clear-bylaw-filter-button" type="button">
-                  <i class="fas fa-times" aria-hidden="true"></i>
-                  <span class="sr-only">Clear</span>
-                </button>
-              </div>
+            <div class="control">
+              <button class="button" id="is-select-location-filter-button" type="button">
+                <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                <span>Select</span>
+              </button>
             </div>
-            <p class="help" id="offenceFilter--bylawText"></p>
+            <div class="control">
+              <button class="button" id="is-clear-location-filter-button" type="button">
+                <i class="fas fa-times" aria-hidden="true"></i>
+                <span class="sr-only">Clear</span>
+              </button>
+            </div>
           </div>
+          <p class="help" id="offenceFilter--locationText"></p>
         </div>
-        <div class="is-clearfix">
-          <div class="is-pulled-right">
-            <div class="field">
-              <div class="control">
-                <div class="b-checkbox is-primary">
-                  <input id="offenceFilter--limitResults" type="checkbox" value="100" checked />
-                  <label for="offenceFilter--limitResults">
-                    Limit Results to 100 Records (Faster)
-                  </label>
-                </div>
+        <div class="column">
+          <label class="label" for="offenceFilter--bylaw">By-Law</label>
+          <div class="field has-addons">
+            <div class="control is-expanded has-icons-left">
+              <input class="input is-readonly" id="offenceFilter--bylaw" type="text" placeholder="(All By-Laws)" readonly />
+              <span class="icon is-left">
+                <i class="fas fa-filter" aria-hidden="true"></i>
+              </span>
+            </div>
+            <div class="control">
+              <button class="button" id="is-select-bylaw-filter-button" type="button">
+                <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                <span>Select</span>
+              </button>
+            </div>
+            <div class="control">
+              <button class="button" id="is-clear-bylaw-filter-button" type="button">
+                <i class="fas fa-times" aria-hidden="true"></i>
+                <span class="sr-only">Clear</span>
+              </button>
+            </div>
+          </div>
+          <p class="help" id="offenceFilter--bylawText"></p>
+        </div>
+      </div>
+      <div class="is-clearfix">
+        <div class="is-pulled-right">
+          <div class="field">
+            <div class="control">
+              <div class="b-checkbox is-primary">
+                <input id="offenceFilter--limitResults" type="checkbox" value="100" checked />
+                <label for="offenceFilter--limitResults">
+                  Limit Results to 100 Records (Faster)
+                </label>
               </div>
             </div>
           </div>
