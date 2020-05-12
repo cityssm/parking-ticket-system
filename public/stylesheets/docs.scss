@@ -1,0 +1,15 @@
+@import '../../node_modules/github-markdown-css/github-markdown';
+
+.markdown-body {
+  max-width: 980px;
+  min-width: 200px;
+  padding: 45px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+  .markdown-body {
+    padding: 15px;
+  }
+}

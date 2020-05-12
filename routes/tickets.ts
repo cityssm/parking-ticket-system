@@ -263,25 +263,6 @@ router.post("/doQuickReconcileMatches", function(req, res) {
 });
 
 
-// Ticket Convictions
-
-
-router.get("/convict", function(req, res) {
-
-  if (!req.session.user.userProperties.canUpdate) {
-
-    res.redirect("/tickets/?error=accessDenied");
-    return;
-
-  }
-
-  res.render("ticket-convict", {
-    headTitle: "Convict Parking Tickets"
-  });
-
-});
-
-
 /*
  * New Ticket
  */
@@ -666,5 +647,6 @@ router.get("/:ticketID/edit", function(req, res) {
   });
 
 });
+
 
 export = router;

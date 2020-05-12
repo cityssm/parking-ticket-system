@@ -18,8 +18,9 @@ const routerAdmin = require("./routes/admin");
 const routerTickets = require("./routes/tickets");
 const routerOffences = require("./routes/offences");
 const routerPlates = require("./routes/plates");
-const routePlatesOntario = require("./routes/plates-ontario");
 const routerReports = require("./routes/reports");
+const routePlatesOntario = require("./routes/plates-ontario");
+const routeTicketsOntario = require("./routes/tickets-ontario");
 const configFns = require("./helpers/configFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const stringFns = require("@cityssm/expressjs-server-js/stringFns");
@@ -56,7 +57,8 @@ app.use(session({
     saveUninitialized: false,
     rolling: true,
     cookie: {
-        maxAge: configFns.getProperty("session.maxAgeMillis")
+        maxAge: configFns.getProperty("session.maxAgeMillis"),
+        sameSite: "strict"
     }
 }));
 app.use(function (req, res, next) {
@@ -94,11 +96,12 @@ app.use("/docs", routerDocs);
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
 app.use("/plates", sessionChecker, routerPlates);
-if (configFns.getProperty("application.feature_mtoExportImport")) {
-    app.use("/plates-ontario", sessionChecker, routePlatesOntario);
-}
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/reports", sessionChecker, routerReports);
+if (configFns.getProperty("application.feature_mtoExportImport")) {
+    app.use("/plates-ontario", sessionChecker, routePlatesOntario);
+    app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
+}
 app.use("/admin", sessionChecker, adminChecker, routerAdmin);
 app.all("/keepAlive", function (_req, res) {
     res.json(true);

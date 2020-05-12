@@ -1,3 +1,4 @@
+import { ParkingTicket } from "./ptsTypes";
 declare type MTO_AvailableLicencePlate = {
     licencePlateNumber: string;
     ticketCount: number;
@@ -9,4 +10,5 @@ declare type MTO_AvailableLicencePlate = {
     ticketNumbers: string[];
 };
 export declare function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID: number, issueDaysAgo: number): MTO_AvailableLicencePlate[];
+export declare function getParkingTicketsAvailableForMTOConvictionBatch(): ParkingTicket[];
 export {};

@@ -46,3 +46,41 @@ function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID, issueDaysAgo
     return plates;
 }
 exports.getLicencePlatesAvailableForMTOLookupBatch = getLicencePlatesAvailableForMTOLookupBatch;
+function getParkingTicketsAvailableForMTOConvictionBatch() {
+    const db = sqlite(parkingDB_1.dbPath, {
+        readonly: true
+    });
+    let issueDate = new Date();
+    issueDate.setDate(issueDate.getDate() - 60);
+    const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
+    const parkingTickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber" +
+        " from ParkingTickets t" +
+        (" inner join ParkingTicketStatusLog o on t.ticketID = o.ticketID" +
+            "	and o.recordDelete_timeMillis is null" +
+            " and o.statusKey = 'ownerLookupMatch'") +
+        " where t.recordDelete_timeMillis is null" +
+        " and t.licencePlateCountry = 'CA'" +
+        " and t.licencePlateProvince = 'ON'" +
+        " and t.licencePlateNumber != ''" +
+        " and t.issueDate <= ?" +
+        (" and not exists (" +
+            "select 1 from ParkingTicketStatusLog s" +
+            " where t.ticketID = s.ticketID" +
+            " and s.recordDelete_timeMillis is null" +
+            " and s.statusKey = 'convictionBatch'" +
+            ")") +
+        (" and (" +
+            "t.resolvedDate is null" +
+            " or exists (" +
+            "select 1 from ParkingTicketStatusLog s" +
+            " where t.ticketID = s.ticketID" +
+            " and s.recordDelete_timeMillis is null" +
+            " and s.statusKey = 'convicted'" +
+            ")" +
+            ")") +
+        " order by ticketNumber")
+        .all(issueDateNumber);
+    db.close();
+    return parkingTickets;
+}
+exports.getParkingTicketsAvailableForMTOConvictionBatch = getParkingTicketsAvailableForMTOConvictionBatch;

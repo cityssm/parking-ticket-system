@@ -206,6 +206,26 @@ export function initParkingDB() {
       ") without rowid").run();
 
     /*
+     * Conviction Batches
+     */
+
+    parkingDB.prepare("create table if not exists ParkingTicketConvictionBatches (" +
+
+      "batchID integer primary key autoincrement," +
+      " batchDate integer not null," +
+      " lockDate integer," +
+      " sentDate integer," +
+
+      " recordCreate_userName varchar(30) not null," +
+      " recordCreate_timeMillis integer not null," +
+      " recordUpdate_userName varchar(30) not null," +
+      " recordUpdate_timeMillis integer not null," +
+      " recordDelete_userName varchar(30)," +
+      " recordDelete_timeMillis integer" +
+      ")").run();
+
+
+    /*
      * Owners
      */
 

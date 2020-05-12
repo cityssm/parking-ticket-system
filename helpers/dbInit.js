@@ -144,6 +144,18 @@ function initParkingDB() {
             " foreign key (batchID) references LicencePlateLookupBatches (batchID)," +
             " foreign key (ticketID) references ParkingTickets (ticketID)" +
             ") without rowid").run();
+        parkingDB.prepare("create table if not exists ParkingTicketConvictionBatches (" +
+            "batchID integer primary key autoincrement," +
+            " batchDate integer not null," +
+            " lockDate integer," +
+            " sentDate integer," +
+            " recordCreate_userName varchar(30) not null," +
+            " recordCreate_timeMillis integer not null," +
+            " recordUpdate_userName varchar(30) not null," +
+            " recordUpdate_timeMillis integer not null," +
+            " recordDelete_userName varchar(30)," +
+            " recordDelete_timeMillis integer" +
+            ")").run();
         parkingDB.prepare("create table if not exists LicencePlateOwners (" +
             "licencePlateCountry varchar(2) not null," +
             " licencePlateProvince varchar(5) not null," +

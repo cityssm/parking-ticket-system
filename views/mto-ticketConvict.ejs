@@ -1,0 +1,58 @@
+<%- include('_header'); -%>
+
+<div class="columns is-variable is-4-mobile is-4-tablet is-block-print" id="is-site-layout">
+  <%- include("_sideMenu-tickets"); -%>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/tickets">Parking Tickets</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Convict Parking Tickets</a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title is-1">
+      Convict Parking Tickets
+    </h1>
+
+    <div class="columns">
+      <div class="column">
+        <h2 class="title is-3">Convictable Parking Tickets</h2>
+
+        <div class="box">
+          <div class="message is-info is-small">
+            <div class="message-body content">
+              <p>Tickets are eligible for conviction when they meet the following criteria.</p>
+              <ul>
+                <li>Licence plates must be from Ontario, Canada.</li>
+                <li>Tickets must have been issued at least 60 days ago.</li>
+                <li>Tickets must not have been resolved already through payment or withdrawal.</li>
+                <li>Tickets must not be part of another conviction batch.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control has-icons-left">
+              <input class="input" id="available--ticketNumber" type="text" placeholder="Filter Parking Tickets" />
+              <span class="icon is-small is-left">
+                <i class="fas fa-filter" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div id="is-available-tickets-container"></div>
+      </div>
+      <div class="is-divider-vertical"></div>
+      <div class="column">
+        <h2 class="title is-3">Target Batch</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<script src="/javascripts/mto-ticketConvict.min.js"></script>
+
+<%- include('_footerB'); -%>

@@ -36,8 +36,15 @@
             <span>Ownership Reconciliation</span>
           </a>
         </li>
+      </ul>
+    <% } %>
+    <% if (configFns.getProperty("application.feature_mtoExportImport") && (user.userProperties.canUpdate || user.userProperties.isOperator)) { %>
+      <p class="menu-label">
+        MTO Integration
+      </p>
+      <ul class="menu-list">
         <li>
-          <a class="<%= (headTitle === "Convict Parking Tickets" ? "is-active" : "") %>" href="/tickets/convict">
+          <a class="<%= (headTitle === "Convict Parking Tickets" ? "is-active" : "") %>" href="/tickets-ontario/convict">
             <span class="icon">
               <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
             </span>

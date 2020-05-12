@@ -22,8 +22,10 @@ import * as routerAdmin from "./routes/admin";
 import * as routerTickets from "./routes/tickets";
 import * as routerOffences from "./routes/offences";
 import * as routerPlates from "./routes/plates";
-import * as routePlatesOntario from "./routes/plates-ontario";
 import * as routerReports from "./routes/reports";
+
+import * as routePlatesOntario from "./routes/plates-ontario";
+import * as routeTicketsOntario from "./routes/tickets-ontario";
 
 
 import { Config_HttpsConfig } from "./helpers/ptsTypes";
@@ -109,7 +111,8 @@ app.use(session({
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    maxAge: configFns.getProperty("session.maxAgeMillis")
+    maxAge: configFns.getProperty("session.maxAgeMillis"),
+    sameSite: "strict"
   }
 }));
 
@@ -184,18 +187,16 @@ app.use("/docs", routerDocs);
 
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
-
 app.use("/plates", sessionChecker, routerPlates);
+app.use("/offences", sessionChecker, routerOffences);
+app.use("/reports", sessionChecker, routerReports);
 
 if (configFns.getProperty("application.feature_mtoExportImport")) {
 
-
   app.use("/plates-ontario", sessionChecker, routePlatesOntario);
+  app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
 
 }
-
-app.use("/offences", sessionChecker, routerOffences);
-app.use("/reports", sessionChecker, routerReports);
 
 app.use("/admin", sessionChecker, adminChecker, routerAdmin);
 
