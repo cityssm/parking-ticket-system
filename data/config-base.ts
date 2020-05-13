@@ -1,6 +1,6 @@
 import * as pts from "../helpers/ptsTypes";
 
-export const baseParkingTicketStatuses : pts.Config_ParkingTicketStatus[] = [
+export const baseParkingTicketStatuses: pts.Config_ParkingTicketStatus[] = [
   {
     statusKey: "paid",
     status: "Paid",
@@ -17,6 +17,15 @@ export const baseParkingTicketStatuses : pts.Config_ParkingTicketStatus[] = [
       fieldLabel: "Reason for Withdrawl"
     },
     isFinalStatus: true,
+    isUserSettable: true
+  },
+  {
+    statusKey: "trial",
+    status: "Trial Requested",
+    statusField: {
+      fieldLabel: "Trial Date"
+    },
+    isFinalStatus: false,
     isUserSettable: true
   },
   {

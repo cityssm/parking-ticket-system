@@ -26,6 +26,7 @@
               <ul>
                 <li>Licence plates must be from Ontario, Canada.</li>
                 <li>Tickets must have been issued at least 60 days ago.</li>
+                <li>Tickets must not have requested a trial date.</li>
                 <li>Tickets must not have been resolved already through payment or withdrawal.</li>
                 <li>Tickets must not be part of another conviction batch.</li>
               </ul>
@@ -33,7 +34,7 @@
           </div>
           <div class="field">
             <div class="control has-icons-left">
-              <input class="input" id="available--ticketNumber" type="text" placeholder="Filter Parking Tickets" />
+              <input class="input" id="filter--parkingTicket" type="text" placeholder="Filter Parking Tickets" />
               <span class="icon is-small is-left">
                 <i class="fas fa-filter" aria-hidden="true"></i>
               </span>
@@ -41,11 +42,27 @@
           </div>
         </div>
 
-        <div id="is-available-tickets-container"></div>
+        <div id="is-convictable-tickets-container"></div>
       </div>
       <div class="is-divider-vertical"></div>
       <div class="column">
         <h2 class="title is-3">Target Batch</h2>
+
+        <div class="box">
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <span class="button is-fullwidth is-static justify-flex-start" id="batchSelector--batchDetails">
+                (No Batch Selected)
+              </span>
+            </div>
+            <div class="control">
+              <button class="button" id="is-select-batch-button" type="button">
+                <span class="icon"><i class="fas fa-search" aria-hidden="true"></i></span>
+                <span>Select</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -53,6 +70,9 @@
 
 <%- include('_footerA'); -%>
 
+<script>
+  pts.convictableTicketsInit = <%- JSON.stringify(tickets) %>;
+</script>
 <script src="/javascripts/mto-ticketConvict.min.js"></script>
 
 <%- include('_footerB'); -%>

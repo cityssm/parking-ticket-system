@@ -352,9 +352,7 @@
 
     clickEvent.preventDefault();
 
-    const filterBlockEle = document.getElementById("is-more-available-filters");
-    filterBlockEle.classList.toggle("is-block");
-    filterBlockEle.classList.toggle("is-hidden");
+    document.getElementById("is-more-available-filters").classList.toggle("is-hidden");
 
   });
 

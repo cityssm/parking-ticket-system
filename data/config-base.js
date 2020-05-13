@@ -20,6 +20,15 @@ exports.baseParkingTicketStatuses = [
         isUserSettable: true
     },
     {
+        statusKey: "trial",
+        status: "Trial Requested",
+        statusField: {
+            fieldLabel: "Trial Date"
+        },
+        isFinalStatus: false,
+        isUserSettable: true
+    },
+    {
         statusKey: "convicted",
         status: "Convicted",
         isFinalStatus: true,

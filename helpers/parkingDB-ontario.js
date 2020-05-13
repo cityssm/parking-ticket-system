@@ -47,17 +47,27 @@ function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID, issueDaysAgo
 }
 exports.getLicencePlatesAvailableForMTOLookupBatch = getLicencePlatesAvailableForMTOLookupBatch;
 function getParkingTicketsAvailableForMTOConvictionBatch() {
+    const addCalculatedFieldsFn = function (ele) {
+        ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
+    };
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
     let issueDate = new Date();
     issueDate.setDate(issueDate.getDate() - 60);
     const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
-    const parkingTickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber" +
+    const parkingTickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber," +
+        " o.ownerName1" +
         " from ParkingTickets t" +
-        (" inner join ParkingTicketStatusLog o on t.ticketID = o.ticketID" +
-            "	and o.recordDelete_timeMillis is null" +
-            " and o.statusKey = 'ownerLookupMatch'") +
+        (" inner join ParkingTicketStatusLog ol on t.ticketID = ol.ticketID" +
+            "	and ol.recordDelete_timeMillis is null" +
+            " and ol.statusKey = 'ownerLookupMatch'") +
+        (" left join LicencePlateOwners o" +
+            " on t.licencePlateCountry = o.licencePlateCountry" +
+            " and t.licencePlateProvince = o.licencePlateProvince" +
+            " and t.licencePlateNumber = o.licencePlateNumber" +
+            " and ol.statusField = o.recordDate" +
+            " and o.recordDelete_timeMillis is null") +
         " where t.recordDelete_timeMillis is null" +
         " and t.licencePlateCountry = 'CA'" +
         " and t.licencePlateProvince = 'ON'" +
@@ -67,7 +77,7 @@ function getParkingTicketsAvailableForMTOConvictionBatch() {
             "select 1 from ParkingTicketStatusLog s" +
             " where t.ticketID = s.ticketID" +
             " and s.recordDelete_timeMillis is null" +
-            " and s.statusKey = 'convictionBatch'" +
+            " and s.statusKey in ('trial', 'convictionBatch')" +
             ")") +
         (" and (" +
             "t.resolvedDate is null" +
@@ -81,6 +91,7 @@ function getParkingTicketsAvailableForMTOConvictionBatch() {
         " order by ticketNumber")
         .all(issueDateNumber);
     db.close();
+    parkingTickets.forEach(addCalculatedFieldsFn);
     return parkingTickets;
 }
 exports.getParkingTicketsAvailableForMTOConvictionBatch = getParkingTicketsAvailableForMTOConvictionBatch;

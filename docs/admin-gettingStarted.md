@@ -58,4 +58,4 @@ It includes the base rules used within the province of Ontario.
 
 ## Step 6: Start the application
 
-    > node app.js
+    > node ./bin/www

@@ -31,18 +31,7 @@ config.parkingTickets = {
         includeDay: false
     }
 };
-const defaultParkingTicketStatuses = [
-    {
-        statusKey: "trial",
-        status: "Trial Requested",
-        statusField: {
-            fieldLabel: "Trial Date"
-        },
-        isFinalStatus: false,
-        isUserSettable: true
-    }
-];
-config.parkingTicketStatuses = base.baseParkingTicketStatuses.concat(defaultParkingTicketStatuses);
+config.parkingTicketStatuses = base.baseParkingTicketStatuses;
 config.parkingOffences = {
     accountNumber: {}
 };

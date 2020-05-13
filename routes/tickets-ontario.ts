@@ -1,6 +1,8 @@
 import { Router } from "express";
 const router = Router();
 
+import { getParkingTicketsAvailableForMTOConvictionBatch } from "../helpers/parkingDB-ontario";
+
 
 // Ticket Convictions
 
@@ -14,8 +16,11 @@ router.get("/convict", function(req, res) {
 
   }
 
+  const tickets = getParkingTicketsAvailableForMTOConvictionBatch();
+
   res.render("mto-ticketConvict", {
-    headTitle: "Convict Parking Tickets"
+    headTitle: "Convict Parking Tickets",
+    tickets: tickets
   });
 
 });

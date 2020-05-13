@@ -19,21 +19,28 @@
       <div class="column">
         <h2 class="title is-3">Available Licence Plates</h2>
 
-        <div class="panel">
-          <div class="panel-heading is-size-6">
-            <div class="level">
-              <div class="level-left">
-                Licence Plate Filters
+        <div class="box">
+          <div class="columns is-variable is-1">
+            <div class="column">
+              <div class="field">
+                <div class="control has-icons-left">
+                  <input class="input" id="available--licencePlateNumber" type="text" placeholder="Filter Licence Plates" />
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-filter" aria-hidden="true"></i>
+                  </span>
+                </div>
               </div>
+            </div>
+            <div class="column is-narrow">
               <div class="level-right has-text-right">
-                <button class="button is-small" id="is-more-available-filters-toggle" type="button">
+                <button class="button" id="is-more-available-filters-toggle" type="button">
                   <span class="icon is-small"><i class="fas fa-cog" aria-hidden="true"></i></span>
-                  <span>Adjust</span>
+                  <span>More</span>
                 </button>
               </div>
             </div>
           </div>
-          <div class="panel-block is-hidden" id="is-more-available-filters">
+          <div class="is-hidden" id="is-more-available-filters">
             <div class="message is-info is-small">
               <div class="message-body content">
                 <p>All available licence plates displayed are automatically filtered in the following ways:</p>
@@ -57,60 +64,51 @@
               </div>
             </div>
           </div>
-          <div class="panel-block is-block">
-            <div class="field">
-              <div class="control has-icons-left">
-                <input class="input" id="available--licencePlateNumber" type="text" placeholder="Filter Licence Plates" />
-                <span class="icon is-small is-left">
-                  <i class="fas fa-filter" aria-hidden="true"></i>
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div id="is-available-plates-container"></div>
       </div>
       <div class="is-divider-vertical"></div>
       <div class="column">
-        <h2 class="title is-3">Target Batch</h2>
 
-        <div class="panel">
-          <div class="panel-heading is-size-6">
-            <div class="level">
-              <div class="level-left" id="batchSelector--batchID">(No Batch Selected)</div>
-              <div class="level-right">
-                <div class="buttons">
-                  <button class="button is-small" id="is-select-batch-button" type="button">
-                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <span>Select</span>
-                  </button>
-                  <% if (user.userProperties.canUpdate) { %>
-                    <button class="button is-small" id="is-create-batch-button" type="button">
-                      <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                      <span>Create</span>
-                    </button>
-                  <% } %>
-                </div>
-              </div>
+        <div class="level">
+          <div class="level-left">
+            <h2 class="title is-3">Target Batch</h2>
+          </div>
+          <% if (user.userProperties.canUpdate) { %>
+            <div class="level-right">
+              <button class="button is-small" id="is-create-batch-button" type="button">
+                <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                <span>Create</span>
+              </button>
+            </div>
+          <% } %>
+        </div>
+
+        <div class="box">
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <span class="button is-fullwidth is-static justify-flex-start" id="batchSelector--batchDetails">
+                (No Batch Selected)
+              </span>
+            </div>
+            <div class="control">
+              <button class="button" id="is-select-batch-button" type="button">
+                <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                <span>Select</span>
+              </button>
             </div>
           </div>
-          <div class="panel-block is-block">
-            <div class="field has-addons">
-              <div class="control is-expanded">
-                <span class="button is-fullwidth is-static justify-flex-start" id="batchSelector--batchDetails">
-                  (No Batch Selected)
-                </span>
+          <div class="level">
+            <div class="level-left" id="batchSelector--batchID">(No Batch Selected)</div>
+            <% if (user.userProperties.canUpdate) { %>
+              <div class="level-right">
+                <button class="button is-primary" id="is-lock-batch-button" type="button" disabled>
+                  <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+                  <span>Lock Batch</span>
+                </button>
               </div>
-              <% if (user.userProperties.canUpdate) { %>
-                <div class="control">
-                  <button class="button is-primary" id="is-lock-batch-button" type="button" disabled>
-                    <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
-                    <span>Lock Batch</span>
-                  </button>
-                </div>
-              <% } %>
-            </div>
+            <% } %>
           </div>
         </div>
 

@@ -71,6 +71,10 @@ export function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID: numbe
 
 export function getParkingTicketsAvailableForMTOConvictionBatch() {
 
+  const addCalculatedFieldsFn = function(ele: ParkingTicket) {
+    ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
+  };
+
   const db = sqlite(dbPath, {
     readonly: true
   });
@@ -79,13 +83,21 @@ export function getParkingTicketsAvailableForMTOConvictionBatch() {
   issueDate.setDate(issueDate.getDate() - 60);
   const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
 
-  const parkingTickets: ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber" +
+  const parkingTickets: ParkingTicket[] = db.prepare(
+    "select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber," +
+    " o.ownerName1" +
     " from ParkingTickets t" +
 
     // Matching Ownership Record
-    (" inner join ParkingTicketStatusLog o on t.ticketID = o.ticketID" +
-      "	and o.recordDelete_timeMillis is null" +
-      " and o.statusKey = 'ownerLookupMatch'") +
+    (" inner join ParkingTicketStatusLog ol on t.ticketID = ol.ticketID" +
+      "	and ol.recordDelete_timeMillis is null" +
+      " and ol.statusKey = 'ownerLookupMatch'") +
+    (" left join LicencePlateOwners o" +
+      " on t.licencePlateCountry = o.licencePlateCountry" +
+      " and t.licencePlateProvince = o.licencePlateProvince" +
+      " and t.licencePlateNumber = o.licencePlateNumber" +
+      " and ol.statusField = o.recordDate" +
+      " and o.recordDelete_timeMillis is null") +
 
     " where t.recordDelete_timeMillis is null" +
 
@@ -96,12 +108,13 @@ export function getParkingTicketsAvailableForMTOConvictionBatch() {
 
     " and t.issueDate <= ?" +
 
+    // No Trial Requested
     // Not Part of Another Conviction Batch
     (" and not exists (" +
       "select 1 from ParkingTicketStatusLog s" +
       " where t.ticketID = s.ticketID" +
       " and s.recordDelete_timeMillis is null" +
-      " and s.statusKey = 'convictionBatch'" +
+      " and s.statusKey in ('trial', 'convictionBatch')" +
       ")") +
 
     // Unresolved or Resolved with Convicted Status
@@ -119,6 +132,8 @@ export function getParkingTicketsAvailableForMTOConvictionBatch() {
     .all(issueDateNumber);
 
   db.close();
+
+  parkingTickets.forEach(addCalculatedFieldsFn);
 
   return parkingTickets;
 }
