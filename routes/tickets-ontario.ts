@@ -1,6 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
+import * as parkingDB from "../helpers/parkingDB";
 import { getParkingTicketsAvailableForMTOConvictionBatch } from "../helpers/parkingDB-ontario";
 
 
@@ -18,9 +19,12 @@ router.get("/convict", function(req, res) {
 
   const tickets = getParkingTicketsAvailableForMTOConvictionBatch();
 
+  const batch = parkingDB.getParkingTicketConvictionBatch(-1);
+
   res.render("mto-ticketConvict", {
     headTitle: "Convict Parking Tickets",
-    tickets: tickets
+    tickets: tickets,
+    batch: batch
   });
 
 });

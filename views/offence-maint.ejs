@@ -100,11 +100,11 @@
 <%- include('_footerA'); -%>
 
 <script>
-  pts.locationsInit = <%- JSON.stringify(locations) -%>;
-  pts.bylawsInit = <%- JSON.stringify(bylaws) -%>;
-  pts.offencesInit = <%- JSON.stringify(offences) -%>;
+  exports.locations = <%- JSON.stringify(locations) -%>;
+  exports.bylaws = <%- JSON.stringify(bylaws) -%>;
+  exports.offences = <%- JSON.stringify(offences) -%>;
 
-  pts.accountNumberPatternInit = <%- JSON.stringify(configFns.getProperty("parkingOffences.accountNumber.pattern").source) -%>;
+  exports.accountNumberPattern = <%- JSON.stringify(configFns.getProperty("parkingOffences.accountNumber.pattern").source) -%>;
 </script>
 
 <script src="/javascripts/offence-maint.min.js"></script>

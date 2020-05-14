@@ -40,7 +40,9 @@ router.post("/doGetTickets", function(req, res) {
 });
 
 
-// Ownership Reconciliation
+/*
+ * Ownership Reconciliation
+ */
 
 
 router.get("/reconcile", function(req, res) {
@@ -259,6 +261,76 @@ router.post("/doQuickReconcileMatches", function(req, res) {
     success: true,
     statusRecords: statusRecords
   });
+
+});
+
+
+/*
+ * Ticket Convictions
+ */
+
+
+router.post("/doGetRecentConvictionBatches", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const batches = parkingDB.getLastTenParkingTicketConvictionBatches();
+
+  return res.json(batches);
+
+});
+
+
+router.post("/doGetConvictionBatch", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const batch = parkingDB.getParkingTicketConvictionBatch(req.body.batchID);
+
+  return res.json(batch);
+
+});
+
+router.post("/doCreateConvictionBatch", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const batchResult = parkingDB.createParkingTicketConvictionBatch(req.session);
+
+  return res.json(batchResult);
 
 });
 

@@ -328,8 +328,8 @@
 
 <% if (!isCreate) { %>
   <script>
-    pts.ticketRemarksInit = <%- JSON.stringify(ticket.remarks) %>;
-    pts.ticketStatusLogInit = <%- JSON.stringify(ticket.statusLog) %>;
+    exports.ticketRemarks = <%- JSON.stringify(ticket.remarks) %>;
+    exports.ticketStatusLog = <%- JSON.stringify(ticket.statusLog) %>;
   </script>
 <% } %>
 

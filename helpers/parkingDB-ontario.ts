@@ -85,7 +85,7 @@ export function getParkingTicketsAvailableForMTOConvictionBatch() {
 
   const parkingTickets: ParkingTicket[] = db.prepare(
     "select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber," +
-    " o.ownerName1" +
+    " o.ownerName1 as licencePlateOwner_ownerName1" +
     " from ParkingTickets t" +
 
     // Matching Ownership Record

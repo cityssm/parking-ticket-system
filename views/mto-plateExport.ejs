@@ -71,19 +71,7 @@
       <div class="is-divider-vertical"></div>
       <div class="column">
 
-        <div class="level">
-          <div class="level-left">
-            <h2 class="title is-3">Target Batch</h2>
-          </div>
-          <% if (user.userProperties.canUpdate) { %>
-            <div class="level-right">
-              <button class="button is-small" id="is-create-batch-button" type="button">
-                <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                <span>Create</span>
-              </button>
-            </div>
-          <% } %>
-        </div>
+        <h2 class="title is-3">Target Batch</h2>
 
         <div class="box">
           <div class="field has-addons">
@@ -123,7 +111,7 @@
 
 <% if (batch) { %>
   <script>
-    pts.plateExportBatch = <%- JSON.stringify(batch) %>;
+    exports.plateExportBatch = <%- JSON.stringify(batch) %>;
   </script>
 <% } %>
 

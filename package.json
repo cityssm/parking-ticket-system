@@ -5,7 +5,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "@cityssm/bulma-webapp-js": "^0.2.3",
+    "@cityssm/bulma-webapp-js": "^0.2.8",
     "@cityssm/expressjs-server-js": "^0.1.0",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "bcrypt": "^4.0.1",
@@ -35,12 +35,16 @@
     "@types/express": "^4.17.6",
     "@types/express-serve-static-core": "^4.17.7",
     "@types/express-session": "^1.17.0",
+    "@types/gulp": "^4.0.6",
+    "@types/gulp-minify": "^3.1.0",
     "@types/html-pdf": "^2.2.0",
     "@types/http-errors": "^1.6.3",
     "@types/marked": "^0.7.4",
     "@types/morgan": "^1.9.0",
     "@types/multer": "^1.4.3",
     "@types/node-fetch": "^2.5.7",
-    "github-markdown-css": "^4.0.0"
+    "github-markdown-css": "^4.0.0",
+    "gulp": "^4.0.2",
+    "gulp-minify": "^3.1.0"
   }
 }

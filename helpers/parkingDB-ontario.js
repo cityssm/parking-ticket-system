@@ -57,7 +57,7 @@ function getParkingTicketsAvailableForMTOConvictionBatch() {
     issueDate.setDate(issueDate.getDate() - 60);
     const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
     const parkingTickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber," +
-        " o.ownerName1" +
+        " o.ownerName1 as licencePlateOwner_ownerName1" +
         " from ParkingTickets t" +
         (" inner join ParkingTicketStatusLog ol on t.ticketID = ol.ticketID" +
             "	and ol.recordDelete_timeMillis is null" +

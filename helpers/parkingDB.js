@@ -1042,6 +1042,7 @@ function getLicencePlateLookupBatch(batchID_or_negOne) {
             .get(batchID_or_negOne);
     }
     if (!batch) {
+        db.close();
         return null;
     }
     batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
@@ -1287,6 +1288,7 @@ function createLicencePlateLookupBatch(reqSession) {
         " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
         " values (?, ?, ?, ?, ?)")
         .run(dateTimeFns.dateToInteger(rightNow), reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
+    db.close();
     if (info.changes > 0) {
         return {
             success: true,
@@ -1424,3 +1426,93 @@ function markLicencePlateLookupErrorLogEntryAcknowledged(batchID, logIndex, reqS
     return info.changes > 0;
 }
 exports.markLicencePlateLookupErrorLogEntryAcknowledged = markLicencePlateLookupErrorLogEntryAcknowledged;
+function createParkingTicketConvictionBatch(reqSession) {
+    const db = sqlite(exports.dbPath);
+    const rightNow = new Date();
+    const info = db.prepare("insert into ParkingTicketConvictionBatches" +
+        " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+        " values (?, ?, ?, ?, ?)")
+        .run(dateTimeFns.dateToInteger(rightNow), reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
+    db.close();
+    if (info.changes > 0) {
+        return {
+            success: true,
+            batch: {
+                batchID: info.lastInsertRowid,
+                batchDate: dateTimeFns.dateToInteger(rightNow),
+                batchDateString: dateTimeFns.dateToString(rightNow),
+                lockDate: null,
+                lockDateString: "",
+                batchEntries: []
+            }
+        };
+    }
+    else {
+        return { success: false };
+    }
+}
+exports.createParkingTicketConvictionBatch = createParkingTicketConvictionBatch;
+function getLastTenParkingTicketConvictionBatches() {
+    const db = sqlite(exports.dbPath, {
+        readonly: true
+    });
+    const batches = db.prepare("select batchID, batchDate, lockDate, sentDate," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
+        " from ParkingTicketConvictionBatches" +
+        " where recordDelete_timeMillis is null" +
+        " order by batchID desc" +
+        " limit 10").all();
+    db.close();
+    batches.forEach(function (batch) {
+        batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
+        batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
+        batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
+    });
+    return batches;
+}
+exports.getLastTenParkingTicketConvictionBatches = getLastTenParkingTicketConvictionBatches;
+function getParkingTicketConvictionBatch(batchID_or_negOne) {
+    const db = sqlite(exports.dbPath, {
+        readonly: true
+    });
+    const baseBatchSQL = "select batchID, batchDate, lockDate, sentDate," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
+        " from ParkingTicketConvictionBatches" +
+        " where recordDelete_timeMillis is null";
+    let batch;
+    if (batchID_or_negOne == -1) {
+        batch = db.prepare(baseBatchSQL +
+            " and lockDate is null" +
+            " order by batchID desc" +
+            " limit 1")
+            .get();
+    }
+    else {
+        batch = db.prepare(baseBatchSQL +
+            " and batchID = ?")
+            .get(batchID_or_negOne);
+    }
+    if (!batch) {
+        db.close();
+        return null;
+    }
+    batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
+    batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
+    batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
+    batch.batchEntries = db.prepare("select s.statusIndex," +
+        " s.statusDate, s.statusTime, s.statusNote," +
+        " s.recordCreate_userName, s.recordCreate_timeMillis, s.recordUpdate_userName, s.recordUpdate_timeMillis" +
+        " from ParkingTicketStatusLog s" +
+        " left join ParkingTickets t on s.ticketID = t.ticketID" +
+        " where s.recordDelete_timeMillis is null" +
+        " and s.statusKey = 'convictionBatch' and s.statusField = ?" +
+        " order by t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber")
+        .all(batch.batchID);
+    batch.batchEntries.forEach(function (batchEntry) {
+        batchEntry.statusDateString = dateTimeFns.dateIntegerToString(batchEntry.statusDate);
+        batchEntry.statusTimeString = dateTimeFns.dateIntegerToString(batchEntry.statusTime);
+    });
+    db.close();
+    return batch;
+}
+exports.getParkingTicketConvictionBatch = getParkingTicketConvictionBatch;

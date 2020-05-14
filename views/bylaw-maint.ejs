@@ -45,7 +45,7 @@
 <%- include('_footerA'); -%>
 
 <script>
-  pts.bylawsInit = <%- JSON.stringify(bylaws) -%>;
+  exports.bylaws = <%- JSON.stringify(bylaws) -%>;
 </script>
 
 <script src="/javascripts/bylaw-maint.min.js"></script>

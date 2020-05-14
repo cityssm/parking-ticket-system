@@ -62,7 +62,7 @@
 <%- include('_footerA'); -%>
 
 <script>
-  pts.locationsInit = <%- JSON.stringify(locations) -%>;
+  exports.locations = <%- JSON.stringify(locations) -%>;
 </script>
 
 <script src="/javascripts/location-maint.min.js"></script>

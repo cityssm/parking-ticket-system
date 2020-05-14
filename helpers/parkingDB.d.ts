@@ -208,4 +208,20 @@ interface LookupErrorLogEntry extends pts.LicencePlate {
 }
 export declare function getUnacknowledgedLicencePlateLookupErrorLog(batchID_or_negOne: number, logIndex_or_negOne: number): LookupErrorLogEntry[];
 export declare function markLicencePlateLookupErrorLogEntryAcknowledged(batchID: number, logIndex: number, reqSession: Express.Session): boolean;
+export declare function createParkingTicketConvictionBatch(reqSession: Express.Session): {
+    success: boolean;
+    batch: {
+        batchID: import("integer").IntLike;
+        batchDate: number;
+        batchDateString: string;
+        lockDate: any;
+        lockDateString: string;
+        batchEntries: any[];
+    };
+} | {
+    success: boolean;
+    batch?: undefined;
+};
+export declare function getLastTenParkingTicketConvictionBatches(): pts.ParkingTicketConvictionBatch[];
+export declare function getParkingTicketConvictionBatch(batchID_or_negOne: number): pts.ParkingTicketConvictionBatch;
 export {};

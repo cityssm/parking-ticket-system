@@ -143,6 +143,7 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     ownerLookup_statusKey: "ownerLookupPending" | "ownerLookupError" | "ownerLookupMatch";
     ownerLookup_statusField: string;
     licencePlateOwner: LicencePlateOwner;
+    licencePlateOwner_ownerName1?: string;
     location: ParkingLocation;
     statusLog: ParkingTicketStatusLog[];
     remarks: ParkingTicketRemark[];
@@ -214,6 +215,16 @@ export interface LicencePlateLookupBatch extends Record {
 }
 export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {
     batchID: number;
+}
+export interface ParkingTicketConvictionBatch extends Record {
+    batchID: number;
+    batchDate: number;
+    batchDateString: string;
+    lockDate: number;
+    lockDateString: string;
+    sentDate: number;
+    sentDateString: string;
+    batchEntries?: ParkingTicketStatusLog[];
 }
 export declare type User = {
     userName: string;

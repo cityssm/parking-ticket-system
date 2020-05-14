@@ -1,4 +1,3 @@
-
 app.min.js
 data/*.db
 data/*.db-journal
@@ -6,6 +5,7 @@ data/*.min.js
 data/config.js
 data/config.ts
 helpers/*.min.js
+tasks/*.min.js
 node_modules/
 public/images-custom/*
 routes/*.min.js

@@ -51,7 +51,7 @@
         <div class="box">
           <div class="field has-addons">
             <div class="control is-expanded">
-              <span class="button is-fullwidth is-static justify-flex-start" id="batchSelector--batchDetails">
+              <span class="button is-fullwidth is-static justify-flex-start" id="batchSelector--batchID">
                 (No Batch Selected)
               </span>
             </div>
@@ -62,6 +62,7 @@
               </button>
             </div>
           </div>
+          <div id="batchSelector--batchDetails"></div>
         </div>
       </div>
     </div>
@@ -71,7 +72,10 @@
 <%- include('_footerA'); -%>
 
 <script>
-  pts.convictableTicketsInit = <%- JSON.stringify(tickets) %>;
+  exports.convictableTickets = <%- JSON.stringify(tickets) %>;
+  <% if (batch) { %>
+    exports.currentBatch = <%- JSON.stringify(batch) %>;
+  <% } %>
 </script>
 <script src="/javascripts/mto-ticketConvict.min.js"></script>
 
