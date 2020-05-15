@@ -10,7 +10,7 @@ export type Config = {
   genders?: Config_Gender[],
   licencePlateCountryAliases?: { [countryKey: string]: string },
   licencePlateProvinceAliases?: { [country: string]: { [provinceKey: string]: string } },
-  licencePlateProvinces?: {[country: string]: Config_LicencePlateCountry},
+  licencePlateProvinces?: { [country: string]: Config_LicencePlateCountry },
   mtoExportImport?: Config_MTOExportImport
 };
 
@@ -91,7 +91,7 @@ export type Config_ParkingOffences = {
 
 type Config_LicencePlateCountry = {
   countryShortName: string,
-  provinces: {[province: string]: Config_LicencePlateProvince}
+  provinces: { [province: string]: Config_LicencePlateProvince }
 };
 
 type Config_LicencePlateProvince = {
@@ -198,9 +198,15 @@ export interface ParkingTicketStatusLog extends Record {
   statusTime?: number,
   statusTimeString?: string,
 
-  statusKey: string,
-  statusField: string,
-  statusNote: string
+  statusKey?: string,
+  statusField?: string,
+  statusNote?: string,
+
+  // from ticket
+  ticketNumber?: string,
+  licencePlateNumber?: string,
+  issueDate?: number,
+  issueDateString?: string
 };
 
 export interface ParkingTicketRemark extends Record {

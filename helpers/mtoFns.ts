@@ -1,5 +1,5 @@
 import * as sqlite from "better-sqlite3";
-import { dbPath, markLookupBatchAsSent, getLicencePlateLookupBatch } from "./parkingDB";
+import * as parkingDB from "./parkingDB";
 
 import * as configFns from "./configFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
@@ -249,7 +249,7 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 
   // Verify the batch with the sent date in the file
 
-  const db = sqlite(dbPath);
+  const db = sqlite(parkingDB.dbPath);
 
   const batchRow = db.prepare("select sentDate from LicencePlateLookupBatches" +
     " where batchID = ?" +
@@ -375,11 +375,12 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 }
 
 
-export function exportLicencePlateBatch(batchID: number, reqSession: Express.Session) {
-
-  markLookupBatchAsSent(batchID, reqSession);
-
-  const batch = getLicencePlateLookupBatch(batchID);
+function exportBatch(sentDate: number, batchEntries: {
+  ticketID?: number,
+  ticketNumber?: string,
+  issueDate?: number,
+  licencePlateNumber?: string
+}[]) {
 
   const newline = "\n";
 
@@ -399,9 +400,9 @@ export function exportLicencePlateBatch(batchID: number, reqSession: Express.Ses
 
   const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
 
-  for (let index = 0; index < batch.batchEntries.length; index += 1) {
+  for (let index = 0; index < batchEntries.length; index += 1) {
 
-    const entry = batch.batchEntries[index];
+    const entry = batchEntries[index];
 
     if (entry.ticketID === null) {
       continue;
@@ -431,7 +432,7 @@ export function exportLicencePlateBatch(batchID: number, reqSession: Express.Ses
 
   output = "PKTA" +
     "    1" +
-    batch.sentDate.toString().slice(-6) +
+    sentDate.toString().slice(-6) +
     recordCountPadded +
     "Y" +
     "N" + newline +
@@ -448,4 +449,24 @@ export function exportLicencePlateBatch(batchID: number, reqSession: Express.Ses
     recordCountPadded + newline;
 
   return output;
+}
+
+
+export function exportLicencePlateBatch(batchID: number, reqSession: Express.Session) {
+
+  parkingDB.markLookupBatchAsSent(batchID, reqSession);
+
+  const batch = parkingDB.getLicencePlateLookupBatch(batchID);
+
+  return exportBatch(batch.sentDate, batch.batchEntries);
+}
+
+
+export function exportConvictionBatch(batchID: number, reqSession: Express.Session) {
+
+  parkingDB.markConvictionBatchAsSent(batchID, reqSession);
+
+  const batch = parkingDB.getParkingTicketConvictionBatch(batchID);
+
+  return exportBatch(batch.sentDate, batch.batchEntries);
 }

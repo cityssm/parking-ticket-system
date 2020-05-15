@@ -224,4 +224,25 @@ export declare function createParkingTicketConvictionBatch(reqSession: Express.S
 };
 export declare function getLastTenParkingTicketConvictionBatches(): pts.ParkingTicketConvictionBatch[];
 export declare function getParkingTicketConvictionBatch(batchID_or_negOne: number): pts.ParkingTicketConvictionBatch;
+export declare function addParkingTicketToConvictionBatch(batchID: number, ticketID: number, reqSession: Express.Session): {
+    success: boolean;
+    message: string;
+} | {
+    success: boolean;
+    message?: undefined;
+};
+export declare function removeParkingTicketFromConvictionBatch(batchID: number, ticketID: number, reqSession: Express.Session): {
+    success: boolean;
+    message: string;
+} | {
+    success: boolean;
+    message?: undefined;
+};
+export declare function lockConvictionBatch(batchID: number, reqSession: Express.Session): {
+    success: boolean;
+    lockDate: number;
+    lockDateString: string;
+};
+export declare function unlockConvictionBatch(batchID: number, reqSession: Express.Session): boolean;
+export declare function markConvictionBatchAsSent(batchID: number, reqSession: Express.Session): boolean;
 export {};

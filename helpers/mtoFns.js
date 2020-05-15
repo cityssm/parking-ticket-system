@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqlite = require("better-sqlite3");
-const parkingDB_1 = require("./parkingDB");
+const parkingDB = require("./parkingDB");
 const configFns = require("./configFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 let currentDate = new Date();
@@ -133,7 +133,7 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
             message: "An error occurred while trying to parse the first row of the file."
         };
     }
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(parkingDB.dbPath);
     const batchRow = db.prepare("select sentDate from LicencePlateLookupBatches" +
         " where batchID = ?" +
         " and recordDelete_timeMillis is null" +
@@ -208,15 +208,13 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
     };
 }
 exports.importLicencePlateOwnership = importLicencePlateOwnership;
-function exportLicencePlateBatch(batchID, reqSession) {
-    parkingDB_1.markLookupBatchAsSent(batchID, reqSession);
-    const batch = parkingDB_1.getLicencePlateLookupBatch(batchID);
+function exportBatch(sentDate, batchEntries) {
     const newline = "\n";
     let output = "";
     let recordCount = 0;
     const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
-    for (let index = 0; index < batch.batchEntries.length; index += 1) {
-        const entry = batch.batchEntries[index];
+    for (let index = 0; index < batchEntries.length; index += 1) {
+        const entry = batchEntries[index];
         if (entry.ticketID === null) {
             continue;
         }
@@ -230,7 +228,7 @@ function exportLicencePlateBatch(batchID, reqSession) {
     const recordCountPadded = ("000000" + recordCount.toString()).slice(-6);
     output = "PKTA" +
         "    1" +
-        batch.sentDate.toString().slice(-6) +
+        sentDate.toString().slice(-6) +
         recordCountPadded +
         "Y" +
         "N" + newline +
@@ -239,4 +237,15 @@ function exportLicencePlateBatch(batchID, reqSession) {
         recordCountPadded + newline;
     return output;
 }
+function exportLicencePlateBatch(batchID, reqSession) {
+    parkingDB.markLookupBatchAsSent(batchID, reqSession);
+    const batch = parkingDB.getLicencePlateLookupBatch(batchID);
+    return exportBatch(batch.sentDate, batch.batchEntries);
+}
 exports.exportLicencePlateBatch = exportLicencePlateBatch;
+function exportConvictionBatch(batchID, reqSession) {
+    parkingDB.markConvictionBatchAsSent(batchID, reqSession);
+    const batch = parkingDB.getParkingTicketConvictionBatch(batchID);
+    return exportBatch(batch.sentDate, batch.batchEntries);
+}
+exports.exportConvictionBatch = exportConvictionBatch;

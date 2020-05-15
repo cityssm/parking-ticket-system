@@ -156,9 +156,13 @@ export interface ParkingTicketStatusLog extends Record {
     statusDateString?: string;
     statusTime?: number;
     statusTimeString?: string;
-    statusKey: string;
-    statusField: string;
-    statusNote: string;
+    statusKey?: string;
+    statusField?: string;
+    statusNote?: string;
+    ticketNumber?: string;
+    licencePlateNumber?: string;
+    issueDate?: number;
+    issueDateString?: string;
 }
 export interface ParkingTicketRemark extends Record {
     recordType: "remark";

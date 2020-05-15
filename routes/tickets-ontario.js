@@ -2,18 +2,48 @@
 const express_1 = require("express");
 const router = express_1.Router();
 const parkingDB = require("../helpers/parkingDB");
-const parkingDB_ontario_1 = require("../helpers/parkingDB-ontario");
+const ontarioParkingDB = require("../helpers/parkingDB-ontario");
+const mtoFns = require("../helpers/mtoFns");
 router.get("/convict", function (req, res) {
-    if (!req.session.user.userProperties.canUpdate) {
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         res.redirect("/tickets/?error=accessDenied");
         return;
     }
-    const tickets = parkingDB_ontario_1.getParkingTicketsAvailableForMTOConvictionBatch();
+    const tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
     const batch = parkingDB.getParkingTicketConvictionBatch(-1);
     res.render("mto-ticketConvict", {
         headTitle: "Convict Parking Tickets",
         tickets: tickets,
         batch: batch
     });
+});
+router.get("/convict/:batchID", function (req, res) {
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+        res.redirect("/tickets/?error=accessDenied");
+        return;
+    }
+    const batchID = parseInt(req.params.batchID);
+    const output = mtoFns.exportConvictionBatch(batchID, req.session);
+    res.setHeader("Content-Disposition", "attachment; filename=convictBatch-" + batchID + ".txt");
+    res.setHeader("Content-Type", "text/plain");
+    res.send(output);
+});
+router.post("/doRemoveTicketFromConvictionBatch", function (req, res) {
+    if (!req.session.user.userProperties.canUpdate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const batchID = req.body.batchID;
+    const ticketID = req.body.ticketID;
+    const result = parkingDB.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
+    if (result.success) {
+        result.tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
+    }
+    return res.json(result);
 });
 module.exports = router;

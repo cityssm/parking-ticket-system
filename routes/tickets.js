@@ -166,7 +166,7 @@ router.post("/doQuickReconcileMatches", function (req, res) {
     });
 });
 router.post("/doGetRecentConvictionBatches", function (req, res) {
-    if (!req.session.user.userProperties.canUpdate) {
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         res
             .status(403)
             .json({
@@ -179,7 +179,7 @@ router.post("/doGetRecentConvictionBatches", function (req, res) {
     return res.json(batches);
 });
 router.post("/doGetConvictionBatch", function (req, res) {
-    if (!req.session.user.userProperties.canUpdate) {
+    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         res
             .status(403)
             .json({
@@ -203,6 +203,54 @@ router.post("/doCreateConvictionBatch", function (req, res) {
     }
     const batchResult = parkingDB.createParkingTicketConvictionBatch(req.session);
     return res.json(batchResult);
+});
+router.post("/doAddTicketToConvictionBatch", function (req, res) {
+    if (!req.session.user.userProperties.canUpdate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const batchID = req.body.batchID;
+    const ticketID = req.body.ticketID;
+    const result = parkingDB.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
+    if (result.success) {
+        result.batch = parkingDB.getParkingTicketConvictionBatch(req.body.batchID);
+    }
+    return res.json(result);
+});
+router.post("/doLockConvictionBatch", function (req, res) {
+    if (!req.session.user.userProperties.canUpdate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const batchID = req.body.batchID;
+    const result = parkingDB.lockConvictionBatch(batchID, req.session);
+    return res.json(result);
+});
+router.post("/doUnlockConvictionBatch", function (req, res) {
+    if (!req.session.user.userProperties.canUpdate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const batchID = req.body.batchID;
+    const success = parkingDB.unlockConvictionBatch(batchID, req.session);
+    return res.json({
+        success: success
+    });
 });
 router.get([
     "/new",

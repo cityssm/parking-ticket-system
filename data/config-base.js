@@ -31,6 +31,9 @@ exports.baseParkingTicketStatuses = [
     {
         statusKey: "convicted",
         status: "Convicted",
+        statusField: {
+            fieldLabel: "Batch ID"
+        },
         isFinalStatus: true,
         isUserSettable: true
     },

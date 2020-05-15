@@ -31,6 +31,9 @@ export const baseParkingTicketStatuses: pts.Config_ParkingTicketStatus[] = [
   {
     statusKey: "convicted",
     status: "Convicted",
+    statusField: {
+      fieldLabel: "Batch ID"
+    },
     isFinalStatus: true,
     isUserSettable: true
   },

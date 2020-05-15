@@ -17,3 +17,4 @@ export declare function importLicencePlateOwnership(batchID: number, ownershipDa
     message?: undefined;
 };
 export declare function exportLicencePlateBatch(batchID: number, reqSession: Express.Session): string;
+export declare function exportConvictionBatch(batchID: number, reqSession: Express.Session): string;

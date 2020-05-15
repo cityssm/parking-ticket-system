@@ -2,20 +2,32 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
     var canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
-    var ticketFilterEle = document.getElementById("filter--parkingTicket");
-    var convictableTicketsContainerEle = document.getElementById("is-convictable-tickets-container");
     var currentBatch = exports.currentBatch;
     delete exports.currentBatch;
     var convictableTickets = exports.convictableTickets;
     delete exports.convictableTickets;
+    var ticketFilterEle = document.getElementById("filter--parkingTicket");
+    var convictableTicketsContainerEle = document.getElementById("convictable-tickets-container");
     var displayedTicketIDs = [];
-    function addTicketToBatchByTicketID(clickEvent) {
+    function addTicketToBatchByIndex(clickEvent) {
         clickEvent.preventDefault();
-        var ticketID = clickEvent.currentTarget.getAttribute("data-ticket-id");
+        var buttonEle = clickEvent.currentTarget;
+        buttonEle.setAttribute("disabled", "disabled");
+        var index = parseInt(buttonEle.getAttribute("data-index"));
+        var ticketID = convictableTickets[index].ticketID;
         cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
             batchID: currentBatch.batchID,
             ticketID: ticketID
         }, function (resultJSON) {
+            if (resultJSON.success) {
+                currentBatch = resultJSON.batch;
+                renderCurrentBatch();
+                convictableTickets.splice(index, 1);
+                renderConvictableTickets();
+            }
+            else {
+                buttonEle.removeAttribute("disabled");
+            }
         });
     }
     function addAllTicketsToBatch(clickEvent) {
@@ -29,9 +41,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function renderConvictableTickets() {
         cityssm.clearElement(convictableTicketsContainerEle);
         displayedTicketIDs = [];
-        if (currentBatch === null) {
+        if (!currentBatch) {
             convictableTicketsContainerEle.innerHTML = "<div class=\"message is-warning\">" +
                 "<div class=\"message-body\">Select a target batch to get started.</div>" +
+                "</div>";
+            return;
+        }
+        if (!canUpdate) {
+            convictableTicketsContainerEle.innerHTML = "<div class=\"message is-warning\">" +
+                "<div class=\"message-body\">Parking tickets can only be added by users with update permissions.</div>" +
+                "</div>";
+            return;
+        }
+        if (currentBatch.lockDate) {
+            convictableTicketsContainerEle.innerHTML = "<div class=\"message is-warning\">" +
+                "<div class=\"message-body\">The target batch is locked and cannot accept additional tickets.</div>" +
                 "</div>";
             return;
         }
@@ -57,6 +81,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     cityssm.escapeHTML(ticket.ticketNumber) +
                     "</a>" +
                     "</td>") +
+                    "<td>" + ticket.issueDateString + "</td>" +
                     ("<td>" +
                         "<span class=\"licence-plate-number is-size-6\">" +
                         cityssm.escapeHTML(ticket.licencePlateNumber) +
@@ -65,14 +90,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         cityssm.escapeHTML(ticket.licencePlateOwner_ownerName1) +
                         "</span>" +
                         "</td>") +
-                    "<td>" + ticket.issueDateString + "</td>" +
                     ("<td class=\"has-text-right\">" +
-                        "<button class=\"button is-small\" data-ticket-id=\"" + ticket.ticketID + "\" type=\"button\">" +
+                        "<button class=\"button is-small\" data-index=\"" + index + "\" type=\"button\">" +
                         "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                         "<span>Add</span>" +
                         "</button>" +
                         "</td>");
-            trEle.getElementsByTagName("button")[0].addEventListener("click", addTicketToBatchByTicketID);
+            trEle.getElementsByTagName("button")[0].addEventListener("click", addTicketToBatchByIndex);
             tbodyEle.appendChild(trEle);
         }
         if (displayedTicketIDs.length === 0) {
@@ -91,17 +115,176 @@ Object.defineProperty(exports, "__esModule", { value: true });
         tableEle.className = "table is-striped is-hoverable is-fullwidth";
         tableEle.innerHTML = "<thead><tr>" +
             "<th>Ticket Number</th>" +
-            "<th>Licence Plate</th>" +
             "<th>Issue Date</th>" +
+            "<th>Licence Plate</th>" +
             "<th></th>" +
             "</tr></thead>";
         tableEle.appendChild(tbodyEle);
         convictableTicketsContainerEle.appendChild(tableEle);
     }
-    renderConvictableTickets();
     ticketFilterEle.addEventListener("keyup", renderConvictableTickets);
+    var batchEntriesContainerEle = document.getElementById("batch-entries-container");
+    function removeTicketFromBatchByIndex(clickEvent) {
+        clickEvent.preventDefault();
+        var buttonEle = clickEvent.currentTarget;
+        buttonEle.setAttribute("disabled", "disabled");
+        var index = parseInt(buttonEle.getAttribute("data-index"));
+        var ticketID = currentBatch.batchEntries[index].ticketID;
+        cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
+            batchID: currentBatch.batchID,
+            ticketID: ticketID
+        }, function (resultJSON) {
+            if (resultJSON.success) {
+                currentBatch.batchEntries.splice(index, 1);
+                renderCurrentBatch();
+                convictableTickets = resultJSON.tickets;
+                renderConvictableTickets();
+            }
+            else {
+                buttonEle.removeAttribute("disabled");
+            }
+        });
+    }
+    function lockBatch(clickEvent) {
+        clickEvent.preventDefault();
+        var lockFn = function () {
+            cityssm.postJSON("/tickets/doLockConvictionBatch", {
+                batchID: currentBatch.batchID
+            }, function (responseJSON) {
+                if (responseJSON.success) {
+                    currentBatch.lockDate = responseJSON.lockDate;
+                    currentBatch.lockDateString = responseJSON.lockDateString;
+                    renderCurrentBatch();
+                    renderConvictableTickets();
+                }
+            });
+        };
+        cityssm.confirmModal("Lock Batch?", "<strong>Are you sure you want to lock this batch?</strong><br />" +
+            "Once locked, no further changes to the batch will be allowed.  The option to download the batch will become available.", "Yes, Lock the Batch", "warning", lockFn);
+    }
+    function unlockBatch(clickEvent) {
+        clickEvent.preventDefault();
+        var lockFn = function () {
+            cityssm.postJSON("/tickets/doUnlockConvictionBatch", {
+                batchID: currentBatch.batchID
+            }, function (responseJSON) {
+                if (responseJSON.success) {
+                    currentBatch.lockDate = null;
+                    currentBatch.lockDateString = null;
+                    renderCurrentBatch();
+                    renderConvictableTickets();
+                }
+            });
+        };
+        cityssm.confirmModal("Lock Batch?", "<strong>Are you sure you want to unlock this batch?</strong><br />" +
+            "Once unlocked, changes to the batch will be allowed.", "Yes, Unlock the Batch", "warning", lockFn);
+    }
+    function downloadBatch(clickEvent) {
+        clickEvent.preventDefault();
+        var downloadFn = function () {
+            window.open("/tickets-ontario/convict/" + currentBatch.batchID);
+        };
+        if (!currentBatch.sentDate) {
+            cityssm.confirmModal("Download Batch", "<strong>You are about to download the batch for the first time.</strong><br />" +
+                "Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.", "Yes, Download the Batch", "warning", function () {
+                downloadFn();
+                var rightNow = new Date();
+                currentBatch.sentDateString = cityssm.dateToString(rightNow);
+                currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""));
+                renderCurrentBatch();
+            });
+        }
+        else {
+            downloadFn();
+        }
+    }
     function renderCurrentBatch() {
         document.getElementById("batchSelector--batchID").innerText = "Batch #" + currentBatch.batchID;
+        document.getElementById("batchSelector--batchDetails").innerHTML =
+            ("<span class=\"has-tooltip-left\" data-tooltip=\"Batch Date\">" +
+                "<span class=\"icon\"><i class=\"fas fa-star\" aria-hidden=\"true\"></i></span> " +
+                currentBatch.batchDateString +
+                "</span>") +
+                (currentBatch.lockDate ?
+                    "<br /><span class=\"has-tooltip-left\" data-tooltip=\"Lock Date\">" +
+                        "<span class=\"icon\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span> " +
+                        currentBatch.lockDateString +
+                        "</span>" : "");
+        cityssm.clearElement(batchEntriesContainerEle);
+        if (currentBatch.batchEntries.length === 0) {
+            batchEntriesContainerEle.innerHTML = "<div class=\"message is-info\">" +
+                "<div class=\"message-body\">There are no parking tickets in this batch.</div>" +
+                "</div>";
+            return;
+        }
+        var tbodyEle = document.createElement("tbody");
+        var canRemove = canUpdate && !currentBatch.lockDate;
+        for (var index = 0; index < currentBatch.batchEntries.length; index += 1) {
+            var batchEntry = currentBatch.batchEntries[index];
+            var trEle = document.createElement("tr");
+            trEle.innerHTML = ("<td>" +
+                "<a href=\"/tickets/" + batchEntry.ticketID + "\" target=\"_blank\">" +
+                batchEntry.ticketNumber +
+                "</a>" +
+                "</td>") +
+                "<td>" + batchEntry.issueDateString + "</td>" +
+                ("<td>" +
+                    "<span class=\"licence-plate-number is-size-6\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</span>" +
+                    "</td>") +
+                (canRemove ?
+                    "<td class=\"has-text-right\">" +
+                        "<button class=\"button is-small\" data-index=\"" + index + "\" type=\"button\">" +
+                        "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
+                        "<span>Remove</span>" +
+                        "</button>" +
+                        "</td>" :
+                    "");
+            if (canRemove) {
+                trEle.getElementsByTagName("button")[0].addEventListener("click", removeTicketFromBatchByIndex);
+            }
+            tbodyEle.appendChild(trEle);
+        }
+        var tableEle = document.createElement("table");
+        tableEle.className = "table is-fullwidth is-striped is-hoverable";
+        tableEle.innerHTML = "<thead><tr>" +
+            "<th>Ticket Number</th>" +
+            "<th>Issue Date</th>" +
+            "<th>Licence Plate</th>" +
+            (canRemove ?
+                "<th></th>" :
+                "") +
+            "</tr></thead>";
+        tableEle.appendChild(tbodyEle);
+        batchEntriesContainerEle.appendChild(tableEle);
+        if (canUpdate && !currentBatch.lockDate) {
+            var lockButtonEle = document.createElement("button");
+            lockButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+            lockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+                "<span>Lock Batch</span>";
+            lockButtonEle.addEventListener("click", lockBatch);
+            batchEntriesContainerEle.insertAdjacentElement("afterbegin", lockButtonEle);
+        }
+        if (canUpdate && currentBatch.lockDate && !currentBatch.sentDate) {
+            var unlockButtonEle = document.createElement("button");
+            unlockButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+            unlockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
+                "<span>Unlock Batch</span>";
+            unlockButtonEle.addEventListener("click", unlockBatch);
+            batchEntriesContainerEle.insertAdjacentElement("afterbegin", unlockButtonEle);
+        }
+        if (currentBatch.lockDate) {
+            var downloadButtonEle = document.createElement("button");
+            downloadButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+            downloadButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
+                "<span>Download File for MTO</span>";
+            downloadButtonEle.addEventListener("click", downloadBatch);
+            tableEle.insertAdjacentElement("beforebegin", downloadButtonEle);
+            tableEle.insertAdjacentHTML("beforebegin", "<a class=\"button is-fullwidth has-margin-bottom-10\"" +
+                " href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
+                "<span>MTO ARIS Login</span>" +
+                "</a>");
+        }
     }
     function confirmCreateBatch() {
         var createFn = function () {
@@ -109,6 +292,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 if (responseJSON.success) {
                     currentBatch = responseJSON.batch;
                     renderCurrentBatch();
+                    renderConvictableTickets();
                 }
             });
         };
@@ -125,6 +309,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }, function (batchObj) {
                 currentBatch = batchObj;
                 renderCurrentBatch();
+                renderConvictableTickets();
             });
             selectBatchCloseModalFn();
         };
@@ -178,4 +363,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
     if (currentBatch) {
         renderCurrentBatch();
     }
+    renderConvictableTickets();
 }());
