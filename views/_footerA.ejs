@@ -2,12 +2,20 @@
 <footer class="footer has-background-grey-lighter has-text-dark has-margin-top-15 is-hidden-print">
   <div class="container">
     <div class="content has-text-right">
-      <p class="has-text-grey-dark">
+      <div class="has-text-grey-dark">
         <strong>
           <%= configFns.getProperty("application.applicationName") %>
         </strong><br />
-        Build <%= buildNumber %>
-      </p>
+        Build <%= buildNumber %><br />
+
+      <a class="has-text-grey-dark" href="/docs" target="_blank">
+        <i class="fas fa-question-circle" aria-hidden="true"></i>
+        Help
+      </a>
+      <a class="has-text-grey-dark has-margin-left-20" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">
+        <i class="fab fa-github" aria-hidden="true"></i>
+        GitHub
+      </a>
     </div>
   </div>
 </footer>

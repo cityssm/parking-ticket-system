@@ -32,10 +32,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function addAllTicketsToBatch(clickEvent) {
         clickEvent.preventDefault();
-        cityssm.postJSON("/tickets/doAddAllTicketsToConvictionBatch", {
-            batchID: currentBatch.batchID,
-            ticketIDs: displayedTicketIDs
-        }, function (resultJSON) {
+        var loadingCloseModalFn;
+        var addFn = function () {
+            cityssm.postJSON("/tickets-ontario/doAddAllTicketsToConvictionBatch", {
+                batchID: currentBatch.batchID,
+                ticketIDs: displayedTicketIDs
+            }, function (responseJSON) {
+                loadingCloseModalFn();
+                if (responseJSON.batch) {
+                    currentBatch = responseJSON.batch;
+                    renderCurrentBatch();
+                }
+                if (responseJSON.tickets) {
+                    convictableTickets = responseJSON.tickets;
+                    renderConvictableTickets();
+                }
+                if (responseJSON.successCount === 0) {
+                    cityssm.alertModal("Results", responseJSON.message ? responseJSON.message : "No tickets were added to the batch.", "OK", "warning");
+                }
+            });
+        };
+        cityssm.openHtmlModal("loading", {
+            onshow: function () {
+                document.getElementById("is-loading-modal-message").innerText =
+                    "Adding " +
+                        displayedTicketIDs.length +
+                        " ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "...";
+            },
+            onshown: function (_modalEle, closeModalFn) {
+                loadingCloseModalFn = closeModalFn;
+                addFn();
+            }
         });
     }
     function renderConvictableTickets() {
@@ -144,6 +171,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 buttonEle.removeAttribute("disabled");
             }
         });
+    }
+    function clearBatch(clickEvent) {
+        clickEvent.preventDefault();
+        var clearFn = function () {
+            cityssm.postJSON("/tickets-ontario/doClearConvictionBatch", {
+                batchID: currentBatch.batchID
+            }, function (responseJSON) {
+                if (!responseJSON.success) {
+                    cityssm.alertModal("Batch Not Cleared", responseJSON.message, "OK", "danger");
+                }
+                if (responseJSON.batch) {
+                    currentBatch = responseJSON.batch;
+                    renderCurrentBatch();
+                }
+                if (responseJSON.tickets) {
+                    convictableTickets = responseJSON.tickets;
+                    renderConvictableTickets();
+                }
+            });
+        };
+        cityssm.confirmModal("Clear Batch", "Are you sure you want to remove all the parking tickets from the batch?", "Yes, Clear the Batch", "warning", clearFn);
     }
     function lockBatch(clickEvent) {
         clickEvent.preventDefault();
@@ -263,6 +311,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<span>Lock Batch</span>";
             lockButtonEle.addEventListener("click", lockBatch);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", lockButtonEle);
+            var clearButtonEle = document.createElement("button");
+            clearButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+            clearButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
+                "<span>Clear Batch</span>";
+            clearButtonEle.addEventListener("click", clearBatch);
+            tableEle.insertAdjacentElement("beforebegin", clearButtonEle);
         }
         if (canUpdate && currentBatch.lockDate && !currentBatch.sentDate) {
             var unlockButtonEle = document.createElement("button");

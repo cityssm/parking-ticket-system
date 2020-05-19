@@ -28,8 +28,8 @@
           Ticket Details
         </h2>
         <div class="panel-block is-block">
-          <div class="columns">
-            <div class="column">
+          <div class="columns is-multiline is-desktop">
+            <div class="column is-full-desktop is-4-widescreen">
               <label class="label" for="ticket--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -81,7 +81,7 @@
               </div>
 
             </div>
-            <div class="is-divider-vertical"></div>
+            <div class="is-divider-vertical is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only"></div>
             <div class="column">
               <label class="label" for="ticket--locationName">Location</label>
               <input id="ticket--locationKey" name="locationKey" type="hidden" value="<%= ticket.locationKey %>" />
@@ -90,9 +90,9 @@
                   <input class="input is-readonly" id="ticket--locationName" type="text" value="<%= (ticket.location || {}).locationName %>" readonly />
                 </div>
                 <div class="control">
-                  <button class="button" id="is-location-lookup-button" type="button">
-                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <span>Lookup</span>
+                  <button class="button" id="is-location-lookup-button" data-tooltip="Lookup Location" type="button">
+                    <span class="sr-only">Lookup Location</span>
+                    <i class="fas fa-fw fa-search" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
@@ -101,8 +101,8 @@
                 <textarea class="textarea" id="ticket--locationDescription" name="locationDescription"><%= ticket.locationDescription %></textarea>
               </div>
             </div>
-            <div class="is-divider-vertical"></div>
-            <div class="column">
+            <div class="is-divider-vertical is-hidden-mobile is-hidden-tablet-only"></div>
+            <div class="column is-half-desktop is-4-widescreen">
 
               <label class="label" for="ticket--bylawNumber">By-law Number</label>
               <div class="field has-addons">
@@ -110,9 +110,9 @@
                   <input class="input is-readonly" id="ticket--bylawNumber" name="bylawNumber" type="text" value="<%= ticket.bylawNumber %>" maxlength="20" readonly required />
                 </div>
                 <div class="control">
-                  <button class="button" id="is-bylaw-lookup-button" type="button">
-                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <span>Lookup</span>
+                  <button class="button" id="is-bylaw-lookup-button" data-tooltip="Lookup By-Law" type="button">
+                    <span class="sr-only">Lookup By-Law</span>
+                    <i class="fas fa-fw fa-search" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
@@ -128,7 +128,7 @@
                 <div class="control">
                   <button class="button is-unlock-field-button" data-unlock="input" data-tooltip="Unlock Offence Amount Field" type="button">
                     <span class="sr-only">Unlock Field</span>
-                    <i class="fas fa-unlock" aria-hidden="false"></i>
+                    <i class="fas fa-fw fa-unlock" aria-hidden="false"></i>
                   </button>
                 </div>
               </div>

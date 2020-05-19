@@ -1591,6 +1591,74 @@ function addParkingTicketToConvictionBatch(batchID, ticketID, reqSession) {
     }
 }
 exports.addParkingTicketToConvictionBatch = addParkingTicketToConvictionBatch;
+function addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, reqSession) {
+    const db = sqlite(exports.dbPath);
+    let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
+        " where recordDelete_timeMillis is null" +
+        " and batchID = ?")
+        .get(batchID);
+    if (!lockedBatchCheck) {
+        db.close();
+        return {
+            successCount: 0,
+            message: "The batch is unavailable."
+        };
+    }
+    else if (lockedBatchCheck.lockDate) {
+        db.close();
+        return {
+            successCount: 0,
+            message: "The batch is locked and cannot be updated."
+        };
+    }
+    const rightNow = new Date();
+    const statusDate = dateTimeFns.dateToInteger(rightNow);
+    const statusTime = dateTimeFns.dateToTimeInteger(rightNow);
+    const timeMillis = rightNow.getTime();
+    let successCount = 0;
+    for (let index = 0; index < ticketIDs.length; index += 1) {
+        const ticketID = ticketIDs[index];
+        let newStatusIndex = db.prepare("select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
+            " from ParkingTicketStatusLog" +
+            " where ticketID = ?")
+            .get(ticketID)
+            .newStatusIndex;
+        let convictedStatusCheck = db.prepare("select statusIndex from ParkingTicketStatusLog" +
+            " where recordDelete_timeMillis is null" +
+            " and ticketID = ?" +
+            " and statusKey = 'convicted'")
+            .get(ticketID);
+        if (!convictedStatusCheck) {
+            db.prepare("insert into ParkingTicketStatusLog" +
+                " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
+                " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+                " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                .run(ticketID, newStatusIndex, statusDate, statusTime, "convicted", batchID.toString(), "", reqSession.user.userName, timeMillis, reqSession.user.userName, timeMillis);
+            newStatusIndex += 1;
+        }
+        const batchStatusCheck = db.prepare("select statusField from ParkingTicketStatusLog" +
+            " where recordDelete_timeMillis is null" +
+            " and ticketID = ?" +
+            " and statusKey = 'convictionBatch'")
+            .get(ticketID);
+        if (!batchStatusCheck) {
+            db.prepare("insert into ParkingTicketStatusLog" +
+                " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
+                " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+                " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                .run(ticketID, newStatusIndex, statusDate, statusTime, "convictionBatch", batchID.toString(), "", reqSession.user.userName, timeMillis, reqSession.user.userName, timeMillis);
+            successCount += 1;
+        }
+        else if (batchStatusCheck.statusField === batchID.toString()) {
+            successCount += 1;
+        }
+    }
+    db.close();
+    return {
+        successCount: successCount
+    };
+}
+exports.addAllParkingTicketsToConvictionBatch = addAllParkingTicketsToConvictionBatch;
 function removeParkingTicketFromConvictionBatch(batchID, ticketID, reqSession) {
     const db = sqlite(exports.dbPath);
     let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
@@ -1626,6 +1694,40 @@ function removeParkingTicketFromConvictionBatch(batchID, ticketID, reqSession) {
     };
 }
 exports.removeParkingTicketFromConvictionBatch = removeParkingTicketFromConvictionBatch;
+function clearConvictionBatch(batchID, reqSession) {
+    const db = sqlite(exports.dbPath);
+    let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
+        " where recordDelete_timeMillis is null" +
+        " and batchID = ?")
+        .get(batchID);
+    if (!lockedBatchCheck) {
+        db.close();
+        return {
+            success: false,
+            message: "The batch is unavailable."
+        };
+    }
+    else if (lockedBatchCheck.lockDate) {
+        db.close();
+        return {
+            success: false,
+            message: "The batch is locked and cannot be updated."
+        };
+    }
+    const rightNowMillis = Date.now();
+    const info = db.prepare("update ParkingTicketStatusLog" +
+        " set recordDelete_userName = ?," +
+        " recordDelete_timeMillis = ?" +
+        " where recordDelete_timeMillis is null" +
+        " and statusKey in ('convicted', 'convictionBatch')" +
+        " and statusField = ?")
+        .run(reqSession.user.userName, rightNowMillis, batchID.toString());
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.clearConvictionBatch = clearConvictionBatch;
 function lockConvictionBatch(batchID, reqSession) {
     const db = sqlite(exports.dbPath);
     const rightNow = new Date();

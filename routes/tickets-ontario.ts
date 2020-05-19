@@ -53,6 +53,75 @@ router.get("/convict/:batchID", function(req, res) {
 });
 
 
+router.post("/doAddAllTicketsToConvictionBatch", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const batchID = req.body.batchID;
+  const ticketIDs: number[] = req.body.ticketIDs;
+
+  const result: {
+    successCount?: number,
+    message?: string,
+    batch?: pts.ParkingTicketConvictionBatch,
+    tickets?: pts.ParkingTicket[]
+  } = parkingDB.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
+
+  if (result.successCount > 0) {
+    result.batch = parkingDB.getParkingTicketConvictionBatch(batchID);
+    result.tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
+  }
+
+  return res.json(result);
+
+});
+
+
+router.post("/doClearConvictionBatch", function(req, res) {
+
+  if (!req.session.user.userProperties.canUpdate) {
+
+    res
+      .status(403)
+      .json({
+        success: false,
+        message: "Forbidden"
+      });
+
+    return;
+
+  }
+
+  const batchID = req.body.batchID;
+
+  const result: {
+    success: boolean,
+    message?: string,
+    batch?: pts.ParkingTicketConvictionBatch,
+    tickets?: pts.ParkingTicket[]
+  } = parkingDB.clearConvictionBatch(batchID, req.session);
+
+  if (result.success) {
+    result.batch = parkingDB.getParkingTicketConvictionBatch(batchID);
+    result.tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
+  }
+
+  return res.json(result);
+
+});
+
+
 router.post("/doRemoveTicketFromConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {

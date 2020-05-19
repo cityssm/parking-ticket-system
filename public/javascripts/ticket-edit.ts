@@ -4,6 +4,8 @@ declare const cityssm: cityssmGlobal;
 import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
+import type * as ptsTypes from "../../helpers/ptsTypes";
+
 
 (function() {
 
@@ -243,7 +245,8 @@ declare const pts: ptsGlobal;
   {
 
     let bylawLookupCloseModalFn: Function;
-    let offenceList = [];
+    let offenceList: ptsTypes.ParkingOffence[] = [];
+    let listItemEles: HTMLAnchorElement[] = [];
 
     const setBylawOffenceFn = function(clickEvent: Event) {
 
@@ -259,7 +262,7 @@ declare const pts: ptsGlobal;
       offenceAmountEle.setAttribute("readonly", "readonly");
       offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
         .removeAttribute("disabled");
-      offenceAmountEle.value = offenceObj.offenceAmount;
+      offenceAmountEle.value = offenceObj.offenceAmount.toFixed(2);
 
       (<HTMLTextAreaElement>document.getElementById("ticket--parkingOffence")).value = offenceObj.bylawDescription;
 
@@ -295,15 +298,16 @@ declare const pts: ptsGlobal;
           linkEle.innerHTML =
             "<div class=\"columns\">" +
             ("<div class=\"column\">" +
-              cityssm.escapeHTML(offenceObj.bylawNumber) + "<br />" +
+              "<span class=\"has-text-weight-semibold\">" + cityssm.escapeHTML(offenceObj.bylawNumber) + "</span><br />" +
               "<small>" + cityssm.escapeHTML(offenceObj.bylawDescription) + "</small>" +
               "</div>") +
-            ("<div class=\"column is-narrow\">" +
-              "$ " + offenceObj.offenceAmount.toFixed(2) +
+            ("<div class=\"column is-narrow has-text-weight-semibold\">" +
+              "$" + offenceObj.offenceAmount.toFixed(2) +
               "</div>") +
             "</div>";
 
           listEle.insertAdjacentElement("beforeend", linkEle);
+          listItemEles.push(linkEle);
 
         }
 
@@ -313,6 +317,34 @@ declare const pts: ptsGlobal;
 
       });
 
+    };
+
+    const filterBylawsFn = function(keyupEvent: Event) {
+
+      const searchStringSplit = (<HTMLInputElement>keyupEvent.currentTarget).value.trim().toLowerCase().split(" ");
+
+      for (let recordIndex = 0; recordIndex < offenceList.length; recordIndex += 1) {
+
+        let displayRecord = true;
+
+        const offenceRecord = offenceList[recordIndex];
+
+        for (let searchIndex = 0; searchIndex < searchStringSplit.length; searchIndex += 1) {
+
+          const searchPiece = searchStringSplit[searchIndex];
+
+          if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 && offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
+            displayRecord = false;
+            break;
+          }
+        }
+
+        if (displayRecord) {
+          listItemEles[recordIndex].classList.remove("is-hidden");
+        } else {
+          listItemEles[recordIndex].classList.add("is-hidden");
+        }
+      }
     };
 
     const openBylawLookupModalFn = function(clickEvent: Event) {
@@ -325,8 +357,10 @@ declare const pts: ptsGlobal;
           bylawLookupCloseModalFn = closeModalFn;
           populateBylawsFn();
 
-          document.getElementById("bylawLookup--searchStr").focus();
+          const searchStringEle = <HTMLInputElement>document.getElementById("bylawLookup--searchStr");
 
+          searchStringEle.focus();
+          searchStringEle.addEventListener("keyup", filterBylawsFn);
         },
         onremoved: function() {
           document.getElementById("is-bylaw-lookup-button").focus();

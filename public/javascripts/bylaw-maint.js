@@ -23,7 +23,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         };
         var confirmDeleteFn = function (deleteClickEvent) {
             deleteClickEvent.preventDefault();
-            cityssm.confirmModal("Delete By-Law", "Are you sure you want to by-law \"" + bylaw.bylawNumber + "\" from the list of available options?", "Yes, Remove By-Law", "danger", deleteFn);
+            cityssm.confirmModal("Delete By-Law", "Are you sure you want to remove by-law \"" + bylaw.bylawNumber + "\" from the list of available options?", "Yes, Remove By-Law", "danger", deleteFn);
         };
         var editFn = function (formEvent) {
             formEvent.preventDefault();

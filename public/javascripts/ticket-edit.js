@@ -127,6 +127,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     {
         var bylawLookupCloseModalFn_1;
         var offenceList_1 = [];
+        var listItemEles_1 = [];
         var setBylawOffenceFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
             var offenceObj = offenceList_1[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
@@ -136,7 +137,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             offenceAmountEle.setAttribute("readonly", "readonly");
             offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
                 .removeAttribute("disabled");
-            offenceAmountEle.value = offenceObj.offenceAmount;
+            offenceAmountEle.value = offenceObj.offenceAmount.toFixed(2);
             document.getElementById("ticket--parkingOffence").value = offenceObj.bylawDescription;
             bylawLookupCloseModalFn_1();
             offenceList_1 = [];
@@ -159,19 +160,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     linkEle.innerHTML =
                         "<div class=\"columns\">" +
                             ("<div class=\"column\">" +
-                                cityssm.escapeHTML(offenceObj.bylawNumber) + "<br />" +
+                                "<span class=\"has-text-weight-semibold\">" + cityssm.escapeHTML(offenceObj.bylawNumber) + "</span><br />" +
                                 "<small>" + cityssm.escapeHTML(offenceObj.bylawDescription) + "</small>" +
                                 "</div>") +
-                            ("<div class=\"column is-narrow\">" +
-                                "$ " + offenceObj.offenceAmount.toFixed(2) +
+                            ("<div class=\"column is-narrow has-text-weight-semibold\">" +
+                                "$" + offenceObj.offenceAmount.toFixed(2) +
                                 "</div>") +
                             "</div>";
                     listEle.insertAdjacentElement("beforeend", linkEle);
+                    listItemEles_1.push(linkEle);
                 }
                 var containerEle = document.getElementById("container--bylawNumbers");
                 cityssm.clearElement(containerEle);
                 containerEle.appendChild(listEle);
             });
+        };
+        var filterBylawsFn_1 = function (keyupEvent) {
+            var searchStringSplit = keyupEvent.currentTarget.value.trim().toLowerCase().split(" ");
+            for (var recordIndex = 0; recordIndex < offenceList_1.length; recordIndex += 1) {
+                var displayRecord = true;
+                var offenceRecord = offenceList_1[recordIndex];
+                for (var searchIndex = 0; searchIndex < searchStringSplit.length; searchIndex += 1) {
+                    var searchPiece = searchStringSplit[searchIndex];
+                    if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 && offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
+                        displayRecord = false;
+                        break;
+                    }
+                }
+                if (displayRecord) {
+                    listItemEles_1[recordIndex].classList.remove("is-hidden");
+                }
+                else {
+                    listItemEles_1[recordIndex].classList.add("is-hidden");
+                }
+            }
         };
         var openBylawLookupModalFn = function (clickEvent) {
             clickEvent.preventDefault();
@@ -179,7 +201,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 onshown: function (_modalEle, closeModalFn) {
                     bylawLookupCloseModalFn_1 = closeModalFn;
                     populateBylawsFn_1();
-                    document.getElementById("bylawLookup--searchStr").focus();
+                    var searchStringEle = document.getElementById("bylawLookup--searchStr");
+                    searchStringEle.focus();
+                    searchStringEle.addEventListener("keyup", filterBylawsFn_1);
                 },
                 onremoved: function () {
                     document.getElementById("is-bylaw-lookup-button").focus();

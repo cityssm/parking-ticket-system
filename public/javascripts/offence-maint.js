@@ -323,7 +323,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             openAddOffenceFromListModal();
         }
         else {
-            cityssm.alertModal("How to Add an Offence", "To add an offence, use the main filters to select either a location, a by-law, or both.", "OK", "info");
+            cityssm.alertModal("How to Create a New Offence", "To add an offence, use the main filters to select either a location, a by-law, or both.", "OK", "info");
         }
     });
     function clearLocationFilter() {

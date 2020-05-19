@@ -218,7 +218,7 @@ router.post("/doAddTicketToConvictionBatch", function (req, res) {
     const ticketID = req.body.ticketID;
     const result = parkingDB.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
     if (result.success) {
-        result.batch = parkingDB.getParkingTicketConvictionBatch(req.body.batchID);
+        result.batch = parkingDB.getParkingTicketConvictionBatch(batchID);
     }
     return res.json(result);
 });

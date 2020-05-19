@@ -231,7 +231,21 @@ export declare function addParkingTicketToConvictionBatch(batchID: number, ticke
     success: boolean;
     message?: undefined;
 };
+export declare function addAllParkingTicketsToConvictionBatch(batchID: number, ticketIDs: number[], reqSession: Express.Session): {
+    successCount: number;
+    message: string;
+} | {
+    successCount: number;
+    message?: undefined;
+};
 export declare function removeParkingTicketFromConvictionBatch(batchID: number, ticketID: number, reqSession: Express.Session): {
+    success: boolean;
+    message: string;
+} | {
+    success: boolean;
+    message?: undefined;
+};
+export declare function clearConvictionBatch(batchID: number, reqSession: Express.Session): {
     success: boolean;
     message: string;
 } | {
