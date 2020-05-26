@@ -33,6 +33,8 @@ export function initUsersDB() {
 
   }
 
+  usersDB.close();
+
   return false;
 
 }
@@ -291,6 +293,8 @@ export function initParkingDB() {
       .run();
   }
 
+  parkingDB.close();
+
   return false;
 
 }
@@ -321,6 +325,8 @@ export function initNHTSADB() {
 
     return true;
   }
+
+  nhtsaDB.close();
 
   return false;
 

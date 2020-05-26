@@ -23,6 +23,7 @@ function initUsersDB() {
         usersDB.close();
         return true;
     }
+    usersDB.close();
     return false;
 }
 exports.initUsersDB = initUsersDB;
@@ -204,6 +205,7 @@ function initParkingDB() {
             " (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)")
             .run();
     }
+    parkingDB.close();
     return false;
 }
 exports.initParkingDB = initParkingDB;
@@ -226,6 +228,7 @@ function initNHTSADB() {
             ") without rowid").run();
         return true;
     }
+    nhtsaDB.close();
     return false;
 }
 exports.initNHTSADB = initNHTSADB;
