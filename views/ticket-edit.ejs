@@ -152,8 +152,8 @@
         </h2>
 
         <div class="panel-block is-block">
-          <div class="columns">
-            <div class="column">
+          <div class="columns is-multiline is-desktop">
+            <div class="column is-6-desktop is-3-widescreen">
               <div class="field">
                 <label class="label" for="ticket--licencePlateCountry">Licence Plate Country</label>
                 <div class="control">
@@ -173,7 +173,7 @@
                 </div>
               </div>
             </div>
-            <div class="column">
+            <div class="column is-6-desktop is-3-widescreen">
               <div class="field">
                 <label class="label" for="ticket--licencePlateProvince">Province</label>
                 <div class="control">
@@ -194,18 +194,11 @@
                 </div>
               </div>
             </div>
-            <div class="column align-self-flex-end">
-              <div class="b-checkbox is-primary has-padding-bottom-10">
-                <input id="ticket--licencePlateIsMissing" name="licencePlateIsMissing" type="checkbox" <%= (ticket.licencePlateIsMissing ? " checked" : "") %> />
-                <label for="ticket--licencePlateIsMissing">
-                  Licence Plate Unavailable
-                </label>
-              </div>
-            </div>
+
           </div>
-          <div class="columns">
+          <div class="columns is-multiline is-desktop">
             <% if (configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) { %>
-              <div class="column">
+              <div class="columnn">
                 <div class="field">
                   <label class="label" for="ticket--licencePlateExpiryDateString">Plate Expiry Date</label>
                   <div class="control">
@@ -244,20 +237,30 @@
                 </div>
               </div>
             <% } %>
-            <div class="column is-3">
-              <div class="field">
-                <label class="label" for="ticket--vehicleMakeModel">Vehicle Make/Model from Ticket</label>
-                <div class="control">
-                  <input class="input" id="ticket--vehicleMakeModel" name="vehicleMakeModel" type="text" value="<%= ticket.vehicleMakeModel %>" maxlength="30" list="datalist--vehicleMakeModel" />
-                  <datalist id="datalist--vehicleMakeModel">
-                    <% for (let makeIndex = 0; makeIndex < vehicleMakeModelDatalist.length; makeIndex += 1) { %>
-                      <option value="<%= vehicleMakeModelDatalist[makeIndex] %>"></option>
+            <div class="column align-self-flex-end">
+              <div class="b-checkbox is-primary has-padding-bottom-10">
+                <input id="ticket--licencePlateIsMissing" name="licencePlateIsMissing" type="checkbox" <%= (ticket.licencePlateIsMissing ? " checked" : "") %> />
+                <label for="ticket--licencePlateIsMissing">
+                  Licence Plate Unavailable
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column">
+            <div class="field">
+              <label class="label" for="ticket--vehicleMakeModel">Vehicle Make/Model from Ticket</label>
+              <div class="control">
+                <input class="input" id="ticket--vehicleMakeModel" name="vehicleMakeModel" type="text" value="<%= ticket.vehicleMakeModel %>" maxlength="30" list="datalist--vehicleMakeModel" />
+                <datalist id="datalist--vehicleMakeModel">
+                  <% for (let makeIndex = 0; makeIndex < vehicleMakeModelDatalist.length; makeIndex += 1) { %>
+                    <option value="<%= vehicleMakeModelDatalist[makeIndex] %>"></option>
                     <% } %>
                   </datalist>
                 </div>
               </div>
             </div>
-            <div class="column is-4">
+            <div class="column">
               <div class="field">
                 <label class="label" for="ticket--vehicleVIN">Vehicle VIN</label>
                 <div class="control">
