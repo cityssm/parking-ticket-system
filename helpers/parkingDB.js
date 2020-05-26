@@ -132,7 +132,7 @@ function getParkingTickets(reqSession, queryOptions) {
         .get(sqlParams)
         .cnt;
     const rows = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
-        " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
+        " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing," +
         " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
         " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
         " s.statusDate as latestStatus_statusDate," +
@@ -317,10 +317,10 @@ function createParkingTicket(reqBody, reqSession) {
         " (ticketNumber, issueDate, issueTime, issuingOfficer," +
         " locationKey, locationDescription," +
         " bylawNumber, parkingOffence, offenceAmount," +
-        " licencePlateCountry, licencePlateProvince, licencePlateNumber, licencePlateExpiryDate, vehicleMakeModel," +
+        " licencePlateCountry, licencePlateProvince, licencePlateNumber, licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN," +
         " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, licencePlateExpiryDate, reqBody.vehicleMakeModel, reqSession.user.userName, nowMillis, reqSession.user.userName, nowMillis);
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqSession.user.userName, nowMillis);
     db.close();
     return {
         success: true,
@@ -380,14 +380,16 @@ function updateParkingTicket(reqBody, reqSession) {
         " licencePlateCountry = ?," +
         " licencePlateProvince = ?," +
         " licencePlateNumber = ?," +
+        " licencePlateIsMissing = ?," +
         " licencePlateExpiryDate = ?," +
         " vehicleMakeModel = ?," +
+        " vehicleVIN = ?," +
         " recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
         " where ticketID = ?" +
         " and resolvedDate is null" +
         " and recordDelete_timeMillis is null")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, licencePlateExpiryDate, reqBody.vehicleMakeModel, reqSession.user.userName, nowMillis, reqBody.ticketID);
+        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqBody.ticketID);
     db.close();
     if (info.changes) {
         return {

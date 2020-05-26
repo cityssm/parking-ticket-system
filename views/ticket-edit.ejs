@@ -17,7 +17,7 @@
     </nav>
 
     <h1 class="title is-1">
-      <%= (isCreate ? "New Ticket" : "Ticket " + ticket.ticketNumber) %>
+      <%= (isCreate ? "Create a New Ticket" : "Ticket " + ticket.ticketNumber) %>
     </h1>
 
     <form id="form--ticket">
@@ -25,11 +25,11 @@
 
       <div class="panel">
         <h2 class="panel-heading">
-          Ticket Details
+          Parking Ticket Details
         </h2>
         <div class="panel-block is-block">
-          <div class="columns is-multiline is-desktop">
-            <div class="column is-full-desktop is-4-widescreen">
+          <div class="columns is-desktop">
+            <div class="column is-6-desktop">
               <label class="label" for="ticket--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -81,7 +81,7 @@
               </div>
 
             </div>
-            <div class="is-divider-vertical is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only"></div>
+            <div class="is-divider-vertical is-hidden-mobile is-hidden-tablet-only"></div>
             <div class="column">
               <label class="label" for="ticket--locationName">Location</label>
               <input id="ticket--locationKey" name="locationKey" type="hidden" value="<%= ticket.locationKey %>" />
@@ -101,9 +101,11 @@
                 <textarea class="textarea" id="ticket--locationDescription" name="locationDescription"><%= ticket.locationDescription %></textarea>
               </div>
             </div>
-            <div class="is-divider-vertical is-hidden-mobile is-hidden-tablet-only"></div>
-            <div class="column is-half-desktop is-4-widescreen">
+          </div>
+          <hr class="is-hidden-mobile is-hidden-tablet-only" />
 
+          <div class="columns">
+            <div class="column">
               <label class="label" for="ticket--bylawNumber">By-law Number</label>
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -116,7 +118,8 @@
                   </button>
                 </div>
               </div>
-
+            </div>
+            <div class="column">
               <label class="label" for="ticket--offenceAmount">Offence Amount</label>
               <div class="field has-addons">
                 <div class="control is-expanded has-icons-left">
@@ -132,12 +135,12 @@
                   </button>
                 </div>
               </div>
-              <div class="field">
-                <label class="label" for="ticket--parkingOffence">Parking Offence</label>
-                <div class="control">
-                  <textarea class="textarea" id="ticket--parkingOffence" name="parkingOffence"><%= ticket.parkingOffence %></textarea>
-                </div>
-              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label" for="ticket--parkingOffence">Parking Offence</label>
+            <div class="control">
+              <textarea class="textarea" id="ticket--parkingOffence" name="parkingOffence"><%= ticket.parkingOffence %></textarea>
             </div>
           </div>
         </div>
@@ -152,9 +155,11 @@
           <div class="columns">
             <div class="column">
               <div class="field">
-                <label class="label" for="ticket--licencePlateCountry">Licence Plate Country Code</label>
+                <label class="label" for="ticket--licencePlateCountry">Licence Plate Country</label>
                 <div class="control">
-                  <input class="input" id="ticket--licencePlateCountry" name="licencePlateCountry" type="text" value="<%= ticket.licencePlateCountry %>" maxlength="2" list="datalist--licencePlateCountry" autocomplete="off" required />
+                  <input class="input" id="ticket--licencePlateCountry" name="licencePlateCountry" type="text" value="<%= ticket.licencePlateCountry %>"
+                    maxlength="2" list="datalist--licencePlateCountry" autocomplete="off"
+                    <%= (ticket.licencePlateIsMissing ? "" : " required") %> />
                   <datalist id="datalist--licencePlateCountry">
                     <%
                       const licencePlateCountries = Object.values(configFns.getProperty("licencePlateProvinces"));
@@ -170,19 +175,31 @@
             </div>
             <div class="column">
               <div class="field">
-                <label class="label" for="ticket--licencePlateProvince">Licence Plate Province</label>
+                <label class="label" for="ticket--licencePlateProvince">Province</label>
                 <div class="control">
-                  <input class="input" id="ticket--licencePlateProvince" name="licencePlateProvince" type="text" value="<%= ticket.licencePlateProvince %>" maxlength="5" list="datalist--licencePlateProvince" autocomplete="off" required />
+                  <input class="input" id="ticket--licencePlateProvince" name="licencePlateProvince" type="text" value="<%= ticket.licencePlateProvince %>"
+                    maxlength="5" list="datalist--licencePlateProvince" autocomplete="off"
+                    <%= (ticket.licencePlateIsMissing ? "" : " required") %> />
                   <datalist id="datalist--licencePlateProvince"></datalist>
                 </div>
               </div>
             </div>
             <div class="column">
               <div class="field">
-                <label class="label" for="ticket--licencePlateNumber">Licence Plate Number</label>
+                <label class="label" for="ticket--licencePlateNumber">Plate Number</label>
                 <div class="control">
-                  <input class="input" id="ticket--licencePlateNumber" name="licencePlateNumber" type="text" value="<%= ticket.licencePlateNumber %>" maxlength="15" pattern="^[A-Z0-9 ]+$" autocomplete="off" required />
+                  <input class="input" id="ticket--licencePlateNumber" name="licencePlateNumber" type="text" value="<%= ticket.licencePlateNumber %>"
+                    maxlength="15" pattern="^[A-Z0-9 ]+$" autocomplete="off"
+                    <%= (ticket.licencePlateIsMissing ? "" : " required") %> />
                 </div>
+              </div>
+            </div>
+            <div class="column align-self-flex-end">
+              <div class="b-checkbox is-primary has-padding-bottom-10">
+                <input id="ticket--licencePlateIsMissing" name="licencePlateIsMissing" type="checkbox" <%= (ticket.licencePlateIsMissing ? " checked" : "") %> />
+                <label for="ticket--licencePlateIsMissing">
+                  Licence Plate Unavailable
+                </label>
               </div>
             </div>
           </div>
@@ -190,7 +207,7 @@
             <% if (configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) { %>
               <div class="column">
                 <div class="field">
-                  <label class="label" for="ticket--licencePlateExpiryDateString">Licence Plate Expiry Date</label>
+                  <label class="label" for="ticket--licencePlateExpiryDateString">Plate Expiry Date</label>
                   <div class="control">
                     <input class="input" id="ticket--licencePlateExpiryDateString" name="licencePlateExpiryDateString" type="date" value="<%= ticket.licencePlateExpiryDateString %>" />
                   </div>
@@ -199,9 +216,9 @@
             <% } else { %>
               <div class="column">
                 <div class="field">
-                  <label class="label" for="ticket--licencePlateExpiryYear">Licence Plate Expiry Year</label>
+                  <label class="label" for="ticket--licencePlateExpiryYear">Plate Expiry Year</label>
                   <div class="control">
-                    <input class="input" id="ticket--licencePlateExpiryYear" name="licencePlateExpiryYear" type="number" value="<%= ticket.licencePlateExpiryYear %>" min="1900" step="1" onwheel="return false" />
+                    <input class="input" id="ticket--licencePlateExpiryYear" name="licencePlateExpiryYear" type="number" value="<%= ticket.licencePlateExpiryYear %>" placeholder="yyyy" min="1900" step="1" onwheel="return false" />
                   </div>
                 </div>
               </div>
@@ -216,6 +233,8 @@
                           <option
                             value="<%= (monthIndex + 1) %>"
                             <%= (ticket.licencePlateExpiryMonth === (monthIndex + 1) ? " selected" : "") %>>
+                            <%= ("0" + (monthIndex + 1).toString()).slice(-2) %>
+                            -
                             <%= dateTimeFns.months[monthIndex] %>
                           </option>
                         <% } %>
@@ -225,7 +244,7 @@
                 </div>
               </div>
             <% } %>
-            <div class="column is-6">
+            <div class="column is-3">
               <div class="field">
                 <label class="label" for="ticket--vehicleMakeModel">Vehicle Make/Model from Ticket</label>
                 <div class="control">
@@ -235,6 +254,14 @@
                       <option value="<%= vehicleMakeModelDatalist[makeIndex] %>"></option>
                     <% } %>
                   </datalist>
+                </div>
+              </div>
+            </div>
+            <div class="column is-4">
+              <div class="field">
+                <label class="label" for="ticket--vehicleVIN">Vehicle VIN</label>
+                <div class="control">
+                  <input class="input" id="ticket--vehicleVIN" name="vehicleVIN" type="text" value="<%= ticket.vehicleVIN %>" maxlength="20" autocomplete="off" />
                 </div>
               </div>
             </div>

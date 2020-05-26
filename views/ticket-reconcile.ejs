@@ -121,7 +121,10 @@
             <tr>
               <th class="has-border-right-width-2" rowspan="2">Licence Plate</th>
               <th class="has-border-right-width-2" colspan="3">Unresolved Parking Ticket</th>
-              <th class="has-border-right-width-2" colspan="3">Ownership</th>
+              <th class="has-border-right-width-2" colspan="2">Ownership</th>
+              <th class="has-border-right-width-2" rowspan="2">
+                <span class="has-cursor-help" data-tooltip="Lookup Date - Issue Date">Record Date Difference</span>
+              </th>
               <th class="has-width-150" rowspan="2">Options</th>
             </tr>
             <tr>
@@ -129,8 +132,7 @@
               <th>Vehicle Make</th>
               <th class="has-border-right-width-2">Plate Expiry Date</th>
               <th>Vehicle Make</th>
-              <th>Plate Expiry Date</th>
-              <th class="has-border-right-width-2">Record Date Difference</th>
+              <th class="has-border-right-width-2">Plate Expiry Date</th>
             </tr>
           </thead>
           <tbody>
@@ -157,20 +159,24 @@
                     <a href="/tickets/<%= record.ticket_ticketID %>" target="_blank">
                       <%= record.ticket_ticketNumber %>
                     </a><br />
-                    <small><%= record.ticket_issueDateString %></small>
+                    <small class="has-cursor-help has-tooltip-right" data-tooltip="Ticket Issue Date" aria-label="Ticket Issue Date"><%= record.ticket_issueDateString %></small>
                   </td>
                   <td><%= record.ticket_vehicleMakeModel %></td>
                   <td class="has-border-right-width-2">
                     <% if (record.ticket_licencePlateExpiryDateString === "") { %>
                       <span class="has-text-grey">(Not Set)</span>
                     <% } else { %>
-                      <%= record.ticket_licencePlateExpiryDateString %>
+                      <span class="has-cursor-help" data-tooltip="Plate Expiry Date on Ticket"><%= record.ticket_licencePlateExpiryDateString %></span>
                     <% } %>
                   </td>
 
                   <td>
                     <%= record.owner_vehicleMake %>
-                    <%- (record.isVehicleMakeMatch ? "<span data-tooltip=\"Vehicle Make Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
+                    <%-
+                      (record.isVehicleMakeMatch ?
+                        "<span class=\"has-cursor-help\" data-tooltip=\"Vehicle Make Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" :
+                        "")
+                    %>
                     <% if (record.owner_vehicleNCIC !== record.owner_vehicleMake) { %>
                       <br />
                       <small><%= record.owner_vehicleNCIC %></small>
@@ -181,15 +187,21 @@
                       <span class="has-text-grey">(Not Set)</span>
                     <% } else { %>
                       <%= record.owner_licencePlateExpiryDateString %>
-                      <%- (record.isLicencePlateExpiryDateMatch ? "<span data-tooltip=\"Expiry Date Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" : "") %>
+                      <%-
+                        (record.isLicencePlateExpiryDateMatch ?
+                          "<span class=\"has-cursor-help\" data-tooltip=\"Expiry Date Match\"><i class=\"fas fa-check-circle has-text-grey-light\" aria-hidden=\"true\"></i></span>" :
+                          "")
+                      %>
                     <% } %>
                   </td>
                   <td class="has-border-right-width-2">
                     <% if (record.dateDifference === 0) { %>
                       Same Day
                     <% } else { %>
-                      <%= record.dateDifference %>
-                      <%= (record.dateDifference === 1 ? "Day" : "Days") %>
+                      <span class="has-cursor-help" data-tooltip="Lookup Date - Issue Date">
+                        <%= record.dateDifference %>
+                        <%= (record.dateDifference === 1 ? "Day" : "Days") %>
+                      </span>
                     <% } %>
                   </td>
 

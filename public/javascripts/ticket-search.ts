@@ -98,7 +98,7 @@ declare const pts: ptsGlobal;
           ticketObj.ticketNumber +
           "</a>" +
           "</td>" +
-          "<td>" + ticketObj.issueDateString + "</td>" +
+          "<td class=\"is-nowrap\">" + ticketObj.issueDateString + "</td>" +
           ("<td>" +
             "<div class=\"licence-plate is-fullwidth\" style=\"--color:" + locationProperties.licencePlateProvince.color + ";--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
 
@@ -106,7 +106,9 @@ declare const pts: ptsGlobal;
               locationProperties.licencePlateProvinceAlias +
               "</div>") +
 
-            ("<div class=\"licence-plate-number\">" + cityssm.escapeHTML(ticketObj.licencePlateNumber) + "</div>") +
+            ("<div class=\"licence-plate-number\">" +
+              (ticketObj.licencePlateNumber === "" ? "&nbsp;" : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
+              "</div>") +
 
             "</div>" +
             "</td>") +

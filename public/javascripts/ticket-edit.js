@@ -214,6 +214,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
         document.getElementById("ticket--bylawNumber").addEventListener("dblclick", openBylawLookupModalFn);
     }
     {
+        var licencePlateIsMissingCheckboxEle_1 = document.getElementById("ticket--licencePlateIsMissing");
+        licencePlateIsMissingCheckboxEle_1.addEventListener("change", function () {
+            if (licencePlateIsMissingCheckboxEle_1.checked) {
+                document.getElementById("ticket--licencePlateCountry").removeAttribute("required");
+                document.getElementById("ticket--licencePlateProvince").removeAttribute("required");
+                document.getElementById("ticket--licencePlateNumber").removeAttribute("required");
+            }
+            else {
+                document.getElementById("ticket--licencePlateCountry").setAttribute("required", "required");
+                document.getElementById("ticket--licencePlateProvince").setAttribute("required", "required");
+                document.getElementById("ticket--licencePlateNumber").setAttribute("required", "required");
+            }
+        });
+    }
+    {
         var populateLicencePlateProvinceDatalistFn = function () {
             var datalistEle = document.getElementById("datalist--licencePlateProvince");
             cityssm.clearElement(datalistEle);

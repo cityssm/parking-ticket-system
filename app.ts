@@ -230,7 +230,7 @@ app.use(function(_req, _res, next) {
 });
 
 // Error handler
-app.use(function(err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) {
+app.use(function(err: createError.HttpError, req: express.Request, res: express.Response, _next: express.NextFunction) {
 
   // Set locals, only providing error in development
   res.locals.message = err.message;

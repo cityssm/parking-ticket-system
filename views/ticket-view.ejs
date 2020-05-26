@@ -64,12 +64,15 @@
           <div class="panel-block is-block">
             <div class="columns">
               <div class="column">
-                <strong>Related By-Law</strong><br />
+                <strong>
+                  Related
+                  <span class="is-nowrap">By-Law</span>
+                </strong><br />
                 <%= ticket.bylawNumber %>
               </div>
               <div class="column">
                 <strong>Offence Amount</strong><br />
-                $ <%= ticket.offenceAmount.toFixed(2) %>
+                $<%= ticket.offenceAmount.toFixed(2) %>
               </div>
             </div>
           </div>
@@ -88,7 +91,13 @@
               <div class="column is-narrow has-text-centered">
                 <div class="licence-plate" style="--color:<%= licencePlateLocationObj.licencePlateProvince.color %>;--backgroundColor:<%= licencePlateLocationObj.licencePlateProvince.backgroundColor %>">
                   <div class="licence-plate-province"><%= licencePlateLocationObj.licencePlateProvinceAlias %></div>
-                  <div class="licence-plate-number"><%= ticket.licencePlateNumber %></div>
+                  <div class="licence-plate-number">
+                    <% if (ticket.licencePlateNumber === "") { %>
+                      &nbsp;
+                    <% } else { %>
+                      <%=  ticket.licencePlateNumber %>
+                    <% } %>
+                  </div>
                 </div><br />
                 <% if (ticket.licencePlateExpiryDateString === "") { %>
                   <span class="is-size-7 has-text-grey">(No Expiry Date)</span>

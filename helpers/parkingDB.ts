@@ -236,7 +236,7 @@ export function getParkingTickets(reqSession: Express.Session, queryOptions: get
   // do query
 
   const rows: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
-    " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
+    " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing," +
     " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
     " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
     " s.statusDate as latestStatus_statusDate," +
@@ -499,9 +499,9 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
     " (ticketNumber, issueDate, issueTime, issuingOfficer," +
     " locationKey, locationDescription," +
     " bylawNumber, parkingOffence, offenceAmount," +
-    " licencePlateCountry, licencePlateProvince, licencePlateNumber, licencePlateExpiryDate, vehicleMakeModel," +
+    " licencePlateCountry, licencePlateProvince, licencePlateNumber, licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN," +
     " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     .run(reqBody.ticketNumber,
       issueDate,
       dateTimeFns.timeStringToInteger(reqBody.issueTimeString),
@@ -514,8 +514,10 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
       reqBody.licencePlateCountry,
       reqBody.licencePlateProvince,
       reqBody.licencePlateNumber,
+      (reqBody.licencePlateIsMissing ? 1 : 0),
       licencePlateExpiryDate,
       reqBody.vehicleMakeModel,
+      reqBody.vehicleVIN,
       reqSession.user.userName,
       nowMillis,
       reqSession.user.userName,
@@ -609,8 +611,10 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
     " licencePlateCountry = ?," +
     " licencePlateProvince = ?," +
     " licencePlateNumber = ?," +
+    " licencePlateIsMissing = ?," +
     " licencePlateExpiryDate = ?," +
     " vehicleMakeModel = ?," +
+    " vehicleVIN = ?," +
     " recordUpdate_userName = ?," +
     " recordUpdate_timeMillis = ?" +
     " where ticketID = ?" +
@@ -628,8 +632,10 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
       reqBody.licencePlateCountry,
       reqBody.licencePlateProvince,
       reqBody.licencePlateNumber,
+      (reqBody.licencePlateIsMissing ? 1 : 0),
       licencePlateExpiryDate,
       reqBody.vehicleMakeModel,
+      reqBody.vehicleVIN,
       reqSession.user.userName,
       nowMillis,
       reqBody.ticketID

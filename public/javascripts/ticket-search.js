@@ -55,13 +55,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     ticketObj.ticketNumber +
                     "</a>" +
                     "</td>" +
-                    "<td>" + ticketObj.issueDateString + "</td>" +
+                    "<td class=\"is-nowrap\">" + ticketObj.issueDateString + "</td>" +
                     ("<td>" +
                         "<div class=\"licence-plate is-fullwidth\" style=\"--color:" + locationProperties.licencePlateProvince.color + ";--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
                         ("<div class=\"licence-plate-province\">" +
                             locationProperties.licencePlateProvinceAlias +
                             "</div>") +
-                        ("<div class=\"licence-plate-number\">" + cityssm.escapeHTML(ticketObj.licencePlateNumber) + "</div>") +
+                        ("<div class=\"licence-plate-number\">" +
+                            (ticketObj.licencePlateNumber === "" ? "&nbsp;" : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
+                            "</div>") +
                         "</div>" +
                         "</td>") +
                     ("<td>" +

@@ -68,10 +68,12 @@ function initParkingDB() {
             " issueDate integer not null," +
             " issueTime integer," +
             " issuingOfficer varchar(30)," +
+            " licencePlateIsMissing bit not null default 0," +
             " licencePlateCountry varchar(2)," +
             " licencePlateProvince varchar(5)," +
             " licencePlateNumber varchar(15)," +
             " licencePlateExpiryDate integer," +
+            " vehicleVIN varchar(20)," +
             " bylawNumber varchar(20)," +
             " locationKey varchar(20)," +
             " locationDescription text," +

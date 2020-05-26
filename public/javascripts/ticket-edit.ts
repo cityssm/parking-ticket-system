@@ -375,6 +375,31 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
   }
 
   /*
+   * Licence Plate Required
+   */
+
+  {
+    const licencePlateIsMissingCheckboxEle = <HTMLInputElement>document.getElementById("ticket--licencePlateIsMissing");
+
+    licencePlateIsMissingCheckboxEle.addEventListener("change", function() {
+
+      if (licencePlateIsMissingCheckboxEle.checked) {
+
+        document.getElementById("ticket--licencePlateCountry").removeAttribute("required");
+        document.getElementById("ticket--licencePlateProvince").removeAttribute("required");
+        document.getElementById("ticket--licencePlateNumber").removeAttribute("required");
+
+      } else {
+
+        document.getElementById("ticket--licencePlateCountry").setAttribute("required", "required");
+        document.getElementById("ticket--licencePlateProvince").setAttribute("required", "required");
+        document.getElementById("ticket--licencePlateNumber").setAttribute("required", "required");
+
+      }
+    });
+  }
+
+  /*
    * Licence Plate Province Datalist
    */
 

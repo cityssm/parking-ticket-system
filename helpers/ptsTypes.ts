@@ -165,7 +165,10 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
   locationDescription: string,
   parkingOffence: string,
   offenceAmount: number,
+
+  licencePlateIsMissing: boolean,
   vehicleMakeModel: string,
+  vehicleVIN: string,
 
   resolvedDate: number,
   resolvedDateString: string,
