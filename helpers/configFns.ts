@@ -1,4 +1,4 @@
-import * as pts from "../helpers/ptsTypes";
+import type * as pts from "../helpers/ptsTypes";
 
 /*
  * LOAD CONFIGURATION

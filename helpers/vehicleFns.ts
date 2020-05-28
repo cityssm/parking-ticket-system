@@ -2,7 +2,7 @@
  * API
  */
 
-import * as fetch from "node-fetch";
+import fetch from "node-fetch";
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;

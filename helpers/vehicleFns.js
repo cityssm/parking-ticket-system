@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fetch = require("node-fetch");
+const node_fetch_1 = require("node-fetch");
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
 const dbPath = "data/nhtsa.db";
@@ -52,7 +52,7 @@ function getModelsByMake(makeSearchStringOriginal, callbackFn) {
             .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis);
     }
     if (useAPI) {
-        fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
+        node_fetch_1.default(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
             .then(response => response.json())
             .then(data => {
             db.prepare("update MakeModelSearchHistory" +

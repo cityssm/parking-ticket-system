@@ -1,5 +1,5 @@
 import { dbPath } from "./parkingDB";
-import { ParkingTicket } from "./ptsTypes";
+import type { ParkingTicket } from "./ptsTypes";
 
 import * as sqlite from "better-sqlite3";
 

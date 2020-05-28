@@ -1,4 +1,4 @@
-import * as pts from "../helpers/ptsTypes";
+import type * as pts from "../helpers/ptsTypes";
 import * as base from "../data/config-base";
 
 const config: pts.Config = {};
@@ -27,6 +27,14 @@ config.locationClasses = [
   {
     locationClassKey: "parkingMeter",
     locationClass: "Parking Meter"
+  },
+  {
+    locationClassKey: "privateProperty",
+    locationClass: "Private Property"
+  },
+  {
+    locationClassKey: "street",
+    locationClass: "Street"
   }
 ];
 

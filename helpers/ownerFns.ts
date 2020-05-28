@@ -1,4 +1,4 @@
-import { LicencePlateOwner } from "./ptsTypes";
+import type { LicencePlateOwner } from "./ptsTypes";
 import { ReconciliationRecord } from "./parkingDB";
 
 

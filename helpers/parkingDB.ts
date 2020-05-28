@@ -4,7 +4,7 @@ import * as sqlite from "better-sqlite3";
 import * as vehicleFns from "./vehicleFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "./configFns";
-import * as pts from "./ptsTypes";
+import type * as pts from "./ptsTypes";
 import { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
 
 

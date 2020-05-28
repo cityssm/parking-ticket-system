@@ -5,7 +5,7 @@ import * as bcrypt from "bcrypt";
 
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
 import * as configFns from "./configFns";
-import { User, UserProperties } from "./ptsTypes";
+import type { User, UserProperties } from "./ptsTypes";
 
 
 export function getUser(userNameSubmitted: string, passwordPlain: string): User {

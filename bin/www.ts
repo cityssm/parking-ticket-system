@@ -8,7 +8,7 @@ import * as https from "https";
 import * as fs from "fs";
 
 import * as configFns from "../helpers/configFns";
-import { Config_HttpsConfig } from "../helpers/ptsTypes";
+import type { Config_HttpsConfig } from "../helpers/ptsTypes";
 
 function onError(error: Error) {
 

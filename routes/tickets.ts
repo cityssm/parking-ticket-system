@@ -6,7 +6,7 @@ import * as ownerFns from "../helpers/ownerFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as parkingDB from "../helpers/parkingDB";
 
-import * as pts from "../helpers/ptsTypes";
+import type * as pts from "../helpers/ptsTypes";
 
 
 /*

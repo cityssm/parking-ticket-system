@@ -21,6 +21,14 @@ config.locationClasses = [
     {
         locationClassKey: "parkingMeter",
         locationClass: "Parking Meter"
+    },
+    {
+        locationClassKey: "privateProperty",
+        locationClass: "Private Property"
+    },
+    {
+        locationClassKey: "street",
+        locationClass: "Street"
     }
 ];
 config.parkingTickets = {

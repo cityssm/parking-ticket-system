@@ -1,4 +1,4 @@
-import { ParkingTicket } from "./ptsTypes";
+import type { ParkingTicket } from "./ptsTypes";
 declare type MTO_AvailableLicencePlate = {
     licencePlateNumber: string;
     ticketCount: number;

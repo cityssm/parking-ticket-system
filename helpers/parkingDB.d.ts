@@ -1,7 +1,7 @@
 /// <reference types="express-session" />
 /// <reference types="integer" />
 export declare const dbPath = "data/parking.db";
-import * as pts from "./ptsTypes";
+import type * as pts from "./ptsTypes";
 import { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
 export declare function getRawRowsColumns(sql: string, params: any[]): RawRowsColumnsReturn;
 export declare type getParkingTickets_queryOptions = {

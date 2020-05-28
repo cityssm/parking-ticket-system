@@ -1,4 +1,4 @@
-import * as pts from "../helpers/ptsTypes";
+import type * as pts from "../helpers/ptsTypes";
 export declare let config: {};
 export declare function getProperty(propertyName: string): any;
 export declare const keepAliveMillis: number;

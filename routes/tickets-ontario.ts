@@ -6,7 +6,7 @@ import * as ontarioParkingDB from "../helpers/parkingDB-ontario";
 
 import * as mtoFns from "../helpers/mtoFns";
 
-import * as pts from "../helpers/ptsTypes";
+import type * as pts from "../helpers/ptsTypes";
 
 
 // Ticket Convictions
