@@ -107,7 +107,7 @@ declare const pts: ptsGlobal;
               "</div>") +
 
             ("<div class=\"licence-plate-number\">" +
-              (ticketObj.licencePlateNumber === "" ? "&nbsp;" : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
+              (ticketObj.licencePlateNumber === "" ? "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>" : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
               "</div>") +
 
             "</div>" +
@@ -166,6 +166,9 @@ declare const pts: ptsGlobal;
 
             clickEvent.preventDefault();
             offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();
+
+            searchResultsEle.scrollIntoView(true);
+
             getTickets();
 
           });
@@ -183,6 +186,9 @@ declare const pts: ptsGlobal;
 
             clickEvent.preventDefault();
             offsetEle.value = (currentOffset + currentLimit).toString();
+
+            searchResultsEle.scrollIntoView(true);
+
             getTickets();
 
           });

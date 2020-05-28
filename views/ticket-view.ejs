@@ -51,11 +51,19 @@
           </div>
           <div class="panel-block is-block">
             <strong>Issuing Officer</strong><br />
-            <%= ticket.issuingOfficer %>
+            <% if (!ticket.issuingOfficer || ticket.issuingOfficer === "") { %>
+              <span class="has-text-grey">(Not Recorded)</span>
+            <% } else { %>
+              <%= ticket.issuingOfficer %>
+            <% } %>
           </div>
           <div class="panel-block is-block">
             <strong>Location</strong><br />
-            <%= ticket.locationDescription %>
+            <% if (!ticket.locationDescription || ticket.locationDescription === "") { %>
+              <span class="has-text-grey">(Not Recorded)</span>
+            <% } else { %>
+              <%= ticket.locationDescription %>
+            <% } %>
           </div>
           <div class="panel-block is-block">
             <strong>Parking Offence</strong><br />
@@ -93,7 +101,7 @@
                   <div class="licence-plate-province"><%= licencePlateLocationObj.licencePlateProvinceAlias %></div>
                   <div class="licence-plate-number">
                     <% if (ticket.licencePlateNumber === "") { %>
-                      &nbsp;
+                      <i class="fas fa-question-circle has-opacity-2" aria-hidden="true"></i>
                     <% } else { %>
                       <%=  ticket.licencePlateNumber %>
                     <% } %>
@@ -113,9 +121,21 @@
                 <% } %>
               </div>
               <div class="column">
-                <p>
+                <p class="has-margin-bottom-5">
                   <strong>Vehicle Make/Model from Ticket</strong><br />
-                  <%= ticket.vehicleMakeModel %>
+                  <% if (!ticket.vehicleMakeModel || ticket.vehicleMakeModel === "") { %>
+                    <span class="has-text-grey">(Not Recorded)</span>
+                  <% } else { %>
+                    <%= ticket.vehicleMakeModel %>
+                  <% } %>
+                </p>
+                <p>
+                  <strong>Vehicle VIN</strong><br />
+                  <% if (!ticket.vehicleVIN || ticket.vehicleVIN === "") { %>
+                    <span class="has-text-grey">(Not Recorded)</span>
+                  <% } else { %>
+                    <%= ticket.vehicleVIN %>
+                  <% } %>
                 </p>
               </div>
               <div class="column">

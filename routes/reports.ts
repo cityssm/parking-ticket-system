@@ -97,9 +97,117 @@ router.all("/:reportName", function(req, res) {
       sql = "select * from LicencePlateOwners";
       break;
 
+    case "owners-reconcile":
+
+      sql = "select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
+
+        " t.ticketID as ticket_ticketID," +
+        " t.ticketNumber as ticket_ticketNumber," +
+        " t.issueDate as ticket_issueDate," +
+        " t.vehicleMakeModel as ticket_vehicleMakeModel," +
+        " t.licencePlateExpiryDate as ticket_licencePlateExpiryDate," +
+
+        " o.recordDate as owner_recordDate," +
+        " o.vehicleNCIC as owner_vehicleNCIC," +
+        " o.vehicleYear as owner_vehicleYear," +
+        " o.vehicleColor as owner_vehicleColor," +
+        " o.licencePlateExpiryDate as owner_licencePlateExpiryDate," +
+        " o.ownerName1 as owner_ownerName1," +
+        " o.ownerName2 as owner_ownerName2," +
+        " o.ownerAddress as owner_ownerAddress," +
+        " o.ownerCity as owner_ownerCity," +
+        " o.ownerProvince as owner_ownerProvince," +
+        " o.ownerPostalCode as owner_ownerPostalCode" +
+        " from ParkingTickets t" +
+        (" inner join LicencePlateOwners o" +
+          " on t.licencePlateCountry = o.licencePlateCountry" +
+          " and t.licencePlateProvince = o.licencePlateProvince" +
+          " and t.licencePlateNumber = o.licencePlateNumber" +
+          " and o.recordDelete_timeMillis is null" +
+          " and o.vehicleNCIC <> ''" +
+          (" and o.recordDate = (" +
+            "select o2.recordDate from LicencePlateOwners o2" +
+            " where t.licencePlateCountry = o2.licencePlateCountry" +
+            " and t.licencePlateProvince = o2.licencePlateProvince" +
+            " and t.licencePlateNumber = o2.licencePlateNumber" +
+            " and o2.recordDelete_timeMillis is null" +
+            " and t.issueDate <= o2.recordDate" +
+            " order by o2.recordDate" +
+            " limit 1)")) +
+        " where t.recordDelete_timeMillis is null" +
+        " and t.resolvedDate is null" +
+        (" and not exists (" +
+          "select 1 from ParkingTicketStatusLog s " +
+          " where t.ticketID = s.ticketID " +
+          " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
+          " and s.recordDelete_timeMillis is null)");
+
+      break;
+
     case "lookupErrorLog-all":
 
       sql = "select * from LicencePlateLookupErrorLog";
+      break;
+
+
+    case "offences-all":
+
+      sql = "select * from ParkingOffences";
+      break;
+
+    case "locations-all":
+
+      sql = "select * from ParkingLocations";
+      break;
+
+    case "locations-usageByYear":
+
+      sql = "select l.locationKey, l.locationName, l.locationClassKey, l.isActive," +
+        " cast(round (issueDate / 10000 - 0.5) as integer) as issueYear," +
+
+        " count(ticketID) as ticket_count," +
+
+        " min(issueDate) as issueDate_min," +
+        " max(issueDate) as issueDate_max," +
+
+        " min(offenceAmount) as offenceAmount_min," +
+        " max(offenceAmount) as offenceAmount_max," +
+
+        " sum(case when resolvedDate is null then 0 else 1 end) as isResolved_count" +
+
+        " from ParkingLocations l" +
+        " inner join ParkingTickets t on l.locationKey = t.locationKey" +
+        " where t.recordDelete_timeMillis is null" +
+
+        " group by l.locationKey, l.locationName, l.locationClassKey, l.isActive," +
+        " round (issueDate / 10000 - 0.5)";
+
+      break;
+
+    case "bylaws-all":
+
+      sql = "select * from ParkingBylaws";
+      break;
+
+    case "bylaws-usageByYear":
+
+      sql = "select b.bylawNumber, b.bylawDescription, b.isActive," +
+        " cast(round (issueDate / 10000 - 0.5) as integer) as issueYear," +
+
+        " count(ticketID) as ticket_count," +
+        " min(issueDate) as issueDate_min," +
+        " max(issueDate) as issueDate_max," +
+        " min(offenceAmount) as offenceAmount_min," +
+        " max(offenceAmount) as offenceAmount_max," +
+        " sum(case when resolvedDate is null then 0 else 1 end) as isResolved_count" +
+
+        " from ParkingBylaws b" +
+        " inner join ParkingTickets t on b.bylawNumber = t.bylawNumber" +
+        " where t.recordDelete_timeMillis is null" +
+
+        " group by b.bylawNumber, b.bylawDescription, b.isActive," +
+        " round (issueDate / 10000 - 0.5)";
+
       break;
 
   }

@@ -23,6 +23,14 @@
             <span>Licence Plates</span>
           </a>
         </li>
+        <li role="presentation">
+          <a id="tab--offenceReports" role="tab" href="#tabContent--offenceReports">
+            <span class="icon">
+              <i class="fas fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
+            </span>
+            <span>Parking Offences</span>
+          </a>
+        </li>
       </ul>
     </aside>
     <div class="message is-info has-margin-top-10">
@@ -128,7 +136,7 @@
         <div class="columns">
           <div class="column">
             <div class="panel">
-              <a class="panel-block align-items-flex-start" href="/reports/#" download>
+              <a class="panel-block align-items-flex-start" href="/reports/owners-reconcile" download>
                 <div class="has-text-centered has-margin-10">
                   <span class="icon has-text-info">
                     <i class="fas fa-2x fa-file " aria-hidden="true"></i>
@@ -136,9 +144,11 @@
                   <span class="tag is-info">CSV</span>
                 </div>
                 <div>
-                  <h3 class="title is-5 is-marginless">Sample</h3>
+                  <h3 class="title is-5 is-marginless">Unreconciled Ownership Records</h3>
                   <p>
-                    Sample
+                    Includes unresolved parking tickets, and ownership records that may correspond to the licence plates.
+                    Once marked as a match or an error on the Ownership Reconcillation page,
+                    records will be removed from this report.
                   </p>
                 </div>
               </a>
@@ -180,6 +190,103 @@
                   </p>
                 </div>
               </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tabContent--offenceReports" role="tabpanel" aria-labelledby="tab--offenceReports">
+        <h1 class="title is-1">
+          Parking Offence Reports
+        </h1>
+        <div class="columns">
+          <div class="column">
+            <div class="panel">
+              <a class="panel-block align-items-flex-start" href="/reports/locations-usageByYear" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-file " aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Parking Location Usage by Year</h3>
+                  <p>
+                    Includes all parking locations used by parking tickets,
+                    and parking ticket statistics by year.
+                  </p>
+                </div>
+              </a>
+              <a class="panel-block align-items-flex-start" href="/reports/bylaws-usageByYear" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-file " aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Parking By-Law Usage by Year</h3>
+                  <p>
+                    Includes all parking by-laws used by parking tickets,
+                    and parking ticket statistics by year.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="column">
+            <div class="panel">
+              <a class="panel-block align-items-flex-start" href="/reports/offences-all" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-table" aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Full Parking Offences Table</h3>
+                  <p>
+                    All the data in the ParkingOffences table unfiltered.
+                  </p>
+                  <p class="is-size-7 is-italic">
+                    Includes deleted records that have not been fully purged.
+                  </p>
+                </div>
+              </a>
+              <a class="panel-block align-items-flex-start" href="/reports/locations-all" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-table" aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Full Parking Locations Table</h3>
+                  <p>
+                    All the data in the ParkingLocations table unfiltered.
+                  </p>
+                  <p class="is-size-7 is-italic">
+                    Includes deleted records that have not been fully purged.
+                  </p>
+                </div>
+              </a>
+              <a class="panel-block align-items-flex-start" href="/reports/bylaws-all" download>
+                <div class="has-text-centered has-margin-10">
+                  <span class="icon has-text-info">
+                    <i class="fas fa-2x fa-table" aria-hidden="true"></i>
+                  </span><br />
+                  <span class="tag is-info">CSV</span>
+                </div>
+                <div>
+                  <h3 class="title is-5 is-marginless">Full Parking By-Laws Table</h3>
+                  <p>
+                    All the data in the ParkingBylaws table unfiltered.
+                  </p>
+                  <p class="is-size-7 is-italic">
+                    Includes deleted records that have not been fully purged.
+                  </p>
+                </div>
+              </a>
+
             </div>
           </div>
         </div>

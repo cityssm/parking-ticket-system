@@ -921,9 +921,8 @@ export function deleteParkingTicketRemark(ticketID: number, remarkIndex: number,
 }
 
 
-/*
- * Parking Ticket Statuses
- */
+// Parking Ticket Statuses
+
 
 export function getParkingTicketStatuses(ticketID: number, reqSession: Express.Session) {
 
@@ -2297,6 +2296,9 @@ export function markLicencePlateLookupErrorLogEntryAcknowledged(batchID: number,
 
   return info.changes > 0;
 }
+
+
+// Conviction Batches
 
 
 export function createParkingTicketConvictionBatch(reqSession: Express.Session) {

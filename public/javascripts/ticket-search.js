@@ -62,7 +62,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             locationProperties.licencePlateProvinceAlias +
                             "</div>") +
                         ("<div class=\"licence-plate-number\">" +
-                            (ticketObj.licencePlateNumber === "" ? "&nbsp;" : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
+                            (ticketObj.licencePlateNumber === "" ? "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>" : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
                             "</div>") +
                         "</div>" +
                         "</td>") +
@@ -110,6 +110,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     previousEle.addEventListener("click", function (clickEvent) {
                         clickEvent.preventDefault();
                         offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();
+                        searchResultsEle.scrollIntoView(true);
                         getTickets();
                     });
                     paginationEle.appendChild(previousEle);
@@ -121,6 +122,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     nextEle.addEventListener("click", function (clickEvent) {
                         clickEvent.preventDefault();
                         offsetEle.value = (currentOffset + currentLimit).toString();
+                        searchResultsEle.scrollIntoView(true);
                         getTickets();
                     });
                     paginationEle.appendChild(nextEle);
