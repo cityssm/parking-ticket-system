@@ -33,6 +33,6 @@ that will bring the side menu back.
 
 **If you're good with Microsoft Excel (or another spreadsheet application),
 you can build pretty much any report you need.**<br />
-Most tables used by th Parking Ticket System can be exported from the Reports page.
+Most tables used by the Parking Ticket System can be exported from the Reports page.
 Look for the full table exports.
 These exports also contain the keys necessary to link the tables together.
