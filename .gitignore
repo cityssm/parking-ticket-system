@@ -3,6 +3,7 @@ data/*.db
 data/*.db-journal
 data/*.min.js
 data/config.js
+data/config.d.ts
 data/config.ts
 helpers/*.min.js
 tasks/*.min.js
