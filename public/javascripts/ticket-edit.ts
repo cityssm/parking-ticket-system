@@ -912,7 +912,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
             "<strong>This ticket is able to be marked as resolved.</strong>" +
             "</div>" +
 
-            "<div class=\"column is-narrow has-text-right\">" +
+            "<div class=\"column is-narrow has-text-right align-self-flex-end\">" +
             "<button class=\"button is-info\" type=\"button\">" +
             "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
             "<span>Resolve Ticket</span>" +

@@ -35,7 +35,7 @@ exports.baseParkingTicketStatuses = [
             fieldLabel: "Batch ID"
         },
         isFinalStatus: true,
-        isUserSettable: true
+        isUserSettable: false
     },
     {
         statusKey: "ownerLookupPending",

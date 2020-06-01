@@ -35,7 +35,7 @@ export const baseParkingTicketStatuses: pts.Config_ParkingTicketStatus[] = [
       fieldLabel: "Batch ID"
     },
     isFinalStatus: true,
-    isUserSettable: true
+    isUserSettable: false
   },
 
   {
