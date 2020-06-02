@@ -85,7 +85,7 @@
     <h2 class="title is-4">
       <a class="is-toggle-hidden-link" href="#toggle-hidden--reconcile">
         <i class="fas fa-caret-down" aria-hidden="true"></i>
-        Record to Reconcile
+        Records to Reconcile
       </a>
       <span class="tag is-rounded is-medium"><%= records.length %></span>
     </h2>
@@ -139,6 +139,7 @@
             <%
               for (let index = 0; index < records.length; index += 1) {
                 const record = records[index];
+                const locationProperties = configFns.getLicencePlateLocationProperties(record.licencePlateCountry, record.licencePlateProvince);
             %>
                 <tr
                   data-licence-plate-country="<%= record.licencePlateCountry %>"
@@ -153,7 +154,16 @@
                   <%= (record.isVehicleMakeMatch ? " data-is-vehicle-make-match": "") %>
                   <%= (record.isLicencePlateExpiryDateMatch ? " data-is-licence-plate-expiry-date-match": "") %>>
 
-                  <td class="has-text-weight-bold has-border-right-width-2 licence-plate-number"><%= record.licencePlateNumber %></td>
+                  <td class="has-border-right-width-2">
+                    <div class="licence-plate is-fullwidth" style="--color:<%= locationProperties.licencePlateProvince.color %>;--backgroundColor:<%= locationProperties.licencePlateProvince.backgroundColor %>">
+                      <div class="licence-plate-province">
+                        <%= locationProperties.licencePlateProvinceAlias %>
+                      </div>
+                      <div class="licence-plate-number">
+                        <%= record.licencePlateNumber %>
+                      </div>
+                    </div>
+                  </td>
 
                   <td>
                     <a href="/tickets/<%= record.ticket_ticketID %>" target="_blank">

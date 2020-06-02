@@ -162,7 +162,7 @@ router.post("/doReconcileAsMatch", function(req, res) {
     recordType: "status",
     ticketID: parseInt(req.body.ticketID),
     statusKey: "ownerLookupMatch",
-    statusField: ownerRecord.recordDateString,
+    statusField: ownerRecord.recordDate.toString(),
     statusNote: ownerAddress
 
   }, req.session, false);
