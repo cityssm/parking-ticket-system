@@ -56,6 +56,8 @@ function initParkingDB() {
             " locationKey varchar(20)," +
             " parkingOffence text," +
             " offenceAmount decimal(6, 2) not null," +
+            " discountOffenceAmount decimal(6, 2) not null default offenceAmount," +
+            " discountDays integer not null default 0," +
             " accountNumber varchar(20)," +
             " isActive bit not null default 1," +
             " primary key (bylawNumber, locationKey)," +
@@ -79,6 +81,8 @@ function initParkingDB() {
             " locationDescription text," +
             " parkingOffence text," +
             " offenceAmount decimal(6, 2) not null," +
+            " discountOffenceAmount decimal(6, 2) not null default offenceAmount," +
+            " discountDays integer not null default 0," +
             " vehicleMakeModel varchar(30)," +
             " resolvedDate integer," +
             " recordCreate_userName varchar(30) not null," +

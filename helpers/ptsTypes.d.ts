@@ -3,11 +3,8 @@ export declare type Config = {
     session?: Config_SessionConfig;
     admin?: Config_AdminDefaults;
     defaults?: Config_DefaultsConfig;
-    locationClasses?: Config_LocationClass[];
     parkingTickets?: Config_ParkingTickets;
     parkingTicketStatuses?: Config_ParkingTicketStatus[];
-    parkingOffences?: Config_ParkingOffences;
-    genders?: Config_Gender[];
     licencePlateCountryAliases?: {
         [countryKey: string]: string;
     };
@@ -19,6 +16,9 @@ export declare type Config = {
     licencePlateProvinces?: {
         [country: string]: Config_LicencePlateCountry;
     };
+    genders?: Config_Gender[];
+    parkingOffences?: Config_ParkingOffences;
+    locationClasses?: Config_LocationClass[];
     mtoExportImport?: Config_MTOExportImport;
 };
 declare type Config_ApplicationConfig = {
@@ -37,7 +37,7 @@ export declare type Config_HttpsConfig = {
     port: number;
     keyPath: string;
     certPath: string;
-    passphrase: string;
+    passphrase?: string;
 };
 declare type Config_SessionConfig = {
     cookieName?: string;
@@ -190,6 +190,7 @@ export declare type ParkingBylaw = {
 export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
     parkingOffence: string;
     offenceAmount: number;
+    discountOffenceAmount: number;
     accountNumber: string;
 }
 export interface LicencePlateOwner extends Record, LicencePlate {
