@@ -29,5 +29,8 @@ What are parking offences?  How do I maintain them?
 
 ## Administrator Documentation
 
-[Getting Started](admin-gettingStarted.md)<br />
+**[Getting Started](admin-gettingStarted.md)**<br />
 How to setup and start the application for the first time.
+
+**[config.js File](admin-configJS.md)**<br />
+How to use the configuration file to customize the application.

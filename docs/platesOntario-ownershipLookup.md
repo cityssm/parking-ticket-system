@@ -38,7 +38,7 @@ from a batch by clicking the "Clear Batch" button.
 
 Once you are satisfied with your batch, click the "Lock Batch" button.
 Locked batches can be downloaded in a format compatible with
-the Authorized Requester Information Services website, provided by MTO.
+the Authorized Requester Information Services (ARIS) website, provided by MTO.
 
 
 ## Import Ownership Lookup Results
