@@ -498,10 +498,11 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
   const info = db.prepare("insert into ParkingTickets" +
     " (ticketNumber, issueDate, issueTime, issuingOfficer," +
     " locationKey, locationDescription," +
-    " bylawNumber, parkingOffence, offenceAmount," +
-    " licencePlateCountry, licencePlateProvince, licencePlateNumber, licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN," +
+    " bylawNumber, parkingOffence, offenceAmount, discountOffenceAmount, discountDays," +
+    " licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+    " licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN," +
     " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     .run(reqBody.ticketNumber,
       issueDate,
       dateTimeFns.timeStringToInteger(reqBody.issueTimeString),
@@ -511,6 +512,8 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
       reqBody.bylawNumber,
       reqBody.parkingOffence,
       reqBody.offenceAmount,
+      reqBody.discountOffenceAmount,
+      reqBody.discountDays,
       reqBody.licencePlateCountry,
       reqBody.licencePlateProvince,
       reqBody.licencePlateNumber,
@@ -608,6 +611,8 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
     " bylawNumber = ?," +
     " parkingOffence = ?," +
     " offenceAmount = ?," +
+    " discountOffenceAmount = ?," +
+    " discountDays = ?," +
     " licencePlateCountry = ?," +
     " licencePlateProvince = ?," +
     " licencePlateNumber = ?," +
@@ -629,6 +634,8 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
       reqBody.bylawNumber,
       reqBody.parkingOffence,
       reqBody.offenceAmount,
+      reqBody.discountOffenceAmount,
+      reqBody.discountDays,
       reqBody.licencePlateCountry,
       reqBody.licencePlateProvince,
       reqBody.licencePlateNumber,
@@ -942,7 +949,7 @@ export function getParkingTicketStatuses(ticketID: number, reqSession: Express.S
   });
 
   const statusRows = db.prepare("select statusIndex, statusDate, statusTime," +
-    " statusKey, statusField, statusNote," +
+    " statusKey, statusField, statusField2, statusNote," +
     " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
     " from ParkingTicketStatusLog" +
     " where recordDelete_timeMillis is null" +
@@ -977,15 +984,16 @@ export function createParkingTicketStatus(reqBodyOrObj: pts.ParkingTicketStatusL
 
   const info = db.prepare("insert into ParkingTicketStatusLog" +
     " (ticketID, statusIndex, statusDate, statusTime, statusKey," +
-    " statusField, statusNote," +
+    " statusField, statusField2, statusNote," +
     " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     .run(reqBodyOrObj.ticketID,
       statusIndexNew,
       dateTimeFns.dateToInteger(rightNow),
       dateTimeFns.dateToTimeInteger(rightNow),
       reqBodyOrObj.statusKey,
       reqBodyOrObj.statusField,
+      reqBodyOrObj.statusField2,
       reqBodyOrObj.statusNote,
       reqSession.user.userName,
       rightNow.getTime(),
@@ -1027,6 +1035,7 @@ export function updateParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
     " statusTime = ?," +
     " statusKey = ?," +
     " statusField = ?," +
+    " statusField2 = ?," +
     " statusNote = ?," +
     " recordUpdate_userName = ?," +
     " recordUpdate_timeMillis = ?" +
@@ -1038,6 +1047,7 @@ export function updateParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, r
       dateTimeFns.timeStringToInteger(reqBody.statusTimeString),
       reqBody.statusKey,
       reqBody.statusField,
+      reqBody.statusField2,
       reqBody.statusNote,
       reqSession.user.userName,
       Date.now(),
@@ -1487,7 +1497,8 @@ export function getParkingOffences() {
   });
 
   const rows: pts.ParkingOffence[] = db.prepare(
-    "select o.bylawNumber, o.locationKey, o.parkingOffence, o.offenceAmount, o.accountNumber" +
+    "select o.bylawNumber, o.locationKey, o.parkingOffence," +
+    " o.offenceAmount, o.discountOffenceAmount, o.discountDays, o.accountNumber" +
     " from ParkingOffences o" +
     " left join ParkingLocations l on o.locationKey = l.locationKey" +
     " where o.isActive = 1 and l.isActive" +
@@ -1507,7 +1518,7 @@ export function getParkingOffencesByLocationKey(locationKey: string) {
   });
 
   const rows: pts.ParkingOffence[] = db.prepare("select o.bylawNumber, b.bylawDescription," +
-    " o.parkingOffence, o.offenceAmount" +
+    " o.parkingOffence, o.offenceAmount, o.discountOffenceAmount, o.discountDays" +
     " from ParkingOffences o" +
     " left join ParkingBylaws b on o.bylawNumber = b.bylawNumber" +
     " where o.isActive = 1 and b.isActive = 1" +
@@ -1572,36 +1583,49 @@ export function addParkingOffence(reqBody: pts.ParkingOffence): addUpdateParking
   // If so, use the same offenceAmount
 
   let offenceAmount = 0;
+  let discountOffenceAmount : number = 0;
+  let discountDays = 0;
 
   if (reqBody.hasOwnProperty("offenceAmount")) {
 
     offenceAmount = reqBody.offenceAmount;
 
+    discountOffenceAmount = reqBody.hasOwnProperty("discountOffenceAmount") ?
+      reqBody.discountOffenceAmount :
+      reqBody.offenceAmount;
+
+    discountDays = reqBody.discountDays || 0;
+
   } else {
 
-    const offenceAmountRecord: pts.ParkingOffence = db.prepare("select offenceAmount" +
+    const offenceAmountRecord: pts.ParkingOffence = db.prepare(
+      "select offenceAmount, discountOffenceAmount, discountDays" +
       " from ParkingOffences" +
       " where bylawNumber = ?" +
       " and isActive = 1" +
-      " group by offenceAmount" +
-      " order by count(locationKey) desc, offenceAmount desc" +
+      " group by offenceAmount, discountOffenceAmount, discountDays" +
+      " order by count(locationKey) desc, offenceAmount desc, discountOffenceAmount desc" +
       " limit 1")
       .get(reqBody.bylawNumber);
 
     if (offenceAmountRecord) {
       offenceAmount = offenceAmountRecord.offenceAmount;
+      discountOffenceAmount = offenceAmountRecord.discountOffenceAmount;
+      discountDays = offenceAmountRecord.discountDays;
     }
   }
 
   // Insert record
 
   const info = db.prepare("insert into ParkingOffences" +
-    " (bylawNumber, locationKey, parkingOffence, offenceAmount, accountNumber, isActive)" +
-    " values (?, ?, ?, ?, ?, 1)")
+    " (bylawNumber, locationKey, parkingOffence, offenceAmount, discountOffenceAmount, discountDays, accountNumber, isActive)" +
+    " values (?, ?, ?, ?, ?, ?, ?, 1)")
     .run(reqBody.bylawNumber,
       reqBody.locationKey,
       reqBody.parkingOffence || "",
       offenceAmount,
+      discountOffenceAmount,
+      discountDays,
       reqBody.accountNumber || "");
 
   db.close();
@@ -1620,12 +1644,16 @@ export function updateParkingOffence(reqBody: pts.ParkingOffence): addUpdatePark
   const info = db.prepare("update ParkingOffences" +
     " set parkingOffence = ?," +
     " offenceAmount = ?," +
+    " discountOffenceAmount = ?," +
+    " discountDays = ?," +
     " accountNumber = ?" +
     " where bylawNumber = ?" +
     " and locationKey = ?" +
     " and isActive = 1")
     .run(reqBody.parkingOffence,
       reqBody.offenceAmount,
+      reqBody.discountOffenceAmount,
+      reqBody.discountDays,
       reqBody.accountNumber,
       reqBody.bylawNumber,
       reqBody.locationKey);

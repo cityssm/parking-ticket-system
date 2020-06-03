@@ -1,41 +1,41 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    const ticketID = document.getElementById("ticket--ticketID").value;
-    const isCreate = (ticketID === "");
+    var ticketID = document.getElementById("ticket--ticketID").value;
+    var isCreate = (ticketID === "");
     {
-        const formMessageEle = document.getElementById("container--form-message");
-        let hasUnsavedChanges = false;
-        const setUnsavedChangesFn = function () {
+        var formMessageEle_1 = document.getElementById("container--form-message");
+        var hasUnsavedChanges_1 = false;
+        var setUnsavedChangesFn_1 = function () {
             cityssm.enableNavBlocker();
-            hasUnsavedChanges = true;
-            formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+            hasUnsavedChanges_1 = true;
+            formMessageEle_1.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
                 "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
                 " <span>Unsaved Changes</span>" +
                 "</div>";
         };
-        const inputEles = document.querySelectorAll(".input, .select, .textarea");
-        for (let inputIndex = 0; inputIndex < inputEles.length; inputIndex += 1) {
-            inputEles[inputIndex].addEventListener("change", setUnsavedChangesFn);
+        var inputEles = document.querySelectorAll(".input, .select, .textarea");
+        for (var inputIndex = 0; inputIndex < inputEles.length; inputIndex += 1) {
+            inputEles[inputIndex].addEventListener("change", setUnsavedChangesFn_1);
         }
         document.getElementById("form--ticket").addEventListener("submit", function (formEvent) {
             formEvent.preventDefault();
-            const ticketNumber = document.getElementById("ticket--ticketNumber").value;
-            formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+            var ticketNumber = document.getElementById("ticket--ticketNumber").value;
+            formMessageEle_1.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
                 "<span>Saving ticket... </span>" +
                 " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
                 "</div>";
             cityssm.postJSON((isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"), formEvent.currentTarget, function (responseJSON) {
                 if (responseJSON.success) {
                     cityssm.disableNavBlocker();
-                    hasUnsavedChanges = false;
-                    formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
+                    hasUnsavedChanges_1 = false;
+                    formMessageEle_1.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
                         "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
                         " <span>Saved Successfully</span>" +
                         "</div>";
                 }
                 else {
-                    setUnsavedChangesFn();
+                    setUnsavedChangesFn_1();
                     cityssm.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
                 }
                 if (responseJSON.success && isCreate) {
@@ -65,30 +65,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     pts.getDefaultConfigProperty("locationClasses", function (locationClassesList) {
-        let locationLookupCloseModalFn;
-        const locationClassMap = {};
-        let locationList = [];
-        for (let index = 0; index < locationClassesList.length; index += 1) {
-            const locationClassObj = locationClassesList[index];
+        var locationLookupCloseModalFn;
+        var locationClassMap = {};
+        var locationList = [];
+        for (var index = 0; index < locationClassesList.length; index += 1) {
+            var locationClassObj = locationClassesList[index];
             locationClassMap[locationClassObj.locationClassKey] = locationClassObj;
         }
-        const setLocationFn = function (clickEvent) {
+        var setLocationFn = function (clickEvent) {
             clickEvent.preventDefault();
-            const locationObj = locationList[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
+            var locationObj = locationList[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
             document.getElementById("ticket--locationKey").value = locationObj.locationKey;
             document.getElementById("ticket--locationName").value = locationObj.locationName;
             locationLookupCloseModalFn();
             locationList = [];
         };
-        const populateLocationsFn = function () {
+        var populateLocationsFn = function () {
             cityssm.postJSON("/offences/doGetAllLocations", {}, function (locationListRes) {
                 locationList = locationListRes;
-                const listEle = document.createElement("div");
+                var listEle = document.createElement("div");
                 listEle.className = "list is-hoverable has-margin-bottom-20";
-                for (let index = 0; index < locationList.length; index += 1) {
-                    const locationObj = locationList[index];
-                    const locationClassObj = locationClassMap[locationObj.locationClassKey];
-                    const linkEle = document.createElement("a");
+                for (var index = 0; index < locationList.length; index += 1) {
+                    var locationObj = locationList[index];
+                    var locationClassObj = locationClassMap[locationObj.locationClassKey];
+                    var linkEle = document.createElement("a");
                     linkEle.className = "list-item";
                     linkEle.setAttribute("data-index", index.toString());
                     linkEle.setAttribute("href", "#");
@@ -104,12 +104,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             "</div>";
                     listEle.insertAdjacentElement("beforeend", linkEle);
                 }
-                const containerEle = document.getElementById("container--parkingLocations");
+                var containerEle = document.getElementById("container--parkingLocations");
                 cityssm.clearElement(containerEle);
                 containerEle.insertAdjacentElement("beforeend", listEle);
             });
         };
-        const openLocationLookupModalFn = function (clickEvent) {
+        var openLocationLookupModalFn = function (clickEvent) {
             clickEvent.preventDefault();
             cityssm.openHtmlModal("location-select", {
                 onshown: function (_modalEle, closeModalFn) {
@@ -125,38 +125,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
         document.getElementById("ticket--locationName").addEventListener("dblclick", openLocationLookupModalFn);
     });
     {
-        let bylawLookupCloseModalFn;
-        let offenceList = [];
-        let listItemEles = [];
-        const setBylawOffenceFn = function (clickEvent) {
+        var bylawLookupCloseModalFn_1;
+        var offenceList_1 = [];
+        var listItemEles_1 = [];
+        var setBylawOffenceFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
-            const offenceObj = offenceList[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
+            var offenceObj = offenceList_1[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
             document.getElementById("ticket--bylawNumber").value = offenceObj.bylawNumber;
-            const offenceAmountEle = document.getElementById("ticket--offenceAmount");
+            var offenceAmountEle = document.getElementById("ticket--offenceAmount");
             offenceAmountEle.classList.add("is-readonly");
             offenceAmountEle.setAttribute("readonly", "readonly");
             offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
                 .removeAttribute("disabled");
             offenceAmountEle.value = offenceObj.offenceAmount.toFixed(2);
+            var discountOffenceAmountEle = document.getElementById("ticket--discountOffenceAmount");
+            discountOffenceAmountEle.classList.add("is-readonly");
+            discountOffenceAmountEle.setAttribute("readonly", "readonly");
+            discountOffenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+                .removeAttribute("disabled");
+            discountOffenceAmountEle.value = offenceObj.discountOffenceAmount.toFixed(2);
+            var discountDaysEle = document.getElementById("ticket--discountDays");
+            discountDaysEle.classList.add("is-readonly");
+            discountDaysEle.setAttribute("readonly", "readonly");
+            discountDaysEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+                .removeAttribute("disabled");
+            discountDaysEle.value = offenceObj.discountDays.toString();
             document.getElementById("ticket--parkingOffence").value = offenceObj.bylawDescription;
-            bylawLookupCloseModalFn();
-            offenceList = [];
+            bylawLookupCloseModalFn_1();
+            offenceList_1 = [];
         };
-        const populateBylawsFn = function () {
-            const locationKey = document.getElementById("ticket--locationKey").value;
+        var populateBylawsFn_1 = function () {
+            var locationKey = document.getElementById("ticket--locationKey").value;
             cityssm.postJSON("/offences/doGetOffencesByLocation", {
                 locationKey: locationKey
             }, function (offenceListRes) {
-                offenceList = offenceListRes;
-                const listEle = document.createElement("div");
+                offenceList_1 = offenceListRes;
+                var listEle = document.createElement("div");
                 listEle.className = "list is-hoverable has-margin-bottom-20";
-                for (let index = 0; index < offenceList.length; index += 1) {
-                    const offenceObj = offenceList[index];
-                    const linkEle = document.createElement("a");
+                for (var index = 0; index < offenceList_1.length; index += 1) {
+                    var offenceObj = offenceList_1[index];
+                    var linkEle = document.createElement("a");
                     linkEle.className = "list-item";
                     linkEle.setAttribute("data-index", index.toString());
                     linkEle.setAttribute("href", "#");
-                    linkEle.addEventListener("click", setBylawOffenceFn);
+                    linkEle.addEventListener("click", setBylawOffenceFn_1);
                     linkEle.innerHTML =
                         "<div class=\"columns\">" +
                             ("<div class=\"column\">" +
@@ -168,42 +180,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                 "</div>") +
                             "</div>";
                     listEle.insertAdjacentElement("beforeend", linkEle);
-                    listItemEles.push(linkEle);
+                    listItemEles_1.push(linkEle);
                 }
-                const containerEle = document.getElementById("container--bylawNumbers");
+                var containerEle = document.getElementById("container--bylawNumbers");
                 cityssm.clearElement(containerEle);
                 containerEle.appendChild(listEle);
             });
         };
-        const filterBylawsFn = function (keyupEvent) {
-            const searchStringSplit = keyupEvent.currentTarget.value.trim().toLowerCase().split(" ");
-            for (let recordIndex = 0; recordIndex < offenceList.length; recordIndex += 1) {
-                let displayRecord = true;
-                const offenceRecord = offenceList[recordIndex];
-                for (let searchIndex = 0; searchIndex < searchStringSplit.length; searchIndex += 1) {
-                    const searchPiece = searchStringSplit[searchIndex];
+        var filterBylawsFn_1 = function (keyupEvent) {
+            var searchStringSplit = keyupEvent.currentTarget.value.trim().toLowerCase().split(" ");
+            for (var recordIndex = 0; recordIndex < offenceList_1.length; recordIndex += 1) {
+                var displayRecord = true;
+                var offenceRecord = offenceList_1[recordIndex];
+                for (var searchIndex = 0; searchIndex < searchStringSplit.length; searchIndex += 1) {
+                    var searchPiece = searchStringSplit[searchIndex];
                     if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 && offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
                         displayRecord = false;
                         break;
                     }
                 }
                 if (displayRecord) {
-                    listItemEles[recordIndex].classList.remove("is-hidden");
+                    listItemEles_1[recordIndex].classList.remove("is-hidden");
                 }
                 else {
-                    listItemEles[recordIndex].classList.add("is-hidden");
+                    listItemEles_1[recordIndex].classList.add("is-hidden");
                 }
             }
         };
-        const openBylawLookupModalFn = function (clickEvent) {
+        var openBylawLookupModalFn = function (clickEvent) {
             clickEvent.preventDefault();
             cityssm.openHtmlModal("ticket-setBylawOffence", {
                 onshown: function (_modalEle, closeModalFn) {
-                    bylawLookupCloseModalFn = closeModalFn;
-                    populateBylawsFn();
-                    const searchStringEle = document.getElementById("bylawLookup--searchStr");
+                    bylawLookupCloseModalFn_1 = closeModalFn;
+                    populateBylawsFn_1();
+                    var searchStringEle = document.getElementById("bylawLookup--searchStr");
                     searchStringEle.focus();
-                    searchStringEle.addEventListener("keyup", filterBylawsFn);
+                    searchStringEle.addEventListener("keyup", filterBylawsFn_1);
                 },
                 onremoved: function () {
                     document.getElementById("is-bylaw-lookup-button").focus();
@@ -214,9 +226,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         document.getElementById("ticket--bylawNumber").addEventListener("dblclick", openBylawLookupModalFn);
     }
     {
-        const licencePlateIsMissingCheckboxEle = document.getElementById("ticket--licencePlateIsMissing");
-        licencePlateIsMissingCheckboxEle.addEventListener("change", function () {
-            if (licencePlateIsMissingCheckboxEle.checked) {
+        var licencePlateIsMissingCheckboxEle_1 = document.getElementById("ticket--licencePlateIsMissing");
+        licencePlateIsMissingCheckboxEle_1.addEventListener("change", function () {
+            if (licencePlateIsMissingCheckboxEle_1.checked) {
                 document.getElementById("ticket--licencePlateCountry").removeAttribute("required");
                 document.getElementById("ticket--licencePlateProvince").removeAttribute("required");
                 document.getElementById("ticket--licencePlateNumber").removeAttribute("required");
@@ -229,14 +241,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     {
-        const populateLicencePlateProvinceDatalistFn = function () {
-            const datalistEle = document.getElementById("datalist--licencePlateProvince");
+        var populateLicencePlateProvinceDatalistFn = function () {
+            var datalistEle = document.getElementById("datalist--licencePlateProvince");
             cityssm.clearElement(datalistEle);
-            const countryProperties = pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
+            var countryProperties = pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
             if (countryProperties && countryProperties.provinces) {
-                const provincesList = Object.values(countryProperties.provinces);
-                for (let index = 0; index < provincesList.length; index += 1) {
-                    const optionEle = document.createElement("option");
+                var provincesList = Object.values(countryProperties.provinces);
+                for (var index = 0; index < provincesList.length; index += 1) {
+                    var optionEle = document.createElement("option");
                     optionEle.setAttribute("value", provincesList[index].provinceShortName);
                     datalistEle.appendChild(optionEle);
                 }
@@ -246,40 +258,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
             .addEventListener("change", populateLicencePlateProvinceDatalistFn);
         pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFn);
     }
-    const clearPanelFn = function (panelEle) {
-        const panelBlockEles = panelEle.getElementsByClassName("panel-block");
+    var clearPanelFn = function (panelEle) {
+        var panelBlockEles = panelEle.getElementsByClassName("panel-block");
         while (panelBlockEles.length > 0) {
             panelBlockEles[0].remove();
         }
     };
     if (!isCreate) {
-        const remarkPanelEle = document.getElementById("is-remark-panel");
-        let remarkList = exports.ticketRemarks;
+        var remarkPanelEle_1 = document.getElementById("is-remark-panel");
+        var remarkList_1 = exports.ticketRemarks;
         delete exports.ticketRemarks;
-        const confirmDeleteRemarkFn = function (clickEvent) {
-            const remarkIndex = clickEvent.currentTarget.getAttribute("data-remark-index");
+        var confirmDeleteRemarkFn_1 = function (clickEvent) {
+            var remarkIndex = clickEvent.currentTarget.getAttribute("data-remark-index");
             cityssm.confirmModal("Delete Remark?", "Are you sure you want to delete this remark?", "Yes, Delete", "warning", function () {
                 cityssm.postJSON("/tickets/doDeleteRemark", {
                     ticketID: ticketID,
                     remarkIndex: remarkIndex
                 }, function (resultJSON) {
                     if (resultJSON.success) {
-                        getRemarksFn();
+                        getRemarksFn_1();
                     }
                 });
             });
         };
-        const openEditRemarkModalFn = function (clickEvent) {
+        var openEditRemarkModalFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
-            let editRemarkCloseModalFn;
-            const index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
-            const remarkObj = remarkList[index];
-            const submitFn = function (formEvent) {
+            var editRemarkCloseModalFn;
+            var index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+            var remarkObj = remarkList_1[index];
+            var submitFn = function (formEvent) {
                 formEvent.preventDefault();
                 cityssm.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget, function (responseJSON) {
                     if (responseJSON.success) {
                         editRemarkCloseModalFn();
-                        getRemarksFn();
+                        getRemarksFn_1();
                     }
                 });
             };
@@ -297,10 +309,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        const populateRemarksPanelFn = function () {
-            clearPanelFn(remarkPanelEle);
-            if (remarkList.length === 0) {
-                remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
+        var populateRemarksPanelFn_1 = function () {
+            clearPanelFn(remarkPanelEle_1);
+            if (remarkList_1.length === 0) {
+                remarkPanelEle_1.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
                     "<div class=\"message is-info\">" +
                     "<p class=\"message-body\">" +
                     "There are no remarks associated with this ticket." +
@@ -309,9 +321,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>");
                 return;
             }
-            for (let index = 0; index < remarkList.length; index += 1) {
-                const remarkObj = remarkList[index];
-                const panelBlockEle = document.createElement("div");
+            for (var index = 0; index < remarkList_1.length; index += 1) {
+                var remarkObj = remarkList_1[index];
+                var panelBlockEle = document.createElement("div");
                 panelBlockEle.className = "panel-block is-block";
                 panelBlockEle.innerHTML = "<div class=\"columns\">" +
                     ("<div class=\"column\">" +
@@ -345,16 +357,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>";
                 if (remarkObj.canUpdate) {
                     panelBlockEle.getElementsByClassName("is-edit-remark-button")[0]
-                        .addEventListener("click", openEditRemarkModalFn);
+                        .addEventListener("click", openEditRemarkModalFn_1);
                     panelBlockEle.getElementsByClassName("is-delete-remark-button")[0]
-                        .addEventListener("click", confirmDeleteRemarkFn);
+                        .addEventListener("click", confirmDeleteRemarkFn_1);
                 }
-                remarkPanelEle.appendChild(panelBlockEle);
+                remarkPanelEle_1.appendChild(panelBlockEle);
             }
         };
-        const getRemarksFn = function () {
-            clearPanelFn(remarkPanelEle);
-            remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
+        var getRemarksFn_1 = function () {
+            clearPanelFn(remarkPanelEle_1);
+            remarkPanelEle_1.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
                 "<p class=\"has-text-centered has-text-grey-lighter\">" +
                 "<i class=\"fas fa-2x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
                 "<em>Loading remarks..." +
@@ -363,19 +375,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
             cityssm.postJSON("/tickets/doGetRemarks", {
                 ticketID: ticketID
             }, function (resultList) {
-                remarkList = resultList;
-                populateRemarksPanelFn();
+                remarkList_1 = resultList;
+                populateRemarksPanelFn_1();
             });
         };
         document.getElementById("is-add-remark-button").addEventListener("click", function (clickEvent) {
             clickEvent.preventDefault();
-            let addRemarkCloseModalFn;
-            const submitFn = function (formEvent) {
+            var addRemarkCloseModalFn;
+            var submitFn = function (formEvent) {
                 formEvent.preventDefault();
                 cityssm.postJSON("/tickets/doAddRemark", formEvent.currentTarget, function (responseJSON) {
                     if (responseJSON.success) {
                         addRemarkCloseModalFn();
-                        getRemarksFn();
+                        getRemarksFn_1();
                     }
                 });
             };
@@ -389,13 +401,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         });
-        populateRemarksPanelFn();
+        populateRemarksPanelFn_1();
     }
     if (!isCreate) {
-        const statusPanelEle = document.getElementById("is-status-panel");
-        let statusList = exports.ticketStatusLog;
+        var statusPanelEle_1 = document.getElementById("is-status-panel");
+        var statusList_1 = exports.ticketStatusLog;
         delete exports.ticketStatusLog;
-        const confirmResolveTicketFn = function (clickEvent) {
+        var confirmResolveTicketFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
             cityssm.confirmModal("Mark Ticket as Resolved?", "Once resolved, you will no longer be able to make changes to the ticket.", "Yes, Resolve Ticket", "info", function () {
                 cityssm.postJSON("/tickets/doResolveTicket", {
@@ -407,40 +419,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 });
             });
         };
-        const confirmDeleteStatusFn = function (clickEvent) {
-            const statusIndex = clickEvent.currentTarget.getAttribute("data-status-index");
+        var confirmDeleteStatusFn_1 = function (clickEvent) {
+            var statusIndex = clickEvent.currentTarget.getAttribute("data-status-index");
             cityssm.confirmModal("Delete Remark?", "Are you sure you want to delete this status?", "Yes, Delete", "warning", function () {
                 cityssm.postJSON("/tickets/doDeleteStatus", {
                     ticketID: ticketID,
                     statusIndex: statusIndex
                 }, function (resultJSON) {
                     if (resultJSON.success) {
-                        getStatusesFn();
+                        getStatusesFn_1();
                     }
                 });
             });
         };
-        const openEditStatusModalFn = function (clickEvent) {
+        var openEditStatusModalFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
-            let editStatusCloseModalFn;
-            const index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
-            const statusObj = statusList[index];
-            const submitFn = function (formEvent) {
+            var editStatusCloseModalFn;
+            var index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+            var statusObj = statusList_1[index];
+            var submitFn = function (formEvent) {
                 formEvent.preventDefault();
                 cityssm.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget, function (responseJSON) {
                     if (responseJSON.success) {
                         editStatusCloseModalFn();
-                        getStatusesFn();
+                        getStatusesFn_1();
                     }
                 });
             };
-            const statusKeyChangeFn = function (changeEvent) {
-                const statusKeyObj = pts.getTicketStatus(changeEvent.currentTarget.value);
-                const statusFieldEle = document.getElementById("editStatus--statusField");
+            var statusKeyChangeFn = function (changeEvent) {
+                var statusKeyObj = pts.getTicketStatus(changeEvent.currentTarget.value);
+                var statusFieldEle = document.getElementById("editStatus--statusField");
                 statusFieldEle.value = "";
                 if (statusKeyObj && statusKeyObj.statusField) {
-                    const fieldEle = statusFieldEle.closest(".field");
+                    var fieldEle = statusFieldEle.closest(".field");
                     fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
+                    fieldEle.classList.remove("is-hidden");
+                }
+                else {
+                    statusFieldEle.closest(".field").classList.add("is-hidden");
+                }
+                var statusField2Ele = document.getElementById("editStatus--statusField2");
+                statusField2Ele.value = "";
+                if (statusKeyObj && statusKeyObj.statusField2) {
+                    var fieldEle = statusField2Ele.closest(".field");
+                    fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
                     fieldEle.classList.remove("is-hidden");
                 }
                 else {
@@ -452,16 +474,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     document.getElementById("editStatus--ticketID").value = ticketID;
                     document.getElementById("editStatus--statusIndex").value = statusObj.statusIndex;
                     document.getElementById("editStatus--statusField").value = statusObj.statusField;
+                    document.getElementById("editStatus--statusField2").value = statusObj.statusField2;
                     document.getElementById("editStatus--statusNote").value = statusObj.statusNote;
-                    const statusDateEle = document.getElementById("editStatus--statusDateString");
+                    var statusDateEle = document.getElementById("editStatus--statusDateString");
                     statusDateEle.value = statusObj.statusDateString;
                     statusDateEle.setAttribute("max", cityssm.dateToString(new Date()));
                     document.getElementById("editStatus--statusTimeString").value = statusObj.statusTimeString;
                     pts.getDefaultConfigProperty("parkingTicketStatuses", function (parkingTicketStatuses) {
-                        let statusKeyFound = false;
-                        const statusKeyEle = document.getElementById("editStatus--statusKey");
-                        for (let statusKeyIndex = 0; statusKeyIndex < parkingTicketStatuses.length; statusKeyIndex += 1) {
-                            const statusKeyObj = parkingTicketStatuses[statusKeyIndex];
+                        var statusKeyFound = false;
+                        var statusKeyEle = document.getElementById("editStatus--statusKey");
+                        for (var statusKeyIndex = 0; statusKeyIndex < parkingTicketStatuses.length; statusKeyIndex += 1) {
+                            var statusKeyObj = parkingTicketStatuses[statusKeyIndex];
                             if (statusKeyObj.isUserSettable || statusKeyObj.statusKey === statusObj.statusKey) {
                                 statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusKeyObj.statusKey + "\">" +
                                     statusKeyObj.status +
@@ -469,8 +492,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                 if (statusKeyObj.statusKey === statusObj.statusKey) {
                                     statusKeyFound = true;
                                     if (statusKeyObj.statusField) {
-                                        const fieldEle = document.getElementById("editStatus--statusField").closest(".field");
+                                        var fieldEle = document.getElementById("editStatus--statusField").closest(".field");
                                         fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
+                                        fieldEle.classList.remove("is-hidden");
+                                    }
+                                    if (statusKeyObj.statusField2) {
+                                        var fieldEle = document.getElementById("editStatus--statusField2").closest(".field");
+                                        fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
                                         fieldEle.classList.remove("is-hidden");
                                     }
                                 }
@@ -491,10 +519,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        const populateStatusesPanelFn = function () {
-            clearPanelFn(statusPanelEle);
-            if (statusList.length === 0) {
-                statusPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
+        var populateStatusesPanelFn_1 = function () {
+            clearPanelFn(statusPanelEle_1);
+            if (statusList_1.length === 0) {
+                statusPanelEle_1.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
                     "<div class=\"message is-info\">" +
                     "<p class=\"message-body\">" +
                     "There are no statuses associated with this ticket." +
@@ -503,11 +531,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>");
                 return;
             }
-            for (let index = 0; index < statusList.length; index += 1) {
-                const statusObj = statusList[index];
-                const statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
+            for (var index = 0; index < statusList_1.length; index += 1) {
+                var statusObj = statusList_1[index];
+                var statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
                 if (index === 0 && statusDefinitionObj && statusDefinitionObj.isFinalStatus) {
-                    const finalizePanelBlockEle = document.createElement("div");
+                    var finalizePanelBlockEle = document.createElement("div");
                     finalizePanelBlockEle.className = "panel-block is-block";
                     finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
                         "<div class=\"message-body\">" +
@@ -524,10 +552,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</div>" +
                         "</div>" +
                         "</div>";
-                    finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn);
-                    statusPanelEle.appendChild(finalizePanelBlockEle);
+                    finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn_1);
+                    statusPanelEle_1.appendChild(finalizePanelBlockEle);
                 }
-                const panelBlockEle = document.createElement("div");
+                var panelBlockEle = document.createElement("div");
                 panelBlockEle.className = "panel-block is-block";
                 panelBlockEle.innerHTML = "<div class=\"columns\">" +
                     ("<div class=\"column\">" +
@@ -546,6 +574,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                     "") +
                                 ":</strong> " +
                                 statusObj.statusField +
+                                "</p>") +
+                        (statusObj.statusField2 === "" ?
+                            "" :
+                            "<p class=\"is-size-7\">" +
+                                "<strong>" +
+                                (statusDefinitionObj && statusDefinitionObj.statusField2 ?
+                                    statusDefinitionObj.statusField2.fieldLabel :
+                                    "") +
+                                ":</strong> " +
+                                statusObj.statusField2 +
                                 "</p>") +
                         "<p class=\"has-newline-chars is-size-7\">" + statusObj.statusNote + "</p>" +
                         "</div>") +
@@ -566,16 +604,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>";
                 if (statusObj.canUpdate && index === 0) {
                     panelBlockEle.getElementsByClassName("is-edit-status-button")[0]
-                        .addEventListener("click", openEditStatusModalFn);
+                        .addEventListener("click", openEditStatusModalFn_1);
                     panelBlockEle.getElementsByClassName("is-delete-status-button")[0]
-                        .addEventListener("click", confirmDeleteStatusFn);
+                        .addEventListener("click", confirmDeleteStatusFn_1);
                 }
-                statusPanelEle.appendChild(panelBlockEle);
+                statusPanelEle_1.appendChild(panelBlockEle);
             }
         };
-        const getStatusesFn = function () {
-            clearPanelFn(statusPanelEle);
-            statusPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
+        var getStatusesFn_1 = function () {
+            clearPanelFn(statusPanelEle_1);
+            statusPanelEle_1.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
                 "<p class=\"has-text-centered has-text-grey-lighter\">" +
                 "<i class=\"fas fa-2x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
                 "<em>Loading statuses..." +
@@ -584,16 +622,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             cityssm.postJSON("/tickets/doGetStatuses", {
                 ticketID: ticketID
             }, function (resultList) {
-                statusList = resultList;
-                populateStatusesPanelFn();
+                statusList_1 = resultList;
+                populateStatusesPanelFn_1();
             });
         };
         document.getElementById("is-add-status-button").addEventListener("click", function (clickEvent) {
             clickEvent.preventDefault();
-            let addStatusCloseModalFn;
-            const submitFn = function (formEvent) {
+            var addStatusCloseModalFn;
+            var submitFn = function (formEvent) {
                 formEvent.preventDefault();
-                const resolveTicket = document.getElementById("addStatus--resolveTicket").checked;
+                var resolveTicket = document.getElementById("addStatus--resolveTicket").checked;
                 cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function (responseJSON) {
                     if (responseJSON.success) {
                         addStatusCloseModalFn();
@@ -601,24 +639,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             window.location.href = "/tickets/" + ticketID;
                         }
                         else {
-                            getStatusesFn();
+                            getStatusesFn_1();
                         }
                     }
                 });
             };
-            const statusKeyChangeFn = function (changeEvent) {
-                const statusObj = pts.getTicketStatus(changeEvent.currentTarget.value);
-                const statusFieldEle = document.getElementById("addStatus--statusField");
+            var statusKeyChangeFn = function (changeEvent) {
+                var statusObj = pts.getTicketStatus(changeEvent.currentTarget.value);
+                var statusFieldEle = document.getElementById("addStatus--statusField");
                 statusFieldEle.value = "";
                 if (statusObj && statusObj.statusField) {
-                    const fieldEle = statusFieldEle.closest(".field");
+                    var fieldEle = statusFieldEle.closest(".field");
                     fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField.fieldLabel;
                     fieldEle.classList.remove("is-hidden");
                 }
                 else {
                     statusFieldEle.closest(".field").classList.add("is-hidden");
                 }
-                const resolveTicketEle = document.getElementById("addStatus--resolveTicket");
+                var statusField2Ele = document.getElementById("addStatus--statusField2");
+                statusField2Ele.value = "";
+                if (statusObj && statusObj.statusField2) {
+                    var fieldEle = statusField2Ele.closest(".field");
+                    fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField2.fieldLabel;
+                    fieldEle.classList.remove("is-hidden");
+                }
+                else {
+                    statusField2Ele.closest(".field").classList.add("is-hidden");
+                }
+                var resolveTicketEle = document.getElementById("addStatus--resolveTicket");
                 resolveTicketEle.checked = false;
                 if (statusObj && statusObj.isFinalStatus) {
                     resolveTicketEle.closest(".field").classList.remove("is-hidden");
@@ -631,9 +679,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 onshow: function (modalEle) {
                     document.getElementById("addStatus--ticketID").value = ticketID;
                     pts.getDefaultConfigProperty("parkingTicketStatuses", function (parkingTicketStatuses) {
-                        const statusKeyEle = document.getElementById("addStatus--statusKey");
-                        for (let index = 0; index < parkingTicketStatuses.length; index += 1) {
-                            const statusObj = parkingTicketStatuses[index];
+                        var statusKeyEle = document.getElementById("addStatus--statusKey");
+                        for (var index = 0; index < parkingTicketStatuses.length; index += 1) {
+                            var statusObj = parkingTicketStatuses[index];
                             if (statusObj.isUserSettable) {
                                 statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
                                     statusObj.status +
@@ -649,21 +697,66 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         });
-        pts.loadDefaultConfigProperties(populateStatusesPanelFn);
+        document.getElementById("is-add-paid-status-button").addEventListener("click", function (clickEvent) {
+            clickEvent.preventDefault();
+            var addPaidStatusCloseModalFn;
+            var submitFn = function (formEvent) {
+                formEvent.preventDefault();
+                var resolveTicket = document.getElementById("addPaidStatus--resolveTicket").checked;
+                cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function (responseJSON) {
+                    if (responseJSON.success) {
+                        addPaidStatusCloseModalFn();
+                        if (resolveTicket) {
+                            window.location.href = "/tickets/" + ticketID;
+                        }
+                        else {
+                            getStatusesFn_1();
+                        }
+                    }
+                });
+            };
+            cityssm.openHtmlModal("ticket-addStatusPaid", {
+                onshow: function (modalEle) {
+                    document.getElementById("addPaidStatus--ticketID").value = ticketID;
+                    var statusFieldEle = document.getElementById("addPaidStatus--statusField");
+                    var offenceAmount = document.getElementById("ticket--offenceAmount").value;
+                    var issueDateString = document.getElementById("ticket--issueDateString").value;
+                    var discountDays = document.getElementById("ticket--discountDays").value;
+                    if (issueDateString === "" || discountDays === "") {
+                        statusFieldEle.value = offenceAmount;
+                    }
+                    else {
+                        var currentDateString = cityssm.dateToString(new Date());
+                        var dateDifference = cityssm.dateStringDifferenceInDays(issueDateString, currentDateString);
+                        if (dateDifference <= parseInt(discountDays)) {
+                            statusFieldEle.value = document.getElementById("ticket--discountOffenceAmount").value;
+                        }
+                        else {
+                            statusFieldEle.value = offenceAmount;
+                        }
+                    }
+                    modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+                },
+                onshown: function (_modalEle, closeModalFn) {
+                    addPaidStatusCloseModalFn = closeModalFn;
+                }
+            });
+        });
+        pts.loadDefaultConfigProperties(populateStatusesPanelFn_1);
     }
     {
-        const unlockFieldFn = function (unlockBtnClickEvent) {
+        var unlockFieldFn = function (unlockBtnClickEvent) {
             unlockBtnClickEvent.preventDefault();
-            const unlockBtnEle = unlockBtnClickEvent.currentTarget;
-            const inputTag = unlockBtnEle.getAttribute("data-unlock");
-            const readOnlyEle = unlockBtnEle.closest(".field").getElementsByTagName(inputTag)[0];
+            var unlockBtnEle = unlockBtnClickEvent.currentTarget;
+            var inputTag = unlockBtnEle.getAttribute("data-unlock");
+            var readOnlyEle = unlockBtnEle.closest(".field").getElementsByTagName(inputTag)[0];
             readOnlyEle.removeAttribute("readonly");
             readOnlyEle.classList.remove("is-readonly");
             readOnlyEle.focus();
             unlockBtnEle.setAttribute("disabled", "disabled");
         };
-        const unlockBtnEles = document.getElementsByClassName("is-unlock-field-button");
-        for (let buttonIndex = 0; buttonIndex < unlockBtnEles.length; buttonIndex += 1) {
+        var unlockBtnEles = document.getElementsByClassName("is-unlock-field-button");
+        for (var buttonIndex = 0; buttonIndex < unlockBtnEles.length; buttonIndex += 1) {
             unlockBtnEles[buttonIndex].addEventListener("click", unlockFieldFn);
         }
     }

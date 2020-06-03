@@ -139,6 +139,8 @@ declare const pts: ptsGlobal;
 
         (<HTMLInputElement>document.getElementById("offenceEdit--parkingOffence")).value = offence.parkingOffence;
         (<HTMLInputElement>document.getElementById("offenceEdit--offenceAmount")).value = offence.offenceAmount;
+        (<HTMLInputElement>document.getElementById("offenceEdit--discountOffenceAmount")).value = offence.discountOffenceAmount;
+        (<HTMLInputElement>document.getElementById("offenceEdit--discountDays")).value = offence.discountDays;
 
         const accountNumberEle = <HTMLInputElement>document.getElementById("offenceEdit--accountNumber");
         accountNumberEle.value = offence.accountNumber;
@@ -409,9 +411,13 @@ declare const pts: ptsGlobal;
           "<strong>" + cityssm.escapeHTML(bylaw.bylawNumber) + "</strong><br />" +
           "<span class=\"is-size-7\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</span>" +
           "</td>") +
-        ("<td class=\"has-text-right\">" +
+        ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Set Rate\">" +
           "$" + offence.offenceAmount.toFixed(2) + "<br />" +
           "<span class=\"is-size-7\">" + offence.accountNumber + "</span>" +
+          "</td>") +
+        ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Discount Rate\">" +
+          "$" + offence.discountOffenceAmount.toFixed(2) + "<br />" +
+          "<span class=\"is-size-7\">" + offence.discountDays + " day" + (offence.discountDays === 1 ? "" : "s") + "</span>" +
           "</td>") +
         ("<td class=\"has-border-right-width-2\">" +
           "<div class=\"is-size-7\">" +
@@ -453,7 +459,7 @@ declare const pts: ptsGlobal;
       "<tr>" +
       "<th class=\"has-border-right-width-2\">Location</th>" +
       "<th class=\"has-border-right-width-2\">By-Law</th>" +
-      "<th class=\"has-border-right-width-2\" colspan=\"2\">Offence</th>" +
+      "<th class=\"has-border-right-width-2\" colspan=\"3\">Offence</th>" +
       "<th class=\"has-width-50\"></th>" +
       "</tr>" +
       "</thead>" +

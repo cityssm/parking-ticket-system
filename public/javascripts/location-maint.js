@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    var locationClassKeyOptionsHTML = "";
-    var locationClassKeyFilterEle = document.getElementById("locationFilter--locationClassKey");
-    var locationNameFilterEle = document.getElementById("locationFilter--locationName");
-    var locationResultsEle = document.getElementById("locationResults");
-    var locationClassKeyMap = new Map();
-    var locationList = exports.locations;
+    let locationClassKeyOptionsHTML = "";
+    const locationClassKeyFilterEle = document.getElementById("locationFilter--locationClassKey");
+    const locationNameFilterEle = document.getElementById("locationFilter--locationName");
+    const locationResultsEle = document.getElementById("locationResults");
+    const locationClassKeyMap = new Map();
+    let locationList = exports.locations;
     delete exports.locations;
     function openEditLocationModal(clickEvent) {
         clickEvent.preventDefault();
-        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
-        var location = locationList[listIndex];
-        var editLocationCloseModalFn;
-        var deleteFn = function () {
+        const listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+        const location = locationList[listIndex];
+        let editLocationCloseModalFn;
+        const deleteFn = function () {
             cityssm.postJSON("/admin/doDeleteLocation", {
                 locationKey: location.locationKey
             }, function (responseJSON) {
@@ -24,11 +24,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        var confirmDeleteFn = function (deleteClickEvent) {
+        const confirmDeleteFn = function (deleteClickEvent) {
             deleteClickEvent.preventDefault();
             cityssm.confirmModal("Delete Location", "Are you sure you want to remove \"" + location.locationName + "\" from the list of available options?", "Yes, Remove Location", "danger", deleteFn);
         };
-        var editFn = function (formEvent) {
+        const editFn = function (formEvent) {
             formEvent.preventDefault();
             cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, function (responseJSON) {
                 if (responseJSON.success) {
@@ -41,7 +41,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.openHtmlModal("location-edit", {
             onshow: function () {
                 document.getElementById("editLocation--locationKey").value = location.locationKey;
-                var locationClassKeyEditSelectEle = document.getElementById("editLocation--locationClassKey");
+                const locationClassKeyEditSelectEle = document.getElementById("editLocation--locationClassKey");
                 locationClassKeyEditSelectEle.innerHTML = locationClassKeyOptionsHTML;
                 if (!locationClassKeyMap.has(location.locationClassKey)) {
                     locationClassKeyEditSelectEle.insertAdjacentHTML("beforeend", "<option value=\"" + cityssm.escapeHTML(location.locationClassKey) + "\">" +
@@ -59,19 +59,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function renderLocationList() {
-        var displayCount = 0;
-        var locationClassKeyFilter = locationClassKeyFilterEle.value;
-        var locationNameFilterSplit = locationNameFilterEle.value.trim().toLowerCase()
+        let displayCount = 0;
+        const locationClassKeyFilter = locationClassKeyFilterEle.value;
+        const locationNameFilterSplit = locationNameFilterEle.value.trim().toLowerCase()
             .split(" ");
-        var tbodyEle = document.createElement("tbody");
-        for (var locationIndex = 0; locationIndex < locationList.length; locationIndex += 1) {
-            var location_1 = locationList[locationIndex];
-            if (locationClassKeyFilter !== "" && locationClassKeyFilter !== location_1.locationClassKey) {
+        const tbodyEle = document.createElement("tbody");
+        for (let locationIndex = 0; locationIndex < locationList.length; locationIndex += 1) {
+            const location = locationList[locationIndex];
+            if (locationClassKeyFilter !== "" && locationClassKeyFilter !== location.locationClassKey) {
                 continue;
             }
-            var showRecord = true;
-            var locationNameLowerCase = location_1.locationName.toLowerCase();
-            for (var searchIndex = 0; searchIndex < locationNameFilterSplit.length; searchIndex += 1) {
+            let showRecord = true;
+            const locationNameLowerCase = location.locationName.toLowerCase();
+            for (let searchIndex = 0; searchIndex < locationNameFilterSplit.length; searchIndex += 1) {
                 if (locationNameLowerCase.indexOf(locationNameFilterSplit[searchIndex]) === -1) {
                     showRecord = false;
                     break;
@@ -81,14 +81,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 continue;
             }
             displayCount += 1;
-            var locationClass = locationClassKeyMap.has(location_1.locationClassKey) ?
-                locationClassKeyMap.get(location_1.locationClassKey).locationClass :
-                location_1.locationClassKey;
-            var trEle = document.createElement("tr");
+            const locationClass = locationClassKeyMap.has(location.locationClassKey) ?
+                locationClassKeyMap.get(location.locationClassKey).locationClass :
+                location.locationClassKey;
+            const trEle = document.createElement("tr");
             trEle.innerHTML =
                 "<td>" +
                     "<a data-index=\"" + locationIndex + "\" href=\"#\">" +
-                    cityssm.escapeHTML(location_1.locationName) +
+                    cityssm.escapeHTML(location.locationName) +
                     "</a>" +
                     "</td>" +
                     "<td>" + cityssm.escapeHTML(locationClass) + "</td>";
@@ -115,8 +115,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     locationNameFilterEle.addEventListener("keyup", renderLocationList);
     pts.getDefaultConfigProperty("locationClasses", function (locationClassesList) {
         locationClassKeyFilterEle.innerHTML = "<option value=\"\">(All Location Classes)</option>";
-        for (var index = 0; index < locationClassesList.length; index += 1) {
-            var locationClass = locationClassesList[index];
+        for (let index = 0; index < locationClassesList.length; index += 1) {
+            const locationClass = locationClassesList[index];
             locationClassKeyOptionsHTML +=
                 "<option value=\"" + locationClass.locationClassKey + "\">" +
                     cityssm.escapeHTML(locationClass.locationClass) +
@@ -128,8 +128,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     });
     document.getElementById("is-add-location-button").addEventListener("click", function (clickEvent) {
         clickEvent.preventDefault();
-        var addLocationCloseModalFn;
-        var addFn = function (formEvent) {
+        let addLocationCloseModalFn;
+        const addFn = function (formEvent) {
             formEvent.preventDefault();
             cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, function (responseJSON) {
                 if (responseJSON.success) {

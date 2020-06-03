@@ -118,6 +118,7 @@ function initParkingDB() {
             " statusTime integer not null," +
             " statusKey varchar(20) not null," +
             " statusField text," +
+            " statusField2 text," +
             " statusNote text," +
             " recordCreate_userName varchar(30) not null," +
             " recordCreate_timeMillis integer not null," +

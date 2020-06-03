@@ -5,10 +5,13 @@ exports.baseParkingTicketStatuses = [
         statusKey: "paid",
         status: "Paid",
         statusField: {
+            fieldLabel: "Amount Paid"
+        },
+        statusField2: {
             fieldLabel: "Receipt Number"
         },
         isFinalStatus: true,
-        isUserSettable: true
+        isUserSettable: false
     },
     {
         statusKey: "withdrawn",

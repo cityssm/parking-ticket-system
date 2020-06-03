@@ -1,0 +1,60 @@
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <h3 class="modal-card-title">Add a Payment</h3>
+      <button class="delete is-close-modal-button" aria-label="close" type="button"></button>
+    </header>
+    <section class="modal-card-body">
+      <form id="form--addPaidStatus">
+        <input id="addPaidStatus--ticketID" name="ticketID" type="hidden" />
+        <input id="addPaidStatus--statusKey" name="statusKey" type="hidden" value="paid" />
+
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label" for="addPaidStatus--statusField">Amount Paid</label>
+              <div class="control has-icons-left">
+                <input class="input has-text-right" id="addPaidStatus--statusField" name="statusField" type="number" min="0" step="0.01" required />
+                <span class="icon is-small is-left">
+                  <i class="fas fa-dollar-sign" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label" for="addPaidStatus--statusField2">Receipt Number</label>
+              <div class="control">
+                <input class="input" id="addPaidStatus--statusField2" name="statusField2" type="text" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="addPaidStatus--statusNote">Notes</label>
+          <div class="control">
+            <textarea class="textarea" id="addPaidStatus--statusNote" name="statusNote"></textarea>
+          </div>
+        </div>
+
+        <div class="field is-clearfix has-margin-bottom-10">
+          <div class="control is-pulled-right">
+            <div class="b-checkbox is-primary">
+              <input id="addPaidStatus--resolveTicket" name="resolveTicket" type="checkbox" value="1" checked />
+              <label for="addPaidStatus--resolveTicket">
+                Resolve Ticket
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </section>
+    <footer class="modal-card-foot justify-flex-end">
+      <button class="button is-close-modal-button" type="button">Cancel</button>
+      <button class="button is-success" type="submit" form="form--addPaidStatus">Record Payment</button>
+    </footer>
+  </div>
+</div>

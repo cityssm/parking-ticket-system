@@ -84,6 +84,12 @@
               </div>
             </div>
           </div>
+          <div class="panel-block is-block">
+            <strong>Discount Offence Amount</strong><br />
+            $<%= ticket.discountOffenceAmount.toFixed(2) %>
+            for
+            <%= ticket.discountDays %> days
+          </div>
         </div>
       </div>
       <div class="column">
@@ -281,6 +287,12 @@
                 <div class="is-size-7">
                   <strong><%= (statusObj.statusField && statusObj.statusField.fieldLabel ? statusObj.statusField.fieldLabel + ":" : "") %></strong>
                   <%= statusLogEntryObj.statusField %>
+                </div>
+              <% } %>
+              <% if (statusLogEntryObj.statusField2 && statusLogEntryObj.statusField2 !== "") { %>
+                <div class="is-size-7">
+                  <strong><%= (statusObj.statusField2 && statusObj.statusField2.fieldLabel ? statusObj.statusField2.fieldLabel + ":" : "") %></strong>
+                  <%= statusLogEntryObj.statusField2 %>
                 </div>
               <% } %>
               <div class="has-newline-chars is-size-7"><%= statusLogEntryObj.statusNote %></div>

@@ -316,11 +316,12 @@ function createParkingTicket(reqBody, reqSession) {
     const info = db.prepare("insert into ParkingTickets" +
         " (ticketNumber, issueDate, issueTime, issuingOfficer," +
         " locationKey, locationDescription," +
-        " bylawNumber, parkingOffence, offenceAmount," +
-        " licencePlateCountry, licencePlateProvince, licencePlateNumber, licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN," +
+        " bylawNumber, parkingOffence, offenceAmount, discountOffenceAmount, discountDays," +
+        " licencePlateCountry, licencePlateProvince, licencePlateNumber," +
+        " licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN," +
         " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqSession.user.userName, nowMillis);
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.discountOffenceAmount, reqBody.discountDays, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqSession.user.userName, nowMillis);
     db.close();
     return {
         success: true,
@@ -377,6 +378,8 @@ function updateParkingTicket(reqBody, reqSession) {
         " bylawNumber = ?," +
         " parkingOffence = ?," +
         " offenceAmount = ?," +
+        " discountOffenceAmount = ?," +
+        " discountDays = ?," +
         " licencePlateCountry = ?," +
         " licencePlateProvince = ?," +
         " licencePlateNumber = ?," +
@@ -389,7 +392,7 @@ function updateParkingTicket(reqBody, reqSession) {
         " where ticketID = ?" +
         " and resolvedDate is null" +
         " and recordDelete_timeMillis is null")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqBody.ticketID);
+        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.discountOffenceAmount, reqBody.discountDays, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqBody.ticketID);
     db.close();
     if (info.changes) {
         return {
@@ -578,7 +581,7 @@ function getParkingTicketStatuses(ticketID, reqSession) {
         readonly: true
     });
     const statusRows = db.prepare("select statusIndex, statusDate, statusTime," +
-        " statusKey, statusField, statusNote," +
+        " statusKey, statusField, statusField2, statusNote," +
         " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
         " from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +
@@ -600,10 +603,10 @@ function createParkingTicketStatus(reqBodyOrObj, reqSession, resolveTicket) {
     const rightNow = new Date();
     const info = db.prepare("insert into ParkingTicketStatusLog" +
         " (ticketID, statusIndex, statusDate, statusTime, statusKey," +
-        " statusField, statusNote," +
+        " statusField, statusField2, statusNote," +
         " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        .run(reqBodyOrObj.ticketID, statusIndexNew, dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), reqBodyOrObj.statusKey, reqBodyOrObj.statusField, reqBodyOrObj.statusNote, reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .run(reqBodyOrObj.ticketID, statusIndexNew, dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), reqBodyOrObj.statusKey, reqBodyOrObj.statusField, reqBodyOrObj.statusField2, reqBodyOrObj.statusNote, reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
     if (info.changes > 0 && resolveTicket) {
         db.prepare("update ParkingTickets" +
             " set resolvedDate = ?," +
@@ -628,13 +631,14 @@ function updateParkingTicketStatus(reqBody, reqSession) {
         " statusTime = ?," +
         " statusKey = ?," +
         " statusField = ?," +
+        " statusField2 = ?," +
         " statusNote = ?," +
         " recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
         " where ticketID = ?" +
         " and statusIndex = ?" +
         " and recordDelete_timeMillis is null")
-        .run(dateTimeFns.dateStringToInteger(reqBody.statusDateString), dateTimeFns.timeStringToInteger(reqBody.statusTimeString), reqBody.statusKey, reqBody.statusField, reqBody.statusNote, reqSession.user.userName, Date.now(), reqBody.ticketID, reqBody.statusIndex);
+        .run(dateTimeFns.dateStringToInteger(reqBody.statusDateString), dateTimeFns.timeStringToInteger(reqBody.statusTimeString), reqBody.statusKey, reqBody.statusField, reqBody.statusField2, reqBody.statusNote, reqSession.user.userName, Date.now(), reqBody.ticketID, reqBody.statusIndex);
     db.close();
     return {
         success: (info.changes > 0)
@@ -910,7 +914,8 @@ function getParkingOffences() {
     const db = sqlite(exports.dbPath, {
         readonly: true
     });
-    const rows = db.prepare("select o.bylawNumber, o.locationKey, o.parkingOffence, o.offenceAmount, o.accountNumber" +
+    const rows = db.prepare("select o.bylawNumber, o.locationKey, o.parkingOffence," +
+        " o.offenceAmount, o.discountOffenceAmount, o.discountDays, o.accountNumber" +
         " from ParkingOffences o" +
         " left join ParkingLocations l on o.locationKey = l.locationKey" +
         " where o.isActive = 1 and l.isActive" +
@@ -926,7 +931,7 @@ function getParkingOffencesByLocationKey(locationKey) {
         readonly: true
     });
     const rows = db.prepare("select o.bylawNumber, b.bylawDescription," +
-        " o.parkingOffence, o.offenceAmount" +
+        " o.parkingOffence, o.offenceAmount, o.discountOffenceAmount, o.discountDays" +
         " from ParkingOffences o" +
         " left join ParkingBylaws b on o.bylawNumber = b.bylawNumber" +
         " where o.isActive = 1 and b.isActive = 1" +
@@ -966,26 +971,34 @@ function addParkingOffence(reqBody) {
         }
     }
     let offenceAmount = 0;
+    let discountOffenceAmount = 0;
+    let discountDays = 0;
     if (reqBody.hasOwnProperty("offenceAmount")) {
         offenceAmount = reqBody.offenceAmount;
+        discountOffenceAmount = reqBody.hasOwnProperty("discountOffenceAmount") ?
+            reqBody.discountOffenceAmount :
+            reqBody.offenceAmount;
+        discountDays = reqBody.discountDays || 0;
     }
     else {
-        const offenceAmountRecord = db.prepare("select offenceAmount" +
+        const offenceAmountRecord = db.prepare("select offenceAmount, discountOffenceAmount, discountDays" +
             " from ParkingOffences" +
             " where bylawNumber = ?" +
             " and isActive = 1" +
-            " group by offenceAmount" +
-            " order by count(locationKey) desc, offenceAmount desc" +
+            " group by offenceAmount, discountOffenceAmount, discountDays" +
+            " order by count(locationKey) desc, offenceAmount desc, discountOffenceAmount desc" +
             " limit 1")
             .get(reqBody.bylawNumber);
         if (offenceAmountRecord) {
             offenceAmount = offenceAmountRecord.offenceAmount;
+            discountOffenceAmount = offenceAmountRecord.discountOffenceAmount;
+            discountDays = offenceAmountRecord.discountDays;
         }
     }
     const info = db.prepare("insert into ParkingOffences" +
-        " (bylawNumber, locationKey, parkingOffence, offenceAmount, accountNumber, isActive)" +
-        " values (?, ?, ?, ?, ?, 1)")
-        .run(reqBody.bylawNumber, reqBody.locationKey, reqBody.parkingOffence || "", offenceAmount, reqBody.accountNumber || "");
+        " (bylawNumber, locationKey, parkingOffence, offenceAmount, discountOffenceAmount, discountDays, accountNumber, isActive)" +
+        " values (?, ?, ?, ?, ?, ?, ?, 1)")
+        .run(reqBody.bylawNumber, reqBody.locationKey, reqBody.parkingOffence || "", offenceAmount, discountOffenceAmount, discountDays, reqBody.accountNumber || "");
     db.close();
     return {
         success: (info.changes > 0)
@@ -997,11 +1010,13 @@ function updateParkingOffence(reqBody) {
     const info = db.prepare("update ParkingOffences" +
         " set parkingOffence = ?," +
         " offenceAmount = ?," +
+        " discountOffenceAmount = ?," +
+        " discountDays = ?," +
         " accountNumber = ?" +
         " where bylawNumber = ?" +
         " and locationKey = ?" +
         " and isActive = 1")
-        .run(reqBody.parkingOffence, reqBody.offenceAmount, reqBody.accountNumber, reqBody.bylawNumber, reqBody.locationKey);
+        .run(reqBody.parkingOffence, reqBody.offenceAmount, reqBody.discountOffenceAmount, reqBody.discountDays, reqBody.accountNumber, reqBody.bylawNumber, reqBody.locationKey);
     db.close();
     return {
         success: (info.changes > 0)

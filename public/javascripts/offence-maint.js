@@ -75,6 +75,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("offenceEdit--bylawDescription").innerText = bylaw.bylawDescription;
                 document.getElementById("offenceEdit--parkingOffence").value = offence.parkingOffence;
                 document.getElementById("offenceEdit--offenceAmount").value = offence.offenceAmount;
+                document.getElementById("offenceEdit--discountOffenceAmount").value = offence.discountOffenceAmount;
+                document.getElementById("offenceEdit--discountDays").value = offence.discountDays;
                 var accountNumberEle = document.getElementById("offenceEdit--accountNumber");
                 accountNumberEle.value = offence.accountNumber;
                 accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
@@ -240,9 +242,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "<strong>" + cityssm.escapeHTML(bylaw.bylawNumber) + "</strong><br />" +
                         "<span class=\"is-size-7\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</span>" +
                         "</td>") +
-                    ("<td class=\"has-text-right\">" +
+                    ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Set Rate\">" +
                         "$" + offence.offenceAmount.toFixed(2) + "<br />" +
                         "<span class=\"is-size-7\">" + offence.accountNumber + "</span>" +
+                        "</td>") +
+                    ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Discount Rate\">" +
+                        "$" + offence.discountOffenceAmount.toFixed(2) + "<br />" +
+                        "<span class=\"is-size-7\">" + offence.discountDays + " day" + (offence.discountDays === 1 ? "" : "s") + "</span>" +
                         "</td>") +
                     ("<td class=\"has-border-right-width-2\">" +
                         "<div class=\"is-size-7\">" +
@@ -275,7 +281,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "<tr>" +
             "<th class=\"has-border-right-width-2\">Location</th>" +
             "<th class=\"has-border-right-width-2\">By-Law</th>" +
-            "<th class=\"has-border-right-width-2\" colspan=\"2\">Offence</th>" +
+            "<th class=\"has-border-right-width-2\" colspan=\"3\">Offence</th>" +
             "<th class=\"has-width-50\"></th>" +
             "</tr>" +
             "</thead>" +

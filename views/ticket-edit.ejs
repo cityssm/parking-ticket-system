@@ -106,6 +106,7 @@
 
           <div class="columns">
             <div class="column">
+
               <label class="label" for="ticket--bylawNumber">By-law Number</label>
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -118,6 +119,14 @@
                   </button>
                 </div>
               </div>
+
+              <div class="field">
+                <label class="label" for="ticket--parkingOffence">Parking Offence</label>
+                <div class="control">
+                  <textarea class="textarea" id="ticket--parkingOffence" name="parkingOffence"><%= ticket.parkingOffence %></textarea>
+                </div>
+              </div>
+
             </div>
             <div class="column">
               <label class="label" for="ticket--offenceAmount">Offence Amount</label>
@@ -129,7 +138,36 @@
                   </span>
                 </div>
                 <div class="control">
-                  <button class="button is-unlock-field-button" data-unlock="input" data-tooltip="Unlock Offence Amount Field" type="button">
+                  <button class="button is-unlock-field-button has-tooltip-left" data-unlock="input" data-tooltip="Unlock Offence Amount Field" type="button">
+                    <span class="sr-only">Unlock Field</span>
+                    <i class="fas fa-fw fa-unlock" aria-hidden="false"></i>
+                  </button>
+                </div>
+              </div>
+
+              <label class="label" for="ticket--discountOffenceAmount">Discount Offence Amount</label>
+              <div class="field has-addons">
+                <div class="control is-expanded has-icons-left">
+                  <input class="input is-readonly has-text-right" id="ticket--discountOffenceAmount" name="discountOffenceAmount" type="number" value="<%= ticket.discountOffenceAmount %>" min="0" step="0.01" required readonly onwheel="return false;" />
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-dollar-sign" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <div class="control">
+                  <button class="button is-unlock-field-button has-tooltip-left" data-unlock="input" data-tooltip="Unlock Discount Offence Amount Field" type="button">
+                    <span class="sr-only">Unlock Field</span>
+                    <i class="fas fa-fw fa-unlock" aria-hidden="false"></i>
+                  </button>
+                </div>
+              </div>
+
+              <label class="label" for="ticket--discountDays">Discount Days</label>
+              <div class="field has-addons">
+                <div class="control is-expanded">
+                  <input class="input is-readonly has-text-right" id="ticket--discountDays" name="discountDays" type="number" value="<%= ticket.discountDays %>" min="0" step="1" required readonly onwheel="return false;" />
+                </div>
+                <div class="control">
+                  <button class="button is-unlock-field-button has-tooltip-left" data-unlock="input" data-tooltip="Unlock Discount Days Field" type="button">
                     <span class="sr-only">Unlock Field</span>
                     <i class="fas fa-fw fa-unlock" aria-hidden="false"></i>
                   </button>
@@ -137,12 +175,7 @@
               </div>
             </div>
           </div>
-          <div class="field">
-            <label class="label" for="ticket--parkingOffence">Parking Offence</label>
-            <div class="control">
-              <textarea class="textarea" id="ticket--parkingOffence" name="parkingOffence"><%= ticket.parkingOffence %></textarea>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -340,10 +373,16 @@
               <div class="level">
                 <h2 class="level-left has-text-weight-bold">Status</h2>
                 <div class="level-right">
-                  <button class="button is-small" id="is-add-status-button" type="button">
-                    <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                    <span>Add Status</span>
-                  </button>
+                  <div class="buttons">
+                    <button class="button is-small" id="is-add-paid-status-button" type="button">
+                      <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                      <span>Pay Ticket</span>
+                    </button>
+                    <button class="button is-small" id="is-add-status-button" type="button">
+                      <span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                      <span>Add Status</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

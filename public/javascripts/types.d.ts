@@ -21,6 +21,9 @@ export declare type ptsGlobal = {
         statusField: {
             fieldLabel: string;
         };
+        statusField2?: {
+            fieldLabel: string;
+        };
         isFinalStatus: boolean;
     };
     initializeTabs?: (tabsListEle: HTMLElement, callbackFns?: {

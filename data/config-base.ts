@@ -5,10 +5,13 @@ export const baseParkingTicketStatuses: pts.Config_ParkingTicketStatus[] = [
     statusKey: "paid",
     status: "Paid",
     statusField: {
+      fieldLabel: "Amount Paid"
+    },
+    statusField2: {
       fieldLabel: "Receipt Number"
     },
     isFinalStatus: true,
-    isUserSettable: true
+    isUserSettable: false
   },
   {
     statusKey: "withdrawn",

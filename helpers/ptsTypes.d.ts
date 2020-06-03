@@ -73,6 +73,9 @@ export declare type Config_ParkingTicketStatus = {
     statusField?: {
         fieldLabel: string;
     };
+    statusField2?: {
+        fieldLabel: string;
+    };
     isFinalStatus: boolean;
     isUserSettable: boolean;
 };
@@ -134,6 +137,8 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     locationDescription: string;
     parkingOffence: string;
     offenceAmount: number;
+    discountOffenceAmount: number;
+    discountDays: number;
     licencePlateIsMissing: boolean;
     vehicleMakeModel: string;
     vehicleVIN: string;
@@ -160,6 +165,7 @@ export interface ParkingTicketStatusLog extends Record {
     statusTimeString?: string;
     statusKey?: string;
     statusField?: string;
+    statusField2?: string;
     statusNote?: string;
     ticketNumber?: string;
     licencePlateNumber?: string;
@@ -191,6 +197,7 @@ export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
     parkingOffence: string;
     offenceAmount: number;
     discountOffenceAmount: number;
+    discountDays: number;
     accountNumber: string;
 }
 export interface LicencePlateOwner extends Record, LicencePlate {

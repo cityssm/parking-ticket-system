@@ -256,6 +256,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       (<HTMLInputElement>document.getElementById("ticket--bylawNumber")).value = offenceObj.bylawNumber;
 
+      // Offence Amount
+
       const offenceAmountEle = <HTMLInputElement>document.getElementById("ticket--offenceAmount");
 
       offenceAmountEle.classList.add("is-readonly");
@@ -263,6 +265,28 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
         .removeAttribute("disabled");
       offenceAmountEle.value = offenceObj.offenceAmount.toFixed(2);
+
+      // Discount Offence Amount
+
+      const discountOffenceAmountEle = <HTMLInputElement>document.getElementById("ticket--discountOffenceAmount");
+
+      discountOffenceAmountEle.classList.add("is-readonly");
+      discountOffenceAmountEle.setAttribute("readonly", "readonly");
+      discountOffenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+        .removeAttribute("disabled");
+      discountOffenceAmountEle.value = offenceObj.discountOffenceAmount.toFixed(2);
+
+      // Discount Days
+
+      const discountDaysEle = <HTMLInputElement>document.getElementById("ticket--discountDays");
+
+      discountDaysEle.classList.add("is-readonly");
+      discountDaysEle.setAttribute("readonly", "readonly");
+      discountDaysEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+        .removeAttribute("disabled");
+      discountDaysEle.value = offenceObj.discountDays.toString();
+
+      // Offence Description
 
       (<HTMLTextAreaElement>document.getElementById("ticket--parkingOffence")).value = offenceObj.bylawDescription;
 
@@ -795,6 +819,21 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         }
 
+        const statusField2Ele = <HTMLInputElement>document.getElementById("editStatus--statusField2");
+        statusField2Ele.value = "";
+
+        if (statusKeyObj && statusKeyObj.statusField2) {
+
+          const fieldEle = statusField2Ele.closest(".field");
+          fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
+          fieldEle.classList.remove("is-hidden");
+
+        } else {
+
+          statusFieldEle.closest(".field").classList.add("is-hidden");
+
+        }
+
       };
 
       cityssm.openHtmlModal("ticket-editStatus", {
@@ -805,6 +844,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           (<HTMLInputElement>document.getElementById("editStatus--statusIndex")).value = statusObj.statusIndex;
 
           (<HTMLInputElement>document.getElementById("editStatus--statusField")).value = statusObj.statusField;
+          (<HTMLInputElement>document.getElementById("editStatus--statusField2")).value = statusObj.statusField2;
           (<HTMLTextAreaElement>document.getElementById("editStatus--statusNote")).value = statusObj.statusNote;
 
           const statusDateEle = <HTMLInputElement>document.getElementById("editStatus--statusDateString");
@@ -837,6 +877,14 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
                     const fieldEle = document.getElementById("editStatus--statusField").closest(".field");
                     fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
+                    fieldEle.classList.remove("is-hidden");
+
+                  }
+
+                  if (statusKeyObj.statusField2) {
+
+                    const fieldEle = document.getElementById("editStatus--statusField2").closest(".field");
+                    fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
                     fieldEle.classList.remove("is-hidden");
 
                   }
@@ -955,6 +1003,17 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
               statusObj.statusField +
               "</p>") +
 
+            (statusObj.statusField2 === "" ?
+              "" :
+              "<p class=\"is-size-7\">" +
+              "<strong>" +
+              (statusDefinitionObj && statusDefinitionObj.statusField2 ?
+                statusDefinitionObj.statusField2.fieldLabel :
+                "") +
+              ":</strong> " +
+              statusObj.statusField2 +
+              "</p>") +
+
             "<p class=\"has-newline-chars is-size-7\">" + statusObj.statusNote + "</p>" +
 
             "</div>") +
@@ -1070,6 +1129,21 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         }
 
+        const statusField2Ele = <HTMLInputElement>document.getElementById("addStatus--statusField2");
+        statusField2Ele.value = "";
+
+        if (statusObj && statusObj.statusField2) {
+
+          const fieldEle = statusField2Ele.closest(".field");
+          fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField2.fieldLabel;
+          fieldEle.classList.remove("is-hidden");
+
+        } else {
+
+          statusField2Ele.closest(".field").classList.add("is-hidden");
+
+        }
+
         const resolveTicketEle = <HTMLInputElement>document.getElementById("addStatus--resolveTicket");
         resolveTicketEle.checked = false;
 
@@ -1118,6 +1192,85 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         },
         onshown: function(_modalEle, closeModalFn) {
           addStatusCloseModalFn = closeModalFn;
+        }
+
+      });
+
+    });
+
+    document.getElementById("is-add-paid-status-button").addEventListener("click", function(clickEvent) {
+
+      clickEvent.preventDefault();
+
+      let addPaidStatusCloseModalFn: Function;
+
+      const submitFn = function(formEvent: Event) {
+
+        formEvent.preventDefault();
+
+        const resolveTicket = (<HTMLInputElement>document.getElementById("addPaidStatus--resolveTicket")).checked;
+
+        cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function(responseJSON) {
+
+          if (responseJSON.success) {
+
+            addPaidStatusCloseModalFn();
+
+            if (resolveTicket) {
+
+              window.location.href = "/tickets/" + ticketID;
+
+            } else {
+
+              getStatusesFn();
+
+            }
+
+          }
+
+        });
+
+      };
+
+      cityssm.openHtmlModal("ticket-addStatusPaid", {
+
+        onshow: function(modalEle) {
+
+          (<HTMLInputElement>document.getElementById("addPaidStatus--ticketID")).value = ticketID;
+
+          // Set amount
+
+          const statusFieldEle = <HTMLInputElement>document.getElementById("addPaidStatus--statusField");
+
+          const offenceAmount = (<HTMLInputElement>document.getElementById("ticket--offenceAmount")).value;
+
+          let issueDateString = (<HTMLInputElement>document.getElementById("ticket--issueDateString")).value;
+
+          let discountDays = (<HTMLInputElement>document.getElementById("ticket--discountDays")).value;
+
+          if (issueDateString === "" || discountDays === "") {
+            statusFieldEle.value = offenceAmount;
+
+          } else {
+
+            const currentDateString = cityssm.dateToString(new Date());
+
+            const dateDifference = cityssm.dateStringDifferenceInDays(issueDateString, currentDateString);
+
+            if (dateDifference <= parseInt(discountDays)) {
+
+              statusFieldEle.value = (<HTMLInputElement>document.getElementById("ticket--discountOffenceAmount")).value;
+
+            } else {
+              statusFieldEle.value = offenceAmount;
+            }
+          }
+
+          modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+
+        },
+        onshown: function(_modalEle, closeModalFn) {
+          addPaidStatusCloseModalFn = closeModalFn;
         }
 
       });
