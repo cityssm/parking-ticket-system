@@ -97,6 +97,17 @@ router.all("/:reportName", function (req, res) {
                     " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
                     " and s.recordDelete_timeMillis is null)");
             break;
+        case "lookupAudit":
+            sql = "select b.batchID," +
+                " sentDate as batchSentDate," +
+                " e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
+                " e.ticketID as ticketID," +
+                " t.ticketNumber as ticketNumber" +
+                " from LicencePlateLookupBatches b" +
+                " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
+                " left join ParkingTickets t on e.ticketID = t.ticketID" +
+                " where b.sentDate is not null";
+            break;
         case "lookupErrorLog-all":
             sql = "select * from LicencePlateLookupErrorLog";
             break;

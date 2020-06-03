@@ -144,6 +144,21 @@ router.all("/:reportName", function(req, res) {
 
       break;
 
+
+    case "lookupAudit":
+
+      sql = "select b.batchID," +
+        " sentDate as batchSentDate," +
+        " e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
+        " e.ticketID as ticketID," +
+        " t.ticketNumber as ticketNumber" +
+        " from LicencePlateLookupBatches b" +
+        " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
+        " left join ParkingTickets t on e.ticketID = t.ticketID" +
+        " where b.sentDate is not null";
+
+      break;
+
     case "lookupErrorLog-all":
 
       sql = "select * from LicencePlateLookupErrorLog";
