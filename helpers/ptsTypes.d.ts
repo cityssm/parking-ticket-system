@@ -6,15 +6,15 @@ export declare type Config = {
     parkingTickets?: Config_ParkingTickets;
     parkingTicketStatuses?: Config_ParkingTicketStatus[];
     licencePlateCountryAliases?: {
-        [countryKey: string]: string;
+        [countryShortName: string]: string;
     };
     licencePlateProvinceAliases?: {
-        [country: string]: {
-            [provinceKey: string]: string;
+        [countryName: string]: {
+            [provinceShortName: string]: string;
         };
     };
     licencePlateProvinces?: {
-        [country: string]: Config_LicencePlateCountry;
+        [countryName: string]: Config_LicencePlateCountry;
     };
     genders?: Config_Gender[];
     parkingOffences?: Config_ParkingOffences;

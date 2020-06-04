@@ -102,34 +102,166 @@ Property Name        | Type     | Description                                   
 
 ### `config.parkingTickets.licencePlateExpiryDate = {};`
 
----
-
-## `config.parkingTicketStatuses = {};`
-
----
-
-## `config.licencePlateCountryAliases = {};`
+Property Name | Type    | Description                                              | Default Value
+------------- | ------- | -------------------------------------------------------- | -------------
+`includeDay`  | boolean | When `true`, the expiry date will use a full date field. | `false`
 
 ---
 
-## `config.licencePlateProvinceAliases = {};`
+## `config.parkingTicketStatuses = [parkingTicketStatusA, parkingTicketStatusB, ...];`
+
+An array of parking ticket status configuration objects.
+
+
+### `parkingTicketStatus = {};`
+
+Property Name             | Type    | Description                                                   | Sample Value
+------------------------- | ------- | --------------------------------------------------------------| ------------
+`statusKey`               | string  | A unique, behind-the-scenes identifier for the ticket status. | `"paid"`
+`status`                  | string  | A human-readable, display name for the status.                | `"Paid"`
+`statusField.fieldLabel`  | string  | A human-readable label for the first status field.            | `"Amount Paid"`
+`statusField2.fieldLabel` | string  | A human-readable label for the second status field.           | `"Receipt Number"`
+`isFinalStatus`           | boolean | When `true`, the ticket can be marked as resolved by this status.       | `true`
+`isUserSettable`          | boolean | When `true`, the status will be available from the "Add Status" window. | `false`
 
 ---
 
-## `config.licencePlateProvinces = {};`
+## `config.licencePlateCountryAliases = { [countryShortName: string]: string };`
+
+An object mapping country short names to full country names.
+
+```javascript
+// Sample
+config.licencePlateCountryAliases = {
+  "CA": "Canada",
+  "US": "USA"
+};
+```
 
 ---
 
-## `config.genders = {};`
+## `config.licencePlateProvinceAliases = { [countryName: string]: { [provinceShortName: string]: string } };`
+
+An object mapping province short names to full province names.
+
+```javascript
+// Sample
+config.licencePlateProvinceAliases = {
+  "Canada": {
+    AB: "Alberta",
+    BC: "British Columbia",
+    MB: "Manitoba",
+    NB: "New Brunswick",
+    NL: "Newfoundland and Labrador",
+    NS: "Nova Scotia",
+    NT: "Northwest Territories",
+    NU: "Nunavut",
+    ON: "Ontario",
+    PE: "Prince Edward Island",
+    QC: "Quebec",
+    SK: "Saskatchewan",
+    YT: "Yukon"
+  },
+  "USA": {
+    AL: "Alabama",
+    // ...
+    WY: "Wyoming"
+  }
+};
+```
+
+---
+
+## `config.licencePlateProvinces = { [countryName: string]: licencePlateCountry };`
+
+An object of province details.
+
+### `licencePlateCountry = {};`
+
+Property Name      | Type                                              | Description
+------------------ | ------------------------------------------------- | --------------------------------------
+`countryShortName` | string                                            | The proper short name for the country.
+`provinces`        | { [provinceName: string] : licencePlateProvince } | An object of province definitions.
+
+### `licencePlateProvince = {};`
+
+Property Name       | Type   | Description
+------------------- | ------ | ------------------------------------------------
+`provinceShortName` | string | The proper short name for the province.
+`color`             | string | The color code for the licence plate text.
+`backgroundColor`   | string | The color code for the licence plate background.
+
+```javascript
+// Sample
+config.licencePlateProvinces = {
+  "Canada": {
+    countryShortName: "CA",
+    provinces: {
+      "Alberta": {
+        provinceShortName: "AB",
+        color: "#dd262b",
+        backgroundColor: "#fff"
+      },
+      // ...
+      "Ontario": {
+        provinceShortName: "ON",
+        color: "#0661a4",
+        backgroundColor: "#fff"
+      },
+      // ...
+      "Yukon": {
+        provinceShortName: "YT",
+        color: "#252525",
+        backgroundColor: "#fff"
+      }
+    }
+  },
+  "USA": {
+    // ...
+  }
+};
+```
+
+---
+
+## `config.genders = [ genderA, genderB, ... ];`
+
+An array of observed genders.
+
+### `gender = {};`
+
+Property Name | Type   | Description                         | Sample Value
+------------- | ------ | ----------------------------------- | ------------
+`genderKey`   | string | A unique identifier for the gender. | `"F"`
+`gender`      | string | The full gender name.               | `"Female"`
 
 ---
 
 ## `config.parkingOffences = {};`
 
+Property Name           | Type   | Description                                       | Default Value
+----------------------- | ------ | ------------------------------------------------- | -------------
+`accountNumber.pattern` | RegExp | A regular expression to validate account numbers. | `/^[\d\w -]{1,20}$/`
+
 ---
 
-## `config.locationClasses = {};`
+## `config.locationClasses = [ locationClassA, locationClassB, ... ];`
+
+An array of location classes.
+
+### `locationClass = {};`
+
+Property Name      | Type   | Description                                 | Sample Value
+------------------ | ------ | ------------------------------------------- | ---------------
+`locationClassKey` | string | A unique identifier for the location class. | `"parkingLot"`
+`locationClass`    | string | The human-readable location class name.     | `"Parking Lot"`
 
 ---
 
 ## `config.mtoExportImport = {};`
+
+Configuration settings when using the Ontario, Canada MTO integrations.
+
+Property Name    | Type   | Description                                    | Sample Value
+---------------- | ------ | ---------------------------------------------- | ---------------
+`authorizedUser` | string | The key associated with your acocunt with MTO. | `"XXXX"`
