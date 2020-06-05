@@ -565,7 +565,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             "</div>" +
                             "<div class=\"level-right\">" + statusObj.statusDateString + "</div>" +
                             "</div>") +
-                        (statusObj.statusField === "" ?
+                        (!statusObj.statusField || statusObj.statusField === "" ?
                             "" :
                             "<p class=\"is-size-7\">" +
                                 "<strong>" +
@@ -575,7 +575,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                 ":</strong> " +
                                 statusObj.statusField +
                                 "</p>") +
-                        (statusObj.statusField2 === "" ?
+                        (!statusObj.statusField2 || statusObj.statusField2 === "" ?
                             "" :
                             "<p class=\"is-size-7\">" +
                                 "<strong>" +

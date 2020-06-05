@@ -992,7 +992,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
               "<div class=\"level-right\">" + statusObj.statusDateString + "</div>" +
               "</div>") +
 
-            (statusObj.statusField === "" ?
+            (!statusObj.statusField || statusObj.statusField === "" ?
               "" :
               "<p class=\"is-size-7\">" +
               "<strong>" +
@@ -1003,7 +1003,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
               statusObj.statusField +
               "</p>") +
 
-            (statusObj.statusField2 === "" ?
+            (!statusObj.statusField2 || statusObj.statusField2 === "" ?
               "" :
               "<p class=\"is-size-7\">" +
               "<strong>" +

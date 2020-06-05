@@ -3,6 +3,7 @@ const express_1 = require("express");
 const router = express_1.Router();
 const usersDB = require("../helpers/usersDB");
 const parkingDB = require("../helpers/parkingDB");
+const configFns = require("../helpers/configFns");
 router.get("/userManagement", function (req, res) {
     if (!req.session.user.userProperties.isAdmin) {
         res.redirect("/dashboard/?error=accessDenied");
@@ -118,6 +119,57 @@ router.post("/doDeleteUser", function (req, res) {
         return;
     }
     const success = usersDB.inactivateUser(userNameToDelete);
+    res.json({
+        success: success
+    });
+});
+router.get("/cleanup", function (req, res) {
+    if (!req.session.user.userProperties.isAdmin) {
+        res.redirect("/dashboard/?error=accessDenied");
+        return;
+    }
+    const counts = parkingDB.getDatabaseCleanupCounts();
+    res.render("admin-cleanup", {
+        headTitle: "Database Cleanup",
+        counts: counts
+    });
+});
+router.post("/doCleanupTable", function (req, res) {
+    if (!req.session.user.userProperties.isAdmin) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const table = req.body.table;
+    const recordDelete_timeMillis = Math.min(parseInt(req.body.recordDelete_timeMillis), Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
+    let success = false;
+    switch (table) {
+        case "parkingTickets":
+            success = parkingDB.cleanupParkingTicketsTable(recordDelete_timeMillis);
+            break;
+        case "parkingTicketRemarks":
+            success = parkingDB.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
+            break;
+        case "parkingTicketStatusLog":
+            success = parkingDB.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
+            break;
+        case "licencePlateOwners":
+            success = parkingDB.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
+            break;
+        case "parkingOffences":
+            success = parkingDB.cleanupParkingOffencesTable();
+            break;
+        case "parkingLocations":
+            success = parkingDB.cleanupParkingLocationsTable();
+            break;
+        case "parkingBylaws":
+            success = parkingDB.cleanupParkingBylawsTable();
+            break;
+    }
     res.json({
         success: success
     });

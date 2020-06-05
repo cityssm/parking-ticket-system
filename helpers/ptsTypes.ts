@@ -11,7 +11,8 @@ export type Config = {
   genders?: Config_Gender[],
   parkingOffences?: Config_ParkingOffences,
   locationClasses?: Config_LocationClass[],
-  mtoExportImport?: Config_MTOExportImport
+  mtoExportImport?: Config_MTOExportImport,
+  databaseCleanup: { windowDays: number }
 };
 
 

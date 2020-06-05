@@ -220,4 +220,7 @@ config.licencePlateProvinces = {
     }
 };
 config.mtoExportImport = {};
+config.databaseCleanup = {
+    windowDays: 30
+};
 module.exports = config;

@@ -20,6 +20,9 @@ export declare type Config = {
     parkingOffences?: Config_ParkingOffences;
     locationClasses?: Config_LocationClass[];
     mtoExportImport?: Config_MTOExportImport;
+    databaseCleanup: {
+        windowDays: number;
+    };
 };
 declare type Config_ApplicationConfig = {
     applicationName?: string;

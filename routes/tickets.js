@@ -343,6 +343,19 @@ router.post("/doUnresolveTicket", function (req, res) {
     const result = parkingDB.unresolveParkingTicket(req.body.ticketID, req.session);
     res.json(result);
 });
+router.post("/doRestoreTicket", function (req, res) {
+    if (!req.session.user.userProperties.canUpdate) {
+        res
+            .status(403)
+            .json({
+            success: false,
+            message: "Forbidden"
+        });
+        return;
+    }
+    const result = parkingDB.restoreParkingTicket(req.body.ticketID, req.session);
+    res.json(result);
+});
 router.post("/doGetRemarks", function (req, res) {
     res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
 });
@@ -434,6 +447,10 @@ router.get("/:ticketID", function (req, res) {
         res.redirect("/tickets/?error=ticketNotFound");
         return;
     }
+    else if (ticket.recordDelete_timeMillis && !req.session.user.userProperties.isAdmin) {
+        res.redirect("/tickets/?error=accessDenied");
+        return;
+    }
     res.render("ticket-view", {
         headTitle: "Ticket " + ticket.ticketNumber,
         ticket: ticket
@@ -460,7 +477,7 @@ router.get("/:ticketID/edit", function (req, res) {
         res.redirect("/tickets/?error=ticketNotFound");
         return;
     }
-    else if (!ticket.canUpdate || ticket.resolvedDate) {
+    else if (!ticket.canUpdate || ticket.resolvedDate || ticket.recordDelete_timeMillis) {
         res.redirect("/tickets/" + ticketID + "/?error=accessDenied");
         return;
     }

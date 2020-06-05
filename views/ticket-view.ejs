@@ -15,11 +15,24 @@
       Ticket <%= ticket.ticketNumber %>
     </h1>
 
+    <% if (ticket.recordDelete_timeMillis) { %>
+      <div class="message is-danger">
+        <div class="message-body is-clearfix">
+          <p class="has-text-weight-bold">This ticket was deleted by <%= ticket.recordDelete_userName %> on <%= dateTimeFns.dateToString(new Date(ticket.recordDelete_timeMillis)) %>.</p>
+          <% if (user.userProperties.isAdmin) { %>
+            <button class="button is-danger is-pulled-right" id="is-restore-ticket-button" data-ticket-id="<%= ticket.ticketID %>" type="button">
+              <span class="icon is-small"><i class="fas fa-trash-restore" aria-hidden="true"></i></span>
+              <span>Restore Ticket</span>
+            </button>
+          <% } %>
+        </div>
+      </div>
+    <% } %>
     <% if (ticket.resolvedDate) { %>
       <div class="message is-success">
         <div class="message-body is-clearfix">
           <p class="has-text-weight-bold">This ticket was resolved <%= ticket.resolvedDateString %>.</p>
-          <% if (ticket.canUpdate) { %>
+          <% if (ticket.canUpdate && !ticket.recordDelete_timeMillis) { %>
             <p class="has-margin-bottom-10">If further changes are required, you can remove the resolved status from the ticket.</p>
             <button class="button is-warning is-pulled-right" id="is-unresolve-ticket-button" data-ticket-id="<%= ticket.ticketID %>" type="button">
               <span class="icon is-small"><i class="fas fa-ban" aria-hidden="true"></i></span>
@@ -30,7 +43,7 @@
       </div>
     <% } %>
 
-    <% if (ticket.canUpdate && !ticket.resolvedDate) { %>
+    <% if (ticket.canUpdate && !ticket.resolvedDate && !ticket.recordDelete_timeMillis) { %>
       <div class="fixed-container is-fixed-bottom-right has-margin-20 has-text-right is-hidden-print">
         <a class="button is-circle is-primary has-tooltip-left" data-tooltip="Edit this Ticket" href="/tickets/<%=ticket.ticketID %>/edit">
           <i class="fas fa-pencil-alt" aria-hidden="true"></i>
@@ -43,7 +56,7 @@
       <div class="column is-4">
         <div class="panel">
           <h2 class="panel-heading">
-            Ticket Details
+            Parking Ticket Details
           </h2>
           <div class="panel-block is-block">
             <strong>Issue Date/Time</strong><br />
@@ -59,9 +72,13 @@
           </div>
           <div class="panel-block is-block">
             <strong>Location</strong><br />
-            <% if (!ticket.locationDescription || ticket.locationDescription === "") { %>
+            <% if ((!ticket.locationDescription || ticket.locationDescription === "") && !ticket.locationName) { %>
               <span class="has-text-grey">(Not Recorded)</span>
             <% } else { %>
+              <% if (ticket.locationName) { %>
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                <%= ticket.locationName %><br />
+              <% } %>
               <%= ticket.locationDescription %>
             <% } %>
           </div>
@@ -308,7 +325,7 @@
 
 <%- include('_footerA'); -%>
 
-<% if (ticket.canUpdate) { %>
+<% if (user.userProperties.canUpdate || user.userProperties.isAdmin) { %>
   <script src="/javascripts/ticket-view.min.js"></script>
 <% } %>
 

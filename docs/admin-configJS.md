@@ -258,6 +258,14 @@ Property Name      | Type   | Description                                 | Samp
 
 ---
 
+## `config.databaseCleanup = {};`
+
+Property Name | Type    | Description                                                                      | Default Value
+------------- | ------- | -------------------------------------------------------------------------------- | -------------
+`windowDays`  | number  | The number of days after a record has been deleted when it can be safely purged. | `30`
+
+---
+
 ## `config.mtoExportImport = {};`
 
 Configuration settings when using the Ontario, Canada MTO integrations.

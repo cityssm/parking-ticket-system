@@ -79,6 +79,8 @@ configFallbackValues.set("licencePlateProvinces", {});
 
 configFallbackValues.set("mtoExportImport.authorizedUser", "");
 
+configFallbackValues.set("databaseCleanup.windowDays", 30);
+
 
 export function getProperty(propertyName: string): any {
 

@@ -5,6 +5,8 @@ import * as parkingDB from "../helpers/parkingDB";
 import { rawToCSV } from "@cityssm/expressjs-server-js/stringFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
+import * as configFns from "../helpers/configFns";
+
 
 router.get("/", function(_req, res) {
 
@@ -222,6 +224,91 @@ router.all("/:reportName", function(req, res) {
 
         " group by b.bylawNumber, b.bylawDescription, b.isActive," +
         " round (issueDate / 10000 - 0.5)";
+
+      break;
+
+    case "cleanup-parkingTickets":
+
+      sql = "select * from ParkingTickets t" +
+        " where t.recordDelete_timeMillis is not null" +
+        " and t.recordDelete_timeMillis < ?" +
+        (" and not exists (" +
+          "select 1 from LicencePlateLookupBatchEntries b" +
+          " where t.ticketID = b.ticketID)");
+
+      params = [
+        req.query.recordDelete_timeMillis && req.query.recordDelete_timeMillis !== "" ?
+          req.query.recordDelete_timeMillis :
+          Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000)
+      ];
+
+      break;
+
+    case "cleanup-parkingTicketStatusLog":
+
+      sql = "select * from ParkingTicketStatusLog" +
+        " where recordDelete_timeMillis is not null" +
+        " and recordDelete_timeMillis < ?";
+
+        params = [
+          req.query.recordDelete_timeMillis && req.query.recordDelete_timeMillis !== "" ?
+            req.query.recordDelete_timeMillis :
+            Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000)
+        ];
+
+      break;
+
+    case "cleanup-parkingTicketRemarks":
+
+      sql = "select * from ParkingTicketRemarks" +
+        " where recordDelete_timeMillis is not null" +
+        " and recordDelete_timeMillis < ?";
+
+        params = [
+          req.query.recordDelete_timeMillis && req.query.recordDelete_timeMillis !== "" ?
+            req.query.recordDelete_timeMillis :
+            Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000)
+        ];
+
+      break;
+
+    case "cleanup-licencePlateOwners":
+
+      sql = "select * from LicencePlateOwners" +
+        " where recordDelete_timeMillis is not null" +
+        " and recordDelete_timeMillis < ?";
+
+        params = [
+          req.query.recordDelete_timeMillis && req.query.recordDelete_timeMillis !== "" ?
+            req.query.recordDelete_timeMillis :
+            Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000)
+        ];
+
+      break;
+
+    case "cleanup-parkingOffences":
+
+      sql = "select * from ParkingOffences o" +
+        " where isActive = 0" +
+        " and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)";
+
+      break;
+
+    case "cleanup-parkingBylaws":
+
+      sql = "select * from ParkingBylaws b" +
+        " where isActive = 0" +
+        " and not exists (select 1 from ParkingTickets t where b.bylawNumber = t.bylawNumber)" +
+        " and not exists (select 1 from ParkingOffences o where b.bylawNumber = o.bylawNumber)";
+
+      break;
+
+    case "cleanup-parkingLocations":
+
+      sql = "select * from ParkingLocations l" +
+        " where isActive = 0" +
+        " and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)" +
+        " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)";
 
       break;
 

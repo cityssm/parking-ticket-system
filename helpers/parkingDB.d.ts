@@ -50,6 +50,9 @@ export declare function unresolveParkingTicket(ticketID: number, reqSession: Exp
     success: boolean;
     message?: undefined;
 };
+export declare function restoreParkingTicket(ticketID: number, reqSession: Express.Session): {
+    success: boolean;
+};
 export declare function getRecentParkingTicketVehicleMakeModelValues(): any[];
 export declare function getParkingTicketRemarks(ticketID: number, reqSession: Express.Session): pts.ParkingTicketRemark[];
 export declare function createParkingTicketRemark(reqBody: pts.ParkingTicketRemark, reqSession: Express.Session): {
@@ -259,4 +262,21 @@ export declare function lockConvictionBatch(batchID: number, reqSession: Express
 };
 export declare function unlockConvictionBatch(batchID: number, reqSession: Express.Session): boolean;
 export declare function markConvictionBatchAsSent(batchID: number, reqSession: Express.Session): boolean;
+export declare function getDatabaseCleanupCounts(): {
+    recordDelete_timeMillis: number;
+    parkingTickets: any;
+    parkingTicketStatusLog: any;
+    parkingTicketRemarks: any;
+    licencePlateOwners: any;
+    parkingLocations: any;
+    parkingBylaws: any;
+    parkingOffences: any;
+};
+export declare function cleanupParkingTicketsTable(recordDelete_timeMillis: number): boolean;
+export declare function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number): boolean;
+export declare function cleanupParkingTicketStatusLog(recordDelete_timeMillis: number): boolean;
+export declare function cleanupLicencePlateOwnersTable(recordDelete_timeMillis: number): boolean;
+export declare function cleanupParkingOffencesTable(): boolean;
+export declare function cleanupParkingLocationsTable(): boolean;
+export declare function cleanupParkingBylawsTable(): boolean;
 export {};

@@ -266,4 +266,8 @@ config.licencePlateProvinces = {
 
 config.mtoExportImport = {};
 
+config.databaseCleanup = {
+  windowDays: 30 
+}
+
 export = config;

@@ -1,0 +1,223 @@
+<%- include('_header'); -%>
+
+<div class="columns is-variable is-4-mobile is-4-tablet is-block-print" id="is-site-layout">
+  <%- include("_sideMenu-admin"); -%>
+  <div class="column">
+    <nav class="breadcrumb">
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li class="is-active">
+          <a href="#" aria-current="page">
+            <span class="icon is-small"><i class="fas fa-cog" aria-hidden="true"></i></span>
+            <span>Database Cleanup</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <h1 class="title is-1">
+      Database Cleanup
+    </h1>
+
+    <div class="message is-info">
+      <p class="message-body">
+        In most cases, when records are marked as deleted, they are simply hidden from view
+        in the event that they need to be recovered.<br />
+        The Database Cleanup tool helps permanently delete hidden records
+        that were deleted over <%= configFns.getProperty("databaseCleanup.windowDays") %>
+        days ago.
+      </p>
+    </div>
+
+    <table class="table is-fullwidth is-striped is-hoverable">
+      <thead>
+        <tr>
+          <th>Database Table</th>
+          <th class="has-text-right has-width-1 is-nowrap">Record Count</th>
+          <th class="has-width-1"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Parking Tickets</strong><br />
+            <span class="is-size-7">
+              Corresponding remark and status records not necessarily included in the record counts below
+              will also be purged.
+            </span>
+          </td>
+          <td class="has-text-right">
+            <%= counts.parkingTickets %>
+          </td>
+          <td class="is-nowrap">
+            <% if (counts.parkingTickets === 0) { %>
+              <span class="has-text-grey">(No Action Necessary)</span>
+            <% } else { %>
+              <a class="button is-primary" href="/reports/cleanup-parkingTickets?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+                Export
+              </a>
+              <button class="button is-warning is-purge-button" type="button" data-table="parkingTickets">
+                <span class="icon is-small"><i class="fas fa-bomb" aria-hidden="true"></i></span>
+                <span>Purge</span>
+              </button>
+            <% } %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Parking Ticket Remarks</strong>
+          </td>
+          <td class="has-text-right">
+            <%= counts.parkingTicketRemarks %>
+          </td>
+          <td class="is-nowrap">
+            <% if (counts.parkingTicketRemarks === 0) { %>
+              <span class="has-text-grey">(No Action Necessary)</span>
+            <% } else { %>
+              <a class="button is-primary" href="/reports/cleanup-parkingTicketRemarks?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+                Export
+              </a>
+              <button class="button is-warning is-purge-button" type="button" data-table="parkingTicketRemarks">
+                <span class="icon is-small"><i class="fas fa-bomb" aria-hidden="true"></i></span>
+                <span>Purge</span>
+              </button>
+            <% } %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Parking Ticket Statuses</strong>
+          </td>
+          <td class="has-text-right">
+            <%= counts.parkingTicketStatusLog %>
+          </td>
+          <td class="is-nowrap">
+            <% if (counts.parkingTicketStatusLog === 0) { %>
+              <span class="has-text-grey">(No Action Necessary)</span>
+            <% } else { %>
+              <a class="button is-primary" href="/reports/cleanup-parkingTicketStatusLog?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+                Export
+              </a>
+              <button class="button is-warning is-purge-button" type="button" data-table="parkingTicketStatusLog">
+                <span class="icon is-small"><i class="fas fa-bomb" aria-hidden="true"></i></span>
+                <span>Purge</span>
+              </button>
+            <% } %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Licence Plate Owners</strong>
+          </td>
+          <td class="has-text-right">
+            <%= counts.licencePlateOwners %>
+          </td>
+          <td class="is-nowrap">
+            <% if (counts.licencePlateOwners === 0) { %>
+              <span class="has-text-grey">(No Action Necessary)</span>
+            <% } else { %>
+              <a class="button is-primary" href="/reports/cleanup-licencePlateOwners?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+                Export
+              </a>
+              <button class="button is-warning is-purge-button" type="button" data-table="licencePlateOwners">
+                <span class="icon is-small"><i class="fas fa-bomb" aria-hidden="true"></i></span>
+                <span>Purge</span>
+              </button>
+            <% } %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="message is-info">
+      <p class="message-body">
+        Some configuration tables can have deleted records purged immediately,
+        provided that the records are not used.
+      </p>
+    </div>
+
+    <table class="table is-fullwidth is-striped is-hoverable">
+      <thead>
+        <tr>
+          <th>Database Table</th>
+          <th class="has-text-right has-width-1 is-nowrap">Record Count</th>
+          <th class="has-width-1"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Parking Offences</strong>
+          </td>
+          <td class="has-text-right">
+            <%= counts.parkingOffences %>
+          </td>
+          <td class="is-nowrap">
+            <% if (counts.parkingOffences === 0) { %>
+              <span class="has-text-grey">(No Action Necessary)</span>
+            <% } else { %>
+              <a class="button is-primary" href="/reports/cleanup-parkingOffences" download>
+                Export
+              </a>
+              <button class="button is-warning is-purge-button" type="button" data-table="parkingOffences">
+                <span class="icon is-small"><i class="fas fa-bomb" aria-hidden="true"></i></span>
+                <span>Purge</span>
+              </button>
+            <% } %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Parking Locations</strong>
+          </td>
+          <td class="has-text-right">
+            <%= counts.parkingLocations %>
+          </td>
+          <td class="is-nowrap">
+            <% if (counts.parkingLocations === 0) { %>
+              <span class="has-text-grey">(No Action Necessary)</span>
+            <% } else { %>
+              <a class="button is-primary" href="/reports/cleanup-parkingLocations" download>
+                Export
+              </a>
+              <button class="button is-warning is-purge-button" type="button" data-table="parkingLocations">
+                <span class="icon is-small"><i class="fas fa-bomb" aria-hidden="true"></i></span>
+                <span>Purge</span>
+              </button>
+            <% } %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Parking By-Laws</strong>
+          </td>
+          <td class="has-text-right">
+            <%= counts.parkingBylaws %>
+          </td>
+          <td class="is-nowrap">
+            <% if (counts.parkingBylaws === 0) { %>
+              <span class="has-text-grey">(No Action Necessary)</span>
+            <% } else { %>
+              <a class="button is-primary" href="/reports/cleanup-parkingBylaws" download>
+                Export
+              </a>
+              <button class="button is-warning is-purge-button" type="button" data-table="parkingBylaws">
+                <span class="icon is-small"><i class="fas fa-bomb" aria-hidden="true"></i></span>
+                <span>Purge</span>
+              </button>
+            <% } %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('_footerA'); -%>
+
+<script>
+  exports.recordDelete_timeMillis = <%= counts.recordDelete_timeMillis %>;
+</script>
+<script src="/javascripts/admin-cleanup.min.js"></script>
+
+<%- include('_footerB'); -%>

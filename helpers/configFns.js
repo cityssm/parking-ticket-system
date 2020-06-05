@@ -47,6 +47,7 @@ configFallbackValues.set("licencePlateCountryAliases", Object.freeze({
 configFallbackValues.set("licencePlateProvinceAliases", {});
 configFallbackValues.set("licencePlateProvinces", {});
 configFallbackValues.set("mtoExportImport.authorizedUser", "");
+configFallbackValues.set("databaseCleanup.windowDays", 30);
 function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");
     let currentObj = exports.config;
