@@ -186,7 +186,7 @@ declare const pts: ptsGlobal;
       cityssm.confirmModal(
         "Confirm Match",
         "<p class=\"has-text-centered\">Are you sure the details on the parking ticket match the details on the ownership record?</p>" +
-        "<div class=\"columns has-margin-top-5\">" +
+        "<div class=\"columns mt-1\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
           "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +
@@ -284,7 +284,7 @@ declare const pts: ptsGlobal;
       cityssm.confirmModal(
         "Confirm Error",
         "<p class=\"has-text-centered\">Are you sure you want to mark an error between the details on the parking ticket and the details on the ownership record?</p>" +
-        "<div class=\"columns has-margin-top-5\">" +
+        "<div class=\"columns mt-1\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
           "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +

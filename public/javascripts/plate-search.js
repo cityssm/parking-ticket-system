@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    const formEle = document.getElementById("form--filters");
-    const limitEle = document.getElementById("filter--limit");
-    const offsetEle = document.getElementById("filter--offset");
-    const searchResultsEle = document.getElementById("container--searchResults");
+    var formEle = document.getElementById("form--filters");
+    var limitEle = document.getElementById("filter--limit");
+    var offsetEle = document.getElementById("filter--offset");
+    var searchResultsEle = document.getElementById("container--searchResults");
     function getLicencePlates() {
-        const currentLimit = parseInt(limitEle.value);
-        const currentOffset = parseInt(offsetEle.value);
+        var currentLimit = parseInt(limitEle.value);
+        var currentOffset = parseInt(offsetEle.value);
         searchResultsEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
             "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
             "<em>Loading licence plates..." +
             "</p>";
         cityssm.postJSON("/plates/doGetLicencePlates", formEle, function (licencePlateResults) {
-            const plateList = licencePlateResults.licencePlates;
+            var plateList = licencePlateResults.licencePlates;
             if (plateList.length === 0) {
                 searchResultsEle.innerHTML = "<div class=\"message is-info\">" +
                     "<div class=\"message-body\">" +
@@ -33,11 +33,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</tr></thead>" +
                 "<tbody></tbody>" +
                 "</table>";
-            const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
-            for (let plateIndex = 0; plateIndex < plateList.length; plateIndex += 1) {
-                const plateObj = plateList[plateIndex];
-                const trEle = document.createElement("tr");
-                const url = "/plates/" +
+            var tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
+            for (var plateIndex = 0; plateIndex < plateList.length; plateIndex += 1) {
+                var plateObj = plateList[plateIndex];
+                var trEle = document.createElement("tr");
+                var url = "/plates/" +
                     (plateObj.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObj.licencePlateCountry)) +
                     "/" +
                     (plateObj.licencePlateProvince === "" ? "_" : encodeURIComponent(plateObj.licencePlateProvince)) +
@@ -82,12 +82,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>" +
                 "</div>");
             if (currentLimit < licencePlateResults.count) {
-                const paginationEle = document.createElement("nav");
+                var paginationEle = document.createElement("nav");
                 paginationEle.className = "level-right is-hidden-print";
                 paginationEle.setAttribute("role", "pagination");
                 paginationEle.setAttribute("aria-label", "pagination");
                 if (currentOffset > 0) {
-                    const previousEle = document.createElement("a");
+                    var previousEle = document.createElement("a");
                     previousEle.className = "button";
                     previousEle.innerHTML = "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
                         "<span>Previous</span>";
@@ -99,8 +99,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     paginationEle.appendChild(previousEle);
                 }
                 if (currentLimit + currentOffset < licencePlateResults.count) {
-                    const nextEle = document.createElement("a");
-                    nextEle.className = "button has-margin-left-10";
+                    var nextEle = document.createElement("a");
+                    nextEle.className = "button ml-3";
                     nextEle.innerHTML = "<span>Next Licence Plates</span>" +
                         "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
                     nextEle.addEventListener("click", function (clickEvent) {

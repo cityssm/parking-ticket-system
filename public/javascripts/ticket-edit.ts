@@ -180,7 +180,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         locationList = locationListRes;
 
         const listEle = document.createElement("div");
-        listEle.className = "list is-hoverable has-margin-bottom-20";
+        listEle.className = "panel mb-4";
 
         for (let index = 0; index < locationList.length; index += 1) {
 
@@ -189,7 +189,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           const locationClassObj = locationClassMap[locationObj.locationClassKey];
 
           const linkEle = document.createElement("a");
-          linkEle.className = "list-item";
+          linkEle.className = "panel-block is-block";
           linkEle.setAttribute("data-index", index.toString());
           linkEle.setAttribute("href", "#");
           linkEle.addEventListener("click", setLocationFn);
@@ -308,14 +308,14 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         offenceList = offenceListRes;
 
         const listEle = document.createElement("div");
-        listEle.className = "list is-hoverable has-margin-bottom-20";
+        listEle.className = "panel mb-4";
 
         for (let index = 0; index < offenceList.length; index += 1) {
 
           const offenceObj = offenceList[index];
 
           const linkEle = document.createElement("a");
-          linkEle.className = "list-item";
+          linkEle.className = "panel-block is-block";
           linkEle.setAttribute("data-index", index.toString());
           linkEle.setAttribute("href", "#");
           linkEle.addEventListener("click", setBylawOffenceFn);
@@ -985,7 +985,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         panelBlockEle.innerHTML = "<div class=\"columns\">" +
           ("<div class=\"column\">" +
 
-            ("<div class=\"level has-margin-bottom-5\">" +
+            ("<div class=\"level mb-1\">" +
               "<div class=\"level-left\">" +
               "<strong>" + (statusDefinitionObj ? statusDefinitionObj.status : statusObj.statusKey) + "</strong>" +
               "</div>" +

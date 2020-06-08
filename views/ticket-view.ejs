@@ -33,7 +33,7 @@
         <div class="message-body is-clearfix">
           <p class="has-text-weight-bold">This ticket was resolved <%= ticket.resolvedDateString %>.</p>
           <% if (ticket.canUpdate && !ticket.recordDelete_timeMillis) { %>
-            <p class="has-margin-bottom-10">If further changes are required, you can remove the resolved status from the ticket.</p>
+            <p class="mb-3">If further changes a re required, you can remove the resolved status from the ticket.</p>
             <button class="button is-warning is-pulled-right" id="is-unresolve-ticket-button" data-ticket-id="<%= ticket.ticketID %>" type="button">
               <span class="icon is-small"><i class="fas fa-ban" aria-hidden="true"></i></span>
               <span>Remove Resolved Status</span>
@@ -44,7 +44,7 @@
     <% } %>
 
     <% if (ticket.canUpdate && !ticket.resolvedDate && !ticket.recordDelete_timeMillis) { %>
-      <div class="fixed-container is-fixed-bottom-right has-margin-20 has-text-right is-hidden-print">
+      <div class="fixed-container is-fixed-bottom-right mb-4 mr-4 has-text-right is-hidden-print">
         <a class="button is-circle is-primary has-tooltip-left" data-tooltip="Edit this Ticket" href="/tickets/<%=ticket.ticketID %>/edit">
           <i class="fas fa-pencil-alt" aria-hidden="true"></i>
           <span class="sr-only">Edit this Ticket</span>
@@ -84,7 +84,11 @@
           </div>
           <div class="panel-block is-block">
             <strong>Parking Offence</strong><br />
-            <%= ticket.parkingOffence %>
+            <% if (!ticket.parkingOffence || ticket.parkingOffence === "") { %>
+              <span class="has-text-grey">(Not Recorded)</span>
+            <% } else { %>
+              <%= ticket.parkingOffence %>
+            <% } %>
           </div>
           <div class="panel-block is-block">
             <div class="columns">
@@ -93,19 +97,31 @@
                   Related
                   <span class="is-nowrap">By-Law</span>
                 </strong><br />
-                <%= ticket.bylawNumber %>
+                <% if (!ticket.bylawNumber || ticket.bylawNumber === "") { %>
+                  <span class="has-text-grey">(Not Recorded)</span>
+                <% } else { %>
+                  <%= ticket.bylawNumber %>
+                <% } %>
               </div>
               <div class="column">
                 <strong>Offence Amount</strong><br />
-                $<%= ticket.offenceAmount.toFixed(2) %>
+                <% if (!ticket.offenceAmount) { %>
+                  <span class="has-text-grey">(Not Recorded)</span>
+                <% } else { %>
+                  $<%= ticket.offenceAmount.toFixed(2) %>
+                <% } %>
               </div>
             </div>
           </div>
           <div class="panel-block is-block">
             <strong>Discount Offence Amount</strong><br />
-            $<%= ticket.discountOffenceAmount.toFixed(2) %>
-            for
-            <%= ticket.discountDays %> days
+            <% if (!ticket.discountOffenceAmount) { %>
+              <span class="has-text-grey">(Not Recorded)</span>
+            <% } else { %>
+              $<%= ticket.discountOffenceAmount.toFixed(2) %>
+              for
+              <%= ticket.discountDays %> days
+            <% } %>
           </div>
         </div>
       </div>
@@ -144,7 +160,7 @@
                 <% } %>
               </div>
               <div class="column">
-                <p class="has-margin-bottom-5">
+                <p class="mb-1">
                   <strong>Vehicle Make/Model from Ticket</strong><br />
                   <% if (!ticket.vehicleMakeModel || ticket.vehicleMakeModel === "") { %>
                     <span class="has-text-grey">(Not Recorded)</span>
@@ -279,7 +295,7 @@
                     Open
                   </span>
                 <% } %>
-                <a class="button is-small has-margin-left-10" href="/reports/statuses-byTicketID/?ticketID=<%= ticket.ticketID %>" download>
+                <a class="button is-small ml-3" href="/reports/statuses-byTicketID/?ticketID=<%= ticket.ticketID %>" download>
                   <span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>
                   <span>Export</span>
                 </a>
@@ -292,7 +308,7 @@
               const statusObj = configFns.getParkingTicketStatus(statusLogEntryObj.statusKey) || {};
           %>
             <div class="panel-block is-block">
-              <div class="level has-margin-bottom-5">
+              <div class="level mb-1">
                 <div class="level-left">
                   <strong><%= statusObj.status || statusLogEntryObj.statusKey %></strong>
                 </div>

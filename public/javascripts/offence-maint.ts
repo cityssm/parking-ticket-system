@@ -252,7 +252,7 @@ declare const pts: ptsGlobal;
       onshown: function() {
 
         const listEle = document.createElement("div");
-        listEle.className = "list has-margin-bottom-20";
+        listEle.className = "panel";
 
         let displayCount = 0;
 
@@ -269,7 +269,7 @@ declare const pts: ptsGlobal;
             displayCount += 1;
 
             const linkEle = document.createElement("a");
-            linkEle.className = "list-item";
+            linkEle.className = "panel-block";
             linkEle.setAttribute("data-bylaw-number", bylaw.bylawNumber);
             linkEle.setAttribute("data-location-key", locationKeyFilter);
 
@@ -295,7 +295,7 @@ declare const pts: ptsGlobal;
             displayCount += 1;
 
             const linkEle = document.createElement("a");
-            linkEle.className = "list-item";
+            linkEle.className = "panel-block";
             linkEle.setAttribute("data-bylaw-number", bylawNumberFilter);
             linkEle.setAttribute("data-location-key", location.locationKey);
 
@@ -493,7 +493,7 @@ declare const pts: ptsGlobal;
       cityssm.confirmModal(
         "Create Offence?",
         "<p class=\"has-text-centered\">Are you sure you want to create the offence record below?</p>" +
-        "<div class=\"columns has-margin-top-20 has-margin-bottom-20\">" +
+        "<div class=\"columns my-4\">" +
         ("<div class=\"column has-text-centered\">" +
           cityssm.escapeHTML(location.locationName) + "<br />" +
           "<span class=\"is-size-7\">" +
@@ -597,13 +597,13 @@ declare const pts: ptsGlobal;
       onshow: function() {
 
         const listEle = document.createElement("div");
-        listEle.className = "list is-hoverable has-margin-bottom-20";
+        listEle.className = "panel mb-4";
 
         locationMap.forEach(function(location) {
 
           const linkEle = document.createElement("a");
 
-          linkEle.className = "list-item";
+          linkEle.className = "panel-block is-block";
           linkEle.setAttribute("data-location-key", location.locationKey);
           linkEle.setAttribute("href", "#");
 
@@ -695,13 +695,13 @@ declare const pts: ptsGlobal;
       onshow: function() {
 
         const listEle = document.createElement("div");
-        listEle.className = "list is-hoverable has-margin-bottom-20";
+        listEle.className = "panel mb-4";
 
         bylawMap.forEach(function(bylaw) {
 
           const linkEle = document.createElement("a");
 
-          linkEle.className = "list-item";
+          linkEle.className = "panel-block is-block";
           linkEle.setAttribute("data-bylaw-number", bylaw.bylawNumber);
           linkEle.setAttribute("href", "#");
 

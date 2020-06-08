@@ -1,30 +1,31 @@
 </main>
-<footer class="footer has-background-grey-lighter has-text-dark has-margin-top-15 is-hidden-print">
+<footer class="footer has-background-grey-lighter has-text-dark is-hidden-print">
   <div class="container">
-    <div class="content has-text-right">
-      <div class="has-text-grey-dark">
-        <strong>
-          <%= configFns.getProperty("application.applicationName") %>
-        </strong><br />
-        Build <%= buildNumber %><br />
+    <div class="content has-text-right has-text-grey-dark">
+      <strong>
+        <%= configFns.getProperty("application.applicationName") %>
+      </strong><br />
+      Build <%= buildNumber %>
+      <span class="is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only is-hidden-widescreen-only">(fullhd)</span>
+      <span class="is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only is-hidden-fullhd">(widescreen)</span>
+      <span class="is-hidden-mobile is-hidden-tablet-only is-hidden-widescreen">(desktop)</span>
+      <span class="is-hidden-mobile is-hidden-desktop">(tablet)</span>
+      <span class="is-hidden-tablet">(mobile)</span>  <br />
 
       <a class="has-text-grey-dark" href="/docs" target="_blank">
         <i class="fas fa-question-circle" aria-hidden="true"></i>
         Help
       </a>
-      <a class="has-text-grey-dark has-margin-left-20" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">
+      <a class="has-text-grey-dark ml-4" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">
         <i class="fab fa-github" aria-hidden="true"></i>
         GitHub
       </a>
     </div>
   </div>
 </footer>
-<!--
-<script src="https://cityssm.github.io/bulma-webapp-js/cityssm.js"></script>
--->
 <script>
   window.exports = window.exports || {};
 </script>
-<script src="/cityssm-bulma-webapp-js/cityssm.js"></script>
+<script src="/cityssm-bulma-webapp-js/dist/cityssm.min.js"></script>
 <script src="/javascripts/main.min.js"></script>
-<script src="/cityssm-bulma-webapp-js/cityssm-theme.js" defer></script>
+<script src="/cityssm-bulma-webapp-js/dist/cityssm-theme.min.js" defer></script>

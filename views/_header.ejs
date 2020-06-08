@@ -20,7 +20,7 @@
     <div class="container">
       <div class="navbar-brand">
         <a class="navbar-item" href="/dashboard">
-          <img class="has-margin-right-10" src="<%= configFns.getProperty("application.logoURL") %>" alt="" height="28" width="28" />
+          <img class="mr-2" src="<%= configFns.getProperty("application.logoURL") %>" alt="" height="28" width="28" />
           <strong><%= configFns.getProperty("application.applicationName") %></strong>
         </a>
 
@@ -35,14 +35,14 @@
         <div class="navbar-start">
 
           <a class="navbar-item" href="/tickets">
-            <span class="icon has-margin-right-5">
+            <span class="icon mr-1">
               <i class="fas fa-fw fa-file-invoice" aria-hidden="true"></i>
             </span>
             <span>Tickets</span>
           </a>
 
           <a class="navbar-item" href="/plates">
-            <span class="icon has-margin-right-5">
+            <span class="icon mr-1">
               <i class="fas fa-fw fa-car" aria-hidden="true"></i>
             </span>
             <span>Licence Plates</span>
@@ -52,14 +52,14 @@
 
             <a class="navbar-link is-arrowless" href="#">
               <span>More</span>
-              <span class="icon has-margin-left-5">
+              <span class="icon mr-1">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
             </a>
             <div class="navbar-dropdown">
 
               <a class="navbar-item" href="/reports">
-                <span class="icon has-margin-right-5">
+                <span class="icon mr-1">
                   <i class="fas fa-fw fa-file" aria-hidden="true"></i>
                 </span>
                 <span>Reports</span>
@@ -68,19 +68,19 @@
 
               <% if (user.userProperties.isAdmin) { %>
                 <a class="navbar-item" href="/admin/offences">
-                  <span class="icon has-margin-right-5">
+                  <span class="icon mr-1">
                     <i class="fas fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
                   </span>
                   <span>Parking Offences</span>
                 </a>
                 <a class="navbar-item" href="/admin/locations">
-                  <span class="icon has-margin-right-5">
+                  <span class="icon mr-1">
                     <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i>
                   </span>
                   <span>Parking Locations</span>
                 </a>
                 <a class="navbar-item" href="/admin/bylaws">
-                  <span class="icon has-margin-right-5">
+                  <span class="icon mr-1">
                     <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
                   </span>
                   <span>Parking By-Laws</span>
@@ -89,7 +89,7 @@
               <% } %>
 
               <a class="navbar-item" href="/docs" target="_blank">
-                <span class="icon has-margin-right-5">
+                <span class="icon mr-1">
                   <i class="fas fa-fw fa-question-circle" aria-hidden="true"></i>
                 </span>
                 <span>Help</span>
@@ -100,7 +100,7 @@
 
         <div class="navbar-end">
           <a class="navbar-item" id="cityssm-theme--logout-button" role="button" href="#">
-            <span class="icon has-margin-right-5">
+            <span class="icon mr-1">
               <i class="fas fa-fw fa-sign-out-alt" aria-hidden="true"></i>
             </span>
             <span>Log Out <%=user.userName %></span>
@@ -110,7 +110,7 @@
     </div>
   </nav>
 
-  <main class="container has-padding-top-10 has-padding-left-15 has-padding-right-15 has-margin-auto has-min-page-height"
+  <main class="container pt-2 px-3 mx-auto has-min-page-height"
     data-session-keep-alive-millis="<%= configFns.keepAliveMillis %>"
     data-can-create="<%= user.userProperties.canCreate %>"
     data-can-update="<%= user.userProperties.canUpdate %>"

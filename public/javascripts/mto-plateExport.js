@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    const canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
-    let batchID = -1;
-    let batchIsLocked = true;
-    let batchIsSent = false;
-    const availableIssueDaysAgoEle = document.getElementById("available--issueDaysAgo");
-    const availablePlatesContainerEle = document.getElementById("is-available-plates-container");
-    const licencePlateNumberFilterEle = document.getElementById("available--licencePlateNumber");
-    let availablePlatesList = [];
-    let batchEntriesList = [];
+    var canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
+    var batchID = -1;
+    var batchIsLocked = true;
+    var batchIsSent = false;
+    var availableIssueDaysAgoEle = document.getElementById("available--issueDaysAgo");
+    var availablePlatesContainerEle = document.getElementById("is-available-plates-container");
+    var licencePlateNumberFilterEle = document.getElementById("available--licencePlateNumber");
+    var availablePlatesList = [];
+    var batchEntriesList = [];
     function clickFn_addLicencePlateToBatch(clickEvent) {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
+        var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        const recordIndex = parseInt(buttonEle.getAttribute("data-index"));
-        const plateRecord = availablePlatesList[recordIndex];
-        const plateContainerEle = buttonEle.closest(".is-plate-container");
+        var recordIndex = parseInt(buttonEle.getAttribute("data-index"));
+        var plateRecord = availablePlatesList[recordIndex];
+        var plateContainerEle = buttonEle.closest(".is-plate-container");
         cityssm.postJSON("/plates/doAddLicencePlateToLookupBatch", {
             batchID: batchID,
             licencePlateCountry: "CA",
@@ -36,11 +36,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function clickFn_removeLicencePlateFromBatch(clickEvent) {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
+        var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        const recordIndex = parseInt(buttonEle.getAttribute("data-index"));
-        const batchEntry = batchEntriesList[recordIndex];
-        const entryContainerEle = buttonEle.closest(".is-entry-container");
+        var recordIndex = parseInt(buttonEle.getAttribute("data-index"));
+        var batchEntry = batchEntriesList[recordIndex];
+        var entryContainerEle = buttonEle.closest(".is-entry-container");
         cityssm.postJSON("/plates/doRemoveLicencePlateFromLookupBatch", {
             batchID: batchID,
             licencePlateCountry: "CA",
@@ -58,7 +58,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function clickFn_clearBatch(clickEvent) {
         clickEvent.preventDefault();
-        const clearFn = function () {
+        var clearFn = function () {
             cityssm.postJSON("/plates/doClearLookupBatch", {
                 batchID: batchID
             }, function (responseJSON) {
@@ -72,7 +72,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function clickFn_downloadBatch(clickEvent) {
         clickEvent.preventDefault();
-        const downloadFn = function () {
+        var downloadFn = function () {
             window.open("/plates-ontario/mtoExport/" + batchID);
             batchIsSent = true;
         };
@@ -91,19 +91,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function fn_populateAvailablePlatesView() {
         cityssm.clearElement(availablePlatesContainerEle);
-        const resultsPanelEle = document.createElement("div");
+        var resultsPanelEle = document.createElement("div");
         resultsPanelEle.className = "panel";
-        const filterStringSplit = licencePlateNumberFilterEle.value.toLowerCase().trim()
+        var filterStringSplit = licencePlateNumberFilterEle.value.toLowerCase().trim()
             .split(" ");
-        let includedLicencePlates = [];
-        for (let recordIndex = 0; recordIndex < availablePlatesList.length; recordIndex += 1) {
-            const plateRecord = availablePlatesList[recordIndex];
+        var includedLicencePlates = [];
+        for (var recordIndex = 0; recordIndex < availablePlatesList.length; recordIndex += 1) {
+            var plateRecord = availablePlatesList[recordIndex];
             if (!plateRecord) {
                 continue;
             }
-            let displayRecord = true;
-            const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
-            for (let searchIndex = 0; searchIndex < filterStringSplit.length; searchIndex += 1) {
+            var displayRecord = true;
+            var licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
+            for (var searchIndex = 0; searchIndex < filterStringSplit.length; searchIndex += 1) {
                 if (licencePlateNumberLowerCase.indexOf(filterStringSplit[searchIndex]) === -1) {
                     displayRecord = false;
                     break;
@@ -116,7 +116,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 plateRecord.licencePlateNumber,
                 plateRecord.ticketIDMin
             ]);
-            const resultEle = document.createElement("div");
+            var resultEle = document.createElement("div");
             resultEle.className = "panel-block is-block is-plate-container";
             resultEle.innerHTML = "<div class=\"level is-marginless\">" +
                 ("<div class=\"level-left\">" +
@@ -146,8 +146,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             resultsPanelEle.appendChild(resultEle);
         }
         if (includedLicencePlates.length > 0) {
-            const addAllButtonEle = document.createElement("button");
-            addAllButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+            var addAllButtonEle = document.createElement("button");
+            addAllButtonEle.className = "button is-fullwidth mb-3";
             addAllButtonEle.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     "<span>Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "</span>";
@@ -205,8 +205,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     });
     licencePlateNumberFilterEle.addEventListener("keyup", fn_populateAvailablePlatesView);
     availableIssueDaysAgoEle.addEventListener("change", fn_refreshAvailablePlates);
-    const lockBatchButtonEle = document.getElementById("is-lock-batch-button");
-    const batchEntriesContainerEle = document.getElementById("is-batch-entries-container");
+    var lockBatchButtonEle = document.getElementById("is-lock-batch-button");
+    var batchEntriesContainerEle = document.getElementById("is-batch-entries-container");
     function fn_populateBatchView(batch) {
         batchID = batch.batchID;
         batchEntriesList = batch.batchEntries;
@@ -237,11 +237,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
             return;
         }
         cityssm.clearElement(batchEntriesContainerEle);
-        const panelEle = document.createElement("div");
+        var panelEle = document.createElement("div");
         panelEle.className = "panel";
-        for (let index = 0; index < batchEntriesList.length; index += 1) {
-            const batchEntry = batchEntriesList[index];
-            const panelBlockEle = document.createElement("div");
+        for (var index = 0; index < batchEntriesList.length; index += 1) {
+            var batchEntry = batchEntriesList[index];
+            var panelBlockEle = document.createElement("div");
             panelBlockEle.className = "panel-block is-block is-entry-container";
             panelBlockEle.innerHTML = "<div class=\"level\">" +
                 ("<div class=\"level-left\">" +
@@ -264,21 +264,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
             panelEle.appendChild(panelBlockEle);
         }
         if (batchIsLocked) {
-            const downloadFileButtonEle = document.createElement("button");
-            downloadFileButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+            var downloadFileButtonEle = document.createElement("button");
+            downloadFileButtonEle.className = "button is-fullwidth mb-3";
             downloadFileButtonEle.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
                     "<span>Download File for MTO</span>";
             downloadFileButtonEle.addEventListener("click", clickFn_downloadBatch);
             batchEntriesContainerEle.appendChild(downloadFileButtonEle);
-            batchEntriesContainerEle.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth has-margin-bottom-10\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
+            batchEntriesContainerEle.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
                 "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
                 "<span>MTO ARIS Login</span>" +
                 "</a>");
         }
         else {
-            const clearAllButtonEle = document.createElement("button");
-            clearAllButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+            var clearAllButtonEle = document.createElement("button");
+            clearAllButtonEle.className = "button is-fullwidth mb-3";
             clearAllButtonEle.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
                     "<span>Clear Batch</span>";
@@ -297,15 +297,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function clickFn_openSelectBatchModal(clickEvent) {
         clickEvent.preventDefault();
-        let selectBatchCloseModalFn;
-        let resultsContainerEle;
-        const clickFn_selectBatch = function (batchClickEvent) {
+        var selectBatchCloseModalFn;
+        var resultsContainerEle;
+        var clickFn_selectBatch = function (batchClickEvent) {
             batchClickEvent.preventDefault();
             batchID = parseInt(batchClickEvent.currentTarget.getAttribute("data-batch-id"));
             selectBatchCloseModalFn();
             fn_refreshBatch();
         };
-        const fn_loadBatches = function () {
+        var fn_loadBatches = function () {
             cityssm.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, function (batchList) {
                 if (batchList.length === 0) {
                     resultsContainerEle.innerHTML = "<div class=\"message is-info\">" +
@@ -313,12 +313,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</div>";
                     return;
                 }
-                const listEle = document.createElement("div");
-                listEle.className = "list is-hoverable";
-                for (let index = 0; index < batchList.length; index += 1) {
-                    const batch = batchList[index];
-                    const linkEle = document.createElement("a");
-                    linkEle.className = "list-item";
+                var listEle = document.createElement("div");
+                listEle.className = "panel";
+                for (var index = 0; index < batchList.length; index += 1) {
+                    var batch = batchList[index];
+                    var linkEle = document.createElement("a");
+                    linkEle.className = "panel-block is-block";
                     linkEle.setAttribute("href", "#");
                     linkEle.setAttribute("data-batch-id", batch.batchID);
                     linkEle.innerHTML = "<div class=\"columns\">" +
@@ -353,11 +353,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
                 fn_loadBatches();
                 if (canUpdate) {
-                    const createBatchButtonEle = modalEle.getElementsByClassName("is-create-batch-button")[0];
+                    var createBatchButtonEle = modalEle.getElementsByClassName("is-create-batch-button")[0];
                     createBatchButtonEle.classList.remove("is-hidden");
                     createBatchButtonEle.addEventListener("click", function () {
                         selectBatchCloseModalFn();
-                        const createFn = function () {
+                        var createFn = function () {
                             cityssm.postJSON("/plates/doCreateLookupBatch", {}, function (responseJSON) {
                                 if (responseJSON.success) {
                                     fn_populateBatchView(responseJSON.batch);
@@ -380,7 +380,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             if (batchIsLocked) {
                 return;
             }
-            const lockFn = function () {
+            var lockFn = function () {
                 cityssm.postJSON("/plates/doLockLookupBatch", {
                     batchID: batchID
                 }, function (responseJSON) {

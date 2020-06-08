@@ -215,7 +215,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     }
 
     const addAllButtonEle = document.createElement("button");
-    addAllButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+    addAllButtonEle.className = "button is-fullwidth mb-3";
 
     addAllButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
       "<span>Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "</span>";
@@ -486,7 +486,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       const lockButtonEle = document.createElement("button");
 
-      lockButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      lockButtonEle.className = "button is-fullwidth mb-3";
 
       lockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
         "<span>Lock Batch</span>";
@@ -497,7 +497,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       const clearButtonEle = document.createElement("button");
 
-      clearButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      clearButtonEle.className = "button is-fullwidth mb-3";
 
       clearButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
         "<span>Clear Batch</span>";
@@ -512,7 +512,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       const unlockButtonEle = document.createElement("button");
 
-      unlockButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      unlockButtonEle.className = "button is-fullwidth mb-3";
 
       unlockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
         "<span>Unlock Batch</span>";
@@ -527,7 +527,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       const downloadButtonEle = document.createElement("button");
 
-      downloadButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      downloadButtonEle.className = "button is-fullwidth mb-3";
 
       downloadButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
         "<span>Download File for MTO</span>";
@@ -537,7 +537,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       tableEle.insertAdjacentElement("beforebegin", downloadButtonEle);
 
       tableEle.insertAdjacentHTML("beforebegin",
-        "<a class=\"button is-fullwidth has-margin-bottom-10\"" +
+        "<a class=\"button is-fullwidth mb-3\"" +
         " href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
         "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
         "<span>MTO ARIS Login</span>" +

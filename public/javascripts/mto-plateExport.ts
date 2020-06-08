@@ -263,7 +263,7 @@ declare const cityssm: cityssmGlobal;
     if (includedLicencePlates.length > 0) {
 
       const addAllButtonEle = document.createElement("button");
-      addAllButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      addAllButtonEle.className = "button is-fullwidth mb-3";
 
       addAllButtonEle.innerHTML =
         "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
@@ -453,7 +453,7 @@ declare const cityssm: cityssmGlobal;
     if (batchIsLocked) {
 
       const downloadFileButtonEle = document.createElement("button");
-      downloadFileButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      downloadFileButtonEle.className = "button is-fullwidth mb-3";
       downloadFileButtonEle.innerHTML =
         "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
         "<span>Download File for MTO</span>";
@@ -464,7 +464,7 @@ declare const cityssm: cityssmGlobal;
 
       batchEntriesContainerEle.insertAdjacentHTML(
         "beforeend",
-        "<a class=\"button is-fullwidth has-margin-bottom-10\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
+        "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
         "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
         "<span>MTO ARIS Login</span>" +
         "</a>"
@@ -473,7 +473,7 @@ declare const cityssm: cityssmGlobal;
     } else {
 
       const clearAllButtonEle = document.createElement("button");
-      clearAllButtonEle.className = "button is-fullwidth has-margin-bottom-10";
+      clearAllButtonEle.className = "button is-fullwidth mb-3";
       clearAllButtonEle.innerHTML =
         "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
         "<span>Clear Batch</span>";
@@ -537,14 +537,14 @@ declare const cityssm: cityssmGlobal;
         }
 
         const listEle = document.createElement("div");
-        listEle.className = "list is-hoverable";
+        listEle.className = "panel";
 
         for (let index = 0; index < batchList.length; index += 1) {
 
           const batch = batchList[index];
 
           const linkEle = document.createElement("a");
-          linkEle.className = "list-item";
+          linkEle.className = "panel-block is-block";
           linkEle.setAttribute("href", "#");
           linkEle.setAttribute("data-batch-id", batch.batchID);
 
