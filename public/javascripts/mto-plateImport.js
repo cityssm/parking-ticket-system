@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
     document.getElementById("mtoImport--importFile").addEventListener("change", function (fileChangeEvent) {
-        const fileNameEle = document.getElementById("mtoImport--importFileName");
-        const messageEle = document.getElementById("mtoImport--importFileMessage");
-        const fileInputEle = fileChangeEvent.currentTarget;
+        var fileNameEle = document.getElementById("mtoImport--importFileName");
+        var messageEle = document.getElementById("mtoImport--importFileMessage");
+        var fileInputEle = fileChangeEvent.currentTarget;
         if (fileInputEle.files.length > 0) {
-            const fileName = fileInputEle.files[0].name;
+            var fileName = fileInputEle.files[0].name;
             fileNameEle.innerText = fileName;
             if (/^\d+[.]txt$/igm.test(fileName)) {
                 cityssm.clearElement(messageEle);
@@ -21,14 +21,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
     });
     document.getElementById("form--mtoImport").addEventListener("submit", function (formEvent) {
         formEvent.preventDefault();
-        const formEle = formEvent.currentTarget;
-        const uploadStepItemEle = document.getElementById("step-item--upload");
+        var formEle = formEvent.currentTarget;
+        var uploadStepItemEle = document.getElementById("step-item--upload");
         uploadStepItemEle.classList.add("is-completed");
         uploadStepItemEle.classList.add("is-success");
         uploadStepItemEle.classList.remove("is-active");
         uploadStepItemEle.getElementsByClassName("icon")[0].innerHTML =
             "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>";
-        const updateStepItemEle = document.getElementById("step-item--update");
+        var updateStepItemEle = document.getElementById("step-item--update");
         updateStepItemEle.classList.add("is-active");
         updateStepItemEle.getElementsByClassName("step-marker")[0].innerHTML = "<span class=\"icon\">" +
             "<i class=\"fas fa-cogs\" aria-hidden=\"true\"></i>" +
@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON("/plates-ontario/doMTOImportUpload", formEle, function (responseJSON) {
             updateStepItemEle.classList.add("is-completed");
             updateStepItemEle.classList.remove("is-active");
-            const resultsMessageEle = document.getElementById("mtoImport--message");
+            var resultsMessageEle = document.getElementById("mtoImport--message");
             if (responseJSON.success) {
                 updateStepItemEle.classList.add("is-success");
                 updateStepItemEle.getElementsByClassName("icon")[0].innerHTML =

@@ -1,4 +1,4 @@
-import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/types";
+import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
 declare const cityssm: cityssmGlobal;
 
 
