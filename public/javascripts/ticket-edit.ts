@@ -158,6 +158,19 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     }
 
+    const clearLocationFn = function(clickEvent: Event) {
+
+      clickEvent.preventDefault();
+
+      (<HTMLInputElement>document.getElementById("ticket--locationKey")).value = "";
+      (<HTMLInputElement>document.getElementById("ticket--locationName")).value = "";
+
+      locationLookupCloseModalFn();
+
+      locationList = [];
+
+    };
+
     const setLocationFn = function(clickEvent: Event) {
 
       clickEvent.preventDefault();
@@ -219,11 +232,13 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       clickEvent.preventDefault();
 
-      cityssm.openHtmlModal("location-select", {
+      cityssm.openHtmlModal("ticket-setLocation", {
         onshown: function(_modalEle, closeModalFn) {
 
           locationLookupCloseModalFn = closeModalFn;
           populateLocationsFn();
+
+          document.getElementById("is-clear-location-button").addEventListener("click", clearLocationFn);
 
         },
         onremoved: function() {
@@ -247,6 +262,51 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     let bylawLookupCloseModalFn: Function;
     let offenceList: ptsTypes.ParkingOffence[] = [];
     let listItemEles: HTMLAnchorElement[] = [];
+
+    const clearBylawOffenceFn = function(clickEvent: Event) {
+
+      clickEvent.preventDefault();
+
+      (<HTMLInputElement>document.getElementById("ticket--bylawNumber")).value = "";
+
+      // Offence Amount
+
+      const offenceAmountEle = <HTMLInputElement>document.getElementById("ticket--offenceAmount");
+
+      offenceAmountEle.classList.add("is-readonly");
+      offenceAmountEle.setAttribute("readonly", "readonly");
+      offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+        .removeAttribute("disabled");
+      offenceAmountEle.value = "";
+
+      // Discount Offence Amount
+
+      const discountOffenceAmountEle = <HTMLInputElement>document.getElementById("ticket--discountOffenceAmount");
+
+      discountOffenceAmountEle.classList.add("is-readonly");
+      discountOffenceAmountEle.setAttribute("readonly", "readonly");
+      discountOffenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+        .removeAttribute("disabled");
+      discountOffenceAmountEle.value = "";
+
+      // Discount Days
+
+      const discountDaysEle = <HTMLInputElement>document.getElementById("ticket--discountDays");
+
+      discountDaysEle.classList.add("is-readonly");
+      discountDaysEle.setAttribute("readonly", "readonly");
+      discountDaysEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+        .removeAttribute("disabled");
+      discountDaysEle.value = "";
+
+      // Offence Description
+
+      (<HTMLTextAreaElement>document.getElementById("ticket--parkingOffence")).value = "";
+
+      bylawLookupCloseModalFn();
+
+      offenceList = [];
+    }
 
     const setBylawOffenceFn = function(clickEvent: Event) {
 
@@ -385,6 +445,9 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
           searchStringEle.focus();
           searchStringEle.addEventListener("keyup", filterBylawsFn);
+
+          document.getElementById("is-clear-bylaw-button").addEventListener("click", clearBylawOffenceFn);
+
         },
         onremoved: function() {
           document.getElementById("is-bylaw-lookup-button").focus();

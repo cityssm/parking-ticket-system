@@ -1405,6 +1405,34 @@ export function getParkingBylaws() {
 
 }
 
+
+export function getParkingBylawsWithOffenceStats() {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const rows: pts.ParkingBylaw[] = db.prepare("select b.bylawNumber, b.bylawDescription," +
+    " count(o.locationKey) as offenceCount," +
+    " min(o.offenceAmount) as offenceAmountMin," +
+    " max(o.offenceAmount) as offenceAmountMax," +
+    " min(o.discountOffenceAmount) as discountOffenceAmountMin," +
+    " max(o.discountOffenceAmount) as discountOffenceAmountMax," +
+    " min(o.discountDays) as discountDaysMin," +
+    " max(o.discountDays) as discountDaysMax" +
+    " from ParkingBylaws b" +
+    " left join ParkingOffences o on b.bylawNumber = o.bylawNumber and o.isActive = 1" +
+    " where b.isActive = 1" +
+    " group by b.bylawNumber, b.bylawDescription, b.orderNumber" +
+    " order by b.orderNumber, b.bylawNumber")
+    .all();
+
+  db.close();
+
+  return rows;
+
+}
+
 type addUpdateParkingBylaw_return = {
   success: boolean,
   message?: string,
@@ -1501,6 +1529,31 @@ export function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_r
     " where bylawNumber = ?" +
     " and isActive = 1")
     .run(bylawNumber);
+
+  db.close();
+
+  return {
+    success: (info.changes > 0)
+  };
+
+}
+
+export function updateParkingOffencesByBylawNumber(reqBody: any): addUpdateParkingBylaw_return {
+
+  const db = sqlite(dbPath);
+
+  // Do update
+
+  const info = db.prepare("update ParkingOffences" +
+    " set offenceAmount = ?," +
+    " discountOffenceAmount = ?," +
+    " discountDays = ?" +
+    " where bylawNumber = ?" +
+    " and isActive = 1")
+    .run(reqBody.offenceAmount,
+      reqBody.discountOffenceAmount,
+      reqBody.discountDays,
+      reqBody.bylawNumber);
 
   db.close();
 

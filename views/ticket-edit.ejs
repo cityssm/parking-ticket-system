@@ -28,8 +28,8 @@
           Parking Ticket Details
         </h2>
         <div class="panel-block is-block">
-          <div class="columns is-desktop">
-            <div class="column is-6-desktop">
+          <div class="columns is-multiline is-desktop">
+            <div class="column is-6-widescreen is-12-desktop">
               <label class="label" for="ticket--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -81,8 +81,7 @@
               </div>
 
             </div>
-            <div class="is-divider-vertical is-hidden-mobile is-hidden-tablet-only"></div>
-            <div class="column">
+            <div class="column is-6-widescreen is-12-desktop">
               <label class="label" for="ticket--locationName">Location</label>
               <input id="ticket--locationKey" name="locationKey" type="hidden" value="<%= ticket.locationKey %>" />
               <div class="field has-addons">
@@ -351,8 +350,8 @@
     </form>
 
     <% if (!isCreate) { %>
-      <div class="columns is-desktop">
-        <div class="column">
+      <div class="columns is-desktop is-multiline">
+        <div class="column is-6-widescreen is-12-desktop">
           <div class="panel" id="is-remark-panel">
             <div class="panel-heading">
               <div class="level">
@@ -367,7 +366,7 @@
             </div>
           </div>
         </div>
-        <div class="column">
+        <div class="column is-6-widescreen is-12-desktop">
           <div class="panel" id="is-status-panel">
             <div class="panel-heading">
               <div class="level">

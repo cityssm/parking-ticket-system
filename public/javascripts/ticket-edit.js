@@ -72,6 +72,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             var locationClassObj = locationClassesList[index];
             locationClassMap[locationClassObj.locationClassKey] = locationClassObj;
         }
+        var clearLocationFn = function (clickEvent) {
+            clickEvent.preventDefault();
+            document.getElementById("ticket--locationKey").value = "";
+            document.getElementById("ticket--locationName").value = "";
+            locationLookupCloseModalFn();
+            locationList = [];
+        };
         var setLocationFn = function (clickEvent) {
             clickEvent.preventDefault();
             var locationObj = locationList[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
@@ -111,10 +118,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         };
         var openLocationLookupModalFn = function (clickEvent) {
             clickEvent.preventDefault();
-            cityssm.openHtmlModal("location-select", {
+            cityssm.openHtmlModal("ticket-setLocation", {
                 onshown: function (_modalEle, closeModalFn) {
                     locationLookupCloseModalFn = closeModalFn;
                     populateLocationsFn();
+                    document.getElementById("is-clear-location-button").addEventListener("click", clearLocationFn);
                 },
                 onremoved: function () {
                     document.getElementById("is-location-lookup-button").focus();
@@ -128,6 +136,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
         var bylawLookupCloseModalFn_1;
         var offenceList_1 = [];
         var listItemEles_1 = [];
+        var clearBylawOffenceFn_1 = function (clickEvent) {
+            clickEvent.preventDefault();
+            document.getElementById("ticket--bylawNumber").value = "";
+            var offenceAmountEle = document.getElementById("ticket--offenceAmount");
+            offenceAmountEle.classList.add("is-readonly");
+            offenceAmountEle.setAttribute("readonly", "readonly");
+            offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+                .removeAttribute("disabled");
+            offenceAmountEle.value = "";
+            var discountOffenceAmountEle = document.getElementById("ticket--discountOffenceAmount");
+            discountOffenceAmountEle.classList.add("is-readonly");
+            discountOffenceAmountEle.setAttribute("readonly", "readonly");
+            discountOffenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+                .removeAttribute("disabled");
+            discountOffenceAmountEle.value = "";
+            var discountDaysEle = document.getElementById("ticket--discountDays");
+            discountDaysEle.classList.add("is-readonly");
+            discountDaysEle.setAttribute("readonly", "readonly");
+            discountDaysEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+                .removeAttribute("disabled");
+            discountDaysEle.value = "";
+            document.getElementById("ticket--parkingOffence").value = "";
+            bylawLookupCloseModalFn_1();
+            offenceList_1 = [];
+        };
         var setBylawOffenceFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
             var offenceObj = offenceList_1[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
@@ -216,6 +249,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     var searchStringEle = document.getElementById("bylawLookup--searchStr");
                     searchStringEle.focus();
                     searchStringEle.addEventListener("keyup", filterBylawsFn_1);
+                    document.getElementById("is-clear-bylaw-button").addEventListener("click", clearBylawOffenceFn_1);
                 },
                 onremoved: function () {
                     document.getElementById("is-bylaw-lookup-button").focus();

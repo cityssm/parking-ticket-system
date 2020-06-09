@@ -5,6 +5,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
     var bylawResultsEle = document.getElementById("bylawResults");
     var bylawList = exports.bylaws;
     delete exports.bylaws;
+    function openUpdateOffencesModal(clickEvent) {
+        clickEvent.preventDefault();
+        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+        var bylaw = bylawList[listIndex];
+        var updateOffencesCloseModalFn;
+        var updateFn = function (formEvent) {
+            formEvent.preventDefault();
+            cityssm.postJSON("/admin/doUpdateOffencesByBylaw", formEvent.currentTarget, function (responseJSON) {
+                if (responseJSON.success) {
+                    updateOffencesCloseModalFn();
+                    bylawList = responseJSON.bylaws;
+                    renderBylawList();
+                }
+            });
+        };
+        cityssm.openHtmlModal("bylaw-updateOffences", {
+            onshow: function () {
+                document.getElementById("updateOffences--bylawNumber").value = bylaw.bylawNumber;
+                document.getElementById("updateOffences--bylawDescription").value = bylaw.bylawDescription;
+                document.getElementById("updateOffences--offenceAmount").value = bylaw.offenceAmountMin;
+                document.getElementById("updateOffences--discountDays").value = bylaw.discountDaysMin;
+                document.getElementById("updateOffences--discountOffenceAmount").value = bylaw.discountOffenceAmountMin;
+            },
+            onshown: function (modalEle, closeModalFn) {
+                updateOffencesCloseModalFn = closeModalFn;
+                modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
+            }
+        });
+    }
     function openEditBylawModal(clickEvent) {
         clickEvent.preventDefault();
         var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
@@ -69,14 +98,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             displayCount += 1;
             var trEle = document.createElement("tr");
+            var offenceAmountRange = "";
+            var hasOffences = false;
+            if (!bylaw.offenceAmountMin) {
+                offenceAmountRange = "(No Offences)";
+            }
+            else {
+                hasOffences = true;
+                offenceAmountRange = "$" + bylaw.offenceAmountMin.toFixed(2);
+                if (bylaw.offenceAmountMin !== bylaw.offenceAmountMax) {
+                    offenceAmountRange += " to $" + bylaw.offenceAmountMax.toFixed(2);
+                }
+                offenceAmountRange = "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\" data-index=\"" + bylawIndex + "\" href=\"#\">" +
+                    offenceAmountRange +
+                    "</a>";
+            }
             trEle.innerHTML =
                 "<td>" +
                     "<a data-index=\"" + bylawIndex + "\" href=\"#\">" +
                     cityssm.escapeHTML(bylaw.bylawNumber) +
                     "</a>" +
                     "</td>" +
-                    "<td>" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>";
+                    "<td class=\"has-border-right-width-2\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>" +
+                    "<td class=\"has-text-right\">" + bylaw.offenceCount + "</td>" +
+                    "<td class=\"has-text-right\">" + offenceAmountRange + "</td>";
             trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModal);
+            if (hasOffences) {
+                trEle.getElementsByTagName("a")[1].addEventListener("click", openUpdateOffencesModal);
+            }
             tbodyEle.appendChild(trEle);
         }
         cityssm.clearElement(bylawResultsEle);
@@ -89,7 +138,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         bylawResultsEle.innerHTML = "<table class=\"table is-striped is-hoverable is-fullwidth\">" +
             "<thead><tr>" +
             "<th>By-Law Number</th>" +
-            "<th>Description</th>" +
+            "<th class=\"has-border-right-width-2\">Description</th>" +
+            "<th class=\"has-text-right\">Total Offences</th>" +
+            "<th class=\"has-text-right\">Offence Amount Range</th>" +
             "</tr></thead>" +
             "</table>";
         bylawResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);

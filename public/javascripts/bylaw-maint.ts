@@ -10,6 +10,54 @@ declare const cityssm: cityssmGlobal;
   let bylawList = exports.bylaws;
   delete exports.bylaws;
 
+
+  function openUpdateOffencesModal(clickEvent: Event) {
+
+    clickEvent.preventDefault();
+
+    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"));
+    const bylaw = bylawList[listIndex];
+
+    let updateOffencesCloseModalFn: Function;
+
+    const updateFn = function(formEvent: Event) {
+
+      formEvent.preventDefault();
+
+      cityssm.postJSON("/admin/doUpdateOffencesByBylaw", formEvent.currentTarget, function(responseJSON) {
+
+        if (responseJSON.success) {
+
+          updateOffencesCloseModalFn();
+          bylawList = responseJSON.bylaws;
+          renderBylawList();
+
+        }
+
+      });
+    }
+
+    cityssm.openHtmlModal("bylaw-updateOffences", {
+      onshow: function() {
+
+        (<HTMLInputElement>document.getElementById("updateOffences--bylawNumber")).value = bylaw.bylawNumber;
+        (<HTMLInputElement>document.getElementById("updateOffences--bylawDescription")).value = bylaw.bylawDescription;
+
+        (<HTMLInputElement>document.getElementById("updateOffences--offenceAmount")).value = bylaw.offenceAmountMin;
+        (<HTMLInputElement>document.getElementById("updateOffences--discountDays")).value = bylaw.discountDaysMin;
+        (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value = bylaw.discountOffenceAmountMin;
+
+      },
+      onshown: function(modalEle, closeModalFn) {
+
+        updateOffencesCloseModalFn = closeModalFn;
+
+        modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
+      }
+    });
+  }
+
+
   function openEditBylawModal(clickEvent: Event) {
 
     clickEvent.preventDefault();
@@ -89,6 +137,7 @@ declare const cityssm: cityssmGlobal;
 
   }
 
+
   function renderBylawList() {
 
     let displayCount = 0;
@@ -129,15 +178,42 @@ declare const cityssm: cityssmGlobal;
 
       const trEle = document.createElement("tr");
 
+      let offenceAmountRange = "";
+      let hasOffences = false;
+
+      if (!bylaw.offenceAmountMin) {
+        offenceAmountRange = "(No Offences)";
+      } else {
+        hasOffences = true;
+
+        offenceAmountRange = "$" + bylaw.offenceAmountMin.toFixed(2);
+
+        if (bylaw.offenceAmountMin !== bylaw.offenceAmountMax) {
+
+          offenceAmountRange += " to $" + bylaw.offenceAmountMax.toFixed(2);
+        }
+
+        offenceAmountRange = "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\" data-index=\"" + bylawIndex + "\" href=\"#\">" +
+          offenceAmountRange +
+          "</a>";
+      }
+
       trEle.innerHTML =
         "<td>" +
         "<a data-index=\"" + bylawIndex + "\" href=\"#\">" +
         cityssm.escapeHTML(bylaw.bylawNumber) +
         "</a>" +
         "</td>" +
-        "<td>" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>";
+        "<td class=\"has-border-right-width-2\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>" +
+        "<td class=\"has-text-right\">" + bylaw.offenceCount + "</td>" +
+        "<td class=\"has-text-right\">" + offenceAmountRange + "</td>";
 
       trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModal);
+
+      if (hasOffences) {
+        trEle.getElementsByTagName("a")[1].addEventListener("click", openUpdateOffencesModal);
+
+      }
 
       tbodyEle.appendChild(trEle);
 
@@ -158,7 +234,9 @@ declare const cityssm: cityssmGlobal;
     bylawResultsEle.innerHTML = "<table class=\"table is-striped is-hoverable is-fullwidth\">" +
       "<thead><tr>" +
       "<th>By-Law Number</th>" +
-      "<th>Description</th>" +
+      "<th class=\"has-border-right-width-2\">Description</th>" +
+      "<th class=\"has-text-right\">Total Offences</th>" +
+      "<th class=\"has-text-right\">Offence Amount Range</th>" +
       "</tr></thead>" +
       "</table>";
 

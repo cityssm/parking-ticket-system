@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getFormattedOwnerAddress = void 0;
 function getFormattedOwnerAddress(owner) {
     const fieldPrefix = ("ownerName1" in owner ? "" : "owner_");
     return owner[fieldPrefix + "ownerName1"] + "\n" +

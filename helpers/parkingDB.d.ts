@@ -99,6 +99,7 @@ export declare function addParkingLocation(reqBody: pts.ParkingLocation): addUpd
 export declare function updateParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return;
 export declare function deleteParkingLocation(locationKey: string): addUpdateParkingLocation_return;
 export declare function getParkingBylaws(): pts.ParkingBylaw[];
+export declare function getParkingBylawsWithOffenceStats(): pts.ParkingBylaw[];
 declare type addUpdateParkingBylaw_return = {
     success: boolean;
     message?: string;
@@ -107,6 +108,7 @@ declare type addUpdateParkingBylaw_return = {
 export declare function addParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return;
 export declare function updateParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return;
 export declare function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_return;
+export declare function updateParkingOffencesByBylawNumber(reqBody: any): addUpdateParkingBylaw_return;
 export declare function getParkingOffences(): pts.ParkingOffence[];
 export declare function getParkingOffencesByLocationKey(locationKey: string): pts.ParkingOffence[];
 declare type addUpdateParkingOffence_return = {
@@ -159,8 +161,8 @@ export declare function createLicencePlateLookupBatch(reqSession: Express.Sessio
     success: boolean;
     batch: {
         batchID: import("integer").IntLike;
-        batchDate: number;
-        batchDateString: string;
+        batchDate: any;
+        batchDateString: any;
         lockDate: any;
         lockDateString: string;
         batchEntries: any[];
@@ -215,8 +217,8 @@ export declare function createParkingTicketConvictionBatch(reqSession: Express.S
     success: boolean;
     batch: {
         batchID: import("integer").IntLike;
-        batchDate: number;
-        batchDateString: string;
+        batchDate: any;
+        batchDateString: any;
         lockDate: any;
         lockDateString: string;
         batchEntries: any[];
@@ -257,8 +259,8 @@ export declare function clearConvictionBatch(batchID: number, reqSession: Expres
 };
 export declare function lockConvictionBatch(batchID: number, reqSession: Express.Session): {
     success: boolean;
-    lockDate: number;
-    lockDateString: string;
+    lockDate: any;
+    lockDateString: any;
 };
 export declare function unlockConvictionBatch(batchID: number, reqSession: Express.Session): boolean;
 export declare function markConvictionBatchAsSent(batchID: number, reqSession: Express.Session): boolean;

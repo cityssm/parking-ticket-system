@@ -7,7 +7,12 @@
     </header>
     <section class="modal-card-body">
       <form id="form--editBylaw">
-        <input id="editBylaw--bylawNumber" name="bylawNumber" type="hidden" />
+        <div class="field">
+          <label class="label" for="editBylaw--bylawNumber">By-Law Number</label>
+          <div class="control">
+            <input class="input is-readonly" id="editBylaw--bylawNumber" name="bylawNumber" type="text" readonly />
+          </div>
+        </div>
 
         <div class="field">
           <label class="label" for="editBylaw--bylawDescription">By-Law Description</label>

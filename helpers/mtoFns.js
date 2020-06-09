@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = void 0;
 const sqlite = require("better-sqlite3");
 const parkingDB = require("./parkingDB");
 const configFns = require("./configFns");

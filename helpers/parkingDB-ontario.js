@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getParkingTicketsAvailableForMTOConvictionBatch = exports.getLicencePlatesAvailableForMTOLookupBatch = void 0;
 const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");

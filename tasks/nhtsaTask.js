@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.scheduleRun = void 0;
 const parkingDB = require("../helpers/parkingDB");
 const vehicleFns = require("../helpers/vehicleFns");
 const configFns = require("../helpers/configFns");

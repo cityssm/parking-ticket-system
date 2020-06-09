@@ -235,7 +235,7 @@ router.post("/doDeleteLocation", function (req, res) {
     res.json(results);
 });
 router.get("/bylaws", function (_req, res) {
-    const bylaws = parkingDB.getParkingBylaws();
+    const bylaws = parkingDB.getParkingBylawsWithOffenceStats();
     res.render("bylaw-maint", {
         headTitle: "By-Law Maintenance",
         bylaws: bylaws
@@ -244,21 +244,28 @@ router.get("/bylaws", function (_req, res) {
 router.post("/doAddBylaw", function (req, res) {
     const results = parkingDB.addParkingBylaw(req.body);
     if (results.success) {
-        results.bylaws = parkingDB.getParkingBylaws();
+        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
     }
     res.json(results);
 });
 router.post("/doUpdateBylaw", function (req, res) {
     const results = parkingDB.updateParkingBylaw(req.body);
     if (results.success) {
-        results.bylaws = parkingDB.getParkingBylaws();
+        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+    }
+    res.json(results);
+});
+router.post("/doUpdateOffencesByBylaw", function (req, res) {
+    const results = parkingDB.updateParkingOffencesByBylawNumber(req.body);
+    if (results.success) {
+        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
     }
     res.json(results);
 });
 router.post("/doDeleteBylaw", function (req, res) {
     const results = parkingDB.deleteParkingBylaw(req.body.bylawNumber);
     if (results.success) {
-        results.bylaws = parkingDB.getParkingBylaws();
+        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
     }
     res.json(results);
 });

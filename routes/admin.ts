@@ -406,12 +406,13 @@ router.post("/doDeleteLocation", function(req, res) {
 
 router.get("/bylaws", function(_req, res) {
 
-  const bylaws = parkingDB.getParkingBylaws();
+  const bylaws = parkingDB.getParkingBylawsWithOffenceStats();
 
   res.render("bylaw-maint", {
     headTitle: "By-Law Maintenance",
     bylaws: bylaws
   });
+
 });
 
 router.post("/doAddBylaw", function(req, res) {
@@ -420,7 +421,7 @@ router.post("/doAddBylaw", function(req, res) {
 
   if (results.success) {
 
-    results.bylaws = parkingDB.getParkingBylaws();
+    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
 
   }
 
@@ -434,7 +435,21 @@ router.post("/doUpdateBylaw", function(req, res) {
 
   if (results.success) {
 
-    results.bylaws = parkingDB.getParkingBylaws();
+    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+
+  }
+
+  res.json(results);
+
+});
+
+router.post("/doUpdateOffencesByBylaw", function(req, res) {
+
+  const results = parkingDB.updateParkingOffencesByBylawNumber(req.body);
+
+  if (results.success) {
+
+    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
 
   }
 
@@ -448,7 +463,7 @@ router.post("/doDeleteBylaw", function(req, res) {
 
   if (results.success) {
 
-    results.bylaws = parkingDB.getParkingBylaws();
+    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
 
   }
 

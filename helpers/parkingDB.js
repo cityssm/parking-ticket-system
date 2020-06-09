@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.cleanupParkingBylawsTable = exports.cleanupParkingLocationsTable = exports.cleanupParkingOffencesTable = exports.cleanupLicencePlateOwnersTable = exports.cleanupParkingTicketStatusLog = exports.cleanupParkingTicketRemarksTable = exports.cleanupParkingTicketsTable = exports.getDatabaseCleanupCounts = exports.markConvictionBatchAsSent = exports.unlockConvictionBatch = exports.lockConvictionBatch = exports.clearConvictionBatch = exports.removeParkingTicketFromConvictionBatch = exports.addAllParkingTicketsToConvictionBatch = exports.addParkingTicketToConvictionBatch = exports.getParkingTicketConvictionBatch = exports.getLastTenParkingTicketConvictionBatches = exports.createParkingTicketConvictionBatch = exports.markLicencePlateLookupErrorLogEntryAcknowledged = exports.getUnacknowledgedLicencePlateLookupErrorLog = exports.getOwnershipReconciliationRecords = exports.createLicencePlateLookupBatch = exports.getUnreceivedLicencePlateLookupBatches = exports.markLookupBatchAsSent = exports.lockLookupBatch = exports.clearLookupBatch = exports.removeLicencePlateFromLookupBatch = exports.addAllLicencePlatesToLookupBatch = exports.addLicencePlateToLookupBatch = exports.getLicencePlateLookupBatch = exports.deleteParkingOffence = exports.updateParkingOffence = exports.addParkingOffence = exports.getParkingOffencesByLocationKey = exports.getParkingOffences = exports.updateParkingOffencesByBylawNumber = exports.deleteParkingBylaw = exports.updateParkingBylaw = exports.addParkingBylaw = exports.getParkingBylawsWithOffenceStats = exports.getParkingBylaws = exports.deleteParkingLocation = exports.updateParkingLocation = exports.addParkingLocation = exports.getParkingLocations = exports.getDistinctLicencePlateOwnerVehicleNCICs = exports.getAllLicencePlateOwners = exports.getLicencePlateOwner = exports.getLicencePlates = exports.deleteParkingTicketStatus = exports.updateParkingTicketStatus = exports.createParkingTicketStatus = exports.getParkingTicketStatuses = exports.deleteParkingTicketRemark = exports.updateParkingTicketRemark = exports.createParkingTicketRemark = exports.getParkingTicketRemarks = exports.getRecentParkingTicketVehicleMakeModelValues = exports.restoreParkingTicket = exports.unresolveParkingTicket = exports.resolveParkingTicket = exports.deleteParkingTicket = exports.updateParkingTicket = exports.createParkingTicket = exports.getParkingTicketID = exports.getParkingTicket = exports.getParkingTicketsByLicencePlate = exports.getParkingTickets = exports.getRawRowsColumns = exports.dbPath = void 0;
 exports.dbPath = "data/parking.db";
 const sqlite = require("better-sqlite3");
 const vehicleFns = require("./vehicleFns");
@@ -866,6 +867,28 @@ function getParkingBylaws() {
     return rows;
 }
 exports.getParkingBylaws = getParkingBylaws;
+function getParkingBylawsWithOffenceStats() {
+    const db = sqlite(exports.dbPath, {
+        readonly: true
+    });
+    const rows = db.prepare("select b.bylawNumber, b.bylawDescription," +
+        " count(o.locationKey) as offenceCount," +
+        " min(o.offenceAmount) as offenceAmountMin," +
+        " max(o.offenceAmount) as offenceAmountMax," +
+        " min(o.discountOffenceAmount) as discountOffenceAmountMin," +
+        " max(o.discountOffenceAmount) as discountOffenceAmountMax," +
+        " min(o.discountDays) as discountDaysMin," +
+        " max(o.discountDays) as discountDaysMax" +
+        " from ParkingBylaws b" +
+        " left join ParkingOffences o on b.bylawNumber = o.bylawNumber and o.isActive = 1" +
+        " where b.isActive = 1" +
+        " group by b.bylawNumber, b.bylawDescription, b.orderNumber" +
+        " order by b.orderNumber, b.bylawNumber")
+        .all();
+    db.close();
+    return rows;
+}
+exports.getParkingBylawsWithOffenceStats = getParkingBylawsWithOffenceStats;
 function addParkingBylaw(reqBody) {
     const db = sqlite(exports.dbPath);
     const bylawRecord = db.prepare("select bylawDescription, isActive" +
@@ -929,6 +952,21 @@ function deleteParkingBylaw(bylawNumber) {
     };
 }
 exports.deleteParkingBylaw = deleteParkingBylaw;
+function updateParkingOffencesByBylawNumber(reqBody) {
+    const db = sqlite(exports.dbPath);
+    const info = db.prepare("update ParkingOffences" +
+        " set offenceAmount = ?," +
+        " discountOffenceAmount = ?," +
+        " discountDays = ?" +
+        " where bylawNumber = ?" +
+        " and isActive = 1")
+        .run(reqBody.offenceAmount, reqBody.discountOffenceAmount, reqBody.discountDays, reqBody.bylawNumber);
+    db.close();
+    return {
+        success: (info.changes > 0)
+    };
+}
+exports.updateParkingOffencesByBylawNumber = updateParkingOffencesByBylawNumber;
 function getParkingOffences() {
     const db = sqlite(exports.dbPath, {
         readonly: true
