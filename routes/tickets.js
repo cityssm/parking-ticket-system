@@ -5,6 +5,7 @@ const configFns = require("../helpers/configFns");
 const ownerFns = require("../helpers/ownerFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB = require("../helpers/parkingDB");
+const parkingDBLookup = require("../helpers/parkingDB-lookup");
 router.get("/", function (_req, res) {
     res.render("ticket-search", {
         headTitle: "Parking Tickets"
@@ -28,8 +29,8 @@ router.get("/reconcile", function (req, res) {
         res.redirect("/tickets/?error=accessDenied");
         return;
     }
-    const reconciliationRecords = parkingDB.getOwnershipReconciliationRecords();
-    const lookupErrors = parkingDB.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1);
+    const reconciliationRecords = parkingDBLookup.getOwnershipReconciliationRecords();
+    const lookupErrors = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1);
     res.render("ticket-reconcile", {
         headTitle: "Ownership Reconciliation",
         records: reconciliationRecords,
@@ -46,7 +47,7 @@ router.post("/doAcknowledgeLookupError", function (req, res) {
         });
         return;
     }
-    const logEntries = parkingDB.getUnacknowledgedLicencePlateLookupErrorLog(req.body.batchID, req.body.logIndex);
+    const logEntries = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(req.body.batchID, req.body.logIndex);
     if (logEntries.length === 0) {
         res.json({
             success: false,
@@ -68,7 +69,7 @@ router.post("/doAcknowledgeLookupError", function (req, res) {
         });
         return;
     }
-    const success = parkingDB.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
+    const success = parkingDBLookup.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
     res.json({
         success: success
     });
@@ -138,7 +139,7 @@ router.post("/doQuickReconcileMatches", function (req, res) {
         });
         return;
     }
-    const records = parkingDB.getOwnershipReconciliationRecords();
+    const records = parkingDBLookup.getOwnershipReconciliationRecords();
     let statusRecords = [];
     for (let recordIndex = 0; recordIndex < records.length; recordIndex += 1) {
         const record = records[recordIndex];

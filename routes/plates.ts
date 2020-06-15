@@ -3,6 +3,7 @@ const router = Router();
 
 import * as vehicleFns from "../helpers/vehicleFns";
 import * as parkingDB from "../helpers/parkingDB";
+import * as parkingDBLookup from "../helpers/parkingDB-lookup";
 
 
 router.get("/", function(_req, res) {
@@ -16,7 +17,7 @@ router.get("/", function(_req, res) {
 
 router.post("/doGetLicencePlates", function(req, res) {
 
-  let queryOptions: parkingDB.getLicencePlates_queryOptions = {
+  let queryOptions: parkingDB.GetLicencePlatesQueryOptions = {
     limit: req.body.limit,
     offset: req.body.offset,
     licencePlateNumber: req.body.licencePlateNumber
@@ -50,7 +51,7 @@ router.post("/doGetUnreceivedLicencePlateLookupBatches", function(req, res) {
 
   }
 
-  const batches = parkingDB.getUnreceivedLicencePlateLookupBatches(req.session.user.userProperties.canUpdate);
+  const batches = parkingDBLookup.getUnreceivedLicencePlateLookupBatches(req.session.user.userProperties.canUpdate);
   res.json(batches);
 
 });
@@ -70,7 +71,7 @@ router.post("/doCreateLookupBatch", function(req, res) {
 
   }
 
-  const createBatchResponse = parkingDB.createLicencePlateLookupBatch(req.session);
+  const createBatchResponse = parkingDBLookup.createLicencePlateLookupBatch(req.session);
 
   res.json(createBatchResponse);
 
@@ -91,7 +92,7 @@ router.post("/doGetLookupBatch", function(req, res) {
 
   }
 
-  const batch = parkingDB.getLicencePlateLookupBatch(req.body.batchID);
+  const batch = parkingDBLookup.getLicencePlateLookupBatch(req.body.batchID);
   res.json(batch);
 });
 
@@ -110,10 +111,10 @@ router.post("/doAddLicencePlateToLookupBatch", function(req, res) {
 
   }
 
-  const result = parkingDB.addLicencePlateToLookupBatch(req.body, req.session);
+  const result = parkingDBLookup.addLicencePlateToLookupBatch(req.body, req.session);
 
   if (result.success) {
-    result.batch = parkingDB.getLicencePlateLookupBatch(req.body.batchID);
+    result.batch = parkingDBLookup.getLicencePlateLookupBatch(req.body.batchID);
   }
 
   res.json(result);
@@ -137,7 +138,7 @@ router.post("/doAddAllLicencePlatesToLookupBatch", function(req, res) {
 
   console.log(req.body.licencePlateNumbers.length);
 
-  const result = parkingDB.addAllLicencePlatesToLookupBatch(req.body, req.session);
+  const result = parkingDBLookup.addAllLicencePlatesToLookupBatch(req.body, req.session);
 
   res.json(result);
 
@@ -158,7 +159,7 @@ router.post("/doRemoveLicencePlateFromLookupBatch", function(req, res) {
 
   }
 
-  const result = parkingDB.removeLicencePlateFromLookupBatch(req.body, req.session);
+  const result = parkingDBLookup.removeLicencePlateFromLookupBatch(req.body, req.session);
 
   res.json(result);
 
@@ -181,10 +182,10 @@ router.post("/doClearLookupBatch", function(req, res) {
 
   const batchID = parseInt(req.body.batchID, 10);
 
-  const result = parkingDB.clearLookupBatch(batchID, req.session);
+  const result = parkingDBLookup.clearLookupBatch(batchID, req.session);
 
   if (result.success) {
-    result.batch = parkingDB.getLicencePlateLookupBatch(batchID);
+    result.batch = parkingDBLookup.getLicencePlateLookupBatch(batchID);
   }
 
   res.json(result);
@@ -208,11 +209,11 @@ router.post("/doLockLookupBatch", function(req, res) {
 
   const batchID = parseInt(req.body.batchID, 10);
 
-  const result = parkingDB.lockLookupBatch(batchID, req.session);
+  const result = parkingDBLookup.lockLookupBatch(batchID, req.session);
 
   if (result.success) {
 
-    result.batch = parkingDB.getLicencePlateLookupBatch(batchID);
+    result.batch = parkingDBLookup.getLicencePlateLookupBatch(batchID);
 
   }
 

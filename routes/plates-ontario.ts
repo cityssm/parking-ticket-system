@@ -3,8 +3,8 @@ const router = Router();
 
 import * as mtoFns from "../helpers/mtoFns";
 
-import * as parkingDB from "../helpers/parkingDB";
-import * as parkingDB_ontario from "../helpers/parkingDB-ontario";
+import * as parkingDBOntario from "../helpers/parkingDB-ontario";
+import * as parkingDBLookup from "../helpers/parkingDB-lookup";
 
 import * as multer from 'multer';
 const storage = multer.memoryStorage();
@@ -14,11 +14,11 @@ const upload = multer({ storage: storage });
 router.get("/mtoExport", function(req, res) {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-    res.redirect ("/plates/?error=accessDenied");
+    res.redirect("/plates/?error=accessDenied");
     return;
   }
 
-  const latestUnlockedBatch = parkingDB.getLicencePlateLookupBatch(-1);
+  const latestUnlockedBatch = parkingDBLookup.getLicencePlateLookupBatch(-1);
 
   res.render("mto-plateExport", {
     headTitle: "MTO Licence Plate Export",
@@ -45,7 +45,7 @@ router.post("/doGetPlatesAvailableForMTOLookup", function(req, res) {
   const batchID = parseInt(req.body.batchID, 10);
   const issueDaysAgo = parseInt(req.body.issueDaysAgo, 10);
 
-  const availablePlates = parkingDB_ontario.getLicencePlatesAvailableForMTOLookupBatch(batchID, issueDaysAgo);
+  const availablePlates = parkingDBOntario.getLicencePlatesAvailableForMTOLookupBatch(batchID, issueDaysAgo);
   res.json(availablePlates);
 
 });
@@ -53,7 +53,7 @@ router.post("/doGetPlatesAvailableForMTOLookup", function(req, res) {
 router.get("/mtoExport/:batchID", function(req, res) {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-    res.redirect ("/plates/?error=accessDenied");
+    res.redirect("/plates/?error=accessDenied");
     return;
   }
 
@@ -70,11 +70,11 @@ router.get("/mtoExport/:batchID", function(req, res) {
 router.get("/mtoImport", function(req, res) {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-    res.redirect ("/plates/?error=accessDenied");
+    res.redirect("/plates/?error=accessDenied");
     return;
   }
 
-  const unreceivedBatches = parkingDB.getUnreceivedLicencePlateLookupBatches(false);
+  const unreceivedBatches = parkingDBLookup.getUnreceivedLicencePlateLookupBatches(false);
 
   res.render("mto-plateImport", {
     headTitle: "MTO Licence Plate Ownership Import",

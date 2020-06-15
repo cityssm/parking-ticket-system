@@ -2,8 +2,8 @@
 const express_1 = require("express");
 const router = express_1.Router();
 const mtoFns = require("../helpers/mtoFns");
-const parkingDB = require("../helpers/parkingDB");
-const parkingDB_ontario = require("../helpers/parkingDB-ontario");
+const parkingDBOntario = require("../helpers/parkingDB-ontario");
+const parkingDBLookup = require("../helpers/parkingDB-lookup");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -12,7 +12,7 @@ router.get("/mtoExport", function (req, res) {
         res.redirect("/plates/?error=accessDenied");
         return;
     }
-    const latestUnlockedBatch = parkingDB.getLicencePlateLookupBatch(-1);
+    const latestUnlockedBatch = parkingDBLookup.getLicencePlateLookupBatch(-1);
     res.render("mto-plateExport", {
         headTitle: "MTO Licence Plate Export",
         batch: latestUnlockedBatch
@@ -30,7 +30,7 @@ router.post("/doGetPlatesAvailableForMTOLookup", function (req, res) {
     }
     const batchID = parseInt(req.body.batchID, 10);
     const issueDaysAgo = parseInt(req.body.issueDaysAgo, 10);
-    const availablePlates = parkingDB_ontario.getLicencePlatesAvailableForMTOLookupBatch(batchID, issueDaysAgo);
+    const availablePlates = parkingDBOntario.getLicencePlatesAvailableForMTOLookupBatch(batchID, issueDaysAgo);
     res.json(availablePlates);
 });
 router.get("/mtoExport/:batchID", function (req, res) {
@@ -49,7 +49,7 @@ router.get("/mtoImport", function (req, res) {
         res.redirect("/plates/?error=accessDenied");
         return;
     }
-    const unreceivedBatches = parkingDB.getUnreceivedLicencePlateLookupBatches(false);
+    const unreceivedBatches = parkingDBLookup.getUnreceivedLicencePlateLookupBatches(false);
     res.render("mto-plateImport", {
         headTitle: "MTO Licence Plate Ownership Import",
         batches: unreceivedBatches
