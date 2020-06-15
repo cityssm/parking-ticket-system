@@ -26,12 +26,13 @@ import * as routerReports from "./routes/reports";
 import * as routePlatesOntario from "./routes/plates-ontario";
 import * as routeTicketsOntario from "./routes/tickets-ontario";
 
-
 import * as configFns from "./helpers/configFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
 import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns";
 import * as vehicleFns from "./helpers/vehicleFns";
+
+import * as nhtsaTask from "./tasks/nhtsaTask";
 
 
 /*
@@ -251,7 +252,7 @@ app.use(function(err: createError.HttpError, req: express.Request, res: express.
  */
 
 if (configFns.getProperty("application.task_nhtsa.runTask")) {
-  require("./tasks/nhtsaTask").scheduleRun();
+  nhtsaTask.scheduleRun();
 }
 
 export = app;

@@ -334,7 +334,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
           renderCurrentBatch();
           renderConvictableTickets();
         }
-      })
+      });
     };
 
     cityssm.confirmModal("Lock Batch?",
@@ -361,7 +361,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
           renderCurrentBatch();
           renderConvictableTickets();
         }
-      })
+      });
     };
 
     cityssm.confirmModal("Lock Batch?",
@@ -378,7 +378,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     const downloadFn = function() {
       window.open("/tickets-ontario/convict/" + currentBatch.batchID);
-    }
+    };
 
     if (!currentBatch.sentDate) {
 
@@ -586,11 +586,11 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         renderCurrentBatch();
 
         renderConvictableTickets();
-      })
+      });
 
       selectBatchCloseModalFn();
 
-    }
+    };
 
     cityssm.openHtmlModal("mto-selectBatch", {
       onshow: function(modalEle) {

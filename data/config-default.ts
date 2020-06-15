@@ -45,7 +45,7 @@ config.parkingTickets = {
   licencePlateExpiryDate: {
     includeDay: false
   }
-}
+};
 
 
 config.parkingTicketStatuses = base.baseParkingTicketStatuses;

@@ -3,6 +3,7 @@ const express_1 = require("express");
 const router = express_1.Router();
 const usersDB = require("../helpers/usersDB");
 const parkingDB = require("../helpers/parkingDB");
+const parkingDBCleanup = require("../helpers/parkingDB-cleanup");
 const configFns = require("../helpers/configFns");
 router.get("/userManagement", function (req, res) {
     if (!req.session.user.userProperties.isAdmin) {
@@ -128,7 +129,7 @@ router.get("/cleanup", function (req, res) {
         res.redirect("/dashboard/?error=accessDenied");
         return;
     }
-    const counts = parkingDB.getDatabaseCleanupCounts();
+    const counts = parkingDBCleanup.getDatabaseCleanupCounts();
     res.render("admin-cleanup", {
         headTitle: "Database Cleanup",
         counts: counts
@@ -149,25 +150,25 @@ router.post("/doCleanupTable", function (req, res) {
     let success = false;
     switch (table) {
         case "parkingTickets":
-            success = parkingDB.cleanupParkingTicketsTable(recordDelete_timeMillis);
+            success = parkingDBCleanup.cleanupParkingTicketsTable(recordDelete_timeMillis);
             break;
         case "parkingTicketRemarks":
-            success = parkingDB.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
+            success = parkingDBCleanup.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
             break;
         case "parkingTicketStatusLog":
-            success = parkingDB.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
+            success = parkingDBCleanup.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
             break;
         case "licencePlateOwners":
-            success = parkingDB.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
+            success = parkingDBCleanup.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
             break;
         case "parkingOffences":
-            success = parkingDB.cleanupParkingOffencesTable();
+            success = parkingDBCleanup.cleanupParkingOffencesTable();
             break;
         case "parkingLocations":
-            success = parkingDB.cleanupParkingLocationsTable();
+            success = parkingDBCleanup.cleanupParkingLocationsTable();
             break;
         case "parkingBylaws":
-            success = parkingDB.cleanupParkingBylawsTable();
+            success = parkingDBCleanup.cleanupParkingBylawsTable();
             break;
     }
     res.json({

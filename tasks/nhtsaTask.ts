@@ -28,8 +28,8 @@ function processNCIC(index: number) {
     vehicleFns.getModelsByMake(vehicleMake, function() {
       processNCIC(index + 1);
     });
-  }
-  else {
+
+  } else {
     vehicleNCICs = [];
     scheduleRun();
   }

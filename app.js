@@ -24,6 +24,7 @@ const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const stringFns = require("@cityssm/expressjs-server-js/stringFns");
 const htmlFns = require("@cityssm/expressjs-server-js/htmlFns");
 const vehicleFns = require("./helpers/vehicleFns");
+const nhtsaTask = require("./tasks/nhtsaTask");
 const dbInit = require("./helpers/dbInit");
 dbInit.initUsersDB();
 dbInit.initParkingDB();
@@ -127,6 +128,6 @@ app.use(function (err, req, res, _next) {
     res.render("error");
 });
 if (configFns.getProperty("application.task_nhtsa.runTask")) {
-    require("./tasks/nhtsaTask").scheduleRun();
+    nhtsaTask.scheduleRun();
 }
 module.exports = app;

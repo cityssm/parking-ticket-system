@@ -1,20 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    const canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
-    let currentBatch = exports.currentBatch;
+    var canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
+    var currentBatch = exports.currentBatch;
     delete exports.currentBatch;
-    let convictableTickets = exports.convictableTickets;
+    var convictableTickets = exports.convictableTickets;
     delete exports.convictableTickets;
-    const ticketFilterEle = document.getElementById("filter--parkingTicket");
-    const convictableTicketsContainerEle = document.getElementById("convictable-tickets-container");
-    let displayedTicketIDs = [];
+    var ticketFilterEle = document.getElementById("filter--parkingTicket");
+    var convictableTicketsContainerEle = document.getElementById("convictable-tickets-container");
+    var displayedTicketIDs = [];
     function addTicketToBatchByIndex(clickEvent) {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
+        var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        const index = parseInt(buttonEle.getAttribute("data-index"), 10);
-        const ticketID = convictableTickets[index].ticketID;
+        var index = parseInt(buttonEle.getAttribute("data-index"), 10);
+        var ticketID = convictableTickets[index].ticketID;
         cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
             batchID: currentBatch.batchID,
             ticketID: ticketID
@@ -32,8 +32,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function addAllTicketsToBatch(clickEvent) {
         clickEvent.preventDefault();
-        let loadingCloseModalFn;
-        const addFn = function () {
+        var loadingCloseModalFn;
+        var addFn = function () {
             cityssm.postJSON("/tickets-ontario/doAddAllTicketsToConvictionBatch", {
                 batchID: currentBatch.batchID,
                 ticketIDs: displayedTicketIDs
@@ -92,16 +92,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>";
             return;
         }
-        const ticketFilter = ticketFilterEle.value.trim().toLowerCase();
-        const tbodyEle = document.createElement("tbody");
-        for (let index = 0; index < convictableTickets.length; index += 1) {
-            const ticket = convictableTickets[index];
+        var ticketFilter = ticketFilterEle.value.trim().toLowerCase();
+        var tbodyEle = document.createElement("tbody");
+        for (var index = 0; index < convictableTickets.length; index += 1) {
+            var ticket = convictableTickets[index];
             if (ticket.ticketNumber.toLowerCase().indexOf(ticketFilter) === -1 &&
                 ticket.licencePlateNumber.toLowerCase().indexOf(ticketFilter) === -1) {
                 continue;
             }
             displayedTicketIDs.push(ticket.ticketID);
-            const trEle = document.createElement("tr");
+            var trEle = document.createElement("tr");
             trEle.innerHTML =
                 ("<td>" +
                     "<a data-tooltip=\"View Ticket (Opens in New Window)\" href=\"/tickets/" + ticket.ticketID + "\" target=\"_blank\">" +
@@ -132,13 +132,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>";
             return;
         }
-        const addAllButtonEle = document.createElement("button");
+        var addAllButtonEle = document.createElement("button");
         addAllButtonEle.className = "button is-fullwidth mb-3";
         addAllButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
             "<span>Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "</span>";
         addAllButtonEle.addEventListener("click", addAllTicketsToBatch);
         convictableTicketsContainerEle.appendChild(addAllButtonEle);
-        const tableEle = document.createElement("table");
+        var tableEle = document.createElement("table");
         tableEle.className = "table is-striped is-hoverable is-fullwidth";
         tableEle.innerHTML = "<thead><tr>" +
             "<th>Ticket Number</th>" +
@@ -150,13 +150,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
         convictableTicketsContainerEle.appendChild(tableEle);
     }
     ticketFilterEle.addEventListener("keyup", renderConvictableTickets);
-    const batchEntriesContainerEle = document.getElementById("batch-entries-container");
+    var batchEntriesContainerEle = document.getElementById("batch-entries-container");
     function removeTicketFromBatchByIndex(clickEvent) {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
+        var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        const index = parseInt(buttonEle.getAttribute("data-index"), 10);
-        const ticketID = currentBatch.batchEntries[index].ticketID;
+        var index = parseInt(buttonEle.getAttribute("data-index"), 10);
+        var ticketID = currentBatch.batchEntries[index].ticketID;
         cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
             batchID: currentBatch.batchID,
             ticketID: ticketID
@@ -174,7 +174,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function clearBatch(clickEvent) {
         clickEvent.preventDefault();
-        const clearFn = function () {
+        var clearFn = function () {
             cityssm.postJSON("/tickets-ontario/doClearConvictionBatch", {
                 batchID: currentBatch.batchID
             }, function (responseJSON) {
@@ -195,7 +195,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function lockBatch(clickEvent) {
         clickEvent.preventDefault();
-        const lockFn = function () {
+        var lockFn = function () {
             cityssm.postJSON("/tickets/doLockConvictionBatch", {
                 batchID: currentBatch.batchID
             }, function (responseJSON) {
@@ -212,7 +212,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function unlockBatch(clickEvent) {
         clickEvent.preventDefault();
-        const lockFn = function () {
+        var lockFn = function () {
             cityssm.postJSON("/tickets/doUnlockConvictionBatch", {
                 batchID: currentBatch.batchID
             }, function (responseJSON) {
@@ -229,14 +229,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function downloadBatch(clickEvent) {
         clickEvent.preventDefault();
-        const downloadFn = function () {
+        var downloadFn = function () {
             window.open("/tickets-ontario/convict/" + currentBatch.batchID);
         };
         if (!currentBatch.sentDate) {
             cityssm.confirmModal("Download Batch", "<strong>You are about to download the batch for the first time.</strong><br />" +
                 "Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.", "Yes, Download the Batch", "warning", function () {
                 downloadFn();
-                const rightNow = new Date();
+                var rightNow = new Date();
                 currentBatch.sentDateString = cityssm.dateToString(rightNow);
                 currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""), 10);
                 renderCurrentBatch();
@@ -265,11 +265,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>";
             return;
         }
-        const tbodyEle = document.createElement("tbody");
-        const canRemove = canUpdate && !currentBatch.lockDate;
-        for (let index = 0; index < currentBatch.batchEntries.length; index += 1) {
-            const batchEntry = currentBatch.batchEntries[index];
-            const trEle = document.createElement("tr");
+        var tbodyEle = document.createElement("tbody");
+        var canRemove = canUpdate && !currentBatch.lockDate;
+        for (var index = 0; index < currentBatch.batchEntries.length; index += 1) {
+            var batchEntry = currentBatch.batchEntries[index];
+            var trEle = document.createElement("tr");
             trEle.innerHTML = ("<td>" +
                 "<a href=\"/tickets/" + batchEntry.ticketID + "\" target=\"_blank\">" +
                 batchEntry.ticketNumber +
@@ -292,7 +292,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             tbodyEle.appendChild(trEle);
         }
-        const tableEle = document.createElement("table");
+        var tableEle = document.createElement("table");
         tableEle.className = "table is-fullwidth is-striped is-hoverable";
         tableEle.innerHTML = "<thead><tr>" +
             "<th>Ticket Number</th>" +
@@ -305,13 +305,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
         tableEle.appendChild(tbodyEle);
         batchEntriesContainerEle.appendChild(tableEle);
         if (canUpdate && !currentBatch.lockDate) {
-            const lockButtonEle = document.createElement("button");
+            var lockButtonEle = document.createElement("button");
             lockButtonEle.className = "button is-fullwidth mb-3";
             lockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                 "<span>Lock Batch</span>";
             lockButtonEle.addEventListener("click", lockBatch);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", lockButtonEle);
-            const clearButtonEle = document.createElement("button");
+            var clearButtonEle = document.createElement("button");
             clearButtonEle.className = "button is-fullwidth mb-3";
             clearButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
                 "<span>Clear Batch</span>";
@@ -319,7 +319,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             tableEle.insertAdjacentElement("beforebegin", clearButtonEle);
         }
         if (canUpdate && currentBatch.lockDate && !currentBatch.sentDate) {
-            const unlockButtonEle = document.createElement("button");
+            var unlockButtonEle = document.createElement("button");
             unlockButtonEle.className = "button is-fullwidth mb-3";
             unlockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
                 "<span>Unlock Batch</span>";
@@ -327,7 +327,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", unlockButtonEle);
         }
         if (currentBatch.lockDate) {
-            const downloadButtonEle = document.createElement("button");
+            var downloadButtonEle = document.createElement("button");
             downloadButtonEle.className = "button is-fullwidth mb-3";
             downloadButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
                 "<span>Download File for MTO</span>";
@@ -341,7 +341,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     function confirmCreateBatch() {
-        const createFn = function () {
+        var createFn = function () {
             cityssm.postJSON("/tickets/doCreateConvictionBatch", {}, function (responseJSON) {
                 if (responseJSON.success) {
                     currentBatch = responseJSON.batch;
@@ -354,10 +354,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     document.getElementById("is-select-batch-button").addEventListener("click", function (clickEvent) {
         clickEvent.preventDefault();
-        let selectBatchCloseModalFn;
-        const selectFn = function (clickEvent) {
+        var selectBatchCloseModalFn;
+        var selectFn = function (clickEvent) {
             clickEvent.preventDefault();
-            const batchID = clickEvent.currentTarget.getAttribute("data-batch-id");
+            var batchID = clickEvent.currentTarget.getAttribute("data-batch-id");
             cityssm.postJSON("/tickets/doGetConvictionBatch", {
                 batchID: batchID
             }, function (batchObj) {
@@ -370,7 +370,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.openHtmlModal("mto-selectBatch", {
             onshow: function (modalEle) {
                 if (canUpdate) {
-                    const createButtonEle = modalEle.getElementsByClassName("is-create-batch-button")[0];
+                    var createButtonEle = modalEle.getElementsByClassName("is-create-batch-button")[0];
                     createButtonEle.classList.remove("is-hidden");
                     createButtonEle.addEventListener("click", function (clickEvent) {
                         clickEvent.preventDefault();
@@ -379,7 +379,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     });
                 }
                 cityssm.postJSON("/tickets/doGetRecentConvictionBatches", [], function (batchList) {
-                    const resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
+                    var resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
                     cityssm.clearElement(resultsContainerEle);
                     if (batchList.length === 0) {
                         resultsContainerEle.className = "message is-info";
@@ -387,9 +387,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         return;
                     }
                     resultsContainerEle.className = "list is-hoverable";
-                    for (let index = 0; index < batchList.length; index += 1) {
-                        const batch = batchList[index];
-                        const batchListItemEle = document.createElement("a");
+                    for (var index = 0; index < batchList.length; index += 1) {
+                        var batch = batchList[index];
+                        var batchListItemEle = document.createElement("a");
                         batchListItemEle.className = "list-item";
                         batchListItemEle.setAttribute("data-batch-id", batch.batchID.toString());
                         batchListItemEle.href = "#";

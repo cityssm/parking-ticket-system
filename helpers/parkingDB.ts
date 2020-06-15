@@ -5,7 +5,6 @@ import * as vehicleFns from "./vehicleFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "./configFns";
 import type * as pts from "./ptsTypes";
-import { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
 
 
 function canUpdateObject(obj: pts.Record, reqSession: Express.Session) {
@@ -65,32 +64,6 @@ function canUpdateObject(obj: pts.Record, reqSession: Express.Session) {
 }
 
 
-export function getRawRowsColumns(sql: string, params: any[]): RawRowsColumnsReturn {
-
-  const db = sqlite(dbPath, {
-    readonly: true
-  });
-
-  const stmt = db.prepare(sql);
-
-  stmt.raw(true);
-
-  const rows = stmt.all(params);
-  const columns = stmt.columns();
-
-  stmt.raw(false);
-
-  db.close();
-
-  return {
-    rows: rows,
-    columns: columns
-  };
-
-}
-
-
-
 function getParkingLocationWithDB(db: sqlite.Database, locationKey: string) {
 
   const location: pts.ParkingLocation = db.prepare("select locationKey, locationName, locationClassKey, isActive" +
@@ -142,16 +115,15 @@ function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: st
 }
 
 
-export type getParkingTickets_queryOptions = {
-  isResolved?: boolean,
-  ticketNumber?: string,
-  licencePlateNumber?: string,
-  location?: string,
-  limit: number,
-  offset: number
-};
-
-export function getParkingTickets(reqSession: Express.Session, queryOptions: getParkingTickets_queryOptions) {
+export interface GetParkingTicketsQueryOptions {
+  isResolved?: boolean;
+  ticketNumber?: string;
+  licencePlateNumber?: string;
+  location?: string;
+  limit: number;
+  offset: number;
+}
+export function getParkingTickets(reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) {
 
   const addCalculatedFieldsFn = function(ele: pts.ParkingTicket) {
 
@@ -1109,15 +1081,15 @@ export function deleteParkingTicketStatus(ticketID: number, statusIndex: number,
 }
 
 
-export type getLicencePlates_queryOptions = {
-  licencePlateNumber?: string,
-  hasOwnerRecord?: boolean,
-  hasUnresolvedTickets?: boolean,
-  limit: number,
-  offset: number
-};
+export interface GetLicencePlatesQueryOptions {
+  licencePlateNumber?: string;
+  hasOwnerRecord?: boolean;
+  hasUnresolvedTickets?: boolean;
+  limit: number;
+  offset: number;
+}
 
-export function getLicencePlates(queryOptions: getLicencePlates_queryOptions) {
+export function getLicencePlates(queryOptions: GetLicencePlatesQueryOptions) {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -1295,13 +1267,13 @@ export function getParkingLocations() {
   return rows;
 }
 
-type addUpdateParkingLocation_return = {
-  success: boolean,
-  message?: string,
-  locations?: pts.ParkingLocation[]
-};
+interface AddUpdateParkingLocationReturn {
+  success: boolean;
+  message?: string;
+  locations?: pts.ParkingLocation[];
+}
 
-export function addParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return {
+export function addParkingLocation(reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn {
 
   const db = sqlite(dbPath);
 
@@ -1342,7 +1314,7 @@ export function addParkingLocation(reqBody: pts.ParkingLocation): addUpdateParki
 
 }
 
-export function updateParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return {
+export function updateParkingLocation(reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn {
 
   const db = sqlite(dbPath);
 
@@ -1363,7 +1335,7 @@ export function updateParkingLocation(reqBody: pts.ParkingLocation): addUpdatePa
 
 }
 
-export function deleteParkingLocation(locationKey: string): addUpdateParkingLocation_return {
+export function deleteParkingLocation(locationKey: string): AddUpdateParkingLocationReturn {
 
   const db = sqlite(dbPath);
 
@@ -1433,13 +1405,13 @@ export function getParkingBylawsWithOffenceStats() {
 
 }
 
-type addUpdateParkingBylaw_return = {
-  success: boolean,
-  message?: string,
-  bylaws?: pts.ParkingBylaw[]
-};
+interface AddUpdateParkingBylawReturn {
+  success: boolean;
+  message?: string;
+  bylaws?: pts.ParkingBylaw[];
+}
 
-export function addParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return {
+export function addParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn {
 
   const db = sqlite(dbPath);
 
@@ -1498,7 +1470,7 @@ export function addParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingByla
 
 }
 
-export function updateParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return {
+export function updateParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn {
 
   const db = sqlite(dbPath);
 
@@ -1518,7 +1490,7 @@ export function updateParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingB
 
 }
 
-export function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_return {
+export function deleteParkingBylaw(bylawNumber: string): AddUpdateParkingBylawReturn {
 
   const db = sqlite(dbPath);
 
@@ -1538,7 +1510,7 @@ export function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_r
 
 }
 
-export function updateParkingOffencesByBylawNumber(reqBody: any): addUpdateParkingBylaw_return {
+export function updateParkingOffencesByBylawNumber(reqBody: any): AddUpdateParkingBylawReturn {
 
   const db = sqlite(dbPath);
 
@@ -2958,269 +2930,4 @@ export function markConvictionBatchAsSent(batchID: number, reqSession: Express.S
   db.close();
 
   return (info.changes > 0);
-}
-
-
-// Database Cleanup
-
-
-export function getDatabaseCleanupCounts() {
-
-  const recordDelete_timeMillisWindow = Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
-
-  const db = sqlite(dbPath, {
-    readonly: true
-  });
-
-  // Tickets
-
-  const parkingTickets = db.prepare("select count(*) as cnt from ParkingTickets t" +
-    " where t.recordDelete_timeMillis is not null" +
-    " and t.recordDelete_timeMillis < ?" +
-    (" and not exists (" +
-      "select 1 from LicencePlateLookupBatchEntries b" +
-      " where t.ticketID = b.ticketID)"))
-    .get(recordDelete_timeMillisWindow).cnt;
-
-  // Status Log
-
-  const parkingTicketStatusLog = db.prepare("select count(*) as cnt from ParkingTicketStatusLog" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .get(recordDelete_timeMillisWindow).cnt;
-
-  // Remarks
-
-  const parkingTicketRemarks = db.prepare("select count(*) as cnt from ParkingTicketRemarks" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .get(recordDelete_timeMillisWindow).cnt;
-
-  // Licence Plate Owners
-
-  const licencePlateOwners = db.prepare("select count(*) as cnt from LicencePlateOwners" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .get(recordDelete_timeMillisWindow).cnt;
-
-  // Parking Locations
-
-  const parkingLocations = db.prepare("select count(*) as cnt from ParkingLocations l" +
-    " where isActive = 0" +
-    " and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)" +
-    " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)")
-    .get().cnt;
-
-  // Parking By-Laws
-
-  const parkingBylaws = db.prepare("select count(*) as cnt from ParkingBylaws b" +
-    " where isActive = 0" +
-    " and not exists (select 1 from ParkingTickets t where b.bylawNumber = t.bylawNumber)" +
-    " and not exists (select 1 from ParkingOffences o where b.bylawNumber = o.bylawNumber)")
-    .get().cnt;
-
-  // Parking Offences
-
-  const parkingOffences = db.prepare("select count(*) as cnt from ParkingOffences o" +
-    " where isActive = 0" +
-    " and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)")
-    .get().cnt;
-
-  // Licence Plate Lookup Error Log
-
-  /*
-  const licencePlateLookupErrorLog = db.prepare("select count(*) as cnt from LicencePlateLookupErrorLog" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .get(recordDelete_timeMillisWindow).cnt;
-  */
-
-  // Conviction Batches
-
-  /*
-  const parkingTicketConvictionBatches = db.prepare("select count(*) as cnt from ParkingTicketConvictionBatches" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .get(recordDelete_timeMillisWindow).cnt;
-  */
-
-  // Licence Plate Lookup Batches
-
-  /*
-  const licencePlateLookupBatches = db.prepare("select count(*) as cnt from LicencePlateLookupBatches" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .get(recordDelete_timeMillisWindow).cnt;
-  */
-
-  db.close();
-
-  return {
-    recordDelete_timeMillis: recordDelete_timeMillisWindow,
-
-    parkingTickets: parkingTickets,
-    parkingTicketStatusLog: parkingTicketStatusLog,
-    parkingTicketRemarks: parkingTicketRemarks,
-    licencePlateOwners: licencePlateOwners,
-
-    parkingLocations: parkingLocations,
-    parkingBylaws: parkingBylaws,
-    parkingOffences: parkingOffences
-
-    //licencePlateLookupErrorLog: licencePlateLookupErrorLog
-    //parkingTicketConvictionBatches: parkingTicketConvictionBatches,
-    //licencePlateLookupBatches: licencePlateLookupBatches,
-  };
-}
-
-
-export function cleanupParkingTicketsTable(recordDelete_timeMillis: number) {
-
-  const db = sqlite(dbPath);
-
-  const recordsToDelete = db.prepare("select ticketID from ParkingTickets t" +
-    " where t.recordDelete_timeMillis is not null" +
-    " and t.recordDelete_timeMillis < ?" +
-    (" and not exists (" +
-      "select 1 from LicencePlateLookupBatchEntries b" +
-      " where t.ticketID = b.ticketID)"))
-    .all(recordDelete_timeMillis);
-
-  for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
-
-    db.prepare("delete from ParkingTicketRemarks" +
-      " where ticketID = ?")
-      .run(recordsToDelete[recordIndex].ticketID);
-
-    db.prepare("delete from ParkingTicketStatusLog" +
-      " where ticketID = ?")
-      .run(recordsToDelete[recordIndex].ticketID);
-
-    db.prepare("delete from ParkingTickets" +
-      " where ticketID = ?")
-      .run(recordsToDelete[recordIndex].ticketID);
-  }
-
-  db.close();
-
-  return true;
-
-}
-
-export function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number) {
-
-  const db = sqlite(dbPath);
-
-  db.prepare("delete from ParkingTicketRemarks" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .run(recordDelete_timeMillis);
-
-  db.close();
-
-  return true;
-
-}
-
-export function cleanupParkingTicketStatusLog(recordDelete_timeMillis: number) {
-
-  const db = sqlite(dbPath);
-
-  db.prepare("delete from ParkingTicketStatusLog" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .run(recordDelete_timeMillis);
-
-  db.close();
-
-  return true;
-
-}
-
-export function cleanupLicencePlateOwnersTable(recordDelete_timeMillis: number) {
-
-  const db = sqlite(dbPath);
-
-  db.prepare("delete from LicencePlateOwners" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .run(recordDelete_timeMillis);
-
-  db.close();
-
-  return true;
-
-}
-
-export function cleanupParkingOffencesTable() {
-
-  const db = sqlite(dbPath);
-
-  const recordsToDelete = db.prepare("select o.bylawNumber, o.locationKey" +
-    " from ParkingOffences o" +
-    " where isActive = 0" +
-    " and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)")
-    .all();
-
-  for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
-
-    db.prepare("delete from ParkingOffences" +
-      " where bylawNumber = ?" +
-      " and locationKey = ?" +
-      " and isActive = 0")
-      .run(recordsToDelete[recordIndex].bylawNumber,
-        recordsToDelete[recordIndex].locationKey);
-  }
-
-  db.close();
-
-  return true;
-
-}
-
-export function cleanupParkingLocationsTable() {
-
-  const db = sqlite(dbPath);
-
-  const recordsToDelete = db.prepare("select locationKey from ParkingLocations l" +
-    " where isActive = 0" +
-    " and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)" +
-    " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)")
-    .all();
-
-  for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
-
-    db.prepare("delete from ParkingLocations" +
-      " where locationKey = ?" +
-      " and isActive = 0")
-      .run(recordsToDelete[recordIndex].locationKey);
-  }
-
-  db.close();
-
-  return true;
-
-}
-
-export function cleanupParkingBylawsTable() {
-
-  const db = sqlite(dbPath);
-
-  const recordsToDelete = db.prepare("select bylawNumber from ParkingBylaws b" +
-    " where isActive = 0" +
-    " and not exists (select 1 from ParkingTickets t where b.bylawNumber = t.bylawNumber)" +
-    " and not exists (select 1 from ParkingOffences o where b.bylawNumber = o.bylawNumber)")
-    .all();
-
-  for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
-
-    db.prepare("delete from ParkingBylaws" +
-      " where bylawNumber = ?" +
-      " and isActive = 0")
-      .run(recordsToDelete[recordIndex].bylawNumber);
-  }
-
-  db.close();
-
-  return true;
 }

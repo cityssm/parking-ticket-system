@@ -3,6 +3,7 @@ const router = Router();
 
 import * as usersDB from "../helpers/usersDB";
 import * as parkingDB from "../helpers/parkingDB";
+import * as parkingDBCleanup from "../helpers/parkingDB-cleanup";
 
 import * as configFns from "../helpers/configFns";
 
@@ -187,7 +188,7 @@ router.post("/doDeleteUser", function(req, res) {
 
   res.json({
     success: success
-  })
+  });
 
 });
 
@@ -204,7 +205,7 @@ router.get("/cleanup", function(req, res) {
 
   }
 
-  const counts = parkingDB.getDatabaseCleanupCounts();
+  const counts = parkingDBCleanup.getDatabaseCleanupCounts();
 
   res.render("admin-cleanup", {
     headTitle: "Database Cleanup",
@@ -242,43 +243,43 @@ router.post("/doCleanupTable", function(req, res) {
 
     case "parkingTickets":
 
-      success = parkingDB.cleanupParkingTicketsTable(recordDelete_timeMillis);
+      success = parkingDBCleanup.cleanupParkingTicketsTable(recordDelete_timeMillis);
       break;
 
     case "parkingTicketRemarks":
 
-      success = parkingDB.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
+      success = parkingDBCleanup.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
       break;
 
     case "parkingTicketStatusLog":
 
-      success = parkingDB.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
+      success = parkingDBCleanup.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
       break;
 
     case "licencePlateOwners":
 
-      success = parkingDB.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
+      success = parkingDBCleanup.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
       break;
 
     case "parkingOffences":
 
-      success = parkingDB.cleanupParkingOffencesTable();
+      success = parkingDBCleanup.cleanupParkingOffencesTable();
       break;
 
     case "parkingLocations":
 
-      success = parkingDB.cleanupParkingLocationsTable();
+      success = parkingDBCleanup.cleanupParkingLocationsTable();
       break;
 
     case "parkingBylaws":
 
-      success = parkingDB.cleanupParkingBylawsTable();
+      success = parkingDBCleanup.cleanupParkingBylawsTable();
       break;
   }
 
   res.json({
     success: success
-  })
+  });
 
 });
 

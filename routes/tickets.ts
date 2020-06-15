@@ -115,6 +115,7 @@ router.post("/doAcknowledgeLookupError", function(req, res) {
       success: false,
       message: "Unable to update the status on the parking ticket.  It may have been resolved."
     });
+
     return;
   }
 
@@ -167,7 +168,7 @@ router.post("/doReconcileAsMatch", function(req, res) {
 
   }, req.session, false);
 
-  res.json(statusResponse)
+  res.json(statusResponse);
 
 });
 

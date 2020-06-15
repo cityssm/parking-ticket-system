@@ -55,7 +55,7 @@ declare const pts: ptsGlobal;
    * Delete users
    */
 
-  function deleteUserFn(clickEvent : Event) {
+  function deleteUserFn(clickEvent: Event) {
 
     clickEvent.preventDefault();
 
@@ -107,7 +107,7 @@ declare const pts: ptsGlobal;
 
   pts.initializeTabs(updateUserModalEle.getElementsByClassName("tabs")[0].getElementsByTagName("ul")[0]);
 
-  function submitFn_updateUserSetting(formEvent : Event) {
+  function submitFn_updateUserSetting(formEvent: Event) {
 
     formEvent.preventDefault();
 

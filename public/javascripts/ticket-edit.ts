@@ -306,7 +306,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       bylawLookupCloseModalFn();
 
       offenceList = [];
-    }
+    };
 
     const setBylawOffenceFn = function(clickEvent: Event) {
 

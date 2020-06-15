@@ -2,17 +2,15 @@
 /// <reference types="integer" />
 export declare const dbPath = "data/parking.db";
 import type * as pts from "./ptsTypes";
-import { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
-export declare function getRawRowsColumns(sql: string, params: any[]): RawRowsColumnsReturn;
-export declare type getParkingTickets_queryOptions = {
+export interface GetParkingTicketsQueryOptions {
     isResolved?: boolean;
     ticketNumber?: string;
     licencePlateNumber?: string;
     location?: string;
     limit: number;
     offset: number;
-};
-export declare function getParkingTickets(reqSession: Express.Session, queryOptions: getParkingTickets_queryOptions): {
+}
+export declare function getParkingTickets(reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions): {
     count: any;
     tickets: pts.ParkingTicket[];
 };
@@ -75,14 +73,14 @@ export declare function updateParkingTicketStatus(reqBody: pts.ParkingTicketStat
 export declare function deleteParkingTicketStatus(ticketID: number, statusIndex: number, reqSession: Express.Session): {
     success: boolean;
 };
-export declare type getLicencePlates_queryOptions = {
+export interface GetLicencePlatesQueryOptions {
     licencePlateNumber?: string;
     hasOwnerRecord?: boolean;
     hasUnresolvedTickets?: boolean;
     limit: number;
     offset: number;
-};
-export declare function getLicencePlates(queryOptions: getLicencePlates_queryOptions): {
+}
+export declare function getLicencePlates(queryOptions: GetLicencePlatesQueryOptions): {
     count: any;
     licencePlates: any[];
 };
@@ -90,25 +88,25 @@ export declare function getLicencePlateOwner(licencePlateCountry: string, licenc
 export declare function getAllLicencePlateOwners(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner[];
 export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number): any[];
 export declare function getParkingLocations(): pts.ParkingLocation[];
-declare type addUpdateParkingLocation_return = {
+interface AddUpdateParkingLocationReturn {
     success: boolean;
     message?: string;
     locations?: pts.ParkingLocation[];
-};
-export declare function addParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return;
-export declare function updateParkingLocation(reqBody: pts.ParkingLocation): addUpdateParkingLocation_return;
-export declare function deleteParkingLocation(locationKey: string): addUpdateParkingLocation_return;
+}
+export declare function addParkingLocation(reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn;
+export declare function updateParkingLocation(reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn;
+export declare function deleteParkingLocation(locationKey: string): AddUpdateParkingLocationReturn;
 export declare function getParkingBylaws(): pts.ParkingBylaw[];
 export declare function getParkingBylawsWithOffenceStats(): pts.ParkingBylaw[];
-declare type addUpdateParkingBylaw_return = {
+interface AddUpdateParkingBylawReturn {
     success: boolean;
     message?: string;
     bylaws?: pts.ParkingBylaw[];
-};
-export declare function addParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return;
-export declare function updateParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingBylaw_return;
-export declare function deleteParkingBylaw(bylawNumber: string): addUpdateParkingBylaw_return;
-export declare function updateParkingOffencesByBylawNumber(reqBody: any): addUpdateParkingBylaw_return;
+}
+export declare function addParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn;
+export declare function updateParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn;
+export declare function deleteParkingBylaw(bylawNumber: string): AddUpdateParkingBylawReturn;
+export declare function updateParkingOffencesByBylawNumber(reqBody: any): AddUpdateParkingBylawReturn;
 export declare function getParkingOffences(): pts.ParkingOffence[];
 export declare function getParkingOffencesByLocationKey(locationKey: string): pts.ParkingOffence[];
 declare type addUpdateParkingOffence_return = {
@@ -264,21 +262,4 @@ export declare function lockConvictionBatch(batchID: number, reqSession: Express
 };
 export declare function unlockConvictionBatch(batchID: number, reqSession: Express.Session): boolean;
 export declare function markConvictionBatchAsSent(batchID: number, reqSession: Express.Session): boolean;
-export declare function getDatabaseCleanupCounts(): {
-    recordDelete_timeMillis: number;
-    parkingTickets: any;
-    parkingTicketStatusLog: any;
-    parkingTicketRemarks: any;
-    licencePlateOwners: any;
-    parkingLocations: any;
-    parkingBylaws: any;
-    parkingOffences: any;
-};
-export declare function cleanupParkingTicketsTable(recordDelete_timeMillis: number): boolean;
-export declare function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number): boolean;
-export declare function cleanupParkingTicketStatusLog(recordDelete_timeMillis: number): boolean;
-export declare function cleanupLicencePlateOwnersTable(recordDelete_timeMillis: number): boolean;
-export declare function cleanupParkingOffencesTable(): boolean;
-export declare function cleanupParkingLocationsTable(): boolean;
-export declare function cleanupParkingBylawsTable(): boolean;
 export {};
