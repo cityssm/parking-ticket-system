@@ -33,7 +33,6 @@ function processNCIC(index) {
         scheduleRun();
     }
 }
-;
 function scheduleRun() {
     return __awaiter(this, void 0, void 0, function* () {
         let nextScheduleDate = new Date();

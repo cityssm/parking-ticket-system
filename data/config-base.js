@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.baseParkingTicketStatuses = void 0;
 exports.baseParkingTicketStatuses = [
     {
         statusKey: "paid",

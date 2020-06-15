@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
 import * as app from "../app";
-const debug = require("debug")("parking-ticket-system:server");
+
+import * as debug from "debug";
 
 import * as http from "http";
 import * as https from "https";
 import * as fs from "fs";
 
 import * as configFns from "../helpers/configFns";
-import type { Config_HttpsConfig } from "../helpers/ptsTypes";
+import type { ConfigHttpsConfig } from "../helpers/ptsTypes";
 
 function onError(error: Error) {
 
@@ -69,7 +70,7 @@ if (httpPort) {
  * Initialize HTTPS
  */
 
-const httpsConfig = <Config_HttpsConfig>configFns.getProperty("application.https");
+const httpsConfig = <ConfigHttpsConfig>configFns.getProperty("application.https");
 
 if (httpsConfig) {
 

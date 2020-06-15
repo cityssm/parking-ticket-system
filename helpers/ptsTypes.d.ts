@@ -1,10 +1,10 @@
-export declare type Config = {
-    application?: Config_ApplicationConfig;
-    session?: Config_SessionConfig;
-    admin?: Config_AdminDefaults;
-    defaults?: Config_DefaultsConfig;
-    parkingTickets?: Config_ParkingTickets;
-    parkingTicketStatuses?: Config_ParkingTicketStatus[];
+export interface Config {
+    application?: ConfigApplicationConfig;
+    session?: ConfigSessionConfig;
+    admin?: ConfigAdminDefaults;
+    defaults?: ConfigDefaultsConfig;
+    parkingTickets?: ConfigParkingTickets;
+    parkingTicketStatuses?: ConfigParkingTicketStatus[];
     licencePlateCountryAliases?: {
         [countryShortName: string]: string;
     };
@@ -14,52 +14,52 @@ export declare type Config = {
         };
     };
     licencePlateProvinces?: {
-        [countryName: string]: Config_LicencePlateCountry;
+        [countryName: string]: ConfigLicencePlateCountry;
     };
-    genders?: Config_Gender[];
-    parkingOffences?: Config_ParkingOffences;
-    locationClasses?: Config_LocationClass[];
-    mtoExportImport?: Config_MTOExportImport;
-    databaseCleanup: {
+    genders?: ConfigGender[];
+    parkingOffences?: ConfigParkingOffences;
+    locationClasses?: ConfigLocationClass[];
+    mtoExportImport?: ConfigMTOExportImport;
+    databaseCleanup?: {
         windowDays: number;
     };
-};
-declare type Config_ApplicationConfig = {
+}
+interface ConfigApplicationConfig {
     applicationName?: string;
     logoURL?: string;
     httpPort?: number;
-    https?: Config_HttpsConfig;
+    https?: ConfigHttpsConfig;
     feature_mtoExportImport?: boolean;
-    task_nhtsa?: Config_ApplicationTask;
-};
-export declare type Config_ApplicationTask = {
+    task_nhtsa?: ConfigApplicationTask;
+}
+export interface ConfigApplicationTask {
     runTask: boolean;
     executeHour: number;
-};
-export declare type Config_HttpsConfig = {
+}
+export interface ConfigHttpsConfig {
     port: number;
     keyPath: string;
     certPath: string;
     passphrase?: string;
-};
-declare type Config_SessionConfig = {
+}
+interface ConfigSessionConfig {
     cookieName?: string;
     secret?: string;
     maxAgeMillis?: number;
     doKeepAlive?: boolean;
-};
-declare type Config_AdminDefaults = {
+}
+interface ConfigAdminDefaults {
     defaultPassword?: string;
-};
-declare type Config_DefaultsConfig = {
+}
+interface ConfigDefaultsConfig {
     province: string;
     country: string;
-};
-export declare type Config_LocationClass = {
+}
+export interface ConfigLocationClass {
     locationClassKey: string;
     locationClass: string;
-};
-declare type Config_ParkingTickets = {
+}
+interface ConfigParkingTickets {
     ticketNumber: {
         fieldLabel?: string;
         pattern?: RegExp;
@@ -69,8 +69,8 @@ declare type Config_ParkingTickets = {
     licencePlateExpiryDate: {
         includeDay?: boolean;
     };
-};
-export declare type Config_ParkingTicketStatus = {
+}
+export interface ConfigParkingTicketStatus {
     statusKey: string;
     status: string;
     statusField?: {
@@ -81,31 +81,31 @@ export declare type Config_ParkingTicketStatus = {
     };
     isFinalStatus: boolean;
     isUserSettable: boolean;
-};
-export declare type Config_ParkingOffences = {
+}
+export interface ConfigParkingOffences {
     accountNumber: {
         pattern?: RegExp;
     };
-};
-declare type Config_LicencePlateCountry = {
+}
+interface ConfigLicencePlateCountry {
     countryShortName: string;
     provinces: {
-        [province: string]: Config_LicencePlateProvince;
+        [province: string]: ConfigLicencePlateProvince;
     };
-};
-declare type Config_LicencePlateProvince = {
+}
+interface ConfigLicencePlateProvince {
     provinceShortName: string;
     color: string;
     backgroundColor: string;
-};
-declare type Config_Gender = {
+}
+interface ConfigGender {
     genderKey: string;
     gender: string;
-};
-declare type Config_MTOExportImport = {
+}
+interface ConfigMTOExportImport {
     authorizedUser?: string;
-};
-export declare type Record = {
+}
+export interface Record {
     recordType: "ticket" | "remark" | "status" | "owner";
     recordCreate_userName?: string;
     recordCreate_timeMillis?: number;
@@ -116,8 +116,8 @@ export declare type Record = {
     recordDelete_timeMillis?: number;
     recordDelete_dateString?: string;
     canUpdate?: boolean;
-};
-export declare type LicencePlate = {
+}
+export interface LicencePlate {
     licencePlateCountry: string;
     licencePlateProvince: string;
     licencePlateNumber: string;
@@ -126,7 +126,7 @@ export declare type LicencePlate = {
     licencePlateExpiryYear: number | string;
     licencePlateExpiryMonth: number | string;
     licencePlateExpiryDay: number;
-};
+}
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     recordType: "ticket";
     ticketID: number;
@@ -185,17 +185,17 @@ export interface ParkingTicketRemark extends Record {
     remarkTimeString: string;
     remark: string;
 }
-export declare type ParkingLocation = {
+export interface ParkingLocation {
     locationKey: string;
     locationName: string;
     locationClassKey: string;
     isActive: boolean;
-};
-export declare type ParkingBylaw = {
+}
+export interface ParkingBylaw {
     bylawNumber: string;
     bylawDescription: string;
     isActive: boolean;
-};
+}
 export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
     parkingOffence: string;
     offenceAmount: number;
@@ -243,17 +243,17 @@ export interface ParkingTicketConvictionBatch extends Record {
     sentDateString: string;
     batchEntries?: ParkingTicketStatusLog[];
 }
-export declare type User = {
+export interface User {
     userName: string;
     firstName?: string;
     lastName?: string;
     userProperties?: UserProperties;
-};
-export declare type UserProperties = {
+}
+export interface UserProperties {
     isDefaultAdmin: boolean;
     canCreate: boolean;
     canUpdate: boolean;
     isAdmin: boolean;
     isOperator: boolean;
-};
+}
 export {};

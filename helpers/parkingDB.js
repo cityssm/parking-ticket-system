@@ -1103,7 +1103,7 @@ function getLicencePlateLookupBatch(batchID_or_negOne) {
         " from LicencePlateLookupBatches" +
         " where recordDelete_timeMillis is null";
     let batch;
-    if (batchID_or_negOne == -1) {
+    if (batchID_or_negOne === -1) {
         batch = db.prepare(baseBatchSQL +
             " and lockDate is null" +
             " order by batchID desc" +
@@ -1381,7 +1381,6 @@ function createLicencePlateLookupBatch(reqSession) {
     }
 }
 exports.createLicencePlateLookupBatch = createLicencePlateLookupBatch;
-;
 function getOwnershipReconciliationRecords() {
     const addCalculatedFieldsFn = function (record) {
         record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
@@ -1443,7 +1442,6 @@ function getOwnershipReconciliationRecords() {
     return records;
 }
 exports.getOwnershipReconciliationRecords = getOwnershipReconciliationRecords;
-;
 function getUnacknowledgedLicencePlateLookupErrorLog(batchID_or_negOne, logIndex_or_negOne) {
     const addCalculatedFieldsFn = function (record) {
         record.recordDateString = dateTimeFns.dateIntegerToString(record.recordDate);
@@ -1554,7 +1552,7 @@ function getParkingTicketConvictionBatch(batchID_or_negOne) {
         " from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null";
     let batch;
-    if (batchID_or_negOne == -1) {
+    if (batchID_or_negOne === -1) {
         batch = db.prepare(baseBatchSQL +
             " and lockDate is null" +
             " order by batchID desc" +

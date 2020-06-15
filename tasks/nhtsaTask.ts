@@ -33,7 +33,7 @@ function processNCIC(index: number) {
     vehicleNCICs = [];
     scheduleRun();
   }
-};
+}
 
 
 export async function scheduleRun() {
@@ -53,6 +53,5 @@ export async function scheduleRun() {
     processNCIC(0);
 
   }, nextScheduleDate.getTime() - Date.now());
-
 
 }

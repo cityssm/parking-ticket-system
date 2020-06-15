@@ -14,7 +14,7 @@ type MTO_AvailableLicencePlate = {
   issueDateMaxString: string,
   ticketNumbersConcat: string,
   ticketNumbers: string[]
-}
+};
 
 export function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID: number, issueDaysAgo: number) {
 

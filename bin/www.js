@@ -2,7 +2,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const app = require("../app");
-const debug = require("debug")("parking-ticket-system:server");
+const debug = require("debug");
 const http = require("http");
 const https = require("https");
 const fs = require("fs");

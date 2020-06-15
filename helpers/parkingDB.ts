@@ -1323,7 +1323,7 @@ export function addParkingLocation(reqBody: pts.ParkingLocation): addUpdateParki
         " is already associated with the " +
         (locationRecord.isActive ? "" : "inactive ") +
         " record \"" + locationRecord.locationName + "\"."
-    }
+    };
 
   }
 
@@ -1462,7 +1462,7 @@ export function addParkingBylaw(reqBody: pts.ParkingBylaw): addUpdateParkingByla
           "By-law number \"" + reqBody.bylawNumber + "\"" +
           " is already associated with the " +
           " record \"" + bylawRecord.bylawDescription + "\"."
-      }
+      };
 
     }
 
@@ -1781,7 +1781,7 @@ export function getLicencePlateLookupBatch(batchID_or_negOne: number) {
 
   let batch: pts.LicencePlateLookupBatch;
 
-  if (batchID_or_negOne == -1) {
+  if (batchID_or_negOne === -1) {
 
     batch = db.prepare(baseBatchSQL +
       " and lockDate is null" +
@@ -1824,7 +1824,7 @@ type addLicencePlateToLookupBatch_return = {
   success: boolean,
   message?: string,
   batch?: pts.LicencePlateLookupBatch
-}
+};
 export function addLicencePlateToLookupBatch(reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session): addLicencePlateToLookupBatch_return {
 
   const db = sqlite(dbPath);
@@ -1872,7 +1872,8 @@ export function addLicencePlateToLookupBatch(reqBody: pts.LicencePlateLookupBatc
     return {
       success: false,
       message: "Licence plate not added to the batch.  It may be already part of the batch."
-    }
+    };
+
   }
 
 }
@@ -1942,7 +1943,8 @@ export function addAllLicencePlatesToLookupBatch(reqBody: addAllLicencePlatesToL
     return {
       success: false,
       message: "Licence plate not added to the batch.  It may be already part of the batch."
-    }
+    };
+
   }
 
 }
@@ -1996,7 +1998,8 @@ export function removeLicencePlateFromLookupBatch(reqBody: pts.LicencePlateLooku
     return {
       success: false,
       message: "Licence plate not removed from the batch."
-    }
+    };
+
   }
 
 }
@@ -2187,6 +2190,7 @@ export function createLicencePlateLookupBatch(reqSession: Express.Session) {
   db.close();
 
   if (info.changes > 0) {
+
     return {
       success: true,
       batch: {
@@ -2197,7 +2201,8 @@ export function createLicencePlateLookupBatch(reqSession: Express.Session) {
         lockDateString: "",
         batchEntries: []
       }
-    }
+    };
+
   } else {
     return { success: false };
   }
@@ -2205,38 +2210,38 @@ export function createLicencePlateLookupBatch(reqSession: Express.Session) {
 
 export interface ReconciliationRecord extends pts.LicencePlate {
 
-  ticket_ticketID: number,
-  ticket_ticketNumber: string,
-  ticket_issueDate: number,
-  ticket_issueDateString: string,
-  ticket_vehicleMakeModel: string,
+  ticket_ticketID: number;
+  ticket_ticketNumber: string;
+  ticket_issueDate: number;
+  ticket_issueDateString: string;
+  ticket_vehicleMakeModel: string;
 
-  ticket_licencePlateExpiryDate: number,
-  ticket_licencePlateExpiryDateString: string,
+  ticket_licencePlateExpiryDate: number;
+  ticket_licencePlateExpiryDateString: string;
 
-  owner_recordDate: number,
-  owner_recordDateString: string,
+  owner_recordDate: number;
+  owner_recordDateString: string;
 
-  owner_vehicleNCIC: string,
-  owner_vehicleMake: string,
-  owner_vehicleYear: number,
-  owner_vehicleColor: string,
+  owner_vehicleNCIC: string;
+  owner_vehicleMake: string;
+  owner_vehicleYear: number;
+  owner_vehicleColor: string;
 
-  owner_licencePlateExpiryDate: number,
-  owner_licencePlateExpiryDateString: string,
+  owner_licencePlateExpiryDate: number;
+  owner_licencePlateExpiryDateString: string;
 
-  owner_ownerName1: string,
-  owner_ownerName2: string,
-  owner_ownerAddress: string,
-  owner_ownerCity: string,
-  owner_ownerProvince: string,
-  owner_ownerPostalCode: string,
+  owner_ownerName1: string;
+  owner_ownerName2: string;
+  owner_ownerAddress: string;
+  owner_ownerCity: string;
+  owner_ownerProvince: string;
+  owner_ownerPostalCode: string;
 
-  dateDifference: number,
+  dateDifference: number;
 
-  isVehicleMakeMatch: boolean,
-  isLicencePlateExpiryDateMatch: boolean
-};
+  isVehicleMakeMatch: boolean;
+  isLicencePlateExpiryDateMatch: boolean;
+}
 
 export function getOwnershipReconciliationRecords() {
 
@@ -2316,18 +2321,18 @@ export function getOwnershipReconciliationRecords() {
 }
 
 interface LookupErrorLogEntry extends pts.LicencePlate {
-  batchID: number,
-  logIndex: number,
-  recordDate: number,
-  recordDateString: string,
-  errorCode: string,
-  errorMessage: string,
-  ticketID: number,
-  ticketNumber: string,
-  issueDate: number,
-  issueDateString: string,
-  vehicleMakeModel: string
-};
+  batchID: number;
+  logIndex: number;
+  recordDate: number;
+  recordDateString: string;
+  errorCode: string;
+  errorMessage: string;
+  ticketID: number;
+  ticketNumber: string;
+  issueDate: number;
+  issueDateString: string;
+  vehicleMakeModel: string;
+}
 
 export function getUnacknowledgedLicencePlateLookupErrorLog(batchID_or_negOne: number, logIndex_or_negOne: number) {
 
@@ -2436,7 +2441,7 @@ export function createParkingTicketConvictionBatch(reqSession: Express.Session) 
         lockDateString: "",
         batchEntries: []
       }
-    }
+    };
   } else {
     return { success: false };
   }
@@ -2482,7 +2487,7 @@ export function getParkingTicketConvictionBatch(batchID_or_negOne: number) {
 
   let batch: pts.ParkingTicketConvictionBatch;
 
-  if (batchID_or_negOne == -1) {
+  if (batchID_or_negOne === -1) {
 
     batch = db.prepare(baseBatchSQL +
       " and lockDate is null" +
@@ -2633,7 +2638,7 @@ export function addParkingTicketToConvictionBatch(batchID: number, ticketID: num
     // Already part of the batch
     return {
       success: true
-    }
+    };
 
   } else {
 
@@ -2641,7 +2646,7 @@ export function addParkingTicketToConvictionBatch(batchID: number, ticketID: num
     return {
       success: false,
       message: "Parking ticket already included in conviction batch #" + batchStatusCheck.statusField + "."
-    }
+    };
   }
 }
 
@@ -2744,10 +2749,9 @@ export function addAllParkingTicketsToConvictionBatch(batchID: number, ticketIDs
 
       successCount += 1;
 
-    }
-    else if (batchStatusCheck.statusField === batchID.toString()) {
+    } else if (batchStatusCheck.statusField === batchID.toString()) {
 
-      successCount += 1
+      successCount += 1;
 
     }
 
@@ -3066,7 +3070,7 @@ export function getDatabaseCleanupCounts() {
     //licencePlateLookupErrorLog: licencePlateLookupErrorLog
     //parkingTicketConvictionBatches: parkingTicketConvictionBatches,
     //licencePlateLookupBatches: licencePlateLookupBatches,
-  }
+  };
 }
 
 

@@ -1,16 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = {};
-try {
-    exports.config = require("../data/config");
-}
-catch (e) {
-    exports.config = {};
-    console.log("No \"config.js\" found." +
-        " To customize, create your own \"config.js\" in the \"data\" folder." +
-        " See \"config-default.js\" to get started.");
-}
-Object.freeze(exports.config);
+exports.getLicencePlateLocationProperties = exports.getParkingTicketStatus = exports.keepAliveMillis = exports.getProperty = void 0;
+const config = require("../data/config");
 const configFallbackValues = new Map();
 configFallbackValues.set("application.applicationName", "Parking Ticket System");
 configFallbackValues.set("application.logoURL", "/images/noParking.svg");
@@ -50,7 +41,7 @@ configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
 function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");
-    let currentObj = exports.config;
+    let currentObj = config;
     for (let index = 0; index < propertyNameSplit.length; index += 1) {
         currentObj = currentObj[propertyNameSplit[index]];
         if (!currentObj) {

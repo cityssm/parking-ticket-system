@@ -1,117 +1,115 @@
-export type Config = {
-  application?: Config_ApplicationConfig,
-  session?: Config_SessionConfig,
-  admin?: Config_AdminDefaults,
-  defaults?: Config_DefaultsConfig,
-  parkingTickets?: Config_ParkingTickets,
-  parkingTicketStatuses?: Config_ParkingTicketStatus[],
-  licencePlateCountryAliases?: { [countryShortName: string]: string },
-  licencePlateProvinceAliases?: { [countryName: string]: { [provinceShortName: string]: string } },
-  licencePlateProvinces?: { [countryName: string]: Config_LicencePlateCountry },
-  genders?: Config_Gender[],
-  parkingOffences?: Config_ParkingOffences,
-  locationClasses?: Config_LocationClass[],
-  mtoExportImport?: Config_MTOExportImport,
-  databaseCleanup: { windowDays: number }
-};
+export interface Config {
+  application?: ConfigApplicationConfig;
+  session?: ConfigSessionConfig;
+  admin?: ConfigAdminDefaults;
+  defaults?: ConfigDefaultsConfig;
+  parkingTickets?: ConfigParkingTickets;
+  parkingTicketStatuses?: ConfigParkingTicketStatus[];
+  licencePlateCountryAliases?: { [countryShortName: string]: string };
+  licencePlateProvinceAliases?: { [countryName: string]: { [provinceShortName: string]: string } };
+  licencePlateProvinces?: { [countryName: string]: ConfigLicencePlateCountry };
+  genders?: ConfigGender[];
+  parkingOffences?: ConfigParkingOffences;
+  locationClasses?: ConfigLocationClass[];
+  mtoExportImport?: ConfigMTOExportImport;
+  databaseCleanup?: { windowDays: number };
+}
 
 
-type Config_ApplicationConfig = {
-  applicationName?: string,
-  logoURL?: string,
-  httpPort?: number,
-  https?: Config_HttpsConfig,
+interface ConfigApplicationConfig {
+  applicationName?: string;
+  logoURL?: string;
+  httpPort?: number;
+  https?: ConfigHttpsConfig;
 
-  feature_mtoExportImport?: boolean,
+  feature_mtoExportImport?: boolean;
 
-  task_nhtsa?: Config_ApplicationTask
-};
+  task_nhtsa?: ConfigApplicationTask;
+}
 
-export type Config_ApplicationTask = {
-  runTask: boolean,
-  executeHour: number
-};
+export interface ConfigApplicationTask {
+  runTask: boolean;
+  executeHour: number;
+}
 
-export type Config_HttpsConfig = {
-  port: number,
-  keyPath: string,
-  certPath: string,
-  passphrase?: string
-};
+export interface ConfigHttpsConfig {
+  port: number;
+  keyPath: string;
+  certPath: string;
+  passphrase?: string;
+}
 
-type Config_SessionConfig = {
-  cookieName?: string,
-  secret?: string,
-  maxAgeMillis?: number,
-  doKeepAlive?: boolean
-};
+interface ConfigSessionConfig {
+  cookieName?: string;
+  secret?: string;
+  maxAgeMillis?: number;
+  doKeepAlive?: boolean;
+}
 
-type Config_AdminDefaults = {
-  defaultPassword?: string
-};
+interface ConfigAdminDefaults {
+  defaultPassword?: string;
+}
 
-type Config_DefaultsConfig = {
-  province: string,
-  country: string
-};
+interface ConfigDefaultsConfig {
+  province: string;
+  country: string;
+}
 
-export type Config_LocationClass = {
+export interface ConfigLocationClass {
+  locationClassKey: string;
+  locationClass: string;
+}
 
-  locationClassKey: string,
-  locationClass: string,
-
-};
-
-type Config_ParkingTickets = {
+interface ConfigParkingTickets {
   ticketNumber: {
     fieldLabel?: string,
     pattern?: RegExp,
     isUnique?: boolean,
     nextTicketNumberFn?: (currentTicketNumber: string) => string
-  },
+  };
   licencePlateExpiryDate: {
     includeDay?: boolean
-  }
-};
+  };
+}
 
-export type Config_ParkingTicketStatus = {
-  statusKey: string,
-  status: string,
+export interface ConfigParkingTicketStatus {
+  statusKey: string;
+  status: string;
   statusField?: {
     fieldLabel: string
-  },
+  };
   statusField2?: {
     fieldLabel: string
-  },
-  isFinalStatus: boolean,
-  isUserSettable: boolean
-};
+  };
+  isFinalStatus: boolean;
+  isUserSettable: boolean;
+}
 
-export type Config_ParkingOffences = {
+export interface ConfigParkingOffences {
   accountNumber: {
     pattern?: RegExp
   }
-};
+}
 
-type Config_LicencePlateCountry = {
-  countryShortName: string,
-  provinces: { [province: string]: Config_LicencePlateProvince }
-};
+interface ConfigLicencePlateCountry {
+  countryShortName: string;
+  provinces: { [province: string]: ConfigLicencePlateProvince };
+}
 
-type Config_LicencePlateProvince = {
-  provinceShortName: string,
-  color: string,
-  backgroundColor: string
-};
+interface ConfigLicencePlateProvince {
+  provinceShortName: string;
+  color: string;
+  backgroundColor: string;
+}
 
-type Config_Gender = {
-  genderKey: string,
-  gender: string
-};
+interface ConfigGender {
+  genderKey: string;
+  gender: string;
+}
 
-type Config_MTOExportImport = {
-  authorizedUser?: string
-};
+interface ConfigMTOExportImport {
+  authorizedUser?: string;
+}
 
 
 /*
@@ -119,211 +117,210 @@ type Config_MTOExportImport = {
  */
 
 
-export type Record = {
-  recordType: "ticket" | "remark" | "status" | "owner",
+export interface Record {
+  recordType: "ticket" | "remark" | "status" | "owner";
 
-  recordCreate_userName?: string,
-  recordCreate_timeMillis?: number,
+  recordCreate_userName?: string;
+  recordCreate_timeMillis?: number;
 
-  recordUpdate_userName?: string,
-  recordUpdate_timeMillis?: number,
-  recordUpdate_dateString?: string,
+  recordUpdate_userName?: string;
+  recordUpdate_timeMillis?: number;
+  recordUpdate_dateString?: string;
 
-  recordDelete_userName?: string,
-  recordDelete_timeMillis?: number,
-  recordDelete_dateString?: string,
+  recordDelete_userName?: string;
+  recordDelete_timeMillis?: number;
+  recordDelete_dateString?: string;
 
-  canUpdate?: boolean
-};
+  canUpdate?: boolean;
+}
 
-export type LicencePlate = {
+export interface LicencePlate {
 
-  licencePlateCountry: string,
-  licencePlateProvince: string,
-  licencePlateNumber: string,
+  licencePlateCountry: string;
+  licencePlateProvince: string;
+  licencePlateNumber: string;
 
-  licencePlateExpiryDate: number,
-  licencePlateExpiryDateString: string,
-  licencePlateExpiryYear: number | string,
-  licencePlateExpiryMonth: number | string,
-  licencePlateExpiryDay: number
-};
+  licencePlateExpiryDate: number;
+  licencePlateExpiryDateString: string;
+  licencePlateExpiryYear: number | string;
+  licencePlateExpiryMonth: number | string;
+  licencePlateExpiryDay: number;
+}
 
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
 
-  recordType: "ticket",
+  recordType: "ticket";
 
-  ticketID: number,
-  ticketNumber: string,
+  ticketID: number;
+  ticketNumber: string;
 
-  issueDate: number,
-  issueDateString: string,
+  issueDate: number;
+  issueDateString: string;
 
-  issueTime: number,
-  issueTimeString: string
+  issueTime: number;
+  issueTimeString: string;
 
-  issuingOfficer: string,
+  issuingOfficer: string;
 
-  bylawNumber: string,
+  bylawNumber: string;
 
-  locationDescription: string,
-  parkingOffence: string,
-  offenceAmount: number,
-  discountOffenceAmount: number,
-  discountDays: number,
+  locationDescription: string;
+  parkingOffence: string;
+  offenceAmount: number;
+  discountOffenceAmount: number;
+  discountDays: number;
 
-  licencePlateIsMissing: boolean,
-  vehicleMakeModel: string,
-  vehicleVIN: string,
+  licencePlateIsMissing: boolean;
+  vehicleMakeModel: string;
+  vehicleVIN: string;
 
-  resolvedDate: number,
-  resolvedDateString: string,
+  resolvedDate: number;
+  resolvedDateString: string;
 
-  latestStatus_statusKey: string,
-  latestStatus_statusDate: number,
-  latestStatus_statusDateString: string,
+  latestStatus_statusKey: string;
+  latestStatus_statusDate: number;
+  latestStatus_statusDateString: string;
 
-  ownerLookup_statusKey: "ownerLookupPending" | "ownerLookupError" | "ownerLookupMatch"
-  ownerLookup_statusField: string,
+  ownerLookup_statusKey: "ownerLookupPending" | "ownerLookupError" | "ownerLookupMatch";
+  ownerLookup_statusField: string;
 
-  licencePlateOwner: LicencePlateOwner,
-  licencePlateOwner_ownerName1?: string,
+  licencePlateOwner: LicencePlateOwner;
+  licencePlateOwner_ownerName1?: string;
 
-  location: ParkingLocation,
-  statusLog: ParkingTicketStatusLog[],
-  remarks: ParkingTicketRemark[]
-};
+  location: ParkingLocation;
+  statusLog: ParkingTicketStatusLog[];
+  remarks: ParkingTicketRemark[];
+}
 
 export interface ParkingTicketStatusLog extends Record {
 
-  recordType: "status",
+  recordType: "status";
 
-  ticketID: number,
-  statusIndex?: number,
+  ticketID: number;
+  statusIndex?: number;
 
-  statusDate?: number,
-  statusDateString?: string,
+  statusDate?: number;
+  statusDateString?: string;
 
-  statusTime?: number,
-  statusTimeString?: string,
+  statusTime?: number;
+  statusTimeString?: string;
 
-  statusKey?: string,
-  statusField?: string,
-  statusField2?: string,
-  statusNote?: string,
+  statusKey?: string;
+  statusField?: string;
+  statusField2?: string;
+  statusNote?: string;
 
   // from ticket
-  ticketNumber?: string,
-  licencePlateNumber?: string,
-  issueDate?: number,
-  issueDateString?: string
-};
+  ticketNumber?: string;
+  licencePlateNumber?: string;
+  issueDate?: number;
+  issueDateString?: string;
+}
 
 export interface ParkingTicketRemark extends Record {
 
-  recordType: "remark",
+  recordType: "remark";
 
-  ticketID: number,
-  remarkIndex: number,
+  ticketID: number;
+  remarkIndex: number;
 
-  remarkDate: number,
-  remarkDateString: string,
+  remarkDate: number;
+  remarkDateString: string;
 
-  remarkTime: number,
-  remarkTimeString: string,
+  remarkTime: number;
+  remarkTimeString: string;
 
-  remark: string
-};
-
-
-export type ParkingLocation = {
-
-  locationKey: string,
-  locationName: string,
-  locationClassKey: string,
-  isActive: boolean
-
-};
+  remark: string;
+}
 
 
-export type ParkingBylaw = {
+export interface ParkingLocation {
 
-  bylawNumber: string,
-  bylawDescription: string,
-  isActive: boolean
-};
+  locationKey: string;
+  locationName: string;
+  locationClassKey: string;
+  isActive: boolean;
+}
+
+
+export interface ParkingBylaw {
+
+  bylawNumber: string;
+  bylawDescription: string;
+  isActive: boolean;
+}
 
 export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
 
-  parkingOffence: string,
-  offenceAmount: number,
-  discountOffenceAmount: number,
-  discountDays: number,
-  accountNumber: string
-};
+  parkingOffence: string;
+  offenceAmount: number;
+  discountOffenceAmount: number;
+  discountDays: number;
+  accountNumber: string;
+}
 
 
 export interface LicencePlateOwner extends Record, LicencePlate {
 
-  recordType: "owner",
+  recordType: "owner";
 
-  recordDate: number,
-  recordDateString: string,
+  recordDate: number;
+  recordDateString: string;
 
-  vehicleNCIC: string,
-  vehicleMake: string,
+  vehicleNCIC: string;
+  vehicleMake: string;
 
-  ownerName1: string,
-  ownerName2: string,
-  ownerAddress: string,
-  ownerCity: string,
-  ownerProvince: string,
-  ownerPostalCode: string,
-  ownerGenderKey: string,
+  ownerName1: string;
+  ownerName2: string;
+  ownerAddress: string;
+  ownerCity: string;
+  ownerProvince: string;
+  ownerPostalCode: string;
+  ownerGenderKey: string;
 
-  driverLicenceNumber: string
-};
+  driverLicenceNumber: string;
+}
 
 
 export interface LicencePlateLookupBatch extends Record {
 
-  batchID: number,
+  batchID: number;
 
-  batchDate: number,
-  batchDateString: string,
+  batchDate: number;
+  batchDateString: string;
 
-  lockDate: number,
-  lockDateString: string,
+  lockDate: number;
+  lockDateString: string;
 
-  sentDate: number,
-  sentDateString: string,
+  sentDate: number;
+  sentDateString: string;
 
-  receivedDate: number,
-  receivedDateString: string
+  receivedDate: number;
+  receivedDateString: string;
 
-  batchEntries: LicencePlateLookupBatchEntry[]
-};
+  batchEntries: LicencePlateLookupBatchEntry[];
+}
 
 export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {
-  batchID: number
-};
+  batchID: number;
+}
 
 
 export interface ParkingTicketConvictionBatch extends Record {
 
-  batchID: number,
+  batchID: number;
 
-  batchDate: number,
-  batchDateString: string,
+  batchDate: number;
+  batchDateString: string;
 
-  lockDate: number,
-  lockDateString: string,
+  lockDate: number;
+  lockDateString: string;
 
-  sentDate: number,
-  sentDateString: string,
+  sentDate: number;
+  sentDateString: string;
 
-  batchEntries?: ParkingTicketStatusLog[]
-};
+  batchEntries?: ParkingTicketStatusLog[];
+}
 
 
 /*
@@ -331,17 +328,17 @@ export interface ParkingTicketConvictionBatch extends Record {
  */
 
 
-export type User = {
-  userName: string,
-  firstName?: string,
-  lastName?: string,
-  userProperties?: UserProperties
-};
+export interface User {
+  userName: string;
+  firstName?: string;
+  lastName?: string;
+  userProperties?: UserProperties;
+}
 
-export type UserProperties = {
-  isDefaultAdmin: boolean,
-  canCreate: boolean,
-  canUpdate: boolean,
-  isAdmin: boolean,
-  isOperator: boolean
-};
+export interface UserProperties {
+  isDefaultAdmin: boolean;
+  canCreate: boolean;
+  canUpdate: boolean;
+  isAdmin: boolean;
+  isOperator: boolean;
+}

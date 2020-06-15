@@ -1,5 +1,7 @@
 # Parking Ticket System
 
+[![CodeFactor](https://www.codefactor.io/repository/github/cityssm/parking-ticket-system/badge)](https://www.codefactor.io/repository/github/cityssm/parking-ticket-system)
+
 The Parking Ticket System is a web application project by the
 [City of Sault Ste. Marie](https://saultstemarie.ca/)
 to track parking tickets issued in our municipality.

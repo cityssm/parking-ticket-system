@@ -4,23 +4,7 @@ import type * as pts from "../helpers/ptsTypes";
  * LOAD CONFIGURATION
  */
 
-export let config = {};
-
-try {
-
-  config = require("../data/config");
-
-} catch (e) {
-
-  config = {};
-
-  console.log("No \"config.js\" found." +
-    " To customize, create your own \"config.js\" in the \"data\" folder." +
-    " See \"config-default.js\" to get started.");
-
-}
-
-Object.freeze(config);
+import * as config from "../data/config";
 
 
 /*
@@ -112,14 +96,14 @@ export const keepAliveMillis =
     0;
 
 
-let parkingTicketStatusMap = new Map<string, pts.Config_ParkingTicketStatus>();
+let parkingTicketStatusMap = new Map<string, pts.ConfigParkingTicketStatus>();
 let parkingTicketStatusMapIsLoaded = false;
 
 export function getParkingTicketStatus(statusKey: string) {
 
   if (!parkingTicketStatusMapIsLoaded) {
 
-    const parkingTicketStatusList: pts.Config_ParkingTicketStatus[] = getProperty("parkingTicketStatuses");
+    const parkingTicketStatusList: pts.ConfigParkingTicketStatus[] = getProperty("parkingTicketStatuses");
 
     for (let index = 0; index < parkingTicketStatusList.length; index += 1) {
 
