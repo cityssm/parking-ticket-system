@@ -30,7 +30,7 @@ declare const cityssm: cityssmGlobal;
     const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
     buttonEle.setAttribute("disabled", "disabled");
 
-    const recordIndex = parseInt(buttonEle.getAttribute("data-index"));
+    const recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
 
     const plateRecord = availablePlatesList[recordIndex];
 
@@ -74,7 +74,7 @@ declare const cityssm: cityssmGlobal;
     const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
     buttonEle.setAttribute("disabled", "disabled");
 
-    const recordIndex = parseInt(buttonEle.getAttribute("data-index"));
+    const recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
 
     const batchEntry = batchEntriesList[recordIndex];
 
@@ -516,7 +516,7 @@ declare const cityssm: cityssmGlobal;
 
       batchClickEvent.preventDefault();
 
-      batchID = parseInt((<HTMLAnchorElement>batchClickEvent.currentTarget).getAttribute("data-batch-id"));
+      batchID = parseInt((<HTMLAnchorElement>batchClickEvent.currentTarget).getAttribute("data-batch-id"), 10);
 
       selectBatchCloseModalFn();
       fn_refreshBatch();

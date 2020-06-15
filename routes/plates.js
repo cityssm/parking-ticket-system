@@ -114,7 +114,7 @@ router.post("/doClearLookupBatch", function (req, res) {
         });
         return;
     }
-    const batchID = parseInt(req.body.batchID);
+    const batchID = parseInt(req.body.batchID, 10);
     const result = parkingDB.clearLookupBatch(batchID, req.session);
     if (result.success) {
         result.batch = parkingDB.getLicencePlateLookupBatch(batchID);
@@ -131,7 +131,7 @@ router.post("/doLockLookupBatch", function (req, res) {
         });
         return;
     }
-    const batchID = parseInt(req.body.batchID);
+    const batchID = parseInt(req.body.batchID, 10);
     const result = parkingDB.lockLookupBatch(batchID, req.session);
     if (result.success) {
         result.batch = parkingDB.getLicencePlateLookupBatch(batchID);

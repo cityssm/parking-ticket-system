@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        var recordIndex = parseInt(buttonEle.getAttribute("data-index"));
+        var recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
         var plateRecord = availablePlatesList[recordIndex];
         var plateContainerEle = buttonEle.closest(".is-plate-container");
         cityssm.postJSON("/plates/doAddLicencePlateToLookupBatch", {
@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        var recordIndex = parseInt(buttonEle.getAttribute("data-index"));
+        var recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
         var batchEntry = batchEntriesList[recordIndex];
         var entryContainerEle = buttonEle.closest(".is-entry-container");
         cityssm.postJSON("/plates/doRemoveLicencePlateFromLookupBatch", {
@@ -301,7 +301,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         var resultsContainerEle;
         var clickFn_selectBatch = function (batchClickEvent) {
             batchClickEvent.preventDefault();
-            batchID = parseInt(batchClickEvent.currentTarget.getAttribute("data-batch-id"));
+            batchID = parseInt(batchClickEvent.currentTarget.getAttribute("data-batch-id"), 10);
             selectBatchCloseModalFn();
             fn_refreshBatch();
         };

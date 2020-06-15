@@ -33,7 +33,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     buttonEle.setAttribute("disabled", "disabled");
 
-    const index = parseInt(buttonEle.getAttribute("data-index"));
+    const index = parseInt(buttonEle.getAttribute("data-index"), 10);
 
     const ticketID = convictableTickets[index].ticketID;
 
@@ -257,7 +257,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     buttonEle.setAttribute("disabled", "disabled");
 
-    const index = parseInt(buttonEle.getAttribute("data-index"));
+    const index = parseInt(buttonEle.getAttribute("data-index"), 10);
 
     const ticketID = currentBatch.batchEntries[index].ticketID;
 
@@ -393,7 +393,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
           const rightNow = new Date();
 
           currentBatch.sentDateString = cityssm.dateToString(rightNow);
-          currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""));
+          currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""), 10);
 
           renderCurrentBatch();
         });

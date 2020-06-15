@@ -356,7 +356,7 @@ declare const pts: ptsGlobal;
     let matchCount = 0;
 
     const displayLimit = (limitResultsCheckboxEle.checked ?
-      parseInt(limitResultsCheckboxEle.value) :
+      parseInt(limitResultsCheckboxEle.value, 10) :
       offenceMap.size);
 
     offenceMap.forEach(function(offence) {

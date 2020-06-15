@@ -206,7 +206,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         var tbodyEle = document.createElement("tbody");
         var matchCount = 0;
         var displayLimit = (limitResultsCheckboxEle.checked ?
-            parseInt(limitResultsCheckboxEle.value) :
+            parseInt(limitResultsCheckboxEle.value, 10) :
             offenceMap.size);
         offenceMap.forEach(function (offence) {
             if (matchCount >= displayLimit) {

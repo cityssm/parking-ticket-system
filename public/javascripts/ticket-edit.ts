@@ -175,7 +175,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       clickEvent.preventDefault();
 
-      const locationObj = locationList[parseInt((<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-index"))];
+      const locationObj = locationList[parseInt((<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
 
       (<HTMLInputElement>document.getElementById("ticket--locationKey")).value = locationObj.locationKey;
       (<HTMLInputElement>document.getElementById("ticket--locationName")).value = locationObj.locationName;
@@ -312,7 +312,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       clickEvent.preventDefault();
 
-      const offenceObj = offenceList[parseInt((<HTMLInputElement>clickEvent.currentTarget).getAttribute("data-index"))];
+      const offenceObj = offenceList[parseInt((<HTMLInputElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
 
       (<HTMLInputElement>document.getElementById("ticket--bylawNumber")).value = offenceObj.bylawNumber;
 
@@ -581,7 +581,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       let editRemarkCloseModalFn: Function;
 
-      const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"));
+      const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
 
       const remarkObj = remarkList[index];
 
@@ -842,7 +842,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       let editStatusCloseModalFn: Function;
 
-      const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"));
+      const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
 
       const statusObj = statusList[index];
 
@@ -1320,7 +1320,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
             const dateDifference = cityssm.dateStringDifferenceInDays(issueDateString, currentDateString);
 
-            if (dateDifference <= parseInt(discountDays)) {
+            if (dateDifference <= parseInt(discountDays, 10)) {
 
               statusFieldEle.value = (<HTMLInputElement>document.getElementById("ticket--discountOffenceAmount")).value;
 

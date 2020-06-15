@@ -179,7 +179,7 @@ router.post("/doClearLookupBatch", function(req, res) {
 
   }
 
-  const batchID = parseInt(req.body.batchID);
+  const batchID = parseInt(req.body.batchID, 10);
 
   const result = parkingDB.clearLookupBatch(batchID, req.session);
 
@@ -206,7 +206,7 @@ router.post("/doLockLookupBatch", function(req, res) {
 
   }
 
-  const batchID = parseInt(req.body.batchID);
+  const batchID = parseInt(req.body.batchID, 10);
 
   const result = parkingDB.lockLookupBatch(batchID, req.session);
 

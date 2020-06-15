@@ -145,7 +145,7 @@ router.post("/doCleanupTable", function (req, res) {
         return;
     }
     const table = req.body.table;
-    const recordDelete_timeMillis = Math.min(parseInt(req.body.recordDelete_timeMillis), Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
+    const recordDelete_timeMillis = Math.min(parseInt(req.body.recordDelete_timeMillis, 10), Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
     let success = false;
     switch (table) {
         case "parkingTickets":

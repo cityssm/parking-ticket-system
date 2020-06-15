@@ -342,8 +342,8 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
   ticket.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(ticket.licencePlateExpiryDate);
 
   if (ticket.licencePlateExpiryDateString !== "") {
-    ticket.licencePlateExpiryYear = parseInt(ticket.licencePlateExpiryDateString.substring(0, 4));
-    ticket.licencePlateExpiryMonth = parseInt(ticket.licencePlateExpiryDateString.substring(5, 7));
+    ticket.licencePlateExpiryYear = parseInt(ticket.licencePlateExpiryDateString.substring(0, 4), 10);
+    ticket.licencePlateExpiryMonth = parseInt(ticket.licencePlateExpiryDateString.substring(5, 7), 10);
   }
 
   ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
@@ -354,7 +354,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
   if (ticket.ownerLookup_statusKey === "ownerLookupMatch") {
     ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db,
       ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber,
-      parseInt(ticket.ownerLookup_statusField));
+      parseInt(ticket.ownerLookup_statusField, 10));
   }
 
   // Location
@@ -471,8 +471,8 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string) || 0;
-    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string) || 0;
+    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string, 10) || 0;
+    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string, 10) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;
@@ -577,8 +577,8 @@ export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string) || 0;
-    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string) || 0;
+    let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string, 10) || 0;
+    let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string, 10) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;

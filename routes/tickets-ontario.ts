@@ -42,7 +42,7 @@ router.get("/convict/:batchID", function(req, res) {
     return;
   }
 
-  const batchID = parseInt(req.params.batchID);
+  const batchID = parseInt(req.params.batchID, 10);
 
   const output = mtoFns.exportConvictionBatch(batchID, req.session);
 

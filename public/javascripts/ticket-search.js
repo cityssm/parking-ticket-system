@@ -8,8 +8,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     var offsetEle = document.getElementById("filter--offset");
     var searchResultsEle = document.getElementById("container--searchResults");
     function getTickets() {
-        var currentLimit = parseInt(limitEle.value);
-        var currentOffset = parseInt(offsetEle.value);
+        var currentLimit = parseInt(limitEle.value, 10);
+        var currentOffset = parseInt(offsetEle.value, 10);
         cityssm.clearElement(searchResultsEle);
         searchResultsEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
             "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +

@@ -22,7 +22,7 @@ router.get("/convict/:batchID", function (req, res) {
         res.redirect("/tickets/?error=accessDenied");
         return;
     }
-    const batchID = parseInt(req.params.batchID);
+    const batchID = parseInt(req.params.batchID, 10);
     const output = mtoFns.exportConvictionBatch(batchID, req.session);
     res.setHeader("Content-Disposition", "attachment; filename=convictBatch-" + batchID + ".txt");
     res.setHeader("Content-Type", "text/plain");

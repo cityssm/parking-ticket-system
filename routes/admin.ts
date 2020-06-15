@@ -233,7 +233,7 @@ router.post("/doCleanupTable", function(req, res) {
 
   const recordDelete_timeMillis =
     Math.min(
-      parseInt(req.body.recordDelete_timeMillis),
+      parseInt(req.body.recordDelete_timeMillis, 10),
       Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
 
   let success = false;

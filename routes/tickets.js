@@ -94,7 +94,7 @@ router.post("/doReconcileAsMatch", function (req, res) {
     const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
     const statusResponse = parkingDB.createParkingTicketStatus({
         recordType: "status",
-        ticketID: parseInt(req.body.ticketID),
+        ticketID: parseInt(req.body.ticketID, 10),
         statusKey: "ownerLookupMatch",
         statusField: ownerRecord.recordDate.toString(),
         statusNote: ownerAddress
@@ -121,7 +121,7 @@ router.post("/doReconcileAsError", function (req, res) {
     }
     const statusResponse = parkingDB.createParkingTicketStatus({
         recordType: "status",
-        ticketID: parseInt(req.body.ticketID),
+        ticketID: parseInt(req.body.ticketID, 10),
         statusKey: "ownerLookupError",
         statusField: ownerRecord.vehicleNCIC,
         statusNote: ""
@@ -441,7 +441,7 @@ router.post("/doDeleteStatus", function (req, res) {
     res.json(result);
 });
 router.get("/:ticketID", function (req, res) {
-    const ticketID = parseInt(req.params.ticketID);
+    const ticketID = parseInt(req.params.ticketID, 10);
     const ticket = parkingDB.getParkingTicket(ticketID, req.session);
     if (!ticket) {
         res.redirect("/tickets/?error=ticketNotFound");
@@ -467,7 +467,7 @@ router.get("/byTicketNumber/:ticketNumber", function (req, res) {
     }
 });
 router.get("/:ticketID/edit", function (req, res) {
-    const ticketID = parseInt(req.params.ticketID);
+    const ticketID = parseInt(req.params.ticketID, 10);
     if (!req.session.user.userProperties.canCreate) {
         res.redirect("/tickets/" + ticketID);
         return;

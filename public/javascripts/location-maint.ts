@@ -22,7 +22,7 @@ declare const pts: ptsGlobal;
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"));
+    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
     const location = locationList[listIndex];
 
     let editLocationCloseModalFn: Function;

@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     delete exports.bylaws;
     function openUpdateOffencesModal(clickEvent) {
         clickEvent.preventDefault();
-        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         var bylaw = bylawList[listIndex];
         var updateOffencesCloseModalFn;
         var updateFn = function (formEvent) {
@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function openEditBylawModal(clickEvent) {
         clickEvent.preventDefault();
-        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         var bylaw = bylawList[listIndex];
         var editBylawCloseModalFn;
         var deleteFn = function () {

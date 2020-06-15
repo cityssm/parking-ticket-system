@@ -15,7 +15,7 @@ declare const cityssm: cityssmGlobal;
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"));
+    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
     let updateOffencesCloseModalFn: Function;
@@ -62,7 +62,7 @@ declare const cityssm: cityssmGlobal;
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"));
+    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
     let editBylawCloseModalFn: Function;

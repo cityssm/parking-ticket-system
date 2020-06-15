@@ -81,7 +81,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         };
         var setLocationFn = function (clickEvent) {
             clickEvent.preventDefault();
-            var locationObj = locationList[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
+            var locationObj = locationList[parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10)];
             document.getElementById("ticket--locationKey").value = locationObj.locationKey;
             document.getElementById("ticket--locationName").value = locationObj.locationName;
             locationLookupCloseModalFn();
@@ -163,7 +163,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         };
         var setBylawOffenceFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
-            var offenceObj = offenceList_1[parseInt(clickEvent.currentTarget.getAttribute("data-index"))];
+            var offenceObj = offenceList_1[parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10)];
             document.getElementById("ticket--bylawNumber").value = offenceObj.bylawNumber;
             var offenceAmountEle = document.getElementById("ticket--offenceAmount");
             offenceAmountEle.classList.add("is-readonly");
@@ -318,7 +318,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         var openEditRemarkModalFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
             var editRemarkCloseModalFn;
-            var index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+            var index = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
             var remarkObj = remarkList_1[index];
             var submitFn = function (formEvent) {
                 formEvent.preventDefault();
@@ -469,7 +469,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         var openEditStatusModalFn_1 = function (clickEvent) {
             clickEvent.preventDefault();
             var editStatusCloseModalFn;
-            var index = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+            var index = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
             var statusObj = statusList_1[index];
             var submitFn = function (formEvent) {
                 formEvent.preventDefault();
@@ -762,7 +762,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     else {
                         var currentDateString = cityssm.dateToString(new Date());
                         var dateDifference = cityssm.dateStringDifferenceInDays(issueDateString, currentDateString);
-                        if (dateDifference <= parseInt(discountDays)) {
+                        if (dateDifference <= parseInt(discountDays, 10)) {
                             statusFieldEle.value = document.getElementById("ticket--discountOffenceAmount").value;
                         }
                         else {

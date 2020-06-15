@@ -20,8 +20,8 @@ declare const pts: ptsGlobal;
 
   function getTickets() {
 
-    const currentLimit = parseInt(limitEle.value);
-    const currentOffset = parseInt(offsetEle.value);
+    const currentLimit = parseInt(limitEle.value, 10);
+    const currentOffset = parseInt(offsetEle.value, 10);
 
     cityssm.clearElement(searchResultsEle);
 

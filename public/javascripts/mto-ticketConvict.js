@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        var index = parseInt(buttonEle.getAttribute("data-index"));
+        var index = parseInt(buttonEle.getAttribute("data-index"), 10);
         var ticketID = convictableTickets[index].ticketID;
         cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
             batchID: currentBatch.batchID,
@@ -155,7 +155,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         var buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
-        var index = parseInt(buttonEle.getAttribute("data-index"));
+        var index = parseInt(buttonEle.getAttribute("data-index"), 10);
         var ticketID = currentBatch.batchEntries[index].ticketID;
         cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
             batchID: currentBatch.batchID,
@@ -238,7 +238,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 downloadFn();
                 var rightNow = new Date();
                 currentBatch.sentDateString = cityssm.dateToString(rightNow);
-                currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""));
+                currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""), 10);
                 renderCurrentBatch();
             });
         }

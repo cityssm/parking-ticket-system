@@ -42,8 +42,8 @@ router.post("/doGetPlatesAvailableForMTOLookup", function(req, res) {
 
   }
 
-  const batchID = parseInt(req.body.batchID);
-  const issueDaysAgo = parseInt(req.body.issueDaysAgo);
+  const batchID = parseInt(req.body.batchID, 10);
+  const issueDaysAgo = parseInt(req.body.issueDaysAgo, 10);
 
   const availablePlates = parkingDB_ontario.getLicencePlatesAvailableForMTOLookupBatch(batchID, issueDaysAgo);
   res.json(availablePlates);
@@ -57,7 +57,7 @@ router.get("/mtoExport/:batchID", function(req, res) {
     return;
   }
 
-  const batchID = parseInt(req.params.batchID);
+  const batchID = parseInt(req.params.batchID, 10);
 
   const output = mtoFns.exportLicencePlateBatch(batchID, req.session);
 

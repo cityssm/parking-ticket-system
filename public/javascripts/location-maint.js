@@ -10,7 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     delete exports.locations;
     function openEditLocationModal(clickEvent) {
         clickEvent.preventDefault();
-        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"));
+        var listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         var location = locationList[listIndex];
         var editLocationCloseModalFn;
         var deleteFn = function () {

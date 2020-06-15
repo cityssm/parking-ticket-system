@@ -42,12 +42,12 @@ function parsePKRA(rowData) {
         if (rawSentDate === "") {
             return false;
         }
-        record.sentDate = sixDigitDateNumberToEightDigit(parseInt(rawSentDate));
+        record.sentDate = sixDigitDateNumberToEightDigit(parseInt(rawSentDate, 10));
         const rawRecordDate = rowData.substring(29, 35).trim();
         if (rawRecordDate === "") {
             return false;
         }
-        record.recordDate = sixDigitDateNumberToEightDigit(parseInt(rawRecordDate));
+        record.recordDate = sixDigitDateNumberToEightDigit(parseInt(rawRecordDate, 10));
         return record;
     }
     catch (e) {
@@ -79,7 +79,7 @@ function parsePKRD(rowData) {
             licencePlateExpiryDate: 0
         };
         record.licencePlateNumber = rowData.substring(4, 14).trim();
-        record.issueDate = sixDigitDateNumberToEightDigit(parseInt(rowData.substring(14, 20)));
+        record.issueDate = sixDigitDateNumberToEightDigit(parseInt(rowData.substring(14, 20), 10));
         record.ticketNumber = rowData.substring(20, 28).trim();
         record.driverLicenceNumber = rowData.substring(32, 47).trim();
         record.ownerGenderKey = rowData.substring(53, 54);
@@ -100,12 +100,12 @@ function parsePKRD(rowData) {
         }
         record.ownerPostalCode = rowData.substring(144, 150).trim();
         record.vehicleNCIC = rowData.substring(150, 154).trim();
-        record.vehicleYear = twoDigitYearToFourDigit(parseInt(rowData.substring(154, 156)));
+        record.vehicleYear = twoDigitYearToFourDigit(parseInt(rowData.substring(154, 156), 10));
         record.vehicleColor = rowData.substring(166, 169).trim();
         record.errorCode = rowData.substring(169, 175).trim();
         record.errorMessage = rowData.substring(175, 204).trim();
-        const expiryYear = twoDigitYearToFourDigit(parseInt(rowData.substring(204, 206)));
-        const expiryDate = new Date(expiryYear, (parseInt(rowData.substring(206, 208)) - 1) + 1, 1);
+        const expiryYear = twoDigitYearToFourDigit(parseInt(rowData.substring(204, 206), 10));
+        const expiryDate = new Date(expiryYear, (parseInt(rowData.substring(206, 208), 10) - 1) + 1, 1);
         expiryDate.setDate(expiryDate.getDate() - 1);
         record.licencePlateExpiryDate = dateTimeFns.dateToInteger(expiryDate);
         if (record.errorCode !== "") {

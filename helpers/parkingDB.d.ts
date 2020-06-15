@@ -161,8 +161,8 @@ export declare function createLicencePlateLookupBatch(reqSession: Express.Sessio
     success: boolean;
     batch: {
         batchID: import("integer").IntLike;
-        batchDate: any;
-        batchDateString: any;
+        batchDate: number;
+        batchDateString: string;
         lockDate: any;
         lockDateString: string;
         batchEntries: any[];
@@ -217,8 +217,8 @@ export declare function createParkingTicketConvictionBatch(reqSession: Express.S
     success: boolean;
     batch: {
         batchID: import("integer").IntLike;
-        batchDate: any;
-        batchDateString: any;
+        batchDate: number;
+        batchDateString: string;
         lockDate: any;
         lockDateString: string;
         batchEntries: any[];
@@ -259,8 +259,8 @@ export declare function clearConvictionBatch(batchID: number, reqSession: Expres
 };
 export declare function lockConvictionBatch(batchID: number, reqSession: Express.Session): {
     success: boolean;
-    lockDate: any;
-    lockDateString: any;
+    lockDate: number;
+    lockDateString: string;
 };
 export declare function unlockConvictionBatch(batchID: number, reqSession: Express.Session): boolean;
 export declare function markConvictionBatchAsSent(batchID: number, reqSession: Express.Session): boolean;
