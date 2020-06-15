@@ -6,6 +6,7 @@ import * as ownerFns from "../helpers/ownerFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as parkingDB from "../helpers/parkingDB";
 import * as parkingDBLookup from "../helpers/parkingDB-lookup";
+import * as parkingDBConvict from "../helpers/parkingDB-convict";
 
 import type * as pts from "../helpers/ptsTypes";
 
@@ -289,7 +290,7 @@ router.post("/doGetRecentConvictionBatches", function(req, res) {
 
   }
 
-  const batches = parkingDB.getLastTenParkingTicketConvictionBatches();
+  const batches = parkingDBConvict.getLastTenParkingTicketConvictionBatches();
 
   return res.json(batches);
 
@@ -311,7 +312,7 @@ router.post("/doGetConvictionBatch", function(req, res) {
 
   }
 
-  const batch = parkingDB.getParkingTicketConvictionBatch(req.body.batchID);
+  const batch = parkingDBConvict.getParkingTicketConvictionBatch(req.body.batchID);
 
   return res.json(batch);
 
@@ -333,7 +334,7 @@ router.post("/doCreateConvictionBatch", function(req, res) {
 
   }
 
-  const batchResult = parkingDB.createParkingTicketConvictionBatch(req.session);
+  const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(req.session);
 
   return res.json(batchResult);
 
@@ -362,10 +363,10 @@ router.post("/doAddTicketToConvictionBatch", function(req, res) {
     success: boolean,
     message?: string,
     batch?: pts.ParkingTicketConvictionBatch
-  } = parkingDB.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
+  } = parkingDBConvict.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
 
   if (result.success) {
-    result.batch = parkingDB.getParkingTicketConvictionBatch(batchID);
+    result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
   }
 
   return res.json(result);
@@ -390,7 +391,7 @@ router.post("/doLockConvictionBatch", function(req, res) {
 
   const batchID = req.body.batchID;
 
-  const result = parkingDB.lockConvictionBatch(batchID, req.session);
+  const result = parkingDBConvict.lockConvictionBatch(batchID, req.session);
 
   return res.json(result);
 
@@ -414,7 +415,7 @@ router.post("/doUnlockConvictionBatch", function(req, res) {
 
   const batchID = req.body.batchID;
 
-  const success = parkingDB.unlockConvictionBatch(batchID, req.session);
+  const success = parkingDBConvict.unlockConvictionBatch(batchID, req.session);
 
   return res.json({
     success: success

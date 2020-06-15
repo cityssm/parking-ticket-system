@@ -6,6 +6,7 @@ const ownerFns = require("../helpers/ownerFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB = require("../helpers/parkingDB");
 const parkingDBLookup = require("../helpers/parkingDB-lookup");
+const parkingDBConvict = require("../helpers/parkingDB-convict");
 router.get("/", function (_req, res) {
     res.render("ticket-search", {
         headTitle: "Parking Tickets"
@@ -176,7 +177,7 @@ router.post("/doGetRecentConvictionBatches", function (req, res) {
         });
         return;
     }
-    const batches = parkingDB.getLastTenParkingTicketConvictionBatches();
+    const batches = parkingDBConvict.getLastTenParkingTicketConvictionBatches();
     return res.json(batches);
 });
 router.post("/doGetConvictionBatch", function (req, res) {
@@ -189,7 +190,7 @@ router.post("/doGetConvictionBatch", function (req, res) {
         });
         return;
     }
-    const batch = parkingDB.getParkingTicketConvictionBatch(req.body.batchID);
+    const batch = parkingDBConvict.getParkingTicketConvictionBatch(req.body.batchID);
     return res.json(batch);
 });
 router.post("/doCreateConvictionBatch", function (req, res) {
@@ -202,7 +203,7 @@ router.post("/doCreateConvictionBatch", function (req, res) {
         });
         return;
     }
-    const batchResult = parkingDB.createParkingTicketConvictionBatch(req.session);
+    const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(req.session);
     return res.json(batchResult);
 });
 router.post("/doAddTicketToConvictionBatch", function (req, res) {
@@ -217,9 +218,9 @@ router.post("/doAddTicketToConvictionBatch", function (req, res) {
     }
     const batchID = req.body.batchID;
     const ticketID = req.body.ticketID;
-    const result = parkingDB.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
+    const result = parkingDBConvict.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
     if (result.success) {
-        result.batch = parkingDB.getParkingTicketConvictionBatch(batchID);
+        result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
     }
     return res.json(result);
 });
@@ -234,7 +235,7 @@ router.post("/doLockConvictionBatch", function (req, res) {
         return;
     }
     const batchID = req.body.batchID;
-    const result = parkingDB.lockConvictionBatch(batchID, req.session);
+    const result = parkingDBConvict.lockConvictionBatch(batchID, req.session);
     return res.json(result);
 });
 router.post("/doUnlockConvictionBatch", function (req, res) {
@@ -248,7 +249,7 @@ router.post("/doUnlockConvictionBatch", function (req, res) {
         return;
     }
     const batchID = req.body.batchID;
-    const success = parkingDB.unlockConvictionBatch(batchID, req.session);
+    const success = parkingDBConvict.unlockConvictionBatch(batchID, req.session);
     return res.json({
         success: success
     });

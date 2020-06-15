@@ -1,8 +1,8 @@
 import { Router } from "express";
 const router = Router();
 
-import * as parkingDB from "../helpers/parkingDB";
-import * as ontarioParkingDB from "../helpers/parkingDB-ontario";
+import * as parkingDBOntario from "../helpers/parkingDB-ontario";
+import * as parkingDBConvict from "../helpers/parkingDB-convict";
 
 import * as mtoFns from "../helpers/mtoFns";
 
@@ -21,9 +21,9 @@ router.get("/convict", function(req, res) {
 
   }
 
-  const tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
+  const tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
 
-  const batch = parkingDB.getParkingTicketConvictionBatch(-1);
+  const batch = parkingDBConvict.getParkingTicketConvictionBatch(-1);
 
   res.render("mto-ticketConvict", {
     headTitle: "Convict Parking Tickets",
@@ -76,11 +76,11 @@ router.post("/doAddAllTicketsToConvictionBatch", function(req, res) {
     message?: string,
     batch?: pts.ParkingTicketConvictionBatch,
     tickets?: pts.ParkingTicket[]
-  } = parkingDB.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
+  } = parkingDBConvict.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
 
   if (result.successCount > 0) {
-    result.batch = parkingDB.getParkingTicketConvictionBatch(batchID);
-    result.tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
+    result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
+    result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
   }
 
   return res.json(result);
@@ -110,11 +110,11 @@ router.post("/doClearConvictionBatch", function(req, res) {
     message?: string,
     batch?: pts.ParkingTicketConvictionBatch,
     tickets?: pts.ParkingTicket[]
-  } = parkingDB.clearConvictionBatch(batchID, req.session);
+  } = parkingDBConvict.clearConvictionBatch(batchID, req.session);
 
   if (result.success) {
-    result.batch = parkingDB.getParkingTicketConvictionBatch(batchID);
-    result.tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
+    result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
+    result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
   }
 
   return res.json(result);
@@ -144,10 +144,10 @@ router.post("/doRemoveTicketFromConvictionBatch", function(req, res) {
     success: boolean,
     message?: string,
     tickets?: pts.ParkingTicket[]
-  } = parkingDB.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
+  } = parkingDBConvict.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
 
   if (result.success) {
-    result.tickets = ontarioParkingDB.getParkingTicketsAvailableForMTOConvictionBatch();
+    result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
   }
 
   return res.json(result);

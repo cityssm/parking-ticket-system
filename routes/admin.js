@@ -2,8 +2,8 @@
 const express_1 = require("express");
 const router = express_1.Router();
 const usersDB = require("../helpers/usersDB");
-const parkingDB = require("../helpers/parkingDB");
 const parkingDBCleanup = require("../helpers/parkingDB-cleanup");
+const parkingDBRelated = require("../helpers/parkingDB-related");
 const configFns = require("../helpers/configFns");
 router.get("/userManagement", function (req, res) {
     if (!req.session.user.userProperties.isAdmin) {
@@ -176,9 +176,9 @@ router.post("/doCleanupTable", function (req, res) {
     });
 });
 router.get("/offences", function (_req, res) {
-    const locations = parkingDB.getParkingLocations();
-    const bylaws = parkingDB.getParkingBylaws();
-    const offences = parkingDB.getParkingOffences();
+    const locations = parkingDBRelated.getParkingLocations();
+    const bylaws = parkingDBRelated.getParkingBylaws();
+    const offences = parkingDBRelated.getParkingOffences();
     res.render("offence-maint", {
         headTitle: "Parking Offences",
         locations: locations,
@@ -187,86 +187,86 @@ router.get("/offences", function (_req, res) {
     });
 });
 router.post("/doAddOffence", function (req, res) {
-    const results = parkingDB.addParkingOffence(req.body);
+    const results = parkingDBRelated.addParkingOffence(req.body);
     if (results.success && req.body.returnOffences) {
-        results.offences = parkingDB.getParkingOffences();
+        results.offences = parkingDBRelated.getParkingOffences();
     }
     res.json(results);
 });
 router.post("/doUpdateOffence", function (req, res) {
-    const results = parkingDB.updateParkingOffence(req.body);
+    const results = parkingDBRelated.updateParkingOffence(req.body);
     if (results.success) {
-        results.offences = parkingDB.getParkingOffences();
+        results.offences = parkingDBRelated.getParkingOffences();
     }
     res.json(results);
 });
 router.post("/doDeleteOffence", function (req, res) {
-    const results = parkingDB.deleteParkingOffence(req.body.bylawNumber, req.body.locationKey);
+    const results = parkingDBRelated.deleteParkingOffence(req.body.bylawNumber, req.body.locationKey);
     if (results.success) {
-        results.offences = parkingDB.getParkingOffences();
+        results.offences = parkingDBRelated.getParkingOffences();
     }
     res.json(results);
 });
 router.get("/locations", function (_req, res) {
-    const locations = parkingDB.getParkingLocations();
+    const locations = parkingDBRelated.getParkingLocations();
     res.render("location-maint", {
         headTitle: "Parking Location Maintenance",
         locations: locations
     });
 });
 router.post("/doAddLocation", function (req, res) {
-    const results = parkingDB.addParkingLocation(req.body);
+    const results = parkingDBRelated.addParkingLocation(req.body);
     if (results.success) {
-        results.locations = parkingDB.getParkingLocations();
+        results.locations = parkingDBRelated.getParkingLocations();
     }
     res.json(results);
 });
 router.post("/doUpdateLocation", function (req, res) {
-    const results = parkingDB.updateParkingLocation(req.body);
+    const results = parkingDBRelated.updateParkingLocation(req.body);
     if (results.success) {
-        results.locations = parkingDB.getParkingLocations();
+        results.locations = parkingDBRelated.getParkingLocations();
     }
     res.json(results);
 });
 router.post("/doDeleteLocation", function (req, res) {
-    const results = parkingDB.deleteParkingLocation(req.body.locationKey);
+    const results = parkingDBRelated.deleteParkingLocation(req.body.locationKey);
     if (results.success) {
-        results.locations = parkingDB.getParkingLocations();
+        results.locations = parkingDBRelated.getParkingLocations();
     }
     res.json(results);
 });
 router.get("/bylaws", function (_req, res) {
-    const bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+    const bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
     res.render("bylaw-maint", {
         headTitle: "By-Law Maintenance",
         bylaws: bylaws
     });
 });
 router.post("/doAddBylaw", function (req, res) {
-    const results = parkingDB.addParkingBylaw(req.body);
+    const results = parkingDBRelated.addParkingBylaw(req.body);
     if (results.success) {
-        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+        results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
     }
     res.json(results);
 });
 router.post("/doUpdateBylaw", function (req, res) {
-    const results = parkingDB.updateParkingBylaw(req.body);
+    const results = parkingDBRelated.updateParkingBylaw(req.body);
     if (results.success) {
-        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+        results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
     }
     res.json(results);
 });
 router.post("/doUpdateOffencesByBylaw", function (req, res) {
-    const results = parkingDB.updateParkingOffencesByBylawNumber(req.body);
+    const results = parkingDBRelated.updateParkingOffencesByBylawNumber(req.body);
     if (results.success) {
-        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+        results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
     }
     res.json(results);
 });
 router.post("/doDeleteBylaw", function (req, res) {
-    const results = parkingDB.deleteParkingBylaw(req.body.bylawNumber);
+    const results = parkingDBRelated.deleteParkingBylaw(req.body.bylawNumber);
     if (results.success) {
-        results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+        results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
     }
     res.json(results);
 });

@@ -2,8 +2,8 @@ import { Router } from "express";
 const router = Router();
 
 import * as usersDB from "../helpers/usersDB";
-import * as parkingDB from "../helpers/parkingDB";
 import * as parkingDBCleanup from "../helpers/parkingDB-cleanup";
+import * as parkingDBRelated from "../helpers/parkingDB-related";
 
 import * as configFns from "../helpers/configFns";
 
@@ -289,9 +289,9 @@ router.post("/doCleanupTable", function(req, res) {
 
 router.get("/offences", function(_req, res) {
 
-  const locations = parkingDB.getParkingLocations();
-  const bylaws = parkingDB.getParkingBylaws();
-  const offences = parkingDB.getParkingOffences();
+  const locations = parkingDBRelated.getParkingLocations();
+  const bylaws = parkingDBRelated.getParkingBylaws();
+  const offences = parkingDBRelated.getParkingOffences();
 
   res.render("offence-maint", {
     headTitle: "Parking Offences",
@@ -304,11 +304,11 @@ router.get("/offences", function(_req, res) {
 
 router.post("/doAddOffence", function(req, res) {
 
-  const results = parkingDB.addParkingOffence(req.body);
+  const results = parkingDBRelated.addParkingOffence(req.body);
 
   if (results.success && req.body.returnOffences) {
 
-    results.offences = parkingDB.getParkingOffences();
+    results.offences = parkingDBRelated.getParkingOffences();
 
   }
 
@@ -318,11 +318,11 @@ router.post("/doAddOffence", function(req, res) {
 
 router.post("/doUpdateOffence", function(req, res) {
 
-  const results = parkingDB.updateParkingOffence(req.body);
+  const results = parkingDBRelated.updateParkingOffence(req.body);
 
   if (results.success) {
 
-    results.offences = parkingDB.getParkingOffences();
+    results.offences = parkingDBRelated.getParkingOffences();
 
   }
 
@@ -332,11 +332,11 @@ router.post("/doUpdateOffence", function(req, res) {
 
 router.post("/doDeleteOffence", function(req, res) {
 
-  const results = parkingDB.deleteParkingOffence(req.body.bylawNumber, req.body.locationKey);
+  const results = parkingDBRelated.deleteParkingOffence(req.body.bylawNumber, req.body.locationKey);
 
   if (results.success) {
 
-    results.offences = parkingDB.getParkingOffences();
+    results.offences = parkingDBRelated.getParkingOffences();
 
   }
 
@@ -350,7 +350,7 @@ router.post("/doDeleteOffence", function(req, res) {
 
 router.get("/locations", function(_req, res) {
 
-  const locations = parkingDB.getParkingLocations();
+  const locations = parkingDBRelated.getParkingLocations();
 
   res.render("location-maint", {
     headTitle: "Parking Location Maintenance",
@@ -361,11 +361,11 @@ router.get("/locations", function(_req, res) {
 
 router.post("/doAddLocation", function(req, res) {
 
-  const results = parkingDB.addParkingLocation(req.body);
+  const results = parkingDBRelated.addParkingLocation(req.body);
 
   if (results.success) {
 
-    results.locations = parkingDB.getParkingLocations();
+    results.locations = parkingDBRelated.getParkingLocations();
 
   }
 
@@ -375,11 +375,11 @@ router.post("/doAddLocation", function(req, res) {
 
 router.post("/doUpdateLocation", function(req, res) {
 
-  const results = parkingDB.updateParkingLocation(req.body);
+  const results = parkingDBRelated.updateParkingLocation(req.body);
 
   if (results.success) {
 
-    results.locations = parkingDB.getParkingLocations();
+    results.locations = parkingDBRelated.getParkingLocations();
 
   }
 
@@ -389,11 +389,11 @@ router.post("/doUpdateLocation", function(req, res) {
 
 router.post("/doDeleteLocation", function(req, res) {
 
-  const results = parkingDB.deleteParkingLocation(req.body.locationKey);
+  const results = parkingDBRelated.deleteParkingLocation(req.body.locationKey);
 
   if (results.success) {
 
-    results.locations = parkingDB.getParkingLocations();
+    results.locations = parkingDBRelated.getParkingLocations();
 
   }
 
@@ -407,7 +407,7 @@ router.post("/doDeleteLocation", function(req, res) {
 
 router.get("/bylaws", function(_req, res) {
 
-  const bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+  const bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
 
   res.render("bylaw-maint", {
     headTitle: "By-Law Maintenance",
@@ -418,11 +418,11 @@ router.get("/bylaws", function(_req, res) {
 
 router.post("/doAddBylaw", function(req, res) {
 
-  const results = parkingDB.addParkingBylaw(req.body);
+  const results = parkingDBRelated.addParkingBylaw(req.body);
 
   if (results.success) {
 
-    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+    results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
 
   }
 
@@ -432,11 +432,11 @@ router.post("/doAddBylaw", function(req, res) {
 
 router.post("/doUpdateBylaw", function(req, res) {
 
-  const results = parkingDB.updateParkingBylaw(req.body);
+  const results = parkingDBRelated.updateParkingBylaw(req.body);
 
   if (results.success) {
 
-    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+    results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
 
   }
 
@@ -446,11 +446,11 @@ router.post("/doUpdateBylaw", function(req, res) {
 
 router.post("/doUpdateOffencesByBylaw", function(req, res) {
 
-  const results = parkingDB.updateParkingOffencesByBylawNumber(req.body);
+  const results = parkingDBRelated.updateParkingOffencesByBylawNumber(req.body);
 
   if (results.success) {
 
-    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+    results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
 
   }
 
@@ -460,11 +460,11 @@ router.post("/doUpdateOffencesByBylaw", function(req, res) {
 
 router.post("/doDeleteBylaw", function(req, res) {
 
-  const results = parkingDB.deleteParkingBylaw(req.body.bylawNumber);
+  const results = parkingDBRelated.deleteParkingBylaw(req.body.bylawNumber);
 
   if (results.success) {
 
-    results.bylaws = parkingDB.getParkingBylawsWithOffenceStats();
+    results.bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
 
   }
 
