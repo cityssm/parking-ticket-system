@@ -135,29 +135,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>");
             return;
         }
-        var firstStatusObj = statusList[0];
-        var firstStatusDefinitionObj = pts.getTicketStatus(firstStatusObj.statusKey);
-        if (firstStatusDefinitionObj && firstStatusDefinitionObj.isFinalStatus) {
-            var finalizePanelBlockEle = document.createElement("div");
-            finalizePanelBlockEle.className = "panel-block is-block";
-            finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
-                "<div class=\"message-body\">" +
-                "<div class=\"columns\">" +
-                "<div class=\"column\">" +
-                "<strong>This ticket is able to be marked as resolved.</strong>" +
-                "</div>" +
-                "<div class=\"column is-narrow has-text-right align-self-flex-end\">" +
-                "<button class=\"button is-info\" type=\"button\">" +
-                "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
-                "<span>Resolve Ticket</span>" +
-                "</button>" +
-                "</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>";
-            finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn);
-            statusPanelEle.appendChild(finalizePanelBlockEle);
-        }
         for (var index = 0; index < statusList.length; index += 1) {
             var statusObj = statusList[index];
             var statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
@@ -193,28 +170,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             "</p>") +
                     "<p class=\"has-newline-chars is-size-7\">" + statusObj.statusNote + "</p>" +
                     "</div>") +
-                (statusObj.canUpdate && index === 0 ?
-                    "<div class=\"column is-narrow\">" +
-                        "<div class=\"buttons is-right has-addons\">" +
-                        "<button class=\"button is-small is-edit-status-button\" data-tooltip=\"Edit Status\" data-index=\"" + index + "\" type=\"button\">" +
-                        "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
-                        " <span>Edit</span>" +
-                        "</button>" +
-                        "<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\" data-status-index=\"" + statusObj.statusIndex + "\" type=\"button\">" +
-                        "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
-                        "<span class=\"sr-only\">Delete</span>" +
-                        "</button>" +
-                        "</div>" +
-                        "</div>" :
-                    "") +
                 "</div>";
             statusPanelEle.appendChild(panelBlockEle);
         }
+        var firstStatusObj = statusList[0];
         if (firstStatusObj.canUpdate) {
-            statusPanelEle.getElementsByClassName("is-edit-status-button")[0]
+            var firstStatusColumnsEle = statusPanelEle.getElementsByClassName("panel-block")[0].getElementsByClassName("columns")[0];
+            firstStatusColumnsEle.insertAdjacentHTML("beforeend", "<div class=\"column is-narrow\">" +
+                "<div class=\"buttons is-right has-addons\">" +
+                "<button class=\"button is-small is-edit-status-button\" data-tooltip=\"Edit Status\" data-index=\"0\" type=\"button\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
+                " <span>Edit</span>" +
+                "</button>" +
+                "<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\" data-status-index=\"" + firstStatusObj.statusIndex + "\" type=\"button\">" +
+                "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
+                "<span class=\"sr-only\">Delete</span>" +
+                "</button>" +
+                "</div>" +
+                "</div>");
+            firstStatusColumnsEle.getElementsByClassName("is-edit-status-button")[0]
                 .addEventListener("click", openEditStatusModalFn);
-            statusPanelEle.getElementsByClassName("is-delete-status-button")[0]
+            firstStatusColumnsEle.getElementsByClassName("is-delete-status-button")[0]
                 .addEventListener("click", confirmDeleteStatusFn);
+        }
+        var firstStatusDefinitionObj = pts.getTicketStatus(firstStatusObj.statusKey);
+        if (firstStatusDefinitionObj && firstStatusDefinitionObj.isFinalStatus) {
+            var finalizePanelBlockEle = document.createElement("div");
+            finalizePanelBlockEle.className = "panel-block is-block";
+            finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
+                "<div class=\"message-body\">" +
+                "<div class=\"columns\">" +
+                "<div class=\"column\">" +
+                "<strong>This ticket is able to be marked as resolved.</strong>" +
+                "</div>" +
+                "<div class=\"column is-narrow has-text-right align-self-flex-end\">" +
+                "<button class=\"button is-info\" type=\"button\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+                "<span>Resolve Ticket</span>" +
+                "</button>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "</div>";
+            finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn);
+            statusPanelEle.insertAdjacentElement("afterbegin", finalizePanelBlockEle);
         }
     };
     var getStatusesFn = function () {
