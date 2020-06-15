@@ -253,47 +253,51 @@ declare const pts: ptsGlobal;
 
     }
 
+    // Add resolve button
+
+    const firstStatusObj = statusList[0];
+    const firstStatusDefinitionObj = pts.getTicketStatus(firstStatusObj.statusKey);
+
+    if (firstStatusDefinitionObj && firstStatusDefinitionObj.isFinalStatus) {
+
+      const finalizePanelBlockEle = document.createElement("div");
+      finalizePanelBlockEle.className = "panel-block is-block";
+
+      finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
+        "<div class=\"message-body\">" +
+
+        "<div class=\"columns\">" +
+
+        "<div class=\"column\">" +
+        "<strong>This ticket is able to be marked as resolved.</strong>" +
+        "</div>" +
+
+        "<div class=\"column is-narrow has-text-right align-self-flex-end\">" +
+        "<button class=\"button is-info\" type=\"button\">" +
+        "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+        "<span>Resolve Ticket</span>" +
+        "</button>" +
+        "</div>" +
+
+        "</div>" +
+        "</div>" +
+        "</div>";
+
+      finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn);
+
+      statusPanelEle.appendChild(finalizePanelBlockEle);
+
+    }
+
+    // Loop through statuses
+
     for (let index = 0; index < statusList.length; index += 1) {
 
       const statusObj = statusList[index];
       const statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
 
-
-      if (index === 0 && statusDefinitionObj && statusDefinitionObj.isFinalStatus) {
-
-        const finalizePanelBlockEle = document.createElement("div");
-        finalizePanelBlockEle.className = "panel-block is-block";
-
-        finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
-          "<div class=\"message-body\">" +
-
-          "<div class=\"columns\">" +
-
-          "<div class=\"column\">" +
-          "<strong>This ticket is able to be marked as resolved.</strong>" +
-          "</div>" +
-
-          "<div class=\"column is-narrow has-text-right align-self-flex-end\">" +
-          "<button class=\"button is-info\" type=\"button\">" +
-          "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
-          "<span>Resolve Ticket</span>" +
-          "</button>" +
-          "</div>" +
-
-          "</div>" +
-          "</div>" +
-          "</div>";
-
-        finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn);
-
-        statusPanelEle.appendChild(finalizePanelBlockEle);
-
-      }
-
-
       const panelBlockEle = document.createElement("div");
       panelBlockEle.className = "panel-block is-block";
-
 
       panelBlockEle.innerHTML = "<div class=\"columns\">" +
         ("<div class=\"column\">" +
@@ -348,17 +352,18 @@ declare const pts: ptsGlobal;
 
         "</div>";
 
-      if (statusObj.canUpdate && index === 0) {
-
-        panelBlockEle.getElementsByClassName("is-edit-status-button")[0]
-          .addEventListener("click", openEditStatusModalFn);
-
-        panelBlockEle.getElementsByClassName("is-delete-status-button")[0]
-          .addEventListener("click", confirmDeleteStatusFn);
-
-      }
-
       statusPanelEle.appendChild(panelBlockEle);
+    }
+
+    // Initialize edit and delete buttons (if applicable)
+
+    if (firstStatusObj.canUpdate) {
+
+      statusPanelEle.getElementsByClassName("is-edit-status-button")[0]
+        .addEventListener("click", openEditStatusModalFn);
+
+      statusPanelEle.getElementsByClassName("is-delete-status-button")[0]
+        .addEventListener("click", confirmDeleteStatusFn);
 
     }
 
