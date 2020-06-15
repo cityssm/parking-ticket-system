@@ -88,7 +88,7 @@ export interface ConfigParkingTicketStatus {
 export interface ConfigParkingOffences {
   accountNumber: {
     pattern?: RegExp
-  }
+  };
 }
 
 interface ConfigLicencePlateCountry {

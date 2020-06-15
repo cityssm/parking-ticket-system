@@ -337,4 +337,4 @@ export function initNHTSADB() {
 
   return false;
 
-};
+}

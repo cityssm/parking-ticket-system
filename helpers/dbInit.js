@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.initNHTSADB = exports.initParkingDB = exports.initUsersDB = void 0;
 const sqlite = require("better-sqlite3");
 function initUsersDB() {
     const usersDB = sqlite("data/users.db");
@@ -239,4 +240,3 @@ function initNHTSADB() {
     return false;
 }
 exports.initNHTSADB = initNHTSADB;
-;

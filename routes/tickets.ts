@@ -58,7 +58,7 @@ router.get("/reconcile", function(req, res) {
 
   const reconciliationRecords = parkingDB.getOwnershipReconciliationRecords();
 
-  const lookupErrors = parkingDB.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1)
+  const lookupErrors = parkingDB.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1);
 
   res.render("ticket-reconcile", {
     headTitle: "Ownership Reconciliation",
@@ -208,7 +208,7 @@ router.post("/doReconcileAsError", function(req, res) {
 
   }, req.session, false);
 
-  res.json(statusResponse)
+  res.json(statusResponse);
 
 });
 
@@ -764,8 +764,9 @@ router.get("/:ticketID", function(req, res) {
   if (!ticket) {
     res.redirect("/tickets/?error=ticketNotFound");
     return;
-  }
-  else if (ticket.recordDelete_timeMillis && !req.session.user.userProperties.isAdmin) {
+
+  } else if (ticket.recordDelete_timeMillis && !req.session.user.userProperties.isAdmin) {
+
     res.redirect("/tickets/?error=accessDenied");
     return;
   }
