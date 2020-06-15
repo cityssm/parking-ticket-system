@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    var formEle = document.getElementById("form--filters");
-    var limitEle = document.getElementById("filter--limit");
-    var offsetEle = document.getElementById("filter--offset");
-    var searchResultsEle = document.getElementById("container--searchResults");
+    const formEle = document.getElementById("form--filters");
+    const limitEle = document.getElementById("filter--limit");
+    const offsetEle = document.getElementById("filter--offset");
+    const searchResultsEle = document.getElementById("container--searchResults");
     function getLicencePlates() {
-        var currentLimit = parseInt(limitEle.value, 10);
-        var currentOffset = parseInt(offsetEle.value, 10);
+        const currentLimit = parseInt(limitEle.value, 10);
+        const currentOffset = parseInt(offsetEle.value, 10);
         searchResultsEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
             "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
             "<em>Loading licence plates..." +
             "</p>";
         cityssm.postJSON("/plates/doGetLicencePlates", formEle, function (licencePlateResults) {
-            var plateList = licencePlateResults.licencePlates;
+            const plateList = licencePlateResults.licencePlates;
             if (plateList.length === 0) {
                 searchResultsEle.innerHTML = "<div class=\"message is-info\">" +
                     "<div class=\"message-body\">" +
@@ -33,11 +33,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</tr></thead>" +
                 "<tbody></tbody>" +
                 "</table>";
-            var tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
-            for (var plateIndex = 0; plateIndex < plateList.length; plateIndex += 1) {
-                var plateObj = plateList[plateIndex];
-                var trEle = document.createElement("tr");
-                var url = "/plates/" +
+            const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
+            for (let plateIndex = 0; plateIndex < plateList.length; plateIndex += 1) {
+                const plateObj = plateList[plateIndex];
+                const trEle = document.createElement("tr");
+                const url = "/plates/" +
                     (plateObj.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObj.licencePlateCountry)) +
                     "/" +
                     (plateObj.licencePlateProvince === "" ? "_" : encodeURIComponent(plateObj.licencePlateProvince)) +
@@ -82,12 +82,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>" +
                 "</div>");
             if (currentLimit < licencePlateResults.count) {
-                var paginationEle = document.createElement("nav");
+                const paginationEle = document.createElement("nav");
                 paginationEle.className = "level-right is-hidden-print";
                 paginationEle.setAttribute("role", "pagination");
                 paginationEle.setAttribute("aria-label", "pagination");
                 if (currentOffset > 0) {
-                    var previousEle = document.createElement("a");
+                    const previousEle = document.createElement("a");
                     previousEle.className = "button";
                     previousEle.innerHTML = "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
                         "<span>Previous</span>";
@@ -99,7 +99,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     paginationEle.appendChild(previousEle);
                 }
                 if (currentLimit + currentOffset < licencePlateResults.count) {
-                    var nextEle = document.createElement("a");
+                    const nextEle = document.createElement("a");
                     nextEle.className = "button ml-3";
                     nextEle.innerHTML = "<span>Next Licence Plates</span>" +
                         "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";

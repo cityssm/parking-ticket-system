@@ -1,5 +1,7 @@
 import * as sqlite from "better-sqlite3";
 import * as parkingDB from "./parkingDB";
+import * as parkingDBLookup from "./parkingDB-lookup";
+import * as parkingDBConvict from "./parkingDB-convict";
 
 import * as configFns from "./configFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
@@ -453,9 +455,9 @@ function exportBatch(sentDate: number, batchEntries: {
 
 export function exportLicencePlateBatch(batchID: number, reqSession: Express.Session) {
 
-  parkingDB.markLookupBatchAsSent(batchID, reqSession);
+  parkingDBLookup.markLookupBatchAsSent(batchID, reqSession);
 
-  const batch = parkingDB.getLicencePlateLookupBatch(batchID);
+  const batch = parkingDBLookup.getLicencePlateLookupBatch(batchID);
 
   return exportBatch(batch.sentDate, batch.batchEntries);
 }
@@ -463,9 +465,9 @@ export function exportLicencePlateBatch(batchID: number, reqSession: Express.Ses
 
 export function exportConvictionBatch(batchID: number, reqSession: Express.Session) {
 
-  parkingDB.markConvictionBatchAsSent(batchID, reqSession);
+  parkingDBConvict.markConvictionBatchAsSent(batchID, reqSession);
 
-  const batch = parkingDB.getParkingTicketConvictionBatch(batchID);
+  const batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
 
   return exportBatch(batch.sentDate, batch.batchEntries);
 }

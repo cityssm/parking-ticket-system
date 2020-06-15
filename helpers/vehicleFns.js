@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.isNCICExclusivelyTrailer = exports.getMakeFromNCIC = exports.getModelsByMake = exports.getModelsByMakeFromCache = void 0;
 const node_fetch_1 = require("node-fetch");
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;

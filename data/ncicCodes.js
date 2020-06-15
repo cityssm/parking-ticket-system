@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.allNCIC = exports.vehicleNCIC = exports.truckNCIC = exports.trailerNCIC = exports.motorcycleNCIC = exports.constructionNCIC = exports.autoNCIC = void 0;
 exports.autoNCIC = {
     "ABAR": "Abarth",
     "AC": "A C",
