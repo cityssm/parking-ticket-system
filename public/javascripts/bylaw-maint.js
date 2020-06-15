@@ -145,7 +145,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</table>";
         bylawResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
     }
-    ;
     bylawFilterEle.addEventListener("keyup", renderBylawList);
     renderBylawList();
     document.getElementById("is-add-bylaw-button").addEventListener("click", function (clickEvent) {

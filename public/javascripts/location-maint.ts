@@ -197,8 +197,7 @@ declare const pts: ptsGlobal;
       "</table>";
 
     locationResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
-
-  };
+  }
 
 
   // Initialize location classes select and map

@@ -31,11 +31,9 @@ declare const cityssm: cityssmGlobal;
           updateOffencesCloseModalFn();
           bylawList = responseJSON.bylaws;
           renderBylawList();
-
         }
-
       });
-    }
+    };
 
     cityssm.openHtmlModal("bylaw-updateOffences", {
       onshow: function() {
@@ -241,8 +239,7 @@ declare const cityssm: cityssmGlobal;
       "</table>";
 
     bylawResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
-
-  };
+  }
 
 
   // Initialize filters

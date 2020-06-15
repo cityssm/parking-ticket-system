@@ -89,8 +89,8 @@ function parsePKRA(rowData: string) {
     record.recordDate = sixDigitDateNumberToEightDigit(parseInt(rawRecordDate, 10));
 
     return record;
-  }
-  catch (e) {
+
+  } catch (e) {
     return false;
   }
 }
@@ -231,7 +231,7 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
     return {
       success: false,
       message: "The file contains zero data rows."
-    }
+    };
   }
 
   // Parse the first row
@@ -244,7 +244,7 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
     return {
       success: false,
       message: "An error occurred while trying to parse the first row of the file."
-    }
+    };
   }
 
   // Verify the batch with the sent date in the file
@@ -370,8 +370,7 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
     insertedErrorCount: insertedErrorCount,
     recordCount: recordCount,
     insertedRecordCount: insertedRecordCount
-
-  }
+  };
 }
 
 

@@ -189,7 +189,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
             errorFn();
         }
     }
-    ;
     var matchButtonEles = document.getElementsByClassName("is-ownership-match-button");
     for (var index = 0; index < matchButtonEles.length; index += 1) {
         matchButtonEles[index].addEventListener("click", clickFn_markAsMatch);

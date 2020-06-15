@@ -110,7 +110,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</table>";
         locationResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
     }
-    ;
     locationClassKeyFilterEle.addEventListener("change", renderLocationList);
     locationNameFilterEle.addEventListener("keyup", renderLocationList);
     pts.getDefaultConfigProperty("locationClasses", function (locationClassesList) {

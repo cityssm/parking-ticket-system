@@ -94,4 +94,3 @@ function getLicencePlateLocationProperties(originalLicencePlateCountry, original
     };
 }
 exports.getLicencePlateLocationProperties = getLicencePlateLocationProperties;
-;

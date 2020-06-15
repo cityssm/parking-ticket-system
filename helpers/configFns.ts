@@ -166,4 +166,4 @@ export function getLicencePlateLocationProperties(originalLicencePlateCountry: s
     licencePlateProvince: licencePlateProvince
   };
 
-};
+}

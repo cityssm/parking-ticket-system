@@ -32,8 +32,8 @@ declare const cityssm: cityssmGlobal;
               "success");
 
             buttonEle.closest("td").innerHTML = "<span class=\"has-text-grey\">Records Purged</span>";
-          }
-          else {
+
+          } else {
             buttonEle.removeAttribute("disabled");
           }
         });

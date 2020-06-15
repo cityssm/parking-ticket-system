@@ -311,8 +311,7 @@ declare const pts: ptsGlobal;
       errorFn();
 
     }
-
-  };
+  }
 
   const matchButtonEles = document.getElementsByClassName("is-ownership-match-button");
 
