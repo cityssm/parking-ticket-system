@@ -1,6 +1,6 @@
 # Parking Ticket System
 
-[![CodeFactor](https://www.codefactor.io/repository/github/cityssm/parking-ticket-system/badge)](https://www.codefactor.io/repository/github/cityssm/parking-ticket-system)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3428568fcab54a1285b8e139e4fd9f41)](https://www.codacy.com/gh/cityssm/parking-ticket-system?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cityssm/parking-ticket-system&amp;utm_campaign=Badge_Grade)
 
 The Parking Ticket System is a web application project by the
 [City of Sault Ste. Marie](https://saultstemarie.ca/)

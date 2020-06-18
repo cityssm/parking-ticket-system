@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("location-edit", {
-            onshow: function () {
+            onshow() {
                 document.getElementById("editLocation--locationKey").value = location.locationKey;
                 const locationClassKeyEditSelectEle = document.getElementById("editLocation--locationClassKey");
                 locationClassKeyEditSelectEle.innerHTML = locationClassKeyOptionsHTML;
@@ -51,7 +51,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 locationClassKeyEditSelectEle.value = location.locationClassKey;
                 document.getElementById("editLocation--locationName").value = location.locationName;
             },
-            onshown: function (modalEle, closeModalFn) {
+            onshown(modalEle, closeModalFn) {
                 editLocationCloseModalFn = closeModalFn;
                 document.getElementById("form--editLocation").addEventListener("submit", editFn);
                 modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);

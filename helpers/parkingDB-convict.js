@@ -321,7 +321,7 @@ function lockConvictionBatch(batchID, reqSession) {
     db.close();
     return {
         success: (info.changes > 0),
-        lockDate: lockDate,
+        lockDate,
         lockDateString: dateTimeFns.dateIntegerToString(lockDate)
     };
 }

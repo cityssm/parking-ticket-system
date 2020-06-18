@@ -13,7 +13,7 @@ router.get("/userManagement", function (req, res) {
     const users = usersDB.getAllUsers();
     res.render("admin-userManagement", {
         headTitle: "User Management",
-        users: users
+        users
     });
 });
 router.post("/doCreateUser", function (req, res) {

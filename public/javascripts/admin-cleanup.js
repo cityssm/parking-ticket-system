@@ -10,7 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const table = buttonEle.getAttribute("data-table");
         const purgeFn = function () {
             cityssm.postJSON("/admin/doCleanupTable", {
-                table: table,
+                table,
                 recordDelete_timeMillis: recordDelete_timeMillis
             }, function (responseJSON) {
                 if (responseJSON.success) {

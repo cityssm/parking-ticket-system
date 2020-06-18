@@ -19,7 +19,7 @@ declare const cityssm: cityssmGlobal;
     const purgeFn = function() {
 
       cityssm.postJSON("/admin/doCleanupTable", {
-        table: table,
+        table,
         recordDelete_timeMillis: recordDelete_timeMillis
       },
         function(responseJSON) {

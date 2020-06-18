@@ -78,7 +78,7 @@ declare const pts: ptsGlobal;
     };
 
     cityssm.openHtmlModal("location-edit", {
-      onshow: function() {
+      onshow() {
 
         (<HTMLInputElement>document.getElementById("editLocation--locationKey")).value = location.locationKey;
 
@@ -102,7 +102,7 @@ declare const pts: ptsGlobal;
         (<HTMLInputElement>document.getElementById("editLocation--locationName")).value = location.locationName;
 
       },
-      onshown: function(modalEle, closeModalFn) {
+      onshown(modalEle, closeModalFn) {
 
         editLocationCloseModalFn = closeModalFn;
 
@@ -115,7 +115,7 @@ declare const pts: ptsGlobal;
 
   }
 
-  function renderLocationList () {
+  function renderLocationList() {
 
     let displayCount = 0;
 

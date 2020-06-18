@@ -22,8 +22,8 @@ declare const pts: ptsGlobal;
     const logIndex = buttonEle.getAttribute("data-log-index");
 
     cityssm.postJSON("/tickets/doAcknowledgeLookupError", {
-      batchID: batchID,
-      logIndex: logIndex
+      batchID,
+      logIndex
     }, function(responseJSON) {
 
       if (responseJSON.success) {
@@ -131,11 +131,11 @@ declare const pts: ptsGlobal;
       const recordDate = trEle.getAttribute("data-record-date");
 
       cityssm.postJSON("/tickets/doReconcileAsMatch", {
-        licencePlateCountry: licencePlateCountry,
-        licencePlateProvince: licencePlateProvince,
-        licencePlateNumber: licencePlateNumber,
-        ticketID: ticketID,
-        recordDate: recordDate
+        licencePlateCountry,
+        licencePlateProvince,
+        licencePlateNumber,
+        ticketID,
+        recordDate
       }, function(responseJSON) {
 
         if (responseJSON.success) {
@@ -393,7 +393,7 @@ declare const pts: ptsGlobal;
       const loadingFn = function() {
 
         cityssm.openHtmlModal("loading", {
-          onshown: function(_modalEle, closeModalFn) {
+          onshown(_modalEle, closeModalFn) {
 
             document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
             loadingCloseModalFn = closeModalFn;

@@ -63,7 +63,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("offence-edit", {
-            onshow: function () {
+            onshow() {
                 document.getElementById("offenceEdit--locationKey").value = offence.locationKey;
                 document.getElementById("offenceEdit--bylawNumber").value = offence.bylawNumber;
                 document.getElementById("offenceEdit--locationName").innerText = location.locationName;
@@ -81,7 +81,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 accountNumberEle.value = offence.accountNumber;
                 accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
             },
-            onshown: function (modalEle, closeModalFn) {
+            onshown(modalEle, closeModalFn) {
                 editOffenceModalCloseFn = closeModalFn;
                 document.getElementById("form--offenceEdit").addEventListener("submit", submitFn);
                 modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
@@ -90,8 +90,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function addOffence(bylawNumber, locationKey, returnAndRenderOffences, callbackFn) {
         cityssm.postJSON("/admin/doAddOffence", {
-            bylawNumber: bylawNumber,
-            locationKey: locationKey,
+            bylawNumber,
+            locationKey,
             returnOffences: returnAndRenderOffences
         }, function (responseJSON) {
             if (responseJSON.success && responseJSON.offences && returnAndRenderOffences) {
@@ -118,7 +118,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("offence-addFromList", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 let titleHTML = "";
                 let selectedHTML = "";
                 if (locationKeyFilterIsSet) {
@@ -139,7 +139,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 modalEle.getElementsByClassName("modal-card-title")[0].innerHTML = titleHTML;
                 document.getElementById("addContainer--selected").innerHTML = selectedHTML;
             },
-            onshown: function () {
+            onshown() {
                 const listEle = document.createElement("div");
                 listEle.className = "panel";
                 let displayCount = 0;
@@ -192,7 +192,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     addResultsEle.appendChild(listEle);
                 }
             },
-            onremoved: function () {
+            onremoved() {
                 if (doRefreshOnClose) {
                     cityssm.postJSON("/offences/doGetAllOffences", {}, function (offenceList) {
                         loadOffenceMap(offenceList);

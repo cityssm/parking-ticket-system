@@ -121,7 +121,7 @@ declare const pts: ptsGlobal;
     };
 
     cityssm.openHtmlModal("offence-edit", {
-      onshow: function() {
+      onshow() {
 
         (<HTMLInputElement>document.getElementById("offenceEdit--locationKey")).value = offence.locationKey;
         (<HTMLInputElement>document.getElementById("offenceEdit--bylawNumber")).value = offence.bylawNumber;
@@ -147,7 +147,7 @@ declare const pts: ptsGlobal;
         accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
 
       },
-      onshown: function(modalEle, closeModalFn) {
+      onshown(modalEle, closeModalFn) {
 
         editOffenceModalCloseFn = closeModalFn;
 
@@ -165,8 +165,8 @@ declare const pts: ptsGlobal;
 
     cityssm.postJSON(
       "/admin/doAddOffence", {
-        bylawNumber: bylawNumber,
-        locationKey: locationKey,
+        bylawNumber,
+        locationKey,
         returnOffences: returnAndRenderOffences
       },
       function(responseJSON) {
@@ -217,7 +217,7 @@ declare const pts: ptsGlobal;
     };
 
     cityssm.openHtmlModal("offence-addFromList", {
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         let titleHTML = "";
         let selectedHTML = "";
@@ -249,7 +249,7 @@ declare const pts: ptsGlobal;
         document.getElementById("addContainer--selected").innerHTML = selectedHTML;
 
       },
-      onshown: function() {
+      onshown() {
 
         const listEle = document.createElement("div");
         listEle.className = "panel";
@@ -330,7 +330,7 @@ declare const pts: ptsGlobal;
         }
 
       },
-      onremoved: function() {
+      onremoved() {
 
         if (doRefreshOnClose) {
 

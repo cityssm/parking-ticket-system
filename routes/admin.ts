@@ -24,7 +24,7 @@ router.get("/userManagement", function(req, res) {
 
   res.render("admin-userManagement", {
     headTitle: "User Management",
-    users: users
+    users
   });
 
 });

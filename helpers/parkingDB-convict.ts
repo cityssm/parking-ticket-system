@@ -485,7 +485,7 @@ export function lockConvictionBatch(batchID: number, reqSession: Express.Session
 
   return {
     success: (info.changes > 0),
-    lockDate: lockDate,
+    lockDate,
     lockDateString: dateTimeFns.dateIntegerToString(lockDate)
   };
 
