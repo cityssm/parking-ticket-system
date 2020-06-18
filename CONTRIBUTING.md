@@ -1,26 +1,23 @@
-### Thank you for your interest in making the Parking Ticket System better.
+### Thank you for your interest in making the Parking Ticket System better
 
 Together, we can build high quality software that meets the needs of municipalities,
 while remaining open and budget conscious.
 
 **Thank you for taking the time to read the contributing guidelines.**
 
-
 ### All contributions are welcome!
 
 Being a very small team, contributions are greatly appreciated.  How can you contribute?
 
-- **Promote this project!**
-- Documentation and tutorials
-- Submit bug reports (or fix them!)
-- Request new features (or build them!)
-
+-   **Promote this project!**
+-   Documentation and tutorials
+-   Submit bug reports (or fix them!)
+-   Request new features (or build them!)
 
 ### Please Read the Code of Conduct
 
 The [Code of Conduct](CODE_OF_CONDUCT.md) document describes how we should act when working together.
 Be nice!  :smile:
-
 
 ### How to report a bug or suggest an enhancement
 
@@ -28,7 +25,6 @@ Be nice!  :smile:
 
 For all other bug reports, feature requests, or enhancements,
 open an issue and use the closest template.
-
 
 ### Thanks Again!
 
