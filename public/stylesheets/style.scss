@@ -28,16 +28,18 @@ $family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Rob
   font-style:  normal;
   font-weight: 100;
   font-display: swap;
-  src: url("/typeface-inter/Inter-Thin.woff2?v=3.12") format("woff2"),
-       url("/typeface-inter/Inter-Thin.woff?v=3.12") format("woff");
+  src:
+    url("/typeface-inter/Inter-Thin.woff2?v=3.12") format("woff2"),
+    url("/typeface-inter/Inter-Thin.woff?v=3.12") format("woff");
 }
 @font-face {
   font-family: 'Inter';
   font-style:  italic;
   font-weight: 100;
   font-display: swap;
-  src: url("/typeface-inter/Inter-ThinItalic.woff2?v=3.12") format("woff2"),
-       url("/typeface-inter/Inter-ThinItalic.woff?v=3.12") format("woff");
+  src:
+    url("/typeface-inter/Inter-ThinItalic.woff2?v=3.12") format("woff2"),
+    url("/typeface-inter/Inter-ThinItalic.woff?v=3.12") format("woff");
 }
 
 @font-face {
@@ -45,16 +47,18 @@ $family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Rob
   font-style:  normal;
   font-weight: 200;
   font-display: swap;
-  src: url("/typeface-inter/Inter-ExtraLight.woff2?v=3.12") format("woff2"),
-       url("/typeface-inter/Inter-ExtraLight.woff?v=3.12") format("woff");
+  src:
+    url("/typeface-inter/Inter-ExtraLight.woff2?v=3.12") format("woff2"),
+    url("/typeface-inter/Inter-ExtraLight.woff?v=3.12") format("woff");
 }
 @font-face {
   font-family: 'Inter';
   font-style:  italic;
   font-weight: 200;
   font-display: swap;
-  src: url("/typeface-inter/Inter-ExtraLightItalic.woff2?v=3.12") format("woff2"),
-       url("/typeface-inter/Inter-ExtraLightItalic.woff?v=3.12") format("woff");
+  src:
+    url("/typeface-inter/Inter-ExtraLightItalic.woff2?v=3.12") format("woff2"),
+    url("/typeface-inter/Inter-ExtraLightItalic.woff?v=3.12") format("woff");
 }
 
 @font-face {
