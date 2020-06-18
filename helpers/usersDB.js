@@ -50,9 +50,9 @@ function getUser(userNameSubmitted, passwordPlain) {
         " from UserProperties" +
         " where userName = ?")
         .all(databaseUserName);
-    for (let userPropertyIndex = 0; userPropertyIndex < userPropertyRows.length; userPropertyIndex += 1) {
-        const propertyName = userPropertyRows[userPropertyIndex].propertyName;
-        const propertyValue = userPropertyRows[userPropertyIndex].propertyValue;
+    userPropertyRows.forEach(function (userProperty) {
+        const propertyName = userProperty.propertyName;
+        const propertyValue = userProperty.propertyValue;
         switch (propertyName) {
             case "canCreate":
             case "canUpdate":
@@ -64,7 +64,7 @@ function getUser(userNameSubmitted, passwordPlain) {
                 userProperties[propertyName] = propertyValue;
                 break;
         }
-    }
+    });
     db.close();
     return {
         userName: databaseUserName,

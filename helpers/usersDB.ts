@@ -89,10 +89,10 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
     " where userName = ?")
     .all(databaseUserName);
 
-  for (let userPropertyIndex = 0; userPropertyIndex < userPropertyRows.length; userPropertyIndex += 1) {
+  userPropertyRows.forEach(function(userProperty) {
 
-    const propertyName: string = userPropertyRows[userPropertyIndex].propertyName;
-    const propertyValue: string = userPropertyRows[userPropertyIndex].propertyValue;
+    const propertyName: string = userProperty.propertyName;
+    const propertyValue: string = userProperty.propertyValue;
 
     switch (propertyName) {
 
@@ -110,7 +110,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
         break;
     }
 
-  }
+  });
 
   db.close();
 
