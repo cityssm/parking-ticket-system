@@ -15,13 +15,9 @@ Examples of behavior that contributes to creating a positive environment
 include:
 
 -   Using welcoming and inclusive language
-
 -   Being respectful of differing viewpoints and experiences
-
 -   Gracefully accepting constructive criticism
-
 -   Focusing on what is best for the community
-
 -   Showing empathy towards other community members
 
 Examples of unacceptable behavior by participants include:
@@ -63,7 +59,7 @@ further defined and clarified by project maintainers.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at corporateapps@cityssm.on.ca. All
+reported by contacting the project team at <corporateapps@cityssm.on.ca>. All
 complaints will be reviewed and investigated and will result in a response that
 is deemed necessary and appropriate to the circumstances. The project team is
 obligated to maintain confidentiality with regard to the reporter of an incident.
@@ -78,7 +74,7 @@ members of the project's leadership.
 This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
 available at <https://www.contributor-covenant.org/version/1/4/code-of-conduct.html>
 
-[homepage]: https://www.contributor-covenant.org
-
 For answers to common questions about this code of conduct, see
 <https://www.contributor-covenant.org/faq>
+
+[homepage]: https://www.contributor-covenant.org

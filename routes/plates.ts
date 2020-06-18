@@ -136,8 +136,6 @@ router.post("/doAddAllLicencePlatesToLookupBatch", function(req, res) {
 
   }
 
-  console.log(req.body.licencePlateNumbers.length);
-
   const result = parkingDBLookup.addAllLicencePlatesToLookupBatch(req.body, req.session);
 
   res.json(result);

@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initNHTSADB = exports.initParkingDB = exports.initUsersDB = void 0;
+const log = require("fancy-log");
 const sqlite = require("better-sqlite3");
 function initUsersDB() {
     const usersDB = sqlite("data/users.db");
     const row = usersDB.prepare("select name from sqlite_master where type = 'table' and name = 'Users'").get();
     if (!row) {
-        console.warn("Creating users.db." +
+        log.warn("Creating users.db." +
             " To get started creating users, set the 'admin.defaultPassword' property in your config.js file.");
         usersDB.prepare("create table if not exists Users (" +
             "userName varchar(30) primary key not null," +
@@ -34,7 +35,7 @@ function initParkingDB() {
         .prepare("select name from sqlite_master where type = 'table' and name = 'ParkingTickets'")
         .get();
     if (!row) {
-        console.warn("Creating parking.db");
+        log.warn("Creating parking.db");
         parkingDB.prepare("create table if not exists ParkingLocations (" +
             "locationKey varchar(20) primary key not null," +
             " locationName varchar(200) not null," +
@@ -221,7 +222,7 @@ function initNHTSADB() {
     const nhtsaDB = sqlite("data/nhtsa.db");
     const row = nhtsaDB.prepare("select name from sqlite_master where type = 'table' and name = 'MakeModel'").get();
     if (!row) {
-        console.warn("Creating nhtsa.db.");
+        log.warn("Creating nhtsa.db.");
         nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +
             "searchString varchar(50) primary key not null," +
             " resultCount integer not null," +

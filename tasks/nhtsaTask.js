@@ -41,7 +41,7 @@ function scheduleRun() {
         nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
         log.info("NHTSA task scheduled for " + nextScheduleDate.toString());
         setTimeout(function () {
-            console.log("NHTSA task starting");
+            log("NHTSA task starting");
             vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
             processNCIC(0);
         }, nextScheduleDate.getTime() - Date.now());

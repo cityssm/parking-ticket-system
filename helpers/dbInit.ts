@@ -1,3 +1,5 @@
+import * as log from "fancy-log";
+
 import * as sqlite from "better-sqlite3";
 
 
@@ -9,7 +11,7 @@ export function initUsersDB() {
 
   if (!row) {
 
-    console.warn("Creating users.db." +
+    log.warn("Creating users.db." +
       " To get started creating users, set the 'admin.defaultPassword' property in your config.js file.");
 
     usersDB.prepare("create table if not exists Users (" +
@@ -49,7 +51,7 @@ export function initParkingDB() {
 
   if (!row) {
 
-    console.warn("Creating parking.db");
+    log.warn("Creating parking.db");
 
     /*
      * Locations
@@ -314,7 +316,7 @@ export function initNHTSADB() {
 
   if (!row) {
 
-    console.warn("Creating nhtsa.db.");
+    log.warn("Creating nhtsa.db.");
 
     nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +
       "searchString varchar(50) primary key not null," +

@@ -49,7 +49,7 @@ export async function scheduleRun() {
 
   setTimeout(function() {
 
-    console.log("NHTSA task starting");
+    log("NHTSA task starting");
 
     vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
     processNCIC(0);

@@ -13,7 +13,7 @@ $family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Rob
 }
 
 // FONT - INTER
-//
+
 @font-face {
   font-family: 'Inter';
   font-style: normal;
@@ -168,6 +168,22 @@ html {
   opacity: 0.2;
 }
 
+.licence-plate-number {
+  font-family: 'PT Mono', monospace;
+  font-size: 1.4em;
+  color: var(--color);
+  white-space: nowrap;
+}
+
+.licence-plate-country,
+.licence-plate-province {
+  font-size: 0.6em;
+  font-weight: bold;
+  color: var(--backgroundColor);
+  background-color: var(--color);
+  opacity: 0.8;
+}
+
 .licence-plate {
   display: inline-block;
   color: var(--color);
@@ -186,21 +202,6 @@ html {
   }
 }
 
-.licence-plate-number {
-  font-family: 'PT Mono', monospace;
-  font-size: 1.4em;
-  color: var(--color);
-  white-space: nowrap;
-}
-
-.licence-plate-country,
-.licence-plate-province {
-  font-size: 0.6em;
-  font-weight: bold;
-  color: var(--backgroundColor);
-  background-color: var(--color);
-  opacity: 0.8;
-}
 /*
  * Tabs
  */
@@ -212,13 +213,14 @@ html {
     display: block;
   }
 }
+
 /*
  * Login
  */
 
 #is-login-page {
   overflow: auto;
-  background-image: url("/images/login.jpg");
+  background-image: url('/images/login.jpg');
   background-position: bottom right;
   background-size: cover;
 
