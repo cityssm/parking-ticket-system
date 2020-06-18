@@ -11,7 +11,6 @@ import * as session from "express-session";
 import * as sqlite from "connect-sqlite3";
 const SQLiteStore = sqlite(session);
 
-
 import { version as buildNumber } from "./package.json";
 
 import * as routerDocs from "./routes/docs";

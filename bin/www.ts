@@ -2,7 +2,7 @@
 
 import * as app from "../app";
 
-import * as debug from "debug";
+import * as log from "fancy-log";
 
 import * as http from "http";
 import * as https from "https";
@@ -20,12 +20,13 @@ function onError(error: Error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
-      console.error("Requires elevated privileges");
+
+      log.error("Requires elevated privileges");
       process.exit(1);
     // break;
 
     case "EADDRINUSE":
-      console.error("Port is already in use.");
+      log.error("Port is already in use.");
       process.exit(1);
     // break;
 
@@ -42,7 +43,7 @@ function onListening(server: http.Server | https.Server) {
     ? "pipe " + addr
     : "port " + addr.port;
 
-  debug("Listening on " + bind);
+  log.info("Listening on " + bind);
 
 }
 
@@ -63,7 +64,7 @@ if (httpPort) {
     onListening(httpServer);
   });
 
-  console.log("HTTP listening on " + httpPort);
+  log.info("HTTP listening on " + httpPort);
 }
 
 /**
@@ -88,6 +89,6 @@ if (httpsConfig) {
     onListening(httpsServer);
   });
 
-  console.log("HTTPS listening on " + httpsConfig.port);
+  log.info("HTTPS listening on " + httpsConfig.port);
 
 }

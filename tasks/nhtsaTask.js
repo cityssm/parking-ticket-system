@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.scheduleRun = void 0;
+const log = require("fancy-log");
 const parkingDB = require("../helpers/parkingDB");
 const vehicleFns = require("../helpers/vehicleFns");
 const configFns = require("../helpers/configFns");
@@ -23,7 +24,7 @@ function processNCIC(index) {
     if (ncicRecord) {
         cutoffDate = ncicRecord.recordDateMax;
         const vehicleMake = vehicleFns.getMakeFromNCIC(ncicRecord.vehicleNCIC);
-        console.log("Processing " + vehicleMake);
+        log("Processing " + vehicleMake);
         vehicleFns.getModelsByMake(vehicleMake, function () {
             processNCIC(index + 1);
         });
@@ -38,7 +39,7 @@ function scheduleRun() {
         let nextScheduleDate = new Date();
         nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
         nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
-        console.log("NHTSA task scheduled for " + nextScheduleDate.toString());
+        log.info("NHTSA task scheduled for " + nextScheduleDate.toString());
         setTimeout(function () {
             console.log("NHTSA task starting");
             vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);

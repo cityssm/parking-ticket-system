@@ -1,3 +1,5 @@
+import * as log from "fancy-log";
+
 import * as parkingDB from "../helpers/parkingDB";
 import * as vehicleFns from "../helpers/vehicleFns";
 
@@ -23,7 +25,7 @@ function processNCIC(index: number) {
 
     const vehicleMake = vehicleFns.getMakeFromNCIC(ncicRecord.vehicleNCIC);
 
-    console.log("Processing " + vehicleMake);
+    log("Processing " + vehicleMake);
 
     vehicleFns.getModelsByMake(vehicleMake, function() {
       processNCIC(index + 1);
@@ -43,7 +45,7 @@ export async function scheduleRun() {
   nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
   nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
 
-  console.log("NHTSA task scheduled for " + nextScheduleDate.toString());
+  log.info("NHTSA task scheduled for " + nextScheduleDate.toString());
 
   setTimeout(function() {
 

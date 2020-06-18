@@ -2,7 +2,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const app = require("../app");
-const debug = require("debug");
+const log = require("fancy-log");
 const http = require("http");
 const https = require("https");
 const fs = require("fs");
@@ -13,10 +13,10 @@ function onError(error) {
     }
     switch (error.code) {
         case "EACCES":
-            console.error("Requires elevated privileges");
+            log.error("Requires elevated privileges");
             process.exit(1);
         case "EADDRINUSE":
-            console.error("Port is already in use.");
+            log.error("Port is already in use.");
             process.exit(1);
         default:
             throw error;
@@ -27,7 +27,7 @@ function onListening(server) {
     const bind = typeof addr === "string"
         ? "pipe " + addr
         : "port " + addr.port;
-    debug("Listening on " + bind);
+    log.info("Listening on " + bind);
 }
 const httpPort = configFns.getProperty("application.httpPort");
 if (httpPort) {
@@ -37,7 +37,7 @@ if (httpPort) {
     httpServer.on("listening", function () {
         onListening(httpServer);
     });
-    console.log("HTTP listening on " + httpPort);
+    log.info("HTTP listening on " + httpPort);
 }
 const httpsConfig = configFns.getProperty("application.https");
 if (httpsConfig) {
@@ -51,5 +51,5 @@ if (httpsConfig) {
     httpsServer.on("listening", function () {
         onListening(httpsServer);
     });
-    console.log("HTTPS listening on " + httpsConfig.port);
+    log.info("HTTPS listening on " + httpsConfig.port);
 }
