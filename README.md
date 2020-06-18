@@ -16,7 +16,7 @@ looking to move away from older, legacy systems.
 
 [Documentation So Far](/docs)
 
-## This project is incomplete and under active development.
+## This project is incomplete and under active development
 
 Significant, breaking changes are happening with each commit.
 It is not ready to run in a live environment yet.

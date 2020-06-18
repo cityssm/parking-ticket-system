@@ -98,14 +98,14 @@ export function getDatabaseCleanupCounts() {
   return {
     recordDelete_timeMillis: recordDelete_timeMillisWindow,
 
-    parkingTickets: parkingTickets,
-    parkingTicketStatusLog: parkingTicketStatusLog,
-    parkingTicketRemarks: parkingTicketRemarks,
-    licencePlateOwners: licencePlateOwners,
+    parkingTickets,
+    parkingTicketStatusLog,
+    parkingTicketRemarks,
+    licencePlateOwners,
 
-    parkingLocations: parkingLocations,
-    parkingBylaws: parkingBylaws,
-    parkingOffences: parkingOffences
+    parkingLocations,
+    parkingBylaws,
+    parkingOffences
 
     //licencePlateLookupErrorLog: licencePlateLookupErrorLog
     //parkingTicketConvictionBatches: parkingTicketConvictionBatches,

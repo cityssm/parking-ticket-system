@@ -45,13 +45,13 @@ function getDatabaseCleanupCounts() {
     db.close();
     return {
         recordDelete_timeMillis: recordDelete_timeMillisWindow,
-        parkingTickets: parkingTickets,
-        parkingTicketStatusLog: parkingTicketStatusLog,
-        parkingTicketRemarks: parkingTicketRemarks,
-        licencePlateOwners: licencePlateOwners,
-        parkingLocations: parkingLocations,
-        parkingBylaws: parkingBylaws,
-        parkingOffences: parkingOffences
+        parkingTickets,
+        parkingTicketStatusLog,
+        parkingTicketRemarks,
+        licencePlateOwners,
+        parkingLocations,
+        parkingBylaws,
+        parkingOffences
     };
 }
 exports.getDatabaseCleanupCounts = getDatabaseCleanupCounts;

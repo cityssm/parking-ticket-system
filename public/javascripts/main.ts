@@ -29,7 +29,9 @@ const pts: ptsGlobal = {};
       }
 
     } catch (e) {
-      // Ignore
+
+      defaultConfigProperties = {};
+      defaultConfigPropertiesIsLoaded = true;
     }
 
     return false;

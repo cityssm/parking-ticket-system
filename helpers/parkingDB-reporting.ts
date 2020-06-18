@@ -270,8 +270,8 @@ function executeQuery(sql: string, params: any[]): RawRowsColumnsReturn {
   db.close();
 
   return {
-    rows: rows,
-    columns: columns
+    rows,
+    columns
   };
 
 }

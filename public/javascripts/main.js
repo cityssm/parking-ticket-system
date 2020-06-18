@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const pts = {};
+var pts = {};
 (function () {
-    let defaultConfigProperties = {};
-    let defaultConfigPropertiesIsLoaded = false;
-    const loadConfigPropertiesFromStorage = function () {
+    var defaultConfigProperties = {};
+    var defaultConfigPropertiesIsLoaded = false;
+    var loadConfigPropertiesFromStorage = function () {
         try {
-            const defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
+            var defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
             if (defaultConfigPropertiesString) {
                 defaultConfigProperties = JSON.parse(defaultConfigPropertiesString);
                 defaultConfigPropertiesIsLoaded = true;
@@ -14,6 +14,8 @@ const pts = {};
             }
         }
         catch (e) {
+            defaultConfigProperties = {};
+            defaultConfigPropertiesIsLoaded = true;
         }
         return false;
     };
@@ -54,7 +56,7 @@ const pts = {};
         if (!defaultConfigPropertiesIsLoaded) {
             return {};
         }
-        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
+        var licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
             originalLicencePlateCountry;
         if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
             return defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias];
@@ -63,7 +65,7 @@ const pts = {};
     };
     pts.getLicencePlateLocationProperties =
         function (originalLicencePlateCountry, originalLicencePlateProvince) {
-            const licencePlateProvinceDefault = {
+            var licencePlateProvinceDefault = {
                 provinceShortName: originalLicencePlateProvince,
                 color: "#000",
                 backgroundColor: "#fff"
@@ -75,15 +77,15 @@ const pts = {};
                     licencePlateProvince: licencePlateProvinceDefault
                 };
             }
-            const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
+            var licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
                 originalLicencePlateCountry;
-            let licencePlateProvinceAlias = originalLicencePlateProvince;
+            var licencePlateProvinceAlias = originalLicencePlateProvince;
             if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
                 licencePlateProvinceAlias =
                     defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
                         originalLicencePlateProvince;
             }
-            let licencePlateProvince = licencePlateProvinceDefault;
+            var licencePlateProvince = licencePlateProvinceDefault;
             if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
                 licencePlateProvince =
                     defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
@@ -94,10 +96,10 @@ const pts = {};
                 licencePlateProvince: licencePlateProvince
             };
         };
-    const ticketStatusKeyToObject = new Map();
-    let ticketStatusKeyToObjectIsLoaded = false;
+    var ticketStatusKeyToObject = new Map();
+    var ticketStatusKeyToObjectIsLoaded = false;
     pts.getTicketStatus = function (statusKey) {
-        const noResult = {
+        var noResult = {
             statusKey: statusKey,
             status: statusKey
         };
@@ -105,8 +107,8 @@ const pts = {};
             return noResult;
         }
         if (!ticketStatusKeyToObjectIsLoaded) {
-            for (let index = 0; index < defaultConfigProperties.parkingTicketStatuses.length; index += 1) {
-                const ticketStatusObj = defaultConfigProperties.parkingTicketStatuses[index];
+            for (var index = 0; index < defaultConfigProperties.parkingTicketStatuses.length; index += 1) {
+                var ticketStatusObj = defaultConfigProperties.parkingTicketStatuses[index];
                 ticketStatusKeyToObject.set(ticketStatusObj.statusKey, ticketStatusObj);
             }
             ticketStatusKeyToObjectIsLoaded = true;
@@ -118,21 +120,21 @@ pts.initializeTabs = function (tabsListEle, callbackFns) {
     if (!tabsListEle) {
         return;
     }
-    const isPanelOrMenuListTabs = tabsListEle.classList.contains("panel-tabs") || tabsListEle.classList.contains("menu-list");
-    const listItemEles = tabsListEle.getElementsByTagName(isPanelOrMenuListTabs ? "a" : "li");
-    const tabLinkEles = (isPanelOrMenuListTabs ? listItemEles : tabsListEle.getElementsByTagName("a"));
+    var isPanelOrMenuListTabs = tabsListEle.classList.contains("panel-tabs") || tabsListEle.classList.contains("menu-list");
+    var listItemEles = tabsListEle.getElementsByTagName(isPanelOrMenuListTabs ? "a" : "li");
+    var tabLinkEles = (isPanelOrMenuListTabs ? listItemEles : tabsListEle.getElementsByTagName("a"));
     function tabClickFn(clickEvent) {
         clickEvent.preventDefault();
-        const tabLinkEle = clickEvent.currentTarget;
-        const tabContentEle = document.getElementById(tabLinkEle.getAttribute("href").substring(1));
-        for (let index = 0; index < listItemEles.length; index += 1) {
+        var tabLinkEle = clickEvent.currentTarget;
+        var tabContentEle = document.getElementById(tabLinkEle.getAttribute("href").substring(1));
+        for (var index = 0; index < listItemEles.length; index += 1) {
             listItemEles[index].classList.remove("is-active");
             tabLinkEles[index].setAttribute("aria-selected", "false");
         }
         (isPanelOrMenuListTabs ? tabLinkEle : tabLinkEle.parentElement).classList.add("is-active");
         tabLinkEle.setAttribute("aria-selected", "true");
-        const tabContentEles = tabContentEle.parentElement.getElementsByClassName("tab-content");
-        for (let index = 0; index < tabContentEles.length; index += 1) {
+        var tabContentEles = tabContentEle.parentElement.getElementsByClassName("tab-content");
+        for (var index = 0; index < tabContentEles.length; index += 1) {
             tabContentEles[index].classList.remove("is-active");
         }
         tabContentEle.classList.add("is-active");
@@ -140,7 +142,7 @@ pts.initializeTabs = function (tabsListEle, callbackFns) {
             callbackFns.onshown(tabContentEle);
         }
     }
-    for (let index = 0; index < listItemEles.length; index += 1) {
+    for (var index = 0; index < listItemEles.length; index += 1) {
         (isPanelOrMenuListTabs ?
             listItemEles[index] :
             listItemEles[index].getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
@@ -149,13 +151,13 @@ pts.initializeTabs = function (tabsListEle, callbackFns) {
 (function () {
     function toggleHiddenFn(clickEvent) {
         clickEvent.preventDefault();
-        const href = clickEvent.currentTarget.href;
-        const divID = href.substring(href.indexOf("#") + 1);
+        var href = clickEvent.currentTarget.href;
+        var divID = href.substring(href.indexOf("#") + 1);
         document.getElementById(divID).classList.toggle("is-hidden");
     }
     pts.initializeToggleHiddenLinks = function (searchContainerEle) {
-        const linkEles = searchContainerEle.getElementsByClassName("is-toggle-hidden-link");
-        for (let index = 0; index < linkEles.length; index += 1) {
+        var linkEles = searchContainerEle.getElementsByClassName("is-toggle-hidden-link");
+        for (var index = 0; index < linkEles.length; index += 1) {
             linkEles[index].addEventListener("click", toggleHiddenFn);
         }
     };

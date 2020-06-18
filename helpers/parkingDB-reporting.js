@@ -209,8 +209,8 @@ function executeQuery(sql, params) {
     stmt.raw(false);
     db.close();
     return {
-        rows: rows,
-        columns: columns
+        rows,
+        columns
     };
 }
 function getReportRowsColumns(reportName, reqQuery) {
