@@ -82,7 +82,7 @@ declare const cityssm: cityssmGlobal;
 
     cityssm.openHtmlModal("ticket-editRemark", {
 
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         (<HTMLInputElement>document.getElementById("editRemark--ticketID")).value = ticketID;
         (<HTMLInputElement>document.getElementById("editRemark--remarkIndex")).value = remarkObj.remarkIndex;
@@ -93,7 +93,7 @@ declare const cityssm: cityssmGlobal;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
         editRemarkCloseModalFn = closeModalFn;
       }
 
@@ -225,13 +225,13 @@ declare const cityssm: cityssmGlobal;
 
     cityssm.openHtmlModal("ticket-addRemark", {
 
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         (<HTMLInputElement>document.getElementById("addRemark--ticketID")).value = ticketID;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
         addRemarkCloseModalFn = closeModalFn;
       }
 

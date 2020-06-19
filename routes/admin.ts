@@ -209,7 +209,7 @@ router.get("/cleanup", function(req, res) {
 
   res.render("admin-cleanup", {
     headTitle: "Database Cleanup",
-    counts: counts
+    counts
   });
 
 });

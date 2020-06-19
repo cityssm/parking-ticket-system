@@ -179,9 +179,9 @@ const pts: ptsGlobal = {};
       // Return
 
       return {
-        licencePlateCountryAlias: licencePlateCountryAlias,
-        licencePlateProvinceAlias: licencePlateProvinceAlias,
-        licencePlateProvince: licencePlateProvince
+        licencePlateCountryAlias,
+        licencePlateProvinceAlias,
+        licencePlateProvince
       };
 
     };
@@ -192,7 +192,7 @@ const pts: ptsGlobal = {};
   pts.getTicketStatus = function(statusKey) {
 
     const noResult = {
-      statusKey: statusKey,
+      statusKey,
       status: statusKey
     };
 

@@ -158,31 +158,31 @@ export function getParkingTickets(reqSession: Express.Session, queryOptions: Get
 
     const ticketNumberPieces = queryOptions.ticketNumber.toLowerCase().split(" ");
 
-    ticketNumberPieces.forEach(function(ticketNumberPiece) {
+    for (const ticketNumberPiece of ticketNumberPieces) {
       sqlWhereClause += " and instr(lower(t.ticketNumber), ?)";
       sqlParams.push(ticketNumberPiece);
-    });
+    }
   }
 
   if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
 
     const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
 
-    licencePlateNumberPieces.forEach(function(licencePlateNumberPiece) {
+    for (const licencePlateNumberPiece of licencePlateNumberPieces) {
       sqlWhereClause += " and instr(lower(t.licencePlateNumber), ?)";
       sqlParams.push(licencePlateNumberPiece);
-    });
+    }
   }
 
   if (queryOptions.location && queryOptions.location !== "") {
 
     const locationPieces = queryOptions.location.toLowerCase().split(" ");
 
-    locationPieces.forEach(function(locationPiece) {
+    for (const locationPiece of locationPieces) {
       sqlWhereClause += " and (instr(lower(t.locationDescription), ?) or instr(lower(l.locationName), ?))";
       sqlParams.push(locationPiece);
       sqlParams.push(locationPiece);
-    });
+    }
   }
 
   // get the count
@@ -220,7 +220,7 @@ export function getParkingTickets(reqSession: Express.Session, queryOptions: Get
   rows.forEach(addCalculatedFieldsFn);
 
   return {
-    count: count,
+    count,
     tickets: rows
   };
 }
@@ -1161,7 +1161,7 @@ export function getLicencePlates(queryOptions: GetLicencePlatesQueryOptions) {
   db.close();
 
   return {
-    count: count,
+    count,
     licencePlates: rows
   };
 

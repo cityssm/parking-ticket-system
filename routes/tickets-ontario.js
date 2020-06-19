@@ -13,8 +13,8 @@ router.get("/convict", function (req, res) {
     const batch = parkingDBConvict.getParkingTicketConvictionBatch(-1);
     res.render("mto-ticketConvict", {
         headTitle: "Convict Parking Tickets",
-        tickets: tickets,
-        batch: batch
+        tickets,
+        batch
     });
 });
 router.get("/convict/:batchID", function (req, res) {

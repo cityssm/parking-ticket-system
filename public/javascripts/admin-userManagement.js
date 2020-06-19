@@ -79,7 +79,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const userPropertiesContainerEle = document.getElementById("container--userProperties");
         cityssm.clearElement(userPropertiesContainerEle);
         cityssm.postJSON("/admin/doGetUserProperties", {
-            userName: userName
+            userName
         }, function (userPropertiesJSON) {
             let propertyIndex = 0;
             for (const propertyName in userPropertiesJSON) {

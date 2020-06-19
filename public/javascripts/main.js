@@ -91,16 +91,16 @@ const pts = {};
                     defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
             }
             return {
-                licencePlateCountryAlias: licencePlateCountryAlias,
-                licencePlateProvinceAlias: licencePlateProvinceAlias,
-                licencePlateProvince: licencePlateProvince
+                licencePlateCountryAlias,
+                licencePlateProvinceAlias,
+                licencePlateProvince
             };
         };
     const ticketStatusKeyToObject = new Map();
     let ticketStatusKeyToObjectIsLoaded = false;
     pts.getTicketStatus = function (statusKey) {
         const noResult = {
-            statusKey: statusKey,
+            statusKey,
             status: statusKey
         };
         if (!defaultConfigPropertiesIsLoaded) {

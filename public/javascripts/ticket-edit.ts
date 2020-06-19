@@ -16,94 +16,87 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
    * Form Management
    */
 
-  {
+  const formMessageEle = document.getElementById("container--form-message");
 
-    const formMessageEle = document.getElementById("container--form-message");
+  let hasUnsavedChanges = false;
 
-    let hasUnsavedChanges = false;
+  const setUnsavedChangesFn = function() {
 
-    const setUnsavedChangesFn = function() {
+    cityssm.enableNavBlocker();
 
-      cityssm.enableNavBlocker();
+    hasUnsavedChanges = true;
 
-      hasUnsavedChanges = true;
+    formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+      "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
+      " <span>Unsaved Changes</span>" +
+      "</div>";
 
-      formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
-        "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
-        " <span>Unsaved Changes</span>" +
-        "</div>";
+  };
 
-    };
+  const inputEles = document.querySelectorAll(".input, .select, .textarea");
 
-    const inputEles = document.querySelectorAll(".input, .select, .textarea");
+  for (const inputEle of inputEles) {
+    inputEle.addEventListener("change", setUnsavedChangesFn);
+  }
 
-    for (let inputIndex = 0; inputIndex < inputEles.length; inputIndex += 1) {
+  document.getElementById("form--ticket").addEventListener("submit", function(formEvent) {
 
-      inputEles[inputIndex].addEventListener("change", setUnsavedChangesFn);
+    formEvent.preventDefault();
 
-    }
+    const ticketNumber = (<HTMLInputElement>document.getElementById("ticket--ticketNumber")).value;
 
-    document.getElementById("form--ticket").addEventListener("submit", function(formEvent) {
+    formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+      "<span>Saving ticket... </span>" +
+      " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
+      "</div>";
 
-      formEvent.preventDefault();
+    cityssm.postJSON(
+      (isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"),
+      formEvent.currentTarget,
+      function(responseJSON) {
 
-      const ticketNumber = (<HTMLInputElement>document.getElementById("ticket--ticketNumber")).value;
+        if (responseJSON.success) {
 
-      formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
-        "<span>Saving ticket... </span>" +
-        " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
-        "</div>";
+          cityssm.disableNavBlocker();
+          hasUnsavedChanges = false;
 
-      cityssm.postJSON(
-        (isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"),
-        formEvent.currentTarget,
-        function(responseJSON) {
+          formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
+            "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+            " <span>Saved Successfully</span>" +
+            "</div>";
 
-          if (responseJSON.success) {
+        } else {
 
-            cityssm.disableNavBlocker();
-            hasUnsavedChanges = false;
-
-            formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
-              "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
-              " <span>Saved Successfully</span>" +
-              "</div>";
-
-          } else {
-
-            setUnsavedChangesFn();
-            cityssm.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
-
-          }
-
-          if (responseJSON.success && isCreate) {
-
-            cityssm.openHtmlModal("ticket-createSuccess", {
-              onshow: function() {
-
-                document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
-
-                document.getElementById("createSuccess--editTicketButton").setAttribute(
-                  "href",
-                  "/tickets/" + responseJSON.ticketID + "/edit"
-                );
-
-                document.getElementById("createSuccess--newTicketButton").setAttribute(
-                  "href",
-                  "/tickets/new/" + responseJSON.nextTicketNumber
-                );
-
-              }
-            });
-
-          }
+          setUnsavedChangesFn();
+          cityssm.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
 
         }
-      );
 
-    });
+        if (responseJSON.success && isCreate) {
 
-  }
+          cityssm.openHtmlModal("ticket-createSuccess", {
+            onshow() {
+
+              document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
+
+              document.getElementById("createSuccess--editTicketButton").setAttribute(
+                "href",
+                "/tickets/" + responseJSON.ticketID + "/edit"
+              );
+
+              document.getElementById("createSuccess--newTicketButton").setAttribute(
+                "href",
+                "/tickets/new/" + responseJSON.nextTicketNumber
+              );
+
+            }
+          });
+        }
+      }
+    );
+
+  });
+
 
   if (!isCreate) {
 
@@ -120,42 +113,32 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
           cityssm.postJSON(
             "/tickets/doDeleteTicket", {
-              ticketID: ticketID
+              ticketID
             },
             function(responseJSON) {
 
               if (responseJSON.success) {
-
                 window.location.href = "/tickets";
-
               }
-
             }
-
           );
-
         }
       );
-
     });
-
   }
 
   /*
    * Location Lookup
    */
 
-  pts.getDefaultConfigProperty("locationClasses", function(locationClassesList) {
+  pts.getDefaultConfigProperty("locationClasses", function(locationClassesList: ptsTypes.ConfigLocationClass[]) {
 
     let locationLookupCloseModalFn: Function;
-    const locationClassMap = {};
+    const locationClassMap = new Map<string, ptsTypes.ConfigLocationClass>();
     let locationList = [];
 
-    for (let index = 0; index < locationClassesList.length; index += 1) {
-
-      const locationClassObj = locationClassesList[index];
-      locationClassMap[locationClassObj.locationClassKey] = locationClassObj;
-
+    for (const locationClassObj of locationClassesList) {
+      locationClassMap.set(locationClassObj.locationClassKey, locationClassObj);
     }
 
     const clearLocationFn = function(clickEvent: Event) {
@@ -188,18 +171,16 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     const populateLocationsFn = function() {
 
-      cityssm.postJSON("/offences/doGetAllLocations", {}, function(locationListRes: []) {
+      cityssm.postJSON("/offences/doGetAllLocations", {}, function(locationListRes: ptsTypes.ParkingLocation[]) {
 
         locationList = locationListRes;
 
         const listEle = document.createElement("div");
         listEle.className = "panel mb-4";
 
-        for (let index = 0; index < locationList.length; index += 1) {
+        locationList.forEach(function(locationObj, index) {
 
-          const locationObj = locationList[index];
-
-          const locationClassObj = locationClassMap[locationObj.locationClassKey];
+          const locationClassObj = locationClassMap.get(locationObj.locationClassKey);
 
           const linkEle = document.createElement("a");
           linkEle.className = "panel-block is-block";
@@ -217,8 +198,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
             "</div>";
 
           listEle.insertAdjacentElement("beforeend", linkEle);
-
-        }
+        });
 
         const containerEle = document.getElementById("container--parkingLocations");
         cityssm.clearElement(containerEle);
@@ -233,7 +213,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       clickEvent.preventDefault();
 
       cityssm.openHtmlModal("ticket-setLocation", {
-        onshown: function(_modalEle, closeModalFn) {
+        onshown(_modalEle, closeModalFn) {
 
           locationLookupCloseModalFn = closeModalFn;
           populateLocationsFn();
@@ -241,7 +221,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           document.getElementById("is-clear-location-button").addEventListener("click", clearLocationFn);
 
         },
-        onremoved: function() {
+        onremoved() {
           document.getElementById("is-location-lookup-button").focus();
         }
       });
@@ -362,7 +342,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       // const locationName = document.getElementById("ticket--locationName").value;
 
       cityssm.postJSON("/offences/doGetOffencesByLocation", {
-        locationKey: locationKey
+        locationKey
       }, function(offenceListRes) {
 
         offenceList = offenceListRes;
@@ -370,9 +350,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         const listEle = document.createElement("div");
         listEle.className = "panel mb-4";
 
-        for (let index = 0; index < offenceList.length; index += 1) {
-
-          const offenceObj = offenceList[index];
+        offenceList.forEach(function(offenceObj, index) {
 
           const linkEle = document.createElement("a");
           linkEle.className = "panel-block is-block";
@@ -392,30 +370,23 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
           listEle.insertAdjacentElement("beforeend", linkEle);
           listItemEles.push(linkEle);
-
-        }
+        });
 
         const containerEle = document.getElementById("container--bylawNumbers");
         cityssm.clearElement(containerEle);
         containerEle.appendChild(listEle);
-
       });
-
     };
 
     const filterBylawsFn = function(keyupEvent: Event) {
 
       const searchStringSplit = (<HTMLInputElement>keyupEvent.currentTarget).value.trim().toLowerCase().split(" ");
 
-      for (let recordIndex = 0; recordIndex < offenceList.length; recordIndex += 1) {
+      offenceList.forEach(function(offenceRecord, recordIndex) {
 
         let displayRecord = true;
 
-        const offenceRecord = offenceList[recordIndex];
-
-        for (let searchIndex = 0; searchIndex < searchStringSplit.length; searchIndex += 1) {
-
-          const searchPiece = searchStringSplit[searchIndex];
+        for (const searchPiece of searchStringSplit) {
 
           if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 && offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
             displayRecord = false;
@@ -428,7 +399,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         } else {
           listItemEles[recordIndex].classList.add("is-hidden");
         }
-      }
+      });
     };
 
     const openBylawLookupModalFn = function(clickEvent: Event) {
@@ -436,7 +407,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       clickEvent.preventDefault();
 
       cityssm.openHtmlModal("ticket-setBylawOffence", {
-        onshown: function(_modalEle, closeModalFn) {
+        onshown(_modalEle, closeModalFn) {
 
           bylawLookupCloseModalFn = closeModalFn;
           populateBylawsFn();
@@ -449,7 +420,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           document.getElementById("is-clear-bylaw-button").addEventListener("click", clearBylawOffenceFn);
 
         },
-        onremoved: function() {
+        onremoved() {
           document.getElementById("is-bylaw-lookup-button").focus();
         }
       });
@@ -490,72 +461,61 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
    * Licence Plate Province Datalist
    */
 
-  {
+  const populateLicencePlateProvinceDatalistFn = function() {
 
-    const populateLicencePlateProvinceDatalistFn = function() {
+    const datalistEle = document.getElementById("datalist--licencePlateProvince");
+    cityssm.clearElement(datalistEle);
 
-      const datalistEle = document.getElementById("datalist--licencePlateProvince");
-      cityssm.clearElement(datalistEle);
+    const countryProperties =
+      pts.getLicencePlateCountryProperties((<HTMLInputElement>document.getElementById("ticket--licencePlateCountry")).value);
 
-      const countryProperties =
-        pts.getLicencePlateCountryProperties((<HTMLInputElement>document.getElementById("ticket--licencePlateCountry")).value);
+    if (countryProperties && countryProperties.provinces) {
 
-      if (countryProperties && countryProperties.provinces) {
+      const provincesList = Object.values(countryProperties.provinces);
 
-        const provincesList = Object.values(countryProperties.provinces);
+      for (const province of provincesList) {
 
-        for (let index = 0; index < provincesList.length; index += 1) {
-
-          const optionEle = document.createElement("option");
-          optionEle.setAttribute("value", provincesList[index].provinceShortName);
-          datalistEle.appendChild(optionEle);
-
-        }
+        const optionEle = document.createElement("option");
+        optionEle.setAttribute("value", province.provinceShortName);
+        datalistEle.appendChild(optionEle);
 
       }
+    }
+  };
 
-    };
+  document.getElementById("ticket--licencePlateCountry")
+    .addEventListener("change", populateLicencePlateProvinceDatalistFn);
 
-    document.getElementById("ticket--licencePlateCountry")
-      .addEventListener("change", populateLicencePlateProvinceDatalistFn);
+  pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFn);
 
-    pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFn);
-
-  }
 
   /*
    * Unlock Buttons
    */
 
-  {
+  const unlockFieldFn = function(unlockBtnClickEvent: Event) {
 
-    const unlockFieldFn = function(unlockBtnClickEvent: Event) {
+    unlockBtnClickEvent.preventDefault();
 
-      unlockBtnClickEvent.preventDefault();
+    const unlockBtnEle = <HTMLButtonElement>unlockBtnClickEvent.currentTarget;
 
-      const unlockBtnEle = <HTMLButtonElement>unlockBtnClickEvent.currentTarget;
+    const inputTag = unlockBtnEle.getAttribute("data-unlock");
 
-      const inputTag = unlockBtnEle.getAttribute("data-unlock");
+    const readOnlyEle = <HTMLInputElement>unlockBtnEle.closest(".field").getElementsByTagName(inputTag)[0];
 
-      const readOnlyEle = <HTMLInputElement>unlockBtnEle.closest(".field").getElementsByTagName(inputTag)[0];
+    readOnlyEle.removeAttribute("readonly");
+    readOnlyEle.classList.remove("is-readonly");
 
-      readOnlyEle.removeAttribute("readonly");
-      readOnlyEle.classList.remove("is-readonly");
+    readOnlyEle.focus();
 
-      readOnlyEle.focus();
+    unlockBtnEle.setAttribute("disabled", "disabled");
 
-      unlockBtnEle.setAttribute("disabled", "disabled");
+  };
 
-    };
+  const unlockBtnEles = document.getElementsByClassName("is-unlock-field-button");
 
-    const unlockBtnEles = document.getElementsByClassName("is-unlock-field-button");
-
-    for (let buttonIndex = 0; buttonIndex < unlockBtnEles.length; buttonIndex += 1) {
-
-      unlockBtnEles[buttonIndex].addEventListener("click", unlockFieldFn);
-
-    }
-
+  for (const unlockBtnEle of unlockBtnEles) {
+    unlockBtnEle.addEventListener("click", unlockFieldFn);
   }
 
 }());

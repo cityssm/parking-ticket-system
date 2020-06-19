@@ -126,7 +126,7 @@ router.post("/doAcknowledgeLookupError", function(req, res) {
   const success = parkingDBLookup.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
 
   res.json({
-    success: success
+    success
   });
 
 });
@@ -262,7 +262,7 @@ router.post("/doQuickReconcileMatches", function(req, res) {
 
   return res.json({
     success: true,
-    statusRecords: statusRecords
+    statusRecords
   });
 
 });
@@ -403,9 +403,7 @@ router.post("/doUnlockConvictionBatch", function(req, res) {
 
   const success = parkingDBConvict.unlockConvictionBatch(batchID, req.session);
 
-  return res.json({
-    success: success
-  });
+  return res.json({ success });
 
 });
 

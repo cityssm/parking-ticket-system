@@ -169,7 +169,7 @@ declare const pts: ptsGlobal;
 
     cityssm.postJSON(
       "/admin/doGetUserProperties", {
-        userName: userName
+        userName
       },
       function(userPropertiesJSON) {
 

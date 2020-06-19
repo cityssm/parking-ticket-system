@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         cityssm.confirmModal("Mark Ticket as Resolved?", "Once resolved, you will no longer be able to make changes to the ticket.", "Yes, Resolve Ticket", "info", function () {
             cityssm.postJSON("/tickets/doResolveTicket", {
-                ticketID: ticketID
+                ticketID
             }, function (responseJSON) {
                 if (responseJSON.success) {
                     window.location.href = "/tickets/" + ticketID;
@@ -225,7 +225,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</p>" +
             "</div>");
         cityssm.postJSON("/tickets/doGetStatuses", {
-            ticketID: ticketID
+            ticketID
         }, function (resultList) {
             statusList = resultList;
             populateStatusesPanelFn();

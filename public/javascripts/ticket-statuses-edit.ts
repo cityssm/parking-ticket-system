@@ -39,7 +39,7 @@ declare const pts: ptsGlobal;
 
         cityssm.postJSON(
           "/tickets/doResolveTicket", {
-            ticketID: ticketID
+            ticketID
           },
           function(responseJSON) {
 
@@ -385,7 +385,7 @@ declare const pts: ptsGlobal;
     );
 
     cityssm.postJSON("/tickets/doGetStatuses", {
-      ticketID: ticketID
+      ticketID
     }, function(resultList) {
 
       statusList = resultList;

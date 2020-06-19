@@ -365,11 +365,11 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 
   return {
     success: true,
-    rowCount: rowCount,
-    errorCount: errorCount,
-    insertedErrorCount: insertedErrorCount,
-    recordCount: recordCount,
-    insertedRecordCount: insertedRecordCount
+    rowCount,
+    errorCount,
+    insertedErrorCount,
+    recordCount,
+    insertedRecordCount
   };
 }
 

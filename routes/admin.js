@@ -132,7 +132,7 @@ router.get("/cleanup", function (req, res) {
     const counts = parkingDBCleanup.getDatabaseCleanupCounts();
     res.render("admin-cleanup", {
         headTitle: "Database Cleanup",
-        counts: counts
+        counts
     });
 });
 router.post("/doCleanupTable", function (req, res) {

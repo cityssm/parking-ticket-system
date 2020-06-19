@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("ticket-editRemark", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 document.getElementById("editRemark--ticketID").value = ticketID;
                 document.getElementById("editRemark--remarkIndex").value = remarkObj.remarkIndex;
                 document.getElementById("editRemark--remark").value = remarkObj.remark;
@@ -47,7 +47,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("editRemark--remarkTimeString").value = remarkObj.remarkTimeString;
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 editRemarkCloseModalFn = closeModalFn;
             }
         });
@@ -135,11 +135,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("ticket-addRemark", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 document.getElementById("addRemark--ticketID").value = ticketID;
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 addRemarkCloseModalFn = closeModalFn;
             }
         });

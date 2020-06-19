@@ -27,8 +27,8 @@ router.get("/convict", function(req, res) {
 
   res.render("mto-ticketConvict", {
     headTitle: "Convict Parking Tickets",
-    tickets: tickets,
-    batch: batch
+    tickets,
+    batch
   });
 
 });

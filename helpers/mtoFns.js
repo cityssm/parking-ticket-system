@@ -203,11 +203,11 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
     db.close();
     return {
         success: true,
-        rowCount: rowCount,
-        errorCount: errorCount,
-        insertedErrorCount: insertedErrorCount,
-        recordCount: recordCount,
-        insertedRecordCount: insertedRecordCount
+        rowCount,
+        errorCount,
+        insertedErrorCount,
+        recordCount,
+        insertedRecordCount
     };
 }
 exports.importLicencePlateOwnership = importLicencePlateOwnership;
