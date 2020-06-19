@@ -31,17 +31,13 @@ declare const pts: ptsGlobal;
   });
 
   document.getElementById("is-create-user-button").addEventListener("click", function() {
-
     cityssm.showModal(createUserModalEle);
-
   });
 
   let cancelButtonEles = createUserModalEle.getElementsByClassName("is-cancel-button");
 
-  for (let buttonIndex = 0; buttonIndex < cancelButtonEles.length; buttonIndex += 1) {
-
-    cancelButtonEles[buttonIndex].addEventListener("click", cityssm.hideModal);
-
+  for (const cancelButtonEle of cancelButtonEles) {
+    cancelButtonEle.addEventListener("click", cityssm.hideModal);
   }
 
   // Existing users
@@ -86,10 +82,8 @@ declare const pts: ptsGlobal;
 
   const deleteUserButtonEles = userContainerEle.getElementsByClassName("is-delete-user-button");
 
-  for (let buttonIndex = 0; buttonIndex < deleteUserButtonEles.length; buttonIndex += 1) {
-
-    deleteUserButtonEles[buttonIndex].addEventListener("click", deleteUserFn);
-
+  for (const deleteUserButtonEle of deleteUserButtonEles) {
+    deleteUserButtonEle.addEventListener("click", deleteUserFn);
   }
 
   /*
@@ -157,10 +151,8 @@ declare const pts: ptsGlobal;
 
     // Spans
 
-    for (let index = 0; index < updateUserUserNameSpanEles.length; index += 1) {
-
-      updateUserUserNameSpanEles[index].innerText = userName;
-
+    for (const updateUserUserNameSpanEle of updateUserUserNameSpanEles) {
+      updateUserUserNameSpanEle.innerText = userName;
     }
 
     // Name form
@@ -246,18 +238,14 @@ declare const pts: ptsGlobal;
 
   const updateUserButtonEles = userContainerEle.getElementsByClassName("is-update-user-button");
 
-  for (let buttonIndex = 0; buttonIndex < updateUserButtonEles.length; buttonIndex += 1) {
-
-    updateUserButtonEles[buttonIndex].addEventListener("click", clickFn_updateUser);
-
+  for (const updateUserButtonEle of updateUserButtonEles) {
+    updateUserButtonEle.addEventListener("click", clickFn_updateUser);
   }
 
   cancelButtonEles = updateUserModalEle.getElementsByClassName("is-cancel-button");
 
-  for (let buttonIndex = 0; buttonIndex < cancelButtonEles.length; buttonIndex += 1) {
-
-    cancelButtonEles[buttonIndex].addEventListener("click", cityssm.hideModal);
-
+  for (const cancelButtonEle of cancelButtonEles) {
+    cancelButtonEle.addEventListener("click", cityssm.hideModal);
   }
 
   // User name
@@ -273,14 +261,10 @@ declare const pts: ptsGlobal;
         function(responseJSON) {
 
           if (responseJSON.success) {
-
             window.location.reload(true);
-
           }
-
         }
       );
-
     });
 
   // Reset password
@@ -302,12 +286,8 @@ declare const pts: ptsGlobal;
             newPasswordEle.innerText = responseJSON.newPassword;
 
             newPasswordEle.closest(".message").removeAttribute("hidden");
-
           }
-
         }
       );
-
     });
-
 }());

@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.confirmModal("Purge Table?", "Are you sure you want to purge the deleted records in this table? This cannot be undone.", "Yes, Delete the Records", "warning", purgeFn);
     }
     const purgeButtonEles = document.getElementsByClassName("is-purge-button");
-    for (let buttonIndex = 0; buttonIndex < purgeButtonEles.length; buttonIndex += 1) {
-        purgeButtonEles[buttonIndex].addEventListener("click", purgeTable);
+    for (const purgeButtonEle of purgeButtonEles) {
+        purgeButtonEle.addEventListener("click", purgeTable);
     }
 }());

@@ -385,7 +385,7 @@ declare const cityssm: cityssmGlobal;
     document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID;
 
     document.getElementById("batchSelector--batchDetails").innerHTML =
-      "<span class=\"icon is-small\"><i class=\"fas fa-calendar\"></i></span>" +
+      "<span class=\"icon is-small\"><i class=\"fas fa-calendar\" aria-hidden=\"true\"></i></span>" +
       "<span>" + batch.batchDateString + "</span>" +
       (batchIsLocked ?
         " <span class=\"tag is-light\">" +

@@ -296,9 +296,9 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 
   const rightNowMillis = Date.now();
 
-  for (let recordIndex = 1; recordIndex < ownershipDataRows.length - 1; recordIndex += 1) {
+  ownershipDataRows.forEach(function(ownershipDataRow) {
 
-    const recordRow = parsePKRD(ownershipDataRows[recordIndex]);
+    const recordRow = parsePKRD(ownershipDataRow);
 
     if (recordRow) {
 
@@ -346,10 +346,8 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
           ).changes;
 
       }
-
     }
-
-  }
+  });
 
   // Update batch
 

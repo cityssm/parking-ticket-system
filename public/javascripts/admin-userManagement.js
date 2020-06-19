@@ -14,8 +14,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.showModal(createUserModalEle);
     });
     let cancelButtonEles = createUserModalEle.getElementsByClassName("is-cancel-button");
-    for (let buttonIndex = 0; buttonIndex < cancelButtonEles.length; buttonIndex += 1) {
-        cancelButtonEles[buttonIndex].addEventListener("click", cityssm.hideModal);
+    for (const cancelButtonEle of cancelButtonEles) {
+        cancelButtonEle.addEventListener("click", cityssm.hideModal);
     }
     const userContainerEle = document.getElementById("container--users");
     function deleteUserFn(clickEvent) {
@@ -35,8 +35,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.confirmModal("Delete User?", "Are you sure you want to delete <em>" + cityssm.escapeHTML(userNameToDelete) + "</em>?<br />", "Yes, Delete", "warning", doDeleteFn);
     }
     const deleteUserButtonEles = userContainerEle.getElementsByClassName("is-delete-user-button");
-    for (let buttonIndex = 0; buttonIndex < deleteUserButtonEles.length; buttonIndex += 1) {
-        deleteUserButtonEles[buttonIndex].addEventListener("click", deleteUserFn);
+    for (const deleteUserButtonEle of deleteUserButtonEles) {
+        deleteUserButtonEle.addEventListener("click", deleteUserFn);
     }
     const updateUserModalEle = document.getElementById("is-update-user-modal");
     const updateUserUserNameSpanEles = updateUserModalEle.getElementsByClassName("container--userName");
@@ -70,8 +70,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const userName = linkEle.getAttribute("data-user-name");
         const firstName = linkEle.getAttribute("data-first-name");
         const lastName = linkEle.getAttribute("data-last-name");
-        for (let index = 0; index < updateUserUserNameSpanEles.length; index += 1) {
-            updateUserUserNameSpanEles[index].innerText = userName;
+        for (const updateUserUserNameSpanEle of updateUserUserNameSpanEles) {
+            updateUserUserNameSpanEle.innerText = userName;
         }
         document.getElementById("updateUser--userName").value = userName;
         document.getElementById("updateUser--firstName").value = firstName;
@@ -125,12 +125,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.showModal(updateUserModalEle);
     }
     const updateUserButtonEles = userContainerEle.getElementsByClassName("is-update-user-button");
-    for (let buttonIndex = 0; buttonIndex < updateUserButtonEles.length; buttonIndex += 1) {
-        updateUserButtonEles[buttonIndex].addEventListener("click", clickFn_updateUser);
+    for (const updateUserButtonEle of updateUserButtonEles) {
+        updateUserButtonEle.addEventListener("click", clickFn_updateUser);
     }
     cancelButtonEles = updateUserModalEle.getElementsByClassName("is-cancel-button");
-    for (let buttonIndex = 0; buttonIndex < cancelButtonEles.length; buttonIndex += 1) {
-        cancelButtonEles[buttonIndex].addEventListener("click", cityssm.hideModal);
+    for (const cancelButtonEle of cancelButtonEles) {
+        cancelButtonEle.addEventListener("click", cityssm.hideModal);
     }
     document.getElementById("tab--updateUser-name").getElementsByTagName("form")[0]
         .addEventListener("submit", function (formEvent) {

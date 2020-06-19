@@ -166,8 +166,8 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
     let recordCount = 0;
     let insertedRecordCount = 0;
     const rightNowMillis = Date.now();
-    for (let recordIndex = 1; recordIndex < ownershipDataRows.length - 1; recordIndex += 1) {
-        const recordRow = parsePKRD(ownershipDataRows[recordIndex]);
+    ownershipDataRows.forEach(function (ownershipDataRow) {
+        const recordRow = parsePKRD(ownershipDataRow);
         if (recordRow) {
             rowCount += 1;
             if (recordRow.errorCode !== "") {
@@ -193,7 +193,7 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
                     .run("CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate, recordRow.vehicleNCIC, recordRow.vehicleYear, recordRow.vehicleColor, recordRow.licencePlateExpiryDate, recordRow.ownerName1, recordRow.ownerName2, recordRow.ownerAddress, recordRow.ownerCity, recordRow.ownerProvince, recordRow.ownerPostalCode, recordRow.ownerGenderKey, recordRow.driverLicenceNumber, reqSession.user.userName, rightNowMillis, reqSession.user.userName, rightNowMillis).changes;
             }
         }
-    }
+    });
     db.prepare("update LicencePlateLookupBatches" +
         " set receivedDate = ?," +
         " recordUpdate_userName = ?," +
