@@ -4,6 +4,8 @@ declare const cityssm: cityssmGlobal;
 import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
+import type * as ptsTypes from "../../helpers/ptsTypes";
+
 
 (function() {
 
@@ -32,7 +34,7 @@ declare const pts: ptsGlobal;
 
     cityssm.postJSON("/tickets/doGetTickets", formEle, function(ticketResults) {
 
-      const ticketList = ticketResults.tickets;
+      const ticketList = <ptsTypes.ParkingTicket[]>ticketResults.tickets;
 
       if (ticketList.length === 0) {
 
@@ -44,7 +46,6 @@ declare const pts: ptsGlobal;
           "</div>";
 
         return;
-
       }
 
       searchResultsEle.innerHTML = "<table class=\"table is-fullwidth is-striped is-hoverable\">" +
@@ -61,9 +62,7 @@ declare const pts: ptsGlobal;
 
       const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
 
-      for (let ticketIndex = 0; ticketIndex < ticketList.length; ticketIndex += 1) {
-
-        const ticketObj = ticketList[ticketIndex];
+      for (const ticketObj of ticketList) {
 
         const trEle = document.createElement("tr");
 
@@ -80,11 +79,8 @@ declare const pts: ptsGlobal;
           const locationClassObj = locationClassLookup[ticketObj.locationClassKey];
 
           if (locationClassObj) {
-
             locationClass = locationClassObj.locationClass;
-
           }
-
         }
 
         // Statuses
@@ -136,7 +132,6 @@ declare const pts: ptsGlobal;
           "</td>";
 
         tbodyEle.appendChild(trEle);
-
       }
 
       searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
@@ -174,7 +169,6 @@ declare const pts: ptsGlobal;
           });
 
           paginationEle.appendChild(previousEle);
-
         }
 
         if (currentLimit + currentOffset < ticketResults.count) {
@@ -198,11 +192,8 @@ declare const pts: ptsGlobal;
         }
 
         searchResultsEle.getElementsByClassName("level")[0].appendChild(paginationEle);
-
       }
-
     });
-
   }
 
 
@@ -228,19 +219,13 @@ declare const pts: ptsGlobal;
 
     ticketNumberFieldLabel = fieldLabel;
 
-    pts.getDefaultConfigProperty("locationClasses", function(locationClasses) {
+    pts.getDefaultConfigProperty("locationClasses", function(locationClasses: ptsTypes.ConfigLocationClass[]) {
 
-      for (let locationClassIndex = 0; locationClassIndex < locationClasses.length; locationClassIndex += 1) {
-
-        const locationClassObj = locationClasses[locationClassIndex];
+      for (const locationClassObj of locationClasses) {
         locationClassLookup[locationClassObj.locationClassKey] = locationClassObj;
-
       }
 
       getTickets();
-
     });
-
   });
-
 }());

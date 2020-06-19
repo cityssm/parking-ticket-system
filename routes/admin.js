@@ -83,7 +83,7 @@ router.post("/doResetPassword", function (req, res) {
     const newPassword = usersDB.generateNewPassword(req.body.userName);
     res.json({
         success: true,
-        newPassword: newPassword
+        newPassword
     });
 });
 router.post("/doGetUserProperties", function (req, res) {

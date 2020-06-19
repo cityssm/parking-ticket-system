@@ -38,7 +38,7 @@ router.route("/")
     }
     else {
         res.render("login", {
-            userName: userName,
+            userName,
             message: "Login Failed",
             redirect: redirectURL
         });

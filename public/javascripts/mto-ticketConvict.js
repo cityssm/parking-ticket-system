@@ -385,8 +385,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         return;
                     }
                     resultsContainerEle.className = "list is-hoverable";
-                    for (let index = 0; index < batchList.length; index += 1) {
-                        const batch = batchList[index];
+                    for (const batch of batchList) {
                         const batchListItemEle = document.createElement("a");
                         batchListItemEle.className = "list-item";
                         batchListItemEle.setAttribute("data-batch-id", batch.batchID.toString());

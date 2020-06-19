@@ -445,7 +445,7 @@ router.get("/:ticketID", function (req, res) {
     }
     res.render("ticket-view", {
         headTitle: "Ticket " + ticket.ticketNumber,
-        ticket: ticket
+        ticket
     });
 });
 router.get("/byTicketNumber/:ticketNumber", function (req, res) {
@@ -477,7 +477,7 @@ router.get("/:ticketID/edit", function (req, res) {
     res.render("ticket-edit", {
         headTitle: "Ticket " + ticket.ticketNumber,
         isCreate: false,
-        ticket: ticket,
+        ticket,
         issueDateMaxString: dateTimeFns.dateToString(new Date()),
         vehicleMakeModelDatalist: vehicleMakeModelDatalist
     });

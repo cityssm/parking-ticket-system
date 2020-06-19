@@ -350,9 +350,7 @@ declare const pts: ptsGlobal;
               "success"
             );
 
-            for (let index = 0; index < responseJSON.statusRecords.length; index += 1) {
-
-              const statusRecord = responseJSON.statusRecords[index];
+            for (const statusRecord of responseJSON.statusRecords) {
 
               const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
 
@@ -375,11 +373,8 @@ declare const pts: ptsGlobal;
                 optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
 
               }
-
             }
-
           }
-
         });
 
       };

@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const batchEntry = batchEntriesList[recordIndex];
         const entryContainerEle = buttonEle.closest(".is-entry-container");
         cityssm.postJSON("/plates/doRemoveLicencePlateFromLookupBatch", {
-            batchID: batchID,
+            batchID,
             licencePlateCountry: "CA",
             licencePlateProvince: "ON",
             licencePlateNumber: batchEntry.licencePlateNumber
@@ -60,7 +60,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         const clearFn = function () {
             cityssm.postJSON("/plates/doClearLookupBatch", {
-                batchID: batchID
+                batchID
             }, function (responseJSON) {
                 if (responseJSON.success) {
                     fn_populateBatchView(responseJSON.batch);
@@ -156,7 +156,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         document.getElementById("is-loading-modal-message").innerText =
                             "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
                         cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
-                            batchID: batchID,
+                            batchID,
                             licencePlateCountry: "CA",
                             licencePlateProvince: "ON",
                             licencePlateNumbers: includedLicencePlates
@@ -191,7 +191,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "<em>Loading licence plates..." +
             "</p>";
         cityssm.postJSON("/plates-ontario/doGetPlatesAvailableForMTOLookup", {
-            batchID: batchID,
+            batchID,
             issueDaysAgo: availableIssueDaysAgoEle.value
         }, function (resultPlatesList) {
             availablePlatesList = resultPlatesList;
@@ -287,7 +287,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function fn_refreshBatch() {
         cityssm.postJSON("/plates/doGetLookupBatch", {
-            batchID: batchID
+            batchID
         }, function (batch) {
             fn_populateBatchView(batch);
             fn_refreshAvailablePlates();
@@ -380,7 +380,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             const lockFn = function () {
                 cityssm.postJSON("/plates/doLockLookupBatch", {
-                    batchID: batchID
+                    batchID
                 }, function (responseJSON) {
                     if (responseJSON.success) {
                         fn_populateBatchView(responseJSON.batch);

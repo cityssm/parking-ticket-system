@@ -38,8 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<tbody></tbody>" +
                 "</table>";
             const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
-            for (let ticketIndex = 0; ticketIndex < ticketList.length; ticketIndex += 1) {
-                const ticketObj = ticketList[ticketIndex];
+            for (const ticketObj of ticketList) {
                 const trEle = document.createElement("tr");
                 const locationProperties = pts.getLicencePlateLocationProperties(ticketObj.licencePlateCountry, ticketObj.licencePlateProvince);
                 let locationClass = "";
@@ -145,8 +144,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     pts.getDefaultConfigProperty("ticketNumber_fieldLabel", function (fieldLabel) {
         ticketNumberFieldLabel = fieldLabel;
         pts.getDefaultConfigProperty("locationClasses", function (locationClasses) {
-            for (let locationClassIndex = 0; locationClassIndex < locationClasses.length; locationClassIndex += 1) {
-                const locationClassObj = locationClasses[locationClassIndex];
+            for (const locationClassObj of locationClasses) {
                 locationClassLookup[locationClassObj.locationClassKey] = locationClassObj;
             }
             getTickets();

@@ -129,7 +129,7 @@ router.post("/doResetPassword", function(req, res) {
 
   res.json({
     success: true,
-    newPassword: newPassword
+    newPassword
   });
 
 });

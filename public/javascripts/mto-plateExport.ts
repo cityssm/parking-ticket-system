@@ -95,7 +95,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
     cityssm.postJSON(
       "/plates/doRemoveLicencePlateFromLookupBatch", {
-        batchID: batchID,
+        batchID,
         licencePlateCountry: "CA",
         licencePlateProvince: "ON",
         licencePlateNumber: batchEntry.licencePlateNumber
@@ -127,7 +127,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
     const clearFn = function() {
 
       cityssm.postJSON("/plates/doClearLookupBatch", {
-        batchID: batchID
+        batchID
       }, function(responseJSON) {
 
         if (responseJSON.success) {
@@ -281,7 +281,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
               "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
 
             cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
-              batchID: batchID,
+              batchID,
               licencePlateCountry: "CA",
               licencePlateProvince: "ON",
               licencePlateNumbers: includedLicencePlates
@@ -336,7 +336,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
     cityssm.postJSON(
       "/plates-ontario/doGetPlatesAvailableForMTOLookup", {
-        batchID: batchID,
+        batchID,
         issueDaysAgo: availableIssueDaysAgoEle.value
       },
       function(resultPlatesList) {
@@ -490,7 +490,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
     cityssm.postJSON(
       "/plates/doGetLookupBatch", {
-        batchID: batchID
+        batchID
       },
       function(batch: LicencePlateLookupBatch) {
 
@@ -644,7 +644,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
       const lockFn = function() {
 
         cityssm.postJSON("/plates/doLockLookupBatch", {
-          batchID: batchID
+          batchID
         }, function(responseJSON) {
 
           if (responseJSON.success) {

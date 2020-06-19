@@ -70,8 +70,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             let showRecord = true;
             const locationNameLowerCase = location.locationName.toLowerCase();
-            for (let searchIndex = 0; searchIndex < locationNameFilterSplit.length; searchIndex += 1) {
-                if (locationNameLowerCase.indexOf(locationNameFilterSplit[searchIndex]) === -1) {
+            for (const locationNamePiece of locationNameFilterSplit) {
+                if (locationNameLowerCase.indexOf(locationNamePiece) === -1) {
                     showRecord = false;
                     break;
                 }
@@ -140,7 +140,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("location-add", {
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 addLocationCloseModalFn = closeModalFn;
                 document.getElementById("addLocation--locationClassKey")
                     .insertAdjacentHTML("beforeend", locationClassKeyOptionsHTML);

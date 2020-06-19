@@ -209,8 +209,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         cityssm.alertModal("Quick Reconcile Complete", (responseJSON.statusRecords.length === 1 ?
                             "One record was successfully reconciled as a match." :
                             responseJSON.statusRecords.length + " records were successfully reconciled as matches."), "OK", "success");
-                        for (let index = 0; index < responseJSON.statusRecords.length; index += 1) {
-                            const statusRecord = responseJSON.statusRecords[index];
+                        for (const statusRecord of responseJSON.statusRecords) {
                             const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
                             if (optionsTdEle) {
                                 cityssm.clearElement(optionsTdEle);
