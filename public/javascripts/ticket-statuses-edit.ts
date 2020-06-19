@@ -4,6 +4,8 @@ declare const cityssm: cityssmGlobal;
 import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
+import type * as ptsTypes from "../../helpers/ptsTypes";
+
 
 (function() {
 
@@ -151,7 +153,7 @@ declare const pts: ptsGlobal;
 
     cityssm.openHtmlModal("ticket-editStatus", {
 
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         (<HTMLInputElement>document.getElementById("editStatus--ticketID")).value = ticketID;
         (<HTMLInputElement>document.getElementById("editStatus--statusIndex")).value = statusObj.statusIndex;
@@ -166,15 +168,13 @@ declare const pts: ptsGlobal;
 
         (<HTMLInputElement>document.getElementById("editStatus--statusTimeString")).value = statusObj.statusTimeString;
 
-        pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses) {
+        pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) {
 
           let statusKeyFound = false;
 
           const statusKeyEle = <HTMLSelectElement>document.getElementById("editStatus--statusKey");
 
-          for (let statusKeyIndex = 0; statusKeyIndex < parkingTicketStatuses.length; statusKeyIndex += 1) {
-
-            const statusKeyObj = parkingTicketStatuses[statusKeyIndex];
+          for (const statusKeyObj of parkingTicketStatuses) {
 
             if (statusKeyObj.isUserSettable || statusKeyObj.statusKey === statusObj.statusKey) {
 
@@ -225,7 +225,7 @@ declare const pts: ptsGlobal;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
 
         editStatusCloseModalFn = closeModalFn;
 
@@ -255,9 +255,8 @@ declare const pts: ptsGlobal;
 
     // Loop through statuses
 
-    for (let index = 0; index < statusList.length; index += 1) {
+    for (const statusObj of statusList) {
 
-      const statusObj = statusList[index];
       const statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
 
       const panelBlockEle = document.createElement("div");
@@ -480,7 +479,7 @@ declare const pts: ptsGlobal;
 
     cityssm.openHtmlModal("ticket-addStatus", {
 
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         (<HTMLInputElement>document.getElementById("addStatus--ticketID")).value = ticketID;
 
@@ -509,7 +508,7 @@ declare const pts: ptsGlobal;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
         addStatusCloseModalFn = closeModalFn;
       }
 
@@ -553,7 +552,7 @@ declare const pts: ptsGlobal;
 
     cityssm.openHtmlModal("ticket-addStatusPaid", {
 
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         (<HTMLInputElement>document.getElementById("addPaidStatus--ticketID")).value = ticketID;
 
@@ -588,7 +587,7 @@ declare const pts: ptsGlobal;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
         addPaidStatusCloseModalFn = closeModalFn;
       }
 

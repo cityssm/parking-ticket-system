@@ -141,8 +141,7 @@ router.post("/doQuickReconcileMatches", function (req, res) {
     }
     const records = parkingDBLookup.getOwnershipReconciliationRecords();
     let statusRecords = [];
-    for (let recordIndex = 0; recordIndex < records.length; recordIndex += 1) {
-        const record = records[recordIndex];
+    for (const record of records) {
         if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
             continue;
         }

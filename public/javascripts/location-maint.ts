@@ -4,6 +4,8 @@ declare const cityssm: cityssmGlobal;
 import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
+import type * as ptsTypes from "../../helpers/ptsTypes";
+
 
 (function() {
 
@@ -15,7 +17,7 @@ declare const pts: ptsGlobal;
 
   const locationClassKeyMap = new Map();
 
-  let locationList = exports.locations;
+  let locationList = <ptsTypes.ParkingLocation[]>exports.locations;
   delete exports.locations;
 
   function openEditLocationModal(clickEvent: Event) {
@@ -123,14 +125,10 @@ declare const pts: ptsGlobal;
 
     const tbodyEle = document.createElement("tbody");
 
-    for (let locationIndex = 0; locationIndex < locationList.length; locationIndex += 1) {
-
-      const location = locationList[locationIndex];
+    locationList.forEach(function(location, locationIndex) {
 
       if (locationClassKeyFilter !== "" && locationClassKeyFilter !== location.locationClassKey) {
-
-        continue;
-
+        return;
       }
 
       let showRecord = true;
@@ -148,9 +146,7 @@ declare const pts: ptsGlobal;
       }
 
       if (!showRecord) {
-
-        continue;
-
+        return;
       }
 
       displayCount += 1;
@@ -173,7 +169,7 @@ declare const pts: ptsGlobal;
 
       tbodyEle.appendChild(trEle);
 
-    }
+    });
 
     cityssm.clearElement(locationResultsEle);
 
@@ -204,13 +200,11 @@ declare const pts: ptsGlobal;
   locationClassKeyFilterEle.addEventListener("change", renderLocationList);
   locationNameFilterEle.addEventListener("keyup", renderLocationList);
 
-  pts.getDefaultConfigProperty("locationClasses", function(locationClassesList) {
+  pts.getDefaultConfigProperty("locationClasses", function(locationClassesList: ptsTypes.ConfigLocationClass[]) {
 
     locationClassKeyFilterEle.innerHTML = "<option value=\"\">(All Location Classes)</option>";
 
-    for (let index = 0; index < locationClassesList.length; index += 1) {
-
-      const locationClass = locationClassesList[index];
+    for (const locationClass of locationClassesList) {
 
       locationClassKeyOptionsHTML +=
         "<option value=\"" + locationClass.locationClassKey + "\">" +

@@ -233,9 +233,7 @@ router.post("/doQuickReconcileMatches", function(req, res) {
 
   let statusRecords: { ticketID: number, statusIndex: number }[] = [];
 
-  for (let recordIndex = 0; recordIndex < records.length; recordIndex += 1) {
-
-    const record = records[recordIndex];
+  for (const record of records) {
 
     if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
       continue;

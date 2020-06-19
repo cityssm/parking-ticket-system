@@ -288,9 +288,7 @@ export function addAllParkingTicketsToConvictionBatch(batchID: number, ticketIDs
 
   let successCount = 0;
 
-  for (let index = 0; index < ticketIDs.length; index += 1) {
-
-    const ticketID = ticketIDs[index];
+  for (const ticketID of ticketIDs) {
 
     // Get the next status index
 
@@ -357,7 +355,6 @@ export function addAllParkingTicketsToConvictionBatch(batchID: number, ticketIDs
   return {
     successCount
   };
-
 }
 
 

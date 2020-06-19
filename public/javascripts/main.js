@@ -107,8 +107,7 @@ const pts = {};
             return noResult;
         }
         if (!ticketStatusKeyToObjectIsLoaded) {
-            for (let index = 0; index < defaultConfigProperties.parkingTicketStatuses.length; index += 1) {
-                const ticketStatusObj = defaultConfigProperties.parkingTicketStatuses[index];
+            for (const ticketStatusObj of defaultConfigProperties.parkingTicketStatuses) {
                 ticketStatusKeyToObject.set(ticketStatusObj.statusKey, ticketStatusObj);
             }
             ticketStatusKeyToObjectIsLoaded = true;
@@ -134,8 +133,8 @@ pts.initializeTabs = function (tabsListEle, callbackFns) {
         (isPanelOrMenuListTabs ? tabLinkEle : tabLinkEle.parentElement).classList.add("is-active");
         tabLinkEle.setAttribute("aria-selected", "true");
         const tabContentEles = tabContentEle.parentElement.getElementsByClassName("tab-content");
-        for (let index = 0; index < tabContentEles.length; index += 1) {
-            tabContentEles[index].classList.remove("is-active");
+        for (const tabContentEle of tabContentEles) {
+            tabContentEle.classList.remove("is-active");
         }
         tabContentEle.classList.add("is-active");
         if (callbackFns && callbackFns.onshown) {
@@ -157,8 +156,8 @@ pts.initializeTabs = function (tabsListEle, callbackFns) {
     }
     pts.initializeToggleHiddenLinks = function (searchContainerEle) {
         const linkEles = searchContainerEle.getElementsByClassName("is-toggle-hidden-link");
-        for (let index = 0; index < linkEles.length; index += 1) {
-            linkEles[index].addEventListener("click", toggleHiddenFn);
+        for (const linkEle of linkEles) {
+            linkEle.addEventListener("click", toggleHiddenFn);
         }
     };
 }());

@@ -399,9 +399,7 @@ function exportBatch(sentDate: number, batchEntries: {
 
   const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
 
-  for (let index = 0; index < batchEntries.length; index += 1) {
-
-    const entry = batchEntries[index];
+  for (const entry of batchEntries) {
 
     if (entry.ticketID === null) {
       continue;

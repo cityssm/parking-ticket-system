@@ -64,10 +64,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const locationNameFilterSplit = locationNameFilterEle.value.trim().toLowerCase()
             .split(" ");
         const tbodyEle = document.createElement("tbody");
-        for (let locationIndex = 0; locationIndex < locationList.length; locationIndex += 1) {
-            const location = locationList[locationIndex];
+        locationList.forEach(function (location, locationIndex) {
             if (locationClassKeyFilter !== "" && locationClassKeyFilter !== location.locationClassKey) {
-                continue;
+                return;
             }
             let showRecord = true;
             const locationNameLowerCase = location.locationName.toLowerCase();
@@ -78,7 +77,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             }
             if (!showRecord) {
-                continue;
+                return;
             }
             displayCount += 1;
             const locationClass = locationClassKeyMap.has(location.locationClassKey) ?
@@ -94,7 +93,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<td>" + cityssm.escapeHTML(locationClass) + "</td>";
             trEle.getElementsByTagName("a")[0].addEventListener("click", openEditLocationModal);
             tbodyEle.appendChild(trEle);
-        }
+        });
         cityssm.clearElement(locationResultsEle);
         if (displayCount === 0) {
             locationResultsEle.innerHTML = "<div class=\"message is-info\">" +
@@ -114,8 +113,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     locationNameFilterEle.addEventListener("keyup", renderLocationList);
     pts.getDefaultConfigProperty("locationClasses", function (locationClassesList) {
         locationClassKeyFilterEle.innerHTML = "<option value=\"\">(All Location Classes)</option>";
-        for (let index = 0; index < locationClassesList.length; index += 1) {
-            const locationClass = locationClassesList[index];
+        for (const locationClass of locationClassesList) {
             locationClassKeyOptionsHTML +=
                 "<option value=\"" + locationClass.locationClassKey + "\">" +
                     cityssm.escapeHTML(locationClass.locationClass) +

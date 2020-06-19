@@ -194,8 +194,7 @@ function addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, reqSession) {
     const statusTime = dateTimeFns.dateToTimeInteger(rightNow);
     const timeMillis = rightNow.getTime();
     let successCount = 0;
-    for (let index = 0; index < ticketIDs.length; index += 1) {
-        const ticketID = ticketIDs[index];
+    for (const ticketID of ticketIDs) {
         let newStatusIndex = db.prepare("select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
             " from ParkingTicketStatusLog" +
             " where ticketID = ?")

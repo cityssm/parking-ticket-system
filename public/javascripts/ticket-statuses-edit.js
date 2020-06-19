@@ -74,7 +74,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         };
         cityssm.openHtmlModal("ticket-editStatus", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 document.getElementById("editStatus--ticketID").value = ticketID;
                 document.getElementById("editStatus--statusIndex").value = statusObj.statusIndex;
                 document.getElementById("editStatus--statusField").value = statusObj.statusField;
@@ -87,8 +87,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 pts.getDefaultConfigProperty("parkingTicketStatuses", function (parkingTicketStatuses) {
                     let statusKeyFound = false;
                     const statusKeyEle = document.getElementById("editStatus--statusKey");
-                    for (let statusKeyIndex = 0; statusKeyIndex < parkingTicketStatuses.length; statusKeyIndex += 1) {
-                        const statusKeyObj = parkingTicketStatuses[statusKeyIndex];
+                    for (const statusKeyObj of parkingTicketStatuses) {
                         if (statusKeyObj.isUserSettable || statusKeyObj.statusKey === statusObj.statusKey) {
                             statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusKeyObj.statusKey + "\">" +
                                 statusKeyObj.status +
@@ -118,7 +117,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 });
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 editStatusCloseModalFn = closeModalFn;
             }
         });
@@ -135,8 +134,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>");
             return;
         }
-        for (let index = 0; index < statusList.length; index += 1) {
-            const statusObj = statusList[index];
+        for (const statusObj of statusList) {
             const statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
             const panelBlockEle = document.createElement("div");
             panelBlockEle.className = "panel-block is-block";
@@ -281,7 +279,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         };
         cityssm.openHtmlModal("ticket-addStatus", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 document.getElementById("addStatus--ticketID").value = ticketID;
                 pts.getDefaultConfigProperty("parkingTicketStatuses", function (parkingTicketStatuses) {
                     const statusKeyEle = document.getElementById("addStatus--statusKey");
@@ -297,7 +295,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 });
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 addStatusCloseModalFn = closeModalFn;
             }
         });
@@ -321,7 +319,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("ticket-addStatusPaid", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 document.getElementById("addPaidStatus--ticketID").value = ticketID;
                 const statusFieldEle = document.getElementById("addPaidStatus--statusField");
                 const offenceAmount = document.getElementById("ticket--offenceAmount").value;
@@ -342,7 +340,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 addPaidStatusCloseModalFn = closeModalFn;
             }
         });

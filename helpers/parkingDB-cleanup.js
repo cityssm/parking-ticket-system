@@ -116,12 +116,12 @@ function cleanupParkingOffencesTable() {
         " where isActive = 0" +
         " and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)")
         .all();
-    for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
+    for (const record of recordsToDelete) {
         db.prepare("delete from ParkingOffences" +
             " where bylawNumber = ?" +
             " and locationKey = ?" +
             " and isActive = 0")
-            .run(recordsToDelete[recordIndex].bylawNumber, recordsToDelete[recordIndex].locationKey);
+            .run(record.bylawNumber, record.locationKey);
     }
     db.close();
     return true;

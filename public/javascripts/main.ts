@@ -202,9 +202,7 @@ const pts: ptsGlobal = {};
 
     if (!ticketStatusKeyToObjectIsLoaded) {
 
-      for (let index = 0; index < defaultConfigProperties.parkingTicketStatuses.length; index += 1) {
-
-        const ticketStatusObj = defaultConfigProperties.parkingTicketStatuses[index];
+      for (const ticketStatusObj of defaultConfigProperties.parkingTicketStatuses) {
         ticketStatusKeyToObject.set(ticketStatusObj.statusKey, ticketStatusObj);
       }
 
@@ -245,7 +243,6 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 
       listItemEles[index].classList.remove("is-active");
       tabLinkEles[index].setAttribute("aria-selected", "false");
-
     }
 
     // Add is-active to the selected tab
@@ -254,20 +251,15 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 
     const tabContentEles = tabContentEle.parentElement.getElementsByClassName("tab-content");
 
-    for (let index = 0; index < tabContentEles.length; index += 1) {
-
-      tabContentEles[index].classList.remove("is-active");
-
+    for (const tabContentEle of tabContentEles) {
+      tabContentEle.classList.remove("is-active");
     }
 
     tabContentEle.classList.add("is-active");
 
     if (callbackFns && callbackFns.onshown) {
-
       callbackFns.onshown(tabContentEle);
-
     }
-
   }
 
   for (let index = 0; index < listItemEles.length; index += 1) {
@@ -293,17 +285,14 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
     const divID = href.substring(href.indexOf("#") + 1);
 
     document.getElementById(divID).classList.toggle("is-hidden");
-
   }
 
   pts.initializeToggleHiddenLinks = function(searchContainerEle) {
 
     const linkEles = searchContainerEle.getElementsByClassName("is-toggle-hidden-link");
 
-    for (let index = 0; index < linkEles.length; index += 1) {
-
-      linkEles[index].addEventListener("click", toggleHiddenFn);
-
+    for (const linkEle of linkEles) {
+      linkEle.addEventListener("click", toggleHiddenFn);
     }
 
   };
