@@ -275,7 +275,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
       addAllButtonEle.addEventListener("click", function() {
 
         cityssm.openHtmlModal("loading", {
-          onshown: function(_modalEle, closeModalFn) {
+          onshown(_modalEle, closeModalFn) {
 
             document.getElementById("is-loading-modal-message").innerText =
               "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
@@ -418,9 +418,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
     const panelEle = document.createElement("div");
     panelEle.className = "panel";
 
-    for (let index = 0; index < batchEntriesList.length; index += 1) {
-
-      const batchEntry = batchEntriesList[index];
+    batchEntriesList.forEach(function(batchEntry, index) {
 
       const panelBlockEle = document.createElement("div");
       panelBlockEle.className = "panel-block is-block is-entry-container";
@@ -448,8 +446,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
       }
 
       panelEle.appendChild(panelBlockEle);
-
-    }
+    });
 
     if (batchIsLocked) {
 

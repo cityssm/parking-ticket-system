@@ -26,8 +26,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     const acknowledgeButtonEles = document.getElementsByClassName("is-acknowledge-error-button");
-    for (let index = 0; index < acknowledgeButtonEles.length; index += 1) {
-        acknowledgeButtonEles[index].addEventListener("click", clickFn_acknowledgeError);
+    for (const acknowledgeButtonEle of acknowledgeButtonEles) {
+        acknowledgeButtonEle.addEventListener("click", clickFn_acknowledgeError);
     }
     function clickFn_clearStatus(clickEvent) {
         clickEvent.preventDefault();
@@ -190,12 +190,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     const matchButtonEles = document.getElementsByClassName("is-ownership-match-button");
-    for (let index = 0; index < matchButtonEles.length; index += 1) {
-        matchButtonEles[index].addEventListener("click", clickFn_markAsMatch);
+    for (const matchButtonEle of matchButtonEles) {
+        matchButtonEle.addEventListener("click", clickFn_markAsMatch);
     }
     const errorButtonEles = document.getElementsByClassName("is-ownership-error-button");
-    for (let index = 0; index < errorButtonEles.length; index += 1) {
-        errorButtonEles[index].addEventListener("click", clickFn_markAsError);
+    for (const errorButtonEle of errorButtonEles) {
+        errorButtonEle.addEventListener("click", clickFn_markAsError);
     }
     const quickReconcilieButtonEle = document.getElementById("is-quick-reconcile-matches-button");
     if (quickReconcilieButtonEle) {

@@ -4,17 +4,19 @@ declare const cityssm: cityssmGlobal;
 import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
+import type * as ptsTypes from "../../helpers/ptsTypes";
+
 
 (function() {
 
   const locationClassMap = new Map();
 
-  const offenceMap = new Map();
+  const offenceMap = new Map<string, ptsTypes.ParkingOffence>();
 
   const offenceAccountNumberPatternString = exports.accountNumberPattern;
   delete exports.accountNumberPattern;
 
-  const locationMap = new Map();
+  const locationMap = new Map<string, ptsTypes.ParkingLocation>();
   const limitResultsCheckboxEle = <HTMLInputElement>document.getElementById("offenceFilter--limitResults");
   const resultsEle = document.getElementById("offenceResults");
 
@@ -24,7 +26,7 @@ declare const pts: ptsGlobal;
   let locationKeyFilterIsSet = false;
   let locationKeyFilter = "";
 
-  const bylawMap = new Map();
+  const bylawMap = new Map<string, ptsTypes.ParkingBylaw>();
 
   const bylawInputEle = <HTMLInputElement>document.getElementById("offenceFilter--bylaw");
   const bylawTextEle = document.getElementById("offenceFilter--bylawText");
@@ -38,19 +40,15 @@ declare const pts: ptsGlobal;
   }
 
 
-  function loadOffenceMap(offenceList: {bylawNumber: string, locationKey: string}[]) {
+  function loadOffenceMap(offenceList: ptsTypes.ParkingOffence[]) {
 
     offenceMap.clear();
 
-    for (let index = 0; index < offenceList.length; index += 1) {
+    for (const offence of offenceList) {
 
-      const offence = offenceList[index];
       const offenceMapKey = getOffenceMapKey(offence.bylawNumber, offence.locationKey);
-
       offenceMap.set(offenceMapKey, offence);
-
     }
-
   }
 
 
@@ -138,9 +136,9 @@ declare const pts: ptsGlobal;
         document.getElementById("offenceEdit--bylawDescription").innerText = bylaw.bylawDescription;
 
         (<HTMLInputElement>document.getElementById("offenceEdit--parkingOffence")).value = offence.parkingOffence;
-        (<HTMLInputElement>document.getElementById("offenceEdit--offenceAmount")).value = offence.offenceAmount;
-        (<HTMLInputElement>document.getElementById("offenceEdit--discountOffenceAmount")).value = offence.discountOffenceAmount;
-        (<HTMLInputElement>document.getElementById("offenceEdit--discountDays")).value = offence.discountDays;
+        (<HTMLInputElement>document.getElementById("offenceEdit--offenceAmount")).value = offence.offenceAmount.toFixed(2);
+        (<HTMLInputElement>document.getElementById("offenceEdit--discountOffenceAmount")).value = offence.discountOffenceAmount.toFixed(2);
+        (<HTMLInputElement>document.getElementById("offenceEdit--discountDays")).value = offence.discountDays.toString();
 
         const accountNumberEle = <HTMLInputElement>document.getElementById("offenceEdit--accountNumber");
         accountNumberEle.value = offence.accountNumber;
@@ -161,7 +159,7 @@ declare const pts: ptsGlobal;
   }
 
 
-  function addOffence(bylawNumber: string, locationKey: string, returnAndRenderOffences: boolean, callbackFn: (responseJSON: {success: boolean, message: string}) => any) {
+  function addOffence(bylawNumber: string, locationKey: string, returnAndRenderOffences: boolean, callbackFn: (responseJSON: { success: boolean, message: string }) => any) {
 
     cityssm.postJSON(
       "/admin/doAddOffence", {
@@ -349,7 +347,7 @@ declare const pts: ptsGlobal;
   }
 
 
-  function renderOffences () {
+  function renderOffences() {
 
     const tbodyEle = document.createElement("tbody");
 
@@ -692,7 +690,7 @@ declare const pts: ptsGlobal;
 
     cityssm.openHtmlModal("bylaw-select", {
 
-      onshow: function() {
+      onshow() {
 
         const listEle = document.createElement("div");
         listEle.className = "panel mb-4";
@@ -719,7 +717,7 @@ declare const pts: ptsGlobal;
         listContainerEle.appendChild(listEle);
 
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
 
         selectBylawCloseModalFn = closeModalFn;
 
@@ -754,11 +752,8 @@ declare const pts: ptsGlobal;
   // Load locationMap
 
 
-  for (let index = 0; index < exports.locations.length; index += 1) {
-
-    const location = exports.locations[index];
+  for (const location of exports.locations) {
     locationMap.set(location.locationKey, location);
-
   }
 
   delete exports.locations;
@@ -767,11 +762,8 @@ declare const pts: ptsGlobal;
   // Load bylawMap
 
 
-  for (let index = 0; index < exports.bylaws.length; index += 1) {
-
-    const bylaw = exports.bylaws[index];
+  for (const bylaw of exports.bylaws) {
     bylawMap.set(bylaw.bylawNumber, bylaw);
-
   }
 
   delete exports.bylaws;
@@ -787,13 +779,10 @@ declare const pts: ptsGlobal;
   // Load locationClasses
 
 
-  pts.getDefaultConfigProperty("locationClasses", function(locationClassList) {
+  pts.getDefaultConfigProperty("locationClasses", function(locationClassList: ptsTypes.ConfigLocationClass[]) {
 
-    for (let index = 0; index < locationClassList.length; index += 1) {
-
-      const locationClass = locationClassList[index];
+    for (const locationClass of locationClassList) {
       locationClassMap.set(locationClass.locationClassKey, locationClass);
-
     }
 
     renderOffences();

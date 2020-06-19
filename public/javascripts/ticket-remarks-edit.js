@@ -116,7 +116,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</p>" +
             "</div>");
         cityssm.postJSON("/tickets/doGetRemarks", {
-            ticketID: ticketID
+            ticketID
         }, function (resultList) {
             remarkList = resultList;
             populateRemarksPanelFn();

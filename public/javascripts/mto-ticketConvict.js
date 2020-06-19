@@ -158,7 +158,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const ticketID = currentBatch.batchEntries[index].ticketID;
         cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
             batchID: currentBatch.batchID,
-            ticketID: ticketID
+            ticketID
         }, function (resultJSON) {
             if (resultJSON.success) {
                 currentBatch.batchEntries.splice(index, 1);
@@ -266,8 +266,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const tbodyEle = document.createElement("tbody");
         const canRemove = canUpdate && !currentBatch.lockDate;
-        for (let index = 0; index < currentBatch.batchEntries.length; index += 1) {
-            const batchEntry = currentBatch.batchEntries[index];
+        currentBatch.batchEntries.forEach(function (batchEntry, index) {
             const trEle = document.createElement("tr");
             trEle.innerHTML = ("<td>" +
                 "<a href=\"/tickets/" + batchEntry.ticketID + "\" target=\"_blank\">" +
@@ -290,7 +289,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 trEle.getElementsByTagName("button")[0].addEventListener("click", removeTicketFromBatchByIndex);
             }
             tbodyEle.appendChild(trEle);
-        }
+        });
         const tableEle = document.createElement("table");
         tableEle.className = "table is-fullwidth is-striped is-hoverable";
         tableEle.innerHTML = "<thead><tr>" +
@@ -358,7 +357,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             const batchID = clickEvent.currentTarget.getAttribute("data-batch-id");
             cityssm.postJSON("/tickets/doGetConvictionBatch", {
-                batchID: batchID
+                batchID
             }, function (batchObj) {
                 currentBatch = batchObj;
                 renderCurrentBatch();
@@ -367,7 +366,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             selectBatchCloseModalFn();
         };
         cityssm.openHtmlModal("mto-selectBatch", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 if (canUpdate) {
                     const createButtonEle = modalEle.getElementsByClassName("is-create-batch-button")[0];
                     createButtonEle.classList.remove("is-hidden");
@@ -408,7 +407,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     }
                 });
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 selectBatchCloseModalFn = closeModalFn;
             }
         });

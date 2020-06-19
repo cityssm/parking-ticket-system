@@ -22,8 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function loadOffenceMap(offenceList) {
         offenceMap.clear();
-        for (let index = 0; index < offenceList.length; index += 1) {
-            const offence = offenceList[index];
+        for (const offence of offenceList) {
             const offenceMapKey = getOffenceMapKey(offence.bylawNumber, offence.locationKey);
             offenceMap.set(offenceMapKey, offence);
         }
@@ -74,9 +73,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("offenceEdit--bylawNumberSpan").innerText = bylaw.bylawNumber;
                 document.getElementById("offenceEdit--bylawDescription").innerText = bylaw.bylawDescription;
                 document.getElementById("offenceEdit--parkingOffence").value = offence.parkingOffence;
-                document.getElementById("offenceEdit--offenceAmount").value = offence.offenceAmount;
-                document.getElementById("offenceEdit--discountOffenceAmount").value = offence.discountOffenceAmount;
-                document.getElementById("offenceEdit--discountDays").value = offence.discountDays;
+                document.getElementById("offenceEdit--offenceAmount").value = offence.offenceAmount.toFixed(2);
+                document.getElementById("offenceEdit--discountOffenceAmount").value = offence.discountOffenceAmount.toFixed(2);
+                document.getElementById("offenceEdit--discountDays").value = offence.discountDays.toString();
                 const accountNumberEle = document.getElementById("offenceEdit--accountNumber");
                 accountNumberEle.value = offence.accountNumber;
                 accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
@@ -408,7 +407,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             renderOffences();
         };
         cityssm.openHtmlModal("bylaw-select", {
-            onshow: function () {
+            onshow() {
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
                 bylawMap.forEach(function (bylaw) {
@@ -425,7 +424,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 cityssm.clearElement(listContainerEle);
                 listContainerEle.appendChild(listEle);
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 selectBylawCloseModalFn = closeModalFn;
             }
         });
@@ -440,21 +439,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clearBylawFilter();
     }
     limitResultsCheckboxEle.addEventListener("change", renderOffences);
-    for (let index = 0; index < exports.locations.length; index += 1) {
-        const location = exports.locations[index];
+    for (const location of exports.locations) {
         locationMap.set(location.locationKey, location);
     }
     delete exports.locations;
-    for (let index = 0; index < exports.bylaws.length; index += 1) {
-        const bylaw = exports.bylaws[index];
+    for (const bylaw of exports.bylaws) {
         bylawMap.set(bylaw.bylawNumber, bylaw);
     }
     delete exports.bylaws;
     loadOffenceMap(exports.offences);
     delete exports.offences;
     pts.getDefaultConfigProperty("locationClasses", function (locationClassList) {
-        for (let index = 0; index < locationClassList.length; index += 1) {
-            const locationClass = locationClassList[index];
+        for (const locationClass of locationClassList) {
             locationClassMap.set(locationClass.locationClassKey, locationClass);
         }
         renderOffences();

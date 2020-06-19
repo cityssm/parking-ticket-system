@@ -6,7 +6,7 @@ const parkingDBOntario = require("../helpers/parkingDB-ontario");
 const parkingDBLookup = require("../helpers/parkingDB-lookup");
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 router.get("/mtoExport", function (req, res) {
     if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         res.redirect("/plates/?error=accessDenied");

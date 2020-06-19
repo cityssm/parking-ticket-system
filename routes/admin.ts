@@ -186,9 +186,7 @@ router.post("/doDeleteUser", function(req, res) {
 
   const success = usersDB.inactivateUser(userNameToDelete);
 
-  res.json({
-    success: success
-  });
+  res.json({ success });
 
 });
 
@@ -277,9 +275,7 @@ router.post("/doCleanupTable", function(req, res) {
       break;
   }
 
-  res.json({
-    success: success
-  });
+  res.json({ success });
 
 });
 

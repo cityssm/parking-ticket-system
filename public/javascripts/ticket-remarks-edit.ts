@@ -190,7 +190,7 @@ declare const cityssm: cityssmGlobal;
     );
 
     cityssm.postJSON("/tickets/doGetRemarks", {
-      ticketID: ticketID
+      ticketID
     }, function(resultList) {
 
       remarkList = resultList;

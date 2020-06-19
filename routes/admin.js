@@ -120,9 +120,7 @@ router.post("/doDeleteUser", function (req, res) {
         return;
     }
     const success = usersDB.inactivateUser(userNameToDelete);
-    res.json({
-        success: success
-    });
+    res.json({ success });
 });
 router.get("/cleanup", function (req, res) {
     if (!req.session.user.userProperties.isAdmin) {
@@ -171,9 +169,7 @@ router.post("/doCleanupTable", function (req, res) {
             success = parkingDBCleanup.cleanupParkingBylawsTable();
             break;
     }
-    res.json({
-        success: success
-    });
+    res.json({ success });
 });
 router.get("/offences", function (_req, res) {
     const locations = parkingDBRelated.getParkingLocations();

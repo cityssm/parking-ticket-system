@@ -8,7 +8,7 @@ import * as parkingDBLookup from "../helpers/parkingDB-lookup";
 
 import * as multer from 'multer';
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 
 router.get("/mtoExport", function(req, res) {

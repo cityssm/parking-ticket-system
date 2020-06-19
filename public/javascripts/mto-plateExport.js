@@ -152,7 +152,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<span>Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "</span>";
             addAllButtonEle.addEventListener("click", function () {
                 cityssm.openHtmlModal("loading", {
-                    onshown: function (_modalEle, closeModalFn) {
+                    onshown(_modalEle, closeModalFn) {
                         document.getElementById("is-loading-modal-message").innerText =
                             "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
                         cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
@@ -238,8 +238,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.clearElement(batchEntriesContainerEle);
         const panelEle = document.createElement("div");
         panelEle.className = "panel";
-        for (let index = 0; index < batchEntriesList.length; index += 1) {
-            const batchEntry = batchEntriesList[index];
+        batchEntriesList.forEach(function (batchEntry, index) {
             const panelBlockEle = document.createElement("div");
             panelBlockEle.className = "panel-block is-block is-entry-container";
             panelBlockEle.innerHTML = "<div class=\"level\">" +
@@ -261,7 +260,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 panelBlockEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_removeLicencePlateFromBatch);
             }
             panelEle.appendChild(panelBlockEle);
-        }
+        });
         if (batchIsLocked) {
             const downloadFileButtonEle = document.createElement("button");
             downloadFileButtonEle.className = "button is-fullwidth mb-3";

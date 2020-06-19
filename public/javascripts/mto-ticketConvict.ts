@@ -261,7 +261,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
       batchID: currentBatch.batchID,
-      ticketID: ticketID
+      ticketID
     }, function(resultJSON) {
 
       if (resultJSON.success) {
@@ -431,9 +431,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     const canRemove = canUpdate && !currentBatch.lockDate;
 
-    for (let index = 0; index < currentBatch.batchEntries.length; index += 1) {
-
-      const batchEntry = currentBatch.batchEntries[index];
+    currentBatch.batchEntries.forEach(function(batchEntry, index) {
 
       const trEle = document.createElement("tr");
 
@@ -462,7 +460,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       }
 
       tbodyEle.appendChild(trEle);
-    }
+    });
 
     const tableEle = document.createElement("table");
     tableEle.className = "table is-fullwidth is-striped is-hoverable";
@@ -577,7 +575,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       const batchID = (<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-batch-id");
 
       cityssm.postJSON("/tickets/doGetConvictionBatch", {
-        batchID: batchID
+        batchID
       }, function(batchObj) {
 
         currentBatch = batchObj;
@@ -591,7 +589,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     };
 
     cityssm.openHtmlModal("mto-selectBatch", {
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         if (canUpdate) {
 
@@ -648,7 +646,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
         });
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
 
         selectBatchCloseModalFn = closeModalFn;
 
