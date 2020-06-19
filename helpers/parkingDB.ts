@@ -91,9 +91,7 @@ function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: st
     " order by recordDate")
     .all(licencePlateNumber, recordDateOrBefore);
 
-  for (let index = 0; index < possibleOwners.length; index += 1) {
-
-    const possibleOwnerObj = possibleOwners[index];
+  for (const possibleOwnerObj of possibleOwners) {
 
     const ownerPlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] || possibleOwnerObj.licencePlateCountry;
 

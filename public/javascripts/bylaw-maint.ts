@@ -1,13 +1,15 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
 declare const cityssm: cityssmGlobal;
 
+import type { ParkingBylaw } from "../../helpers/ptsTypes";
+
 
 (function() {
 
   const bylawFilterEle = <HTMLInputElement>document.getElementById("bylawFilter--bylaw");
   const bylawResultsEle = document.getElementById("bylawResults");
 
-  let bylawList = exports.bylaws;
+  let bylawList = <ParkingBylaw[]>exports.bylaws;
   delete exports.bylaws;
 
 
@@ -36,17 +38,17 @@ declare const cityssm: cityssmGlobal;
     };
 
     cityssm.openHtmlModal("bylaw-updateOffences", {
-      onshow: function() {
+      onshow() {
 
         (<HTMLInputElement>document.getElementById("updateOffences--bylawNumber")).value = bylaw.bylawNumber;
         (<HTMLInputElement>document.getElementById("updateOffences--bylawDescription")).value = bylaw.bylawDescription;
 
-        (<HTMLInputElement>document.getElementById("updateOffences--offenceAmount")).value = bylaw.offenceAmountMin;
-        (<HTMLInputElement>document.getElementById("updateOffences--discountDays")).value = bylaw.discountDaysMin;
-        (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value = bylaw.discountOffenceAmountMin;
+        (<HTMLInputElement>document.getElementById("updateOffences--offenceAmount")).value = bylaw.offenceAmountMin.toFixed(2);
+        (<HTMLInputElement>document.getElementById("updateOffences--discountDays")).value = bylaw.discountDaysMin.toString();
+        (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value = bylaw.discountOffenceAmountMin.toFixed(2);
 
       },
-      onshown: function(modalEle, closeModalFn) {
+      onshown(modalEle, closeModalFn) {
 
         updateOffencesCloseModalFn = closeModalFn;
 
@@ -116,13 +118,13 @@ declare const cityssm: cityssmGlobal;
     };
 
     cityssm.openHtmlModal("bylaw-edit", {
-      onshow: function() {
+      onshow() {
 
         (<HTMLInputElement>document.getElementById("editBylaw--bylawNumber")).value = bylaw.bylawNumber;
         (<HTMLInputElement>document.getElementById("editBylaw--bylawDescription")).value = bylaw.bylawDescription;
 
       },
-      onshown: function(modalEle, closeModalFn) {
+      onshown(modalEle, closeModalFn) {
 
         editBylawCloseModalFn = closeModalFn;
 
@@ -145,31 +147,25 @@ declare const cityssm: cityssmGlobal;
 
     const tbodyEle = document.createElement("tbody");
 
-    for (let bylawIndex = 0; bylawIndex < bylawList.length; bylawIndex += 1) {
-
-      const bylaw = bylawList[bylawIndex];
+    bylawList.forEach(function(bylaw, bylawIndex) {
 
       let showRecord = true;
 
       const bylawNumberLowerCase = bylaw.bylawNumber.toLowerCase();
       const bylawDescriptionLowerCase = bylaw.bylawDescription.toLowerCase();
 
-      for (let searchIndex = 0; searchIndex < bylawFilterSplit.length; searchIndex += 1) {
+      for (const searchStringPiece of bylawFilterSplit) {
 
-        if (bylawNumberLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1 &&
-          bylawDescriptionLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1) {
+        if (bylawNumberLowerCase.indexOf(searchStringPiece) === -1 &&
+          bylawDescriptionLowerCase.indexOf(searchStringPiece) === -1) {
 
           showRecord = false;
           break;
-
         }
-
       }
 
       if (!showRecord) {
-
-        continue;
-
+        return;
       }
 
       displayCount += 1;
@@ -215,7 +211,7 @@ declare const cityssm: cityssmGlobal;
 
       tbodyEle.appendChild(trEle);
 
-    }
+    });
 
     cityssm.clearElement(bylawResultsEle);
 
@@ -299,12 +295,10 @@ declare const cityssm: cityssmGlobal;
 
     cityssm.openHtmlModal("bylaw-add", {
 
-      onshown: function(modalEle, closeModalFn) {
+      onshown(modalEle, closeModalFn) {
 
         addBylawCloseModalFn = closeModalFn;
-
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", addFn);
-
       }
 
     });

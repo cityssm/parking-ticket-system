@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const ticketID = convictableTickets[index].ticketID;
         cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
             batchID: currentBatch.batchID,
-            ticketID: ticketID
+            ticketID
         }, function (resultJSON) {
             if (resultJSON.success) {
                 currentBatch = resultJSON.batch;
@@ -53,13 +53,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("loading", {
-            onshow: function () {
+            onshow() {
                 document.getElementById("is-loading-modal-message").innerText =
                     "Adding " +
                         displayedTicketIDs.length +
                         " ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "...";
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 loadingCloseModalFn = closeModalFn;
                 addFn();
             }
@@ -94,11 +94,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const ticketFilter = ticketFilterEle.value.trim().toLowerCase();
         const tbodyEle = document.createElement("tbody");
-        for (let index = 0; index < convictableTickets.length; index += 1) {
-            const ticket = convictableTickets[index];
+        convictableTickets.forEach(function (ticket, index) {
             if (ticket.ticketNumber.toLowerCase().indexOf(ticketFilter) === -1 &&
                 ticket.licencePlateNumber.toLowerCase().indexOf(ticketFilter) === -1) {
-                continue;
+                return;
             }
             displayedTicketIDs.push(ticket.ticketID);
             const trEle = document.createElement("tr");
@@ -125,7 +124,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</td>");
             trEle.getElementsByTagName("button")[0].addEventListener("click", addTicketToBatchByIndex);
             tbodyEle.appendChild(trEle);
-        }
+        });
         if (displayedTicketIDs.length === 0) {
             convictableTicketsContainerEle.innerHTML = "<div class=\"message is-info\">" +
                 "<div class=\"message-body\">There are no parking tickets that meet the search criteria.</div>" +

@@ -54,8 +54,7 @@ function getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvinc
         " and recordDate >= ?" +
         " order by recordDate")
         .all(licencePlateNumber, recordDateOrBefore);
-    for (let index = 0; index < possibleOwners.length; index += 1) {
-        const possibleOwnerObj = possibleOwners[index];
+    for (const possibleOwnerObj of possibleOwners) {
         const ownerPlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] || possibleOwnerObj.licencePlateCountry;
         const ownerPlateProvinceAlias = (configFns.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})[possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
         if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {

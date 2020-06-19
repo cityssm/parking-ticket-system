@@ -1,6 +1,7 @@
 import type { ParkingTicket } from "./ptsTypes";
 declare type MTO_AvailableLicencePlate = {
     licencePlateNumber: string;
+    ticketIDMin: number;
     ticketCount: number;
     issueDateMin: number;
     issueDateMinString: string;

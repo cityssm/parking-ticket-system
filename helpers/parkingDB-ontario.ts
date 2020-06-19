@@ -7,6 +7,7 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 type MTO_AvailableLicencePlate = {
   licencePlateNumber: string,
+  ticketIDMin: number,
   ticketCount: number,
   issueDateMin: number,
   issueDateMinString: string,

@@ -195,6 +195,11 @@ export interface ParkingBylaw {
     bylawNumber: string;
     bylawDescription: string;
     isActive: boolean;
+    offenceCount?: number;
+    offenceAmountMin?: number;
+    offenceAmountMax?: number;
+    discountOffenceAmountMin?: number;
+    discountDaysMin?: number;
 }
 export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
     parkingOffence: string;

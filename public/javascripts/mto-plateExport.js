@@ -18,7 +18,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const plateRecord = availablePlatesList[recordIndex];
         const plateContainerEle = buttonEle.closest(".is-plate-container");
         cityssm.postJSON("/plates/doAddLicencePlateToLookupBatch", {
-            batchID: batchID,
+            batchID,
             licencePlateCountry: "CA",
             licencePlateProvince: "ON",
             licencePlateNumber: plateRecord.licencePlateNumber,
@@ -102,8 +102,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             let displayRecord = true;
             const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
-            for (let searchIndex = 0; searchIndex < filterStringSplit.length; searchIndex += 1) {
-                if (licencePlateNumberLowerCase.indexOf(filterStringSplit[searchIndex]) === -1) {
+            for (const searchStringPiece of filterStringSplit) {
+                if (licencePlateNumberLowerCase.indexOf(searchStringPiece) === -1) {
                     displayRecord = false;
                     break;
                 }
@@ -319,7 +319,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     const linkEle = document.createElement("a");
                     linkEle.className = "panel-block is-block";
                     linkEle.setAttribute("href", "#");
-                    linkEle.setAttribute("data-batch-id", batch.batchID);
+                    linkEle.setAttribute("data-batch-id", batch.batchID.toString());
                     linkEle.innerHTML = "<div class=\"columns\">" +
                         "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
                         "<div class=\"column has-text-right\">" +
@@ -348,7 +348,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("mto-selectBatch", {
-            onshow: function (modalEle) {
+            onshow(modalEle) {
                 resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
                 fn_loadBatches();
                 if (canUpdate) {
@@ -368,7 +368,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     });
                 }
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 selectBatchCloseModalFn = closeModalFn;
             }
         });

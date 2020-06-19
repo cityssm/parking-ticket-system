@@ -23,7 +23,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
   const convictableTicketsContainerEle = document.getElementById("convictable-tickets-container");
 
-  let displayedTicketIDs = [];
+  let displayedTicketIDs: number[] = [];
 
   function addTicketToBatchByIndex(clickEvent: Event) {
 
@@ -39,7 +39,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
       batchID: currentBatch.batchID,
-      ticketID: ticketID
+      ticketID
     }, function(resultJSON) {
 
       if (resultJSON.success) {
@@ -95,13 +95,13 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     };
 
     cityssm.openHtmlModal("loading", {
-      onshow: function() {
+      onshow() {
         document.getElementById("is-loading-modal-message").innerText =
           "Adding " +
           displayedTicketIDs.length +
           " ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "...";
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
         loadingCloseModalFn = closeModalFn;
         addFn();
       }
@@ -160,14 +160,12 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     const tbodyEle = document.createElement("tbody");
 
-    for (let index = 0; index < convictableTickets.length; index += 1) {
-
-      const ticket = convictableTickets[index];
+    convictableTickets.forEach(function(ticket, index) {
 
       if (ticket.ticketNumber.toLowerCase().indexOf(ticketFilter) === -1 &&
         ticket.licencePlateNumber.toLowerCase().indexOf(ticketFilter) === -1) {
 
-        continue;
+        return;
 
       }
 
@@ -202,7 +200,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       tbodyEle.appendChild(trEle);
 
-    }
+    });
 
     if (displayedTicketIDs.length === 0) {
 

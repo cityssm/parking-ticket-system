@@ -21,14 +21,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("bylaw-updateOffences", {
-            onshow: function () {
+            onshow() {
                 document.getElementById("updateOffences--bylawNumber").value = bylaw.bylawNumber;
                 document.getElementById("updateOffences--bylawDescription").value = bylaw.bylawDescription;
-                document.getElementById("updateOffences--offenceAmount").value = bylaw.offenceAmountMin;
-                document.getElementById("updateOffences--discountDays").value = bylaw.discountDaysMin;
-                document.getElementById("updateOffences--discountOffenceAmount").value = bylaw.discountOffenceAmountMin;
+                document.getElementById("updateOffences--offenceAmount").value = bylaw.offenceAmountMin.toFixed(2);
+                document.getElementById("updateOffences--discountDays").value = bylaw.discountDaysMin.toString();
+                document.getElementById("updateOffences--discountOffenceAmount").value = bylaw.discountOffenceAmountMin.toFixed(2);
             },
-            onshown: function (modalEle, closeModalFn) {
+            onshown(modalEle, closeModalFn) {
                 updateOffencesCloseModalFn = closeModalFn;
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
             }
@@ -65,11 +65,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("bylaw-edit", {
-            onshow: function () {
+            onshow() {
                 document.getElementById("editBylaw--bylawNumber").value = bylaw.bylawNumber;
                 document.getElementById("editBylaw--bylawDescription").value = bylaw.bylawDescription;
             },
-            onshown: function (modalEle, closeModalFn) {
+            onshown(modalEle, closeModalFn) {
                 editBylawCloseModalFn = closeModalFn;
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", editFn);
                 modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
@@ -81,20 +81,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const bylawFilterSplit = bylawFilterEle.value.trim().toLowerCase()
             .split(" ");
         const tbodyEle = document.createElement("tbody");
-        for (let bylawIndex = 0; bylawIndex < bylawList.length; bylawIndex += 1) {
-            const bylaw = bylawList[bylawIndex];
+        bylawList.forEach(function (bylaw, bylawIndex) {
             let showRecord = true;
             const bylawNumberLowerCase = bylaw.bylawNumber.toLowerCase();
             const bylawDescriptionLowerCase = bylaw.bylawDescription.toLowerCase();
-            for (let searchIndex = 0; searchIndex < bylawFilterSplit.length; searchIndex += 1) {
-                if (bylawNumberLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1 &&
-                    bylawDescriptionLowerCase.indexOf(bylawFilterSplit[searchIndex]) === -1) {
+            for (const searchStringPiece of bylawFilterSplit) {
+                if (bylawNumberLowerCase.indexOf(searchStringPiece) === -1 &&
+                    bylawDescriptionLowerCase.indexOf(searchStringPiece) === -1) {
                     showRecord = false;
                     break;
                 }
             }
             if (!showRecord) {
-                continue;
+                return;
             }
             displayCount += 1;
             const trEle = document.createElement("tr");
@@ -127,7 +126,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 trEle.getElementsByTagName("a")[1].addEventListener("click", openUpdateOffencesModal);
             }
             tbodyEle.appendChild(trEle);
-        }
+        });
         cityssm.clearElement(bylawResultsEle);
         if (displayCount === 0) {
             bylawResultsEle.innerHTML = "<div class=\"message is-info\">" +
@@ -167,7 +166,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("bylaw-add", {
-            onshown: function (modalEle, closeModalFn) {
+            onshown(modalEle, closeModalFn) {
                 addBylawCloseModalFn = closeModalFn;
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", addFn);
             }

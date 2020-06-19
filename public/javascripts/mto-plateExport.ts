@@ -1,6 +1,8 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
 declare const cityssm: cityssmGlobal;
 
+import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
+
 
 (function() {
 
@@ -20,7 +22,18 @@ declare const cityssm: cityssmGlobal;
 
   const licencePlateNumberFilterEle = <HTMLInputElement>document.getElementById("available--licencePlateNumber");
 
-  let availablePlatesList = [];
+  let availablePlatesList: {
+    licencePlateNumber: string,
+    ticketIDMin: number,
+    ticketCount: number,
+    issueDateMin: number,
+    issueDateMinString: string,
+    issueDateMax: number,
+    issueDateMaxString: string,
+    ticketNumbersConcat: string,
+    ticketNumbers: string[]
+  }[] = [];
+
   let batchEntriesList = [];
 
   function clickFn_addLicencePlateToBatch(clickEvent: Event) {
@@ -38,7 +51,7 @@ declare const cityssm: cityssmGlobal;
 
     cityssm.postJSON(
       "/plates/doAddLicencePlateToLookupBatch", {
-        batchID: batchID,
+        batchID,
         licencePlateCountry: "CA",
         licencePlateProvince: "ON",
         licencePlateNumber: plateRecord.licencePlateNumber,
@@ -199,15 +212,11 @@ declare const cityssm: cityssmGlobal;
       let displayRecord = true;
       const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
 
-      for (let searchIndex = 0; searchIndex < filterStringSplit.length; searchIndex += 1) {
-
-        if (licencePlateNumberLowerCase.indexOf(filterStringSplit[searchIndex]) === -1) {
-
+      for (const searchStringPiece of filterStringSplit) {
+        if (licencePlateNumberLowerCase.indexOf(searchStringPiece) === -1) {
           displayRecord = false;
           break;
-
         }
-
       }
 
       if (!displayRecord) {
@@ -318,7 +327,6 @@ declare const cityssm: cityssmGlobal;
         "</div>";
 
       return;
-
     }
 
     availablePlatesContainerEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
@@ -361,7 +369,7 @@ declare const cityssm: cityssmGlobal;
 
   const batchEntriesContainerEle = document.getElementById("is-batch-entries-container");
 
-  function fn_populateBatchView(batch) {
+  function fn_populateBatchView(batch: LicencePlateLookupBatch) {
 
     batchID = batch.batchID;
     batchEntriesList = batch.batchEntries;
@@ -487,7 +495,7 @@ declare const cityssm: cityssmGlobal;
       "/plates/doGetLookupBatch", {
         batchID: batchID
       },
-      function(batch) {
+      function(batch: LicencePlateLookupBatch) {
 
         fn_populateBatchView(batch);
         fn_refreshAvailablePlates();
@@ -518,7 +526,7 @@ declare const cityssm: cityssmGlobal;
 
     const fn_loadBatches = function() {
 
-      cityssm.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, function(batchList) {
+      cityssm.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, function(batchList: LicencePlateLookupBatch[]) {
 
         if (batchList.length === 0) {
 
@@ -539,7 +547,7 @@ declare const cityssm: cityssmGlobal;
           const linkEle = document.createElement("a");
           linkEle.className = "panel-block is-block";
           linkEle.setAttribute("href", "#");
-          linkEle.setAttribute("data-batch-id", batch.batchID);
+          linkEle.setAttribute("data-batch-id", batch.batchID.toString());
 
           linkEle.innerHTML = "<div class=\"columns\">" +
             "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
@@ -576,7 +584,7 @@ declare const cityssm: cityssmGlobal;
     };
 
     cityssm.openHtmlModal("mto-selectBatch", {
-      onshow: function(modalEle) {
+      onshow(modalEle) {
 
         resultsContainerEle = <HTMLDivElement>modalEle.getElementsByClassName("is-results-container")[0];
         fn_loadBatches();
@@ -619,10 +627,8 @@ declare const cityssm: cityssmGlobal;
         }
 
       },
-      onshown: function(_modalEle, closeModalFn) {
-
+      onshown(_modalEle, closeModalFn) {
         selectBatchCloseModalFn = closeModalFn;
-
       }
     });
 
@@ -635,9 +641,7 @@ declare const cityssm: cityssmGlobal;
     lockBatchButtonEle.addEventListener("click", function() {
 
       if (batchIsLocked) {
-
         return;
-
       }
 
       const lockFn = function() {
@@ -665,9 +669,7 @@ declare const cityssm: cityssmGlobal;
         "info",
         lockFn
       );
-
     });
-
   }
 
   if (exports.plateExportBatch) {
@@ -676,7 +678,6 @@ declare const cityssm: cityssmGlobal;
     delete exports.plateExportBatch;
 
     fn_refreshAvailablePlates();
-
   }
 
 }());
