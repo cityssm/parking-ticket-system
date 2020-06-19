@@ -22,7 +22,7 @@ declare const cityssm: cityssmGlobal;
         function() {
 
           cityssm.postJSON("/tickets/doUnresolveTicket", {
-            ticketID: ticketID
+            ticketID
           }, function(responseJSON) {
 
             if (responseJSON.success) {
@@ -58,7 +58,7 @@ declare const cityssm: cityssmGlobal;
         function() {
 
           cityssm.postJSON("/tickets/doRestoreTicket", {
-            ticketID: ticketID
+            ticketID
           }, function(responseJSON) {
 
             if (responseJSON.success) {

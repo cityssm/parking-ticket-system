@@ -483,22 +483,17 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         (<HTMLInputElement>document.getElementById("addStatus--ticketID")).value = ticketID;
 
-        pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses) {
+        pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) {
 
           const statusKeyEle = document.getElementById("addStatus--statusKey");
 
-          for (let index = 0; index < parkingTicketStatuses.length; index += 1) {
-
-            const statusObj = parkingTicketStatuses[index];
+          for (const statusObj of parkingTicketStatuses) {
 
             if (statusObj.isUserSettable) {
-
               statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
                 statusObj.status +
                 "</option>");
-
             }
-
           }
 
           statusKeyEle.addEventListener("change", statusKeyChangeFn);

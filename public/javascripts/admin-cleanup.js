@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const purgeFn = function () {
             cityssm.postJSON("/admin/doCleanupTable", {
                 table,
-                recordDelete_timeMillis: recordDelete_timeMillis
+                recordDelete_timeMillis
             }, function (responseJSON) {
                 if (responseJSON.success) {
                     cityssm.alertModal("Table Purged Successfully", "", "OK", "success");

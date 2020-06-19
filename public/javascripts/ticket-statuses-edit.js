@@ -283,8 +283,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("addStatus--ticketID").value = ticketID;
                 pts.getDefaultConfigProperty("parkingTicketStatuses", function (parkingTicketStatuses) {
                     const statusKeyEle = document.getElementById("addStatus--statusKey");
-                    for (let index = 0; index < parkingTicketStatuses.length; index += 1) {
-                        const statusObj = parkingTicketStatuses[index];
+                    for (const statusObj of parkingTicketStatuses) {
                         if (statusObj.isUserSettable) {
                             statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
                                 statusObj.status +

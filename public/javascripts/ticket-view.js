@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const ticketID = clickEvent.currentTarget.getAttribute("data-ticket-id");
             cityssm.confirmModal("Remove Resolved Status?", "Are you sure you want to remove the resolved status from this ticket?", "Yes, Mark as Unresolved", "warning", function () {
                 cityssm.postJSON("/tickets/doUnresolveTicket", {
-                    ticketID: ticketID
+                    ticketID
                 }, function (responseJSON) {
                     if (responseJSON.success) {
                         window.location.reload(true);
@@ -24,7 +24,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const ticketID = clickEvent.currentTarget.getAttribute("data-ticket-id");
             cityssm.confirmModal("Restore Ticket?", "Are you sure you want to restore this parking ticket?", "Yes, Restore the Ticket", "warning", function () {
                 cityssm.postJSON("/tickets/doRestoreTicket", {
-                    ticketID: ticketID
+                    ticketID
                 }, function (responseJSON) {
                     if (responseJSON.success) {
                         window.location.reload(true);

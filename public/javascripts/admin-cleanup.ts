@@ -20,7 +20,7 @@ declare const cityssm: cityssmGlobal;
 
       cityssm.postJSON("/admin/doCleanupTable", {
         table,
-        recordDelete_timeMillis: recordDelete_timeMillis
+        recordDelete_timeMillis
       },
         function(responseJSON) {
 

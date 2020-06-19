@@ -25,7 +25,7 @@ function getUser(userNameSubmitted, passwordPlain) {
                 userProperties.isDefaultAdmin = true;
                 return {
                     userName: userNameSubmitted,
-                    userProperties: userProperties
+                    userProperties
                 };
             }
         }
@@ -68,7 +68,7 @@ function getUser(userNameSubmitted, passwordPlain) {
     db.close();
     return {
         userName: databaseUserName,
-        userProperties: userProperties
+        userProperties
     };
 }
 exports.getUser = getUser;

@@ -41,7 +41,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
 
         return {
           userName: userNameSubmitted,
-          userProperties: userProperties
+          userProperties
         };
 
       }
@@ -116,7 +116,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
 
   return {
     userName: databaseUserName,
-    userProperties: userProperties
+    userProperties
   };
 
 }

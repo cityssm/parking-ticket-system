@@ -429,12 +429,12 @@ router.get([
     headTitle: "New Ticket",
     isCreate: true,
     ticket: {
-      ticketNumber: ticketNumber,
+      ticketNumber,
       licencePlateCountry: configFns.getProperty("defaults.country"),
       licencePlateProvince: configFns.getProperty("defaults.province")
     },
     issueDateMaxString: dateTimeFns.dateToString(new Date()),
-    vehicleMakeModelDatalist: vehicleMakeModelDatalist
+    vehicleMakeModelDatalist
   });
 
 });
@@ -813,7 +813,7 @@ router.get("/:ticketID/edit", function(req, res) {
     isCreate: false,
     ticket,
     issueDateMaxString: dateTimeFns.dateToString(new Date()),
-    vehicleMakeModelDatalist: vehicleMakeModelDatalist
+    vehicleMakeModelDatalist
   });
 
 });

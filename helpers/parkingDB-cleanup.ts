@@ -228,12 +228,12 @@ export function cleanupParkingLocationsTable() {
     " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)")
     .all();
 
-  for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
+  for (const record of recordsToDelete) {
 
     db.prepare("delete from ParkingLocations" +
       " where locationKey = ?" +
       " and isActive = 0")
-      .run(recordsToDelete[recordIndex].locationKey);
+      .run(record.locationKey);
   }
 
   db.close();
