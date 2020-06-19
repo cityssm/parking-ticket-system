@@ -96,10 +96,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const filterStringSplit = licencePlateNumberFilterEle.value.toLowerCase().trim()
             .split(" ");
         let includedLicencePlates = [];
-        for (let recordIndex = 0; recordIndex < availablePlatesList.length; recordIndex += 1) {
-            const plateRecord = availablePlatesList[recordIndex];
+        availablePlatesList.forEach(function (plateRecord, recordIndex) {
             if (!plateRecord) {
-                continue;
+                return;
             }
             let displayRecord = true;
             const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
@@ -110,7 +109,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             }
             if (!displayRecord) {
-                continue;
+                return;
             }
             includedLicencePlates.push([
                 plateRecord.licencePlateNumber,
@@ -144,7 +143,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>";
             resultEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_addLicencePlateToBatch);
             resultsPanelEle.appendChild(resultEle);
-        }
+        });
         if (includedLicencePlates.length > 0) {
             const addAllButtonEle = document.createElement("button");
             addAllButtonEle.className = "button is-fullwidth mb-3";

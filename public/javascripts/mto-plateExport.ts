@@ -189,15 +189,11 @@ declare const cityssm: cityssmGlobal;
 
     let includedLicencePlates = [];
 
-    for (let recordIndex = 0; recordIndex < availablePlatesList.length; recordIndex += 1) {
-
-      const plateRecord = availablePlatesList[recordIndex];
+    availablePlatesList.forEach(function(plateRecord, recordIndex) {
 
       // Tombstone record
       if (!plateRecord) {
-
-        continue;
-
+        return;
       }
 
       let displayRecord = true;
@@ -215,9 +211,7 @@ declare const cityssm: cityssmGlobal;
       }
 
       if (!displayRecord) {
-
-        continue;
-
+        return;
       }
 
       includedLicencePlates.push([
@@ -258,7 +252,7 @@ declare const cityssm: cityssmGlobal;
 
       resultsPanelEle.appendChild(resultEle);
 
-    }
+    });
 
     if (includedLicencePlates.length > 0) {
 
@@ -386,7 +380,6 @@ declare const cityssm: cityssmGlobal;
         lockBatchButtonEle.removeAttribute("disabled");
 
       }
-
     }
 
     document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID;

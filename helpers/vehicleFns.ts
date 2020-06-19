@@ -99,8 +99,8 @@ export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Fu
   if (useAPI) {
 
     fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
 
         db.prepare("update MakeModelSearchHistory" +
           " set resultCount = ?" +
@@ -131,7 +131,6 @@ export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Fu
               nowMillis, nowMillis);
 
           if (info.changes === 0) {
-
             db.prepare(updateSQL).run(nowMillis, record.Make_Name, record.Model_Name);
           }
         }
@@ -140,7 +139,7 @@ export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Fu
         return;
 
       })
-      .catch(err => {
+      .catch((_err) => {
 
         queryCloseCallbackFn();
         return;

@@ -64,17 +64,17 @@ function cleanupParkingTicketsTable(recordDelete_timeMillis) {
             "select 1 from LicencePlateLookupBatchEntries b" +
             " where t.ticketID = b.ticketID)"))
         .all(recordDelete_timeMillis);
-    for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
+    recordsToDelete.forEach(function (recordToDelete) {
         db.prepare("delete from ParkingTicketRemarks" +
             " where ticketID = ?")
-            .run(recordsToDelete[recordIndex].ticketID);
+            .run(recordToDelete.ticketID);
         db.prepare("delete from ParkingTicketStatusLog" +
             " where ticketID = ?")
-            .run(recordsToDelete[recordIndex].ticketID);
+            .run(recordToDelete.ticketID);
         db.prepare("delete from ParkingTickets" +
             " where ticketID = ?")
-            .run(recordsToDelete[recordIndex].ticketID);
-    }
+            .run(recordToDelete.ticketID);
+    });
     db.close();
     return true;
 }

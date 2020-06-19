@@ -17,21 +17,27 @@ function onError(error: Error) {
     throw error;
   }
 
+  let doProcessExit = false;
+
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case "EACCES":
 
+    case "EACCES":
       log.error("Requires elevated privileges");
-      process.exit(1);
-    // break;
+      doProcessExit = true;
+      break;
 
     case "EADDRINUSE":
       log.error("Port is already in use.");
-      process.exit(1);
-    // break;
+      doProcessExit = true;
+      break;
 
     default:
       throw error;
+  }
+
+  if (doProcessExit) {
+    process.exit(1);
   }
 }
 

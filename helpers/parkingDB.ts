@@ -160,40 +160,31 @@ export function getParkingTickets(reqSession: Express.Session, queryOptions: Get
 
     const ticketNumberPieces = queryOptions.ticketNumber.toLowerCase().split(" ");
 
-    for (let index = 0; index < ticketNumberPieces.length; index += 1) {
-
+    ticketNumberPieces.forEach(function(ticketNumberPiece) {
       sqlWhereClause += " and instr(lower(t.ticketNumber), ?)";
-      sqlParams.push(ticketNumberPieces[index]);
-
-    }
-
+      sqlParams.push(ticketNumberPiece);
+    });
   }
 
   if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
 
     const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
 
-    for (let index = 0; index < licencePlateNumberPieces.length; index += 1) {
-
+    licencePlateNumberPieces.forEach(function(licencePlateNumberPiece) {
       sqlWhereClause += " and instr(lower(t.licencePlateNumber), ?)";
-      sqlParams.push(licencePlateNumberPieces[index]);
-
-    }
-
+      sqlParams.push(licencePlateNumberPiece);
+    });
   }
 
   if (queryOptions.location && queryOptions.location !== "") {
 
     const locationPieces = queryOptions.location.toLowerCase().split(" ");
 
-    for (let index = 0; index < locationPieces.length; index += 1) {
-
+    locationPieces.forEach(function(locationPiece) {
       sqlWhereClause += " and (instr(lower(t.locationDescription), ?) or instr(lower(l.locationName), ?))";
-      sqlParams.push(locationPieces[index]);
-      sqlParams.push(locationPieces[index]);
-
-    }
-
+      sqlParams.push(locationPiece);
+      sqlParams.push(locationPiece);
+    });
   }
 
   // get the count
@@ -341,9 +332,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     " order by statusDate desc, statusTime desc, statusIndex desc")
     .all(ticketID);
 
-  for (let index = 0; index < ticket.statusLog.length; index += 1) {
-
-    const statusObj = ticket.statusLog[index];
+  ticket.statusLog.forEach(function(statusObj) {
 
     statusObj.statusDateString = dateTimeFns.dateIntegerToString(statusObj.statusDate);
     statusObj.statusTimeString = dateTimeFns.timeIntegerToString(statusObj.statusTime);
@@ -353,8 +342,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     } else {
       statusObj.canUpdate = canUpdateObject(statusObj, reqSession);
     }
-
-  }
+  });
 
   // Remarks
 
@@ -364,9 +352,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     " order by remarkDate desc, remarkTime desc, remarkIndex desc")
     .all(ticketID);
 
-  for (let index = 0; index < ticket.remarks.length; index += 1) {
-
-    const remarkObj = ticket.remarks[index];
+  ticket.remarks.forEach(function(remarkObj) {
 
     remarkObj.remarkDateString = dateTimeFns.dateIntegerToString(remarkObj.remarkDate);
     remarkObj.remarkTimeString = dateTimeFns.timeIntegerToString(remarkObj.remarkTime);
@@ -376,8 +362,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     } else {
       remarkObj.canUpdate = canUpdateObject(remarkObj, reqSession);
     }
-
-  }
+  });
 
   db.close();
 
@@ -788,10 +773,9 @@ export function getRecentParkingTicketVehicleMakeModelValues() {
 
   const vehicleMakeModelList = [];
 
-  for (let index = 0; index < rows.length; index += 1) {
-
-    vehicleMakeModelList.push(rows[index].vehicleMakeModel);
-  }
+  rows.forEach(function(row) {
+    vehicleMakeModelList.push(row.vehicleMakeModel);
+  });
 
   return vehicleMakeModelList;
 
@@ -1108,13 +1092,10 @@ export function getLicencePlates(queryOptions: GetLicencePlatesQueryOptions) {
 
     const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
 
-    for (let index = 0; index < licencePlateNumberPieces.length; index += 1) {
-
+    licencePlateNumberPieces.forEach(function(licencePlateNumberPiece) {
       sqlInnerWhereClause += " and instr(lower(licencePlateNumber), ?)";
-      sqlParams.push(licencePlateNumberPieces[index]);
-
-    }
-
+      sqlParams.push(licencePlateNumberPiece);
+    });
   }
 
   sqlParams = sqlParams.concat(sqlParams);

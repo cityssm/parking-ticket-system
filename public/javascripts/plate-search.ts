@@ -27,7 +27,7 @@ declare const pts: ptsGlobal;
 
     cityssm.postJSON("/plates/doGetLicencePlates", formEle, function(licencePlateResults) {
 
-      const plateList = licencePlateResults.licencePlates;
+      const plateList: any[] = licencePlateResults.licencePlates;
 
       if (plateList.length === 0) {
 
@@ -55,9 +55,7 @@ declare const pts: ptsGlobal;
 
       const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
 
-      for (let plateIndex = 0; plateIndex < plateList.length; plateIndex += 1) {
-
-        const plateObj = plateList[plateIndex];
+      plateList.forEach(function(plateObj) {
 
         const trEle = document.createElement("tr");
 
@@ -100,7 +98,7 @@ declare const pts: ptsGlobal;
 
         tbodyEle.appendChild(trEle);
 
-      }
+      });
 
       searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
         "<div class=\"level-left has-text-weight-bold\">" +

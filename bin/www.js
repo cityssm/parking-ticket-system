@@ -11,15 +11,21 @@ function onError(error) {
     if (error.syscall !== "listen") {
         throw error;
     }
+    let doProcessExit = false;
     switch (error.code) {
         case "EACCES":
             log.error("Requires elevated privileges");
-            process.exit(1);
+            doProcessExit = true;
+            break;
         case "EADDRINUSE":
             log.error("Port is already in use.");
-            process.exit(1);
+            doProcessExit = true;
+            break;
         default:
             throw error;
+    }
+    if (doProcessExit) {
+        process.exit(1);
     }
 }
 function onListening(server) {

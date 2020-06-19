@@ -54,8 +54,8 @@ function getModelsByMake(makeSearchStringOriginal, callbackFn) {
     }
     if (useAPI) {
         node_fetch_1.default(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
             db.prepare("update MakeModelSearchHistory" +
                 " set resultCount = ?" +
                 "where searchString = ?")
@@ -78,7 +78,7 @@ function getModelsByMake(makeSearchStringOriginal, callbackFn) {
             queryCloseCallbackFn();
             return;
         })
-            .catch(err => {
+            .catch((_err) => {
             queryCloseCallbackFn();
             return;
         });

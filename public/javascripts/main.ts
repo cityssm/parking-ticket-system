@@ -197,9 +197,7 @@ const pts: ptsGlobal = {};
     };
 
     if (!defaultConfigPropertiesIsLoaded) {
-
       return noResult;
-
     }
 
     if (!ticketStatusKeyToObjectIsLoaded) {
@@ -208,15 +206,12 @@ const pts: ptsGlobal = {};
 
         const ticketStatusObj = defaultConfigProperties.parkingTicketStatuses[index];
         ticketStatusKeyToObject.set(ticketStatusObj.statusKey, ticketStatusObj);
-
       }
 
       ticketStatusKeyToObjectIsLoaded = true;
-
     }
 
     return ticketStatusKeyToObject.has(statusKey) ? ticketStatusKeyToObject.get(statusKey) : noResult;
-
   };
 
 }());

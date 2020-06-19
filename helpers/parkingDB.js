@@ -90,25 +90,25 @@ function getParkingTickets(reqSession, queryOptions) {
     }
     if (queryOptions.ticketNumber && queryOptions.ticketNumber !== "") {
         const ticketNumberPieces = queryOptions.ticketNumber.toLowerCase().split(" ");
-        for (let index = 0; index < ticketNumberPieces.length; index += 1) {
+        ticketNumberPieces.forEach(function (ticketNumberPiece) {
             sqlWhereClause += " and instr(lower(t.ticketNumber), ?)";
-            sqlParams.push(ticketNumberPieces[index]);
-        }
+            sqlParams.push(ticketNumberPiece);
+        });
     }
     if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
         const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
-        for (let index = 0; index < licencePlateNumberPieces.length; index += 1) {
+        licencePlateNumberPieces.forEach(function (licencePlateNumberPiece) {
             sqlWhereClause += " and instr(lower(t.licencePlateNumber), ?)";
-            sqlParams.push(licencePlateNumberPieces[index]);
-        }
+            sqlParams.push(licencePlateNumberPiece);
+        });
     }
     if (queryOptions.location && queryOptions.location !== "") {
         const locationPieces = queryOptions.location.toLowerCase().split(" ");
-        for (let index = 0; index < locationPieces.length; index += 1) {
+        locationPieces.forEach(function (locationPiece) {
             sqlWhereClause += " and (instr(lower(t.locationDescription), ?) or instr(lower(l.locationName), ?))";
-            sqlParams.push(locationPieces[index]);
-            sqlParams.push(locationPieces[index]);
-        }
+            sqlParams.push(locationPiece);
+            sqlParams.push(locationPiece);
+        });
     }
     const count = db.prepare("select ifnull(count(*), 0) as cnt" +
         " from ParkingTickets t" +
@@ -215,8 +215,7 @@ function getParkingTicket(ticketID, reqSession) {
         " and ticketID = ?" +
         " order by statusDate desc, statusTime desc, statusIndex desc")
         .all(ticketID);
-    for (let index = 0; index < ticket.statusLog.length; index += 1) {
-        const statusObj = ticket.statusLog[index];
+    ticket.statusLog.forEach(function (statusObj) {
         statusObj.statusDateString = dateTimeFns.dateIntegerToString(statusObj.statusDate);
         statusObj.statusTimeString = dateTimeFns.timeIntegerToString(statusObj.statusTime);
         if (!ticket.canUpdate) {
@@ -225,14 +224,13 @@ function getParkingTicket(ticketID, reqSession) {
         else {
             statusObj.canUpdate = canUpdateObject(statusObj, reqSession);
         }
-    }
+    });
     ticket.remarks = db.prepare("select * from ParkingTicketRemarks" +
         " where recordDelete_timeMillis is null" +
         " and ticketID = ?" +
         " order by remarkDate desc, remarkTime desc, remarkIndex desc")
         .all(ticketID);
-    for (let index = 0; index < ticket.remarks.length; index += 1) {
-        const remarkObj = ticket.remarks[index];
+    ticket.remarks.forEach(function (remarkObj) {
         remarkObj.remarkDateString = dateTimeFns.dateIntegerToString(remarkObj.remarkDate);
         remarkObj.remarkTimeString = dateTimeFns.timeIntegerToString(remarkObj.remarkTime);
         if (!ticket.canUpdate) {
@@ -241,7 +239,7 @@ function getParkingTicket(ticketID, reqSession) {
         else {
             remarkObj.canUpdate = canUpdateObject(remarkObj, reqSession);
         }
-    }
+    });
     db.close();
     return ticket;
 }
@@ -494,9 +492,9 @@ function getRecentParkingTicketVehicleMakeModelValues() {
         .all(issueDate);
     db.close();
     const vehicleMakeModelList = [];
-    for (let index = 0; index < rows.length; index += 1) {
-        vehicleMakeModelList.push(rows[index].vehicleMakeModel);
-    }
+    rows.forEach(function (row) {
+        vehicleMakeModelList.push(row.vehicleMakeModel);
+    });
     return vehicleMakeModelList;
 }
 exports.getRecentParkingTicketVehicleMakeModelValues = getRecentParkingTicketVehicleMakeModelValues;
@@ -672,10 +670,10 @@ function getLicencePlates(queryOptions) {
     let sqlInnerWhereClause = " where recordDelete_timeMillis is null";
     if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
         const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
-        for (let index = 0; index < licencePlateNumberPieces.length; index += 1) {
+        licencePlateNumberPieces.forEach(function (licencePlateNumberPiece) {
             sqlInnerWhereClause += " and instr(lower(licencePlateNumber), ?)";
-            sqlParams.push(licencePlateNumberPieces[index]);
-        }
+            sqlParams.push(licencePlateNumberPiece);
+        });
     }
     sqlParams = sqlParams.concat(sqlParams);
     let sqlHavingClause = " having 1 = 1";

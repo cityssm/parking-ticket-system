@@ -40,9 +40,7 @@ declare const pts: ptsGlobal;
           renderLocationList();
 
         }
-
       });
-
     };
 
     const confirmDeleteFn = function(deleteClickEvent: Event) {

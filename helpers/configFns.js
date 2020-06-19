@@ -59,10 +59,9 @@ let parkingTicketStatusMapIsLoaded = false;
 function getParkingTicketStatus(statusKey) {
     if (!parkingTicketStatusMapIsLoaded) {
         const parkingTicketStatusList = getProperty("parkingTicketStatuses");
-        for (let index = 0; index < parkingTicketStatusList.length; index += 1) {
-            const statusObj = parkingTicketStatusList[index];
+        parkingTicketStatusList.forEach(function (statusObj) {
             parkingTicketStatusMap.set(statusObj.statusKey, statusObj);
-        }
+        });
         parkingTicketStatusMapIsLoaded = true;
     }
     return parkingTicketStatusMap.get(statusKey);
@@ -88,9 +87,9 @@ function getLicencePlateLocationProperties(originalLicencePlateCountry, original
             getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
     }
     return {
-        licencePlateCountryAlias: licencePlateCountryAlias,
-        licencePlateProvinceAlias: licencePlateProvinceAlias,
-        licencePlateProvince: licencePlateProvince
+        licencePlateCountryAlias,
+        licencePlateProvinceAlias,
+        licencePlateProvince
     };
 }
 exports.getLicencePlateLocationProperties = getLicencePlateLocationProperties;

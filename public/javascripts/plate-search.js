@@ -34,8 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<tbody></tbody>" +
                 "</table>";
             const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
-            for (let plateIndex = 0; plateIndex < plateList.length; plateIndex += 1) {
-                const plateObj = plateList[plateIndex];
+            plateList.forEach(function (plateObj) {
                 const trEle = document.createElement("tr");
                 const url = "/plates/" +
                     (plateObj.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObj.licencePlateCountry)) +
@@ -70,7 +69,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         plateObj.unresolvedTicketCount +
                         "</td>");
                 tbodyEle.appendChild(trEle);
-            }
+            });
             searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
                 "<div class=\"level-left has-text-weight-bold\">" +
                 "Displaying licence plates " +

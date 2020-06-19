@@ -105,19 +105,14 @@ export function getParkingTicketStatus(statusKey: string) {
 
     const parkingTicketStatusList: pts.ConfigParkingTicketStatus[] = getProperty("parkingTicketStatuses");
 
-    for (let index = 0; index < parkingTicketStatusList.length; index += 1) {
-
-      const statusObj = parkingTicketStatusList[index];
+    parkingTicketStatusList.forEach(function(statusObj) {
       parkingTicketStatusMap.set(statusObj.statusKey, statusObj);
-
-    }
+    });
 
     parkingTicketStatusMapIsLoaded = true;
-
   }
 
   return parkingTicketStatusMap.get(statusKey);
-
 }
 
 
@@ -161,9 +156,9 @@ export function getLicencePlateLocationProperties(originalLicencePlateCountry: s
   // Return
 
   return {
-    licencePlateCountryAlias: licencePlateCountryAlias,
-    licencePlateProvinceAlias: licencePlateProvinceAlias,
-    licencePlateProvince: licencePlateProvince
+    licencePlateCountryAlias,
+    licencePlateProvinceAlias,
+    licencePlateProvince
   };
 
 }
