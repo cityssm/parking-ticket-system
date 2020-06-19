@@ -254,12 +254,12 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
   res.render("plate-view", {
     headTitle: "Licence Plate " + licencePlateNumber,
 
-    licencePlateNumber: licencePlateNumber,
-    licencePlateProvince: licencePlateProvince,
-    licencePlateCountry: licencePlateCountry,
+    licencePlateNumber,
+    licencePlateProvince,
+    licencePlateCountry,
 
-    owners: owners,
-    tickets: tickets
+    owners,
+    tickets
   });
 });
 

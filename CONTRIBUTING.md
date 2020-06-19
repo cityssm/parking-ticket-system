@@ -5,7 +5,7 @@ while remaining open and budget conscious.
 
 **Thank you for taking the time to read the contributing guidelines.**
 
-### All contributions are welcome!
+### All contributions are welcome
 
 Being a very small team, contributions are greatly appreciated.  How can you contribute?
 
@@ -27,7 +27,7 @@ Email [corporateapps@cityssm.on.ca](mailto:corporateapps@cityssm.on.ca) instead.
 For all other bug reports, feature requests, or enhancements,
 open an issue and use the closest template.
 
-### Thanks Again!
+### Thanks Again
 
 We are a very small team with big aspirations and limited resources.
 Thank you for helping with this project in any way you can!

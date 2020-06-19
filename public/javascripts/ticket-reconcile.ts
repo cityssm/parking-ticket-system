@@ -233,11 +233,11 @@ declare const pts: ptsGlobal;
       const recordDate = trEle.getAttribute("data-record-date");
 
       cityssm.postJSON("/tickets/doReconcileAsError", {
-        licencePlateCountry: licencePlateCountry,
-        licencePlateProvince: licencePlateProvince,
-        licencePlateNumber: licencePlateNumber,
-        ticketID: ticketID,
-        recordDate: recordDate
+        licencePlateCountry,
+        licencePlateProvince,
+        licencePlateNumber,
+        ticketID,
+        recordDate
       }, function(responseJSON) {
 
         if (responseJSON.success) {

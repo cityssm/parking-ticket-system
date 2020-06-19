@@ -23,11 +23,8 @@ declare const pts: ptsGlobal;
       function(responseJSON) {
 
         if (responseJSON.success) {
-
           window.location.reload(true);
-
         }
-
       }
     );
 
@@ -71,9 +68,7 @@ declare const pts: ptsGlobal;
       }, function(resultJSON) {
 
         if (resultJSON.success) {
-
           trEle.remove();
-
         }
 
       });
@@ -87,7 +82,6 @@ declare const pts: ptsGlobal;
       "warning",
       doDeleteFn
     );
-
   }
 
   const deleteUserButtonEles = userContainerEle.getElementsByClassName("is-delete-user-button");

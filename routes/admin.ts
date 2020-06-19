@@ -57,7 +57,7 @@ router.post("/doCreateUser", function(req, res) {
 
     res.json({
       success: true,
-      newPassword: newPassword
+      newPassword
     });
 
   }
@@ -295,9 +295,9 @@ router.get("/offences", function(_req, res) {
 
   res.render("offence-maint", {
     headTitle: "Parking Offences",
-    locations: locations,
-    bylaws: bylaws,
-    offences: offences
+    locations,
+    bylaws,
+    offences
   });
 
 });
@@ -354,7 +354,7 @@ router.get("/locations", function(_req, res) {
 
   res.render("location-maint", {
     headTitle: "Parking Location Maintenance",
-    locations: locations
+    locations
   });
 
 });
@@ -411,7 +411,7 @@ router.get("/bylaws", function(_req, res) {
 
   res.render("bylaw-maint", {
     headTitle: "By-Law Maintenance",
-    bylaws: bylaws
+    bylaws
   });
 
 });

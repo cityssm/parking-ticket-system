@@ -594,7 +594,7 @@ declare const pts: ptsGlobal;
 
     cityssm.openHtmlModal("location-select", {
 
-      onshow: function() {
+      onshow() {
 
         const listEle = document.createElement("div");
         listEle.className = "panel mb-4";
@@ -629,7 +629,7 @@ declare const pts: ptsGlobal;
         listContainerEle.appendChild(listEle);
 
       },
-      onshown: function(_modalEle, closeModalFn) {
+      onshown(_modalEle, closeModalFn) {
 
         selectLocationCloseModalFn = closeModalFn;
 

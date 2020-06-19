@@ -233,7 +233,7 @@ function addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, reqSession) {
     }
     db.close();
     return {
-        successCount: successCount
+        successCount
     };
 }
 exports.addAllParkingTicketsToConvictionBatch = addAllParkingTicketsToConvictionBatch;

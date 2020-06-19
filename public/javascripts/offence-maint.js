@@ -350,7 +350,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             renderOffences();
         };
         cityssm.openHtmlModal("location-select", {
-            onshow: function () {
+            onshow() {
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
                 locationMap.forEach(function (location) {
@@ -375,7 +375,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 cityssm.clearElement(listContainerEle);
                 listContainerEle.appendChild(listEle);
             },
-            onshown: function (_modalEle, closeModalFn) {
+            onshown(_modalEle, closeModalFn) {
                 selectLocationCloseModalFn = closeModalFn;
             }
         });

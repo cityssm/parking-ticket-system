@@ -355,7 +355,7 @@ export function addAllParkingTicketsToConvictionBatch(batchID: number, ticketIDs
   db.close();
 
   return {
-    successCount: successCount
+    successCount
   };
 
 }

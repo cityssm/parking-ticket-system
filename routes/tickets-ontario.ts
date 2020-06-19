@@ -57,14 +57,12 @@ router.post("/doAddAllTicketsToConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -92,14 +90,12 @@ router.post("/doClearConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -126,14 +122,12 @@ router.post("/doRemoveTicketFromConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 

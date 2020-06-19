@@ -36,8 +36,8 @@ declare const cityssm: cityssmGlobal;
       function() {
 
         cityssm.postJSON("/tickets/doDeleteRemark", {
-          ticketID: ticketID,
-          remarkIndex: remarkIndex
+          ticketID,
+          remarkIndex
         }, function(resultJSON) {
 
           if (resultJSON.success) {

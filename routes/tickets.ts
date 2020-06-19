@@ -220,14 +220,12 @@ router.post("/doQuickReconcileMatches", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -279,14 +277,12 @@ router.post("/doGetRecentConvictionBatches", function(req, res) {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -301,14 +297,12 @@ router.post("/doGetConvictionBatch", function(req, res) {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -323,14 +317,12 @@ router.post("/doCreateConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -345,14 +337,12 @@ router.post("/doAddTicketToConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -378,14 +368,12 @@ router.post("/doLockConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -402,14 +390,12 @@ router.post("/doUnlockConvictionBatch", function(req, res) {
 
   if (!req.session.user.userProperties.canUpdate) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 

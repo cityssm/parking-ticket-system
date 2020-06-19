@@ -132,13 +132,12 @@ router.post("/doReconcileAsError", function (req, res) {
 });
 router.post("/doQuickReconcileMatches", function (req, res) {
     if (!req.session.user.userProperties.canUpdate) {
-        res
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const records = parkingDBLookup.getOwnershipReconciliationRecords();
     let statusRecords = [];
@@ -169,52 +168,48 @@ router.post("/doQuickReconcileMatches", function (req, res) {
 });
 router.post("/doGetRecentConvictionBatches", function (req, res) {
     if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-        res
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const batches = parkingDBConvict.getLastTenParkingTicketConvictionBatches();
     return res.json(batches);
 });
 router.post("/doGetConvictionBatch", function (req, res) {
     if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-        res
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const batch = parkingDBConvict.getParkingTicketConvictionBatch(req.body.batchID);
     return res.json(batch);
 });
 router.post("/doCreateConvictionBatch", function (req, res) {
     if (!req.session.user.userProperties.canUpdate) {
-        res
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(req.session);
     return res.json(batchResult);
 });
 router.post("/doAddTicketToConvictionBatch", function (req, res) {
     if (!req.session.user.userProperties.canUpdate) {
-        res
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const batchID = req.body.batchID;
     const ticketID = req.body.ticketID;
@@ -226,13 +221,12 @@ router.post("/doAddTicketToConvictionBatch", function (req, res) {
 });
 router.post("/doLockConvictionBatch", function (req, res) {
     if (!req.session.user.userProperties.canUpdate) {
-        res
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const batchID = req.body.batchID;
     const result = parkingDBConvict.lockConvictionBatch(batchID, req.session);
@@ -240,13 +234,12 @@ router.post("/doLockConvictionBatch", function (req, res) {
 });
 router.post("/doUnlockConvictionBatch", function (req, res) {
     if (!req.session.user.userProperties.canUpdate) {
-        res
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const batchID = req.body.batchID;
     const success = parkingDBConvict.unlockConvictionBatch(batchID, req.session);

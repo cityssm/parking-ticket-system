@@ -36,7 +36,7 @@ router.post("/doCreateUser", function (req, res) {
     else {
         res.json({
             success: true,
-            newPassword: newPassword
+            newPassword
         });
     }
 });
@@ -181,9 +181,9 @@ router.get("/offences", function (_req, res) {
     const offences = parkingDBRelated.getParkingOffences();
     res.render("offence-maint", {
         headTitle: "Parking Offences",
-        locations: locations,
-        bylaws: bylaws,
-        offences: offences
+        locations,
+        bylaws,
+        offences
     });
 });
 router.post("/doAddOffence", function (req, res) {
@@ -211,7 +211,7 @@ router.get("/locations", function (_req, res) {
     const locations = parkingDBRelated.getParkingLocations();
     res.render("location-maint", {
         headTitle: "Parking Location Maintenance",
-        locations: locations
+        locations
     });
 });
 router.post("/doAddLocation", function (req, res) {
@@ -239,7 +239,7 @@ router.get("/bylaws", function (_req, res) {
     const bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
     res.render("bylaw-maint", {
         headTitle: "By-Law Maintenance",
-        bylaws: bylaws
+        bylaws
     });
 });
 router.post("/doAddBylaw", function (req, res) {

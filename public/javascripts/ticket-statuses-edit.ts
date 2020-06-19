@@ -69,8 +69,8 @@ declare const pts: ptsGlobal;
       function() {
 
         cityssm.postJSON("/tickets/doDeleteStatus", {
-          ticketID: ticketID,
-          statusIndex: statusIndex
+          ticketID,
+          statusIndex
         }, function(resultJSON) {
 
           if (resultJSON.success) {

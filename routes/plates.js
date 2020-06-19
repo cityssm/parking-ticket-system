@@ -159,11 +159,11 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", fu
     const tickets = parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
     res.render("plate-view", {
         headTitle: "Licence Plate " + licencePlateNumber,
-        licencePlateNumber: licencePlateNumber,
-        licencePlateProvince: licencePlateProvince,
-        licencePlateCountry: licencePlateCountry,
-        owners: owners,
-        tickets: tickets
+        licencePlateNumber,
+        licencePlateProvince,
+        licencePlateCountry,
+        owners,
+        tickets
     });
 });
 module.exports = router;
