@@ -6,8 +6,14 @@ declare const pts: ptsGlobal;
 
 import type * as ptsTypes from "../../helpers/ptsTypes";
 
+type UpdateLocationResponseJSON = {
+  success: boolean,
+  message?: string,
+  locations?: ptsTypes.ParkingLocation[]
+};
 
-(function() {
+
+(() => {
 
   let locationClassKeyOptionsHTML = "";
 
@@ -20,32 +26,32 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
   let locationList = <ptsTypes.ParkingLocation[]>exports.locations;
   delete exports.locations;
 
-  function openEditLocationModal(clickEvent: Event) {
+  const openEditLocationModalFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
     const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
     const location = locationList[listIndex];
 
-    let editLocationCloseModalFn: Function;
+    let editLocationCloseModalFn: () => void;
 
-    const deleteFn = function() {
+    const deleteFn = () => {
 
       cityssm.postJSON("/admin/doDeleteLocation", {
         locationKey: location.locationKey
-      }, function(responseJSON) {
+      }, (responseJSON: UpdateLocationResponseJSON) => {
 
         if (responseJSON.success) {
 
           editLocationCloseModalFn();
           locationList = responseJSON.locations;
-          renderLocationList();
+          renderLocationListFn();
 
         }
       });
     };
 
-    const confirmDeleteFn = function(deleteClickEvent: Event) {
+    const confirmDeleteFn = (deleteClickEvent: Event) => {
 
       deleteClickEvent.preventDefault();
 
@@ -59,17 +65,17 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     };
 
-    const editFn = function(formEvent: Event) {
+    const editFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, (responseJSON: UpdateLocationResponseJSON) => {
 
         if (responseJSON.success) {
 
           editLocationCloseModalFn();
           locationList = responseJSON.locations;
-          renderLocationList();
+          renderLocationListFn();
 
         }
 
@@ -113,9 +119,9 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       }
     });
 
-  }
+  };
 
-  function renderLocationList() {
+  const renderLocationListFn = () => {
 
     let displayCount = 0;
 
@@ -125,7 +131,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     const tbodyEle = document.createElement("tbody");
 
-    locationList.forEach(function(location, locationIndex) {
+    locationList.forEach((location, locationIndex) => {
 
       if (locationClassKeyFilter !== "" && locationClassKeyFilter !== location.locationClassKey) {
         return;
@@ -163,7 +169,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         "</td>" +
         "<td>" + cityssm.escapeHTML(locationClass) + "</td>";
 
-      trEle.getElementsByTagName("a")[0].addEventListener("click", openEditLocationModal);
+      trEle.getElementsByTagName("a")[0].addEventListener("click", openEditLocationModalFn);
 
       tbodyEle.appendChild(trEle);
 
@@ -178,7 +184,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         "</div>";
 
       return;
-
     }
 
     locationResultsEle.innerHTML = "<table class=\"table is-fixed is-striped is-hoverable is-fullwidth\">" +
@@ -189,16 +194,16 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       "</table>";
 
     locationResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
-  }
+  };
 
 
   // Initialize location classes select and map
 
 
-  locationClassKeyFilterEle.addEventListener("change", renderLocationList);
-  locationNameFilterEle.addEventListener("keyup", renderLocationList);
+  locationClassKeyFilterEle.addEventListener("change", renderLocationListFn);
+  locationNameFilterEle.addEventListener("keyup", renderLocationListFn);
 
-  pts.getDefaultConfigProperty("locationClasses", function(locationClassesList: ptsTypes.ConfigLocationClass[]) {
+  pts.getDefaultConfigProperty("locationClasses", (locationClassesList: ptsTypes.ConfigLocationClass[]) => {
 
     locationClassKeyFilterEle.innerHTML = "<option value=\"\">(All Location Classes)</option>";
 
@@ -215,29 +220,29 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     locationClassKeyFilterEle.insertAdjacentHTML("beforeend", locationClassKeyOptionsHTML);
 
-    renderLocationList();
+    renderLocationListFn();
 
   });
 
   // Initialize add button
 
-  document.getElementById("is-add-location-button").addEventListener("click", function(clickEvent) {
+  document.getElementById("is-add-location-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addLocationCloseModalFn: Function;
+    let addLocationCloseModalFn: () => void;
 
     const addFn = function(formEvent: Event) {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, (responseJSON) => {
 
         if (responseJSON.success) {
 
           addLocationCloseModalFn();
           locationList = responseJSON.locations;
-          renderLocationList();
+          renderLocationListFn();
 
         } else {
 
@@ -247,11 +252,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
             "OK",
             "danger"
           );
-
         }
-
       });
-
     };
 
     cityssm.openHtmlModal("location-add", {
@@ -264,11 +266,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           .insertAdjacentHTML("beforeend", locationClassKeyOptionsHTML);
 
         document.getElementById("form--addLocation").addEventListener("submit", addFn);
-
       }
-
     });
-
   });
-
-}());
+})();

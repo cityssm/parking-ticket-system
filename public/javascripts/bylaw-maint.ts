@@ -3,7 +3,7 @@ declare const cityssm: cityssmGlobal;
 
 import type { ParkingBylaw } from "../../helpers/ptsTypes";
 
-type UpdateRecordResponseJSON = {
+type UpdateBylawResponseJSON = {
   success: boolean,
   message?: string,
   bylaws?: ParkingBylaw[]
@@ -33,7 +33,7 @@ type UpdateRecordResponseJSON = {
       formEvent.preventDefault();
 
       cityssm.postJSON("/admin/doUpdateOffencesByBylaw", formEvent.currentTarget,
-        (responseJSON: UpdateRecordResponseJSON) => {
+        (responseJSON: UpdateBylawResponseJSON) => {
 
           if (responseJSON.success) {
             updateOffencesCloseModalFn();
@@ -77,7 +77,7 @@ type UpdateRecordResponseJSON = {
 
       cityssm.postJSON("/admin/doDeleteBylaw", {
         bylawNumber: bylaw.bylawNumber
-      }, (responseJSON: UpdateRecordResponseJSON) => {
+      }, (responseJSON: UpdateBylawResponseJSON) => {
 
         if (responseJSON.success) {
 
@@ -106,7 +106,7 @@ type UpdateRecordResponseJSON = {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, (responseJSON: UpdateRecordResponseJSON) => {
+      cityssm.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, (responseJSON: UpdateBylawResponseJSON) => {
 
         if (responseJSON.success) {
 
@@ -260,7 +260,7 @@ type UpdateRecordResponseJSON = {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doAddBylaw", formEvent.currentTarget, (responseJSON: UpdateRecordResponseJSON) => {
+      cityssm.postJSON("/admin/doAddBylaw", formEvent.currentTarget, (responseJSON: UpdateBylawResponseJSON) => {
 
         if (responseJSON.success) {
 

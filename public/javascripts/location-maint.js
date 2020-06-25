@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     let locationClassKeyOptionsHTML = "";
     const locationClassKeyFilterEle = document.getElementById("locationFilter--locationClassKey");
     const locationNameFilterEle = document.getElementById("locationFilter--locationName");
@@ -8,33 +8,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const locationClassKeyMap = new Map();
     let locationList = exports.locations;
     delete exports.locations;
-    function openEditLocationModal(clickEvent) {
+    const openEditLocationModalFn = (clickEvent) => {
         clickEvent.preventDefault();
         const listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         const location = locationList[listIndex];
         let editLocationCloseModalFn;
-        const deleteFn = function () {
+        const deleteFn = () => {
             cityssm.postJSON("/admin/doDeleteLocation", {
                 locationKey: location.locationKey
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     editLocationCloseModalFn();
                     locationList = responseJSON.locations;
-                    renderLocationList();
+                    renderLocationListFn();
                 }
             });
         };
-        const confirmDeleteFn = function (deleteClickEvent) {
+        const confirmDeleteFn = (deleteClickEvent) => {
             deleteClickEvent.preventDefault();
             cityssm.confirmModal("Delete Location", "Are you sure you want to remove \"" + location.locationName + "\" from the list of available options?", "Yes, Remove Location", "danger", deleteFn);
         };
-        const editFn = function (formEvent) {
+        const editFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     editLocationCloseModalFn();
                     locationList = responseJSON.locations;
-                    renderLocationList();
+                    renderLocationListFn();
                 }
             });
         };
@@ -57,14 +57,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
             }
         });
-    }
-    function renderLocationList() {
+    };
+    const renderLocationListFn = () => {
         let displayCount = 0;
         const locationClassKeyFilter = locationClassKeyFilterEle.value;
         const locationNameFilterSplit = locationNameFilterEle.value.trim().toLowerCase()
             .split(" ");
         const tbodyEle = document.createElement("tbody");
-        locationList.forEach(function (location, locationIndex) {
+        locationList.forEach((location, locationIndex) => {
             if (locationClassKeyFilter !== "" && locationClassKeyFilter !== location.locationClassKey) {
                 return;
             }
@@ -91,7 +91,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</a>" +
                     "</td>" +
                     "<td>" + cityssm.escapeHTML(locationClass) + "</td>";
-            trEle.getElementsByTagName("a")[0].addEventListener("click", openEditLocationModal);
+            trEle.getElementsByTagName("a")[0].addEventListener("click", openEditLocationModalFn);
             tbodyEle.appendChild(trEle);
         });
         cityssm.clearElement(locationResultsEle);
@@ -108,10 +108,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</tr></thead>" +
             "</table>";
         locationResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
-    }
-    locationClassKeyFilterEle.addEventListener("change", renderLocationList);
-    locationNameFilterEle.addEventListener("keyup", renderLocationList);
-    pts.getDefaultConfigProperty("locationClasses", function (locationClassesList) {
+    };
+    locationClassKeyFilterEle.addEventListener("change", renderLocationListFn);
+    locationNameFilterEle.addEventListener("keyup", renderLocationListFn);
+    pts.getDefaultConfigProperty("locationClasses", (locationClassesList) => {
         locationClassKeyFilterEle.innerHTML = "<option value=\"\">(All Location Classes)</option>";
         for (const locationClass of locationClassesList) {
             locationClassKeyOptionsHTML +=
@@ -121,18 +121,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
             locationClassKeyMap.set(locationClass.locationClassKey, locationClass);
         }
         locationClassKeyFilterEle.insertAdjacentHTML("beforeend", locationClassKeyOptionsHTML);
-        renderLocationList();
+        renderLocationListFn();
     });
-    document.getElementById("is-add-location-button").addEventListener("click", function (clickEvent) {
+    document.getElementById("is-add-location-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         let addLocationCloseModalFn;
         const addFn = function (formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     addLocationCloseModalFn();
                     locationList = responseJSON.locations;
-                    renderLocationList();
+                    renderLocationListFn();
                 }
                 else {
                     cityssm.alertModal("Location Not Added", responseJSON.message, "OK", "danger");
@@ -148,4 +148,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-}());
+})();
