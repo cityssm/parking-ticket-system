@@ -138,7 +138,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     cityssm.openHtmlModal("ticket-editStatus", {
 
-      onshow(modalEle: HTMLElement) {
+      onshow(modalEle: HTMLElement): void {
 
         (<HTMLInputElement>document.getElementById("editStatus--ticketID")).value = ticketID;
         (<HTMLInputElement>document.getElementById("editStatus--statusIndex")).value = statusObj.statusIndex;
@@ -207,7 +207,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         editStatusCloseModalFn = closeModalFn;
       }
     });
@@ -453,7 +453,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     cityssm.openHtmlModal("ticket-addStatus", {
 
-      onshow(modalEle: HTMLElement) {
+      onshow(modalEle: HTMLElement): void {
 
         (<HTMLInputElement>document.getElementById("addStatus--ticketID")).value = ticketID;
 
@@ -477,7 +477,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         addStatusCloseModalFn = closeModalFn;
       }
 
@@ -516,7 +516,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     cityssm.openHtmlModal("ticket-addStatusPaid", {
 
-      onshow(modalEle: HTMLElement) {
+      onshow(modalEle: HTMLElement): void {
 
         (<HTMLInputElement>document.getElementById("addPaidStatus--ticketID")).value = ticketID;
 
@@ -551,7 +551,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         addPaidStatusCloseModalFn = closeModalFn;
       }
 

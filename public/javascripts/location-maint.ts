@@ -84,7 +84,7 @@ type UpdateLocationResponseJSON = {
     };
 
     cityssm.openHtmlModal("location-edit", {
-      onshow() {
+      onshow(): void {
 
         (<HTMLInputElement>document.getElementById("editLocation--locationKey")).value = location.locationKey;
 
@@ -108,7 +108,7 @@ type UpdateLocationResponseJSON = {
         (<HTMLInputElement>document.getElementById("editLocation--locationName")).value = location.locationName;
 
       },
-      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
 
         editLocationCloseModalFn = closeModalFn;
 
@@ -258,7 +258,7 @@ type UpdateLocationResponseJSON = {
 
     cityssm.openHtmlModal("location-add", {
 
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
         addLocationCloseModalFn = closeModalFn;
 

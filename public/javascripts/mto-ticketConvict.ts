@@ -98,13 +98,13 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     };
 
     cityssm.openHtmlModal("loading", {
-      onshow() {
+      onshow(): void {
         document.getElementById("is-loading-modal-message").innerText =
           "Adding " +
           displayedTicketIDs.length +
           " ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "...";
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         loadingCloseModalFn = closeModalFn;
         addFn();
       }
@@ -593,7 +593,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     };
 
     cityssm.openHtmlModal("mto-selectBatch", {
-      onshow(modalEle: HTMLElement) {
+      onshow(modalEle: HTMLElement): void {
 
         if (canUpdate) {
 
@@ -654,7 +654,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
           });
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         selectBatchCloseModalFn = closeModalFn;
       }
     });

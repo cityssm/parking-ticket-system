@@ -386,7 +386,7 @@ declare const pts: ptsGlobal;
       const loadingFn = () => {
 
         cityssm.openHtmlModal("loading", {
-          onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+          onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
             document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
             loadingCloseModalFn = closeModalFn;

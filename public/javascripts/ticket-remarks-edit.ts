@@ -77,7 +77,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     cityssm.openHtmlModal("ticket-editRemark", {
 
-      onshow(modalEle) {
+      onshow(modalEle: HTMLElement): void {
 
         (<HTMLInputElement>document.getElementById("editRemark--ticketID")).value = ticketID;
         (<HTMLInputElement>document.getElementById("editRemark--remarkIndex")).value = remarkObj.remarkIndex.toString();
@@ -88,7 +88,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown(_modalEle, closeModalFn) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         editRemarkCloseModalFn = closeModalFn;
       }
     });
@@ -213,13 +213,13 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     cityssm.openHtmlModal("ticket-addRemark", {
 
-      onshow(modalEle) {
+      onshow(modalEle: HTMLElement): void {
 
         (<HTMLInputElement>document.getElementById("addRemark--ticketID")).value = ticketID;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
-      onshown(_modalEle, closeModalFn) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         addRemarkCloseModalFn = closeModalFn;
       }
     });

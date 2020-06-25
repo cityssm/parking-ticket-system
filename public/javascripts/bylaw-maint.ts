@@ -44,7 +44,7 @@ type UpdateBylawResponseJSON = {
     };
 
     cityssm.openHtmlModal("bylaw-updateOffences", {
-      onshow() {
+      onshow(): void {
 
         (<HTMLInputElement>document.getElementById("updateOffences--bylawNumber")).value = bylaw.bylawNumber;
         (<HTMLInputElement>document.getElementById("updateOffences--bylawDescription")).value = bylaw.bylawDescription;
@@ -54,7 +54,7 @@ type UpdateBylawResponseJSON = {
         (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value = bylaw.discountOffenceAmountMin.toFixed(2);
 
       },
-      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
 
         updateOffencesCloseModalFn = closeModalFn;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
@@ -120,13 +120,13 @@ type UpdateBylawResponseJSON = {
     };
 
     cityssm.openHtmlModal("bylaw-edit", {
-      onshow() {
+      onshow(): void {
 
         (<HTMLInputElement>document.getElementById("editBylaw--bylawNumber")).value = bylaw.bylawNumber;
         (<HTMLInputElement>document.getElementById("editBylaw--bylawDescription")).value = bylaw.bylawDescription;
 
       },
-      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
 
         editBylawCloseModalFn = closeModalFn;
 
@@ -296,7 +296,7 @@ type UpdateBylawResponseJSON = {
 
     cityssm.openHtmlModal("bylaw-add", {
 
-      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
         addBylawCloseModalFn = closeModalFn;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", addFn);
       }

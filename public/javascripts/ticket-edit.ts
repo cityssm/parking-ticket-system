@@ -75,7 +75,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         if (responseJSON.success && isCreate) {
 
           cityssm.openHtmlModal("ticket-createSuccess", {
-            onshow() {
+            onshow(): void {
 
               document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
 
@@ -212,7 +212,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       clickEvent.preventDefault();
 
       cityssm.openHtmlModal("ticket-setLocation", {
-        onshown(_modalEle, closeModalFn) {
+        onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
           locationLookupCloseModalFn = closeModalFn;
           populateLocationsFn();
@@ -220,7 +220,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           document.getElementById("is-clear-location-button").addEventListener("click", clearLocationFn);
 
         },
-        onremoved() {
+        onremoved(): void {
           document.getElementById("is-location-lookup-button").focus();
         }
       });
@@ -410,7 +410,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       clickEvent.preventDefault();
 
       cityssm.openHtmlModal("ticket-setBylawOffence", {
-        onshown(_modalEle, closeModalFn) {
+        onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
           bylawLookupCloseModalFn = closeModalFn;
           populateBylawsFn();
@@ -423,7 +423,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           document.getElementById("is-clear-bylaw-button").addEventListener("click", clearBylawOffenceFn);
 
         },
-        onremoved() {
+        onremoved(): void {
           document.getElementById("is-bylaw-lookup-button").focus();
         }
       });
