@@ -1,8 +1,8 @@
 import type * as pts from "../helpers/ptsTypes";
-export declare function getProperty(propertyName: string): any;
+export declare const getProperty: (propertyName: string) => any;
 export declare const keepAliveMillis: number;
-export declare function getParkingTicketStatus(statusKey: string): pts.ConfigParkingTicketStatus;
-export declare function getLicencePlateLocationProperties(originalLicencePlateCountry: string, originalLicencePlateProvince: string): {
+export declare const getParkingTicketStatus: (statusKey: string) => pts.ConfigParkingTicketStatus;
+export declare const getLicencePlateLocationProperties: (originalLicencePlateCountry: string, originalLicencePlateProvince: string) => {
     licencePlateCountryAlias: string;
     licencePlateProvinceAlias: string;
     licencePlateProvince: {

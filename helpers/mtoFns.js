@@ -11,27 +11,27 @@ let currentDate = new Date();
 let currentDateNumber;
 let currentDatePrefix;
 let currentYearPrefix;
-function resetCurrentDate() {
+const resetCurrentDate = () => {
     currentDate = new Date();
     currentDateNumber = dateTimeFns.dateToInteger(currentDate);
     currentYearPrefix = Math.floor(currentDate.getFullYear() / 100) * 100;
     currentDatePrefix = currentYearPrefix * 10000;
-}
-function twoDigitYearToFourDigit(twoDigitYear) {
+};
+const twoDigitYearToFourDigit = (twoDigitYear) => {
     let fourDigitYear = twoDigitYear + currentYearPrefix;
     if (fourDigitYear > currentDate.getFullYear() + 5) {
         return fourDigitYear - 100;
     }
     return fourDigitYear;
-}
-function sixDigitDateNumberToEightDigit(sixDigitDateNumber) {
+};
+const sixDigitDateNumberToEightDigit = (sixDigitDateNumber) => {
     let eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
     if (eightDigitDateNumber > currentDateNumber) {
         return eightDigitDateNumber - 1000000;
     }
     return eightDigitDateNumber;
-}
-function parsePKRA(rowData) {
+};
+const parsePKRA = (rowData) => {
     if (!rowData.startsWith("PKRA")) {
         return false;
     }
@@ -55,8 +55,8 @@ function parsePKRA(rowData) {
     catch (e) {
         return false;
     }
-}
-function parsePKRD(rowData) {
+};
+const parsePKRD = (rowData) => {
     if (!rowData.startsWith("PKRD")) {
         return false;
     }
@@ -119,8 +119,8 @@ function parsePKRD(rowData) {
     catch (e) {
         return false;
     }
-}
-function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
+};
+exports.importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
     const ownershipDataRows = ownershipData.split("\n");
     if (ownershipDataRows.length === 0) {
         return {
@@ -166,7 +166,7 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
     let recordCount = 0;
     let insertedRecordCount = 0;
     const rightNowMillis = Date.now();
-    ownershipDataRows.forEach(function (ownershipDataRow) {
+    for (const ownershipDataRow of ownershipDataRows) {
         const recordRow = parsePKRD(ownershipDataRow);
         if (recordRow) {
             rowCount += 1;
@@ -193,7 +193,7 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
                     .run("CA", "ON", recordRow.licencePlateNumber, headerRow.recordDate, recordRow.vehicleNCIC, recordRow.vehicleYear, recordRow.vehicleColor, recordRow.licencePlateExpiryDate, recordRow.ownerName1, recordRow.ownerName2, recordRow.ownerAddress, recordRow.ownerCity, recordRow.ownerProvince, recordRow.ownerPostalCode, recordRow.ownerGenderKey, recordRow.driverLicenceNumber, reqSession.user.userName, rightNowMillis, reqSession.user.userName, rightNowMillis).changes;
             }
         }
-    });
+    }
     db.prepare("update LicencePlateLookupBatches" +
         " set receivedDate = ?," +
         " recordUpdate_userName = ?," +
@@ -209,9 +209,8 @@ function importLicencePlateOwnership(batchID, ownershipData, reqSession) {
         recordCount,
         insertedRecordCount
     };
-}
-exports.importLicencePlateOwnership = importLicencePlateOwnership;
-function exportBatch(sentDate, batchEntries) {
+};
+const exportBatch = (sentDate, batchEntries) => {
     const newline = "\n";
     let output = "";
     let recordCount = 0;
@@ -238,16 +237,14 @@ function exportBatch(sentDate, batchEntries) {
     output += "PKTZ" +
         recordCountPadded + newline;
     return output;
-}
-function exportLicencePlateBatch(batchID, reqSession) {
+};
+exports.exportLicencePlateBatch = (batchID, reqSession) => {
     parkingDBLookup.markLookupBatchAsSent(batchID, reqSession);
     const batch = parkingDBLookup.getLicencePlateLookupBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);
-}
-exports.exportLicencePlateBatch = exportLicencePlateBatch;
-function exportConvictionBatch(batchID, reqSession) {
+};
+exports.exportConvictionBatch = (batchID, reqSession) => {
     parkingDBConvict.markConvictionBatchAsSent(batchID, reqSession);
     const batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);
-}
-exports.exportConvictionBatch = exportConvictionBatch;
+};

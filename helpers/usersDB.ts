@@ -8,7 +8,7 @@ import * as configFns from "./configFns";
 import type { User, UserProperties } from "./ptsTypes";
 
 
-export function getUser(userNameSubmitted: string, passwordPlain: string): User {
+export const getUser = (userNameSubmitted: string, passwordPlain: string): User => {
 
   const db = sqlite(dbPath);
 
@@ -28,9 +28,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
       const adminPasswordPlain = configFns.getProperty("admin.defaultPassword");
 
       if (adminPasswordPlain === "") {
-
         return null;
-
       }
 
       if (adminPasswordPlain === passwordPlain) {
@@ -43,9 +41,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
           userName: userNameSubmitted,
           userProperties
         };
-
       }
-
     }
 
     return null;
@@ -53,9 +49,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
   } else if (row.isActive === 0) {
 
     db.close();
-
     return null;
-
   }
 
   // Check if the password matches
@@ -65,16 +59,12 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
   let passwordIsValid = false;
 
   if (bcrypt.compareSync(databaseUserName + "::" + passwordPlain, row.passwordHash)) {
-
     passwordIsValid = true;
-
   }
 
   if (!passwordIsValid) {
-
     db.close();
     return null;
-
   }
 
   // Get user properties
@@ -89,7 +79,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
     " where userName = ?")
     .all(databaseUserName);
 
-  userPropertyRows.forEach(function(userProperty) {
+  for (const userProperty of userPropertyRows) {
 
     const propertyName: string = userProperty.propertyName;
     const propertyValue: string = userProperty.propertyValue;
@@ -109,8 +99,7 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
         userProperties[propertyName] = propertyValue;
         break;
     }
-
-  });
+  }
 
   db.close();
 
@@ -118,10 +107,9 @@ export function getUser(userNameSubmitted: string, passwordPlain: string): User 
     userName: databaseUserName,
     userProperties
   };
+};
 
-}
-
-export function tryResetPassword(userName: string, oldPasswordPlain: string, newPasswordPlain: string) {
+export const tryResetPassword = (userName: string, oldPasswordPlain: string, newPasswordPlain: string) => {
 
   const db = sqlite(dbPath);
 
@@ -165,10 +153,9 @@ export function tryResetPassword(userName: string, oldPasswordPlain: string, new
     success: true,
     message: "Password updated successfully."
   };
+};
 
-}
-
-export function getAllUsers() {
+export const getAllUsers = () => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -184,10 +171,9 @@ export function getAllUsers() {
   db.close();
 
   return rows;
+};
 
-}
-
-export function getUserProperties(userName: string) {
+export const getUserProperties = (userName: string) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -201,20 +187,16 @@ export function getUserProperties(userName: string) {
     " where userName = ?")
     .all(userName);
 
-  for (let userPropertyIndex = 0; userPropertyIndex < userPropertyRows.length; userPropertyIndex += 1) {
-
-    userProperties[userPropertyRows[userPropertyIndex].propertyName] =
-      userPropertyRows[userPropertyIndex].propertyValue;
-
+  for (const userProperty of userPropertyRows) {
+    userProperties[userProperty.propertyName] = userProperty.propertyValue;
   }
 
   db.close();
 
   return userProperties;
+};
 
-}
-
-export function createUser(reqBody: any) {
+export const createUser = (reqBody: any) => {
 
   const newPasswordPlain = stringFns.generatePassword();
   const hash = bcrypt.hashSync(reqBody.userName + "::" + newPasswordPlain, 10);
@@ -258,9 +240,9 @@ export function createUser(reqBody: any) {
 
   return newPasswordPlain;
 
-}
+};
 
-export function updateUser(reqBody: any) {
+export const updateUser = (reqBody: any) => {
 
   const db = sqlite(dbPath);
 
@@ -278,10 +260,9 @@ export function updateUser(reqBody: any) {
   db.close();
 
   return info.changes;
+};
 
-}
-
-export function updateUserProperty(reqBody: any) {
+export const updateUserProperty = (reqBody: any) => {
 
   const db = sqlite(dbPath);
 
@@ -313,10 +294,9 @@ export function updateUserProperty(reqBody: any) {
   db.close();
 
   return info.changes;
+};
 
-}
-
-export function generateNewPassword(userName: string) {
+export const generateNewPassword = (userName: string) => {
 
   const newPasswordPlain: string = stringFns.generatePassword();
   const hash = bcrypt.hashSync(userName + "::" + newPasswordPlain, 10);
@@ -331,10 +311,9 @@ export function generateNewPassword(userName: string) {
   db.close();
 
   return newPasswordPlain;
+};
 
-}
-
-export function inactivateUser(userName: string) {
+export const inactivateUser = (userName: string) => {
 
   const db = sqlite(dbPath);
 
@@ -347,5 +326,4 @@ export function inactivateUser(userName: string) {
   db.close();
 
   return info.changes;
-
-}
+};

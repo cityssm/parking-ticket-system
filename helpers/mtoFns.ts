@@ -13,16 +13,16 @@ let currentDatePrefix: number;
 let currentYearPrefix: number;
 
 
-function resetCurrentDate() {
+const resetCurrentDate = () => {
   currentDate = new Date();
   currentDateNumber = dateTimeFns.dateToInteger(currentDate);
 
   currentYearPrefix = Math.floor(currentDate.getFullYear() / 100) * 100;
   currentDatePrefix = currentYearPrefix * 10000;
-}
+};
 
 
-function twoDigitYearToFourDigit(twoDigitYear: number) {
+const twoDigitYearToFourDigit = (twoDigitYear: number) => {
 
   let fourDigitYear = twoDigitYear + currentYearPrefix;
 
@@ -31,10 +31,10 @@ function twoDigitYearToFourDigit(twoDigitYear: number) {
   }
 
   return fourDigitYear;
-}
+};
 
 
-function sixDigitDateNumberToEightDigit(sixDigitDateNumber: number) {
+const sixDigitDateNumberToEightDigit = (sixDigitDateNumber: number) => {
 
   let eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
 
@@ -43,10 +43,10 @@ function sixDigitDateNumberToEightDigit(sixDigitDateNumber: number) {
   }
 
   return eightDigitDateNumber;
-}
+};
 
 
-function parsePKRA(rowData: string) {
+const parsePKRA = (rowData: string) => {
 
   if (!rowData.startsWith("PKRA")) {
     return false;
@@ -95,10 +95,10 @@ function parsePKRA(rowData: string) {
   } catch (e) {
     return false;
   }
-}
+};
 
 
-function parsePKRD(rowData: string) {
+const parsePKRD = (rowData: string) => {
 
   if (!rowData.startsWith("PKRD")) {
     return false;
@@ -218,12 +218,10 @@ function parsePKRD(rowData: string) {
   } catch (e) {
     return false;
   }
+};
 
 
-}
-
-
-export function importLicencePlateOwnership(batchID: number, ownershipData: string, reqSession: Express.Session) {
+export const importLicencePlateOwnership = (batchID: number, ownershipData: string, reqSession: Express.Session) => {
 
   // Split the file into rows
 
@@ -296,7 +294,7 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 
   const rightNowMillis = Date.now();
 
-  ownershipDataRows.forEach(function(ownershipDataRow) {
+  for (const ownershipDataRow of ownershipDataRows) {
 
     const recordRow = parsePKRD(ownershipDataRow);
 
@@ -347,7 +345,7 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
 
       }
     }
-  });
+  }
 
   // Update batch
 
@@ -371,15 +369,15 @@ export function importLicencePlateOwnership(batchID: number, ownershipData: stri
     recordCount,
     insertedRecordCount
   };
-}
+};
 
 
-function exportBatch(sentDate: number, batchEntries: {
+const exportBatch = (sentDate: number, batchEntries: {
   ticketID?: number,
   ticketNumber?: string,
   issueDate?: number,
   licencePlateNumber?: string
-}[]) {
+}[]) => {
 
   const newline = "\n";
 
@@ -446,24 +444,24 @@ function exportBatch(sentDate: number, batchEntries: {
     recordCountPadded + newline;
 
   return output;
-}
+};
 
 
-export function exportLicencePlateBatch(batchID: number, reqSession: Express.Session) {
+export const exportLicencePlateBatch = (batchID: number, reqSession: Express.Session) => {
 
   parkingDBLookup.markLookupBatchAsSent(batchID, reqSession);
 
   const batch = parkingDBLookup.getLicencePlateLookupBatch(batchID);
 
   return exportBatch(batch.sentDate, batch.batchEntries);
-}
+};
 
 
-export function exportConvictionBatch(batchID: number, reqSession: Express.Session) {
+export const exportConvictionBatch = (batchID: number, reqSession: Express.Session) => {
 
   parkingDBConvict.markConvictionBatchAsSent(batchID, reqSession);
 
   const batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
 
   return exportBatch(batch.sentDate, batch.batchEntries);
-}
+};

@@ -1,3 +1,3 @@
-export declare function initUsersDB(): boolean;
-export declare function initParkingDB(): boolean;
-export declare function initNHTSADB(): boolean;
+export declare const initUsersDB: () => boolean;
+export declare const initParkingDB: () => boolean;
+export declare const initNHTSADB: () => boolean;

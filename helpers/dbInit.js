@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initNHTSADB = exports.initParkingDB = exports.initUsersDB = void 0;
 const log = require("fancy-log");
 const sqlite = require("better-sqlite3");
-function initUsersDB() {
+exports.initUsersDB = () => {
     const usersDB = sqlite("data/users.db");
     const row = usersDB.prepare("select name from sqlite_master where type = 'table' and name = 'Users'").get();
     if (!row) {
@@ -27,9 +27,8 @@ function initUsersDB() {
     }
     usersDB.close();
     return false;
-}
-exports.initUsersDB = initUsersDB;
-function initParkingDB() {
+};
+exports.initParkingDB = () => {
     const parkingDB = sqlite("data/parking.db");
     const row = parkingDB
         .prepare("select name from sqlite_master where type = 'table' and name = 'ParkingTickets'")
@@ -216,9 +215,8 @@ function initParkingDB() {
     }
     parkingDB.close();
     return false;
-}
-exports.initParkingDB = initParkingDB;
-function initNHTSADB() {
+};
+exports.initNHTSADB = () => {
     const nhtsaDB = sqlite("data/nhtsa.db");
     const row = nhtsaDB.prepare("select name from sqlite_master where type = 'table' and name = 'MakeModel'").get();
     if (!row) {
@@ -239,5 +237,4 @@ function initNHTSADB() {
     }
     nhtsaDB.close();
     return false;
-}
-exports.initNHTSADB = initNHTSADB;
+};

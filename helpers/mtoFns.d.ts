@@ -1,5 +1,8 @@
+/// <reference types="express-serve-static-core" />
+/// <reference types="compression" />
 /// <reference types="express-session" />
-export declare function importLicencePlateOwnership(batchID: number, ownershipData: string, reqSession: Express.Session): {
+/// <reference types="multer" />
+export declare const importLicencePlateOwnership: (batchID: number, ownershipData: string, reqSession: Express.Session) => {
     success: boolean;
     message: string;
     rowCount?: undefined;
@@ -16,5 +19,5 @@ export declare function importLicencePlateOwnership(batchID: number, ownershipDa
     insertedRecordCount: number;
     message?: undefined;
 };
-export declare function exportLicencePlateBatch(batchID: number, reqSession: Express.Session): string;
-export declare function exportConvictionBatch(batchID: number, reqSession: Express.Session): string;
+export declare const exportLicencePlateBatch: (batchID: number, reqSession: Express.Session) => string;
+export declare const exportConvictionBatch: (batchID: number, reqSession: Express.Session) => string;

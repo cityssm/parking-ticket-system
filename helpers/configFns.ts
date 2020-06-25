@@ -40,7 +40,7 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
 configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);
 configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);
-configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", function(_currentTicketNumber: string) {
+configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", (_currentTicketNumber: string) => {
   return "";
 });
 
@@ -66,7 +66,7 @@ configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
 
 
-export function getProperty(propertyName: string): any {
+export const getProperty = (propertyName: string): any => {
 
   const propertyNameSplit = propertyName.split(".");
 
@@ -74,17 +74,16 @@ export function getProperty(propertyName: string): any {
 
   for (const propertyNamePiece of propertyNameSplit) {
 
-    currentObj = currentObj[propertyNamePiece];
+    if (currentObj.hasOwnProperty(propertyNamePiece)) {
+      currentObj = currentObj[propertyNamePiece];
 
-    if (!currentObj) {
+    } else {
       return configFallbackValues.get(propertyName);
     }
-
   }
 
   return currentObj;
-
-}
+};
 
 
 export const keepAliveMillis =
@@ -99,66 +98,67 @@ export const keepAliveMillis =
 let parkingTicketStatusMap = new Map<string, pts.ConfigParkingTicketStatus>();
 let parkingTicketStatusMapIsLoaded = false;
 
-export function getParkingTicketStatus(statusKey: string) {
+export const getParkingTicketStatus = (statusKey: string) => {
 
   if (!parkingTicketStatusMapIsLoaded) {
 
     const parkingTicketStatusList: pts.ConfigParkingTicketStatus[] = getProperty("parkingTicketStatuses");
 
-    parkingTicketStatusList.forEach(function(statusObj) {
-      parkingTicketStatusMap.set(statusObj.statusKey, statusObj);
-    });
+    for (const parkingTicketStatusObj of parkingTicketStatusList) {
+      parkingTicketStatusMap.set(parkingTicketStatusObj.statusKey, parkingTicketStatusObj);
+    }
 
     parkingTicketStatusMapIsLoaded = true;
   }
 
   return parkingTicketStatusMap.get(statusKey);
-}
+};
 
 
-export function getLicencePlateLocationProperties(originalLicencePlateCountry: string, originalLicencePlateProvince: string) {
+export const getLicencePlateLocationProperties =
+  (originalLicencePlateCountry: string, originalLicencePlateProvince: string) => {
 
-  const licencePlateProvinceDefault = {
-    provinceShortName: originalLicencePlateProvince,
-    color: "#000",
-    backgroundColor: "#fff"
+    const licencePlateProvinceDefault = {
+      provinceShortName: originalLicencePlateProvince,
+      color: "#000",
+      backgroundColor: "#fff"
+    };
+
+    // Get the country alias
+
+    const licencePlateCountryAlias: string =
+      getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()] ||
+      originalLicencePlateCountry;
+
+    // Get the province alias
+
+    let licencePlateProvinceAlias = originalLicencePlateProvince;
+
+    if (getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
+
+      licencePlateProvinceAlias =
+        getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+        originalLicencePlateProvince;
+
+    }
+
+    // Get the province object
+
+    let licencePlateProvince = licencePlateProvinceDefault;
+
+    if (getProperty("licencePlateProvinces").hasOwnProperty(licencePlateCountryAlias)) {
+
+      licencePlateProvince =
+        getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+
+    }
+
+    // Return
+
+    return {
+      licencePlateCountryAlias,
+      licencePlateProvinceAlias,
+      licencePlateProvince
+    };
+
   };
-
-  // Get the country alias
-
-  const licencePlateCountryAlias: string =
-    getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()] ||
-    originalLicencePlateCountry;
-
-  // Get the province alias
-
-  let licencePlateProvinceAlias = originalLicencePlateProvince;
-
-  if (getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
-
-    licencePlateProvinceAlias =
-      getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
-      originalLicencePlateProvince;
-
-  }
-
-  // Get the province object
-
-  let licencePlateProvince = licencePlateProvinceDefault;
-
-  if (getProperty("licencePlateProvinces").hasOwnProperty(licencePlateCountryAlias)) {
-
-    licencePlateProvince =
-      getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
-
-  }
-
-  // Return
-
-  return {
-    licencePlateCountryAlias,
-    licencePlateProvinceAlias,
-    licencePlateProvince
-  };
-
-}
