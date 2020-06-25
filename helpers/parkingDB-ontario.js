@@ -4,13 +4,7 @@ exports.getParkingTicketsAvailableForMTOConvictionBatch = exports.getLicencePlat
 const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID, issueDaysAgo) {
-    const addCalculatedFieldsFn = function (plateRecord) {
-        plateRecord.issueDateMinString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMin);
-        plateRecord.issueDateMaxString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMax);
-        plateRecord.ticketNumbers = plateRecord.ticketNumbersConcat.split(":");
-        delete plateRecord.ticketNumbersConcat;
-    };
+exports.getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysAgo) => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -43,14 +37,15 @@ function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID, issueDaysAgo
         " order by t.licencePlateNumber")
         .all(currentBatchID, issueDateNumber);
     db.close();
-    plates.forEach(addCalculatedFieldsFn);
+    for (const plateRecord of plates) {
+        plateRecord.issueDateMinString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMin);
+        plateRecord.issueDateMaxString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMax);
+        plateRecord.ticketNumbers = plateRecord.ticketNumbersConcat.split(":");
+        delete plateRecord.ticketNumbersConcat;
+    }
     return plates;
-}
-exports.getLicencePlatesAvailableForMTOLookupBatch = getLicencePlatesAvailableForMTOLookupBatch;
-function getParkingTicketsAvailableForMTOConvictionBatch() {
-    const addCalculatedFieldsFn = function (ele) {
-        ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
-    };
+};
+exports.getParkingTicketsAvailableForMTOConvictionBatch = () => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -92,7 +87,8 @@ function getParkingTicketsAvailableForMTOConvictionBatch() {
         " order by ticketNumber")
         .all(issueDateNumber);
     db.close();
-    parkingTickets.forEach(addCalculatedFieldsFn);
+    for (const ticket of parkingTickets) {
+        ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+    }
     return parkingTickets;
-}
-exports.getParkingTicketsAvailableForMTOConvictionBatch = getParkingTicketsAvailableForMTOConvictionBatch;
+};

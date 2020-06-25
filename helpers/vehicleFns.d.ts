@@ -1,4 +1,4 @@
-export declare function getModelsByMakeFromCache(makeSearchStringOriginal: string): any[];
-export declare function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Function): void;
-export declare function getMakeFromNCIC(vehicleNCIC: string): string;
-export declare function isNCICExclusivelyTrailer(vehicleNCIC: string): boolean;
+export declare const getModelsByMakeFromCache: (makeSearchStringOriginal: string) => any[];
+export declare const getModelsByMake: (makeSearchStringOriginal: string, callbackFn: (makeModelResults: any[]) => void) => void;
+export declare const getMakeFromNCIC: (vehicleNCIC: string) => string;
+export declare const isNCICExclusivelyTrailer: (vehicleNCIC: string) => boolean;

@@ -31,49 +31,49 @@ export declare const createParkingTicket: (reqBody: pts.ParkingTicket, reqSessio
     nextTicketNumber: string;
     message?: undefined;
 };
-export declare function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.Session): {
+export declare const updateParkingTicket: (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
     success: boolean;
     message: string;
 } | {
     success: boolean;
     message?: undefined;
 };
-export declare function deleteParkingTicket(ticketID: number, reqSession: Express.Session): {
+export declare const deleteParkingTicket: (ticketID: number, reqSession: Express.Session) => {
     success: boolean;
 };
-export declare function resolveParkingTicket(ticketID: number, reqSession: Express.Session): {
+export declare const resolveParkingTicket: (ticketID: number, reqSession: Express.Session) => {
     success: boolean;
 };
-export declare function unresolveParkingTicket(ticketID: number, reqSession: Express.Session): {
+export declare const unresolveParkingTicket: (ticketID: number, reqSession: Express.Session) => {
     success: boolean;
     message: string;
 } | {
     success: boolean;
     message?: undefined;
 };
-export declare function restoreParkingTicket(ticketID: number, reqSession: Express.Session): {
+export declare const restoreParkingTicket: (ticketID: number, reqSession: Express.Session) => {
     success: boolean;
 };
-export declare function getRecentParkingTicketVehicleMakeModelValues(): any[];
-export declare function getParkingTicketRemarks(ticketID: number, reqSession: Express.Session): pts.ParkingTicketRemark[];
-export declare function createParkingTicketRemark(reqBody: pts.ParkingTicketRemark, reqSession: Express.Session): {
+export declare const getRecentParkingTicketVehicleMakeModelValues: () => any[];
+export declare const getParkingTicketRemarks: (ticketID: number, reqSession: Express.Session) => pts.ParkingTicketRemark[];
+export declare const createParkingTicketRemark: (reqBody: pts.ParkingTicketRemark, reqSession: Express.Session) => {
     success: boolean;
 };
-export declare function updateParkingTicketRemark(reqBody: pts.ParkingTicketRemark, reqSession: Express.Session): {
+export declare const updateParkingTicketRemark: (reqBody: pts.ParkingTicketRemark, reqSession: Express.Session) => {
     success: boolean;
 };
-export declare function deleteParkingTicketRemark(ticketID: number, remarkIndex: number, reqSession: Express.Session): {
+export declare const deleteParkingTicketRemark: (ticketID: number, remarkIndex: number, reqSession: Express.Session) => {
     success: boolean;
 };
-export declare function getParkingTicketStatuses(ticketID: number, reqSession: Express.Session): any[];
-export declare function createParkingTicketStatus(reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean): {
+export declare const getParkingTicketStatuses: (ticketID: number, reqSession: Express.Session) => any[];
+export declare const createParkingTicketStatus: (reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) => {
     success: boolean;
     statusIndex: any;
 };
-export declare function updateParkingTicketStatus(reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session): {
+export declare const updateParkingTicketStatus: (reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session) => {
     success: boolean;
 };
-export declare function deleteParkingTicketStatus(ticketID: number, statusIndex: number, reqSession: Express.Session): {
+export declare const deleteParkingTicketStatus: (ticketID: number, statusIndex: number, reqSession: Express.Session) => {
     success: boolean;
 };
 export interface GetLicencePlatesQueryOptions {
@@ -83,10 +83,10 @@ export interface GetLicencePlatesQueryOptions {
     limit: number;
     offset: number;
 }
-export declare function getLicencePlates(queryOptions: GetLicencePlatesQueryOptions): {
+export declare const getLicencePlates: (queryOptions: GetLicencePlatesQueryOptions) => {
     count: any;
     licencePlates: any[];
 };
-export declare function getLicencePlateOwner(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number): pts.LicencePlateOwner;
-export declare function getAllLicencePlateOwners(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner[];
-export declare function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate: number): any[];
+export declare const getLicencePlateOwner: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number) => pts.LicencePlateOwner;
+export declare const getAllLicencePlateOwners: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) => pts.LicencePlateOwner[];
+export declare const getDistinctLicencePlateOwnerVehicleNCICs: (cutoffDate: number) => any[];

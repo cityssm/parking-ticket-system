@@ -6,12 +6,12 @@ import { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
 import * as configFns from "../helpers/configFns";
 
 
-function getCleanupRecordDeleteTimeMillis(possibleRecordDeleteTimeMillis: string) {
+const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis: string) => {
 
   return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== "" ?
     possibleRecordDeleteTimeMillis :
     Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
-}
+};
 
 /*
  * Report Definitions
@@ -21,6 +21,7 @@ interface ReportDefinition {
   sql: string;
   getParams?: (params: any) => [any];
 }
+
 const reportDefinitions = new Map<string, ReportDefinition>();
 
 reportDefinitions.set("tickets-all", {
@@ -254,7 +255,7 @@ reportDefinitions.set("cleanup-parkingLocations", {
 });
 
 
-function executeQuery(sql: string, params: any[]): RawRowsColumnsReturn {
+const executeQuery = (sql: string, params: any[]): RawRowsColumnsReturn => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -276,11 +277,10 @@ function executeQuery(sql: string, params: any[]): RawRowsColumnsReturn {
     columns
   };
 
-}
+};
 
 
-
-export function getReportRowsColumns(reportName: string, reqQuery: any) {
+export const getReportRowsColumns = (reportName: string, reqQuery: any) => {
 
   if (!reportDefinitions.has(reportName)) {
     return null;
@@ -290,4 +290,4 @@ export function getReportRowsColumns(reportName: string, reqQuery: any) {
   let params = reportDefinition.getParams ? reportDefinition.getParams(reqQuery) : [];
 
   return executeQuery(reportDefinition.sql, params);
-}
+};

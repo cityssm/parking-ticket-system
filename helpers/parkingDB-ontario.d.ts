@@ -10,6 +10,6 @@ declare type MTO_AvailableLicencePlate = {
     ticketNumbersConcat: string;
     ticketNumbers: string[];
 };
-export declare function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID: number, issueDaysAgo: number): MTO_AvailableLicencePlate[];
-export declare function getParkingTicketsAvailableForMTOConvictionBatch(): ParkingTicket[];
+export declare const getLicencePlatesAvailableForMTOLookupBatch: (currentBatchID: number, issueDaysAgo: number) => MTO_AvailableLicencePlate[];
+export declare const getParkingTicketsAvailableForMTOConvictionBatch: () => ParkingTicket[];
 export {};

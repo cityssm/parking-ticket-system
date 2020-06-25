@@ -1,4 +1,4 @@
-import {dbPath} from "./parkingDB";
+import { dbPath } from "./parkingDB";
 import * as sqlite from "better-sqlite3";
 
 import type * as pts from "./ptsTypes";
@@ -7,7 +7,7 @@ import type * as pts from "./ptsTypes";
 // Parking Locations
 
 
-export function getParkingLocations() {
+export const getParkingLocations = () => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -22,7 +22,8 @@ export function getParkingLocations() {
   db.close();
 
   return rows;
-}
+};
+
 
 interface AddUpdateParkingLocationReturn {
   success: boolean;
@@ -30,7 +31,8 @@ interface AddUpdateParkingLocationReturn {
   locations?: pts.ParkingLocation[];
 }
 
-export function addParkingLocation(reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn {
+
+export const addParkingLocation = (reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn => {
 
   const db = sqlite(dbPath);
 
@@ -69,9 +71,10 @@ export function addParkingLocation(reqBody: pts.ParkingLocation): AddUpdateParki
     success: (info.changes > 0)
   };
 
-}
+};
 
-export function updateParkingLocation(reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn {
+
+export const updateParkingLocation = (reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn => {
 
   const db = sqlite(dbPath);
 
@@ -90,9 +93,10 @@ export function updateParkingLocation(reqBody: pts.ParkingLocation): AddUpdatePa
     success: (info.changes > 0)
   };
 
-}
+};
 
-export function deleteParkingLocation(locationKey: string): AddUpdateParkingLocationReturn {
+
+export const deleteParkingLocation = (locationKey: string): AddUpdateParkingLocationReturn => {
 
   const db = sqlite(dbPath);
 
@@ -110,13 +114,13 @@ export function deleteParkingLocation(locationKey: string): AddUpdateParkingLoca
     success: (info.changes > 0)
   };
 
-}
+};
 
 
 // Parking By-Laws
 
 
-export function getParkingBylaws() {
+export const getParkingBylaws = () => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -132,9 +136,10 @@ export function getParkingBylaws() {
 
   return rows;
 
-}
+};
 
-export function getParkingBylawsWithOffenceStats() {
+
+export const getParkingBylawsWithOffenceStats = () => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -159,7 +164,8 @@ export function getParkingBylawsWithOffenceStats() {
 
   return rows;
 
-}
+};
+
 
 interface AddUpdateParkingBylawReturn {
   success: boolean;
@@ -167,7 +173,8 @@ interface AddUpdateParkingBylawReturn {
   bylaws?: pts.ParkingBylaw[];
 }
 
-export function addParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn {
+
+export const addParkingBylaw = (reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn => {
 
   const db = sqlite(dbPath);
 
@@ -224,9 +231,10 @@ export function addParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingByla
     success: (info.changes > 0)
   };
 
-}
+};
 
-export function updateParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn {
+
+export const updateParkingBylaw = (reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn => {
 
   const db = sqlite(dbPath);
 
@@ -244,9 +252,10 @@ export function updateParkingBylaw(reqBody: pts.ParkingBylaw): AddUpdateParkingB
     success: (info.changes > 0)
   };
 
-}
+};
 
-export function deleteParkingBylaw(bylawNumber: string): AddUpdateParkingBylawReturn {
+
+export const deleteParkingBylaw = (bylawNumber: string): AddUpdateParkingBylawReturn => {
 
   const db = sqlite(dbPath);
 
@@ -264,9 +273,10 @@ export function deleteParkingBylaw(bylawNumber: string): AddUpdateParkingBylawRe
     success: (info.changes > 0)
   };
 
-}
+};
 
-export function updateParkingOffencesByBylawNumber(reqBody: any): AddUpdateParkingBylawReturn {
+
+export const updateParkingOffencesByBylawNumber = (reqBody: any): AddUpdateParkingBylawReturn => {
 
   const db = sqlite(dbPath);
 
@@ -289,13 +299,13 @@ export function updateParkingOffencesByBylawNumber(reqBody: any): AddUpdateParki
     success: (info.changes > 0)
   };
 
-}
+};
 
 
 // Parking Offences
 
 
-export function getParkingOffences() {
+export const getParkingOffences = () => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -314,9 +324,10 @@ export function getParkingOffences() {
   db.close();
 
   return rows;
-}
+};
 
-export function getParkingOffencesByLocationKey(locationKey: string) {
+
+export const getParkingOffencesByLocationKey = (locationKey: string) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -334,7 +345,8 @@ export function getParkingOffencesByLocationKey(locationKey: string) {
   db.close();
 
   return rows;
-}
+};
+
 
 interface AddUpdateParkingOffenceReturn {
   success: boolean;
@@ -342,7 +354,8 @@ interface AddUpdateParkingOffenceReturn {
   offences?: pts.ParkingOffence[];
 }
 
-export function addParkingOffence(reqBody: pts.ParkingOffence): AddUpdateParkingOffenceReturn {
+
+export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParkingOffenceReturn => {
 
   const db = sqlite(dbPath);
 
@@ -438,9 +451,10 @@ export function addParkingOffence(reqBody: pts.ParkingOffence): AddUpdateParking
   return {
     success: (info.changes > 0)
   };
-}
+};
 
-export function updateParkingOffence(reqBody: pts.ParkingOffence): AddUpdateParkingOffenceReturn {
+
+export const updateParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParkingOffenceReturn => {
 
   const db = sqlite(dbPath);
 
@@ -469,9 +483,10 @@ export function updateParkingOffence(reqBody: pts.ParkingOffence): AddUpdatePark
     success: (info.changes > 0)
   };
 
-}
+};
 
-export function deleteParkingOffence(bylawNumber: string, locationKey: string): AddUpdateParkingOffenceReturn {
+
+export const deleteParkingOffence = (bylawNumber: string, locationKey: string): AddUpdateParkingOffenceReturn => {
 
   const db = sqlite(dbPath);
 
@@ -490,4 +505,4 @@ export function deleteParkingOffence(bylawNumber: string, locationKey: string): 
     success: (info.changes > 0)
   };
 
-}
+};

@@ -5,6 +5,7 @@ import * as sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
+
 type MTO_AvailableLicencePlate = {
   licencePlateNumber: string,
   ticketIDMin: number,
@@ -17,14 +18,8 @@ type MTO_AvailableLicencePlate = {
   ticketNumbers: string[]
 };
 
-export function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID: number, issueDaysAgo: number) {
 
-  const addCalculatedFieldsFn = function(plateRecord: MTO_AvailableLicencePlate) {
-    plateRecord.issueDateMinString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMin);
-    plateRecord.issueDateMaxString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMax);
-    plateRecord.ticketNumbers = plateRecord.ticketNumbersConcat.split(":");
-    delete plateRecord.ticketNumbersConcat;
-  };
+export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: number, issueDaysAgo: number) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -63,18 +58,20 @@ export function getLicencePlatesAvailableForMTOLookupBatch(currentBatchID: numbe
 
   db.close();
 
-  plates.forEach(addCalculatedFieldsFn);
+  for (const plateRecord of plates) {
+
+    plateRecord.issueDateMinString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMin);
+    plateRecord.issueDateMaxString = dateTimeFns.dateIntegerToString(plateRecord.issueDateMax);
+    plateRecord.ticketNumbers = plateRecord.ticketNumbersConcat.split(":");
+    delete plateRecord.ticketNumbersConcat;
+  }
 
   return plates;
 
-}
+};
 
 
-export function getParkingTicketsAvailableForMTOConvictionBatch() {
-
-  const addCalculatedFieldsFn = function(ele: ParkingTicket) {
-    ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
-  };
+export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -134,7 +131,9 @@ export function getParkingTicketsAvailableForMTOConvictionBatch() {
 
   db.close();
 
-  parkingTickets.forEach(addCalculatedFieldsFn);
+  for (const ticket of parkingTickets) {
+    ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+  }
 
   return parkingTickets;
-}
+};

@@ -1,20 +1,23 @@
+/// <reference types="express-serve-static-core" />
+/// <reference types="compression" />
 /// <reference types="express-session" />
+/// <reference types="multer" />
 /// <reference types="integer" />
 import type * as pts from "./ptsTypes";
-export declare function getLicencePlateLookupBatch(batchID_or_negOne: number): pts.LicencePlateLookupBatch;
+export declare const getLicencePlateLookupBatch: (batchID_or_negOne: number) => pts.LicencePlateLookupBatch;
 interface AddLicencePlateToLookupBatchReturn {
     success: boolean;
     message?: string;
     batch?: pts.LicencePlateLookupBatch;
 }
-export declare function addLicencePlateToLookupBatch(reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session): AddLicencePlateToLookupBatchReturn;
+export declare const addLicencePlateToLookupBatch: (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session) => AddLicencePlateToLookupBatchReturn;
 interface AddAllLicencePlatesToLookupBatchBody {
     batchID: number;
     licencePlateCountry: string;
     licencePlateProvince: string;
     licencePlateNumbers: [string, number][];
 }
-export declare function addAllLicencePlatesToLookupBatch(reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: Express.Session): {
+export declare const addAllLicencePlatesToLookupBatch: (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: Express.Session) => {
     success: boolean;
     message: string;
     batch?: undefined;
@@ -23,7 +26,7 @@ export declare function addAllLicencePlatesToLookupBatch(reqBody: AddAllLicenceP
     batch: pts.LicencePlateLookupBatch;
     message?: undefined;
 };
-export declare function removeLicencePlateFromLookupBatch(reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session): {
+export declare const removeLicencePlateFromLookupBatch: (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session) => {
     success: boolean;
     message: string;
 } | {
@@ -35,11 +38,11 @@ interface LookupBatchReturn {
     message?: string;
     batch?: pts.LicencePlateLookupBatch;
 }
-export declare function clearLookupBatch(batchID: number, reqSession: Express.Session): LookupBatchReturn;
-export declare function lockLookupBatch(batchID: number, reqSession: Express.Session): LookupBatchReturn;
-export declare function markLookupBatchAsSent(batchID: number, reqSession: Express.Session): boolean;
-export declare function getUnreceivedLicencePlateLookupBatches(includeUnlocked: boolean): pts.LicencePlateLookupBatch[];
-export declare function createLicencePlateLookupBatch(reqSession: Express.Session): {
+export declare const clearLookupBatch: (batchID: number, reqSession: Express.Session) => LookupBatchReturn;
+export declare const lockLookupBatch: (batchID: number, reqSession: Express.Session) => LookupBatchReturn;
+export declare const markLookupBatchAsSent: (batchID: number, reqSession: Express.Session) => boolean;
+export declare const getUnreceivedLicencePlateLookupBatches: (includeUnlocked: boolean) => pts.LicencePlateLookupBatch[];
+export declare const createLicencePlateLookupBatch: (reqSession: Express.Session) => {
     success: boolean;
     batch: {
         batchID: import("integer").IntLike;
@@ -79,7 +82,7 @@ export interface ReconciliationRecord extends pts.LicencePlate {
     isVehicleMakeMatch: boolean;
     isLicencePlateExpiryDateMatch: boolean;
 }
-export declare function getOwnershipReconciliationRecords(): ReconciliationRecord[];
+export declare const getOwnershipReconciliationRecords: () => ReconciliationRecord[];
 interface LookupErrorLogEntry extends pts.LicencePlate {
     batchID: number;
     logIndex: number;
@@ -93,6 +96,6 @@ interface LookupErrorLogEntry extends pts.LicencePlate {
     issueDateString: string;
     vehicleMakeModel: string;
 }
-export declare function getUnacknowledgedLicencePlateLookupErrorLog(batchID_or_negOne: number, logIndex_or_negOne: number): LookupErrorLogEntry[];
-export declare function markLicencePlateLookupErrorLogEntryAcknowledged(batchID: number, logIndex: number, reqSession: Express.Session): boolean;
+export declare const getUnacknowledgedLicencePlateLookupErrorLog: (batchID_or_negOne: number, logIndex_or_negOne: number) => LookupErrorLogEntry[];
+export declare const markLicencePlateLookupErrorLogEntryAcknowledged: (batchID: number, logIndex: number, reqSession: Express.Session) => boolean;
 export {};

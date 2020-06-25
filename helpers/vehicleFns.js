@@ -7,26 +7,25 @@ const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
 const dbPath = "data/nhtsa.db";
 const sqlite = require("better-sqlite3");
 const ncic = require("../data/ncicCodes");
-function getModelsByMakeFromDB(makeSearchString, db) {
+const getModelsByMakeFromDB = (makeSearchString, db) => {
     return db.prepare("select makeID, makeName, modelID, modelName" +
         " from MakeModel" +
         " where instr(lower(makeName), ?)" +
         " and recordDelete_timeMillis is null" +
         " order by makeName, modelName")
         .all(makeSearchString);
-}
-function getModelsByMakeFromCache(makeSearchStringOriginal) {
+};
+exports.getModelsByMakeFromCache = (makeSearchStringOriginal) => {
     const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
     const db = sqlite(dbPath);
     const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
     db.close();
     return makeModelResults;
-}
-exports.getModelsByMakeFromCache = getModelsByMakeFromCache;
-function getModelsByMake(makeSearchStringOriginal, callbackFn) {
+};
+exports.getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
     const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
     const db = sqlite(dbPath);
-    const queryCloseCallbackFn = function () {
+    const queryCloseCallbackFn = () => {
         const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
         db.close();
         callbackFn(makeModelResults);
@@ -87,16 +86,13 @@ function getModelsByMake(makeSearchStringOriginal, callbackFn) {
         queryCloseCallbackFn();
         return;
     }
-}
-exports.getModelsByMake = getModelsByMake;
-function getMakeFromNCIC(vehicleNCIC) {
+};
+exports.getMakeFromNCIC = (vehicleNCIC) => {
     return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
-}
-exports.getMakeFromNCIC = getMakeFromNCIC;
-function isNCICExclusivelyTrailer(vehicleNCIC) {
+};
+exports.isNCICExclusivelyTrailer = (vehicleNCIC) => {
     if (ncic.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
         return true;
     }
     return false;
-}
-exports.isNCICExclusivelyTrailer = isNCICExclusivelyTrailer;
+};

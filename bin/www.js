@@ -7,7 +7,7 @@ const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const configFns = require("../helpers/configFns");
-function onError(error) {
+const onError = (error) => {
     if (error.syscall !== "listen") {
         throw error;
     }
@@ -27,20 +27,20 @@ function onError(error) {
     if (doProcessExit) {
         process.exit(1);
     }
-}
-function onListening(server) {
+};
+const onListening = (server) => {
     const addr = server.address();
     const bind = typeof addr === "string"
         ? "pipe " + addr
         : "port " + addr.port;
     log.info("Listening on " + bind);
-}
+};
 const httpPort = configFns.getProperty("application.httpPort");
 if (httpPort) {
     const httpServer = http.createServer(app);
     httpServer.listen(httpPort);
     httpServer.on("error", onError);
-    httpServer.on("listening", function () {
+    httpServer.on("listening", () => {
         onListening(httpServer);
     });
     log.info("HTTP listening on " + httpPort);
@@ -54,7 +54,7 @@ if (httpsConfig) {
     }, app);
     httpsServer.listen(httpsConfig.port);
     httpsServer.on("error", onError);
-    httpsServer.on("listening", function () {
+    httpsServer.on("listening", () => {
         onListening(httpsServer);
     });
     log.info("HTTPS listening on " + httpsConfig.port);

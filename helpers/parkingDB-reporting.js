@@ -4,11 +4,11 @@ exports.getReportRowsColumns = void 0;
 const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
 const configFns = require("../helpers/configFns");
-function getCleanupRecordDeleteTimeMillis(possibleRecordDeleteTimeMillis) {
+const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis) => {
     return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== "" ?
         possibleRecordDeleteTimeMillis :
         Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
-}
+};
 const reportDefinitions = new Map();
 reportDefinitions.set("tickets-all", {
     sql: "select * from ParkingTickets"
@@ -196,7 +196,7 @@ reportDefinitions.set("cleanup-parkingLocations", {
         " and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)" +
         " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)"
 });
-function executeQuery(sql, params) {
+const executeQuery = (sql, params) => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -210,13 +210,12 @@ function executeQuery(sql, params) {
         rows,
         columns
     };
-}
-function getReportRowsColumns(reportName, reqQuery) {
+};
+exports.getReportRowsColumns = (reportName, reqQuery) => {
     if (!reportDefinitions.has(reportName)) {
         return null;
     }
     const reportDefinition = reportDefinitions.get(reportName);
     let params = reportDefinition.getParams ? reportDefinition.getParams(reqQuery) : [];
     return executeQuery(reportDefinition.sql, params);
-}
-exports.getReportRowsColumns = getReportRowsColumns;
+};

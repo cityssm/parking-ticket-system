@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteParkingOffence = exports.updateParkingOffence = exports.addParkingOffence = exports.getParkingOffencesByLocationKey = exports.getParkingOffences = exports.updateParkingOffencesByBylawNumber = exports.deleteParkingBylaw = exports.updateParkingBylaw = exports.addParkingBylaw = exports.getParkingBylawsWithOffenceStats = exports.getParkingBylaws = exports.deleteParkingLocation = exports.updateParkingLocation = exports.addParkingLocation = exports.getParkingLocations = void 0;
 const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
-function getParkingLocations() {
+exports.getParkingLocations = () => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -14,9 +14,8 @@ function getParkingLocations() {
         .all();
     db.close();
     return rows;
-}
-exports.getParkingLocations = getParkingLocations;
-function addParkingLocation(reqBody) {
+};
+exports.addParkingLocation = (reqBody) => {
     const db = sqlite(parkingDB_1.dbPath);
     const locationRecord = db.prepare("select locationName, isActive" +
         " from ParkingLocations" +
@@ -40,9 +39,8 @@ function addParkingLocation(reqBody) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.addParkingLocation = addParkingLocation;
-function updateParkingLocation(reqBody) {
+};
+exports.updateParkingLocation = (reqBody) => {
     const db = sqlite(parkingDB_1.dbPath);
     const info = db.prepare("update ParkingLocations" +
         " set locationName = ?," +
@@ -54,9 +52,8 @@ function updateParkingLocation(reqBody) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.updateParkingLocation = updateParkingLocation;
-function deleteParkingLocation(locationKey) {
+};
+exports.deleteParkingLocation = (locationKey) => {
     const db = sqlite(parkingDB_1.dbPath);
     const info = db.prepare("update ParkingLocations" +
         " set isActive = 0" +
@@ -67,9 +64,8 @@ function deleteParkingLocation(locationKey) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.deleteParkingLocation = deleteParkingLocation;
-function getParkingBylaws() {
+};
+exports.getParkingBylaws = () => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -80,9 +76,8 @@ function getParkingBylaws() {
         .all();
     db.close();
     return rows;
-}
-exports.getParkingBylaws = getParkingBylaws;
-function getParkingBylawsWithOffenceStats() {
+};
+exports.getParkingBylawsWithOffenceStats = () => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -102,9 +97,8 @@ function getParkingBylawsWithOffenceStats() {
         .all();
     db.close();
     return rows;
-}
-exports.getParkingBylawsWithOffenceStats = getParkingBylawsWithOffenceStats;
-function addParkingBylaw(reqBody) {
+};
+exports.addParkingBylaw = (reqBody) => {
     const db = sqlite(parkingDB_1.dbPath);
     const bylawRecord = db.prepare("select bylawDescription, isActive" +
         " from ParkingBylaws" +
@@ -139,9 +133,8 @@ function addParkingBylaw(reqBody) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.addParkingBylaw = addParkingBylaw;
-function updateParkingBylaw(reqBody) {
+};
+exports.updateParkingBylaw = (reqBody) => {
     const db = sqlite(parkingDB_1.dbPath);
     const info = db.prepare("update ParkingBylaws" +
         " set bylawDescription = ?" +
@@ -152,9 +145,8 @@ function updateParkingBylaw(reqBody) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.updateParkingBylaw = updateParkingBylaw;
-function deleteParkingBylaw(bylawNumber) {
+};
+exports.deleteParkingBylaw = (bylawNumber) => {
     const db = sqlite(parkingDB_1.dbPath);
     const info = db.prepare("update ParkingBylaws" +
         " set isActive = 0" +
@@ -165,9 +157,8 @@ function deleteParkingBylaw(bylawNumber) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.deleteParkingBylaw = deleteParkingBylaw;
-function updateParkingOffencesByBylawNumber(reqBody) {
+};
+exports.updateParkingOffencesByBylawNumber = (reqBody) => {
     const db = sqlite(parkingDB_1.dbPath);
     const info = db.prepare("update ParkingOffences" +
         " set offenceAmount = ?," +
@@ -180,9 +171,8 @@ function updateParkingOffencesByBylawNumber(reqBody) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.updateParkingOffencesByBylawNumber = updateParkingOffencesByBylawNumber;
-function getParkingOffences() {
+};
+exports.getParkingOffences = () => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -196,9 +186,8 @@ function getParkingOffences() {
         .all();
     db.close();
     return rows;
-}
-exports.getParkingOffences = getParkingOffences;
-function getParkingOffencesByLocationKey(locationKey) {
+};
+exports.getParkingOffencesByLocationKey = (locationKey) => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -212,9 +201,8 @@ function getParkingOffencesByLocationKey(locationKey) {
         .all(locationKey);
     db.close();
     return rows;
-}
-exports.getParkingOffencesByLocationKey = getParkingOffencesByLocationKey;
-function addParkingOffence(reqBody) {
+};
+exports.addParkingOffence = (reqBody) => {
     const db = sqlite(parkingDB_1.dbPath);
     const existingOffenceRecord = db.prepare("select isActive" +
         " from ParkingOffences" +
@@ -275,9 +263,8 @@ function addParkingOffence(reqBody) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.addParkingOffence = addParkingOffence;
-function updateParkingOffence(reqBody) {
+};
+exports.updateParkingOffence = (reqBody) => {
     const db = sqlite(parkingDB_1.dbPath);
     const info = db.prepare("update ParkingOffences" +
         " set parkingOffence = ?," +
@@ -293,9 +280,8 @@ function updateParkingOffence(reqBody) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.updateParkingOffence = updateParkingOffence;
-function deleteParkingOffence(bylawNumber, locationKey) {
+};
+exports.deleteParkingOffence = (bylawNumber, locationKey) => {
     const db = sqlite(parkingDB_1.dbPath);
     const info = db.prepare("update ParkingOffences" +
         " set isActive = 0" +
@@ -307,5 +293,4 @@ function deleteParkingOffence(bylawNumber, locationKey) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.deleteParkingOffence = deleteParkingOffence;
+};

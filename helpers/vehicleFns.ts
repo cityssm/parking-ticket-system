@@ -21,7 +21,7 @@ import * as sqlite from "better-sqlite3";
 import * as ncic from "../data/ncicCodes";
 
 
-function getModelsByMakeFromDB(makeSearchString: string, db: sqlite.Database) {
+const getModelsByMakeFromDB = (makeSearchString: string, db: sqlite.Database) => {
 
   return db.prepare("select makeID, makeName, modelID, modelName" +
     " from MakeModel" +
@@ -29,10 +29,10 @@ function getModelsByMakeFromDB(makeSearchString: string, db: sqlite.Database) {
     " and recordDelete_timeMillis is null" +
     " order by makeName, modelName")
     .all(makeSearchString);
-}
+};
 
 
-export function getModelsByMakeFromCache(makeSearchStringOriginal: string) {
+export const getModelsByMakeFromCache = (makeSearchStringOriginal: string) => {
 
   const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
 
@@ -43,16 +43,16 @@ export function getModelsByMakeFromCache(makeSearchStringOriginal: string) {
   db.close();
 
   return makeModelResults;
-}
+};
 
 
-export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Function) {
+export const getModelsByMake = (makeSearchStringOriginal: string, callbackFn: (makeModelResults: any[]) => void) => {
 
   const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
 
   const db = sqlite(dbPath);
 
-  const queryCloseCallbackFn = function() {
+  const queryCloseCallbackFn = () => {
 
     const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
     db.close();
@@ -153,15 +153,15 @@ export function getModelsByMake(makeSearchStringOriginal: string, callbackFn: Fu
 
   }
 
-}
+};
 
 
-export function getMakeFromNCIC(vehicleNCIC: string): string {
+export const getMakeFromNCIC = (vehicleNCIC: string): string => {
   return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
-}
+};
 
 
-export function isNCICExclusivelyTrailer(vehicleNCIC: string) {
+export const isNCICExclusivelyTrailer = (vehicleNCIC: string) => {
 
   if (ncic.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
     return true;
@@ -169,4 +169,4 @@ export function isNCICExclusivelyTrailer(vehicleNCIC: string) {
 
   return false;
 
-}
+};

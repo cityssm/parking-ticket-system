@@ -4,7 +4,7 @@ exports.markConvictionBatchAsSent = exports.unlockConvictionBatch = exports.lock
 const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-function createParkingTicketConvictionBatch(reqSession) {
+exports.createParkingTicketConvictionBatch = (reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     const rightNow = new Date();
     const info = db.prepare("insert into ParkingTicketConvictionBatches" +
@@ -28,9 +28,8 @@ function createParkingTicketConvictionBatch(reqSession) {
     else {
         return { success: false };
     }
-}
-exports.createParkingTicketConvictionBatch = createParkingTicketConvictionBatch;
-function getLastTenParkingTicketConvictionBatches() {
+};
+exports.getLastTenParkingTicketConvictionBatches = () => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -41,15 +40,14 @@ function getLastTenParkingTicketConvictionBatches() {
         " order by batchID desc" +
         " limit 10").all();
     db.close();
-    batches.forEach(function (batch) {
+    for (const batch of batches) {
         batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
         batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
         batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
-    });
+    }
     return batches;
-}
-exports.getLastTenParkingTicketConvictionBatches = getLastTenParkingTicketConvictionBatches;
-function getParkingTicketConvictionBatch(batchID_or_negOne) {
+};
+exports.getParkingTicketConvictionBatch = (batchID_or_negOne) => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
@@ -88,16 +86,15 @@ function getParkingTicketConvictionBatch(batchID_or_negOne) {
         " and s.statusKey = 'convictionBatch' and s.statusField = ?" +
         " order by t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber")
         .all(batch.batchID.toString());
-    batch.batchEntries.forEach(function (batchEntry) {
+    for (const batchEntry of batch.batchEntries) {
         batchEntry.statusDateString = dateTimeFns.dateIntegerToString(batchEntry.statusDate);
         batchEntry.statusTimeString = dateTimeFns.timeIntegerToString(batchEntry.statusTime);
         batchEntry.issueDateString = dateTimeFns.dateIntegerToString(batchEntry.issueDate);
-    });
+    }
     db.close();
     return batch;
-}
-exports.getParkingTicketConvictionBatch = getParkingTicketConvictionBatch;
-function addParkingTicketToConvictionBatch(batchID, ticketID, reqSession) {
+};
+exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +
@@ -167,9 +164,8 @@ function addParkingTicketToConvictionBatch(batchID, ticketID, reqSession) {
             message: "Parking ticket already included in conviction batch #" + batchStatusCheck.statusField + "."
         };
     }
-}
-exports.addParkingTicketToConvictionBatch = addParkingTicketToConvictionBatch;
-function addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, reqSession) {
+};
+exports.addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +
@@ -234,9 +230,8 @@ function addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, reqSession) {
     return {
         successCount
     };
-}
-exports.addAllParkingTicketsToConvictionBatch = addAllParkingTicketsToConvictionBatch;
-function removeParkingTicketFromConvictionBatch(batchID, ticketID, reqSession) {
+};
+exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +
@@ -269,9 +264,8 @@ function removeParkingTicketFromConvictionBatch(batchID, ticketID, reqSession) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.removeParkingTicketFromConvictionBatch = removeParkingTicketFromConvictionBatch;
-function clearConvictionBatch(batchID, reqSession) {
+};
+exports.clearConvictionBatch = (batchID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +
@@ -303,9 +297,8 @@ function clearConvictionBatch(batchID, reqSession) {
     return {
         success: (info.changes > 0)
     };
-}
-exports.clearConvictionBatch = clearConvictionBatch;
-function lockConvictionBatch(batchID, reqSession) {
+};
+exports.lockConvictionBatch = (batchID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     const rightNow = new Date();
     const lockDate = dateTimeFns.dateToInteger(rightNow);
@@ -323,9 +316,8 @@ function lockConvictionBatch(batchID, reqSession) {
         lockDate,
         lockDateString: dateTimeFns.dateIntegerToString(lockDate)
     };
-}
-exports.lockConvictionBatch = lockConvictionBatch;
-function unlockConvictionBatch(batchID, reqSession) {
+};
+exports.unlockConvictionBatch = (batchID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     const rightNowMillis = Date.now();
     let info = db.prepare("update ParkingTicketConvictionBatches" +
@@ -339,9 +331,8 @@ function unlockConvictionBatch(batchID, reqSession) {
         .run(reqSession.user.userName, rightNowMillis, batchID);
     db.close();
     return (info.changes > 0);
-}
-exports.unlockConvictionBatch = unlockConvictionBatch;
-function markConvictionBatchAsSent(batchID, reqSession) {
+};
+exports.markConvictionBatchAsSent = (batchID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     const rightNow = new Date();
     const info = db.prepare("update ParkingTicketConvictionBatches" +
@@ -367,5 +358,4 @@ function markConvictionBatchAsSent(batchID, reqSession) {
         .run(dateTimeFns.dateToInteger(rightNow), reqSession.user.userName, rightNow.getTime(), batchID.toString());
     db.close();
     return (info.changes > 0);
-}
-exports.markConvictionBatchAsSent = markConvictionBatchAsSent;
+};

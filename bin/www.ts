@@ -11,7 +11,8 @@ import * as fs from "fs";
 import * as configFns from "../helpers/configFns";
 import type { ConfigHttpsConfig } from "../helpers/ptsTypes";
 
-function onError(error: Error) {
+
+const onError = (error: Error) => {
 
   if (error.syscall !== "listen") {
     throw error;
@@ -39,9 +40,10 @@ function onError(error: Error) {
   if (doProcessExit) {
     process.exit(1);
   }
-}
+};
 
-function onListening(server: http.Server | https.Server) {
+
+const onListening = (server: http.Server | https.Server) => {
 
   const addr = server.address();
 
@@ -50,12 +52,13 @@ function onListening(server: http.Server | https.Server) {
     : "port " + addr.port;
 
   log.info("Listening on " + bind);
+};
 
-}
 
 /**
  * Initialize HTTP
  */
+
 
 const httpPort = configFns.getProperty("application.httpPort");
 
@@ -66,7 +69,7 @@ if (httpPort) {
   httpServer.listen(httpPort);
 
   httpServer.on("error", onError);
-  httpServer.on("listening", function() {
+  httpServer.on("listening", () => {
     onListening(httpServer);
   });
 
@@ -91,10 +94,9 @@ if (httpsConfig) {
 
   httpsServer.on("error", onError);
 
-  httpsServer.on("listening", function() {
+  httpsServer.on("listening", () => {
     onListening(httpsServer);
   });
 
   log.info("HTTPS listening on " + httpsConfig.port);
-
 }
