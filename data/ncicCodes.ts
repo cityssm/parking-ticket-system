@@ -416,7 +416,7 @@ export const constructionNCIC = {
   "HOND": "Honda",
   "MITS": "Mitsubishi",
   "NISS": "Nissan",
-  "TOYT": "Toyota",
+  "TOYT": "Toyota"
 };
 
 

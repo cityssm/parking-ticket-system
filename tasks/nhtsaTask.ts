@@ -6,7 +6,7 @@ import * as vehicleFns from "../helpers/vehicleFns";
 import * as configFns from "../helpers/configFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
-let initDate = new Date();
+const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
@@ -40,7 +40,7 @@ const processNCIC = (index: number) => {
 
 export const scheduleRun = async () => {
 
-  let nextScheduleDate = new Date();
+  const nextScheduleDate = new Date();
 
   nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
   nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);

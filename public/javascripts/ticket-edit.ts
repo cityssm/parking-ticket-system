@@ -239,7 +239,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     let bylawLookupCloseModalFn: () => void;
     let offenceList: ptsTypes.ParkingOffence[] = [];
-    let listItemEles: HTMLAnchorElement[] = [];
+    const listItemEles: HTMLAnchorElement[] = [];
 
     const clearBylawOffenceFn = (clickEvent: Event) => {
 
@@ -290,7 +290,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       clickEvent.preventDefault();
 
-      const offenceObj = offenceList[parseInt((<HTMLInputElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
+      const offenceObj =
+        offenceList[parseInt((<HTMLInputElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
 
       (<HTMLInputElement>document.getElementById("ticket--bylawNumber")).value = offenceObj.bylawNumber;
 

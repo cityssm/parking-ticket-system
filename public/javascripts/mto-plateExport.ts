@@ -184,7 +184,7 @@ type AvailableLicencePlate = {
       .split(" ");
 
 
-    let includedLicencePlates = [];
+    const includedLicencePlates = [];
 
     availablePlatesList.forEach((plateRecord, recordIndex) => {
 
@@ -222,7 +222,8 @@ type AvailableLicencePlate = {
           "</div>" +
           "</div>") +
         ("<div class=\"level-right\">" +
-          "<button class=\"button is-small\" data-index=\"" + recordIndex + "\" data-tooltip=\"Add to Batch\" type=\"button\">" +
+          "<button class=\"button is-small\" data-index=\"" + recordIndex + "\"" +
+          " data-tooltip=\"Add to Batch\" type=\"button\">" +
           "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
           "<span>Add</span>" +
           "</button>" +
@@ -254,7 +255,9 @@ type AvailableLicencePlate = {
 
       addAllButtonEle.innerHTML =
         "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
-        "<span>Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "</span>";
+        ("<span>" +
+          "Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
+          "</span>");
 
       addAllButtonEle.addEventListener("click", () => {
 
@@ -262,7 +265,8 @@ type AvailableLicencePlate = {
           onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
             document.getElementById("is-loading-modal-message").innerText =
-              "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
+              "Adding " + includedLicencePlates.length +
+              " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
 
             cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
               batchID,
@@ -432,7 +436,8 @@ type AvailableLicencePlate = {
 
       batchEntriesContainerEle.insertAdjacentHTML(
         "beforeend",
-        "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
+        "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\"" +
+        " target=\"_blank\" rel=\"noreferrer\">" +
         "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
         "<span>MTO ARIS Login</span>" +
         "</a>"

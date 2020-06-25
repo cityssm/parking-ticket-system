@@ -209,8 +209,8 @@ exports.initParkingDB = () => {
             " primary key (batchID, logIndex)," +
             " foreign key (batchID) references LicencePlateLookupBatches (batchID)" +
             ") without rowid").run();
-        parkingDB.prepare("create unique index if not exists LicencePlateLookupErrorLog_LicencePlateIndex on LicencePlateLookupErrorLog" +
-            " (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)")
+        parkingDB.prepare("create unique index if not exists LicencePlateLookupErrorLog_LicencePlateIndex" +
+            " on LicencePlateLookupErrorLog (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)")
             .run();
     }
     parkingDB.close();

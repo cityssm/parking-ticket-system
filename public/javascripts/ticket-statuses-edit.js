@@ -324,8 +324,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("addPaidStatus--ticketID").value = ticketID;
                 const statusFieldEle = document.getElementById("addPaidStatus--statusField");
                 const offenceAmount = document.getElementById("ticket--offenceAmount").value;
-                let issueDateString = document.getElementById("ticket--issueDateString").value;
-                let discountDays = document.getElementById("ticket--discountDays").value;
+                const issueDateString = document.getElementById("ticket--issueDateString").value;
+                const discountDays = document.getElementById("ticket--discountDays").value;
                 if (issueDateString === "" || discountDays === "") {
                     statusFieldEle.value = offenceAmount;
                 }

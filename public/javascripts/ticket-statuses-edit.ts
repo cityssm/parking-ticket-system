@@ -526,9 +526,9 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         const offenceAmount = (<HTMLInputElement>document.getElementById("ticket--offenceAmount")).value;
 
-        let issueDateString = (<HTMLInputElement>document.getElementById("ticket--issueDateString")).value;
+        const issueDateString = (<HTMLInputElement>document.getElementById("ticket--issueDateString")).value;
 
-        let discountDays = (<HTMLInputElement>document.getElementById("ticket--discountDays")).value;
+        const discountDays = (<HTMLInputElement>document.getElementById("ticket--discountDays")).value;
 
         if (issueDateString === "" || discountDays === "") {
           statusFieldEle.value = offenceAmount;

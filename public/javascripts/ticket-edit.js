@@ -131,7 +131,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     {
         let bylawLookupCloseModalFn;
         let offenceList = [];
-        let listItemEles = [];
+        const listItemEles = [];
         const clearBylawOffenceFn = (clickEvent) => {
             clickEvent.preventDefault();
             document.getElementById("ticket--bylawNumber").value = "";

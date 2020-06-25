@@ -162,12 +162,12 @@ export const addAllLicencePlatesToLookupBatch =
 
     let changeCount = 0;
 
-    for (let index = 0; index < reqBody.licencePlateNumbers.length; index += 1) {
+    for (const licencePlateNumberRecord of reqBody.licencePlateNumbers) {
 
       const info = insertStmt
         .run(reqBody.batchID,
-          reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumbers[index][0],
-          reqBody.licencePlateNumbers[index][1]);
+          reqBody.licencePlateCountry, reqBody.licencePlateProvince, licencePlateNumberRecord[0],
+          licencePlateNumberRecord[1]);
 
       changeCount += info.changes;
     }
@@ -341,7 +341,8 @@ export const lockLookupBatch = (batchID: number, reqSession: Express.Session): L
       " and (e.ticketID = t.ticketID or (t.recordDelete_timeMillis is null and t.resolvedDate is null))" +
       " group by t.ticketID, e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber, e.batchID" +
       " having max(" +
-      "case when s.statusKey in ('ownerLookupPending', 'ownerLookupMatch', 'ownerLookupError') and s.recordDelete_timeMillis is null then 1" +
+      ("case when s.statusKey in ('ownerLookupPending', 'ownerLookupMatch', 'ownerLookupError')" +
+        " and s.recordDelete_timeMillis is null then 1") +
       " else 0" +
       " end) = 0")
       .run(dateTimeFns.dateToInteger(rightNow),

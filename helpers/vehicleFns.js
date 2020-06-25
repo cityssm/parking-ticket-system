@@ -66,8 +66,7 @@ exports.getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
                 " set recordUpdate_timeMillis = ?" +
                 " where makeName = ?" +
                 " and modelName = ?";
-            for (let index = 0; index < data.Results.length; index += 1) {
-                const record = data.Results[index];
+            for (const record of data.Results) {
                 const info = db.prepare(insertSQL)
                     .run(record.Make_ID, record.Make_Name, record.Model_ID, record.Model_Name, nowMillis, nowMillis);
                 if (info.changes === 0) {

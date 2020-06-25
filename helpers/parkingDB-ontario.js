@@ -10,7 +10,7 @@ exports.getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysA
     });
     let issueDateNumber = 99999999;
     if (issueDaysAgo !== -1) {
-        let issueDate = new Date();
+        const issueDate = new Date();
         issueDate.setDate(issueDate.getDate() - issueDaysAgo);
         issueDateNumber = dateTimeFns.dateToInteger(issueDate);
     }

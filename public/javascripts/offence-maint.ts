@@ -121,7 +121,7 @@ type UpdateOffenceResponseJSON = {
     };
 
     cityssm.openHtmlModal("offence-edit", {
-      onshow() {
+      onshow(): void {
 
         (<HTMLInputElement>document.getElementById("offenceEdit--locationKey")).value = offence.locationKey;
         (<HTMLInputElement>document.getElementById("offenceEdit--bylawNumber")).value = offence.bylawNumber;
@@ -153,7 +153,7 @@ type UpdateOffenceResponseJSON = {
         accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
 
       },
-      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
 
         editOffenceModalCloseFn = closeModalFn;
 
@@ -213,7 +213,7 @@ type UpdateOffenceResponseJSON = {
     };
 
     cityssm.openHtmlModal("offence-addFromList", {
-      onshow(modalEle: HTMLElement) {
+      onshow(modalEle: HTMLElement): void {
 
         let titleHTML = "";
         let selectedHTML = "";
@@ -245,7 +245,7 @@ type UpdateOffenceResponseJSON = {
         document.getElementById("addContainer--selected").innerHTML = selectedHTML;
 
       },
-      onshown() {
+      onshown(): void {
 
         const listEle = document.createElement("div");
         listEle.className = "panel";
@@ -323,7 +323,7 @@ type UpdateOffenceResponseJSON = {
           addResultsEle.appendChild(listEle);
         }
       },
-      onremoved() {
+      onremoved(): void {
 
         if (doRefreshOnClose) {
 
@@ -572,7 +572,7 @@ type UpdateOffenceResponseJSON = {
 
     cityssm.openHtmlModal("location-select", {
 
-      onshow() {
+      onshow(): void {
 
         const listEle = document.createElement("div");
         listEle.className = "panel mb-4";
@@ -607,7 +607,7 @@ type UpdateOffenceResponseJSON = {
         listContainerEle.appendChild(listEle);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
         selectLocationCloseModalFn = closeModalFn;
       }
     });
@@ -665,7 +665,7 @@ type UpdateOffenceResponseJSON = {
 
     cityssm.openHtmlModal("bylaw-select", {
 
-      onshow() {
+      onshow(): void {
 
         const listEle = document.createElement("div");
         listEle.className = "panel mb-4";
@@ -690,7 +690,7 @@ type UpdateOffenceResponseJSON = {
         cityssm.clearElement(listContainerEle);
         listContainerEle.appendChild(listEle);
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
         selectBylawCloseModalFn = closeModalFn;
       }

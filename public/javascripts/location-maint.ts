@@ -69,18 +69,16 @@ type UpdateLocationResponseJSON = {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget, (responseJSON: UpdateLocationResponseJSON) => {
+      cityssm.postJSON("/admin/doUpdateLocation", formEvent.currentTarget,
+        (responseJSON: UpdateLocationResponseJSON) => {
 
-        if (responseJSON.success) {
+          if (responseJSON.success) {
 
-          editLocationCloseModalFn();
-          locationList = responseJSON.locations;
-          renderLocationListFn();
-
-        }
-
-      });
-
+            editLocationCloseModalFn();
+            locationList = responseJSON.locations;
+            renderLocationListFn();
+          }
+        });
     };
 
     cityssm.openHtmlModal("location-edit", {
@@ -88,7 +86,8 @@ type UpdateLocationResponseJSON = {
 
         (<HTMLInputElement>document.getElementById("editLocation--locationKey")).value = location.locationKey;
 
-        const locationClassKeyEditSelectEle = <HTMLSelectElement>document.getElementById("editLocation--locationClassKey");
+        const locationClassKeyEditSelectEle =
+          <HTMLSelectElement>document.getElementById("editLocation--locationClassKey");
 
         locationClassKeyEditSelectEle.innerHTML = locationClassKeyOptionsHTML;
 

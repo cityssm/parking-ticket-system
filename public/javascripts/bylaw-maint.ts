@@ -49,9 +49,14 @@ type UpdateBylawResponseJSON = {
         (<HTMLInputElement>document.getElementById("updateOffences--bylawNumber")).value = bylaw.bylawNumber;
         (<HTMLInputElement>document.getElementById("updateOffences--bylawDescription")).value = bylaw.bylawDescription;
 
-        (<HTMLInputElement>document.getElementById("updateOffences--offenceAmount")).value = bylaw.offenceAmountMin.toFixed(2);
-        (<HTMLInputElement>document.getElementById("updateOffences--discountDays")).value = bylaw.discountDaysMin.toString();
-        (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value = bylaw.discountOffenceAmountMin.toFixed(2);
+        (<HTMLInputElement>document.getElementById("updateOffences--offenceAmount")).value =
+          bylaw.offenceAmountMin.toFixed(2);
+
+        (<HTMLInputElement>document.getElementById("updateOffences--discountDays")).value =
+          bylaw.discountDaysMin.toString();
+
+        (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value =
+          bylaw.discountOffenceAmountMin.toFixed(2);
 
       },
       onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
@@ -188,7 +193,9 @@ type UpdateBylawResponseJSON = {
           offenceAmountRange += " to $" + bylaw.offenceAmountMax.toFixed(2);
         }
 
-        offenceAmountRange = "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\" data-index=\"" + bylawIndex + "\" href=\"#\">" +
+        offenceAmountRange =
+          "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\"" +
+          " data-index=\"" + bylawIndex + "\" href=\"#\">" +
           offenceAmountRange +
           "</a>";
       }

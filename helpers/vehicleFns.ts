@@ -100,7 +100,15 @@ export const getModelsByMake = (makeSearchStringOriginal: string, callbackFn: (m
 
     fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
       .then((response) => response.json())
-      .then((data) => {
+      .then((data: {
+        Count: number,
+        Results: {
+          Make_ID: number,
+          Make_Name: string,
+          Model_ID: number,
+          Model_Name: string
+        }[]
+      }) => {
 
         db.prepare("update MakeModelSearchHistory" +
           " set resultCount = ?" +
@@ -116,14 +124,7 @@ export const getModelsByMake = (makeSearchStringOriginal: string, callbackFn: (m
           " where makeName = ?" +
           " and modelName = ?";
 
-        for (let index = 0; index < data.Results.length; index += 1) {
-
-          const record: {
-            Make_ID: number,
-            Make_Name: string,
-            Model_ID: number,
-            Model_Name: string
-          } = data.Results[index];
+        for (const record of data.Results) {
 
           const info = db.prepare(insertSQL)
             .run(record.Make_ID, record.Make_Name,
@@ -137,22 +138,18 @@ export const getModelsByMake = (makeSearchStringOriginal: string, callbackFn: (m
 
         queryCloseCallbackFn();
         return;
-
       })
       .catch((_err) => {
 
         queryCloseCallbackFn();
         return;
-
       });
 
   } else {
 
     queryCloseCallbackFn();
     return;
-
   }
-
 };
 
 

@@ -338,7 +338,13 @@ declare const pts: ptsGlobal;
       const reconcileFn = () => {
 
         cityssm.postJSON("/tickets/doQuickReconcileMatches", {},
-          (responseJSON: { success: boolean, statusRecords: any[] }) => {
+          (responseJSON: {
+            success: boolean,
+            statusRecords: {
+              ticketID: number,
+              statusIndex: number
+            }[]
+          }) => {
 
             loadingCloseModalFn();
 

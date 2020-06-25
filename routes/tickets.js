@@ -13,7 +13,7 @@ router.get("/", (_req, res) => {
     });
 });
 router.post("/doGetTickets", (req, res) => {
-    let queryOptions = {
+    const queryOptions = {
         limit: req.body.limit,
         offset: req.body.offset,
         ticketNumber: req.body.ticketNumber,

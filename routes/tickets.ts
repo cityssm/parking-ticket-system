@@ -27,7 +27,7 @@ router.get("/", (_req, res) => {
 
 router.post("/doGetTickets", (req, res) => {
 
-  let queryOptions: parkingDB.GetParkingTicketsQueryOptions = {
+  const queryOptions: parkingDB.GetParkingTicketsQueryOptions = {
     limit: req.body.limit,
     offset: req.body.offset,
     ticketNumber: req.body.ticketNumber,
@@ -123,7 +123,8 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
 
   // Mark log entry as acknowledged
 
-  const success = parkingDBLookup.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
+  const success =
+    parkingDBLookup.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
 
   res.json({
     success

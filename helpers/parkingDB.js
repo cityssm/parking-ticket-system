@@ -58,9 +58,11 @@ const getLicencePlateOwnerWithDB = (db, licencePlateCountry, licencePlateProvinc
         const ownerPlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] ||
             possibleOwnerObj.licencePlateCountry;
         const ownerPlateProvinceAlias = (configFns.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})[possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
-        if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {
+        if (licencePlateCountryAlias === ownerPlateCountryAlias &&
+            licencePlateProvinceAlias === ownerPlateProvinceAlias) {
             possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
-            possibleOwnerObj.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
+            possibleOwnerObj.licencePlateExpiryDateString =
+                dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
             possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
             return possibleOwnerObj;
         }
@@ -118,8 +120,10 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
         " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
         " from ParkingTickets t" +
         " left join ParkingLocations l on t.locationKey = l.locationKey" +
-        (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-            " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
+        " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+        (" and s.statusIndex = (" +
+            "select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID" +
+            " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
         sqlWhereClause +
         " order by t.issueDate desc, t.ticketNumber desc" +
         " limit " + queryOptions.limit +

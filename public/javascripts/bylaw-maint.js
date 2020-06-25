@@ -24,9 +24,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshow() {
                 document.getElementById("updateOffences--bylawNumber").value = bylaw.bylawNumber;
                 document.getElementById("updateOffences--bylawDescription").value = bylaw.bylawDescription;
-                document.getElementById("updateOffences--offenceAmount").value = bylaw.offenceAmountMin.toFixed(2);
-                document.getElementById("updateOffences--discountDays").value = bylaw.discountDaysMin.toString();
-                document.getElementById("updateOffences--discountOffenceAmount").value = bylaw.discountOffenceAmountMin.toFixed(2);
+                document.getElementById("updateOffences--offenceAmount").value =
+                    bylaw.offenceAmountMin.toFixed(2);
+                document.getElementById("updateOffences--discountDays").value =
+                    bylaw.discountDaysMin.toString();
+                document.getElementById("updateOffences--discountOffenceAmount").value =
+                    bylaw.discountOffenceAmountMin.toFixed(2);
             },
             onshown(modalEle, closeModalFn) {
                 updateOffencesCloseModalFn = closeModalFn;
@@ -108,9 +111,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 if (bylaw.offenceAmountMin !== bylaw.offenceAmountMax) {
                     offenceAmountRange += " to $" + bylaw.offenceAmountMax.toFixed(2);
                 }
-                offenceAmountRange = "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\" data-index=\"" + bylawIndex + "\" href=\"#\">" +
-                    offenceAmountRange +
-                    "</a>";
+                offenceAmountRange =
+                    "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\"" +
+                        " data-index=\"" + bylawIndex + "\" href=\"#\">" +
+                        offenceAmountRange +
+                        "</a>";
             }
             trEle.innerHTML =
                 "<td>" +

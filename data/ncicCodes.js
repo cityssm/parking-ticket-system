@@ -382,7 +382,7 @@ exports.constructionNCIC = {
     "HOND": "Honda",
     "MITS": "Mitsubishi",
     "NISS": "Nissan",
-    "TOYT": "Toyota",
+    "TOYT": "Toyota"
 };
 exports.motorcycleNCIC = {
     "BMW": "BMW",

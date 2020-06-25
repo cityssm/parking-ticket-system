@@ -15,7 +15,7 @@ const parkingDB = require("../helpers/parkingDB");
 const vehicleFns = require("../helpers/vehicleFns");
 const configFns = require("../helpers/configFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-let initDate = new Date();
+const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
 let vehicleNCICs = [];
@@ -35,7 +35,7 @@ const processNCIC = (index) => {
     }
 };
 exports.scheduleRun = () => __awaiter(void 0, void 0, void 0, function* () {
-    let nextScheduleDate = new Date();
+    const nextScheduleDate = new Date();
     nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
     nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
     log.info("NHTSA task scheduled for " + nextScheduleDate.toString());

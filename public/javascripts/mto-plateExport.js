@@ -95,7 +95,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         resultsPanelEle.className = "panel";
         const filterStringSplit = licencePlateNumberFilterEle.value.toLowerCase().trim()
             .split(" ");
-        let includedLicencePlates = [];
+        const includedLicencePlates = [];
         availablePlatesList.forEach((plateRecord, recordIndex) => {
             if (!plateRecord) {
                 return;
@@ -124,7 +124,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>" +
                     "</div>") +
                 ("<div class=\"level-right\">" +
-                    "<button class=\"button is-small\" data-index=\"" + recordIndex + "\" data-tooltip=\"Add to Batch\" type=\"button\">" +
+                    "<button class=\"button is-small\" data-index=\"" + recordIndex + "\"" +
+                    " data-tooltip=\"Add to Batch\" type=\"button\">" +
                     "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     "<span>Add</span>" +
                     "</button>" +
@@ -149,12 +150,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
             addAllButtonEle.className = "button is-fullwidth mb-3";
             addAllButtonEle.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
-                    "<span>Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "</span>";
+                    ("<span>" +
+                        "Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
+                        "</span>");
             addAllButtonEle.addEventListener("click", () => {
                 cityssm.openHtmlModal("loading", {
                     onshown(_modalEle, closeModalFn) {
                         document.getElementById("is-loading-modal-message").innerText =
-                            "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
+                            "Adding " + includedLicencePlates.length +
+                                " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
                         cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
                             batchID,
                             licencePlateCountry: "CA",
@@ -270,7 +274,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<span>Download File for MTO</span>";
             downloadFileButtonEle.addEventListener("click", clickFn_downloadBatch);
             batchEntriesContainerEle.appendChild(downloadFileButtonEle);
-            batchEntriesContainerEle.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
+            batchEntriesContainerEle.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\"" +
+                " target=\"_blank\" rel=\"noreferrer\">" +
                 "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
                 "<span>MTO ARIS Login</span>" +
                 "</a>");
