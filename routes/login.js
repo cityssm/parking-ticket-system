@@ -4,7 +4,7 @@ const router = express_1.Router();
 const configFns = require("../helpers/configFns");
 const usersDB = require("../helpers/usersDB");
 router.route("/")
-    .get(function (req, res) {
+    .get((req, res) => {
     const sessionCookieName = configFns.getProperty("session.cookieName");
     if (req.session.user && req.cookies[sessionCookieName]) {
         if (req.query.redirect && req.query.redirect !== "") {
@@ -22,7 +22,7 @@ router.route("/")
         });
     }
 })
-    .post(function (req, res) {
+    .post((req, res) => {
     const userName = req.body.userName;
     const passwordPlain = req.body.password;
     const redirectURL = req.body.redirect;

@@ -16,7 +16,7 @@ import type * as pts from "../helpers/ptsTypes";
  */
 
 
-router.get("/", function(_req, res) {
+router.get("/", (_req, res) => {
 
   res.render("ticket-search", {
     headTitle: "Parking Tickets"
@@ -25,7 +25,7 @@ router.get("/", function(_req, res) {
 });
 
 
-router.post("/doGetTickets", function(req, res) {
+router.post("/doGetTickets", (req, res) => {
 
   let queryOptions: parkingDB.GetParkingTicketsQueryOptions = {
     limit: req.body.limit,
@@ -49,7 +49,7 @@ router.post("/doGetTickets", function(req, res) {
  */
 
 
-router.get("/reconcile", function(req, res) {
+router.get("/reconcile", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -71,7 +71,7 @@ router.get("/reconcile", function(req, res) {
 });
 
 
-router.post("/doAcknowledgeLookupError", function(req, res) {
+router.post("/doAcknowledgeLookupError", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -132,7 +132,7 @@ router.post("/doAcknowledgeLookupError", function(req, res) {
 });
 
 
-router.post("/doReconcileAsMatch", function(req, res) {
+router.post("/doReconcileAsMatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -175,7 +175,7 @@ router.post("/doReconcileAsMatch", function(req, res) {
 });
 
 
-router.post("/doReconcileAsError", function(req, res) {
+router.post("/doReconcileAsError", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -216,7 +216,7 @@ router.post("/doReconcileAsError", function(req, res) {
 });
 
 
-router.post("/doQuickReconcileMatches", function(req, res) {
+router.post("/doQuickReconcileMatches", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -271,7 +271,7 @@ router.post("/doQuickReconcileMatches", function(req, res) {
  */
 
 
-router.post("/doGetRecentConvictionBatches", function(req, res) {
+router.post("/doGetRecentConvictionBatches", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 
@@ -291,7 +291,7 @@ router.post("/doGetRecentConvictionBatches", function(req, res) {
 });
 
 
-router.post("/doGetConvictionBatch", function(req, res) {
+router.post("/doGetConvictionBatch", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 
@@ -311,7 +311,7 @@ router.post("/doGetConvictionBatch", function(req, res) {
 });
 
 
-router.post("/doCreateConvictionBatch", function(req, res) {
+router.post("/doCreateConvictionBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -331,7 +331,7 @@ router.post("/doCreateConvictionBatch", function(req, res) {
 });
 
 
-router.post("/doAddTicketToConvictionBatch", function(req, res) {
+router.post("/doAddTicketToConvictionBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -362,7 +362,7 @@ router.post("/doAddTicketToConvictionBatch", function(req, res) {
 });
 
 
-router.post("/doLockConvictionBatch", function(req, res) {
+router.post("/doLockConvictionBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -384,7 +384,7 @@ router.post("/doLockConvictionBatch", function(req, res) {
 });
 
 
-router.post("/doUnlockConvictionBatch", function(req, res) {
+router.post("/doUnlockConvictionBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -440,7 +440,7 @@ router.get([
 });
 
 
-router.post("/doCreateTicket", function(req, res) {
+router.post("/doCreateTicket", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -469,7 +469,7 @@ router.post("/doCreateTicket", function(req, res) {
 });
 
 
-router.post("/doUpdateTicket", function(req, res) {
+router.post("/doUpdateTicket", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -491,7 +491,7 @@ router.post("/doUpdateTicket", function(req, res) {
 });
 
 
-router.post("/doDeleteTicket", function(req, res) {
+router.post("/doDeleteTicket", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -513,7 +513,7 @@ router.post("/doDeleteTicket", function(req, res) {
 });
 
 
-router.post("/doResolveTicket", function(req, res) {
+router.post("/doResolveTicket", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -535,7 +535,7 @@ router.post("/doResolveTicket", function(req, res) {
 });
 
 
-router.post("/doUnresolveTicket", function(req, res) {
+router.post("/doUnresolveTicket", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -557,7 +557,7 @@ router.post("/doUnresolveTicket", function(req, res) {
 });
 
 
-router.post("/doRestoreTicket", function(req, res) {
+router.post("/doRestoreTicket", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -584,14 +584,14 @@ router.post("/doRestoreTicket", function(req, res) {
  */
 
 
-router.post("/doGetRemarks", function(req, res) {
+router.post("/doGetRemarks", (req, res) => {
 
   res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
 
 });
 
 
-router.post("/doAddRemark", function(req, res) {
+router.post("/doAddRemark", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -613,7 +613,7 @@ router.post("/doAddRemark", function(req, res) {
 });
 
 
-router.post("/doUpdateRemark", function(req, res) {
+router.post("/doUpdateRemark", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -635,7 +635,7 @@ router.post("/doUpdateRemark", function(req, res) {
 });
 
 
-router.post("/doDeleteRemark", function(req, res) {
+router.post("/doDeleteRemark", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -662,14 +662,14 @@ router.post("/doDeleteRemark", function(req, res) {
  */
 
 
-router.post("/doGetStatuses", function(req, res) {
+router.post("/doGetStatuses", (req, res) => {
 
   res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
 
 });
 
 
-router.post("/doAddStatus", function(req, res) {
+router.post("/doAddStatus", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -691,7 +691,7 @@ router.post("/doAddStatus", function(req, res) {
 });
 
 
-router.post("/doUpdateStatus", function(req, res) {
+router.post("/doUpdateStatus", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -713,7 +713,7 @@ router.post("/doUpdateStatus", function(req, res) {
 });
 
 
-router.post("/doDeleteStatus", function(req, res) {
+router.post("/doDeleteStatus", (req, res) => {
 
   if (!req.session.user.userProperties.canCreate) {
 
@@ -740,7 +740,7 @@ router.post("/doDeleteStatus", function(req, res) {
  */
 
 
-router.get("/:ticketID", function(req, res) {
+router.get("/:ticketID", (req, res) => {
 
   const ticketID = parseInt(req.params.ticketID, 10);
 
@@ -763,7 +763,7 @@ router.get("/:ticketID", function(req, res) {
 
 });
 
-router.get("/byTicketNumber/:ticketNumber", function(req, res) {
+router.get("/byTicketNumber/:ticketNumber", (req, res) => {
 
   const ticketNumber = req.params.ticketNumber;
 
@@ -783,7 +783,7 @@ router.get("/byTicketNumber/:ticketNumber", function(req, res) {
  */
 
 
-router.get("/:ticketID/edit", function(req, res) {
+router.get("/:ticketID/edit", (req, res) => {
 
   const ticketID = parseInt(req.params.ticketID, 10);
 

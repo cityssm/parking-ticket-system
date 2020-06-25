@@ -4,14 +4,14 @@ const router = express_1.Router();
 const parkingDBReporting = require("../helpers/parkingDB-reporting");
 const stringFns_1 = require("@cityssm/expressjs-server-js/stringFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-router.get("/", function (_req, res) {
+router.get("/", (_req, res) => {
     const rightNow = new Date();
     res.render("report-search", {
         headTitle: "Reports",
         todayDateString: dateTimeFns.dateToString(rightNow)
     });
 });
-router.all("/:reportName", function (req, res) {
+router.all("/:reportName", (req, res) => {
     const reportName = req.params.reportName;
     const rowsColumnsObj = parkingDBReporting.getReportRowsColumns(reportName, req.query);
     if (!rowsColumnsObj) {

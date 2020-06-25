@@ -7,7 +7,7 @@ declare const pts: ptsGlobal;
 import type * as ptsTypes from "../../helpers/ptsTypes";
 
 
-(function() {
+(() => {
 
   const ticketID = (<HTMLInputElement>document.getElementById("ticket--ticketID")).value;
 
@@ -16,19 +16,16 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
   let statusList = exports.ticketStatusLog;
   delete exports.ticketStatusLog;
 
-  const clearStatusPanelFn = function() {
+  const clearStatusPanelFn = () => {
 
     const panelBlockEles = statusPanelEle.getElementsByClassName("panel-block");
 
     while (panelBlockEles.length > 0) {
-
       panelBlockEles[0].remove();
-
     }
-
   };
 
-  const confirmResolveTicketFn = function(clickEvent: Event) {
+  const confirmResolveTicketFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -37,20 +34,17 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       "Once resolved, you will no longer be able to make changes to the ticket.",
       "Yes, Resolve Ticket",
       "info",
-      function() {
+      () => {
 
         cityssm.postJSON(
           "/tickets/doResolveTicket", {
             ticketID
           },
-          function(responseJSON) {
+          (responseJSON: { success: boolean }) => {
 
             if (responseJSON.success) {
-
               window.location.href = "/tickets/" + ticketID;
-
             }
-
           }
         );
 
@@ -59,7 +53,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   };
 
-  const confirmDeleteStatusFn = function(clickEvent: Event) {
+  const confirmDeleteStatusFn = (clickEvent: Event) => {
 
     const statusIndex = (<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-status-index");
 
@@ -68,54 +62,48 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       "Are you sure you want to delete this status?",
       "Yes, Delete",
       "warning",
-      function() {
+      () => {
 
         cityssm.postJSON("/tickets/doDeleteStatus", {
           ticketID,
           statusIndex
-        }, function(resultJSON) {
+        },
+          (responseJSON: { success: boolean }) => {
 
-          if (resultJSON.success) {
-
-            getStatusesFn();
-
-          }
-
-        });
-
+            if (responseJSON.success) {
+              getStatusesFn();
+            }
+          });
       }
     );
 
   };
 
-  const openEditStatusModalFn = function(clickEvent: Event) {
+  const openEditStatusModalFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    let editStatusCloseModalFn: Function;
+    let editStatusCloseModalFn: () => void;
 
     const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
 
     const statusObj = statusList[index];
 
-    const submitFn = function(formEvent: Event) {
+    const submitFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget,
+        (responseJSON: { success: boolean }) => {
 
-        if (responseJSON.success) {
-
-          editStatusCloseModalFn();
-          getStatusesFn();
-
-        }
-
-      });
-
+          if (responseJSON.success) {
+            editStatusCloseModalFn();
+            getStatusesFn();
+          }
+        });
     };
 
-    const statusKeyChangeFn = function(changeEvent: Event) {
+    const statusKeyChangeFn = (changeEvent: Event) => {
 
       const statusKeyObj = pts.getTicketStatus((<HTMLSelectElement>changeEvent.currentTarget).value);
 
@@ -131,7 +119,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       } else {
 
         statusFieldEle.closest(".field").classList.add("is-hidden");
-
       }
 
       const statusField2Ele = <HTMLInputElement>document.getElementById("editStatus--statusField2");
@@ -146,9 +133,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       } else {
 
         statusFieldEle.closest(".field").classList.add("is-hidden");
-
       }
-
     };
 
     cityssm.openHtmlModal("ticket-editStatus", {
@@ -168,74 +153,68 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         (<HTMLInputElement>document.getElementById("editStatus--statusTimeString")).value = statusObj.statusTimeString;
 
-        pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) {
+        pts.getDefaultConfigProperty("parkingTicketStatuses",
+          (parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) => {
 
-          let statusKeyFound = false;
+            let statusKeyFound = false;
 
-          const statusKeyEle = <HTMLSelectElement>document.getElementById("editStatus--statusKey");
+            const statusKeyEle = <HTMLSelectElement>document.getElementById("editStatus--statusKey");
 
-          for (const statusKeyObj of parkingTicketStatuses) {
+            for (const statusKeyObj of parkingTicketStatuses) {
 
-            if (statusKeyObj.isUserSettable || statusKeyObj.statusKey === statusObj.statusKey) {
+              if (statusKeyObj.isUserSettable || statusKeyObj.statusKey === statusObj.statusKey) {
 
-              statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusKeyObj.statusKey + "\">" +
-                statusKeyObj.status +
-                "</option>");
+                statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusKeyObj.statusKey + "\">" +
+                  statusKeyObj.status +
+                  "</option>");
 
-              if (statusKeyObj.statusKey === statusObj.statusKey) {
+                if (statusKeyObj.statusKey === statusObj.statusKey) {
 
-                statusKeyFound = true;
+                  statusKeyFound = true;
 
-                if (statusKeyObj.statusField) {
+                  if (statusKeyObj.statusField) {
 
-                  const fieldEle = document.getElementById("editStatus--statusField").closest(".field");
-                  fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
-                  fieldEle.classList.remove("is-hidden");
+                    const fieldEle = document.getElementById("editStatus--statusField").closest(".field");
+                    fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
+                    fieldEle.classList.remove("is-hidden");
 
+                  }
+
+                  if (statusKeyObj.statusField2) {
+
+                    const fieldEle = document.getElementById("editStatus--statusField2").closest(".field");
+                    fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
+                    fieldEle.classList.remove("is-hidden");
+
+                  }
                 }
-
-                if (statusKeyObj.statusField2) {
-
-                  const fieldEle = document.getElementById("editStatus--statusField2").closest(".field");
-                  fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
-                  fieldEle.classList.remove("is-hidden");
-
-                }
-
               }
-
             }
 
-          }
+            if (!statusKeyFound) {
 
-          if (!statusKeyFound) {
+              statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
+                statusObj.statusKey +
+                "</option>");
+            }
 
-            statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
-              statusObj.statusKey +
-              "</option>");
+            statusKeyEle.value = statusObj.statusKey;
 
-          }
+            statusKeyEle.addEventListener("change", statusKeyChangeFn);
 
-          statusKeyEle.value = statusObj.statusKey;
-
-          statusKeyEle.addEventListener("change", statusKeyChangeFn);
-
-        });
+          });
 
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },
       onshown(_modalEle, closeModalFn) {
-
         editStatusCloseModalFn = closeModalFn;
-
       }
-
     });
 
   };
 
-  const populateStatusesPanelFn = function() {
+  const populateStatusesPanelFn = () => {
 
     clearStatusPanelFn();
 
@@ -250,7 +229,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         "</div>");
 
       return;
-
     }
 
     // Loop through statuses
@@ -309,18 +287,21 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     if (firstStatusObj.canUpdate) {
 
-      const firstStatusColumnsEle = statusPanelEle.getElementsByClassName("panel-block")[0].getElementsByClassName("columns")[0];
+      const firstStatusColumnsEle =
+        statusPanelEle.getElementsByClassName("panel-block")[0].getElementsByClassName("columns")[0];
 
       firstStatusColumnsEle.insertAdjacentHTML("beforeend", "<div class=\"column is-narrow\">" +
         "<div class=\"buttons is-right has-addons\">" +
-        "<button class=\"button is-small is-edit-status-button\" data-tooltip=\"Edit Status\" data-index=\"0\" type=\"button\">" +
-        "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
-        " <span>Edit</span>" +
-        "</button>" +
-        "<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\" data-status-index=\"" + firstStatusObj.statusIndex + "\" type=\"button\">" +
-        "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
-        "<span class=\"sr-only\">Delete</span>" +
-        "</button>" +
+        ("<button class=\"button is-small is-edit-status-button\"" +
+          " data-tooltip=\"Edit Status\" data-index=\"0\" type=\"button\">" +
+          "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
+          " <span>Edit</span>" +
+          "</button>") +
+        ("<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\"" +
+          " data-status-index=\"" + firstStatusObj.statusIndex + "\" type=\"button\">" +
+          "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
+          "<span class=\"sr-only\">Delete</span>" +
+          "</button>") +
         "</div>" +
         "</div>");
 
@@ -369,7 +350,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   };
 
-  const getStatusesFn = function() {
+  const getStatusesFn = () => {
 
     clearStatusPanelFn();
 
@@ -385,50 +366,48 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     cityssm.postJSON("/tickets/doGetStatuses", {
       ticketID
-    }, function(resultList) {
+    },
+      (responseStatusList) => {
 
-      statusList = resultList;
-      populateStatusesPanelFn();
+        statusList = responseStatusList;
+        populateStatusesPanelFn();
 
-    });
+      });
 
   };
 
-  document.getElementById("is-add-status-button").addEventListener("click", function(clickEvent) {
+  document.getElementById("is-add-status-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addStatusCloseModalFn: Function;
+    let addStatusCloseModalFn: () => void;
 
-    const submitFn = function(formEvent: Event) {
+    const submitFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
       const resolveTicket = (<HTMLInputElement>document.getElementById("addStatus--resolveTicket")).checked;
 
-      cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget,
+        (responseJSON: { success: boolean }) => {
 
-        if (responseJSON.success) {
+          if (responseJSON.success) {
 
-          addStatusCloseModalFn();
+            addStatusCloseModalFn();
 
-          if (resolveTicket) {
+            if (resolveTicket) {
 
-            window.location.href = "/tickets/" + ticketID;
+              window.location.href = "/tickets/" + ticketID;
 
-          } else {
+            } else {
 
-            getStatusesFn();
-
+              getStatusesFn();
+            }
           }
-
-        }
-
-      });
-
+        });
     };
 
-    const statusKeyChangeFn = function(changeEvent: Event) {
+    const statusKeyChangeFn = (changeEvent: Event) => {
 
       const statusObj = pts.getTicketStatus((<HTMLInputElement>changeEvent.currentTarget).value);
 
@@ -457,9 +436,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         fieldEle.classList.remove("is-hidden");
 
       } else {
-
         statusField2Ele.closest(".field").classList.add("is-hidden");
-
       }
 
       const resolveTicketEle = <HTMLInputElement>document.getElementById("addStatus--resolveTicket");
@@ -470,11 +447,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         resolveTicketEle.closest(".field").classList.remove("is-hidden");
 
       } else {
-
         resolveTicketEle.closest(".field").classList.add("is-hidden");
-
       }
-
     };
 
     cityssm.openHtmlModal("ticket-addStatus", {
@@ -483,22 +457,22 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         (<HTMLInputElement>document.getElementById("addStatus--ticketID")).value = ticketID;
 
-        pts.getDefaultConfigProperty("parkingTicketStatuses", function(parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) {
+        pts.getDefaultConfigProperty("parkingTicketStatuses",
+          (parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) => {
 
-          const statusKeyEle = document.getElementById("addStatus--statusKey");
+            const statusKeyEle = document.getElementById("addStatus--statusKey");
 
-          for (const statusObj of parkingTicketStatuses) {
+            for (const statusObj of parkingTicketStatuses) {
 
-            if (statusObj.isUserSettable) {
-              statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
-                statusObj.status +
-                "</option>");
+              if (statusObj.isUserSettable) {
+                statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
+                  statusObj.status +
+                  "</option>");
+              }
             }
-          }
 
-          statusKeyEle.addEventListener("change", statusKeyChangeFn);
-
-        });
+            statusKeyEle.addEventListener("change", statusKeyChangeFn);
+          });
 
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
@@ -511,38 +485,33 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   });
 
-  document.getElementById("is-add-paid-status-button").addEventListener("click", function(clickEvent) {
+  document.getElementById("is-add-paid-status-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addPaidStatusCloseModalFn: Function;
+    let addPaidStatusCloseModalFn: () => void;
 
-    const submitFn = function(formEvent: Event) {
+    const submitFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
       const resolveTicket = (<HTMLInputElement>document.getElementById("addPaidStatus--resolveTicket")).checked;
 
-      cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget,
+        (responseJSON: { success: boolean }) => {
 
-        if (responseJSON.success) {
+          if (responseJSON.success) {
 
-          addPaidStatusCloseModalFn();
+            addPaidStatusCloseModalFn();
 
-          if (resolveTicket) {
+            if (resolveTicket) {
+              window.location.href = "/tickets/" + ticketID;
 
-            window.location.href = "/tickets/" + ticketID;
-
-          } else {
-
-            getStatusesFn();
-
+            } else {
+              getStatusesFn();
+            }
           }
-
-        }
-
-      });
-
+        });
     };
 
     cityssm.openHtmlModal("ticket-addStatusPaid", {
@@ -592,4 +561,4 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   pts.loadDefaultConfigProperties(populateStatusesPanelFn);
 
-}());
+})();

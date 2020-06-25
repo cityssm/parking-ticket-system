@@ -19,32 +19,29 @@ let initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
 let vehicleNCICs = [];
-function processNCIC(index) {
+const processNCIC = (index) => {
     const ncicRecord = vehicleNCICs[index];
     if (ncicRecord) {
         cutoffDate = ncicRecord.recordDateMax;
         const vehicleMake = vehicleFns.getMakeFromNCIC(ncicRecord.vehicleNCIC);
         log("Processing " + vehicleMake);
-        vehicleFns.getModelsByMake(vehicleMake, function () {
+        vehicleFns.getModelsByMake(vehicleMake, () => {
             processNCIC(index + 1);
         });
     }
     else {
         vehicleNCICs = [];
-        scheduleRun();
+        exports.scheduleRun();
     }
-}
-function scheduleRun() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let nextScheduleDate = new Date();
-        nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
-        nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
-        log.info("NHTSA task scheduled for " + nextScheduleDate.toString());
-        setTimeout(function () {
-            log("NHTSA task starting");
-            vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
-            processNCIC(0);
-        }, nextScheduleDate.getTime() - Date.now());
-    });
-}
-exports.scheduleRun = scheduleRun;
+};
+exports.scheduleRun = () => __awaiter(void 0, void 0, void 0, function* () {
+    let nextScheduleDate = new Date();
+    nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
+    nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
+    log.info("NHTSA task scheduled for " + nextScheduleDate.toString());
+    setTimeout(() => {
+        log("NHTSA task starting");
+        vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
+        processNCIC(0);
+    }, nextScheduleDate.getTime() - Date.now());
+});

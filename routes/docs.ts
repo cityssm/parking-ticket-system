@@ -9,14 +9,14 @@ import * as marked from "marked";
 import * as configFns from "../helpers/configFns";
 
 
-router.all("/", function(_req, res) {
+router.all("/", (_req, res) => {
 
   res.redirect("/docs/readme.md");
 
 });
 
 
-router.all("/:mdFileName", function(req, res, next) {
+router.all("/:mdFileName", (req, res, next) => {
 
   const mdFileName = req.params.mdFileName;
 

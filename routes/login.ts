@@ -7,7 +7,7 @@ import * as usersDB from "../helpers/usersDB";
 
 
 router.route("/")
-  .get(function(req, res) {
+  .get((req, res) => {
 
     const sessionCookieName = configFns.getProperty("session.cookieName");
 
@@ -34,7 +34,7 @@ router.route("/")
     }
 
   })
-  .post(function(req, res) {
+  .post((req, res) => {
 
     const userName = req.body.userName;
     const passwordPlain = req.body.password;

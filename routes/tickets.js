@@ -7,12 +7,12 @@ const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB = require("../helpers/parkingDB");
 const parkingDBLookup = require("../helpers/parkingDB-lookup");
 const parkingDBConvict = require("../helpers/parkingDB-convict");
-router.get("/", function (_req, res) {
+router.get("/", (_req, res) => {
     res.render("ticket-search", {
         headTitle: "Parking Tickets"
     });
 });
-router.post("/doGetTickets", function (req, res) {
+router.post("/doGetTickets", (req, res) => {
     let queryOptions = {
         limit: req.body.limit,
         offset: req.body.offset,
@@ -25,7 +25,7 @@ router.post("/doGetTickets", function (req, res) {
     }
     res.json(parkingDB.getParkingTickets(req.session, queryOptions));
 });
-router.get("/reconcile", function (req, res) {
+router.get("/reconcile", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         res.redirect("/tickets/?error=accessDenied");
         return;
@@ -38,7 +38,7 @@ router.get("/reconcile", function (req, res) {
         errorLog: lookupErrors
     });
 });
-router.post("/doAcknowledgeLookupError", function (req, res) {
+router.post("/doAcknowledgeLookupError", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         res
             .status(403)
@@ -75,7 +75,7 @@ router.post("/doAcknowledgeLookupError", function (req, res) {
         success
     });
 });
-router.post("/doReconcileAsMatch", function (req, res) {
+router.post("/doReconcileAsMatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         res
             .status(403)
@@ -103,7 +103,7 @@ router.post("/doReconcileAsMatch", function (req, res) {
     }, req.session, false);
     res.json(statusResponse);
 });
-router.post("/doReconcileAsError", function (req, res) {
+router.post("/doReconcileAsError", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         res
             .status(403)
@@ -130,7 +130,7 @@ router.post("/doReconcileAsError", function (req, res) {
     }, req.session, false);
     res.json(statusResponse);
 });
-router.post("/doQuickReconcileMatches", function (req, res) {
+router.post("/doQuickReconcileMatches", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)
@@ -165,7 +165,7 @@ router.post("/doQuickReconcileMatches", function (req, res) {
         statusRecords
     });
 });
-router.post("/doGetRecentConvictionBatches", function (req, res) {
+router.post("/doGetRecentConvictionBatches", (req, res) => {
     if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         return res
             .status(403)
@@ -177,7 +177,7 @@ router.post("/doGetRecentConvictionBatches", function (req, res) {
     const batches = parkingDBConvict.getLastTenParkingTicketConvictionBatches();
     return res.json(batches);
 });
-router.post("/doGetConvictionBatch", function (req, res) {
+router.post("/doGetConvictionBatch", (req, res) => {
     if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         return res
             .status(403)
@@ -189,7 +189,7 @@ router.post("/doGetConvictionBatch", function (req, res) {
     const batch = parkingDBConvict.getParkingTicketConvictionBatch(req.body.batchID);
     return res.json(batch);
 });
-router.post("/doCreateConvictionBatch", function (req, res) {
+router.post("/doCreateConvictionBatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)
@@ -201,7 +201,7 @@ router.post("/doCreateConvictionBatch", function (req, res) {
     const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(req.session);
     return res.json(batchResult);
 });
-router.post("/doAddTicketToConvictionBatch", function (req, res) {
+router.post("/doAddTicketToConvictionBatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)
@@ -218,7 +218,7 @@ router.post("/doAddTicketToConvictionBatch", function (req, res) {
     }
     return res.json(result);
 });
-router.post("/doLockConvictionBatch", function (req, res) {
+router.post("/doLockConvictionBatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)
@@ -231,7 +231,7 @@ router.post("/doLockConvictionBatch", function (req, res) {
     const result = parkingDBConvict.lockConvictionBatch(batchID, req.session);
     return res.json(result);
 });
-router.post("/doUnlockConvictionBatch", function (req, res) {
+router.post("/doUnlockConvictionBatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)
@@ -266,7 +266,7 @@ router.get([
         vehicleMakeModelDatalist
     });
 });
-router.post("/doCreateTicket", function (req, res) {
+router.post("/doCreateTicket", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -283,7 +283,7 @@ router.post("/doCreateTicket", function (req, res) {
     }
     res.json(result);
 });
-router.post("/doUpdateTicket", function (req, res) {
+router.post("/doUpdateTicket", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -296,7 +296,7 @@ router.post("/doUpdateTicket", function (req, res) {
     const result = parkingDB.updateParkingTicket(req.body, req.session);
     res.json(result);
 });
-router.post("/doDeleteTicket", function (req, res) {
+router.post("/doDeleteTicket", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -309,7 +309,7 @@ router.post("/doDeleteTicket", function (req, res) {
     const result = parkingDB.deleteParkingTicket(req.body.ticketID, req.session);
     res.json(result);
 });
-router.post("/doResolveTicket", function (req, res) {
+router.post("/doResolveTicket", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -322,7 +322,7 @@ router.post("/doResolveTicket", function (req, res) {
     const result = parkingDB.resolveParkingTicket(req.body.ticketID, req.session);
     res.json(result);
 });
-router.post("/doUnresolveTicket", function (req, res) {
+router.post("/doUnresolveTicket", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -335,7 +335,7 @@ router.post("/doUnresolveTicket", function (req, res) {
     const result = parkingDB.unresolveParkingTicket(req.body.ticketID, req.session);
     res.json(result);
 });
-router.post("/doRestoreTicket", function (req, res) {
+router.post("/doRestoreTicket", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         res
             .status(403)
@@ -348,10 +348,10 @@ router.post("/doRestoreTicket", function (req, res) {
     const result = parkingDB.restoreParkingTicket(req.body.ticketID, req.session);
     res.json(result);
 });
-router.post("/doGetRemarks", function (req, res) {
+router.post("/doGetRemarks", (req, res) => {
     res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
 });
-router.post("/doAddRemark", function (req, res) {
+router.post("/doAddRemark", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -364,7 +364,7 @@ router.post("/doAddRemark", function (req, res) {
     const result = parkingDB.createParkingTicketRemark(req.body, req.session);
     res.json(result);
 });
-router.post("/doUpdateRemark", function (req, res) {
+router.post("/doUpdateRemark", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -377,7 +377,7 @@ router.post("/doUpdateRemark", function (req, res) {
     const result = parkingDB.updateParkingTicketRemark(req.body, req.session);
     res.json(result);
 });
-router.post("/doDeleteRemark", function (req, res) {
+router.post("/doDeleteRemark", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -390,10 +390,10 @@ router.post("/doDeleteRemark", function (req, res) {
     const result = parkingDB.deleteParkingTicketRemark(req.body.ticketID, req.body.remarkIndex, req.session);
     res.json(result);
 });
-router.post("/doGetStatuses", function (req, res) {
+router.post("/doGetStatuses", (req, res) => {
     res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
 });
-router.post("/doAddStatus", function (req, res) {
+router.post("/doAddStatus", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -406,7 +406,7 @@ router.post("/doAddStatus", function (req, res) {
     const result = parkingDB.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
     res.json(result);
 });
-router.post("/doUpdateStatus", function (req, res) {
+router.post("/doUpdateStatus", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -419,7 +419,7 @@ router.post("/doUpdateStatus", function (req, res) {
     const result = parkingDB.updateParkingTicketStatus(req.body, req.session);
     res.json(result);
 });
-router.post("/doDeleteStatus", function (req, res) {
+router.post("/doDeleteStatus", (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res
             .status(403)
@@ -432,7 +432,7 @@ router.post("/doDeleteStatus", function (req, res) {
     const result = parkingDB.deleteParkingTicketStatus(req.body.ticketID, req.body.statusIndex, req.session);
     res.json(result);
 });
-router.get("/:ticketID", function (req, res) {
+router.get("/:ticketID", (req, res) => {
     const ticketID = parseInt(req.params.ticketID, 10);
     const ticket = parkingDB.getParkingTicket(ticketID, req.session);
     if (!ticket) {
@@ -448,7 +448,7 @@ router.get("/:ticketID", function (req, res) {
         ticket
     });
 });
-router.get("/byTicketNumber/:ticketNumber", function (req, res) {
+router.get("/byTicketNumber/:ticketNumber", (req, res) => {
     const ticketNumber = req.params.ticketNumber;
     const ticketID = parkingDB.getParkingTicketID(ticketNumber);
     if (ticketID) {
@@ -458,7 +458,7 @@ router.get("/byTicketNumber/:ticketNumber", function (req, res) {
         res.redirect("/tickets/?error=ticketNotFound");
     }
 });
-router.get("/:ticketID/edit", function (req, res) {
+router.get("/:ticketID/edit", (req, res) => {
     const ticketID = parseInt(req.params.ticketID, 10);
     if (!req.session.user.userProperties.canCreate) {
         res.redirect("/tickets/" + ticketID);

@@ -4,7 +4,7 @@ const router = express_1.Router();
 const parkingDBOntario = require("../helpers/parkingDB-ontario");
 const parkingDBConvict = require("../helpers/parkingDB-convict");
 const mtoFns = require("../helpers/mtoFns");
-router.get("/convict", function (req, res) {
+router.get("/convict", (req, res) => {
     if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         res.redirect("/tickets/?error=accessDenied");
         return;
@@ -17,7 +17,7 @@ router.get("/convict", function (req, res) {
         batch
     });
 });
-router.get("/convict/:batchID", function (req, res) {
+router.get("/convict/:batchID", (req, res) => {
     if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
         res.redirect("/tickets/?error=accessDenied");
         return;
@@ -28,7 +28,7 @@ router.get("/convict/:batchID", function (req, res) {
     res.setHeader("Content-Type", "text/plain");
     res.send(output);
 });
-router.post("/doAddAllTicketsToConvictionBatch", function (req, res) {
+router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)
@@ -46,7 +46,7 @@ router.post("/doAddAllTicketsToConvictionBatch", function (req, res) {
     }
     return res.json(result);
 });
-router.post("/doClearConvictionBatch", function (req, res) {
+router.post("/doClearConvictionBatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)
@@ -63,7 +63,7 @@ router.post("/doClearConvictionBatch", function (req, res) {
     }
     return res.json(result);
 });
-router.post("/doRemoveTicketFromConvictionBatch", function (req, res) {
+router.post("/doRemoveTicketFromConvictionBatch", (req, res) => {
     if (!req.session.user.userProperties.canUpdate) {
         return res
             .status(403)

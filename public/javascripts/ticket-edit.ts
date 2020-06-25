@@ -389,7 +389,9 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         for (const searchPiece of searchStringSplit) {
 
-          if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 && offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
+          if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 &&
+            offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
+
             displayRecord = false;
             break;
           }
@@ -465,8 +467,9 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     const datalistEle = document.getElementById("datalist--licencePlateProvince");
     cityssm.clearElement(datalistEle);
 
-    const countryProperties =
-      pts.getLicencePlateCountryProperties((<HTMLInputElement>document.getElementById("ticket--licencePlateCountry")).value);
+    const countryString = (<HTMLInputElement>document.getElementById("ticket--licencePlateCountry")).value;
+
+    const countryProperties = pts.getLicencePlateCountryProperties(countryString);
 
     if (countryProperties && countryProperties.provinces) {
 

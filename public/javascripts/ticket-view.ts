@@ -2,13 +2,13 @@ import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/
 declare const cityssm: cityssmGlobal;
 
 
-(function() {
+(() => {
 
   const unresolveTicketButtonEle = document.getElementById("is-unresolve-ticket-button");
 
   if (unresolveTicketButtonEle) {
 
-    unresolveTicketButtonEle.addEventListener("click", function(clickEvent) {
+    unresolveTicketButtonEle.addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 
@@ -19,20 +19,17 @@ declare const cityssm: cityssmGlobal;
         "Are you sure you want to remove the resolved status from this ticket?",
         "Yes, Mark as Unresolved",
         "warning",
-        function() {
+        () => {
 
           cityssm.postJSON("/tickets/doUnresolveTicket", {
             ticketID
-          }, function(responseJSON) {
+          },
+            (responseJSON: { success: boolean }) => {
 
-            if (responseJSON.success) {
-
-              window.location.reload(true);
-
-            }
-
-          });
-
+              if (responseJSON.success) {
+                window.location.reload(true);
+              }
+            });
         }
       );
 
@@ -44,7 +41,7 @@ declare const cityssm: cityssmGlobal;
 
   if (restoreTicketButtonEle) {
 
-    restoreTicketButtonEle.addEventListener("click", function(clickEvent) {
+    restoreTicketButtonEle.addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 
@@ -55,25 +52,19 @@ declare const cityssm: cityssmGlobal;
         "Are you sure you want to restore this parking ticket?",
         "Yes, Restore the Ticket",
         "warning",
-        function() {
+        () => {
 
           cityssm.postJSON("/tickets/doRestoreTicket", {
             ticketID
-          }, function(responseJSON) {
+          },
+            (responseJSON: { success: boolean }) => {
 
-            if (responseJSON.success) {
-
-              window.location.reload(true);
-
-            }
-
-          });
-
+              if (responseJSON.success) {
+                window.location.reload(true);
+              }
+            });
         }
       );
-
     });
-
   }
-
-}());
+})();

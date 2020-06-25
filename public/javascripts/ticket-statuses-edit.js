@@ -1,56 +1,56 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const ticketID = document.getElementById("ticket--ticketID").value;
     const statusPanelEle = document.getElementById("is-status-panel");
     let statusList = exports.ticketStatusLog;
     delete exports.ticketStatusLog;
-    const clearStatusPanelFn = function () {
+    const clearStatusPanelFn = () => {
         const panelBlockEles = statusPanelEle.getElementsByClassName("panel-block");
         while (panelBlockEles.length > 0) {
             panelBlockEles[0].remove();
         }
     };
-    const confirmResolveTicketFn = function (clickEvent) {
+    const confirmResolveTicketFn = (clickEvent) => {
         clickEvent.preventDefault();
-        cityssm.confirmModal("Mark Ticket as Resolved?", "Once resolved, you will no longer be able to make changes to the ticket.", "Yes, Resolve Ticket", "info", function () {
+        cityssm.confirmModal("Mark Ticket as Resolved?", "Once resolved, you will no longer be able to make changes to the ticket.", "Yes, Resolve Ticket", "info", () => {
             cityssm.postJSON("/tickets/doResolveTicket", {
                 ticketID
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     window.location.href = "/tickets/" + ticketID;
                 }
             });
         });
     };
-    const confirmDeleteStatusFn = function (clickEvent) {
+    const confirmDeleteStatusFn = (clickEvent) => {
         const statusIndex = clickEvent.currentTarget.getAttribute("data-status-index");
-        cityssm.confirmModal("Delete Remark?", "Are you sure you want to delete this status?", "Yes, Delete", "warning", function () {
+        cityssm.confirmModal("Delete Remark?", "Are you sure you want to delete this status?", "Yes, Delete", "warning", () => {
             cityssm.postJSON("/tickets/doDeleteStatus", {
                 ticketID,
                 statusIndex
-            }, function (resultJSON) {
-                if (resultJSON.success) {
+            }, (responseJSON) => {
+                if (responseJSON.success) {
                     getStatusesFn();
                 }
             });
         });
     };
-    const openEditStatusModalFn = function (clickEvent) {
+    const openEditStatusModalFn = (clickEvent) => {
         clickEvent.preventDefault();
         let editStatusCloseModalFn;
         const index = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         const statusObj = statusList[index];
-        const submitFn = function (formEvent) {
+        const submitFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/tickets/doUpdateStatus", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     editStatusCloseModalFn();
                     getStatusesFn();
                 }
             });
         };
-        const statusKeyChangeFn = function (changeEvent) {
+        const statusKeyChangeFn = (changeEvent) => {
             const statusKeyObj = pts.getTicketStatus(changeEvent.currentTarget.value);
             const statusFieldEle = document.getElementById("editStatus--statusField");
             statusFieldEle.value = "";
@@ -84,7 +84,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 statusDateEle.value = statusObj.statusDateString;
                 statusDateEle.setAttribute("max", cityssm.dateToString(new Date()));
                 document.getElementById("editStatus--statusTimeString").value = statusObj.statusTimeString;
-                pts.getDefaultConfigProperty("parkingTicketStatuses", function (parkingTicketStatuses) {
+                pts.getDefaultConfigProperty("parkingTicketStatuses", (parkingTicketStatuses) => {
                     let statusKeyFound = false;
                     const statusKeyEle = document.getElementById("editStatus--statusKey");
                     for (const statusKeyObj of parkingTicketStatuses) {
@@ -122,7 +122,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     };
-    const populateStatusesPanelFn = function () {
+    const populateStatusesPanelFn = () => {
         clearStatusPanelFn();
         if (statusList.length === 0) {
             statusPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
@@ -176,14 +176,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const firstStatusColumnsEle = statusPanelEle.getElementsByClassName("panel-block")[0].getElementsByClassName("columns")[0];
             firstStatusColumnsEle.insertAdjacentHTML("beforeend", "<div class=\"column is-narrow\">" +
                 "<div class=\"buttons is-right has-addons\">" +
-                "<button class=\"button is-small is-edit-status-button\" data-tooltip=\"Edit Status\" data-index=\"0\" type=\"button\">" +
-                "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
-                " <span>Edit</span>" +
-                "</button>" +
-                "<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\" data-status-index=\"" + firstStatusObj.statusIndex + "\" type=\"button\">" +
-                "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
-                "<span class=\"sr-only\">Delete</span>" +
-                "</button>" +
+                ("<button class=\"button is-small is-edit-status-button\"" +
+                    " data-tooltip=\"Edit Status\" data-index=\"0\" type=\"button\">" +
+                    "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
+                    " <span>Edit</span>" +
+                    "</button>") +
+                ("<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\"" +
+                    " data-status-index=\"" + firstStatusObj.statusIndex + "\" type=\"button\">" +
+                    "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
+                    "<span class=\"sr-only\">Delete</span>" +
+                    "</button>") +
                 "</div>" +
                 "</div>");
             firstStatusColumnsEle.getElementsByClassName("is-edit-status-button")[0]
@@ -214,7 +216,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             statusPanelEle.insertAdjacentElement("afterbegin", finalizePanelBlockEle);
         }
     };
-    const getStatusesFn = function () {
+    const getStatusesFn = () => {
         clearStatusPanelFn();
         statusPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
             "<p class=\"has-text-centered has-text-grey-lighter\">" +
@@ -224,18 +226,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</div>");
         cityssm.postJSON("/tickets/doGetStatuses", {
             ticketID
-        }, function (resultList) {
-            statusList = resultList;
+        }, (responseStatusList) => {
+            statusList = responseStatusList;
             populateStatusesPanelFn();
         });
     };
-    document.getElementById("is-add-status-button").addEventListener("click", function (clickEvent) {
+    document.getElementById("is-add-status-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         let addStatusCloseModalFn;
-        const submitFn = function (formEvent) {
+        const submitFn = (formEvent) => {
             formEvent.preventDefault();
             const resolveTicket = document.getElementById("addStatus--resolveTicket").checked;
-            cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     addStatusCloseModalFn();
                     if (resolveTicket) {
@@ -247,7 +249,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        const statusKeyChangeFn = function (changeEvent) {
+        const statusKeyChangeFn = (changeEvent) => {
             const statusObj = pts.getTicketStatus(changeEvent.currentTarget.value);
             const statusFieldEle = document.getElementById("addStatus--statusField");
             statusFieldEle.value = "";
@@ -281,7 +283,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.openHtmlModal("ticket-addStatus", {
             onshow(modalEle) {
                 document.getElementById("addStatus--ticketID").value = ticketID;
-                pts.getDefaultConfigProperty("parkingTicketStatuses", function (parkingTicketStatuses) {
+                pts.getDefaultConfigProperty("parkingTicketStatuses", (parkingTicketStatuses) => {
                     const statusKeyEle = document.getElementById("addStatus--statusKey");
                     for (const statusObj of parkingTicketStatuses) {
                         if (statusObj.isUserSettable) {
@@ -299,13 +301,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-    document.getElementById("is-add-paid-status-button").addEventListener("click", function (clickEvent) {
+    document.getElementById("is-add-paid-status-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         let addPaidStatusCloseModalFn;
-        const submitFn = function (formEvent) {
+        const submitFn = (formEvent) => {
             formEvent.preventDefault();
             const resolveTicket = document.getElementById("addPaidStatus--resolveTicket").checked;
-            cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     addPaidStatusCloseModalFn();
                     if (resolveTicket) {
@@ -345,4 +347,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     });
     pts.loadDefaultConfigProperties(populateStatusesPanelFn);
-}());
+})();

@@ -6,7 +6,7 @@ import * as parkingDB from "../helpers/parkingDB";
 import * as parkingDBLookup from "../helpers/parkingDB-lookup";
 
 
-router.get("/", function(_req, res) {
+router.get("/", (_req, res) => {
 
   res.render("plate-search", {
     headTitle: "Licence Plates"
@@ -15,7 +15,7 @@ router.get("/", function(_req, res) {
 });
 
 
-router.post("/doGetLicencePlates", function(req, res) {
+router.post("/doGetLicencePlates", (req, res) => {
 
   let queryOptions: parkingDB.GetLicencePlatesQueryOptions = {
     limit: req.body.limit,
@@ -36,7 +36,7 @@ router.post("/doGetLicencePlates", function(req, res) {
 });
 
 
-router.post("/doGetUnreceivedLicencePlateLookupBatches", function(req, res) {
+router.post("/doGetUnreceivedLicencePlateLookupBatches", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 
@@ -56,7 +56,7 @@ router.post("/doGetUnreceivedLicencePlateLookupBatches", function(req, res) {
 
 });
 
-router.post("/doCreateLookupBatch", function(req, res) {
+router.post("/doCreateLookupBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -77,7 +77,7 @@ router.post("/doCreateLookupBatch", function(req, res) {
 
 });
 
-router.post("/doGetLookupBatch", function(req, res) {
+router.post("/doGetLookupBatch", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 
@@ -96,7 +96,7 @@ router.post("/doGetLookupBatch", function(req, res) {
   res.json(batch);
 });
 
-router.post("/doAddLicencePlateToLookupBatch", function(req, res) {
+router.post("/doAddLicencePlateToLookupBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -121,7 +121,7 @@ router.post("/doAddLicencePlateToLookupBatch", function(req, res) {
 
 });
 
-router.post("/doAddAllLicencePlatesToLookupBatch", function(req, res) {
+router.post("/doAddAllLicencePlatesToLookupBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -142,7 +142,7 @@ router.post("/doAddAllLicencePlatesToLookupBatch", function(req, res) {
 
 });
 
-router.post("/doRemoveLicencePlateFromLookupBatch", function(req, res) {
+router.post("/doRemoveLicencePlateFromLookupBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -163,7 +163,7 @@ router.post("/doRemoveLicencePlateFromLookupBatch", function(req, res) {
 
 });
 
-router.post("/doClearLookupBatch", function(req, res) {
+router.post("/doClearLookupBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -190,7 +190,7 @@ router.post("/doClearLookupBatch", function(req, res) {
 
 });
 
-router.post("/doLockLookupBatch", function(req, res) {
+router.post("/doLockLookupBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -220,14 +220,14 @@ router.post("/doLockLookupBatch", function(req, res) {
 });
 
 
-router.post("/doGetModelsByMake", function(req, res) {
+router.post("/doGetModelsByMake", (req, res) => {
 
   const makeModelList = vehicleFns.getModelsByMakeFromCache(req.body.vehicleMake);
   res.json(makeModelList);
 });
 
 
-router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", function(req, res) {
+router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", (req, res) => {
 
   let licencePlateCountry = req.params.licencePlateCountry;
 

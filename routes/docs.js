@@ -6,10 +6,10 @@ const fs = require("fs");
 const path = require("path");
 const marked = require("marked");
 const configFns = require("../helpers/configFns");
-router.all("/", function (_req, res) {
+router.all("/", (_req, res) => {
     res.redirect("/docs/readme.md");
 });
-router.all("/:mdFileName", function (req, res, next) {
+router.all("/:mdFileName", (req, res, next) => {
     const mdFileName = req.params.mdFileName;
     const mdPath = path.join(__dirname, "..", "docs", mdFileName + (mdFileName.endsWith(".md") ? "" : ".md"));
     fs.readFile(mdPath, "utf8", function (err, data) {

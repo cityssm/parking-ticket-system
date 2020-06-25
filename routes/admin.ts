@@ -11,7 +11,7 @@ import * as configFns from "../helpers/configFns";
 // User Management
 
 
-router.get("/userManagement", function(req, res) {
+router.get("/userManagement", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -29,7 +29,7 @@ router.get("/userManagement", function(req, res) {
 
 });
 
-router.post("/doCreateUser", function(req, res) {
+router.post("/doCreateUser", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -64,7 +64,7 @@ router.post("/doCreateUser", function(req, res) {
 
 });
 
-router.post("/doUpdateUser", function(req, res) {
+router.post("/doUpdateUser", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -87,7 +87,7 @@ router.post("/doUpdateUser", function(req, res) {
 
 });
 
-router.post("/doUpdateUserProperty", function(req, res) {
+router.post("/doUpdateUserProperty", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -110,7 +110,7 @@ router.post("/doUpdateUserProperty", function(req, res) {
 
 });
 
-router.post("/doResetPassword", function(req, res) {
+router.post("/doResetPassword", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -134,7 +134,7 @@ router.post("/doResetPassword", function(req, res) {
 
 });
 
-router.post("/doGetUserProperties", function(req, res) {
+router.post("/doGetUserProperties", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -154,7 +154,7 @@ router.post("/doGetUserProperties", function(req, res) {
 
 });
 
-router.post("/doDeleteUser", function(req, res) {
+router.post("/doDeleteUser", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -194,7 +194,7 @@ router.post("/doDeleteUser", function(req, res) {
 // Database Cleanup
 
 
-router.get("/cleanup", function(req, res) {
+router.get("/cleanup", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -212,8 +212,7 @@ router.get("/cleanup", function(req, res) {
 
 });
 
-
-router.post("/doCleanupTable", function(req, res) {
+router.post("/doCleanupTable", (req, res) => {
 
   if (!req.session.user.userProperties.isAdmin) {
 
@@ -283,7 +282,7 @@ router.post("/doCleanupTable", function(req, res) {
 // Offence Maintenance
 
 
-router.get("/offences", function(_req, res) {
+router.get("/offences", (_req, res) => {
 
   const locations = parkingDBRelated.getParkingLocations();
   const bylaws = parkingDBRelated.getParkingBylaws();
@@ -298,7 +297,7 @@ router.get("/offences", function(_req, res) {
 
 });
 
-router.post("/doAddOffence", function(req, res) {
+router.post("/doAddOffence", (req, res) => {
 
   const results = parkingDBRelated.addParkingOffence(req.body);
 
@@ -312,7 +311,7 @@ router.post("/doAddOffence", function(req, res) {
 
 });
 
-router.post("/doUpdateOffence", function(req, res) {
+router.post("/doUpdateOffence", (req, res) => {
 
   const results = parkingDBRelated.updateParkingOffence(req.body);
 
@@ -326,7 +325,7 @@ router.post("/doUpdateOffence", function(req, res) {
 
 });
 
-router.post("/doDeleteOffence", function(req, res) {
+router.post("/doDeleteOffence", (req, res) => {
 
   const results = parkingDBRelated.deleteParkingOffence(req.body.bylawNumber, req.body.locationKey);
 
@@ -344,7 +343,7 @@ router.post("/doDeleteOffence", function(req, res) {
 // Location Maintenance
 
 
-router.get("/locations", function(_req, res) {
+router.get("/locations", (_req, res) => {
 
   const locations = parkingDBRelated.getParkingLocations();
 
@@ -355,7 +354,7 @@ router.get("/locations", function(_req, res) {
 
 });
 
-router.post("/doAddLocation", function(req, res) {
+router.post("/doAddLocation", (req, res) => {
 
   const results = parkingDBRelated.addParkingLocation(req.body);
 
@@ -369,7 +368,7 @@ router.post("/doAddLocation", function(req, res) {
 
 });
 
-router.post("/doUpdateLocation", function(req, res) {
+router.post("/doUpdateLocation", (req, res) => {
 
   const results = parkingDBRelated.updateParkingLocation(req.body);
 
@@ -383,7 +382,7 @@ router.post("/doUpdateLocation", function(req, res) {
 
 });
 
-router.post("/doDeleteLocation", function(req, res) {
+router.post("/doDeleteLocation", (req, res) => {
 
   const results = parkingDBRelated.deleteParkingLocation(req.body.locationKey);
 
@@ -401,7 +400,7 @@ router.post("/doDeleteLocation", function(req, res) {
 // By-Law Maintenance
 
 
-router.get("/bylaws", function(_req, res) {
+router.get("/bylaws", (_req, res) => {
 
   const bylaws = parkingDBRelated.getParkingBylawsWithOffenceStats();
 
@@ -412,7 +411,7 @@ router.get("/bylaws", function(_req, res) {
 
 });
 
-router.post("/doAddBylaw", function(req, res) {
+router.post("/doAddBylaw", (req, res) => {
 
   const results = parkingDBRelated.addParkingBylaw(req.body);
 
@@ -426,7 +425,7 @@ router.post("/doAddBylaw", function(req, res) {
 
 });
 
-router.post("/doUpdateBylaw", function(req, res) {
+router.post("/doUpdateBylaw", (req, res) => {
 
   const results = parkingDBRelated.updateParkingBylaw(req.body);
 
@@ -440,7 +439,7 @@ router.post("/doUpdateBylaw", function(req, res) {
 
 });
 
-router.post("/doUpdateOffencesByBylaw", function(req, res) {
+router.post("/doUpdateOffencesByBylaw", (req, res) => {
 
   const results = parkingDBRelated.updateParkingOffencesByBylawNumber(req.body);
 
@@ -454,7 +453,7 @@ router.post("/doUpdateOffencesByBylaw", function(req, res) {
 
 });
 
-router.post("/doDeleteBylaw", function(req, res) {
+router.post("/doDeleteBylaw", (req, res) => {
 
   const results = parkingDBRelated.deleteParkingBylaw(req.body.bylawNumber);
 

@@ -222,7 +222,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             offenceList.forEach((offenceRecord, recordIndex) => {
                 let displayRecord = true;
                 for (const searchPiece of searchStringSplit) {
-                    if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 && offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
+                    if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 &&
+                        offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
                         displayRecord = false;
                         break;
                     }
@@ -272,7 +273,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const populateLicencePlateProvinceDatalistFn = () => {
         const datalistEle = document.getElementById("datalist--licencePlateProvince");
         cityssm.clearElement(datalistEle);
-        const countryProperties = pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
+        const countryString = document.getElementById("ticket--licencePlateCountry").value;
+        const countryProperties = pts.getLicencePlateCountryProperties(countryString);
         if (countryProperties && countryProperties.provinces) {
             const provincesList = Object.values(countryProperties.provinces);
             for (const province of provincesList) {

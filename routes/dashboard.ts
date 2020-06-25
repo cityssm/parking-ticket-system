@@ -5,7 +5,7 @@ import * as configFns from "../helpers/configFns";
 import * as usersDB from "../helpers/usersDB";
 
 
-router.get("/", function(_req, res) {
+router.get("/", (_req, res) => {
 
   res.render("dashboard", {
     headTitle: "Dashboard"
@@ -14,7 +14,7 @@ router.get("/", function(_req, res) {
 });
 
 
-router.post("/doChangePassword", function(req, res) {
+router.post("/doChangePassword", (req, res) => {
 
   const userName = req.session.user.userName;
   const oldPassword = req.body.oldPassword;
@@ -27,7 +27,7 @@ router.post("/doChangePassword", function(req, res) {
 });
 
 
-router.all("/doGetDefaultConfigProperties", function(_req, res) {
+router.all("/doGetDefaultConfigProperties", (_req, res) => {
 
   res.json({
     locationClasses: configFns.getProperty("locationClasses"),

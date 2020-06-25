@@ -12,7 +12,7 @@ import type * as pts from "../helpers/ptsTypes";
 // Ticket Convictions
 
 
-router.get("/convict", function(req, res) {
+router.get("/convict", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 
@@ -35,7 +35,7 @@ router.get("/convict", function(req, res) {
 
 
 
-router.get("/convict/:batchID", function(req, res) {
+router.get("/convict/:batchID", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
     res.redirect ("/tickets/?error=accessDenied");
@@ -53,7 +53,7 @@ router.get("/convict/:batchID", function(req, res) {
 });
 
 
-router.post("/doAddAllTicketsToConvictionBatch", function(req, res) {
+router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -86,7 +86,7 @@ router.post("/doAddAllTicketsToConvictionBatch", function(req, res) {
 });
 
 
-router.post("/doClearConvictionBatch", function(req, res) {
+router.post("/doClearConvictionBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -118,7 +118,7 @@ router.post("/doClearConvictionBatch", function(req, res) {
 });
 
 
-router.post("/doRemoveTicketFromConvictionBatch", function(req, res) {
+router.post("/doRemoveTicketFromConvictionBatch", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 

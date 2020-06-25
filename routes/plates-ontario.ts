@@ -11,7 +11,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
-router.get("/mtoExport", function(req, res) {
+router.get("/mtoExport", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
     res.redirect("/plates/?error=accessDenied");
@@ -27,7 +27,7 @@ router.get("/mtoExport", function(req, res) {
 
 });
 
-router.post("/doGetPlatesAvailableForMTOLookup", function(req, res) {
+router.post("/doGetPlatesAvailableForMTOLookup", (req, res) => {
 
   if (!req.session.user.userProperties.canUpdate) {
 
@@ -50,7 +50,7 @@ router.post("/doGetPlatesAvailableForMTOLookup", function(req, res) {
 
 });
 
-router.get("/mtoExport/:batchID", function(req, res) {
+router.get("/mtoExport/:batchID", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
     res.redirect("/plates/?error=accessDenied");
@@ -67,7 +67,7 @@ router.get("/mtoExport/:batchID", function(req, res) {
 
 });
 
-router.get("/mtoImport", function(req, res) {
+router.get("/mtoImport", (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
     res.redirect("/plates/?error=accessDenied");
@@ -83,7 +83,7 @@ router.get("/mtoImport", function(req, res) {
 
 });
 
-router.post("/doMTOImportUpload", upload.single("importFile"), function(req, res) {
+router.post("/doMTOImportUpload", upload.single("importFile"), (req, res) => {
 
   if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
 

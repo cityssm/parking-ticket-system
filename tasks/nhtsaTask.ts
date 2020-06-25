@@ -15,7 +15,7 @@ let cutoffDate = dateTimeFns.dateToInteger(initDate);
 let vehicleNCICs = [];
 
 
-function processNCIC(index: number) {
+const processNCIC = (index: number) => {
 
   const ncicRecord = vehicleNCICs[index];
 
@@ -27,7 +27,7 @@ function processNCIC(index: number) {
 
     log("Processing " + vehicleMake);
 
-    vehicleFns.getModelsByMake(vehicleMake, function() {
+    vehicleFns.getModelsByMake(vehicleMake, () => {
       processNCIC(index + 1);
     });
 
@@ -35,10 +35,10 @@ function processNCIC(index: number) {
     vehicleNCICs = [];
     scheduleRun();
   }
-}
+};
 
 
-export async function scheduleRun() {
+export const scheduleRun = async () => {
 
   let nextScheduleDate = new Date();
 
@@ -47,7 +47,7 @@ export async function scheduleRun() {
 
   log.info("NHTSA task scheduled for " + nextScheduleDate.toString());
 
-  setTimeout(function() {
+  setTimeout(() => {
 
     log("NHTSA task starting");
 
@@ -56,4 +56,4 @@ export async function scheduleRun() {
 
   }, nextScheduleDate.getTime() - Date.now());
 
-}
+};

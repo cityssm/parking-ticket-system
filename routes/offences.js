@@ -2,13 +2,13 @@
 const express_1 = require("express");
 const router = express_1.Router();
 const parkingDBRelated = require("../helpers/parkingDB-related");
-router.post("/doGetAllLocations", function (_req, res) {
+router.post("/doGetAllLocations", (_req, res) => {
     res.json(parkingDBRelated.getParkingLocations());
 });
-router.post("/doGetOffencesByLocation", function (req, res) {
+router.post("/doGetOffencesByLocation", (req, res) => {
     res.json(parkingDBRelated.getParkingOffencesByLocationKey(req.body.locationKey));
 });
-router.post("/doGetAllOffences", function (_req, res) {
+router.post("/doGetAllOffences", (_req, res) => {
     res.json(parkingDBRelated.getParkingOffences());
 });
 module.exports = router;

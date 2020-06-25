@@ -6,7 +6,7 @@ import { rawToCSV } from "@cityssm/expressjs-server-js/stringFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 
-router.get("/", function(_req, res) {
+router.get("/", (_req, res) => {
 
   const rightNow = new Date();
 
@@ -18,7 +18,7 @@ router.get("/", function(_req, res) {
 });
 
 
-router.all("/:reportName", function(req, res) {
+router.all("/:reportName", (req, res) => {
 
   const reportName = req.params.reportName;
 
