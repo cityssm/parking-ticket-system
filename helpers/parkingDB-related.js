@@ -256,7 +256,9 @@ exports.addParkingOffence = (reqBody) => {
         }
     }
     const info = db.prepare("insert into ParkingOffences" +
-        " (bylawNumber, locationKey, parkingOffence, offenceAmount, discountOffenceAmount, discountDays, accountNumber, isActive)" +
+        " (bylawNumber, locationKey, parkingOffence," +
+        " offenceAmount, discountOffenceAmount, discountDays," +
+        " accountNumber, isActive)" +
         " values (?, ?, ?, ?, ?, ?, ?, 1)")
         .run(reqBody.bylawNumber, reqBody.locationKey, reqBody.parkingOffence || "", offenceAmount, discountOffenceAmount, discountDays, reqBody.accountNumber || "");
     db.close();

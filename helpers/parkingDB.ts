@@ -1157,7 +1157,7 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
     " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
     sqlHavingClause;
 
-  const count = db.prepare("select ifnull(count(*), 0) as cnt" +
+  const count: number = db.prepare("select ifnull(count(*), 0) as cnt" +
     " from (" + innerSql + ")")
     .get(sqlParams)
     .cnt;

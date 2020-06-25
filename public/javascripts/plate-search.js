@@ -88,8 +88,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 if (currentOffset > 0) {
                     const previousEle = document.createElement("a");
                     previousEle.className = "button";
-                    previousEle.innerHTML = "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
-                        "<span>Previous</span>";
+                    previousEle.innerHTML =
+                        "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
+                            "<span>Previous</span>";
                     previousEle.addEventListener("click", (clickEvent) => {
                         clickEvent.preventDefault();
                         offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();

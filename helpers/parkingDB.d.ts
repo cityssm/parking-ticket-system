@@ -84,7 +84,7 @@ export interface GetLicencePlatesQueryOptions {
     offset: number;
 }
 export declare const getLicencePlates: (queryOptions: GetLicencePlatesQueryOptions) => {
-    count: any;
+    count: number;
     licencePlates: any[];
 };
 export declare const getLicencePlateOwner: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number) => pts.LicencePlateOwner;

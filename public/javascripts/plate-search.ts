@@ -25,135 +25,146 @@ declare const pts: ptsGlobal;
       "<em>Loading licence plates..." +
       "</p>";
 
-    cityssm.postJSON("/plates/doGetLicencePlates", formEle, (licencePlateResults) => {
+    cityssm.postJSON("/plates/doGetLicencePlates", formEle,
+      (licencePlateResults: {
+        count: number,
+        licencePlates: {
+          licencePlateCountry: string,
+          licencePlateProvince: string,
+          licencePlateNumber: string,
+          unresolvedTicketCount: number,
+          hasOwnerRecord: boolean
+        }[]
+      }) => {
 
-      const plateList: any[] = licencePlateResults.licencePlates;
+        const plateList = licencePlateResults.licencePlates;
 
-      if (plateList.length === 0) {
+        if (plateList.length === 0) {
 
-        searchResultsEle.innerHTML = "<div class=\"message is-info\">" +
-          "<div class=\"message-body\">" +
-          "<strong>Your search returned no results.</strong><br />" +
-          "Please try expanding your search criteria." +
+          searchResultsEle.innerHTML = "<div class=\"message is-info\">" +
+            "<div class=\"message-body\">" +
+            "<strong>Your search returned no results.</strong><br />" +
+            "Please try expanding your search criteria." +
+            "</div>" +
+            "</div>";
+
+          return;
+        }
+
+        searchResultsEle.innerHTML = "<table class=\"table is-fullwidth is-striped is-hoverable\">" +
+          "<thead><tr>" +
+          "<th>Licence Plate Number</th>" +
+          "<th>Province</th>" +
+          "<th>Country</th>" +
+          "<th class=\"has-text-right\">Ownership Record</th>" +
+          "<th class=\"has-text-right\">Unresolved Tickets</th>" +
+          "</tr></thead>" +
+          "<tbody></tbody>" +
+          "</table>";
+
+        const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
+
+        plateList.forEach((plateObj) => {
+
+          const trEle = document.createElement("tr");
+
+          // Output row
+
+          const url = "/plates/" +
+            (plateObj.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObj.licencePlateCountry)) +
+            "/" +
+            (plateObj.licencePlateProvince === "" ? "_" : encodeURIComponent(plateObj.licencePlateProvince)) +
+            "/" +
+            (plateObj.licencePlateNumber === "" ? "_" : encodeURIComponent(plateObj.licencePlateNumber));
+
+
+          trEle.innerHTML = "<td>" +
+            "<a href=\"" + url + "\" data-tooltip=\"View Licence Plate\">" +
+            (plateObj.licencePlateNumber === "" ?
+              "(Blank)" :
+              "<span class=\"licence-plate-number\">" + plateObj.licencePlateNumber + "</span>") +
+            "</a>" +
+            "</td>" +
+            ("<td class=\"is-vcentered\">" +
+              (plateObj.licencePlateProvince === "" ?
+                "<span class=\"has-text-grey\">(Blank)</span>" :
+                plateObj.licencePlateProvince) +
+              "</td>") +
+            ("<td class=\"is-vcentered\">" +
+              (plateObj.licencePlateCountry === "" ?
+                "<span class=\"has-text-grey\">(Blank)</span>" :
+                plateObj.licencePlateCountry) +
+              "</td>") +
+            ("<td class=\"has-text-right is-vcentered\">" +
+              (plateObj.hasOwnerRecord ?
+                "<span data-tooltip=\"Has Ownership Record\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+                "<span class=\"sr-only\">Has Ownership Record</span>" :
+                "") +
+              "</td>") +
+            ("<td class=\"has-text-right is-vcentered\">" +
+              plateObj.unresolvedTicketCount +
+              "</td>");
+
+          tbodyEle.appendChild(trEle);
+
+        });
+
+        searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
+          "<div class=\"level-left has-text-weight-bold\">" +
+          "Displaying licence plates " +
+          (currentOffset + 1) +
+          " to " +
+          Math.min(currentLimit + currentOffset, licencePlateResults.count) +
+          " of " +
+          licencePlateResults.count +
           "</div>" +
-          "</div>";
+          "</div>");
 
-        return;
-      }
+        if (currentLimit < licencePlateResults.count) {
 
-      searchResultsEle.innerHTML = "<table class=\"table is-fullwidth is-striped is-hoverable\">" +
-        "<thead><tr>" +
-        "<th>Licence Plate Number</th>" +
-        "<th>Province</th>" +
-        "<th>Country</th>" +
-        "<th class=\"has-text-right\">Ownership Record</th>" +
-        "<th class=\"has-text-right\">Unresolved Tickets</th>" +
-        "</tr></thead>" +
-        "<tbody></tbody>" +
-        "</table>";
+          const paginationEle = document.createElement("nav");
+          paginationEle.className = "level-right is-hidden-print";
+          paginationEle.setAttribute("role", "pagination");
+          paginationEle.setAttribute("aria-label", "pagination");
 
-      const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
+          if (currentOffset > 0) {
 
-      plateList.forEach((plateObj) => {
+            const previousEle = document.createElement("a");
+            previousEle.className = "button";
+            previousEle.innerHTML =
+              "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
+              "<span>Previous</span>";
+            previousEle.addEventListener("click", (clickEvent) => {
 
-        const trEle = document.createElement("tr");
+              clickEvent.preventDefault();
+              offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();
+              getLicencePlatesFn();
 
-        // Output row
+            });
 
-        const url = "/plates/" +
-          (plateObj.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObj.licencePlateCountry)) +
-          "/" +
-          (plateObj.licencePlateProvince === "" ? "_" : encodeURIComponent(plateObj.licencePlateProvince)) +
-          "/" +
-          (plateObj.licencePlateNumber === "" ? "_" : encodeURIComponent(plateObj.licencePlateNumber));
+            paginationEle.appendChild(previousEle);
+          }
 
+          if (currentLimit + currentOffset < licencePlateResults.count) {
 
-        trEle.innerHTML = "<td>" +
-          "<a href=\"" + url + "\" data-tooltip=\"View Licence Plate\">" +
-          (plateObj.licencePlateNumber === "" ?
-            "(Blank)" :
-            "<span class=\"licence-plate-number\">" + plateObj.licencePlateNumber + "</span>") +
-          "</a>" +
-          "</td>" +
-          ("<td class=\"is-vcentered\">" +
-            (plateObj.licencePlateProvince === "" ?
-              "<span class=\"has-text-grey\">(Blank)</span>" :
-              plateObj.licencePlateProvince) +
-            "</td>") +
-          ("<td class=\"is-vcentered\">" +
-            (plateObj.licencePlateCountry === "" ?
-              "<span class=\"has-text-grey\">(Blank)</span>" :
-              plateObj.licencePlateCountry) +
-            "</td>") +
-          ("<td class=\"has-text-right is-vcentered\">" +
-            (plateObj.hasOwnerRecord ?
-              "<span data-tooltip=\"Has Ownership Record\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
-              "<span class=\"sr-only\">Has Ownership Record</span>" :
-              "") +
-            "</td>") +
-          ("<td class=\"has-text-right is-vcentered\">" +
-            plateObj.unresolvedTicketCount +
-            "</td>");
+            const nextEle = document.createElement("a");
+            nextEle.className = "button ml-3";
+            nextEle.innerHTML = "<span>Next Licence Plates</span>" +
+              "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
 
-        tbodyEle.appendChild(trEle);
+            nextEle.addEventListener("click", (clickEvent) => {
 
+              clickEvent.preventDefault();
+              offsetEle.value = (currentOffset + currentLimit).toString();
+              getLicencePlatesFn();
+            });
+
+            paginationEle.appendChild(nextEle);
+          }
+
+          searchResultsEle.getElementsByClassName("level")[0].appendChild(paginationEle);
+        }
       });
-
-      searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
-        "<div class=\"level-left has-text-weight-bold\">" +
-        "Displaying licence plates " +
-        (currentOffset + 1) +
-        " to " +
-        Math.min(currentLimit + currentOffset, licencePlateResults.count) +
-        " of " +
-        licencePlateResults.count +
-        "</div>" +
-        "</div>");
-
-      if (currentLimit < licencePlateResults.count) {
-
-        const paginationEle = document.createElement("nav");
-        paginationEle.className = "level-right is-hidden-print";
-        paginationEle.setAttribute("role", "pagination");
-        paginationEle.setAttribute("aria-label", "pagination");
-
-        if (currentOffset > 0) {
-
-          const previousEle = document.createElement("a");
-          previousEle.className = "button";
-          previousEle.innerHTML = "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
-            "<span>Previous</span>";
-          previousEle.addEventListener("click", (clickEvent) => {
-
-            clickEvent.preventDefault();
-            offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();
-            getLicencePlatesFn();
-
-          });
-
-          paginationEle.appendChild(previousEle);
-        }
-
-        if (currentLimit + currentOffset < licencePlateResults.count) {
-
-          const nextEle = document.createElement("a");
-          nextEle.className = "button ml-3";
-          nextEle.innerHTML = "<span>Next Licence Plates</span>" +
-            "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
-
-          nextEle.addEventListener("click", (clickEvent) => {
-
-            clickEvent.preventDefault();
-            offsetEle.value = (currentOffset + currentLimit).toString();
-            getLicencePlatesFn();
-          });
-
-          paginationEle.appendChild(nextEle);
-        }
-
-        searchResultsEle.getElementsByClassName("level")[0].appendChild(paginationEle);
-      }
-    });
   };
 
 

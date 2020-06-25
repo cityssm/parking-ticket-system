@@ -137,7 +137,8 @@ export const getLicencePlateLocationProperties =
     if (getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
 
       licencePlateProvinceAlias =
-        getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+        getProperty("licencePlateProvinceAliases")
+        [licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
         originalLicencePlateProvince;
 
     }

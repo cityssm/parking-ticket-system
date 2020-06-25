@@ -69,7 +69,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
           // Licence plate location properties
 
-          const locationProperties = pts.getLicencePlateLocationProperties(ticketObj.licencePlateCountry, ticketObj.licencePlateProvince);
+          const locationProperties =
+            pts.getLicencePlateLocationProperties(ticketObj.licencePlateCountry, ticketObj.licencePlateProvince);
 
           // Location classes
 

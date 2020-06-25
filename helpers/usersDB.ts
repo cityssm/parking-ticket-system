@@ -196,7 +196,11 @@ export const getUserProperties = (userName: string) => {
   return userProperties;
 };
 
-export const createUser = (reqBody: any) => {
+export const createUser = (reqBody: {
+  userName: string,
+  lastName: string,
+  firstName: string
+}) => {
 
   const newPasswordPlain = stringFns.generatePassword();
   const hash = bcrypt.hashSync(reqBody.userName + "::" + newPasswordPlain, 10);
@@ -242,7 +246,11 @@ export const createUser = (reqBody: any) => {
 
 };
 
-export const updateUser = (reqBody: any) => {
+export const updateUser = (reqBody: {
+  userName: string,
+  lastName: string,
+  firstName: string
+}) => {
 
   const db = sqlite(dbPath);
 
@@ -262,7 +270,11 @@ export const updateUser = (reqBody: any) => {
   return info.changes;
 };
 
-export const updateUserProperty = (reqBody: any) => {
+export const updateUserProperty = (reqBody: {
+  userName: string,
+  propertyName: string,
+  propertyValue: string
+}) => {
 
   const db = sqlite(dbPath);
 

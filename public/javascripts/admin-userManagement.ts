@@ -90,7 +90,8 @@ declare const pts: ptsGlobal;
    */
 
   const updateUserModalEle = document.getElementById("is-update-user-modal");
-  const updateUserUserNameSpanEles = <HTMLCollectionOf<HTMLSpanElement>>updateUserModalEle.getElementsByClassName("container--userName");
+  const updateUserUserNameSpanEles =
+    <HTMLCollectionOf<HTMLSpanElement>>updateUserModalEle.getElementsByClassName("container--userName");
 
   pts.initializeTabs(updateUserModalEle.getElementsByClassName("tabs")[0].getElementsByTagName("ul")[0]);
 

@@ -19,7 +19,7 @@ const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis: string
 
 interface ReportDefinition {
   sql: string;
-  getParams?: (params: any) => [any];
+  getParams?: (params: { [key: string]: string }) => (string | number)[];
 }
 
 const reportDefinitions = new Map<string, ReportDefinition>();
@@ -39,8 +39,10 @@ reportDefinitions.set("tickets-unresolved", {
 
     " from ParkingTickets t" +
     " left join ParkingLocations l on t.locationKey = l.locationKey" +
-    (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
+    " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+    (" and s.statusIndex = (" +
+      "select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID" +
+      " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
 
     " where t.recordDelete_timeMillis is null" +
     " and t.resolvedDate is null"
@@ -276,18 +278,17 @@ const executeQuery = (sql: string, params: any[]): RawRowsColumnsReturn => {
     rows,
     columns
   };
-
 };
 
 
-export const getReportRowsColumns = (reportName: string, reqQuery: any) => {
+export const getReportRowsColumns = (reportName: string, reqQuery: { [key: string]: string }) => {
 
   if (!reportDefinitions.has(reportName)) {
     return null;
   }
 
   const reportDefinition = reportDefinitions.get(reportName);
-  let params = reportDefinition.getParams ? reportDefinition.getParams(reqQuery) : [];
+  const params = reportDefinition.getParams ? reportDefinition.getParams(reqQuery) : [];
 
   return executeQuery(reportDefinition.sql, params);
 };
