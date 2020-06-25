@@ -4,7 +4,7 @@ declare const cityssm: cityssmGlobal;
 import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/ptsTypes";
 
 
-(function() {
+(() => {
 
   const canUpdate =
     document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
@@ -25,7 +25,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
   let displayedTicketIDs: number[] = [];
 
-  function addTicketToBatchByIndex(clickEvent: Event) {
+  const addTicketToBatchByIndexFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -40,58 +40,61 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
       batchID: currentBatch.batchID,
       ticketID
-    }, function(resultJSON) {
+    }, (resultJSON: { success: boolean, batch?: ParkingTicketConvictionBatch }) => {
 
       if (resultJSON.success) {
 
         currentBatch = resultJSON.batch;
-        renderCurrentBatch();
+        renderCurrentBatchFn();
 
         convictableTickets.splice(index, 1);
-        renderConvictableTickets();
+        renderConvictableTicketsFn();
 
       } else {
-
         buttonEle.removeAttribute("disabled");
       }
-
     });
+  };
 
-  }
-
-  function addAllTicketsToBatch(clickEvent: Event) {
+  const addAllTicketsToBatchFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    let loadingCloseModalFn: Function;
+    let loadingCloseModalFn: () => void;
 
-    const addFn = function() {
+    const addFn = () => {
       cityssm.postJSON("/tickets-ontario/doAddAllTicketsToConvictionBatch", {
         batchID: currentBatch.batchID,
         ticketIDs: displayedTicketIDs
-      }, function(responseJSON) {
+      },
+        (responseJSON: {
+          batch?: ParkingTicketConvictionBatch,
+          tickets?: ParkingTicket[],
+          successCount?: number,
+          message: string
+        }) => {
 
-        loadingCloseModalFn();
+          loadingCloseModalFn();
 
-        if (responseJSON.batch) {
-          currentBatch = responseJSON.batch;
-          renderCurrentBatch();
-        }
+          if (responseJSON.batch) {
+            currentBatch = responseJSON.batch;
+            renderCurrentBatchFn();
+          }
 
-        if (responseJSON.tickets) {
-          convictableTickets = responseJSON.tickets;
-          renderConvictableTickets();
-        }
+          if (responseJSON.tickets) {
+            convictableTickets = responseJSON.tickets;
+            renderConvictableTicketsFn();
+          }
 
-        if (responseJSON.successCount === 0) {
+          if (responseJSON.successCount === 0) {
 
-          cityssm.alertModal("Results",
-            responseJSON.message ? responseJSON.message : "No tickets were added to the batch.",
-            "OK",
-            "warning");
-        }
+            cityssm.alertModal("Results",
+              responseJSON.message ? responseJSON.message : "No tickets were added to the batch.",
+              "OK",
+              "warning");
+          }
 
-      });
+        });
     };
 
     cityssm.openHtmlModal("loading", {
@@ -106,12 +109,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         addFn();
       }
     });
+  };
 
-
-
-  }
-
-  function renderConvictableTickets() {
+  const renderConvictableTicketsFn = () => {
 
     cityssm.clearElement(convictableTicketsContainerEle);
     displayedTicketIDs = [];
@@ -123,7 +123,6 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "</div>";
 
       return;
-
     }
 
     if (!canUpdate) {
@@ -133,7 +132,6 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "</div>";
 
       return;
-
     }
 
     if (currentBatch.lockDate) {
@@ -143,7 +141,6 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "</div>";
 
       return;
-
     }
 
     if (convictableTickets.length === 0) {
@@ -153,20 +150,18 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "</div>";
 
       return;
-
     }
 
     const ticketFilter = ticketFilterEle.value.trim().toLowerCase();
 
     const tbodyEle = document.createElement("tbody");
 
-    convictableTickets.forEach(function(ticket, index) {
+    convictableTickets.forEach((ticket, index) => {
 
       if (ticket.ticketNumber.toLowerCase().indexOf(ticketFilter) === -1 &&
         ticket.licencePlateNumber.toLowerCase().indexOf(ticketFilter) === -1) {
 
         return;
-
       }
 
       displayedTicketIDs.push(ticket.ticketID);
@@ -196,10 +191,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
           "</button>" +
           "</td>");
 
-      trEle.getElementsByTagName("button")[0].addEventListener("click", addTicketToBatchByIndex);
+      trEle.getElementsByTagName("button")[0].addEventListener("click", addTicketToBatchByIndexFn);
 
       tbodyEle.appendChild(trEle);
-
     });
 
     if (displayedTicketIDs.length === 0) {
@@ -209,7 +203,6 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "</div>";
 
       return;
-
     }
 
     const addAllButtonEle = document.createElement("button");
@@ -218,7 +211,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     addAllButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
       "<span>Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "</span>";
 
-    addAllButtonEle.addEventListener("click", addAllTicketsToBatch);
+    addAllButtonEle.addEventListener("click", addAllTicketsToBatchFn);
 
     convictableTicketsContainerEle.appendChild(addAllButtonEle);
 
@@ -235,11 +228,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     tableEle.appendChild(tbodyEle);
 
     convictableTicketsContainerEle.appendChild(tableEle);
+  };
 
-
-  }
-
-  ticketFilterEle.addEventListener("keyup", renderConvictableTickets);
+  ticketFilterEle.addEventListener("keyup", renderConvictableTicketsFn);
 
   /*
    * Target Batch Side
@@ -247,7 +238,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
   const batchEntriesContainerEle = document.getElementById("batch-entries-container");
 
-  function removeTicketFromBatchByIndex(clickEvent: Event) {
+  const removeTicketFromBatchByIndexFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -262,51 +253,51 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
       batchID: currentBatch.batchID,
       ticketID
-    }, function(resultJSON) {
+    },
+      (resultJSON: { success: boolean, tickets?: ParkingTicket[] }) => {
 
-      if (resultJSON.success) {
+        if (resultJSON.success) {
 
-        currentBatch.batchEntries.splice(index, 1);
-        renderCurrentBatch();
+          currentBatch.batchEntries.splice(index, 1);
+          renderCurrentBatchFn();
 
-        convictableTickets = resultJSON.tickets;
-        renderConvictableTickets();
-      } else {
-        buttonEle.removeAttribute("disabled");
-      }
+          convictableTickets = resultJSON.tickets;
+          renderConvictableTicketsFn();
+        } else {
+          buttonEle.removeAttribute("disabled");
+        }
+      });
+  };
 
-    });
-  }
-
-  function clearBatch(clickEvent: Event) {
+  const clearBatchFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const clearFn = function() {
+    const clearFn = () => {
 
       cityssm.postJSON("/tickets-ontario/doClearConvictionBatch", {
         batchID: currentBatch.batchID
-      }, function(responseJSON) {
+      },
+        (responseJSON) => {
 
-        if (!responseJSON.success) {
+          if (!responseJSON.success) {
 
-          cityssm.alertModal("Batch Not Cleared",
-            responseJSON.message,
-            "OK",
-            "danger");
-        }
+            cityssm.alertModal("Batch Not Cleared",
+              responseJSON.message,
+              "OK",
+              "danger");
+          }
 
-        if (responseJSON.batch) {
-          currentBatch = responseJSON.batch;
-          renderCurrentBatch();
-        }
+          if (responseJSON.batch) {
+            currentBatch = responseJSON.batch;
+            renderCurrentBatchFn();
+          }
 
-        if (responseJSON.tickets) {
-          convictableTickets = responseJSON.tickets;
-          renderConvictableTickets();
-        }
-
-      });
+          if (responseJSON.tickets) {
+            convictableTickets = responseJSON.tickets;
+            renderConvictableTicketsFn();
+          }
+        });
     };
 
     cityssm.confirmModal("Clear Batch",
@@ -314,52 +305,59 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       "Yes, Clear the Batch",
       "warning",
       clearFn);
-  }
+  };
 
-  function lockBatch(clickEvent: Event) {
+  const lockBatchFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const lockFn = function() {
+    const lockFn = () => {
       cityssm.postJSON("/tickets/doLockConvictionBatch", {
         batchID: currentBatch.batchID
-      }, function(responseJSON) {
+      },
+        (responseJSON: {
+          success: boolean,
+          lockDate?: number,
+          lockDateString?: string
+        }) => {
 
-        if (responseJSON.success) {
-          currentBatch.lockDate = responseJSON.lockDate;
-          currentBatch.lockDateString = responseJSON.lockDateString;
+          if (responseJSON.success) {
+            currentBatch.lockDate = responseJSON.lockDate;
+            currentBatch.lockDateString = responseJSON.lockDateString;
 
-          renderCurrentBatch();
-          renderConvictableTickets();
-        }
-      });
+            renderCurrentBatchFn();
+            renderConvictableTicketsFn();
+          }
+        });
     };
 
     cityssm.confirmModal("Lock Batch?",
       "<strong>Are you sure you want to lock this batch?</strong><br />" +
-      "Once locked, no further changes to the batch will be allowed.  The option to download the batch will become available.",
+      "Once locked, no further changes to the batch will be allowed." +
+      " The option to download the batch will become available.",
       "Yes, Lock the Batch",
       "warning",
       lockFn);
-  }
+  };
 
-  function unlockBatch(clickEvent: Event) {
+  const unlockBatchFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const lockFn = function() {
+    const lockFn = () => {
       cityssm.postJSON("/tickets/doUnlockConvictionBatch", {
         batchID: currentBatch.batchID
-      }, function(responseJSON) {
+      },
+        (responseJSON: { success: boolean }) => {
 
-        if (responseJSON.success) {
-          currentBatch.lockDate = null;
-          currentBatch.lockDateString = null;
+          if (responseJSON.success) {
+            currentBatch.lockDate = null;
+            currentBatch.lockDateString = null;
 
-          renderCurrentBatch();
-          renderConvictableTickets();
-        }
-      });
+            renderCurrentBatchFn();
+            renderConvictableTicketsFn();
+          }
+        });
     };
 
     cityssm.confirmModal("Lock Batch?",
@@ -368,13 +366,13 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       "Yes, Unlock the Batch",
       "warning",
       lockFn);
-  }
+  };
 
-  function downloadBatch(clickEvent: Event) {
+  const downloadBatchFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const downloadFn = function() {
+    const downloadFn = () => {
       window.open("/tickets-ontario/convict/" + currentBatch.batchID);
     };
 
@@ -385,7 +383,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.",
         "Yes, Download the Batch",
         "warning",
-        function() {
+        () => {
           downloadFn();
 
           const rightNow = new Date();
@@ -393,15 +391,15 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
           currentBatch.sentDateString = cityssm.dateToString(rightNow);
           currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""), 10);
 
-          renderCurrentBatch();
+          renderCurrentBatchFn();
         });
 
     } else {
       downloadFn();
     }
-  }
+  };
 
-  function renderCurrentBatch() {
+  const renderCurrentBatchFn = () => {
 
     document.getElementById("batchSelector--batchID").innerText = "Batch #" + currentBatch.batchID;
 
@@ -431,7 +429,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
     const canRemove = canUpdate && !currentBatch.lockDate;
 
-    currentBatch.batchEntries.forEach(function(batchEntry, index) {
+    currentBatch.batchEntries.forEach((batchEntry, index) => {
 
       const trEle = document.createElement("tr");
 
@@ -454,9 +452,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
           "");
 
       if (canRemove) {
-
-        trEle.getElementsByTagName("button")[0].addEventListener("click", removeTicketFromBatchByIndex);
-
+        trEle.getElementsByTagName("button")[0].addEventListener("click", removeTicketFromBatchByIndexFn);
       }
 
       tbodyEle.appendChild(trEle);
@@ -487,7 +483,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       lockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
         "<span>Lock Batch</span>";
 
-      lockButtonEle.addEventListener("click", lockBatch);
+      lockButtonEle.addEventListener("click", lockBatchFn);
 
       batchEntriesContainerEle.insertAdjacentElement("afterbegin", lockButtonEle);
 
@@ -498,10 +494,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       clearButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
         "<span>Clear Batch</span>";
 
-      clearButtonEle.addEventListener("click", clearBatch);
+      clearButtonEle.addEventListener("click", clearBatchFn);
 
       tableEle.insertAdjacentElement("beforebegin", clearButtonEle);
-
     }
 
     if (canUpdate && currentBatch.lockDate && !currentBatch.sentDate) {
@@ -513,10 +508,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       unlockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
         "<span>Unlock Batch</span>";
 
-      unlockButtonEle.addEventListener("click", unlockBatch);
+      unlockButtonEle.addEventListener("click", unlockBatchFn);
 
       batchEntriesContainerEle.insertAdjacentElement("afterbegin", unlockButtonEle);
-
     }
 
     if (currentBatch.lockDate) {
@@ -528,7 +522,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       downloadButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
         "<span>Download File for MTO</span>";
 
-      downloadButtonEle.addEventListener("click", downloadBatch);
+      downloadButtonEle.addEventListener("click", downloadBatchFn);
 
       tableEle.insertAdjacentElement("beforebegin", downloadButtonEle);
 
@@ -538,21 +532,20 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
         "<span>MTO ARIS Login</span>" +
         "</a>");
-
     }
-  }
+  };
 
-  function confirmCreateBatch() {
+  const confirmCreateBatchFn = () => {
 
-    const createFn = function() {
-      cityssm.postJSON("/tickets/doCreateConvictionBatch", {}, function(responseJSON) {
-        if (responseJSON.success) {
-          currentBatch = responseJSON.batch;
-          renderCurrentBatch();
-
-          renderConvictableTickets();
-        }
-      });
+    const createFn = () => {
+      cityssm.postJSON("/tickets/doCreateConvictionBatch", {},
+        (responseJSON: { success: boolean, batch: ParkingTicketConvictionBatch }) => {
+          if (responseJSON.success) {
+            currentBatch = responseJSON.batch;
+            renderCurrentBatchFn();
+            renderConvictableTicketsFn();
+          }
+        });
     };
 
     cityssm.confirmModal("Create a New Batch",
@@ -560,15 +553,15 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
       "Yes, Create Batch",
       "info",
       createFn);
-  }
+  };
 
-  document.getElementById("is-select-batch-button").addEventListener("click", function(clickEvent) {
+  document.getElementById("is-select-batch-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let selectBatchCloseModalFn: Function;
+    let selectBatchCloseModalFn: () => void;
 
-    const selectFn = function(clickEvent: Event) {
+    const selectFn = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
@@ -576,13 +569,14 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       cityssm.postJSON("/tickets/doGetConvictionBatch", {
         batchID
-      }, function(batchObj) {
+      },
+        (batchObj: ParkingTicketConvictionBatch) => {
 
-        currentBatch = batchObj;
-        renderCurrentBatch();
+          currentBatch = batchObj;
 
-        renderConvictableTickets();
-      });
+          renderCurrentBatchFn();
+          renderConvictableTicketsFn();
+        });
 
       selectBatchCloseModalFn();
 
@@ -597,57 +591,56 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
           createButtonEle.classList.remove("is-hidden");
 
-          createButtonEle.addEventListener("click", function(clickEvent: Event) {
+          createButtonEle.addEventListener("click", (clickEvent: Event) => {
             clickEvent.preventDefault();
             selectBatchCloseModalFn();
-            confirmCreateBatch();
+            confirmCreateBatchFn();
           });
         }
 
-        cityssm.postJSON("/tickets/doGetRecentConvictionBatches", [], function(batchList: ParkingTicketConvictionBatch[]) {
+        cityssm.postJSON("/tickets/doGetRecentConvictionBatches", [],
+          (batchList: ParkingTicketConvictionBatch[]) => {
 
-          const resultsContainerEle = <HTMLDivElement>modalEle.getElementsByClassName("is-results-container")[0];
+            const resultsContainerEle = <HTMLDivElement>modalEle.getElementsByClassName("is-results-container")[0];
 
-          cityssm.clearElement(resultsContainerEle);
+            cityssm.clearElement(resultsContainerEle);
 
-          if (batchList.length === 0) {
-            resultsContainerEle.className = "message is-info";
-            resultsContainerEle.innerHTML = "<div class=\"message-body\">There are no recent conviction batches.</div>";
-            return;
-          }
+            if (batchList.length === 0) {
+              resultsContainerEle.className = "message is-info";
+              resultsContainerEle.innerHTML = "<div class=\"message-body\">There are no recent conviction batches.</div>";
+              return;
+            }
 
-          resultsContainerEle.className = "list is-hoverable";
+            resultsContainerEle.className = "list is-hoverable";
 
-          for (const batch of batchList) {
+            for (const batch of batchList) {
 
-            const batchListItemEle = document.createElement("a");
-            batchListItemEle.className = "list-item";
-            batchListItemEle.setAttribute("data-batch-id", batch.batchID.toString());
-            batchListItemEle.href = "#";
+              const batchListItemEle = document.createElement("a");
+              batchListItemEle.className = "list-item";
+              batchListItemEle.setAttribute("data-batch-id", batch.batchID.toString());
+              batchListItemEle.href = "#";
 
-            batchListItemEle.innerHTML = "<div class=\"columns\">" +
-              "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
-              "<div class=\"column has-text-right\">" +
-              batch.batchDateString +
-              (batch.lockDate ?
-                "<br /><div class=\"tags justify-flex-end\">" +
-                "<span class=\"tag\">" +
-                "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span><span>Locked</span></span>" :
-                "") +
-              "</div>" +
-              "</div>";
+              batchListItemEle.innerHTML = "<div class=\"columns\">" +
+                "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
+                "<div class=\"column has-text-right\">" +
+                batch.batchDateString +
+                (batch.lockDate ?
+                  "<br /><div class=\"tags justify-flex-end\">" +
+                  "<span class=\"tag\">" +
+                  "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span><span>Locked</span></span>" :
+                  "") +
+                "</div>" +
+                "</div>";
 
-            batchListItemEle.addEventListener("click", selectFn);
+              batchListItemEle.addEventListener("click", selectFn);
 
-            resultsContainerEle.appendChild(batchListItemEle);
-          }
+              resultsContainerEle.appendChild(batchListItemEle);
+            }
 
-        });
+          });
       },
       onshown(_modalEle, closeModalFn) {
-
         selectBatchCloseModalFn = closeModalFn;
-
       }
     });
 
@@ -658,9 +651,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
    */
 
   if (currentBatch) {
-    renderCurrentBatch();
+    renderCurrentBatchFn();
   }
 
-  renderConvictableTickets();
+  renderConvictableTicketsFn();
 
-}());
+})();

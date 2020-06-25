@@ -232,11 +232,11 @@ type UpdateLocationResponseJSON = {
 
     let addLocationCloseModalFn: () => void;
 
-    const addFn = function(formEvent: Event) {
+    const addFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, (responseJSON) => {
+      cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, (responseJSON: UpdateLocationResponseJSON) => {
 
         if (responseJSON.success) {
 

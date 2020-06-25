@@ -2,9 +2,9 @@ import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/
 declare const cityssm: cityssmGlobal;
 
 
-(function() {
+(() => {
 
-  document.getElementById("mtoImport--importFile").addEventListener("change", function(fileChangeEvent: Event) {
+  document.getElementById("mtoImport--importFile").addEventListener("change", (fileChangeEvent: Event) => {
 
     const fileNameEle = document.getElementById("mtoImport--importFileName");
     const messageEle = document.getElementById("mtoImport--importFileMessage");
@@ -27,14 +27,11 @@ declare const cityssm: cityssmGlobal;
           "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
           "<span>MTO file names are generally a number with a \".txt\" extension.</span>" +
           "</div>";
-
       }
-
     }
-
   });
 
-  document.getElementById("form--mtoImport").addEventListener("submit", function(formEvent) {
+  document.getElementById("form--mtoImport").addEventListener("submit", (formEvent) => {
 
     formEvent.preventDefault();
 
@@ -56,49 +53,47 @@ declare const cityssm: cityssmGlobal;
     document.getElementById("step--upload").classList.add("is-hidden");
     document.getElementById("step--update").classList.remove("is-hidden");
 
-    cityssm.postJSON("/plates-ontario/doMTOImportUpload", formEle, function(responseJSON) {
+    cityssm.postJSON("/plates-ontario/doMTOImportUpload", formEle,
+      (responseJSON: { success: boolean, message?: string }) => {
 
-      updateStepItemEle.classList.add("is-completed");
-      updateStepItemEle.classList.remove("is-active");
+        updateStepItemEle.classList.add("is-completed");
+        updateStepItemEle.classList.remove("is-active");
 
-      const resultsMessageEle = document.getElementById("mtoImport--message");
+        const resultsMessageEle = document.getElementById("mtoImport--message");
 
-      if (responseJSON.success) {
+        if (responseJSON.success) {
 
-        updateStepItemEle.classList.add("is-success");
+          updateStepItemEle.classList.add("is-success");
 
-        updateStepItemEle.getElementsByClassName("icon")[0].innerHTML =
-          "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>";
+          updateStepItemEle.getElementsByClassName("icon")[0].innerHTML =
+            "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>";
 
-        resultsMessageEle.classList.add("is-success");
+          resultsMessageEle.classList.add("is-success");
 
-        resultsMessageEle.innerHTML = "<div class=\"message-body\">" +
-          "<p><strong>The file was imported successfully.</strong></p>" +
-          "</div>";
+          resultsMessageEle.innerHTML = "<div class=\"message-body\">" +
+            "<p><strong>The file was imported successfully.</strong></p>" +
+            "</div>";
 
-      } else {
+        } else {
 
-        updateStepItemEle.classList.add("is-danger");
+          updateStepItemEle.classList.add("is-danger");
 
-        updateStepItemEle.getElementsByClassName("icon")[0].innerHTML =
-          "<i class=\"fas fa-exclamation\" aria-hidden=\"true\"></i>";
+          updateStepItemEle.getElementsByClassName("icon")[0].innerHTML =
+            "<i class=\"fas fa-exclamation\" aria-hidden=\"true\"></i>";
 
-        resultsMessageEle.classList.add("is-danger");
+          resultsMessageEle.classList.add("is-danger");
 
-        resultsMessageEle.innerHTML = "<div class=\"message-body\">" +
-          "<p><strong>An error occurred while importing the file.</strong></p>" +
-          "<p>" + cityssm.escapeHTML(responseJSON.message) + "</p>" +
-          "</div>";
+          resultsMessageEle.innerHTML = "<div class=\"message-body\">" +
+            "<p><strong>An error occurred while importing the file.</strong></p>" +
+            "<p>" + cityssm.escapeHTML(responseJSON.message) + "</p>" +
+            "</div>";
 
-      }
+        }
 
-      document.getElementById("step-item--results").classList.add("is-active");
+        document.getElementById("step-item--results").classList.add("is-active");
 
-      document.getElementById("step--update").classList.add("is-hidden");
-      document.getElementById("step--results").classList.remove("is-hidden");
-
-    });
-
+        document.getElementById("step--update").classList.add("is-hidden");
+        document.getElementById("step--results").classList.remove("is-hidden");
+      });
   });
-
-}());
+})();

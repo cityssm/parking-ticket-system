@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
-    document.getElementById("mtoImport--importFile").addEventListener("change", function (fileChangeEvent) {
+(() => {
+    document.getElementById("mtoImport--importFile").addEventListener("change", (fileChangeEvent) => {
         const fileNameEle = document.getElementById("mtoImport--importFileName");
         const messageEle = document.getElementById("mtoImport--importFileMessage");
         const fileInputEle = fileChangeEvent.currentTarget;
@@ -19,7 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         }
     });
-    document.getElementById("form--mtoImport").addEventListener("submit", function (formEvent) {
+    document.getElementById("form--mtoImport").addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
         const formEle = formEvent.currentTarget;
         const uploadStepItemEle = document.getElementById("step-item--upload");
@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</span>";
         document.getElementById("step--upload").classList.add("is-hidden");
         document.getElementById("step--update").classList.remove("is-hidden");
-        cityssm.postJSON("/plates-ontario/doMTOImportUpload", formEle, function (responseJSON) {
+        cityssm.postJSON("/plates-ontario/doMTOImportUpload", formEle, (responseJSON) => {
             updateStepItemEle.classList.add("is-completed");
             updateStepItemEle.classList.remove("is-active");
             const resultsMessageEle = document.getElementById("mtoImport--message");
@@ -63,4 +63,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
             document.getElementById("step--results").classList.remove("is-hidden");
         });
     });
-}());
+})();

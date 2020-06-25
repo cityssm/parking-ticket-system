@@ -126,7 +126,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     document.getElementById("is-add-location-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         let addLocationCloseModalFn;
-        const addFn = function (formEvent) {
+        const addFn = (formEvent) => {
             formEvent.preventDefault();
             cityssm.postJSON("/admin/doAddLocation", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {

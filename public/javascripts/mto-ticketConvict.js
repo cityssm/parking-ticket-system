@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
     let currentBatch = exports.currentBatch;
     delete exports.currentBatch;
@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const ticketFilterEle = document.getElementById("filter--parkingTicket");
     const convictableTicketsContainerEle = document.getElementById("convictable-tickets-container");
     let displayedTicketIDs = [];
-    function addTicketToBatchByIndex(clickEvent) {
+    const addTicketToBatchByIndexFn = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
@@ -18,34 +18,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
             batchID: currentBatch.batchID,
             ticketID
-        }, function (resultJSON) {
+        }, (resultJSON) => {
             if (resultJSON.success) {
                 currentBatch = resultJSON.batch;
-                renderCurrentBatch();
+                renderCurrentBatchFn();
                 convictableTickets.splice(index, 1);
-                renderConvictableTickets();
+                renderConvictableTicketsFn();
             }
             else {
                 buttonEle.removeAttribute("disabled");
             }
         });
-    }
-    function addAllTicketsToBatch(clickEvent) {
+    };
+    const addAllTicketsToBatchFn = (clickEvent) => {
         clickEvent.preventDefault();
         let loadingCloseModalFn;
-        const addFn = function () {
+        const addFn = () => {
             cityssm.postJSON("/tickets-ontario/doAddAllTicketsToConvictionBatch", {
                 batchID: currentBatch.batchID,
                 ticketIDs: displayedTicketIDs
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 loadingCloseModalFn();
                 if (responseJSON.batch) {
                     currentBatch = responseJSON.batch;
-                    renderCurrentBatch();
+                    renderCurrentBatchFn();
                 }
                 if (responseJSON.tickets) {
                     convictableTickets = responseJSON.tickets;
-                    renderConvictableTickets();
+                    renderConvictableTicketsFn();
                 }
                 if (responseJSON.successCount === 0) {
                     cityssm.alertModal("Results", responseJSON.message ? responseJSON.message : "No tickets were added to the batch.", "OK", "warning");
@@ -64,8 +64,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 addFn();
             }
         });
-    }
-    function renderConvictableTickets() {
+    };
+    const renderConvictableTicketsFn = () => {
         cityssm.clearElement(convictableTicketsContainerEle);
         displayedTicketIDs = [];
         if (!currentBatch) {
@@ -94,7 +94,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const ticketFilter = ticketFilterEle.value.trim().toLowerCase();
         const tbodyEle = document.createElement("tbody");
-        convictableTickets.forEach(function (ticket, index) {
+        convictableTickets.forEach((ticket, index) => {
             if (ticket.ticketNumber.toLowerCase().indexOf(ticketFilter) === -1 &&
                 ticket.licencePlateNumber.toLowerCase().indexOf(ticketFilter) === -1) {
                 return;
@@ -122,7 +122,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "<span>Add</span>" +
                         "</button>" +
                         "</td>");
-            trEle.getElementsByTagName("button")[0].addEventListener("click", addTicketToBatchByIndex);
+            trEle.getElementsByTagName("button")[0].addEventListener("click", addTicketToBatchByIndexFn);
             tbodyEle.appendChild(trEle);
         });
         if (displayedTicketIDs.length === 0) {
@@ -135,7 +135,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         addAllButtonEle.className = "button is-fullwidth mb-3";
         addAllButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
             "<span>Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "</span>";
-        addAllButtonEle.addEventListener("click", addAllTicketsToBatch);
+        addAllButtonEle.addEventListener("click", addAllTicketsToBatchFn);
         convictableTicketsContainerEle.appendChild(addAllButtonEle);
         const tableEle = document.createElement("table");
         tableEle.className = "table is-striped is-hoverable is-fullwidth";
@@ -147,10 +147,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</tr></thead>";
         tableEle.appendChild(tbodyEle);
         convictableTicketsContainerEle.appendChild(tableEle);
-    }
-    ticketFilterEle.addEventListener("keyup", renderConvictableTickets);
+    };
+    ticketFilterEle.addEventListener("keyup", renderConvictableTicketsFn);
     const batchEntriesContainerEle = document.getElementById("batch-entries-container");
-    function removeTicketFromBatchByIndex(clickEvent) {
+    const removeTicketFromBatchByIndexFn = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
@@ -159,93 +159,94 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
             batchID: currentBatch.batchID,
             ticketID
-        }, function (resultJSON) {
+        }, (resultJSON) => {
             if (resultJSON.success) {
                 currentBatch.batchEntries.splice(index, 1);
-                renderCurrentBatch();
+                renderCurrentBatchFn();
                 convictableTickets = resultJSON.tickets;
-                renderConvictableTickets();
+                renderConvictableTicketsFn();
             }
             else {
                 buttonEle.removeAttribute("disabled");
             }
         });
-    }
-    function clearBatch(clickEvent) {
+    };
+    const clearBatchFn = (clickEvent) => {
         clickEvent.preventDefault();
-        const clearFn = function () {
+        const clearFn = () => {
             cityssm.postJSON("/tickets-ontario/doClearConvictionBatch", {
                 batchID: currentBatch.batchID
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (!responseJSON.success) {
                     cityssm.alertModal("Batch Not Cleared", responseJSON.message, "OK", "danger");
                 }
                 if (responseJSON.batch) {
                     currentBatch = responseJSON.batch;
-                    renderCurrentBatch();
+                    renderCurrentBatchFn();
                 }
                 if (responseJSON.tickets) {
                     convictableTickets = responseJSON.tickets;
-                    renderConvictableTickets();
+                    renderConvictableTicketsFn();
                 }
             });
         };
         cityssm.confirmModal("Clear Batch", "Are you sure you want to remove all the parking tickets from the batch?", "Yes, Clear the Batch", "warning", clearFn);
-    }
-    function lockBatch(clickEvent) {
+    };
+    const lockBatchFn = (clickEvent) => {
         clickEvent.preventDefault();
-        const lockFn = function () {
+        const lockFn = () => {
             cityssm.postJSON("/tickets/doLockConvictionBatch", {
                 batchID: currentBatch.batchID
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     currentBatch.lockDate = responseJSON.lockDate;
                     currentBatch.lockDateString = responseJSON.lockDateString;
-                    renderCurrentBatch();
-                    renderConvictableTickets();
+                    renderCurrentBatchFn();
+                    renderConvictableTicketsFn();
                 }
             });
         };
         cityssm.confirmModal("Lock Batch?", "<strong>Are you sure you want to lock this batch?</strong><br />" +
-            "Once locked, no further changes to the batch will be allowed.  The option to download the batch will become available.", "Yes, Lock the Batch", "warning", lockFn);
-    }
-    function unlockBatch(clickEvent) {
+            "Once locked, no further changes to the batch will be allowed." +
+            " The option to download the batch will become available.", "Yes, Lock the Batch", "warning", lockFn);
+    };
+    const unlockBatchFn = (clickEvent) => {
         clickEvent.preventDefault();
-        const lockFn = function () {
+        const lockFn = () => {
             cityssm.postJSON("/tickets/doUnlockConvictionBatch", {
                 batchID: currentBatch.batchID
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     currentBatch.lockDate = null;
                     currentBatch.lockDateString = null;
-                    renderCurrentBatch();
-                    renderConvictableTickets();
+                    renderCurrentBatchFn();
+                    renderConvictableTicketsFn();
                 }
             });
         };
         cityssm.confirmModal("Lock Batch?", "<strong>Are you sure you want to unlock this batch?</strong><br />" +
             "Once unlocked, changes to the batch will be allowed.", "Yes, Unlock the Batch", "warning", lockFn);
-    }
-    function downloadBatch(clickEvent) {
+    };
+    const downloadBatchFn = (clickEvent) => {
         clickEvent.preventDefault();
-        const downloadFn = function () {
+        const downloadFn = () => {
             window.open("/tickets-ontario/convict/" + currentBatch.batchID);
         };
         if (!currentBatch.sentDate) {
             cityssm.confirmModal("Download Batch", "<strong>You are about to download the batch for the first time.</strong><br />" +
-                "Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.", "Yes, Download the Batch", "warning", function () {
+                "Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.", "Yes, Download the Batch", "warning", () => {
                 downloadFn();
                 const rightNow = new Date();
                 currentBatch.sentDateString = cityssm.dateToString(rightNow);
                 currentBatch.sentDate = parseInt(currentBatch.sentDateString.replace(/-/g, ""), 10);
-                renderCurrentBatch();
+                renderCurrentBatchFn();
             });
         }
         else {
             downloadFn();
         }
-    }
-    function renderCurrentBatch() {
+    };
+    const renderCurrentBatchFn = () => {
         document.getElementById("batchSelector--batchID").innerText = "Batch #" + currentBatch.batchID;
         document.getElementById("batchSelector--batchDetails").innerHTML =
             ("<span class=\"has-tooltip-left\" data-tooltip=\"Batch Date\">" +
@@ -266,7 +267,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const tbodyEle = document.createElement("tbody");
         const canRemove = canUpdate && !currentBatch.lockDate;
-        currentBatch.batchEntries.forEach(function (batchEntry, index) {
+        currentBatch.batchEntries.forEach((batchEntry, index) => {
             const trEle = document.createElement("tr");
             trEle.innerHTML = ("<td>" +
                 "<a href=\"/tickets/" + batchEntry.ticketID + "\" target=\"_blank\">" +
@@ -286,7 +287,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</td>" :
                     "");
             if (canRemove) {
-                trEle.getElementsByTagName("button")[0].addEventListener("click", removeTicketFromBatchByIndex);
+                trEle.getElementsByTagName("button")[0].addEventListener("click", removeTicketFromBatchByIndexFn);
             }
             tbodyEle.appendChild(trEle);
         });
@@ -307,13 +308,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             lockButtonEle.className = "button is-fullwidth mb-3";
             lockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                 "<span>Lock Batch</span>";
-            lockButtonEle.addEventListener("click", lockBatch);
+            lockButtonEle.addEventListener("click", lockBatchFn);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", lockButtonEle);
             const clearButtonEle = document.createElement("button");
             clearButtonEle.className = "button is-fullwidth mb-3";
             clearButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
                 "<span>Clear Batch</span>";
-            clearButtonEle.addEventListener("click", clearBatch);
+            clearButtonEle.addEventListener("click", clearBatchFn);
             tableEle.insertAdjacentElement("beforebegin", clearButtonEle);
         }
         if (canUpdate && currentBatch.lockDate && !currentBatch.sentDate) {
@@ -321,7 +322,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             unlockButtonEle.className = "button is-fullwidth mb-3";
             unlockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
                 "<span>Unlock Batch</span>";
-            unlockButtonEle.addEventListener("click", unlockBatch);
+            unlockButtonEle.addEventListener("click", unlockBatchFn);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", unlockButtonEle);
         }
         if (currentBatch.lockDate) {
@@ -329,7 +330,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             downloadButtonEle.className = "button is-fullwidth mb-3";
             downloadButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
                 "<span>Download File for MTO</span>";
-            downloadButtonEle.addEventListener("click", downloadBatch);
+            downloadButtonEle.addEventListener("click", downloadBatchFn);
             tableEle.insertAdjacentElement("beforebegin", downloadButtonEle);
             tableEle.insertAdjacentHTML("beforebegin", "<a class=\"button is-fullwidth mb-3\"" +
                 " href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
@@ -337,31 +338,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<span>MTO ARIS Login</span>" +
                 "</a>");
         }
-    }
-    function confirmCreateBatch() {
-        const createFn = function () {
-            cityssm.postJSON("/tickets/doCreateConvictionBatch", {}, function (responseJSON) {
+    };
+    const confirmCreateBatchFn = () => {
+        const createFn = () => {
+            cityssm.postJSON("/tickets/doCreateConvictionBatch", {}, (responseJSON) => {
                 if (responseJSON.success) {
                     currentBatch = responseJSON.batch;
-                    renderCurrentBatch();
-                    renderConvictableTickets();
+                    renderCurrentBatchFn();
+                    renderConvictableTicketsFn();
                 }
             });
         };
         cityssm.confirmModal("Create a New Batch", "Are you sure you want to create a new conviction batch?", "Yes, Create Batch", "info", createFn);
-    }
-    document.getElementById("is-select-batch-button").addEventListener("click", function (clickEvent) {
+    };
+    document.getElementById("is-select-batch-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         let selectBatchCloseModalFn;
-        const selectFn = function (clickEvent) {
+        const selectFn = (clickEvent) => {
             clickEvent.preventDefault();
             const batchID = clickEvent.currentTarget.getAttribute("data-batch-id");
             cityssm.postJSON("/tickets/doGetConvictionBatch", {
                 batchID
-            }, function (batchObj) {
+            }, (batchObj) => {
                 currentBatch = batchObj;
-                renderCurrentBatch();
-                renderConvictableTickets();
+                renderCurrentBatchFn();
+                renderConvictableTicketsFn();
             });
             selectBatchCloseModalFn();
         };
@@ -370,13 +371,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 if (canUpdate) {
                     const createButtonEle = modalEle.getElementsByClassName("is-create-batch-button")[0];
                     createButtonEle.classList.remove("is-hidden");
-                    createButtonEle.addEventListener("click", function (clickEvent) {
+                    createButtonEle.addEventListener("click", (clickEvent) => {
                         clickEvent.preventDefault();
                         selectBatchCloseModalFn();
-                        confirmCreateBatch();
+                        confirmCreateBatchFn();
                     });
                 }
-                cityssm.postJSON("/tickets/doGetRecentConvictionBatches", [], function (batchList) {
+                cityssm.postJSON("/tickets/doGetRecentConvictionBatches", [], (batchList) => {
                     const resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
                     cityssm.clearElement(resultsContainerEle);
                     if (batchList.length === 0) {
@@ -412,7 +413,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     });
     if (currentBatch) {
-        renderCurrentBatch();
+        renderCurrentBatchFn();
     }
-    renderConvictableTickets();
-}());
+    renderConvictableTicketsFn();
+})();

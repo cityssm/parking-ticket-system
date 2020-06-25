@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const pts = {};
-(function () {
+(() => {
     let defaultConfigProperties = {};
     let defaultConfigPropertiesIsLoaded = false;
-    const loadConfigPropertiesFromStorage = function () {
+    const loadConfigPropertiesFromStorage = () => {
         try {
             const defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
             if (defaultConfigPropertiesString) {
@@ -19,7 +19,7 @@ const pts = {};
         }
         return false;
     };
-    pts.loadDefaultConfigProperties = function (callbackFn) {
+    pts.loadDefaultConfigProperties = (callbackFn) => {
         if (defaultConfigPropertiesIsLoaded) {
             callbackFn();
             return;
@@ -28,18 +28,18 @@ const pts = {};
             callbackFn();
             return;
         }
-        cityssm.postJSON("/dashboard/doGetDefaultConfigProperties", {}, function (defaultConfigPropertiesResult) {
+        cityssm.postJSON("/dashboard/doGetDefaultConfigProperties", {}, (defaultConfigPropertiesResult) => {
             defaultConfigProperties = defaultConfigPropertiesResult;
             defaultConfigPropertiesIsLoaded = true;
             try {
                 window.localStorage.setItem("defaultConfigProperties", JSON.stringify(defaultConfigProperties));
             }
-            catch (e) {
+            catch (_e) {
             }
             callbackFn();
         });
     };
-    pts.getDefaultConfigProperty = function (propertyName, propertyValueCallbackFn) {
+    pts.getDefaultConfigProperty = (propertyName, propertyValueCallbackFn) => {
         if (defaultConfigPropertiesIsLoaded) {
             propertyValueCallbackFn(defaultConfigProperties[propertyName]);
             return;
@@ -48,11 +48,11 @@ const pts = {};
             propertyValueCallbackFn(defaultConfigProperties[propertyName]);
             return;
         }
-        pts.loadDefaultConfigProperties(function () {
+        pts.loadDefaultConfigProperties(() => {
             propertyValueCallbackFn(defaultConfigProperties[propertyName]);
         });
     };
-    pts.getLicencePlateCountryProperties = function (originalLicencePlateCountry) {
+    pts.getLicencePlateCountryProperties = (originalLicencePlateCountry) => {
         if (!defaultConfigPropertiesIsLoaded) {
             return {};
         }
@@ -63,42 +63,41 @@ const pts = {};
         }
         return {};
     };
-    pts.getLicencePlateLocationProperties =
-        function (originalLicencePlateCountry, originalLicencePlateProvince) {
-            const licencePlateProvinceDefault = {
-                provinceShortName: originalLicencePlateProvince,
-                color: "#000",
-                backgroundColor: "#fff"
-            };
-            if (!defaultConfigPropertiesIsLoaded) {
-                return {
-                    licencePlateCountryAlias: originalLicencePlateCountry,
-                    licencePlateProvinceAlias: originalLicencePlateProvince,
-                    licencePlateProvince: licencePlateProvinceDefault
-                };
-            }
-            const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
-                originalLicencePlateCountry;
-            let licencePlateProvinceAlias = originalLicencePlateProvince;
-            if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
-                licencePlateProvinceAlias =
-                    defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
-                        originalLicencePlateProvince;
-            }
-            let licencePlateProvince = licencePlateProvinceDefault;
-            if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
-                licencePlateProvince =
-                    defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
-            }
-            return {
-                licencePlateCountryAlias,
-                licencePlateProvinceAlias,
-                licencePlateProvince
-            };
+    pts.getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
+        const licencePlateProvinceDefault = {
+            provinceShortName: originalLicencePlateProvince,
+            color: "#000",
+            backgroundColor: "#fff"
         };
+        if (!defaultConfigPropertiesIsLoaded) {
+            return {
+                licencePlateCountryAlias: originalLicencePlateCountry,
+                licencePlateProvinceAlias: originalLicencePlateProvince,
+                licencePlateProvince: licencePlateProvinceDefault
+            };
+        }
+        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
+            originalLicencePlateCountry;
+        let licencePlateProvinceAlias = originalLicencePlateProvince;
+        if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
+            licencePlateProvinceAlias =
+                defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+                    originalLicencePlateProvince;
+        }
+        let licencePlateProvince = licencePlateProvinceDefault;
+        if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
+            licencePlateProvince =
+                defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+        }
+        return {
+            licencePlateCountryAlias,
+            licencePlateProvinceAlias,
+            licencePlateProvince
+        };
+    };
     const ticketStatusKeyToObject = new Map();
     let ticketStatusKeyToObjectIsLoaded = false;
-    pts.getTicketStatus = function (statusKey) {
+    pts.getTicketStatus = (statusKey) => {
         const noResult = {
             statusKey,
             status: statusKey
@@ -114,15 +113,15 @@ const pts = {};
         }
         return ticketStatusKeyToObject.has(statusKey) ? ticketStatusKeyToObject.get(statusKey) : noResult;
     };
-}());
-pts.initializeTabs = function (tabsListEle, callbackFns) {
+})();
+pts.initializeTabs = (tabsListEle, callbackFns) => {
     if (!tabsListEle) {
         return;
     }
     const isPanelOrMenuListTabs = tabsListEle.classList.contains("panel-tabs") || tabsListEle.classList.contains("menu-list");
     const listItemEles = tabsListEle.getElementsByTagName(isPanelOrMenuListTabs ? "a" : "li");
     const tabLinkEles = (isPanelOrMenuListTabs ? listItemEles : tabsListEle.getElementsByTagName("a"));
-    function tabClickFn(clickEvent) {
+    const tabClickFn = (clickEvent) => {
         clickEvent.preventDefault();
         const tabLinkEle = clickEvent.currentTarget;
         const tabContentEle = document.getElementById(tabLinkEle.getAttribute("href").substring(1));
@@ -140,24 +139,24 @@ pts.initializeTabs = function (tabsListEle, callbackFns) {
         if (callbackFns && callbackFns.onshown) {
             callbackFns.onshown(tabContentEle);
         }
-    }
-    for (let index = 0; index < listItemEles.length; index += 1) {
+    };
+    for (const listItemEle of listItemEles) {
         (isPanelOrMenuListTabs ?
-            listItemEles[index] :
-            listItemEles[index].getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
+            listItemEle :
+            listItemEle.getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
     }
 };
-(function () {
-    function toggleHiddenFn(clickEvent) {
+(() => {
+    const toggleHiddenFn = (clickEvent) => {
         clickEvent.preventDefault();
         const href = clickEvent.currentTarget.href;
         const divID = href.substring(href.indexOf("#") + 1);
         document.getElementById(divID).classList.toggle("is-hidden");
-    }
-    pts.initializeToggleHiddenLinks = function (searchContainerEle) {
+    };
+    pts.initializeToggleHiddenLinks = (searchContainerEle) => {
         const linkEles = searchContainerEle.getElementsByClassName("is-toggle-hidden-link");
         for (const linkEle of linkEles) {
             linkEle.addEventListener("click", toggleHiddenFn);
         }
     };
-}());
+})();

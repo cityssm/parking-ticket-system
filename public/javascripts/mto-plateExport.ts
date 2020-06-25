@@ -3,8 +3,20 @@ declare const cityssm: cityssmGlobal;
 
 import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
+type AvailableLicencePlate = {
+  licencePlateNumber: string,
+  ticketIDMin: number,
+  ticketCount: number,
+  issueDateMin: number,
+  issueDateMinString: string,
+  issueDateMax: number,
+  issueDateMaxString: string,
+  ticketNumbersConcat: string,
+  ticketNumbers: string[]
+};
 
-(function() {
+
+(() => {
 
   const canUpdate =
     document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
@@ -22,21 +34,11 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
   const licencePlateNumberFilterEle = <HTMLInputElement>document.getElementById("available--licencePlateNumber");
 
-  let availablePlatesList: {
-    licencePlateNumber: string,
-    ticketIDMin: number,
-    ticketCount: number,
-    issueDateMin: number,
-    issueDateMinString: string,
-    issueDateMax: number,
-    issueDateMaxString: string,
-    ticketNumbersConcat: string,
-    ticketNumbers: string[]
-  }[] = [];
+  let availablePlatesList: AvailableLicencePlate[] = [];
 
   let batchEntriesList = [];
 
-  function clickFn_addLicencePlateToBatch(clickEvent: Event) {
+  const clickFn_addLicencePlateToBatch = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -57,7 +59,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
         licencePlateNumber: plateRecord.licencePlateNumber,
         ticketID: plateRecord.ticketIDMin
       },
-      function(responseJSON) {
+      (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
 
         if (responseJSON.success) {
 
@@ -70,17 +72,13 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
           fn_populateBatchView(responseJSON.batch);
 
         } else {
-
           buttonEle.removeAttribute("disabled");
-
         }
-
       }
     );
+  };
 
-  }
-
-  function clickFn_removeLicencePlateFromBatch(clickEvent: Event) {
+  const clickFn_removeLicencePlateFromBatch = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -100,7 +98,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
         licencePlateProvince: "ON",
         licencePlateNumber: batchEntry.licencePlateNumber
       },
-      function(responseJSON) {
+      (responseJSON: { success: boolean }) => {
 
         if (responseJSON.success) {
 
@@ -110,35 +108,28 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
           fn_refreshAvailablePlates();
 
         } else {
-
           buttonEle.removeAttribute("disabled");
-
         }
-
       }
     );
+  };
 
-  }
-
-  function clickFn_clearBatch(clickEvent: Event) {
+  const clickFn_clearBatch = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const clearFn = function() {
+    const clearFn = () => {
 
       cityssm.postJSON("/plates/doClearLookupBatch", {
         batchID
-      }, function(responseJSON) {
+      },
+        (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
 
-        if (responseJSON.success) {
-
-          fn_populateBatchView(responseJSON.batch);
-          fn_refreshAvailablePlates();
-
-        }
-
-      });
-
+          if (responseJSON.success) {
+            fn_populateBatchView(responseJSON.batch);
+            fn_refreshAvailablePlates();
+          }
+        });
     };
 
     cityssm.confirmModal(
@@ -148,25 +139,20 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
       "warning",
       clearFn
     );
+  };
 
-  }
-
-  function clickFn_downloadBatch(clickEvent: Event) {
+  const clickFn_downloadBatch = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const downloadFn = function() {
-
+    const downloadFn = () => {
       window.open("/plates-ontario/mtoExport/" + batchID);
       batchIsSent = true;
-
     };
 
     if (batchIsSent) {
-
       downloadFn();
       return;
-
     }
 
     cityssm.confirmModal(
@@ -177,19 +163,17 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
       "warning",
       downloadFn
     );
+  };
 
-  }
-
-  function reduceFn_ticketNumbers(soFar: string, ticketNumber: string) {
+  const reduceFn_ticketNumbers = (soFar: string, ticketNumber: string) => {
 
     return soFar + "<a class=\"tag has-tooltip-bottom\" data-tooltip=\"View Ticket (Opens in New Window)\"" +
       " href=\"/tickets/byTicketNumber/" + encodeURIComponent(ticketNumber) + "\" target=\"_blank\">" +
       cityssm.escapeHTML(ticketNumber) +
       "</a> ";
+  };
 
-  }
-
-  function fn_populateAvailablePlatesView() {
+  const fn_populateAvailablePlatesView = () => {
 
     cityssm.clearElement(availablePlatesContainerEle);
 
@@ -202,7 +186,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
     let includedLicencePlates = [];
 
-    availablePlatesList.forEach(function(plateRecord, recordIndex) {
+    availablePlatesList.forEach((plateRecord, recordIndex) => {
 
       // Tombstone record
       if (!plateRecord) {
@@ -272,7 +256,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
         "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
         "<span>Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "</span>";
 
-      addAllButtonEle.addEventListener("click", function() {
+      addAllButtonEle.addEventListener("click", () => {
 
         cityssm.openHtmlModal("loading", {
           onshown(_modalEle, closeModalFn) {
@@ -285,23 +269,18 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
               licencePlateCountry: "CA",
               licencePlateProvince: "ON",
               licencePlateNumbers: includedLicencePlates
-            }, function(resultJSON) {
+            },
+              (resultJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
 
-              closeModalFn();
+                closeModalFn();
 
-              if (resultJSON.success) {
-
-                fn_populateBatchView(resultJSON.batch);
-                fn_refreshAvailablePlates();
-
-              }
-
-            });
-
+                if (resultJSON.success) {
+                  fn_populateBatchView(resultJSON.batch);
+                  fn_refreshAvailablePlates();
+                }
+              });
           }
         });
-
-
       });
 
       availablePlatesContainerEle.appendChild(addAllButtonEle);
@@ -316,9 +295,9 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
     }
 
-  }
+  };
 
-  function fn_refreshAvailablePlates() {
+  const fn_refreshAvailablePlates = () => {
 
     if (batchIsLocked) {
 
@@ -339,22 +318,19 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
         batchID,
         issueDaysAgo: availableIssueDaysAgoEle.value
       },
-      function(resultPlatesList) {
+      (resultPlatesList) => {
 
         availablePlatesList = resultPlatesList;
         fn_populateAvailablePlatesView();
 
       }
     );
+  };
 
-  }
-
-  document.getElementById("is-more-available-filters-toggle").addEventListener("click", function(clickEvent) {
+  document.getElementById("is-more-available-filters-toggle").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
-
     document.getElementById("is-more-available-filters").classList.toggle("is-hidden");
-
   });
 
   licencePlateNumberFilterEle.addEventListener("keyup", fn_populateAvailablePlatesView);
@@ -369,7 +345,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
   const batchEntriesContainerEle = document.getElementById("is-batch-entries-container");
 
-  function fn_populateBatchView(batch: LicencePlateLookupBatch) {
+  const fn_populateBatchView = (batch: LicencePlateLookupBatch) => {
 
     batchID = batch.batchID;
     batchEntriesList = batch.batchEntries;
@@ -378,15 +354,10 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
     batchIsSent = !(batch.sentDate == null);
 
     if (canUpdate) {
-
       if (batchIsLocked) {
-
         lockBatchButtonEle.setAttribute("disabled", "disabled");
-
       } else {
-
         lockBatchButtonEle.removeAttribute("disabled");
-
       }
     }
 
@@ -394,10 +365,11 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
     document.getElementById("batchSelector--batchDetails").innerHTML =
       "<span class=\"icon is-small\"><i class=\"fas fa-calendar\" aria-hidden=\"true\"></i></span>" +
-      "<span>" + batch.batchDateString + "</span>" +
+      "<span>" + batch.batchDateString + "</span> " +
       (batchIsLocked ?
-        " <span class=\"tag is-light\">" +
-        "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span> <span>" + batch.lockDateString + "</span>" +
+        "<span class=\"tag is-light\">" +
+        "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+        " <span>" + batch.lockDateString + "</span>" +
         "</span>" :
         "");
 
@@ -418,7 +390,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
     const panelEle = document.createElement("div");
     panelEle.className = "panel";
 
-    batchEntriesList.forEach(function(batchEntry, index) {
+    batchEntriesList.forEach((batchEntry, index) => {
 
       const panelBlockEle = document.createElement("div");
       panelBlockEle.className = "panel-block is-block is-entry-container";
@@ -440,9 +412,7 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
         "</div>";
 
       if (!batchIsLocked) {
-
         panelBlockEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_removeLicencePlateFromBatch);
-
       }
 
       panelEle.appendChild(panelBlockEle);
@@ -483,34 +453,30 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
     }
 
     batchEntriesContainerEle.appendChild(panelEle);
+  };
 
-  }
-
-  function fn_refreshBatch() {
+  const fn_refreshBatch = () => {
 
     cityssm.postJSON(
       "/plates/doGetLookupBatch", {
         batchID
       },
-      function(batch: LicencePlateLookupBatch) {
+      (batch: LicencePlateLookupBatch) => {
 
         fn_populateBatchView(batch);
         fn_refreshAvailablePlates();
-
       }
     );
+  };
 
-
-  }
-
-  function clickFn_openSelectBatchModal(clickEvent: Event) {
+  const clickFn_openSelectBatchModal = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    let selectBatchCloseModalFn: Function;
+    let selectBatchCloseModalFn: () => void;
     let resultsContainerEle: HTMLDivElement;
 
-    const clickFn_selectBatch = function(batchClickEvent: Event) {
+    const clickFn_selectBatch = (batchClickEvent: Event) => {
 
       batchClickEvent.preventDefault();
 
@@ -521,63 +487,61 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
     };
 
-    const fn_loadBatches = function() {
+    const fn_loadBatches = () => {
 
-      cityssm.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, function(batchList: LicencePlateLookupBatch[]) {
+      cityssm.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {},
+        (batchList: LicencePlateLookupBatch[]) => {
 
-        if (batchList.length === 0) {
+          if (batchList.length === 0) {
 
-          resultsContainerEle.innerHTML = "<div class=\"message is-info\">" +
-            "<p class=\"message-body\">There are no unsent batches available.</p>" +
-            "</div>";
-          return;
+            resultsContainerEle.innerHTML = "<div class=\"message is-info\">" +
+              "<p class=\"message-body\">There are no unsent batches available.</p>" +
+              "</div>";
+            return;
 
-        }
+          }
 
-        const listEle = document.createElement("div");
-        listEle.className = "panel";
+          const listEle = document.createElement("div");
+          listEle.className = "panel";
 
-        for (let index = 0; index < batchList.length; index += 1) {
+          for (let index = 0; index < batchList.length; index += 1) {
 
-          const batch = batchList[index];
+            const batch = batchList[index];
 
-          const linkEle = document.createElement("a");
-          linkEle.className = "panel-block is-block";
-          linkEle.setAttribute("href", "#");
-          linkEle.setAttribute("data-batch-id", batch.batchID.toString());
+            const linkEle = document.createElement("a");
+            linkEle.className = "panel-block is-block";
+            linkEle.setAttribute("href", "#");
+            linkEle.setAttribute("data-batch-id", batch.batchID.toString());
 
-          linkEle.innerHTML = "<div class=\"columns\">" +
-            "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
-            "<div class=\"column has-text-right\">" +
-            batch.batchDateString + "<br />" +
-            ("<div class=\"tags justify-flex-end\">" +
-              (batch.lockDate ?
-                "<span class=\"tag\">" +
-                "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
-                "<span>Locked</span>" +
-                "</span>" :
-                "") +
-              (batch.sentDate ?
-                "<span class=\"tag\">" +
-                "<span class=\"icon is-small\"><i class=\"fas fa-share\" aria-hidden=\"true\"></i></span>" +
-                "<span>Sent to MTO</span>" +
-                "</span>" :
-                "") +
-              "</div>") +
-            "</div>" +
-            "</div>";
+            linkEle.innerHTML = "<div class=\"columns\">" +
+              "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
+              "<div class=\"column has-text-right\">" +
+              batch.batchDateString + "<br />" +
+              ("<div class=\"tags justify-flex-end\">" +
+                (batch.lockDate ?
+                  "<span class=\"tag\">" +
+                  "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+                  "<span>Locked</span>" +
+                  "</span>" :
+                  "") +
+                (batch.sentDate ?
+                  "<span class=\"tag\">" +
+                  "<span class=\"icon is-small\"><i class=\"fas fa-share\" aria-hidden=\"true\"></i></span>" +
+                  "<span>Sent to MTO</span>" +
+                  "</span>" :
+                  "") +
+                "</div>") +
+              "</div>" +
+              "</div>";
 
-          linkEle.addEventListener("click", clickFn_selectBatch);
+            linkEle.addEventListener("click", clickFn_selectBatch);
 
-          listEle.appendChild(linkEle);
+            listEle.appendChild(linkEle);
+          }
 
-        }
-
-        cityssm.clearElement(resultsContainerEle);
-        resultsContainerEle.appendChild(listEle);
-
-      });
-
+          cityssm.clearElement(resultsContainerEle);
+          resultsContainerEle.appendChild(listEle);
+        });
     };
 
     cityssm.openHtmlModal("mto-selectBatch", {
@@ -592,23 +556,21 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
           createBatchButtonEle.classList.remove("is-hidden");
 
-          createBatchButtonEle.addEventListener("click", function() {
+          createBatchButtonEle.addEventListener("click", () => {
 
             selectBatchCloseModalFn();
 
-            const createFn = function() {
+            const createFn = () => {
 
-              cityssm.postJSON("/plates/doCreateLookupBatch", {}, function(responseJSON) {
+              cityssm.postJSON("/plates/doCreateLookupBatch", {},
+                (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
 
-                if (responseJSON.success) {
+                  if (responseJSON.success) {
 
-                  fn_populateBatchView(responseJSON.batch);
-                  fn_refreshAvailablePlates();
-
-                }
-
-              });
-
+                    fn_populateBatchView(responseJSON.batch);
+                    fn_refreshAvailablePlates();
+                  }
+                });
             };
 
             cityssm.confirmModal(
@@ -618,43 +580,35 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
               "info",
               createFn
             );
-
           });
-
         }
-
       },
       onshown(_modalEle, closeModalFn) {
         selectBatchCloseModalFn = closeModalFn;
       }
     });
-
-  }
+  };
 
   document.getElementById("is-select-batch-button").addEventListener("click", clickFn_openSelectBatchModal);
 
   if (canUpdate) {
 
-    lockBatchButtonEle.addEventListener("click", function() {
+    lockBatchButtonEle.addEventListener("click", () => {
 
       if (batchIsLocked) {
         return;
       }
 
-      const lockFn = function() {
+      const lockFn = () => {
 
         cityssm.postJSON("/plates/doLockLookupBatch", {
           batchID
-        }, function(responseJSON) {
+        }, (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
 
           if (responseJSON.success) {
-
             fn_populateBatchView(responseJSON.batch);
-
           }
-
         });
-
       };
 
       cityssm.confirmModal(
@@ -677,4 +631,4 @@ import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
     fn_refreshAvailablePlates();
   }
 
-}());
+})();

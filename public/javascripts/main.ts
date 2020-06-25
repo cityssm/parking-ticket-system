@@ -8,12 +8,12 @@ const pts: ptsGlobal = {};
 
 // CONFIG DEFAULTS
 
-(function() {
+(() => {
 
   let defaultConfigProperties: any = {};
   let defaultConfigPropertiesIsLoaded = false;
 
-  const loadConfigPropertiesFromStorage = function() {
+  const loadConfigPropertiesFromStorage = () => {
 
     try {
 
@@ -38,7 +38,7 @@ const pts: ptsGlobal = {};
 
   };
 
-  pts.loadDefaultConfigProperties = function(callbackFn) {
+  pts.loadDefaultConfigProperties = (callbackFn: () => void) => {
 
     if (defaultConfigPropertiesIsLoaded) {
 
@@ -56,57 +56,48 @@ const pts: ptsGlobal = {};
 
     cityssm.postJSON(
       "/dashboard/doGetDefaultConfigProperties", {},
-      function(defaultConfigPropertiesResult) {
+      (defaultConfigPropertiesResult) => {
 
         defaultConfigProperties = defaultConfigPropertiesResult;
         defaultConfigPropertiesIsLoaded = true;
 
         try {
-
           window.localStorage.setItem("defaultConfigProperties", JSON.stringify(defaultConfigProperties));
 
-        } catch (e) {
+        } catch (_e) {
           // Ignore
         }
 
         callbackFn();
-
       }
     );
-
   };
 
-  pts.getDefaultConfigProperty = function(propertyName, propertyValueCallbackFn) {
+  pts.getDefaultConfigProperty = (propertyName, propertyValueCallbackFn: (propertyValue: any) => void) => {
 
     // Check memory
 
     if (defaultConfigPropertiesIsLoaded) {
-
       propertyValueCallbackFn(defaultConfigProperties[propertyName]);
       return;
-
     }
 
     // Check local storage
 
     if (loadConfigPropertiesFromStorage()) {
-
       propertyValueCallbackFn(defaultConfigProperties[propertyName]);
       return;
-
     }
 
     // Populate local storage
 
-    pts.loadDefaultConfigProperties(function() {
-
+    pts.loadDefaultConfigProperties(() => {
       propertyValueCallbackFn(defaultConfigProperties[propertyName]);
-
     });
 
   };
 
-  pts.getLicencePlateCountryProperties = function(originalLicencePlateCountry) {
+  pts.getLicencePlateCountryProperties = (originalLicencePlateCountry) => {
 
     if (!defaultConfigPropertiesIsLoaded) {
 
@@ -128,68 +119,67 @@ const pts: ptsGlobal = {};
 
   };
 
-  pts.getLicencePlateLocationProperties =
-    function(originalLicencePlateCountry, originalLicencePlateProvince) {
+  pts.getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
 
-      const licencePlateProvinceDefault = {
-        provinceShortName: originalLicencePlateProvince,
-        color: "#000",
-        backgroundColor: "#fff"
-      };
+    const licencePlateProvinceDefault = {
+      provinceShortName: originalLicencePlateProvince,
+      color: "#000",
+      backgroundColor: "#fff"
+    };
 
-      if (!defaultConfigPropertiesIsLoaded) {
-
-        return {
-          licencePlateCountryAlias: originalLicencePlateCountry,
-          licencePlateProvinceAlias: originalLicencePlateProvince,
-          licencePlateProvince: licencePlateProvinceDefault
-        };
-
-      }
-
-      // Get the country alias
-
-      const licencePlateCountryAlias =
-        defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
-        originalLicencePlateCountry;
-
-      // Get the province alias
-
-      let licencePlateProvinceAlias = originalLicencePlateProvince;
-
-      if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
-
-        licencePlateProvinceAlias =
-          defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
-          originalLicencePlateProvince;
-
-      }
-
-      // Get the province object
-
-      let licencePlateProvince = licencePlateProvinceDefault;
-
-      if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
-
-        licencePlateProvince =
-          defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
-
-      }
-
-      // Return
+    if (!defaultConfigPropertiesIsLoaded) {
 
       return {
-        licencePlateCountryAlias,
-        licencePlateProvinceAlias,
-        licencePlateProvince
+        licencePlateCountryAlias: originalLicencePlateCountry,
+        licencePlateProvinceAlias: originalLicencePlateProvince,
+        licencePlateProvince: licencePlateProvinceDefault
       };
 
+    }
+
+    // Get the country alias
+
+    const licencePlateCountryAlias =
+      defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
+      originalLicencePlateCountry;
+
+    // Get the province alias
+
+    let licencePlateProvinceAlias = originalLicencePlateProvince;
+
+    if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
+
+      licencePlateProvinceAlias =
+        defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+        originalLicencePlateProvince;
+
+    }
+
+    // Get the province object
+
+    let licencePlateProvince = licencePlateProvinceDefault;
+
+    if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
+
+      licencePlateProvince =
+        defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+
+    }
+
+    // Return
+
+    return {
+      licencePlateCountryAlias,
+      licencePlateProvinceAlias,
+      licencePlateProvince
     };
+
+  };
 
   const ticketStatusKeyToObject = new Map();
   let ticketStatusKeyToObjectIsLoaded = false;
 
-  pts.getTicketStatus = function(statusKey) {
+  pts.getTicketStatus = (statusKey) => {
 
     const noResult = {
       statusKey,
@@ -212,12 +202,12 @@ const pts: ptsGlobal = {};
     return ticketStatusKeyToObject.has(statusKey) ? ticketStatusKeyToObject.get(statusKey) : noResult;
   };
 
-}());
+})();
 
 
 // TABS
 
-pts.initializeTabs = function(tabsListEle, callbackFns) {
+pts.initializeTabs = (tabsListEle, callbackFns) => {
 
   if (!tabsListEle) {
 
@@ -232,7 +222,7 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
   const listItemEles = tabsListEle.getElementsByTagName(isPanelOrMenuListTabs ? "a" : "li");
   const tabLinkEles = (isPanelOrMenuListTabs ? listItemEles : tabsListEle.getElementsByTagName("a"));
 
-  function tabClickFn(clickEvent: Event) {
+  const tabClickFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -260,13 +250,13 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
     if (callbackFns && callbackFns.onshown) {
       callbackFns.onshown(tabContentEle);
     }
-  }
+  };
 
-  for (let index = 0; index < listItemEles.length; index += 1) {
+  for (const listItemEle of listItemEles) {
 
     (isPanelOrMenuListTabs ?
-      listItemEles[index] :
-      listItemEles[index].getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
+      listItemEle :
+      listItemEle.getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
 
   }
 
@@ -275,9 +265,9 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
 
 // TOGGLE CONTAINERS
 
-(function() {
+(() => {
 
-  function toggleHiddenFn(clickEvent: Event) {
+  const toggleHiddenFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -285,16 +275,15 @@ pts.initializeTabs = function(tabsListEle, callbackFns) {
     const divID = href.substring(href.indexOf("#") + 1);
 
     document.getElementById(divID).classList.toggle("is-hidden");
-  }
+  };
 
-  pts.initializeToggleHiddenLinks = function(searchContainerEle) {
+  pts.initializeToggleHiddenLinks = (searchContainerEle) => {
 
     const linkEles = searchContainerEle.getElementsByClassName("is-toggle-hidden-link");
 
     for (const linkEle of linkEles) {
       linkEle.addEventListener("click", toggleHiddenFn);
     }
-
   };
 
-}());
+})();
