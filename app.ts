@@ -118,42 +118,33 @@ app.use(session({
 }));
 
 // Clear cookie if no corresponding session
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
 
   if (req.cookies[sessionCookieName] && !req.session.user) {
-
     res.clearCookie(sessionCookieName);
-
   }
 
   next();
-
 });
 
 // Redirect logged in users
-const sessionChecker = function(req: express.Request, res: express.Response, next: express.NextFunction) {
+const sessionChecker = (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
   if (req.session.user && req.cookies[sessionCookieName]) {
-
     return next();
-
   }
 
   return res.redirect("/login?redirect=" + req.originalUrl);
-
 };
 
 // Redirect non-admin users
-const adminChecker = function(req: express.Request, res: express.Response, next: express.NextFunction) {
+const adminChecker = (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
   if (req.session.user.userProperties.isAdmin) {
-
     return next();
-
   }
 
   return res.redirect("/login?redirect=" + req.originalUrl);
-
 };
 
 
@@ -163,7 +154,7 @@ const adminChecker = function(req: express.Request, res: express.Response, next:
 
 
 // Make the user and config objects available to the templates
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
 
   res.locals.buildNumber = buildNumber;
 
@@ -176,11 +167,10 @@ app.use(function(req, res, next) {
   res.locals.vehicleFns = vehicleFns;
 
   next();
-
 });
 
 
-app.get("/", sessionChecker, function(_req, res) {
+app.get("/", sessionChecker, (_req, res) => {
   res.redirect("/dashboard");
 });
 
@@ -196,18 +186,17 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
   app.use("/plates-ontario", sessionChecker, routePlatesOntario);
   app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
-
 }
 
 app.use("/admin", sessionChecker, adminChecker, routerAdmin);
 
-app.all("/keepAlive", function(_req, res) {
+app.all("/keepAlive", (_req, res) => {
   res.json(true);
 });
 
 app.use("/login", routerLogin);
 
-app.get("/logout", function(req, res) {
+app.get("/logout", (req, res) => {
 
   if (req.session.user && req.cookies[sessionCookieName]) {
 
@@ -219,21 +208,17 @@ app.get("/logout", function(req, res) {
   } else {
 
     res.redirect("/login");
-
   }
-
 });
 
 
 // Catch 404 and forward to error handler
-app.use(function(_req, _res, next) {
-
+app.use((_req, _res, next) => {
   next(createError(404));
-
 });
 
 // Error handler
-app.use(function(err: createError.HttpError, req: express.Request, res: express.Response, _next: express.NextFunction) {
+app.use((err: createError.HttpError, req: express.Request, res: express.Response, _next: express.NextFunction) => {
 
   // Set locals, only providing error in development
   res.locals.message = err.message;
@@ -242,7 +227,6 @@ app.use(function(err: createError.HttpError, req: express.Request, res: express.
   // Render the error page
   res.status(err.status || 500);
   res.render("error");
-
 });
 
 

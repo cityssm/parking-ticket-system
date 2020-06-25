@@ -12,7 +12,7 @@ router.all("/", (_req, res) => {
 router.all("/:mdFileName", (req, res, next) => {
     const mdFileName = req.params.mdFileName;
     const mdPath = path.join(__dirname, "..", "docs", mdFileName + (mdFileName.endsWith(".md") ? "" : ".md"));
-    fs.readFile(mdPath, "utf8", function (err, data) {
+    fs.readFile(mdPath, "utf8", (err, data) => {
         if (err) {
             next(createError(400));
             return;

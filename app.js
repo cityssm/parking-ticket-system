@@ -61,25 +61,25 @@ app.use(session({
         sameSite: "strict"
     }
 }));
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     if (req.cookies[sessionCookieName] && !req.session.user) {
         res.clearCookie(sessionCookieName);
     }
     next();
 });
-const sessionChecker = function (req, res, next) {
+const sessionChecker = (req, res, next) => {
     if (req.session.user && req.cookies[sessionCookieName]) {
         return next();
     }
     return res.redirect("/login?redirect=" + req.originalUrl);
 };
-const adminChecker = function (req, res, next) {
+const adminChecker = (req, res, next) => {
     if (req.session.user.userProperties.isAdmin) {
         return next();
     }
     return res.redirect("/login?redirect=" + req.originalUrl);
 };
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     res.locals.buildNumber = package_json_1.version;
     res.locals.user = req.session.user;
     res.locals.configFns = configFns;
@@ -89,7 +89,7 @@ app.use(function (req, res, next) {
     res.locals.vehicleFns = vehicleFns;
     next();
 });
-app.get("/", sessionChecker, function (_req, res) {
+app.get("/", sessionChecker, (_req, res) => {
     res.redirect("/dashboard");
 });
 app.use("/docs", routerDocs);
@@ -103,11 +103,11 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
     app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
 }
 app.use("/admin", sessionChecker, adminChecker, routerAdmin);
-app.all("/keepAlive", function (_req, res) {
+app.all("/keepAlive", (_req, res) => {
     res.json(true);
 });
 app.use("/login", routerLogin);
-app.get("/logout", function (req, res) {
+app.get("/logout", (req, res) => {
     if (req.session.user && req.cookies[sessionCookieName]) {
         req.session.destroy(null);
         req.session = null;
@@ -118,10 +118,10 @@ app.get("/logout", function (req, res) {
         res.redirect("/login");
     }
 });
-app.use(function (_req, _res, next) {
+app.use((_req, _res, next) => {
     next(createError(404));
 });
-app.use(function (err, req, res, _next) {
+app.use((err, req, res, _next) => {
     res.locals.message = err.message;
     res.locals.error = req.app.get("env") === "development" ? err : {};
     res.status(err.status || 500);

@@ -247,7 +247,7 @@ router.post("/doUnlockConvictionBatch", (req, res) => {
 router.get([
     "/new",
     "/new/:ticketNumber"
-], function (req, res) {
+], (req, res) => {
     if (!req.session.user.userProperties.canCreate) {
         res.redirect("/tickets/?error=accessDenied");
         return;

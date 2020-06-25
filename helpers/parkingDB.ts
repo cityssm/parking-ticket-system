@@ -1174,7 +1174,8 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
 
 
 export const getLicencePlateOwner =
-  (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number) => {
+  (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string,
+    recordDateOrBefore: number) => {
 
     const db = sqlite(dbPath, {
       readonly: true
