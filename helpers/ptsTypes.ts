@@ -91,7 +91,7 @@ export interface ConfigParkingOffences {
   };
 }
 
-interface ConfigLicencePlateCountry {
+export interface ConfigLicencePlateCountry {
   countryShortName: string;
   provinces: { [province: string]: ConfigLicencePlateProvince };
 }

@@ -96,7 +96,7 @@ exports.getParkingTicketConvictionBatch = (batchID_or_negOne) => {
 };
 exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
-    let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
+    const lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +
         " and batchID = ?")
         .get(batchID);
@@ -302,7 +302,7 @@ exports.lockConvictionBatch = (batchID, reqSession) => {
     const db = sqlite(parkingDB_1.dbPath);
     const rightNow = new Date();
     const lockDate = dateTimeFns.dateToInteger(rightNow);
-    let info = db.prepare("update ParkingTicketConvictionBatches" +
+    const info = db.prepare("update ParkingTicketConvictionBatches" +
         " set lockDate = ?," +
         " recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +

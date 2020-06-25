@@ -84,7 +84,8 @@ exports.getLicencePlateLocationProperties = (originalLicencePlateCountry, origin
     let licencePlateProvince = licencePlateProvinceDefault;
     if (exports.getProperty("licencePlateProvinces").hasOwnProperty(licencePlateCountryAlias)) {
         licencePlateProvince =
-            exports.getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+            exports.getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
+                licencePlateProvinceDefault;
     }
     return {
         licencePlateCountryAlias,

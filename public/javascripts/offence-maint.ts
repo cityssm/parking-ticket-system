@@ -153,7 +153,7 @@ type UpdateOffenceResponseJSON = {
         accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
 
       },
-      onshown(modalEle, closeModalFn) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
 
         editOffenceModalCloseFn = closeModalFn;
 
@@ -213,7 +213,7 @@ type UpdateOffenceResponseJSON = {
     };
 
     cityssm.openHtmlModal("offence-addFromList", {
-      onshow(modalEle) {
+      onshow(modalEle: HTMLElement) {
 
         let titleHTML = "";
         let selectedHTML = "";
@@ -607,7 +607,7 @@ type UpdateOffenceResponseJSON = {
         listContainerEle.appendChild(listEle);
 
       },
-      onshown(_modalEle, closeModalFn) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
         selectLocationCloseModalFn = closeModalFn;
       }
     });
@@ -690,7 +690,7 @@ type UpdateOffenceResponseJSON = {
         cityssm.clearElement(listContainerEle);
         listContainerEle.appendChild(listEle);
       },
-      onshown(_modalEle, closeModalFn) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
 
         selectBylawCloseModalFn = closeModalFn;
       }

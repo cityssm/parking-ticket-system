@@ -54,10 +54,9 @@ type UpdateBylawResponseJSON = {
         (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value = bylaw.discountOffenceAmountMin.toFixed(2);
 
       },
-      onshown(modalEle, closeModalFn) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
 
         updateOffencesCloseModalFn = closeModalFn;
-
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
       }
     });
@@ -127,7 +126,7 @@ type UpdateBylawResponseJSON = {
         (<HTMLInputElement>document.getElementById("editBylaw--bylawDescription")).value = bylaw.bylawDescription;
 
       },
-      onshown(modalEle, closeModalFn) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
 
         editBylawCloseModalFn = closeModalFn;
 
@@ -297,7 +296,7 @@ type UpdateBylawResponseJSON = {
 
     cityssm.openHtmlModal("bylaw-add", {
 
-      onshown(modalEle, closeModalFn) {
+      onshown(modalEle: HTMLElement, closeModalFn: () => void) {
         addBylawCloseModalFn = closeModalFn;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", addFn);
       }

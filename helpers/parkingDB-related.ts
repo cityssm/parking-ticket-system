@@ -401,7 +401,7 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
   // If so, use the same offenceAmount
 
   let offenceAmount = 0;
-  let discountOffenceAmount: number = 0;
+  let discountOffenceAmount = 0;
   let discountDays = 0;
 
   if (reqBody.hasOwnProperty("offenceAmount")) {

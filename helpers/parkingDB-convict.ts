@@ -137,7 +137,7 @@ export const addParkingTicketToConvictionBatch =
 
     // Ensure batch is not locked
 
-    let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
+    const lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
       " where recordDelete_timeMillis is null" +
       " and batchID = ?")
       .get(batchID);
@@ -472,7 +472,7 @@ export const lockConvictionBatch = (batchID: number, reqSession: Express.Session
 
   const lockDate = dateTimeFns.dateToInteger(rightNow);
 
-  let info = db.prepare("update ParkingTicketConvictionBatches" +
+  const info = db.prepare("update ParkingTicketConvictionBatches" +
     " set lockDate = ?," +
     " recordUpdate_userName = ?," +
     " recordUpdate_timeMillis = ?" +

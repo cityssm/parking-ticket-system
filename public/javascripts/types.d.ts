@@ -2,7 +2,7 @@ export declare type ptsGlobal = {
     loadDefaultConfigProperties?: (callbackFn: () => void) => void;
     getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void;
     getLicencePlateCountryProperties?: (originalLicencePlateCountry: string) => {
-        provinces: {
+        provinces?: {
             provinceShortName: string;
         }[];
     };

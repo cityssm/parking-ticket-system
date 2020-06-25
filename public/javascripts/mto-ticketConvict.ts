@@ -104,7 +104,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
           displayedTicketIDs.length +
           " ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "...";
       },
-      onshown(_modalEle, closeModalFn) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
         loadingCloseModalFn = closeModalFn;
         addFn();
       }
@@ -170,7 +170,8 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       trEle.innerHTML =
         ("<td>" +
-          "<a data-tooltip=\"View Ticket (Opens in New Window)\" href=\"/tickets/" + ticket.ticketID + "\" target=\"_blank\">" +
+          "<a data-tooltip=\"View Ticket (Opens in New Window)\"" +
+          " href=\"/tickets/" + ticket.ticketID + "\" target=\"_blank\">" +
           cityssm.escapeHTML(ticket.ticketNumber) +
           "</a>" +
           "</td>") +
@@ -208,8 +209,11 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     const addAllButtonEle = document.createElement("button");
     addAllButtonEle.className = "button is-fullwidth mb-3";
 
-    addAllButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
-      "<span>Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "</span>";
+    addAllButtonEle.innerHTML =
+      "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
+      "<span>" +
+      "Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") +
+      "</span>";
 
     addAllButtonEle.addEventListener("click", addAllTicketsToBatchFn);
 
@@ -440,7 +444,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
         "</td>") +
         "<td>" + batchEntry.issueDateString + "</td>" +
         ("<td>" +
-          "<span class=\"licence-plate-number is-size-6\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</span>" +
+          "<span class=\"licence-plate-number is-size-6\">" +
+          cityssm.escapeHTML(batchEntry.licencePlateNumber) +
+          "</span>" +
           "</td>") +
         (canRemove ?
           "<td class=\"has-text-right\">" +
@@ -480,7 +486,8 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       lockButtonEle.className = "button is-fullwidth mb-3";
 
-      lockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+      lockButtonEle.innerHTML =
+        "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
         "<span>Lock Batch</span>";
 
       lockButtonEle.addEventListener("click", lockBatchFn);
@@ -491,7 +498,8 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       clearButtonEle.className = "button is-fullwidth mb-3";
 
-      clearButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
+      clearButtonEle.innerHTML =
+        "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
         "<span>Clear Batch</span>";
 
       clearButtonEle.addEventListener("click", clearBatchFn);
@@ -505,7 +513,8 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       unlockButtonEle.className = "button is-fullwidth mb-3";
 
-      unlockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
+      unlockButtonEle.innerHTML =
+        "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
         "<span>Unlock Batch</span>";
 
       unlockButtonEle.addEventListener("click", unlockBatchFn);
@@ -519,7 +528,8 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       downloadButtonEle.className = "button is-fullwidth mb-3";
 
-      downloadButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
+      downloadButtonEle.innerHTML =
+        "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
         "<span>Download File for MTO</span>";
 
       downloadButtonEle.addEventListener("click", downloadBatchFn);
@@ -583,7 +593,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     };
 
     cityssm.openHtmlModal("mto-selectBatch", {
-      onshow(modalEle) {
+      onshow(modalEle: HTMLElement) {
 
         if (canUpdate) {
 
@@ -607,7 +617,10 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
             if (batchList.length === 0) {
               resultsContainerEle.className = "message is-info";
-              resultsContainerEle.innerHTML = "<div class=\"message-body\">There are no recent conviction batches.</div>";
+
+              resultsContainerEle.innerHTML =
+                "<div class=\"message-body\">There are no recent conviction batches.</div>";
+
               return;
             }
 
@@ -627,7 +640,9 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
                 (batch.lockDate ?
                   "<br /><div class=\"tags justify-flex-end\">" +
                   "<span class=\"tag\">" +
-                  "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span><span>Locked</span></span>" :
+                  "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+                  "<span>Locked</span>" +
+                  "</span>" :
                   "") +
                 "</div>" +
                 "</div>";
@@ -639,7 +654,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
           });
       },
-      onshown(_modalEle, closeModalFn) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
         selectBatchCloseModalFn = closeModalFn;
       }
     });
@@ -655,5 +670,4 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
   }
 
   renderConvictableTicketsFn();
-
 })();

@@ -21,7 +21,8 @@ exports.getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysA
         " min(t.issueDate) as issueDateMin," +
         " max(t.issueDate) as issueDateMax" +
         " from ParkingTickets t" +
-        " left join LicencePlateLookupBatchEntries e on t.licencePlateNumber = e.licencePlateNumber and (t.ticketID = e.ticketID or e.batchID = ?)" +
+        (" left join LicencePlateLookupBatchEntries e" +
+            " on t.licencePlateNumber = e.licencePlateNumber and (t.ticketID = e.ticketID or e.batchID = ?)") +
         " where t.recordDelete_timeMillis is null" +
         " and t.licencePlateCountry = 'CA'" +
         " and t.licencePlateProvince = 'ON'" +

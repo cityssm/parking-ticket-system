@@ -5,12 +5,21 @@ import type { ptsGlobal } from "./types";
 
 const pts: ptsGlobal = {};
 
+import type * as ptsTypes from "../../helpers/ptsTypes";
+
 
 // CONFIG DEFAULTS
 
 (() => {
 
-  let defaultConfigProperties: any = {};
+  let defaultConfigProperties: {
+    locationClasses?: ptsTypes.ConfigLocationClass[],
+    ticketNumber_fieldLabel?: string,
+    parkingTicketStatuses?: ptsTypes.ConfigParkingTicketStatus[],
+    licencePlateCountryAliases?: { [countryShortName: string]: string },
+    licencePlateProvinceAliases?: { [countryName: string]: { [provinceShortName: string]: string } },
+    licencePlateProvinces?: { [countryName: string]: ptsTypes.ConfigLicencePlateCountry }
+  } = {};
   let defaultConfigPropertiesIsLoaded = false;
 
   const loadConfigPropertiesFromStorage = () => {
@@ -100,9 +109,7 @@ const pts: ptsGlobal = {};
   pts.getLicencePlateCountryProperties = (originalLicencePlateCountry) => {
 
     if (!defaultConfigPropertiesIsLoaded) {
-
       return {};
-
     }
 
     const licencePlateCountryAlias =

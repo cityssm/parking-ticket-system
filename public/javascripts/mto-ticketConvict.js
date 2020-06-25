@@ -103,7 +103,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const trEle = document.createElement("tr");
             trEle.innerHTML =
                 ("<td>" +
-                    "<a data-tooltip=\"View Ticket (Opens in New Window)\" href=\"/tickets/" + ticket.ticketID + "\" target=\"_blank\">" +
+                    "<a data-tooltip=\"View Ticket (Opens in New Window)\"" +
+                    " href=\"/tickets/" + ticket.ticketID + "\" target=\"_blank\">" +
                     cityssm.escapeHTML(ticket.ticketNumber) +
                     "</a>" +
                     "</td>") +
@@ -133,8 +134,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const addAllButtonEle = document.createElement("button");
         addAllButtonEle.className = "button is-fullwidth mb-3";
-        addAllButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
-            "<span>Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") + "</span>";
+        addAllButtonEle.innerHTML =
+            "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
+                "<span>" +
+                "Add " + displayedTicketIDs.length + " Parking Ticket" + (displayedTicketIDs.length === 1 ? "" : "s") +
+                "</span>";
         addAllButtonEle.addEventListener("click", addAllTicketsToBatchFn);
         convictableTicketsContainerEle.appendChild(addAllButtonEle);
         const tableEle = document.createElement("table");
@@ -276,7 +280,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</td>") +
                 "<td>" + batchEntry.issueDateString + "</td>" +
                 ("<td>" +
-                    "<span class=\"licence-plate-number is-size-6\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</span>" +
+                    "<span class=\"licence-plate-number is-size-6\">" +
+                    cityssm.escapeHTML(batchEntry.licencePlateNumber) +
+                    "</span>" +
                     "</td>") +
                 (canRemove ?
                     "<td class=\"has-text-right\">" +
@@ -306,30 +312,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
         if (canUpdate && !currentBatch.lockDate) {
             const lockButtonEle = document.createElement("button");
             lockButtonEle.className = "button is-fullwidth mb-3";
-            lockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
-                "<span>Lock Batch</span>";
+            lockButtonEle.innerHTML =
+                "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+                    "<span>Lock Batch</span>";
             lockButtonEle.addEventListener("click", lockBatchFn);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", lockButtonEle);
             const clearButtonEle = document.createElement("button");
             clearButtonEle.className = "button is-fullwidth mb-3";
-            clearButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
-                "<span>Clear Batch</span>";
+            clearButtonEle.innerHTML =
+                "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
+                    "<span>Clear Batch</span>";
             clearButtonEle.addEventListener("click", clearBatchFn);
             tableEle.insertAdjacentElement("beforebegin", clearButtonEle);
         }
         if (canUpdate && currentBatch.lockDate && !currentBatch.sentDate) {
             const unlockButtonEle = document.createElement("button");
             unlockButtonEle.className = "button is-fullwidth mb-3";
-            unlockButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
-                "<span>Unlock Batch</span>";
+            unlockButtonEle.innerHTML =
+                "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
+                    "<span>Unlock Batch</span>";
             unlockButtonEle.addEventListener("click", unlockBatchFn);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", unlockButtonEle);
         }
         if (currentBatch.lockDate) {
             const downloadButtonEle = document.createElement("button");
             downloadButtonEle.className = "button is-fullwidth mb-3";
-            downloadButtonEle.innerHTML = "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
-                "<span>Download File for MTO</span>";
+            downloadButtonEle.innerHTML =
+                "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
+                    "<span>Download File for MTO</span>";
             downloadButtonEle.addEventListener("click", downloadBatchFn);
             tableEle.insertAdjacentElement("beforebegin", downloadButtonEle);
             tableEle.insertAdjacentHTML("beforebegin", "<a class=\"button is-fullwidth mb-3\"" +
@@ -382,7 +392,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     cityssm.clearElement(resultsContainerEle);
                     if (batchList.length === 0) {
                         resultsContainerEle.className = "message is-info";
-                        resultsContainerEle.innerHTML = "<div class=\"message-body\">There are no recent conviction batches.</div>";
+                        resultsContainerEle.innerHTML =
+                            "<div class=\"message-body\">There are no recent conviction batches.</div>";
                         return;
                     }
                     resultsContainerEle.className = "list is-hoverable";
@@ -398,7 +409,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             (batch.lockDate ?
                                 "<br /><div class=\"tags justify-flex-end\">" +
                                     "<span class=\"tag\">" +
-                                    "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span><span>Locked</span></span>" :
+                                    "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
+                                    "<span>Locked</span>" +
+                                    "</span>" :
                                 "") +
                             "</div>" +
                             "</div>";

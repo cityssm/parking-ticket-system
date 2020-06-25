@@ -87,7 +87,7 @@ export interface ConfigParkingOffences {
         pattern?: RegExp;
     };
 }
-interface ConfigLicencePlateCountry {
+export interface ConfigLicencePlateCountry {
     countryShortName: string;
     provinces: {
         [province: string]: ConfigLicencePlateProvince;

@@ -85,8 +85,11 @@ declare const pts: ptsGlobal;
               "<span class=\"sr-only\">Error</span>" +
               "</button>";
 
-            optionsTdEle.getElementsByClassName("is-ownership-match-button")[0].addEventListener("click", clickFn_markAsMatch);
-            optionsTdEle.getElementsByClassName("is-ownership-error-button")[0].addEventListener("click", clickFn_markAsError);
+            optionsTdEle.getElementsByClassName("is-ownership-match-button")[0]
+              .addEventListener("click", clickFn_markAsMatch);
+
+            optionsTdEle.getElementsByClassName("is-ownership-error-button")[0]
+              .addEventListener("click", clickFn_markAsError);
 
           }
 
@@ -166,7 +169,8 @@ declare const pts: ptsGlobal;
         });
     };
 
-    if (trEle.hasAttribute("data-is-vehicle-make-match") && trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
+    if (trEle.hasAttribute("data-is-vehicle-make-match") &&
+      trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
 
       matchFn();
 
@@ -179,7 +183,9 @@ declare const pts: ptsGlobal;
 
       cityssm.confirmModal(
         "Confirm Match",
-        "<p class=\"has-text-centered\">Are you sure the details on the parking ticket match the details on the ownership record?</p>" +
+        ("<p class=\"has-text-centered\">" +
+          "Are you sure the details on the parking ticket match the details on the ownership record?" +
+          "</p>") +
         "<div class=\"columns mt-1\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
@@ -240,9 +246,11 @@ declare const pts: ptsGlobal;
             optionsTdEle.innerHTML =
               "<div class=\"tags has-addons\">" +
               ("<span class=\"tag is-light is-danger\">" +
-                "<span class=\"icon is-small\"><i class=\"fas fa-times\" aria-hidden=\"true\"></i></span><span>Match Error</span>" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-times\" aria-hidden=\"true\"></i></span>" +
+                "<span>Match Error</span>" +
                 "</span>") +
-              "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+              "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
+              " data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
               "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
               "<span class=\"sr-only\">Remove Match</span>" +
               "</a>" +
@@ -264,7 +272,8 @@ declare const pts: ptsGlobal;
         });
     };
 
-    if (trEle.hasAttribute("data-is-vehicle-make-match") || trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
+    if (trEle.hasAttribute("data-is-vehicle-make-match") ||
+      trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
 
       const ticketVehicle = trEle.getAttribute("data-ticket-vehicle");
       const ticketExpiryDate = trEle.getAttribute("data-ticket-expiry-date");
@@ -273,7 +282,10 @@ declare const pts: ptsGlobal;
 
       cityssm.confirmModal(
         "Confirm Error",
-        "<p class=\"has-text-centered\">Are you sure you want to mark an error between the details on the parking ticket and the details on the ownership record?</p>" +
+        ("<p class=\"has-text-centered\">" +
+          "Are you sure you want to mark an error between the details on the parking ticket" +
+          " and the details on the ownership record?" +
+          "</p>") +
         "<div class=\"columns mt-1\">" +
         ("<div class=\"column has-text-centered\">" +
           "<strong>Parking Ticket</strong><br />" +
@@ -355,7 +367,9 @@ declare const pts: ptsGlobal;
                       "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
                       "<span>Match</span>" +
                       "</span>") +
-                    "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + statusRecord.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+                    "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
+                    " data-status-index=\"" + statusRecord.statusIndex + "\"" +
+                    " data-tooltip=\"Remove Match\" href=\"#\">" +
                     "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
                     "<span class=\"sr-only\">Remove Match</span>" +
                     "</a>" +
@@ -372,7 +386,7 @@ declare const pts: ptsGlobal;
       const loadingFn = () => {
 
         cityssm.openHtmlModal("loading", {
-          onshown(_modalEle, closeModalFn) {
+          onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
 
             document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
             loadingCloseModalFn = closeModalFn;
@@ -392,9 +406,6 @@ declare const pts: ptsGlobal;
         "info",
         loadingFn
       );
-
     });
-
   }
-
 })();

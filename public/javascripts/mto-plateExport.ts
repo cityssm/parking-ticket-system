@@ -259,7 +259,7 @@ type AvailableLicencePlate = {
       addAllButtonEle.addEventListener("click", () => {
 
         cityssm.openHtmlModal("loading", {
-          onshown(_modalEle, closeModalFn) {
+          onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
 
             document.getElementById("is-loading-modal-message").innerText =
               "Adding " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
@@ -543,7 +543,7 @@ type AvailableLicencePlate = {
     };
 
     cityssm.openHtmlModal("mto-selectBatch", {
-      onshow(modalEle) {
+      onshow(modalEle: HTMLElement) {
 
         resultsContainerEle = <HTMLDivElement>modalEle.getElementsByClassName("is-results-container")[0];
         fn_loadBatches();
@@ -581,7 +581,7 @@ type AvailableLicencePlate = {
           });
         }
       },
-      onshown(_modalEle, closeModalFn) {
+      onshown(_modalEle: HTMLElement, closeModalFn: () => void) {
         selectBatchCloseModalFn = closeModalFn;
       }
     });
