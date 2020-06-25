@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const formEle = document.getElementById("form--filters");
     const limitEle = document.getElementById("filter--limit");
     const offsetEle = document.getElementById("filter--offset");
     const searchResultsEle = document.getElementById("container--searchResults");
-    function getLicencePlates() {
+    const getLicencePlatesFn = () => {
         const currentLimit = parseInt(limitEle.value, 10);
         const currentOffset = parseInt(offsetEle.value, 10);
         searchResultsEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
             "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
             "<em>Loading licence plates..." +
             "</p>";
-        cityssm.postJSON("/plates/doGetLicencePlates", formEle, function (licencePlateResults) {
+        cityssm.postJSON("/plates/doGetLicencePlates", formEle, (licencePlateResults) => {
             const plateList = licencePlateResults.licencePlates;
             if (plateList.length === 0) {
                 searchResultsEle.innerHTML = "<div class=\"message is-info\">" +
@@ -34,7 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<tbody></tbody>" +
                 "</table>";
             const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
-            plateList.forEach(function (plateObj) {
+            plateList.forEach((plateObj) => {
                 const trEle = document.createElement("tr");
                 const url = "/plates/" +
                     (plateObj.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObj.licencePlateCountry)) +
@@ -90,10 +90,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     previousEle.className = "button";
                     previousEle.innerHTML = "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
                         "<span>Previous</span>";
-                    previousEle.addEventListener("click", function (clickEvent) {
+                    previousEle.addEventListener("click", (clickEvent) => {
                         clickEvent.preventDefault();
                         offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();
-                        getLicencePlates();
+                        getLicencePlatesFn();
                     });
                     paginationEle.appendChild(previousEle);
                 }
@@ -102,26 +102,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     nextEle.className = "button ml-3";
                     nextEle.innerHTML = "<span>Next Licence Plates</span>" +
                         "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
-                    nextEle.addEventListener("click", function (clickEvent) {
+                    nextEle.addEventListener("click", (clickEvent) => {
                         clickEvent.preventDefault();
                         offsetEle.value = (currentOffset + currentLimit).toString();
-                        getLicencePlates();
+                        getLicencePlatesFn();
                     });
                     paginationEle.appendChild(nextEle);
                 }
                 searchResultsEle.getElementsByClassName("level")[0].appendChild(paginationEle);
             }
         });
-    }
-    function resetOffsetAndGetLicencePlates() {
+    };
+    const resetOffsetAndGetLicencePlatesFn = () => {
         offsetEle.value = "0";
-        getLicencePlates();
-    }
-    formEle.addEventListener("submit", function (formEvent) {
+        getLicencePlatesFn();
+    };
+    formEle.addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
     });
-    document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetLicencePlates);
-    document.getElementById("filter--hasOwnerRecord").addEventListener("change", resetOffsetAndGetLicencePlates);
-    document.getElementById("filter--hasUnresolvedTickets").addEventListener("change", resetOffsetAndGetLicencePlates);
-    pts.loadDefaultConfigProperties(resetOffsetAndGetLicencePlates);
-}());
+    document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetLicencePlatesFn);
+    document.getElementById("filter--hasOwnerRecord").addEventListener("change", resetOffsetAndGetLicencePlatesFn);
+    document.getElementById("filter--hasUnresolvedTickets").addEventListener("change", resetOffsetAndGetLicencePlatesFn);
+    pts.loadDefaultConfigProperties(resetOffsetAndGetLicencePlatesFn);
+})();

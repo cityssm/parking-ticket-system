@@ -5,7 +5,7 @@ import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
 
-(function() {
+(() => {
 
   const formEle = <HTMLFormElement>document.getElementById("form--filters");
 
@@ -15,7 +15,7 @@ declare const pts: ptsGlobal;
   const searchResultsEle = document.getElementById("container--searchResults");
 
 
-  function getLicencePlates() {
+  const getLicencePlatesFn = () => {
 
     const currentLimit = parseInt(limitEle.value, 10);
     const currentOffset = parseInt(offsetEle.value, 10);
@@ -25,7 +25,7 @@ declare const pts: ptsGlobal;
       "<em>Loading licence plates..." +
       "</p>";
 
-    cityssm.postJSON("/plates/doGetLicencePlates", formEle, function(licencePlateResults) {
+    cityssm.postJSON("/plates/doGetLicencePlates", formEle, (licencePlateResults) => {
 
       const plateList: any[] = licencePlateResults.licencePlates;
 
@@ -39,7 +39,6 @@ declare const pts: ptsGlobal;
           "</div>";
 
         return;
-
       }
 
       searchResultsEle.innerHTML = "<table class=\"table is-fullwidth is-striped is-hoverable\">" +
@@ -55,7 +54,7 @@ declare const pts: ptsGlobal;
 
       const tbodyEle = searchResultsEle.getElementsByTagName("tbody")[0];
 
-      plateList.forEach(function(plateObj) {
+      plateList.forEach((plateObj) => {
 
         const trEle = document.createElement("tr");
 
@@ -124,16 +123,15 @@ declare const pts: ptsGlobal;
           previousEle.className = "button";
           previousEle.innerHTML = "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
             "<span>Previous</span>";
-          previousEle.addEventListener("click", function(clickEvent) {
+          previousEle.addEventListener("click", (clickEvent) => {
 
             clickEvent.preventDefault();
             offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();
-            getLicencePlates();
+            getLicencePlatesFn();
 
           });
 
           paginationEle.appendChild(previousEle);
-
         }
 
         if (currentLimit + currentOffset < licencePlateResults.count) {
@@ -142,45 +140,39 @@ declare const pts: ptsGlobal;
           nextEle.className = "button ml-3";
           nextEle.innerHTML = "<span>Next Licence Plates</span>" +
             "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
-          nextEle.addEventListener("click", function(clickEvent) {
+
+          nextEle.addEventListener("click", (clickEvent) => {
 
             clickEvent.preventDefault();
             offsetEle.value = (currentOffset + currentLimit).toString();
-            getLicencePlates();
-
+            getLicencePlatesFn();
           });
 
           paginationEle.appendChild(nextEle);
-
         }
 
         searchResultsEle.getElementsByClassName("level")[0].appendChild(paginationEle);
-
       }
-
     });
+  };
 
 
-  }
-
-
-  function resetOffsetAndGetLicencePlates() {
+  const resetOffsetAndGetLicencePlatesFn = () => {
 
     offsetEle.value = "0";
-    getLicencePlates();
+    getLicencePlatesFn();
+  };
 
-  }
 
-
-  formEle.addEventListener("submit", function(formEvent) {
+  formEle.addEventListener("submit", (formEvent) => {
     formEvent.preventDefault();
   });
 
 
-  document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetLicencePlates);
-  document.getElementById("filter--hasOwnerRecord").addEventListener("change", resetOffsetAndGetLicencePlates);
-  document.getElementById("filter--hasUnresolvedTickets").addEventListener("change", resetOffsetAndGetLicencePlates);
+  document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetLicencePlatesFn);
+  document.getElementById("filter--hasOwnerRecord").addEventListener("change", resetOffsetAndGetLicencePlatesFn);
+  document.getElementById("filter--hasUnresolvedTickets").addEventListener("change", resetOffsetAndGetLicencePlatesFn);
 
-  pts.loadDefaultConfigProperties(resetOffsetAndGetLicencePlates);
+  pts.loadDefaultConfigProperties(resetOffsetAndGetLicencePlatesFn);
 
-}());
+})();

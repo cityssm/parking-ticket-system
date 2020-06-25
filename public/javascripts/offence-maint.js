@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const locationClassMap = new Map();
     const offenceMap = new Map();
     const offenceAccountNumberPatternString = exports.accountNumberPattern;
@@ -17,47 +17,47 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const bylawTextEle = document.getElementById("offenceFilter--bylawText");
     let bylawNumberFilterIsSet = false;
     let bylawNumberFilter = "";
-    function getOffenceMapKey(bylawNumber, locationKey) {
+    const getOffenceMapKeyFn = (bylawNumber, locationKey) => {
         return bylawNumber + "::::" + locationKey;
-    }
-    function loadOffenceMap(offenceList) {
+    };
+    const loadOffenceMapFn = (offenceList) => {
         offenceMap.clear();
         for (const offence of offenceList) {
-            const offenceMapKey = getOffenceMapKey(offence.bylawNumber, offence.locationKey);
+            const offenceMapKey = getOffenceMapKeyFn(offence.bylawNumber, offence.locationKey);
             offenceMap.set(offenceMapKey, offence);
         }
-    }
-    function openEditOffenceModal(clickEvent) {
+    };
+    const openEditOffenceModalFn = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonEle = clickEvent.currentTarget;
-        const offenceMapKey = getOffenceMapKey(buttonEle.getAttribute("data-bylaw-number"), buttonEle.getAttribute("data-location-key"));
+        const offenceMapKey = getOffenceMapKeyFn(buttonEle.getAttribute("data-bylaw-number"), buttonEle.getAttribute("data-location-key"));
         const offence = offenceMap.get(offenceMapKey);
         const location = locationMap.get(offence.locationKey);
         const bylaw = bylawMap.get(offence.bylawNumber);
         let editOffenceModalCloseFn;
-        const deleteFn = function () {
+        const deleteFn = () => {
             cityssm.postJSON("/admin/doDeleteOffence", {
                 bylawNumber: offence.bylawNumber,
                 locationKey: offence.locationKey
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
-                    loadOffenceMap(responseJSON.offences);
+                    loadOffenceMapFn(responseJSON.offences);
                     editOffenceModalCloseFn();
-                    renderOffences();
+                    renderOffencesFn();
                 }
             });
         };
-        const confirmDeleteFn = function (deleteClickEvent) {
+        const confirmDeleteFn = (deleteClickEvent) => {
             deleteClickEvent.preventDefault();
             cityssm.confirmModal("Remove Offence?", "Are you sure you want to remove this offence?", "Yes, Remove Offence", "warning", deleteFn);
         };
-        const submitFn = function (formEvent) {
+        const submitFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/admin/doUpdateOffence", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/admin/doUpdateOffence", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
-                    loadOffenceMap(responseJSON.offences);
+                    loadOffenceMapFn(responseJSON.offences);
                     editOffenceModalCloseFn();
-                    renderOffences();
+                    renderOffencesFn();
                 }
             });
         };
@@ -73,9 +73,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("offenceEdit--bylawNumberSpan").innerText = bylaw.bylawNumber;
                 document.getElementById("offenceEdit--bylawDescription").innerText = bylaw.bylawDescription;
                 document.getElementById("offenceEdit--parkingOffence").value = offence.parkingOffence;
-                document.getElementById("offenceEdit--offenceAmount").value = offence.offenceAmount.toFixed(2);
-                document.getElementById("offenceEdit--discountOffenceAmount").value = offence.discountOffenceAmount.toFixed(2);
-                document.getElementById("offenceEdit--discountDays").value = offence.discountDays.toString();
+                document.getElementById("offenceEdit--offenceAmount").value =
+                    offence.offenceAmount.toFixed(2);
+                document.getElementById("offenceEdit--discountOffenceAmount").value =
+                    offence.discountOffenceAmount.toFixed(2);
+                document.getElementById("offenceEdit--discountDays").value =
+                    offence.discountDays.toString();
                 const accountNumberEle = document.getElementById("offenceEdit--accountNumber");
                 accountNumberEle.value = offence.accountNumber;
                 accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
@@ -86,30 +89,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
             }
         });
-    }
-    function addOffence(bylawNumber, locationKey, returnAndRenderOffences, callbackFn) {
+    };
+    const addOffenceFn = (bylawNumber, locationKey, returnAndRenderOffences, callbackFn) => {
         cityssm.postJSON("/admin/doAddOffence", {
             bylawNumber,
             locationKey,
             returnOffences: returnAndRenderOffences
-        }, function (responseJSON) {
+        }, (responseJSON) => {
             if (responseJSON.success && responseJSON.offences && returnAndRenderOffences) {
-                loadOffenceMap(responseJSON.offences);
-                renderOffences();
+                loadOffenceMapFn(responseJSON.offences);
+                renderOffencesFn();
             }
             if (callbackFn) {
                 callbackFn(responseJSON);
             }
         });
-    }
-    function openAddOffenceFromListModal() {
+    };
+    const openAddOffenceFromListModalFn = () => {
         let doRefreshOnClose = false;
-        const addFn = function (clickEvent) {
+        const addFn = (clickEvent) => {
             clickEvent.preventDefault();
             const linkEle = clickEvent.currentTarget;
             const bylawNumber = linkEle.getAttribute("data-bylaw-number");
             const locationKey = linkEle.getAttribute("data-location-key");
-            addOffence(bylawNumber, locationKey, false, function (responseJSON) {
+            addOffenceFn(bylawNumber, locationKey, false, (responseJSON) => {
                 if (responseJSON.success) {
                     linkEle.remove();
                     doRefreshOnClose = true;
@@ -143,8 +146,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 listEle.className = "panel";
                 let displayCount = 0;
                 if (locationKeyFilterIsSet) {
-                    bylawMap.forEach(function (bylaw) {
-                        const offenceMapKey = getOffenceMapKey(bylaw.bylawNumber, locationKeyFilter);
+                    bylawMap.forEach((bylaw) => {
+                        const offenceMapKey = getOffenceMapKeyFn(bylaw.bylawNumber, locationKeyFilter);
                         if (offenceMap.has(offenceMapKey)) {
                             return;
                         }
@@ -160,8 +163,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     });
                 }
                 else {
-                    locationMap.forEach(function (location) {
-                        const offenceMapKey = getOffenceMapKey(bylawNumberFilter, location.locationKey);
+                    locationMap.forEach((location) => {
+                        const offenceMapKey = getOffenceMapKeyFn(bylawNumberFilter, location.locationKey);
                         if (offenceMap.has(offenceMapKey)) {
                             return;
                         }
@@ -193,21 +196,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
             },
             onremoved() {
                 if (doRefreshOnClose) {
-                    cityssm.postJSON("/offences/doGetAllOffences", {}, function (offenceList) {
-                        loadOffenceMap(offenceList);
-                        renderOffences();
+                    cityssm.postJSON("/offences/doGetAllOffences", {}, (offenceList) => {
+                        loadOffenceMapFn(offenceList);
+                        renderOffencesFn();
                     });
                 }
             }
         });
-    }
-    function renderOffences() {
+    };
+    const renderOffencesFn = () => {
         const tbodyEle = document.createElement("tbody");
         let matchCount = 0;
         const displayLimit = (limitResultsCheckboxEle.checked ?
             parseInt(limitResultsCheckboxEle.value, 10) :
             offenceMap.size);
-        offenceMap.forEach(function (offence) {
+        offenceMap.forEach((offence) => {
             if (matchCount >= displayLimit) {
                 return;
             }
@@ -263,7 +266,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "<span>Edit</span>" +
                         "</button>" +
                         "</td>");
-            trEle.getElementsByTagName("button")[0].addEventListener("click", openEditOffenceModal);
+            trEle.getElementsByTagName("button")[0].addEventListener("click", openEditOffenceModalFn);
             tbodyEle.appendChild(trEle);
         });
         cityssm.clearElement(resultsEle);
@@ -291,8 +294,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<div class=\"message-body has-text-centered\">Limit Reached</div>" +
                 "</div>");
         }
-    }
-    document.getElementById("is-add-offence-button").addEventListener("click", function (clickEvent) {
+    };
+    document.getElementById("is-add-offence-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         if (locationKeyFilterIsSet && bylawNumberFilterIsSet) {
             const bylaw = bylawMap.get(bylawNumberFilter);
@@ -313,8 +316,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     cityssm.escapeHTML(bylaw.bylawDescription) +
                     "</span>" +
                     "</div>") +
-                "</div>", "Yes, Create Offence", "info", function () {
-                addOffence(bylawNumberFilter, locationKeyFilter, true, function (responseJSON) {
+                "</div>", "Yes, Create Offence", "info", () => {
+                addOffenceFn(bylawNumberFilter, locationKeyFilter, true, (responseJSON) => {
                     if (!responseJSON.success) {
                         cityssm.alertModal("Offence Not Added", responseJSON.message, "OK", "danger");
                     }
@@ -325,34 +328,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         }
         else if (locationKeyFilterIsSet || bylawNumberFilterIsSet) {
-            openAddOffenceFromListModal();
+            openAddOffenceFromListModalFn();
         }
         else {
             cityssm.alertModal("How to Create a New Offence", "To add an offence, use the main filters to select either a location, a by-law, or both.", "OK", "info");
         }
     });
-    function clearLocationFilter() {
+    const clearLocationFilterFn = () => {
         locationInputEle.value = "";
         cityssm.clearElement(locationTextEle);
         locationKeyFilter = "";
         locationKeyFilterIsSet = false;
-    }
-    function openSelectLocationFilterModal() {
+    };
+    const openSelectLocationFilterModalFn = () => {
         let selectLocationCloseModalFn;
-        const selectFn = function (clickEvent) {
+        const selectFn = (clickEvent) => {
             clickEvent.preventDefault();
             const location = locationMap.get(clickEvent.currentTarget.getAttribute("data-location-key"));
             locationKeyFilterIsSet = true;
             locationKeyFilter = location.locationKey;
             locationInputEle.value = location.locationName;
             selectLocationCloseModalFn();
-            renderOffences();
+            renderOffencesFn();
         };
         cityssm.openHtmlModal("location-select", {
             onshow() {
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
-                locationMap.forEach(function (location) {
+                locationMap.forEach((location) => {
                     const linkEle = document.createElement("a");
                     linkEle.className = "panel-block is-block";
                     linkEle.setAttribute("data-location-key", location.locationKey);
@@ -378,25 +381,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 selectLocationCloseModalFn = closeModalFn;
             }
         });
-    }
-    locationInputEle.addEventListener("dblclick", openSelectLocationFilterModal);
-    document.getElementById("is-select-location-filter-button").addEventListener("click", openSelectLocationFilterModal);
-    document.getElementById("is-clear-location-filter-button").addEventListener("click", function () {
-        clearLocationFilter();
-        renderOffences();
+    };
+    locationInputEle.addEventListener("dblclick", openSelectLocationFilterModalFn);
+    document.getElementById("is-select-location-filter-button").addEventListener("click", openSelectLocationFilterModalFn);
+    document.getElementById("is-clear-location-filter-button").addEventListener("click", () => {
+        clearLocationFilterFn();
+        renderOffencesFn();
     });
     if (!locationKeyFilterIsSet) {
-        clearLocationFilter();
+        clearLocationFilterFn();
     }
-    function clearBylawFilter() {
+    const clearBylawFilterFn = () => {
         bylawInputEle.value = "";
         cityssm.clearElement(bylawTextEle);
         bylawNumberFilter = "";
         bylawNumberFilterIsSet = false;
-    }
-    function openSelectBylawFilterModal() {
+    };
+    const openSelectBylawFilterModalFn = () => {
         let selectBylawCloseModalFn;
-        const selectFn = function (clickEvent) {
+        const selectFn = (clickEvent) => {
             clickEvent.preventDefault();
             const bylaw = bylawMap.get(clickEvent.currentTarget.getAttribute("data-bylaw-number"));
             bylawNumberFilterIsSet = true;
@@ -404,13 +407,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             bylawInputEle.value = bylaw.bylawNumber;
             bylawTextEle.innerText = bylaw.bylawDescription;
             selectBylawCloseModalFn();
-            renderOffences();
+            renderOffencesFn();
         };
         cityssm.openHtmlModal("bylaw-select", {
             onshow() {
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
-                bylawMap.forEach(function (bylaw) {
+                bylawMap.forEach((bylaw) => {
                     const linkEle = document.createElement("a");
                     linkEle.className = "panel-block is-block";
                     linkEle.setAttribute("data-bylaw-number", bylaw.bylawNumber);
@@ -428,17 +431,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 selectBylawCloseModalFn = closeModalFn;
             }
         });
-    }
-    bylawInputEle.addEventListener("dblclick", openSelectBylawFilterModal);
-    document.getElementById("is-select-bylaw-filter-button").addEventListener("click", openSelectBylawFilterModal);
-    document.getElementById("is-clear-bylaw-filter-button").addEventListener("click", function () {
-        clearBylawFilter();
-        renderOffences();
+    };
+    bylawInputEle.addEventListener("dblclick", openSelectBylawFilterModalFn);
+    document.getElementById("is-select-bylaw-filter-button").addEventListener("click", openSelectBylawFilterModalFn);
+    document.getElementById("is-clear-bylaw-filter-button").addEventListener("click", () => {
+        clearBylawFilterFn();
+        renderOffencesFn();
     });
     if (!bylawNumberFilterIsSet) {
-        clearBylawFilter();
+        clearBylawFilterFn();
     }
-    limitResultsCheckboxEle.addEventListener("change", renderOffences);
+    limitResultsCheckboxEle.addEventListener("change", renderOffencesFn);
     for (const location of exports.locations) {
         locationMap.set(location.locationKey, location);
     }
@@ -447,12 +450,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
         bylawMap.set(bylaw.bylawNumber, bylaw);
     }
     delete exports.bylaws;
-    loadOffenceMap(exports.offences);
+    loadOffenceMapFn(exports.offences);
     delete exports.offences;
-    pts.getDefaultConfigProperty("locationClasses", function (locationClassList) {
+    pts.getDefaultConfigProperty("locationClasses", (locationClassList) => {
         for (const locationClass of locationClassList) {
             locationClassMap.set(locationClass.locationClassKey, locationClass);
         }
-        renderOffences();
+        renderOffencesFn();
     });
-}());
+})();

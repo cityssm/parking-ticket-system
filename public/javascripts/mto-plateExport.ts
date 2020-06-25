@@ -504,9 +504,7 @@ type AvailableLicencePlate = {
           const listEle = document.createElement("div");
           listEle.className = "panel";
 
-          for (let index = 0; index < batchList.length; index += 1) {
-
-            const batch = batchList[index];
+          for (const batch of batchList) {
 
             const linkEle = document.createElement("a");
             linkEle.className = "panel-block is-block";
