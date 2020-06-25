@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const ticketID = document.getElementById("ticket--ticketID").value;
     const isCreate = (ticketID === "");
     const formMessageEle = document.getElementById("container--form-message");
     let hasUnsavedChanges = false;
-    const setUnsavedChangesFn = function () {
+    const setUnsavedChangesFn = () => {
         cityssm.enableNavBlocker();
         hasUnsavedChanges = true;
         formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
@@ -17,14 +17,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
     for (const inputEle of inputEles) {
         inputEle.addEventListener("change", setUnsavedChangesFn);
     }
-    document.getElementById("form--ticket").addEventListener("submit", function (formEvent) {
+    document.getElementById("form--ticket").addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
         const ticketNumber = document.getElementById("ticket--ticketNumber").value;
         formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
             "<span>Saving ticket... </span>" +
             " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
             "</div>";
-        cityssm.postJSON((isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"), formEvent.currentTarget, function (responseJSON) {
+        cityssm.postJSON((isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"), formEvent.currentTarget, (responseJSON) => {
             if (responseJSON.success) {
                 cityssm.disableNavBlocker();
                 hasUnsavedChanges = false;
@@ -49,12 +49,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     });
     if (!isCreate) {
-        document.getElementById("is-delete-ticket-button").addEventListener("click", function (clickEvent) {
+        document.getElementById("is-delete-ticket-button").addEventListener("click", (clickEvent) => {
             clickEvent.preventDefault();
-            cityssm.confirmModal("Delete Ticket?", "Are you sure you want to delete this ticket record?", "Yes, Delete Ticket", "danger", function () {
+            cityssm.confirmModal("Delete Ticket?", "Are you sure you want to delete this ticket record?", "Yes, Delete Ticket", "danger", () => {
                 cityssm.postJSON("/tickets/doDeleteTicket", {
                     ticketID
-                }, function (responseJSON) {
+                }, (responseJSON) => {
                     if (responseJSON.success) {
                         window.location.href = "/tickets";
                     }
@@ -62,21 +62,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         });
     }
-    pts.getDefaultConfigProperty("locationClasses", function (locationClassesList) {
+    pts.getDefaultConfigProperty("locationClasses", (locationClassesList) => {
         let locationLookupCloseModalFn;
         const locationClassMap = new Map();
         let locationList = [];
         for (const locationClassObj of locationClassesList) {
             locationClassMap.set(locationClassObj.locationClassKey, locationClassObj);
         }
-        const clearLocationFn = function (clickEvent) {
+        const clearLocationFn = (clickEvent) => {
             clickEvent.preventDefault();
             document.getElementById("ticket--locationKey").value = "";
             document.getElementById("ticket--locationName").value = "";
             locationLookupCloseModalFn();
             locationList = [];
         };
-        const setLocationFn = function (clickEvent) {
+        const setLocationFn = (clickEvent) => {
             clickEvent.preventDefault();
             const locationObj = locationList[parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10)];
             document.getElementById("ticket--locationKey").value = locationObj.locationKey;
@@ -84,12 +84,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             locationLookupCloseModalFn();
             locationList = [];
         };
-        const populateLocationsFn = function () {
-            cityssm.postJSON("/offences/doGetAllLocations", {}, function (locationListRes) {
+        const populateLocationsFn = () => {
+            cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListRes) => {
                 locationList = locationListRes;
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
-                locationList.forEach(function (locationObj, index) {
+                locationList.forEach((locationObj, index) => {
                     const locationClassObj = locationClassMap.get(locationObj.locationClassKey);
                     const linkEle = document.createElement("a");
                     linkEle.className = "panel-block is-block";
@@ -112,7 +112,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 containerEle.insertAdjacentElement("beforeend", listEle);
             });
         };
-        const openLocationLookupModalFn = function (clickEvent) {
+        const openLocationLookupModalFn = (clickEvent) => {
             clickEvent.preventDefault();
             cityssm.openHtmlModal("ticket-setLocation", {
                 onshown(_modalEle, closeModalFn) {
@@ -132,7 +132,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let bylawLookupCloseModalFn;
         let offenceList = [];
         let listItemEles = [];
-        const clearBylawOffenceFn = function (clickEvent) {
+        const clearBylawOffenceFn = (clickEvent) => {
             clickEvent.preventDefault();
             document.getElementById("ticket--bylawNumber").value = "";
             const offenceAmountEle = document.getElementById("ticket--offenceAmount");
@@ -157,7 +157,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             bylawLookupCloseModalFn();
             offenceList = [];
         };
-        const setBylawOffenceFn = function (clickEvent) {
+        const setBylawOffenceFn = (clickEvent) => {
             clickEvent.preventDefault();
             const offenceObj = offenceList[parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10)];
             document.getElementById("ticket--bylawNumber").value = offenceObj.bylawNumber;
@@ -183,15 +183,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
             bylawLookupCloseModalFn();
             offenceList = [];
         };
-        const populateBylawsFn = function () {
+        const populateBylawsFn = () => {
             const locationKey = document.getElementById("ticket--locationKey").value;
             cityssm.postJSON("/offences/doGetOffencesByLocation", {
                 locationKey
-            }, function (offenceListRes) {
+            }, (offenceListRes) => {
                 offenceList = offenceListRes;
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
-                offenceList.forEach(function (offenceObj, index) {
+                offenceList.forEach((offenceObj, index) => {
                     const linkEle = document.createElement("a");
                     linkEle.className = "panel-block is-block";
                     linkEle.setAttribute("data-index", index.toString());
@@ -200,7 +200,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     linkEle.innerHTML =
                         "<div class=\"columns\">" +
                             ("<div class=\"column\">" +
-                                "<span class=\"has-text-weight-semibold\">" + cityssm.escapeHTML(offenceObj.bylawNumber) + "</span><br />" +
+                                "<span class=\"has-text-weight-semibold\">" +
+                                cityssm.escapeHTML(offenceObj.bylawNumber) +
+                                "</span><br />" +
                                 "<small>" + cityssm.escapeHTML(offenceObj.bylawDescription) + "</small>" +
                                 "</div>") +
                             ("<div class=\"column is-narrow has-text-weight-semibold\">" +
@@ -215,9 +217,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 containerEle.appendChild(listEle);
             });
         };
-        const filterBylawsFn = function (keyupEvent) {
+        const filterBylawsFn = (keyupEvent) => {
             const searchStringSplit = keyupEvent.currentTarget.value.trim().toLowerCase().split(" ");
-            offenceList.forEach(function (offenceRecord, recordIndex) {
+            offenceList.forEach((offenceRecord, recordIndex) => {
                 let displayRecord = true;
                 for (const searchPiece of searchStringSplit) {
                     if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 && offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
@@ -233,7 +235,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        const openBylawLookupModalFn = function (clickEvent) {
+        const openBylawLookupModalFn = (clickEvent) => {
             clickEvent.preventDefault();
             cityssm.openHtmlModal("ticket-setBylawOffence", {
                 onshown(_modalEle, closeModalFn) {
@@ -254,7 +256,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     {
         const licencePlateIsMissingCheckboxEle = document.getElementById("ticket--licencePlateIsMissing");
-        licencePlateIsMissingCheckboxEle.addEventListener("change", function () {
+        licencePlateIsMissingCheckboxEle.addEventListener("change", () => {
             if (licencePlateIsMissingCheckboxEle.checked) {
                 document.getElementById("ticket--licencePlateCountry").removeAttribute("required");
                 document.getElementById("ticket--licencePlateProvince").removeAttribute("required");
@@ -267,7 +269,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
-    const populateLicencePlateProvinceDatalistFn = function () {
+    const populateLicencePlateProvinceDatalistFn = () => {
         const datalistEle = document.getElementById("datalist--licencePlateProvince");
         cityssm.clearElement(datalistEle);
         const countryProperties = pts.getLicencePlateCountryProperties(document.getElementById("ticket--licencePlateCountry").value);
@@ -283,7 +285,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     document.getElementById("ticket--licencePlateCountry")
         .addEventListener("change", populateLicencePlateProvinceDatalistFn);
     pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFn);
-    const unlockFieldFn = function (unlockBtnClickEvent) {
+    const unlockFieldFn = (unlockBtnClickEvent) => {
         unlockBtnClickEvent.preventDefault();
         const unlockBtnEle = unlockBtnClickEvent.currentTarget;
         const inputTag = unlockBtnEle.getAttribute("data-unlock");
@@ -297,4 +299,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
     for (const unlockBtnEle of unlockBtnEles) {
         unlockBtnEle.addEventListener("click", unlockFieldFn);
     }
-}());
+})();

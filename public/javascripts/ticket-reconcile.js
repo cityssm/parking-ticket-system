@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     pts.initializeToggleHiddenLinks(document.getElementsByTagName("main")[0]);
-    function clickFn_acknowledgeError(clickEvent) {
+    const clickFn_acknowledgeError = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON("/tickets/doAcknowledgeLookupError", {
             batchID,
             logIndex
-        }, function (responseJSON) {
+        }, (responseJSON) => {
             if (responseJSON.success) {
                 const tdEle = buttonEle.closest("td");
                 cityssm.clearElement(tdEle);
@@ -24,21 +24,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 buttonEle.removeAttribute("disabled");
             }
         });
-    }
+    };
     const acknowledgeButtonEles = document.getElementsByClassName("is-acknowledge-error-button");
     for (const acknowledgeButtonEle of acknowledgeButtonEles) {
         acknowledgeButtonEle.addEventListener("click", clickFn_acknowledgeError);
     }
-    function clickFn_clearStatus(clickEvent) {
+    const clickFn_clearStatus = (clickEvent) => {
         clickEvent.preventDefault();
         const anchorEle = clickEvent.currentTarget;
         const optionsTdEle = anchorEle.closest("td");
         const trEle = optionsTdEle.closest("tr");
-        const clearFn = function () {
+        const clearFn = () => {
             cityssm.postJSON("/tickets/doDeleteStatus", {
                 ticketID: trEle.getAttribute("data-ticket-id"),
                 statusIndex: anchorEle.getAttribute("data-status-index")
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     cityssm.clearElement(optionsTdEle);
                     optionsTdEle.classList.remove("has-width-200");
@@ -56,13 +56,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.confirmModal("Clear Status", "Are you sure you want to undo this status?", "Yes, Remove the Status", "warning", clearFn);
-    }
-    function clickFn_markAsMatch(clickEvent) {
+    };
+    const clickFn_markAsMatch = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonEle = clickEvent.currentTarget;
         const optionsTdEle = buttonEle.closest("td");
         const trEle = optionsTdEle.closest("tr");
-        const matchFn = function () {
+        const matchFn = () => {
             buttonEle.setAttribute("disabled", "disabled");
             const licencePlateCountry = trEle.getAttribute("data-licence-plate-country");
             const licencePlateProvince = trEle.getAttribute("data-licence-plate-province");
@@ -75,15 +75,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 licencePlateNumber,
                 ticketID,
                 recordDate
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     cityssm.clearElement(optionsTdEle);
                     optionsTdEle.innerHTML =
                         "<div class=\"tags has-addons\">" +
                             ("<span class=\"tag is-light is-success\">" +
-                                "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span><span>Match</span>" +
+                                "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+                                "<span>Match</span>" +
                                 "</span>") +
-                            "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+                            "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
+                            " data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
                             "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
                             "<span class=\"sr-only\">Remove Match</span>" +
                             "</a>" +
@@ -122,13 +124,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>") +
                 "</div>", "Yes, Confirm Match", "warning", matchFn);
         }
-    }
-    function clickFn_markAsError(clickEvent) {
+    };
+    const clickFn_markAsError = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonEle = clickEvent.currentTarget;
         const optionsTdEle = buttonEle.closest("td");
         const trEle = optionsTdEle.closest("tr");
-        const errorFn = function () {
+        const errorFn = () => {
             buttonEle.setAttribute("disabled", "disabled");
             const licencePlateCountry = trEle.getAttribute("data-licence-plate-country");
             const licencePlateProvince = trEle.getAttribute("data-licence-plate-province");
@@ -141,7 +143,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 licencePlateNumber,
                 ticketID,
                 recordDate
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     cityssm.clearElement(optionsTdEle);
                     optionsTdEle.innerHTML =
@@ -188,7 +190,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         else {
             errorFn();
         }
-    }
+    };
     const matchButtonEles = document.getElementsByClassName("is-ownership-match-button");
     for (const matchButtonEle of matchButtonEles) {
         matchButtonEle.addEventListener("click", clickFn_markAsMatch);
@@ -199,11 +201,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     const quickReconcilieButtonEle = document.getElementById("is-quick-reconcile-matches-button");
     if (quickReconcilieButtonEle) {
-        quickReconcilieButtonEle.addEventListener("click", function (clickEvent) {
+        quickReconcilieButtonEle.addEventListener("click", (clickEvent) => {
             clickEvent.preventDefault();
             let loadingCloseModalFn;
-            const reconcileFn = function () {
-                cityssm.postJSON("/tickets/doQuickReconcileMatches", {}, function (responseJSON) {
+            const reconcileFn = () => {
+                cityssm.postJSON("/tickets/doQuickReconcileMatches", {}, (responseJSON) => {
                     loadingCloseModalFn();
                     if (responseJSON.success) {
                         cityssm.alertModal("Quick Reconcile Complete", (responseJSON.statusRecords.length === 1 ?
@@ -230,7 +232,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     }
                 });
             };
-            const loadingFn = function () {
+            const loadingFn = () => {
                 cityssm.openHtmlModal("loading", {
                     onshown(_modalEle, closeModalFn) {
                         document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
@@ -243,4 +245,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 " with matching vehicle makes and plate expiry dates as matched?", "Yes, Mark All Matches as Matched", "info", loadingFn);
         });
     }
-}());
+})();

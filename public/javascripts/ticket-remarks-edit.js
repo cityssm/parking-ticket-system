@@ -1,37 +1,37 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const ticketID = document.getElementById("ticket--ticketID").value;
     const remarkPanelEle = document.getElementById("is-remark-panel");
     let remarkList = exports.ticketRemarks;
     delete exports.ticketRemarks;
-    const clearRemarkPanelFn = function () {
+    const clearRemarkPanelFn = () => {
         const panelBlockEles = remarkPanelEle.getElementsByClassName("panel-block");
         while (panelBlockEles.length > 0) {
             panelBlockEles[0].remove();
         }
     };
-    const confirmDeleteRemarkFn = function (clickEvent) {
+    const confirmDeleteRemarkFn = (clickEvent) => {
         const remarkIndex = clickEvent.currentTarget.getAttribute("data-remark-index");
-        cityssm.confirmModal("Delete Remark?", "Are you sure you want to delete this remark?", "Yes, Delete", "warning", function () {
+        cityssm.confirmModal("Delete Remark?", "Are you sure you want to delete this remark?", "Yes, Delete", "warning", () => {
             cityssm.postJSON("/tickets/doDeleteRemark", {
                 ticketID,
                 remarkIndex
-            }, function (resultJSON) {
+            }, (resultJSON) => {
                 if (resultJSON.success) {
                     getRemarksFn();
                 }
             });
         });
     };
-    const openEditRemarkModalFn = function (clickEvent) {
+    const openEditRemarkModalFn = (clickEvent) => {
         clickEvent.preventDefault();
         let editRemarkCloseModalFn;
         const index = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         const remarkObj = remarkList[index];
-        const submitFn = function (formEvent) {
+        const submitFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     editRemarkCloseModalFn();
                     getRemarksFn();
@@ -41,7 +41,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.openHtmlModal("ticket-editRemark", {
             onshow(modalEle) {
                 document.getElementById("editRemark--ticketID").value = ticketID;
-                document.getElementById("editRemark--remarkIndex").value = remarkObj.remarkIndex;
+                document.getElementById("editRemark--remarkIndex").value = remarkObj.remarkIndex.toString();
                 document.getElementById("editRemark--remark").value = remarkObj.remark;
                 document.getElementById("editRemark--remarkDateString").value = remarkObj.remarkDateString;
                 document.getElementById("editRemark--remarkTimeString").value = remarkObj.remarkTimeString;
@@ -52,7 +52,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     };
-    const populateRemarksPanelFn = function () {
+    const populateRemarksPanelFn = () => {
         clearRemarkPanelFn();
         if (remarkList.length === 0) {
             remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
@@ -64,8 +64,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>");
             return;
         }
-        for (let index = 0; index < remarkList.length; index += 1) {
-            const remarkObj = remarkList[index];
+        remarkList.forEach((remarkObj, index) => {
             const panelBlockEle = document.createElement("div");
             panelBlockEle.className = "panel-block is-block";
             panelBlockEle.innerHTML = "<div class=\"columns\">" +
@@ -105,9 +104,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     .addEventListener("click", confirmDeleteRemarkFn);
             }
             remarkPanelEle.appendChild(panelBlockEle);
-        }
+        });
     };
-    const getRemarksFn = function () {
+    const getRemarksFn = () => {
         clearRemarkPanelFn();
         remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
             "<p class=\"has-text-centered has-text-grey-lighter\">" +
@@ -117,17 +116,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</div>");
         cityssm.postJSON("/tickets/doGetRemarks", {
             ticketID
-        }, function (resultList) {
-            remarkList = resultList;
+        }, (responseRemarkList) => {
+            remarkList = responseRemarkList;
             populateRemarksPanelFn();
         });
     };
-    document.getElementById("is-add-remark-button").addEventListener("click", function (clickEvent) {
+    document.getElementById("is-add-remark-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         let addRemarkCloseModalFn;
-        const submitFn = function (formEvent) {
+        const submitFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/tickets/doAddRemark", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/tickets/doAddRemark", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     addRemarkCloseModalFn();
                     getRemarksFn();
@@ -145,4 +144,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     });
     populateRemarksPanelFn();
-}());
+})();

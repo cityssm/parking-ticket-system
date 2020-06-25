@@ -7,7 +7,7 @@ declare const pts: ptsGlobal;
 import type * as ptsTypes from "../../helpers/ptsTypes";
 
 
-(function() {
+(() => {
 
   const ticketID = (<HTMLInputElement>document.getElementById("ticket--ticketID")).value;
   const isCreate = (ticketID === "");
@@ -20,7 +20,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   let hasUnsavedChanges = false;
 
-  const setUnsavedChangesFn = function() {
+  const setUnsavedChangesFn = () => {
 
     cityssm.enableNavBlocker();
 
@@ -39,7 +39,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     inputEle.addEventListener("change", setUnsavedChangesFn);
   }
 
-  document.getElementById("form--ticket").addEventListener("submit", function(formEvent) {
+  document.getElementById("form--ticket").addEventListener("submit", (formEvent) => {
 
     formEvent.preventDefault();
 
@@ -53,7 +53,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     cityssm.postJSON(
       (isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"),
       formEvent.currentTarget,
-      function(responseJSON) {
+      (responseJSON: { success: boolean, message?: string, ticketID?: number, nextTicketNumber?: string }) => {
 
         if (responseJSON.success) {
 
@@ -100,7 +100,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   if (!isCreate) {
 
-    document.getElementById("is-delete-ticket-button").addEventListener("click", function(clickEvent) {
+    document.getElementById("is-delete-ticket-button").addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 
@@ -109,13 +109,13 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         "Are you sure you want to delete this ticket record?",
         "Yes, Delete Ticket",
         "danger",
-        function() {
+        () => {
 
           cityssm.postJSON(
             "/tickets/doDeleteTicket", {
               ticketID
             },
-            function(responseJSON) {
+            (responseJSON: { success: boolean }) => {
 
               if (responseJSON.success) {
                 window.location.href = "/tickets";
@@ -131,9 +131,9 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
    * Location Lookup
    */
 
-  pts.getDefaultConfigProperty("locationClasses", function(locationClassesList: ptsTypes.ConfigLocationClass[]) {
+  pts.getDefaultConfigProperty("locationClasses", (locationClassesList: ptsTypes.ConfigLocationClass[]) => {
 
-    let locationLookupCloseModalFn: Function;
+    let locationLookupCloseModalFn: () => void;
     const locationClassMap = new Map<string, ptsTypes.ConfigLocationClass>();
     let locationList = [];
 
@@ -141,7 +141,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       locationClassMap.set(locationClassObj.locationClassKey, locationClassObj);
     }
 
-    const clearLocationFn = function(clickEvent: Event) {
+    const clearLocationFn = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
@@ -154,11 +154,12 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     };
 
-    const setLocationFn = function(clickEvent: Event) {
+    const setLocationFn = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
-      const locationObj = locationList[parseInt((<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
+      const locationObj =
+        locationList[parseInt((<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
 
       (<HTMLInputElement>document.getElementById("ticket--locationKey")).value = locationObj.locationKey;
       (<HTMLInputElement>document.getElementById("ticket--locationName")).value = locationObj.locationName;
@@ -169,16 +170,16 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     };
 
-    const populateLocationsFn = function() {
+    const populateLocationsFn = () => {
 
-      cityssm.postJSON("/offences/doGetAllLocations", {}, function(locationListRes: ptsTypes.ParkingLocation[]) {
+      cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListRes: ptsTypes.ParkingLocation[]) => {
 
         locationList = locationListRes;
 
         const listEle = document.createElement("div");
         listEle.className = "panel mb-4";
 
-        locationList.forEach(function(locationObj, index) {
+        locationList.forEach((locationObj, index) => {
 
           const locationClassObj = locationClassMap.get(locationObj.locationClassKey);
 
@@ -203,12 +204,10 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         const containerEle = document.getElementById("container--parkingLocations");
         cityssm.clearElement(containerEle);
         containerEle.insertAdjacentElement("beforeend", listEle);
-
       });
-
     };
 
-    const openLocationLookupModalFn = function(clickEvent: Event) {
+    const openLocationLookupModalFn = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
@@ -230,7 +229,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     document.getElementById("is-location-lookup-button").addEventListener("click", openLocationLookupModalFn);
     document.getElementById("ticket--locationName").addEventListener("dblclick", openLocationLookupModalFn);
-
   });
 
   /*
@@ -239,11 +237,11 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   {
 
-    let bylawLookupCloseModalFn: Function;
+    let bylawLookupCloseModalFn: () => void;
     let offenceList: ptsTypes.ParkingOffence[] = [];
     let listItemEles: HTMLAnchorElement[] = [];
 
-    const clearBylawOffenceFn = function(clickEvent: Event) {
+    const clearBylawOffenceFn = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
@@ -288,7 +286,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       offenceList = [];
     };
 
-    const setBylawOffenceFn = function(clickEvent: Event) {
+    const setBylawOffenceFn = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
@@ -336,53 +334,56 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     };
 
-    const populateBylawsFn = function() {
+    const populateBylawsFn = () => {
 
       const locationKey = (<HTMLInputElement>document.getElementById("ticket--locationKey")).value;
       // const locationName = document.getElementById("ticket--locationName").value;
 
       cityssm.postJSON("/offences/doGetOffencesByLocation", {
         locationKey
-      }, function(offenceListRes) {
+      },
+        (offenceListRes: ptsTypes.ParkingOffence[]) => {
 
-        offenceList = offenceListRes;
+          offenceList = offenceListRes;
 
-        const listEle = document.createElement("div");
-        listEle.className = "panel mb-4";
+          const listEle = document.createElement("div");
+          listEle.className = "panel mb-4";
 
-        offenceList.forEach(function(offenceObj, index) {
+          offenceList.forEach((offenceObj, index) => {
 
-          const linkEle = document.createElement("a");
-          linkEle.className = "panel-block is-block";
-          linkEle.setAttribute("data-index", index.toString());
-          linkEle.setAttribute("href", "#");
-          linkEle.addEventListener("click", setBylawOffenceFn);
-          linkEle.innerHTML =
-            "<div class=\"columns\">" +
-            ("<div class=\"column\">" +
-              "<span class=\"has-text-weight-semibold\">" + cityssm.escapeHTML(offenceObj.bylawNumber) + "</span><br />" +
-              "<small>" + cityssm.escapeHTML(offenceObj.bylawDescription) + "</small>" +
-              "</div>") +
-            ("<div class=\"column is-narrow has-text-weight-semibold\">" +
-              "$" + offenceObj.offenceAmount.toFixed(2) +
-              "</div>") +
-            "</div>";
+            const linkEle = document.createElement("a");
+            linkEle.className = "panel-block is-block";
+            linkEle.setAttribute("data-index", index.toString());
+            linkEle.setAttribute("href", "#");
+            linkEle.addEventListener("click", setBylawOffenceFn);
+            linkEle.innerHTML =
+              "<div class=\"columns\">" +
+              ("<div class=\"column\">" +
+                "<span class=\"has-text-weight-semibold\">" +
+                cityssm.escapeHTML(offenceObj.bylawNumber) +
+                "</span><br />" +
+                "<small>" + cityssm.escapeHTML(offenceObj.bylawDescription) + "</small>" +
+                "</div>") +
+              ("<div class=\"column is-narrow has-text-weight-semibold\">" +
+                "$" + offenceObj.offenceAmount.toFixed(2) +
+                "</div>") +
+              "</div>";
 
-          listEle.insertAdjacentElement("beforeend", linkEle);
-          listItemEles.push(linkEle);
+            listEle.insertAdjacentElement("beforeend", linkEle);
+            listItemEles.push(linkEle);
+          });
+
+          const containerEle = document.getElementById("container--bylawNumbers");
+          cityssm.clearElement(containerEle);
+          containerEle.appendChild(listEle);
         });
-
-        const containerEle = document.getElementById("container--bylawNumbers");
-        cityssm.clearElement(containerEle);
-        containerEle.appendChild(listEle);
-      });
     };
 
-    const filterBylawsFn = function(keyupEvent: Event) {
+    const filterBylawsFn = (keyupEvent: Event) => {
 
       const searchStringSplit = (<HTMLInputElement>keyupEvent.currentTarget).value.trim().toLowerCase().split(" ");
 
-      offenceList.forEach(function(offenceRecord, recordIndex) {
+      offenceList.forEach((offenceRecord, recordIndex) => {
 
         let displayRecord = true;
 
@@ -402,7 +403,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       });
     };
 
-    const openBylawLookupModalFn = function(clickEvent: Event) {
+    const openBylawLookupModalFn = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
@@ -429,7 +430,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     document.getElementById("is-bylaw-lookup-button").addEventListener("click", openBylawLookupModalFn);
     document.getElementById("ticket--bylawNumber").addEventListener("dblclick", openBylawLookupModalFn);
-
   }
 
   /*
@@ -439,7 +439,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
   {
     const licencePlateIsMissingCheckboxEle = <HTMLInputElement>document.getElementById("ticket--licencePlateIsMissing");
 
-    licencePlateIsMissingCheckboxEle.addEventListener("change", function() {
+    licencePlateIsMissingCheckboxEle.addEventListener("change", () => {
 
       if (licencePlateIsMissingCheckboxEle.checked) {
 
@@ -452,7 +452,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         document.getElementById("ticket--licencePlateCountry").setAttribute("required", "required");
         document.getElementById("ticket--licencePlateProvince").setAttribute("required", "required");
         document.getElementById("ticket--licencePlateNumber").setAttribute("required", "required");
-
       }
     });
   }
@@ -461,7 +460,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
    * Licence Plate Province Datalist
    */
 
-  const populateLicencePlateProvinceDatalistFn = function() {
+  const populateLicencePlateProvinceDatalistFn = () => {
 
     const datalistEle = document.getElementById("datalist--licencePlateProvince");
     cityssm.clearElement(datalistEle);
@@ -478,7 +477,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         const optionEle = document.createElement("option");
         optionEle.setAttribute("value", province.provinceShortName);
         datalistEle.appendChild(optionEle);
-
       }
     }
   };
@@ -493,7 +491,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
    * Unlock Buttons
    */
 
-  const unlockFieldFn = function(unlockBtnClickEvent: Event) {
+  const unlockFieldFn = (unlockBtnClickEvent: Event) => {
 
     unlockBtnClickEvent.preventDefault();
 
@@ -509,7 +507,6 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     readOnlyEle.focus();
 
     unlockBtnEle.setAttribute("disabled", "disabled");
-
   };
 
   const unlockBtnEles = document.getElementsByClassName("is-unlock-field-button");
@@ -518,4 +515,4 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     unlockBtnEle.addEventListener("click", unlockFieldFn);
   }
 
-}());
+})();

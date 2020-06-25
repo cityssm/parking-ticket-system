@@ -5,13 +5,13 @@ import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
 
-(function() {
+(() => {
 
   pts.initializeToggleHiddenLinks(document.getElementsByTagName("main")[0]);
 
   // ERROR LOG TABLE
 
-  function clickFn_acknowledgeError(clickEvent: Event) {
+  const clickFn_acknowledgeError = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -24,28 +24,25 @@ declare const pts: ptsGlobal;
     cityssm.postJSON("/tickets/doAcknowledgeLookupError", {
       batchID,
       logIndex
-    }, function(responseJSON) {
+    },
+      (responseJSON: { success: boolean }) => {
 
-      if (responseJSON.success) {
+        if (responseJSON.success) {
 
-        const tdEle = buttonEle.closest("td");
+          const tdEle = buttonEle.closest("td");
 
-        cityssm.clearElement(tdEle);
+          cityssm.clearElement(tdEle);
 
-        tdEle.innerHTML = "<span class=\"tag is-light is-warning\">" +
-          "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
-          "<span>Acknowledged</span>" +
-          "</span>";
+          tdEle.innerHTML = "<span class=\"tag is-light is-warning\">" +
+            "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+            "<span>Acknowledged</span>" +
+            "</span>";
 
-      } else {
-
-        buttonEle.removeAttribute("disabled");
-
-      }
-
-    });
-
-  }
+        } else {
+          buttonEle.removeAttribute("disabled");
+        }
+      });
+  };
 
   const acknowledgeButtonEles = document.getElementsByClassName("is-acknowledge-error-button");
 
@@ -55,7 +52,7 @@ declare const pts: ptsGlobal;
 
   // RECONCILE TABLE
 
-  function clickFn_clearStatus(clickEvent: Event) {
+  const clickFn_clearStatus = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -64,14 +61,14 @@ declare const pts: ptsGlobal;
     const optionsTdEle = anchorEle.closest("td");
     const trEle = optionsTdEle.closest("tr");
 
-    const clearFn = function() {
+    const clearFn = () => {
 
       cityssm.postJSON(
         "/tickets/doDeleteStatus", {
           ticketID: trEle.getAttribute("data-ticket-id"),
           statusIndex: anchorEle.getAttribute("data-status-index")
         },
-        function(responseJSON) {
+        (responseJSON: { success: boolean }) => {
 
           if (responseJSON.success) {
 
@@ -105,10 +102,9 @@ declare const pts: ptsGlobal;
       "warning",
       clearFn
     );
+  };
 
-  }
-
-  function clickFn_markAsMatch(clickEvent: Event) {
+  const clickFn_markAsMatch = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -117,7 +113,7 @@ declare const pts: ptsGlobal;
     const optionsTdEle = buttonEle.closest("td");
     const trEle = optionsTdEle.closest("tr");
 
-    const matchFn = function() {
+    const matchFn = () => {
 
       buttonEle.setAttribute("disabled", "disabled");
 
@@ -134,40 +130,40 @@ declare const pts: ptsGlobal;
         licencePlateNumber,
         ticketID,
         recordDate
-      }, function(responseJSON) {
+      },
+        (responseJSON: { success: boolean, message?: string, statusIndex?: number }) => {
 
-        if (responseJSON.success) {
+          if (responseJSON.success) {
 
-          cityssm.clearElement(optionsTdEle);
+            cityssm.clearElement(optionsTdEle);
 
-          optionsTdEle.innerHTML =
-            "<div class=\"tags has-addons\">" +
-            ("<span class=\"tag is-light is-success\">" +
-              "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span><span>Match</span>" +
-              "</span>") +
-            "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
-            "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
-            "<span class=\"sr-only\">Remove Match</span>" +
-            "</a>" +
-            "</div>";
+            optionsTdEle.innerHTML =
+              "<div class=\"tags has-addons\">" +
+              ("<span class=\"tag is-light is-success\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+                "<span>Match</span>" +
+                "</span>") +
+              "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
+              " data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+              "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
+              "<span class=\"sr-only\">Remove Match</span>" +
+              "</a>" +
+              "</div>";
 
-          optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+            optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
 
-        } else {
+          } else {
 
-          buttonEle.removeAttribute("disabled");
+            buttonEle.removeAttribute("disabled");
 
-          cityssm.alertModal(
-            "Record Not Updated",
-            responseJSON.message,
-            "OK",
-            "danger"
-          );
-
-        }
-
-      });
-
+            cityssm.alertModal(
+              "Record Not Updated",
+              responseJSON.message,
+              "OK",
+              "danger"
+            );
+          }
+        });
     };
 
     if (trEle.hasAttribute("data-is-vehicle-make-match") && trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
@@ -205,12 +201,10 @@ declare const pts: ptsGlobal;
         "warning",
         matchFn
       );
-
     }
+  };
 
-  }
-
-  function clickFn_markAsError(clickEvent: Event) {
+  const clickFn_markAsError = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -219,7 +213,7 @@ declare const pts: ptsGlobal;
     const optionsTdEle = buttonEle.closest("td");
     const trEle = optionsTdEle.closest("tr");
 
-    const errorFn = function() {
+    const errorFn = () => {
 
       buttonEle.setAttribute("disabled", "disabled");
 
@@ -236,40 +230,38 @@ declare const pts: ptsGlobal;
         licencePlateNumber,
         ticketID,
         recordDate
-      }, function(responseJSON) {
+      },
+        (responseJSON: { success: boolean, message?: string, statusIndex?: number }) => {
 
-        if (responseJSON.success) {
+          if (responseJSON.success) {
 
-          cityssm.clearElement(optionsTdEle);
+            cityssm.clearElement(optionsTdEle);
 
-          optionsTdEle.innerHTML =
-            "<div class=\"tags has-addons\">" +
-            ("<span class=\"tag is-light is-danger\">" +
-              "<span class=\"icon is-small\"><i class=\"fas fa-times\" aria-hidden=\"true\"></i></span><span>Match Error</span>" +
-              "</span>") +
-            "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
-            "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
-            "<span class=\"sr-only\">Remove Match</span>" +
-            "</a>" +
-            "</div>";
+            optionsTdEle.innerHTML =
+              "<div class=\"tags has-addons\">" +
+              ("<span class=\"tag is-light is-danger\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-times\" aria-hidden=\"true\"></i></span><span>Match Error</span>" +
+                "</span>") +
+              "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+              "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
+              "<span class=\"sr-only\">Remove Match</span>" +
+              "</a>" +
+              "</div>";
 
-          optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+            optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
 
-        } else {
+          } else {
 
-          buttonEle.removeAttribute("disabled");
+            buttonEle.removeAttribute("disabled");
 
-          cityssm.alertModal(
-            "Record Not Updated",
-            responseJSON.message,
-            "OK",
-            "danger"
-          );
-
-        }
-
-      });
-
+            cityssm.alertModal(
+              "Record Not Updated",
+              responseJSON.message,
+              "OK",
+              "danger"
+            );
+          }
+        });
     };
 
     if (trEle.hasAttribute("data-is-vehicle-make-match") || trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
@@ -305,11 +297,9 @@ declare const pts: ptsGlobal;
       );
 
     } else {
-
       errorFn();
-
     }
-  }
+  };
 
   const matchButtonEles = document.getElementsByClassName("is-ownership-match-button");
 
@@ -327,59 +317,59 @@ declare const pts: ptsGlobal;
 
   if (quickReconcilieButtonEle) {
 
-    quickReconcilieButtonEle.addEventListener("click", function(clickEvent) {
+    quickReconcilieButtonEle.addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 
-      let loadingCloseModalFn: Function;
+      let loadingCloseModalFn: () => void;
 
-      const reconcileFn = function() {
+      const reconcileFn = () => {
 
-        cityssm.postJSON("/tickets/doQuickReconcileMatches", {}, function(responseJSON) {
+        cityssm.postJSON("/tickets/doQuickReconcileMatches", {},
+          (responseJSON: { success: boolean, statusRecords: any[] }) => {
 
-          loadingCloseModalFn();
+            loadingCloseModalFn();
 
-          if (responseJSON.success) {
+            if (responseJSON.success) {
 
-            cityssm.alertModal(
-              "Quick Reconcile Complete",
-              (responseJSON.statusRecords.length === 1 ?
-                "One record was successfully reconciled as a match." :
-                responseJSON.statusRecords.length + " records were successfully reconciled as matches."),
-              "OK",
-              "success"
-            );
+              cityssm.alertModal(
+                "Quick Reconcile Complete",
+                (responseJSON.statusRecords.length === 1 ?
+                  "One record was successfully reconciled as a match." :
+                  responseJSON.statusRecords.length + " records were successfully reconciled as matches."),
+                "OK",
+                "success"
+              );
 
-            for (const statusRecord of responseJSON.statusRecords) {
+              for (const statusRecord of responseJSON.statusRecords) {
 
-              const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
+                const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
 
-              if (optionsTdEle) {
+                if (optionsTdEle) {
 
-                cityssm.clearElement(optionsTdEle);
+                  cityssm.clearElement(optionsTdEle);
 
-                optionsTdEle.innerHTML =
-                  "<div class=\"tags has-addons\">" +
-                  ("<span class=\"tag is-light is-success\">" +
-                    "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
-                    "<span>Match</span>" +
-                    "</span>") +
-                  "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + statusRecord.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
-                  "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
-                  "<span class=\"sr-only\">Remove Match</span>" +
-                  "</a>" +
-                  "</div>";
+                  optionsTdEle.innerHTML =
+                    "<div class=\"tags has-addons\">" +
+                    ("<span class=\"tag is-light is-success\">" +
+                      "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+                      "<span>Match</span>" +
+                      "</span>") +
+                    "<a class=\"tag\" data-tooltip=\"Remove Match\" data-status-index=\"" + statusRecord.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+                    "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
+                    "<span class=\"sr-only\">Remove Match</span>" +
+                    "</a>" +
+                    "</div>";
 
-                optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+                  optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
 
+                }
               }
             }
-          }
-        });
-
+          });
       };
 
-      const loadingFn = function() {
+      const loadingFn = () => {
 
         cityssm.openHtmlModal("loading", {
           onshown(_modalEle, closeModalFn) {
@@ -407,4 +397,4 @@ declare const pts: ptsGlobal;
 
   }
 
-}());
+})();

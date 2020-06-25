@@ -383,7 +383,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     };
     locationInputEle.addEventListener("dblclick", openSelectLocationFilterModalFn);
-    document.getElementById("is-select-location-filter-button").addEventListener("click", openSelectLocationFilterModalFn);
+    document.getElementById("is-select-location-filter-button")
+        .addEventListener("click", openSelectLocationFilterModalFn);
     document.getElementById("is-clear-location-filter-button").addEventListener("click", () => {
         clearLocationFilterFn();
         renderOffencesFn();

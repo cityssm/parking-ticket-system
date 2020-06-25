@@ -166,7 +166,7 @@ type UpdateOffenceResponseJSON = {
 
 
   const addOffenceFn = (bylawNumber: string, locationKey: string, returnAndRenderOffences: boolean,
-    callbackFn: (responseJSON: UpdateOffenceResponseJSON) => any) => {
+    callbackFn: (responseJSON: UpdateOffenceResponseJSON) => void) => {
 
     cityssm.postJSON(
       "/admin/doAddOffence", {
@@ -614,7 +614,9 @@ type UpdateOffenceResponseJSON = {
   };
 
   locationInputEle.addEventListener("dblclick", openSelectLocationFilterModalFn);
-  document.getElementById("is-select-location-filter-button").addEventListener("click", openSelectLocationFilterModalFn);
+
+  document.getElementById("is-select-location-filter-button")
+    .addEventListener("click", openSelectLocationFilterModalFn);
 
   document.getElementById("is-clear-location-filter-button").addEventListener("click", () => {
 

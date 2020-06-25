@@ -1,30 +1,29 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
 declare const cityssm: cityssmGlobal;
 
+import type * as ptsTypes from "../../helpers/ptsTypes";
 
-(function() {
+
+(() => {
 
   const ticketID = (<HTMLInputElement>document.getElementById("ticket--ticketID")).value;
 
   const remarkPanelEle = document.getElementById("is-remark-panel");
 
-  let remarkList = exports.ticketRemarks;
+  let remarkList: ptsTypes.ParkingTicketRemark[] = exports.ticketRemarks;
   delete exports.ticketRemarks;
 
 
-  const clearRemarkPanelFn = function() {
+  const clearRemarkPanelFn = () => {
 
     const panelBlockEles = remarkPanelEle.getElementsByClassName("panel-block");
 
     while (panelBlockEles.length > 0) {
-
       panelBlockEles[0].remove();
-
     }
-
   };
 
-  const confirmDeleteRemarkFn = function(clickEvent: Event) {
+  const confirmDeleteRemarkFn = (clickEvent: Event) => {
 
     const remarkIndex = (<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-remark-index");
 
@@ -33,51 +32,47 @@ declare const cityssm: cityssmGlobal;
       "Are you sure you want to delete this remark?",
       "Yes, Delete",
       "warning",
-      function() {
+      () => {
 
         cityssm.postJSON("/tickets/doDeleteRemark", {
           ticketID,
           remarkIndex
-        }, function(resultJSON) {
+        },
+          (resultJSON: { success: boolean }) => {
 
-          if (resultJSON.success) {
-
-            getRemarksFn();
-
+            if (resultJSON.success) {
+              getRemarksFn();
+            }
           }
-
-        });
-
+        );
       }
     );
-
   };
 
-  const openEditRemarkModalFn = function(clickEvent: Event) {
+  const openEditRemarkModalFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    let editRemarkCloseModalFn: Function;
+    let editRemarkCloseModalFn: () => void;
 
     const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
 
     const remarkObj = remarkList[index];
 
-    const submitFn = function(formEvent: Event) {
+    const submitFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/tickets/doUpdateRemark", formEvent.currentTarget,
+        (responseJSON: { success: boolean }) => {
 
-        if (responseJSON.success) {
+          if (responseJSON.success) {
 
-          editRemarkCloseModalFn();
-          getRemarksFn();
+            editRemarkCloseModalFn();
+            getRemarksFn();
 
-        }
-
-      });
-
+          }
+        });
     };
 
     cityssm.openHtmlModal("ticket-editRemark", {
@@ -85,7 +80,7 @@ declare const cityssm: cityssmGlobal;
       onshow(modalEle) {
 
         (<HTMLInputElement>document.getElementById("editRemark--ticketID")).value = ticketID;
-        (<HTMLInputElement>document.getElementById("editRemark--remarkIndex")).value = remarkObj.remarkIndex;
+        (<HTMLInputElement>document.getElementById("editRemark--remarkIndex")).value = remarkObj.remarkIndex.toString();
         (<HTMLInputElement>document.getElementById("editRemark--remark")).value = remarkObj.remark;
         (<HTMLInputElement>document.getElementById("editRemark--remarkDateString")).value = remarkObj.remarkDateString;
         (<HTMLInputElement>document.getElementById("editRemark--remarkTimeString")).value = remarkObj.remarkTimeString;
@@ -96,12 +91,10 @@ declare const cityssm: cityssmGlobal;
       onshown(_modalEle, closeModalFn) {
         editRemarkCloseModalFn = closeModalFn;
       }
-
     });
-
   };
 
-  const populateRemarksPanelFn = function() {
+  const populateRemarksPanelFn = () => {
 
     clearRemarkPanelFn();
 
@@ -119,9 +112,7 @@ declare const cityssm: cityssmGlobal;
 
     }
 
-    for (let index = 0; index < remarkList.length; index += 1) {
-
-      const remarkObj = remarkList[index];
+    remarkList.forEach((remarkObj, index) => {
 
       const panelBlockEle = document.createElement("div");
       panelBlockEle.className = "panel-block is-block";
@@ -171,11 +162,11 @@ declare const cityssm: cityssmGlobal;
 
       remarkPanelEle.appendChild(panelBlockEle);
 
-    }
+    });
 
   };
 
-  const getRemarksFn = function() {
+  const getRemarksFn = () => {
 
     clearRemarkPanelFn();
 
@@ -191,36 +182,33 @@ declare const cityssm: cityssmGlobal;
 
     cityssm.postJSON("/tickets/doGetRemarks", {
       ticketID
-    }, function(resultList) {
+    },
+      (responseRemarkList) => {
 
-      remarkList = resultList;
-      populateRemarksPanelFn();
-
-    });
-
+        remarkList = responseRemarkList;
+        populateRemarksPanelFn();
+      });
   };
 
-  document.getElementById("is-add-remark-button").addEventListener("click", function(clickEvent) {
+  document.getElementById("is-add-remark-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addRemarkCloseModalFn: Function;
+    let addRemarkCloseModalFn: () => void;
 
-    const submitFn = function(formEvent: Event) {
+    const submitFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/tickets/doAddRemark", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/tickets/doAddRemark", formEvent.currentTarget,
+        (responseJSON: { success: boolean }) => {
 
-        if (responseJSON.success) {
+          if (responseJSON.success) {
 
-          addRemarkCloseModalFn();
-          getRemarksFn();
-
-        }
-
-      });
-
+            addRemarkCloseModalFn();
+            getRemarksFn();
+          }
+        });
     };
 
     cityssm.openHtmlModal("ticket-addRemark", {
@@ -234,11 +222,9 @@ declare const cityssm: cityssmGlobal;
       onshown(_modalEle, closeModalFn) {
         addRemarkCloseModalFn = closeModalFn;
       }
-
     });
-
   });
 
   populateRemarksPanelFn();
 
-}());
+})();

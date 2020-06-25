@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const locationClassLookup = {};
     let ticketNumberFieldLabel = "";
     const formEle = document.getElementById("form--filters");
     const limitEle = document.getElementById("filter--limit");
     const offsetEle = document.getElementById("filter--offset");
     const searchResultsEle = document.getElementById("container--searchResults");
-    function getTickets() {
+    const getTicketsFn = () => {
         const currentLimit = parseInt(limitEle.value, 10);
         const currentOffset = parseInt(offsetEle.value, 10);
         cityssm.clearElement(searchResultsEle);
@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
             "<em>Loading tickets..." +
             "</p>";
-        cityssm.postJSON("/tickets/doGetTickets", formEle, function (ticketResults) {
+        cityssm.postJSON("/tickets/doGetTickets", formEle, (ticketResults) => {
             const ticketList = ticketResults.tickets;
             if (ticketList.length === 0) {
                 searchResultsEle.innerHTML = "<div class=\"message is-info\">" +
@@ -106,11 +106,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     const previousEle = document.createElement("a");
                     previousEle.className = "button";
                     previousEle.innerText = "Previous";
-                    previousEle.addEventListener("click", function (clickEvent) {
+                    previousEle.addEventListener("click", (clickEvent) => {
                         clickEvent.preventDefault();
                         offsetEle.value = Math.max(0, currentOffset - currentLimit).toString();
                         searchResultsEle.scrollIntoView(true);
-                        getTickets();
+                        getTicketsFn();
                     });
                     paginationEle.appendChild(previousEle);
                 }
@@ -118,36 +118,36 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     const nextEle = document.createElement("a");
                     nextEle.className = "button ml-3";
                     nextEle.innerHTML = "<span>Next Tickets</span><span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
-                    nextEle.addEventListener("click", function (clickEvent) {
+                    nextEle.addEventListener("click", (clickEvent) => {
                         clickEvent.preventDefault();
                         offsetEle.value = (currentOffset + currentLimit).toString();
                         searchResultsEle.scrollIntoView(true);
-                        getTickets();
+                        getTicketsFn();
                     });
                     paginationEle.appendChild(nextEle);
                 }
                 searchResultsEle.getElementsByClassName("level")[0].appendChild(paginationEle);
             }
         });
-    }
-    function resetOffsetAndGetTickets() {
+    };
+    const resetOffsetAndGetTicketsFn = () => {
         offsetEle.value = "0";
-        getTickets();
-    }
-    formEle.addEventListener("submit", function (formEvent) {
+        getTicketsFn();
+    };
+    formEle.addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
     });
-    document.getElementById("filter--ticketNumber").addEventListener("change", resetOffsetAndGetTickets);
-    document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetTickets);
-    document.getElementById("filter--location").addEventListener("change", resetOffsetAndGetTickets);
-    document.getElementById("filter--isResolved").addEventListener("change", resetOffsetAndGetTickets);
-    pts.getDefaultConfigProperty("ticketNumber_fieldLabel", function (fieldLabel) {
+    document.getElementById("filter--ticketNumber").addEventListener("change", resetOffsetAndGetTicketsFn);
+    document.getElementById("filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetTicketsFn);
+    document.getElementById("filter--location").addEventListener("change", resetOffsetAndGetTicketsFn);
+    document.getElementById("filter--isResolved").addEventListener("change", resetOffsetAndGetTicketsFn);
+    pts.getDefaultConfigProperty("ticketNumber_fieldLabel", (fieldLabel) => {
         ticketNumberFieldLabel = fieldLabel;
-        pts.getDefaultConfigProperty("locationClasses", function (locationClasses) {
+        pts.getDefaultConfigProperty("locationClasses", (locationClasses) => {
             for (const locationClassObj of locationClasses) {
                 locationClassLookup[locationClassObj.locationClassKey] = locationClassObj;
             }
-            getTickets();
+            getTicketsFn();
         });
     });
-}());
+})();
