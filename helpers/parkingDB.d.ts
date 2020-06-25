@@ -1,4 +1,7 @@
+/// <reference types="express-serve-static-core" />
+/// <reference types="compression" />
 /// <reference types="express-session" />
+/// <reference types="multer" />
 /// <reference types="integer" />
 export declare const dbPath = "data/parking.db";
 import type * as pts from "./ptsTypes";
@@ -10,14 +13,14 @@ export interface GetParkingTicketsQueryOptions {
     limit: number;
     offset: number;
 }
-export declare function getParkingTickets(reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions): {
+export declare const getParkingTickets: (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
     count: any;
     tickets: pts.ParkingTicket[];
 };
-export declare function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session): pts.ParkingTicket[];
-export declare function getParkingTicket(ticketID: number, reqSession: Express.Session): pts.ParkingTicket;
-export declare function getParkingTicketID(ticketNumber: string): any;
-export declare function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.Session): {
+export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) => pts.ParkingTicket[];
+export declare const getParkingTicket: (ticketID: number, reqSession: Express.Session) => pts.ParkingTicket;
+export declare const getParkingTicketID: (ticketNumber: string) => any;
+export declare const createParkingTicket: (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
     success: boolean;
     message: string;
     ticketID?: undefined;

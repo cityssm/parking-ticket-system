@@ -7,7 +7,7 @@ import * as configFns from "./configFns";
 import type * as pts from "./ptsTypes";
 
 
-function canUpdateObject(obj: pts.Record, reqSession: Express.Session) {
+const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
 
   const userProperties: pts.UserProperties = reqSession.user.userProperties;
 
@@ -61,10 +61,10 @@ function canUpdateObject(obj: pts.Record, reqSession: Express.Session) {
   }
 
   return canUpdate;
-}
+};
 
 
-function getParkingLocationWithDB(db: sqlite.Database, locationKey: string) {
+const getParkingLocationWithDB = (db: sqlite.Database, locationKey: string) => {
 
   const location: pts.ParkingLocation = db.prepare("select locationKey, locationName, locationClassKey, isActive" +
     " from ParkingLocations" +
@@ -73,44 +73,50 @@ function getParkingLocationWithDB(db: sqlite.Database, locationKey: string) {
 
   return location;
 
-}
+};
 
 
-function getLicencePlateOwnerWithDB(db: sqlite.Database, licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number) {
+const getLicencePlateOwnerWithDB =
+  (db: sqlite.Database,
+    licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string,
+    recordDateOrBefore: number) => {
 
-  const licencePlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
+    const licencePlateCountryAlias =
+      configFns.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
 
-  const licencePlateProvinceAlias =
-    (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})
-    [licencePlateProvince] || licencePlateProvince;
+    const licencePlateProvinceAlias =
+      (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})
+      [licencePlateProvince] || licencePlateProvince;
 
-  const possibleOwners: pts.LicencePlateOwner[] = db.prepare("select * from LicencePlateOwners" +
-    " where recordDelete_timeMillis is null" +
-    " and licencePlateNumber = ?" +
-    " and recordDate >= ?" +
-    " order by recordDate")
-    .all(licencePlateNumber, recordDateOrBefore);
+    const possibleOwners: pts.LicencePlateOwner[] = db.prepare("select * from LicencePlateOwners" +
+      " where recordDelete_timeMillis is null" +
+      " and licencePlateNumber = ?" +
+      " and recordDate >= ?" +
+      " order by recordDate")
+      .all(licencePlateNumber, recordDateOrBefore);
 
-  for (const possibleOwnerObj of possibleOwners) {
+    for (const possibleOwnerObj of possibleOwners) {
 
-    const ownerPlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] || possibleOwnerObj.licencePlateCountry;
+      const ownerPlateCountryAlias =
+        configFns.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] ||
+        possibleOwnerObj.licencePlateCountry;
 
-    const ownerPlateProvinceAlias =
-      (configFns.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})
-      [possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
+      const ownerPlateProvinceAlias =
+        (configFns.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})
+        [possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
 
-    if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {
+      if (licencePlateCountryAlias === ownerPlateCountryAlias && licencePlateProvinceAlias === ownerPlateProvinceAlias) {
 
-      possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
-      possibleOwnerObj.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
-      possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
+        possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
+        possibleOwnerObj.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
+        possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
 
-      return possibleOwnerObj;
+        return possibleOwnerObj;
+      }
     }
-  }
 
-  return null;
-}
+    return null;
+  };
 
 
 export interface GetParkingTicketsQueryOptions {
@@ -121,19 +127,7 @@ export interface GetParkingTicketsQueryOptions {
   limit: number;
   offset: number;
 }
-export function getParkingTickets(reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) {
-
-  const addCalculatedFieldsFn = function(ele: pts.ParkingTicket) {
-
-    ele.recordType = "ticket";
-
-    ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
-    ele.resolvedDateString = dateTimeFns.dateIntegerToString(ele.resolvedDate);
-
-    ele.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ele.latestStatus_statusDate);
-
-    ele.canUpdate = canUpdateObject(ele, reqSession);
-  };
+export const getParkingTickets = (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -217,59 +211,67 @@ export function getParkingTickets(reqSession: Express.Session, queryOptions: Get
 
   db.close();
 
-  rows.forEach(addCalculatedFieldsFn);
+  for (const ticket of rows) {
+
+    ticket.recordType = "ticket";
+
+    ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+    ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
+
+    ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
+
+    ticket.canUpdate = canUpdateObject(ticket, reqSession);
+  }
 
   return {
     count,
     tickets: rows
   };
-}
+};
 
-export function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) {
+export const getParkingTicketsByLicencePlate =
+  (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) => {
 
-  const addCalculatedFieldsFn = function(ele: pts.ParkingTicket) {
+    const db = sqlite(dbPath, {
+      readonly: true
+    });
 
-    ele.recordType = "ticket";
+    const tickets: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
+      " t.vehicleMakeModel," +
+      " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
+      " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
+      " s.statusDate as latestStatus_statusDate," +
+      " s.statusKey as latestStatus_statusKey," +
+      " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
+      " from ParkingTickets t" +
+      " left join ParkingLocations l on t.locationKey = l.locationKey" +
+      (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+        " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
+      " where t.recordDelete_timeMillis is null" +
+      " and t.licencePlateCountry = ?" +
+      " and t.licencePlateProvince = ?" +
+      " and t.licencePlateNumber = ?" +
+      " order by t.issueDate desc, t.ticketNumber desc")
+      .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
-    ele.issueDateString = dateTimeFns.dateIntegerToString(ele.issueDate);
-    ele.resolvedDateString = dateTimeFns.dateIntegerToString(ele.resolvedDate);
+    db.close();
 
-    ele.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ele.latestStatus_statusDate);
+    for (const ticket of tickets) {
 
-    ele.canUpdate = canUpdateObject(ele, reqSession);
+      ticket.recordType = "ticket";
+
+      ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+      ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
+
+      ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
+
+      ticket.canUpdate = canUpdateObject(ticket, reqSession);
+    }
+
+    return tickets;
   };
 
-
-  const db = sqlite(dbPath, {
-    readonly: true
-  });
-
-  const tickets: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
-    " t.vehicleMakeModel," +
-    " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
-    " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
-    " s.statusDate as latestStatus_statusDate," +
-    " s.statusKey as latestStatus_statusKey," +
-    " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
-    " from ParkingTickets t" +
-    " left join ParkingLocations l on t.locationKey = l.locationKey" +
-    (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-      " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
-    " where t.recordDelete_timeMillis is null" +
-    " and t.licencePlateCountry = ?" +
-    " and t.licencePlateProvince = ?" +
-    " and t.licencePlateNumber = ?" +
-    " order by t.issueDate desc, t.ticketNumber desc")
-    .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
-
-  db.close();
-
-  tickets.forEach(addCalculatedFieldsFn);
-
-  return tickets;
-}
-
-export function getParkingTicket(ticketID: number, reqSession: Express.Session) {
+export const getParkingTicket = (ticketID: number, reqSession: Express.Session) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -330,7 +332,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     " order by statusDate desc, statusTime desc, statusIndex desc")
     .all(ticketID);
 
-  ticket.statusLog.forEach(function(statusObj) {
+  for (const statusObj of ticket.statusLog) {
 
     statusObj.statusDateString = dateTimeFns.dateIntegerToString(statusObj.statusDate);
     statusObj.statusTimeString = dateTimeFns.timeIntegerToString(statusObj.statusTime);
@@ -340,7 +342,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     } else {
       statusObj.canUpdate = canUpdateObject(statusObj, reqSession);
     }
-  });
+  }
 
   // Remarks
 
@@ -350,7 +352,7 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     " order by remarkDate desc, remarkTime desc, remarkIndex desc")
     .all(ticketID);
 
-  ticket.remarks.forEach(function(remarkObj) {
+  for (const remarkObj of ticket.remarks) {
 
     remarkObj.remarkDateString = dateTimeFns.dateIntegerToString(remarkObj.remarkDate);
     remarkObj.remarkTimeString = dateTimeFns.timeIntegerToString(remarkObj.remarkTime);
@@ -360,15 +362,14 @@ export function getParkingTicket(ticketID: number, reqSession: Express.Session) 
     } else {
       remarkObj.canUpdate = canUpdateObject(remarkObj, reqSession);
     }
-  });
+  }
 
   db.close();
 
   return ticket;
+};
 
-}
-
-export function getParkingTicketID(ticketNumber: string) {
+export const getParkingTicketID = (ticketNumber: string) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -389,9 +390,9 @@ export function getParkingTicketID(ticketNumber: string) {
   }
 
   return null;
-}
+};
 
-export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.Session) {
+export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
 
   const db = sqlite(dbPath);
 
@@ -492,7 +493,7 @@ export function createParkingTicket(reqBody: pts.ParkingTicket, reqSession: Expr
     ticketID: info.lastInsertRowid,
     nextTicketNumber: ""
   };
-}
+};
 
 export function updateParkingTicket(reqBody: pts.ParkingTicket, reqSession: Express.Session) {
 

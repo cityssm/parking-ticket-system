@@ -4,7 +4,7 @@ exports.cleanupParkingBylawsTable = exports.cleanupParkingLocationsTable = expor
 const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
 const configFns = require("./configFns");
-function getDatabaseCleanupCounts() {
+exports.getDatabaseCleanupCounts = () => {
     const recordDelete_timeMillisWindow = Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
@@ -40,7 +40,8 @@ function getDatabaseCleanupCounts() {
         .get().cnt;
     const parkingOffences = db.prepare("select count(*) as cnt from ParkingOffences o" +
         " where isActive = 0" +
-        " and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)")
+        (" and not exists (" +
+            "select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)"))
         .get().cnt;
     db.close();
     return {
@@ -53,9 +54,8 @@ function getDatabaseCleanupCounts() {
         parkingBylaws,
         parkingOffences
     };
-}
-exports.getDatabaseCleanupCounts = getDatabaseCleanupCounts;
-function cleanupParkingTicketsTable(recordDelete_timeMillis) {
+};
+exports.cleanupParkingTicketsTable = (recordDelete_timeMillis) => {
     const db = sqlite(parkingDB_1.dbPath);
     const recordsToDelete = db.prepare("select ticketID from ParkingTickets t" +
         " where t.recordDelete_timeMillis is not null" +
@@ -64,7 +64,7 @@ function cleanupParkingTicketsTable(recordDelete_timeMillis) {
             "select 1 from LicencePlateLookupBatchEntries b" +
             " where t.ticketID = b.ticketID)"))
         .all(recordDelete_timeMillis);
-    recordsToDelete.forEach(function (recordToDelete) {
+    for (const recordToDelete of recordsToDelete) {
         db.prepare("delete from ParkingTicketRemarks" +
             " where ticketID = ?")
             .run(recordToDelete.ticketID);
@@ -74,12 +74,11 @@ function cleanupParkingTicketsTable(recordDelete_timeMillis) {
         db.prepare("delete from ParkingTickets" +
             " where ticketID = ?")
             .run(recordToDelete.ticketID);
-    });
+    }
     db.close();
     return true;
-}
-exports.cleanupParkingTicketsTable = cleanupParkingTicketsTable;
-function cleanupParkingTicketRemarksTable(recordDelete_timeMillis) {
+};
+exports.cleanupParkingTicketRemarksTable = (recordDelete_timeMillis) => {
     const db = sqlite(parkingDB_1.dbPath);
     db.prepare("delete from ParkingTicketRemarks" +
         " where recordDelete_timeMillis is not null" +
@@ -87,9 +86,8 @@ function cleanupParkingTicketRemarksTable(recordDelete_timeMillis) {
         .run(recordDelete_timeMillis);
     db.close();
     return true;
-}
-exports.cleanupParkingTicketRemarksTable = cleanupParkingTicketRemarksTable;
-function cleanupParkingTicketStatusLog(recordDelete_timeMillis) {
+};
+exports.cleanupParkingTicketStatusLog = (recordDelete_timeMillis) => {
     const db = sqlite(parkingDB_1.dbPath);
     db.prepare("delete from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is not null" +
@@ -97,9 +95,8 @@ function cleanupParkingTicketStatusLog(recordDelete_timeMillis) {
         .run(recordDelete_timeMillis);
     db.close();
     return true;
-}
-exports.cleanupParkingTicketStatusLog = cleanupParkingTicketStatusLog;
-function cleanupLicencePlateOwnersTable(recordDelete_timeMillis) {
+};
+exports.cleanupLicencePlateOwnersTable = (recordDelete_timeMillis) => {
     const db = sqlite(parkingDB_1.dbPath);
     db.prepare("delete from LicencePlateOwners" +
         " where recordDelete_timeMillis is not null" +
@@ -107,9 +104,8 @@ function cleanupLicencePlateOwnersTable(recordDelete_timeMillis) {
         .run(recordDelete_timeMillis);
     db.close();
     return true;
-}
-exports.cleanupLicencePlateOwnersTable = cleanupLicencePlateOwnersTable;
-function cleanupParkingOffencesTable() {
+};
+exports.cleanupParkingOffencesTable = () => {
     const db = sqlite(parkingDB_1.dbPath);
     const recordsToDelete = db.prepare("select o.bylawNumber, o.locationKey" +
         " from ParkingOffences o" +
@@ -125,9 +121,8 @@ function cleanupParkingOffencesTable() {
     }
     db.close();
     return true;
-}
-exports.cleanupParkingOffencesTable = cleanupParkingOffencesTable;
-function cleanupParkingLocationsTable() {
+};
+exports.cleanupParkingLocationsTable = () => {
     const db = sqlite(parkingDB_1.dbPath);
     const recordsToDelete = db.prepare("select locationKey from ParkingLocations l" +
         " where isActive = 0" +
@@ -142,22 +137,20 @@ function cleanupParkingLocationsTable() {
     }
     db.close();
     return true;
-}
-exports.cleanupParkingLocationsTable = cleanupParkingLocationsTable;
-function cleanupParkingBylawsTable() {
+};
+exports.cleanupParkingBylawsTable = () => {
     const db = sqlite(parkingDB_1.dbPath);
     const recordsToDelete = db.prepare("select bylawNumber from ParkingBylaws b" +
         " where isActive = 0" +
         " and not exists (select 1 from ParkingTickets t where b.bylawNumber = t.bylawNumber)" +
         " and not exists (select 1 from ParkingOffences o where b.bylawNumber = o.bylawNumber)")
         .all();
-    for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
+    for (const recordToDelete of recordsToDelete) {
         db.prepare("delete from ParkingBylaws" +
             " where bylawNumber = ?" +
             " and isActive = 0")
-            .run(recordsToDelete[recordIndex].bylawNumber);
+            .run(recordToDelete.bylawNumber);
     }
     db.close();
     return true;
-}
-exports.cleanupParkingBylawsTable = cleanupParkingBylawsTable;
+};

@@ -4,9 +4,10 @@ import * as sqlite from "better-sqlite3";
 import * as configFns from "./configFns";
 
 
-export function getDatabaseCleanupCounts() {
+export const getDatabaseCleanupCounts = () => {
 
-  const recordDelete_timeMillisWindow = Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
+  const recordDelete_timeMillisWindow =
+    Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -63,7 +64,8 @@ export function getDatabaseCleanupCounts() {
 
   const parkingOffences = db.prepare("select count(*) as cnt from ParkingOffences o" +
     " where isActive = 0" +
-    " and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)")
+    (" and not exists (" +
+      "select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)"))
     .get().cnt;
 
   // Licence Plate Lookup Error Log
@@ -111,10 +113,10 @@ export function getDatabaseCleanupCounts() {
     //parkingTicketConvictionBatches: parkingTicketConvictionBatches,
     //licencePlateLookupBatches: licencePlateLookupBatches,
   };
-}
+};
 
 
-export function cleanupParkingTicketsTable(recordDelete_timeMillis: number) {
+export const cleanupParkingTicketsTable = (recordDelete_timeMillis: number) => {
 
   const db = sqlite(dbPath);
 
@@ -126,7 +128,7 @@ export function cleanupParkingTicketsTable(recordDelete_timeMillis: number) {
       " where t.ticketID = b.ticketID)"))
     .all(recordDelete_timeMillis);
 
-  recordsToDelete.forEach(function(recordToDelete) {
+  for (const recordToDelete of recordsToDelete) {
 
     db.prepare("delete from ParkingTicketRemarks" +
       " where ticketID = ?")
@@ -139,15 +141,15 @@ export function cleanupParkingTicketsTable(recordDelete_timeMillis: number) {
     db.prepare("delete from ParkingTickets" +
       " where ticketID = ?")
       .run(recordToDelete.ticketID);
-  });
+  }
 
   db.close();
 
   return true;
 
-}
+};
 
-export function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number) {
+export const cleanupParkingTicketRemarksTable = (recordDelete_timeMillis: number) => {
 
   const db = sqlite(dbPath);
 
@@ -160,9 +162,9 @@ export function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number
 
   return true;
 
-}
+};
 
-export function cleanupParkingTicketStatusLog(recordDelete_timeMillis: number) {
+export const cleanupParkingTicketStatusLog = (recordDelete_timeMillis: number) => {
 
   const db = sqlite(dbPath);
 
@@ -175,9 +177,9 @@ export function cleanupParkingTicketStatusLog(recordDelete_timeMillis: number) {
 
   return true;
 
-}
+};
 
-export function cleanupLicencePlateOwnersTable(recordDelete_timeMillis: number) {
+export const cleanupLicencePlateOwnersTable = (recordDelete_timeMillis: number) => {
 
   const db = sqlite(dbPath);
 
@@ -190,9 +192,9 @@ export function cleanupLicencePlateOwnersTable(recordDelete_timeMillis: number) 
 
   return true;
 
-}
+};
 
-export function cleanupParkingOffencesTable() {
+export const cleanupParkingOffencesTable = () => {
 
   const db = sqlite(dbPath);
 
@@ -216,9 +218,9 @@ export function cleanupParkingOffencesTable() {
 
   return true;
 
-}
+};
 
-export function cleanupParkingLocationsTable() {
+export const cleanupParkingLocationsTable = () => {
 
   const db = sqlite(dbPath);
 
@@ -240,9 +242,9 @@ export function cleanupParkingLocationsTable() {
 
   return true;
 
-}
+};
 
-export function cleanupParkingBylawsTable() {
+export const cleanupParkingBylawsTable = () => {
 
   const db = sqlite(dbPath);
 
@@ -252,15 +254,15 @@ export function cleanupParkingBylawsTable() {
     " and not exists (select 1 from ParkingOffences o where b.bylawNumber = o.bylawNumber)")
     .all();
 
-  for (let recordIndex = 0; recordIndex < recordsToDelete.length; recordIndex += 1) {
+  for (const recordToDelete of recordsToDelete) {
 
     db.prepare("delete from ParkingBylaws" +
       " where bylawNumber = ?" +
       " and isActive = 0")
-      .run(recordsToDelete[recordIndex].bylawNumber);
+      .run(recordToDelete.bylawNumber);
   }
 
   db.close();
 
   return true;
-}
+};
