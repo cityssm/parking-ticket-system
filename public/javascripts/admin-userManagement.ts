@@ -5,7 +5,7 @@ import type { ptsGlobal } from "./types";
 declare const pts: ptsGlobal;
 
 
-(function() {
+(() => {
 
   /*
    * Create user
@@ -13,24 +13,23 @@ declare const pts: ptsGlobal;
 
   const createUserModalEle = document.getElementById("is-create-user-modal");
 
-  createUserModalEle.getElementsByTagName("form")[0].addEventListener("submit", function(formEvent) {
+  createUserModalEle.getElementsByTagName("form")[0].addEventListener("submit", (formEvent) => {
 
     formEvent.preventDefault();
 
     cityssm.postJSON(
       "/admin/doCreateUser",
       formEvent.currentTarget,
-      function(responseJSON) {
+      (responseJSON: { success: boolean }) => {
 
         if (responseJSON.success) {
           window.location.reload(true);
         }
       }
     );
-
   });
 
-  document.getElementById("is-create-user-button").addEventListener("click", function() {
+  document.getElementById("is-create-user-button").addEventListener("click", () => {
     cityssm.showModal(createUserModalEle);
   });
 
@@ -48,7 +47,7 @@ declare const pts: ptsGlobal;
    * Delete users
    */
 
-  function deleteUserFn(clickEvent: Event) {
+  const deleteUserFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -57,11 +56,11 @@ declare const pts: ptsGlobal;
     const userNameToDelete = deleteButtonEle.getAttribute("data-user-name");
     const trEle = deleteButtonEle.closest("tr");
 
-    const doDeleteFn = function() {
+    const doDeleteFn = () => {
 
       cityssm.postJSON("/admin/doDeleteUser", {
         userName: userNameToDelete
-      }, function(resultJSON) {
+      }, (resultJSON: { success: boolean }) => {
 
         if (resultJSON.success) {
           trEle.remove();
@@ -78,7 +77,7 @@ declare const pts: ptsGlobal;
       "warning",
       doDeleteFn
     );
-  }
+  };
 
   const deleteUserButtonEles = userContainerEle.getElementsByClassName("is-delete-user-button");
 
@@ -95,7 +94,7 @@ declare const pts: ptsGlobal;
 
   pts.initializeTabs(updateUserModalEle.getElementsByClassName("tabs")[0].getElementsByTagName("ul")[0]);
 
-  function submitFn_updateUserSetting(formEvent: Event) {
+  const submitFn_updateUserSetting = (formEvent: Event) => {
 
     formEvent.preventDefault();
 
@@ -104,7 +103,7 @@ declare const pts: ptsGlobal;
     cityssm.postJSON(
       "/admin/doUpdateUserProperty",
       formEle,
-      function(responseJSON) {
+      (responseJSON: { success: boolean }) => {
 
         if (responseJSON.success) {
 
@@ -123,9 +122,9 @@ declare const pts: ptsGlobal;
       }
     );
 
-  }
+  };
 
-  function keyupFn_markSettingUnsaved(keyupEvent: Event) {
+  const keyupFn_markSettingUnsaved = (keyupEvent: Event) => {
 
     const inputEle = <HTMLInputElement>keyupEvent.currentTarget;
 
@@ -139,9 +138,9 @@ declare const pts: ptsGlobal;
     submitBtnEle.classList.remove("is-primary");
     submitBtnEle.classList.remove("is-success");
 
-  }
+  };
 
-  function clickFn_updateUser(clickEvent: Event) {
+  const clickFn_updateUser = (clickEvent: Event) => {
 
     const linkEle = <HTMLAnchorElement>clickEvent.currentTarget;
 
@@ -171,7 +170,7 @@ declare const pts: ptsGlobal;
       "/admin/doGetUserProperties", {
         userName
       },
-      function(userPropertiesJSON) {
+      (userPropertiesJSON) => {
 
         let propertyIndex = 0;
 
@@ -234,7 +233,7 @@ declare const pts: ptsGlobal;
 
     cityssm.showModal(updateUserModalEle);
 
-  }
+  };
 
   const updateUserButtonEles = userContainerEle.getElementsByClassName("is-update-user-button");
 
@@ -251,14 +250,14 @@ declare const pts: ptsGlobal;
   // User name
 
   document.getElementById("tab--updateUser-name").getElementsByTagName("form")[0]
-    .addEventListener("submit", function(formEvent) {
+    .addEventListener("submit", (formEvent) => {
 
       formEvent.preventDefault();
 
       cityssm.postJSON(
         "/admin/doUpdateUser",
         formEvent.currentTarget,
-        function(responseJSON) {
+        (responseJSON: { success: boolean }) => {
 
           if (responseJSON.success) {
             window.location.reload(true);
@@ -270,14 +269,14 @@ declare const pts: ptsGlobal;
   // Reset password
 
   document.getElementById("tab--updateUser-password").getElementsByTagName("form")[0]
-    .addEventListener("submit", function(formEvent) {
+    .addEventListener("submit", (formEvent) => {
 
       formEvent.preventDefault();
 
       cityssm.postJSON(
         "/admin/doResetPassword",
         formEvent.currentTarget,
-        function(responseJSON) {
+        (responseJSON: { success: boolean, newPassword?: string }) => {
 
           if (responseJSON.success) {
 
@@ -290,4 +289,4 @@ declare const pts: ptsGlobal;
         }
       );
     });
-}());
+})();

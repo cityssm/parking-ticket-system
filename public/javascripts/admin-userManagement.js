@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const createUserModalEle = document.getElementById("is-create-user-modal");
-    createUserModalEle.getElementsByTagName("form")[0].addEventListener("submit", function (formEvent) {
+    createUserModalEle.getElementsByTagName("form")[0].addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
-        cityssm.postJSON("/admin/doCreateUser", formEvent.currentTarget, function (responseJSON) {
+        cityssm.postJSON("/admin/doCreateUser", formEvent.currentTarget, (responseJSON) => {
             if (responseJSON.success) {
                 window.location.reload(true);
             }
         });
     });
-    document.getElementById("is-create-user-button").addEventListener("click", function () {
+    document.getElementById("is-create-user-button").addEventListener("click", () => {
         cityssm.showModal(createUserModalEle);
     });
     let cancelButtonEles = createUserModalEle.getElementsByClassName("is-cancel-button");
@@ -18,22 +18,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cancelButtonEle.addEventListener("click", cityssm.hideModal);
     }
     const userContainerEle = document.getElementById("container--users");
-    function deleteUserFn(clickEvent) {
+    const deleteUserFn = (clickEvent) => {
         clickEvent.preventDefault();
         const deleteButtonEle = clickEvent.currentTarget;
         const userNameToDelete = deleteButtonEle.getAttribute("data-user-name");
         const trEle = deleteButtonEle.closest("tr");
-        const doDeleteFn = function () {
+        const doDeleteFn = () => {
             cityssm.postJSON("/admin/doDeleteUser", {
                 userName: userNameToDelete
-            }, function (resultJSON) {
+            }, (resultJSON) => {
                 if (resultJSON.success) {
                     trEle.remove();
                 }
             });
         };
         cityssm.confirmModal("Delete User?", "Are you sure you want to delete <em>" + cityssm.escapeHTML(userNameToDelete) + "</em>?<br />", "Yes, Delete", "warning", doDeleteFn);
-    }
+    };
     const deleteUserButtonEles = userContainerEle.getElementsByClassName("is-delete-user-button");
     for (const deleteUserButtonEle of deleteUserButtonEles) {
         deleteUserButtonEle.addEventListener("click", deleteUserFn);
@@ -41,10 +41,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const updateUserModalEle = document.getElementById("is-update-user-modal");
     const updateUserUserNameSpanEles = updateUserModalEle.getElementsByClassName("container--userName");
     pts.initializeTabs(updateUserModalEle.getElementsByClassName("tabs")[0].getElementsByTagName("ul")[0]);
-    function submitFn_updateUserSetting(formEvent) {
+    const submitFn_updateUserSetting = (formEvent) => {
         formEvent.preventDefault();
         const formEle = formEvent.currentTarget;
-        cityssm.postJSON("/admin/doUpdateUserProperty", formEle, function (responseJSON) {
+        cityssm.postJSON("/admin/doUpdateUserProperty", formEle, (responseJSON) => {
             if (responseJSON.success) {
                 const inputEle = formEle.getElementsByClassName("input")[0];
                 inputEle.classList.add("is-success");
@@ -54,8 +54,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 submitBtnEle.classList.remove("is-danger");
             }
         });
-    }
-    function keyupFn_markSettingUnsaved(keyupEvent) {
+    };
+    const keyupFn_markSettingUnsaved = (keyupEvent) => {
         const inputEle = keyupEvent.currentTarget;
         inputEle.classList.add("is-danger");
         inputEle.classList.remove("is-primary");
@@ -64,8 +64,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         submitBtnEle.classList.add("is-danger");
         submitBtnEle.classList.remove("is-primary");
         submitBtnEle.classList.remove("is-success");
-    }
-    function clickFn_updateUser(clickEvent) {
+    };
+    const clickFn_updateUser = (clickEvent) => {
         const linkEle = clickEvent.currentTarget;
         const userName = linkEle.getAttribute("data-user-name");
         const firstName = linkEle.getAttribute("data-first-name");
@@ -80,7 +80,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.clearElement(userPropertiesContainerEle);
         cityssm.postJSON("/admin/doGetUserProperties", {
             userName
-        }, function (userPropertiesJSON) {
+        }, (userPropertiesJSON) => {
             let propertyIndex = 0;
             for (const propertyName in userPropertiesJSON) {
                 if (userPropertiesJSON.hasOwnProperty(propertyName)) {
@@ -123,7 +123,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             .closest(".message")
             .setAttribute("hidden", "hidden");
         cityssm.showModal(updateUserModalEle);
-    }
+    };
     const updateUserButtonEles = userContainerEle.getElementsByClassName("is-update-user-button");
     for (const updateUserButtonEle of updateUserButtonEles) {
         updateUserButtonEle.addEventListener("click", clickFn_updateUser);
@@ -133,18 +133,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cancelButtonEle.addEventListener("click", cityssm.hideModal);
     }
     document.getElementById("tab--updateUser-name").getElementsByTagName("form")[0]
-        .addEventListener("submit", function (formEvent) {
+        .addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
-        cityssm.postJSON("/admin/doUpdateUser", formEvent.currentTarget, function (responseJSON) {
+        cityssm.postJSON("/admin/doUpdateUser", formEvent.currentTarget, (responseJSON) => {
             if (responseJSON.success) {
                 window.location.reload(true);
             }
         });
     });
     document.getElementById("tab--updateUser-password").getElementsByTagName("form")[0]
-        .addEventListener("submit", function (formEvent) {
+        .addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
-        cityssm.postJSON("/admin/doResetPassword", formEvent.currentTarget, function (responseJSON) {
+        cityssm.postJSON("/admin/doResetPassword", formEvent.currentTarget, (responseJSON) => {
             if (responseJSON.success) {
                 const newPasswordEle = document.getElementById("resetPassword--newPassword");
                 newPasswordEle.innerText = responseJSON.newPassword;
@@ -152,4 +152,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-}());
+})();

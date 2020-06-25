@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const recordDelete_timeMillis = exports.recordDelete_timeMillis;
     delete exports.recordDelete_timeMillis;
-    function purgeTable(clickEvent) {
+    const purgeTableFn = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonEle = clickEvent.currentTarget;
         buttonEle.setAttribute("disabled", "disabled");
         const table = buttonEle.getAttribute("data-table");
-        const purgeFn = function () {
+        const purgeFn = () => {
             cityssm.postJSON("/admin/doCleanupTable", {
                 table,
                 recordDelete_timeMillis
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     cityssm.alertModal("Table Purged Successfully", "", "OK", "success");
                     buttonEle.closest("td").innerHTML = "<span class=\"has-text-grey\">Records Purged</span>";
@@ -23,9 +23,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.confirmModal("Purge Table?", "Are you sure you want to purge the deleted records in this table? This cannot be undone.", "Yes, Delete the Records", "warning", purgeFn);
-    }
+    };
     const purgeButtonEles = document.getElementsByClassName("is-purge-button");
     for (const purgeButtonEle of purgeButtonEles) {
-        purgeButtonEle.addEventListener("click", purgeTable);
+        purgeButtonEle.addEventListener("click", purgeTableFn);
     }
-}());
+})();

@@ -2,13 +2,13 @@ import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/
 declare const cityssm: cityssmGlobal;
 
 
-(function() {
+(() => {
 
   const changePasswordModalEle = document.getElementById("is-change-password-modal");
 
   if (changePasswordModalEle) {
 
-    changePasswordModalEle.getElementsByTagName("form")[0].addEventListener("submit", function(formEvent) {
+    changePasswordModalEle.getElementsByTagName("form")[0].addEventListener("submit", (formEvent) => {
 
       formEvent.preventDefault();
 
@@ -17,7 +17,7 @@ declare const cityssm: cityssmGlobal;
       cityssm.postJSON(
         "/dashboard/doChangePassword",
         formEle,
-        function(responseJSON) {
+        (responseJSON: { success: boolean }) => {
 
           if (responseJSON.success) {
 
@@ -29,7 +29,7 @@ declare const cityssm: cityssmGlobal;
     });
 
 
-    document.getElementsByClassName("is-change-password-button")[0].addEventListener("click", function() {
+    document.getElementsByClassName("is-change-password-button")[0].addEventListener("click", () => {
 
       changePasswordModalEle.getElementsByTagName("form")[0].reset();
       cityssm.showModal(changePasswordModalEle);
@@ -37,7 +37,7 @@ declare const cityssm: cityssmGlobal;
 
     });
 
-    const toggleVisibilityFn = function(buttonEvent: Event) {
+    const toggleVisibilityFn = (buttonEvent: Event) => {
 
       const inputEle = (<HTMLButtonElement>buttonEvent.currentTarget).closest(".field").getElementsByClassName("input")[0];
 
@@ -60,4 +60,4 @@ declare const cityssm: cityssmGlobal;
     }
   }
 
-}());
+})();

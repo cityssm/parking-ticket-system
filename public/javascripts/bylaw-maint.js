@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const bylawFilterEle = document.getElementById("bylawFilter--bylaw");
     const bylawResultsEle = document.getElementById("bylawResults");
     let bylawList = exports.bylaws;
     delete exports.bylaws;
-    function openUpdateOffencesModal(clickEvent) {
+    const openUpdateOffencesModal = (clickEvent) => {
         clickEvent.preventDefault();
         const listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         const bylaw = bylawList[listIndex];
         let updateOffencesCloseModalFn;
-        const updateFn = function (formEvent) {
+        const updateFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/admin/doUpdateOffencesByBylaw", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/admin/doUpdateOffencesByBylaw", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     updateOffencesCloseModalFn();
                     bylawList = responseJSON.bylaws;
-                    renderBylawList();
+                    renderBylawListFn();
                 }
             });
         };
@@ -33,34 +33,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
             }
         });
-    }
-    function openEditBylawModal(clickEvent) {
+    };
+    const openEditBylawModalFn = (clickEvent) => {
         clickEvent.preventDefault();
         const listIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         const bylaw = bylawList[listIndex];
         let editBylawCloseModalFn;
-        const deleteFn = function () {
+        const deleteFn = () => {
             cityssm.postJSON("/admin/doDeleteBylaw", {
                 bylawNumber: bylaw.bylawNumber
-            }, function (responseJSON) {
+            }, (responseJSON) => {
                 if (responseJSON.success) {
                     editBylawCloseModalFn();
                     bylawList = responseJSON.bylaws;
-                    renderBylawList();
+                    renderBylawListFn();
                 }
             });
         };
-        const confirmDeleteFn = function (deleteClickEvent) {
+        const confirmDeleteFn = (deleteClickEvent) => {
             deleteClickEvent.preventDefault();
             cityssm.confirmModal("Delete By-Law", "Are you sure you want to remove by-law \"" + bylaw.bylawNumber + "\" from the list of available options?", "Yes, Remove By-Law", "danger", deleteFn);
         };
-        const editFn = function (formEvent) {
+        const editFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     editBylawCloseModalFn();
                     bylawList = responseJSON.bylaws;
-                    renderBylawList();
+                    renderBylawListFn();
                 }
             });
         };
@@ -75,13 +75,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
             }
         });
-    }
-    function renderBylawList() {
+    };
+    const renderBylawListFn = () => {
         let displayCount = 0;
         const bylawFilterSplit = bylawFilterEle.value.trim().toLowerCase()
             .split(" ");
         const tbodyEle = document.createElement("tbody");
-        bylawList.forEach(function (bylaw, bylawIndex) {
+        bylawList.forEach((bylaw, bylawIndex) => {
             let showRecord = true;
             const bylawNumberLowerCase = bylaw.bylawNumber.toLowerCase();
             const bylawDescriptionLowerCase = bylaw.bylawDescription.toLowerCase();
@@ -121,7 +121,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<td class=\"has-border-right-width-2\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>" +
                     "<td class=\"has-text-right\">" + bylaw.offenceCount + "</td>" +
                     "<td class=\"has-text-right\">" + offenceAmountRange + "</td>";
-            trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModal);
+            trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModalFn);
             if (hasOffences) {
                 trEle.getElementsByTagName("a")[1].addEventListener("click", openUpdateOffencesModal);
             }
@@ -143,22 +143,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</tr></thead>" +
             "</table>";
         bylawResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
-    }
-    bylawFilterEle.addEventListener("keyup", renderBylawList);
-    renderBylawList();
-    document.getElementById("is-add-bylaw-button").addEventListener("click", function (clickEvent) {
+    };
+    bylawFilterEle.addEventListener("keyup", renderBylawListFn);
+    renderBylawListFn();
+    document.getElementById("is-add-bylaw-button").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         let addBylawCloseModalFn;
-        const addFn = function (formEvent) {
+        const addFn = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/admin/doAddBylaw", formEvent.currentTarget, function (responseJSON) {
+            cityssm.postJSON("/admin/doAddBylaw", formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     addBylawCloseModalFn();
                     if (responseJSON.message) {
                         cityssm.alertModal("By-Law Added", responseJSON.message, "OK", "warning");
                     }
                     bylawList = responseJSON.bylaws;
-                    renderBylawList();
+                    renderBylawListFn();
                 }
                 else {
                     cityssm.alertModal("By-Law Not Added", responseJSON.message, "OK", "danger");
@@ -172,4 +172,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-}());
+})();

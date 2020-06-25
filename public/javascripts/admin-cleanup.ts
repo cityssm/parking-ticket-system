@@ -2,12 +2,12 @@ import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/
 declare const cityssm: cityssmGlobal;
 
 
-(function() {
+(() => {
 
   const recordDelete_timeMillis = exports.recordDelete_timeMillis;
   delete exports.recordDelete_timeMillis;
 
-  function purgeTable(clickEvent: Event) {
+  const purgeTableFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -16,13 +16,13 @@ declare const cityssm: cityssmGlobal;
 
     const table = buttonEle.getAttribute("data-table");
 
-    const purgeFn = function() {
+    const purgeFn = () => {
 
       cityssm.postJSON("/admin/doCleanupTable", {
         table,
         recordDelete_timeMillis
       },
-        function(responseJSON) {
+        (responseJSON: { success: true }) => {
 
           if (responseJSON.success) {
 
@@ -44,11 +44,11 @@ declare const cityssm: cityssmGlobal;
       "Yes, Delete the Records",
       "warning",
       purgeFn);
-  }
+  };
 
   const purgeButtonEles = <HTMLCollectionOf<HTMLButtonElement>>document.getElementsByClassName("is-purge-button");
 
   for (const purgeButtonEle of purgeButtonEles) {
-    purgeButtonEle.addEventListener("click", purgeTable);
+    purgeButtonEle.addEventListener("click", purgeTableFn);
   }
-}());
+})();

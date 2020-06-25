@@ -3,8 +3,14 @@ declare const cityssm: cityssmGlobal;
 
 import type { ParkingBylaw } from "../../helpers/ptsTypes";
 
+type UpdateRecordResponseJSON = {
+  success: boolean,
+  message?: string,
+  bylaws?: ParkingBylaw[]
+};
 
-(function() {
+
+(() => {
 
   const bylawFilterEle = <HTMLInputElement>document.getElementById("bylawFilter--bylaw");
   const bylawResultsEle = document.getElementById("bylawResults");
@@ -13,28 +19,28 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
   delete exports.bylaws;
 
 
-  function openUpdateOffencesModal(clickEvent: Event) {
+  const openUpdateOffencesModal = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
     const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
-    let updateOffencesCloseModalFn: Function;
+    let updateOffencesCloseModalFn: () => void;
 
-    const updateFn = function(formEvent: Event) {
+    const updateFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doUpdateOffencesByBylaw", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doUpdateOffencesByBylaw", formEvent.currentTarget,
+        (responseJSON: UpdateRecordResponseJSON) => {
 
-        if (responseJSON.success) {
-
-          updateOffencesCloseModalFn();
-          bylawList = responseJSON.bylaws;
-          renderBylawList();
-        }
-      });
+          if (responseJSON.success) {
+            updateOffencesCloseModalFn();
+            bylawList = responseJSON.bylaws;
+            renderBylawListFn();
+          }
+        });
     };
 
     cityssm.openHtmlModal("bylaw-updateOffences", {
@@ -55,37 +61,34 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
       }
     });
-  }
+  };
 
 
-  function openEditBylawModal(clickEvent: Event) {
+  const openEditBylawModalFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
     const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
-    let editBylawCloseModalFn: Function;
+    let editBylawCloseModalFn: () => void;
 
-    const deleteFn = function() {
+    const deleteFn = () => {
 
       cityssm.postJSON("/admin/doDeleteBylaw", {
         bylawNumber: bylaw.bylawNumber
-      }, function(responseJSON) {
+      }, (responseJSON: UpdateRecordResponseJSON) => {
 
         if (responseJSON.success) {
 
           editBylawCloseModalFn();
           bylawList = responseJSON.bylaws;
-          renderBylawList();
-
+          renderBylawListFn();
         }
-
       });
-
     };
 
-    const confirmDeleteFn = function(deleteClickEvent: Event) {
+    const confirmDeleteFn = (deleteClickEvent: Event) => {
 
       deleteClickEvent.preventDefault();
 
@@ -99,17 +102,17 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
 
     };
 
-    const editFn = function(formEvent: Event) {
+    const editFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doUpdateBylaw", formEvent.currentTarget, (responseJSON: UpdateRecordResponseJSON) => {
 
         if (responseJSON.success) {
 
           editBylawCloseModalFn();
           bylawList = responseJSON.bylaws;
-          renderBylawList();
+          renderBylawListFn();
 
         }
 
@@ -134,11 +137,10 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
 
       }
     });
+  };
 
-  }
 
-
-  function renderBylawList() {
+  const renderBylawListFn = () => {
 
     let displayCount = 0;
 
@@ -147,7 +149,7 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
 
     const tbodyEle = document.createElement("tbody");
 
-    bylawList.forEach(function(bylaw, bylawIndex) {
+    bylawList.forEach((bylaw, bylawIndex) => {
 
       let showRecord = true;
 
@@ -202,7 +204,7 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
         "<td class=\"has-text-right\">" + bylaw.offenceCount + "</td>" +
         "<td class=\"has-text-right\">" + offenceAmountRange + "</td>";
 
-      trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModal);
+      trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModalFn);
 
       if (hasOffences) {
         trEle.getElementsByTagName("a")[1].addEventListener("click", openUpdateOffencesModal);
@@ -235,30 +237,30 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
       "</table>";
 
     bylawResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
-  }
+  };
 
 
   // Initialize filters
 
 
-  bylawFilterEle.addEventListener("keyup", renderBylawList);
-  renderBylawList();
+  bylawFilterEle.addEventListener("keyup", renderBylawListFn);
+  renderBylawListFn();
 
 
   // Initialize add button
 
 
-  document.getElementById("is-add-bylaw-button").addEventListener("click", function(clickEvent) {
+  document.getElementById("is-add-bylaw-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addBylawCloseModalFn: Function;
+    let addBylawCloseModalFn: () => void;
 
-    const addFn = function(formEvent: Event) {
+    const addFn = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      cityssm.postJSON("/admin/doAddBylaw", formEvent.currentTarget, function(responseJSON) {
+      cityssm.postJSON("/admin/doAddBylaw", formEvent.currentTarget, (responseJSON: UpdateRecordResponseJSON) => {
 
         if (responseJSON.success) {
 
@@ -276,7 +278,7 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
           }
 
           bylawList = responseJSON.bylaws;
-          renderBylawList();
+          renderBylawListFn();
 
         } else {
 
@@ -296,7 +298,6 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
     cityssm.openHtmlModal("bylaw-add", {
 
       onshown(modalEle, closeModalFn) {
-
         addBylawCloseModalFn = closeModalFn;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", addFn);
       }
@@ -305,4 +306,4 @@ import type { ParkingBylaw } from "../../helpers/ptsTypes";
 
   });
 
-}());
+})();
