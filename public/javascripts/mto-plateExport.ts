@@ -354,8 +354,8 @@ type AvailableLicencePlate = {
     batchID = batch.batchID;
     batchEntriesList = batch.batchEntries;
 
-    batchIsLocked = !(batch.lockDate == null);
-    batchIsSent = !(batch.sentDate == null);
+    batchIsLocked = !(batch.lockDate === null);
+    batchIsSent = !(batch.sentDate === null);
 
     if (canUpdate) {
       if (batchIsLocked) {

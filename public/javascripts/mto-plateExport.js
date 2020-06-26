@@ -213,8 +213,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const fn_populateBatchView = (batch) => {
         batchID = batch.batchID;
         batchEntriesList = batch.batchEntries;
-        batchIsLocked = !(batch.lockDate == null);
-        batchIsSent = !(batch.sentDate == null);
+        batchIsLocked = !(batch.lockDate === null);
+        batchIsSent = !(batch.sentDate === null);
         if (canUpdate) {
             if (batchIsLocked) {
                 lockBatchButtonEle.setAttribute("disabled", "disabled");

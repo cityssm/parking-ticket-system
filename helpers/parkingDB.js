@@ -155,8 +155,9 @@ exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProv
         " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
         " from ParkingTickets t" +
         " left join ParkingLocations l on t.locationKey = l.locationKey" +
-        (" left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-            " and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
+        " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
+        (" and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID" +
+            " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
         " where t.recordDelete_timeMillis is null" +
         " and t.licencePlateCountry = ?" +
         " and t.licencePlateProvince = ?" +
@@ -280,8 +281,8 @@ exports.createParkingTicket = (reqBody, reqSession) => {
     }
     let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
     if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
-        let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
+        const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
+        const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
         if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
             licencePlateExpiryDate = 0;
         }
@@ -334,8 +335,8 @@ exports.updateParkingTicket = (reqBody, reqSession) => {
     }
     let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
     if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        let licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
-        let licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
+        const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
+        const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
         if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
             licencePlateExpiryDate = 0;
         }

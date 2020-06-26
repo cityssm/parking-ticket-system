@@ -25,7 +25,7 @@ export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: numbe
     readonly: true
   });
 
-  let issueDateNumber = 99999999;
+  let issueDateNumber = 1e8; // 100000000 (a number bigger than any possible date)
 
   if (issueDaysAgo !== -1) {
     const issueDate = new Date();

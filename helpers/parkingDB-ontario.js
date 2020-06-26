@@ -8,7 +8,7 @@ exports.getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysA
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
-    let issueDateNumber = 99999999;
+    let issueDateNumber = 1e8;
     if (issueDaysAgo !== -1) {
         const issueDate = new Date();
         issueDate.setDate(issueDate.getDate() - issueDaysAgo);
