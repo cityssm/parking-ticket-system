@@ -169,10 +169,10 @@ An object of province details.
 
 ### `licencePlateCountry = {};`
 
-| Property Name      | Type                                                   | Description                            |
-| ------------------ | ------------------------------------------------------ | -------------------------------------- |
-| `countryShortName` | string                                                 | The proper short name for the country. |
-| `provinces`        | { [provinceName: string] &#x3A; licencePlateProvince } | An object of province definitions.     |
+| Property Name      | Type                                               | Description                            |
+| ------------------ | -------------------------------------------------- | -------------------------------------- |
+| `countryShortName` | string                                             | The proper short name for the country. |
+| `provinces`        | `{ [provinceName: string]: licencePlateProvince }` | An object of province definitions.     |
 
 ### `licencePlateProvince = {};`
 

@@ -30,7 +30,7 @@ Complete the form, and click "Create New Ticket and Continue" to save the record
 
 An details of some of the key fields.
 
-**Parking Ticket Number**
+### Parking Ticket Number
 
 You can use the config file to customize this field.
 
@@ -39,32 +39,32 @@ You can use the config file to customize this field.
 -   You can apply a regular expression to the field, so the value must match a pattern.
 -   You can define the `nextTicketNumberFn()` function to assist with entering sequential ticket numbers.
 
-**Location**
+### Location
 
 The location values are defined in the [Parking Locations admin section](locations.md).
 Click the Search button to open a selection window.
 
-**By-Law Number**
+### By-Law Number
 
 The by-law values are defined in the [Parking By-Laws admin section](bylaws.md).
 Click the Search button to open a selection window.
 The by-laws available are filtered using the [parking offence records](offences.md),
 which relate the locations with the by-laws, and provide the Offence Amount.
 
-**Licence Plate Country and Province**
+### Licence Plate Country and Province
 
 The country and province codes can use default values defined in the config file.
 To make use of the Ontario, Canada functionality, the country code should be **CA**
 and the province code should be **ON**.
 
-**Licence Plate Expiry Year and Month**
+### Licence Plate Expiry Year and Month
 
 The expiry date field is split across a year field and a month field.
 The fields can either both be populated, or both left blank.
 When split, the expiry date defaults to the last day of the selected month.
 A setting in the config file can change the two fields into a single date field.
 
-**Licence Plate Unavailable**
+### Licence Plate Unavailable
 
 When selected, the licence plate country, province, and number fields will no longer be required.
 
