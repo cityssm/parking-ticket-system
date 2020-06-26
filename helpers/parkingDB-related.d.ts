@@ -18,7 +18,12 @@ interface AddUpdateParkingBylawReturn {
 export declare const addParkingBylaw: (reqBody: pts.ParkingBylaw) => AddUpdateParkingBylawReturn;
 export declare const updateParkingBylaw: (reqBody: pts.ParkingBylaw) => AddUpdateParkingBylawReturn;
 export declare const deleteParkingBylaw: (bylawNumber: string) => AddUpdateParkingBylawReturn;
-export declare const updateParkingOffencesByBylawNumber: (reqBody: any) => AddUpdateParkingBylawReturn;
+export declare const updateParkingOffencesByBylawNumber: (reqBody: {
+    bylawNumber: string;
+    offenceAmount: string;
+    discountDays: string;
+    discountOffenceAmount: string;
+}) => AddUpdateParkingBylawReturn;
 export declare const getParkingOffences: () => pts.ParkingOffence[];
 export declare const getParkingOffencesByLocationKey: (locationKey: string) => pts.ParkingOffence[];
 interface AddUpdateParkingOffenceReturn {

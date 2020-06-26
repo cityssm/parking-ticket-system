@@ -683,7 +683,8 @@ exports.getLicencePlates = (queryOptions) => {
         sqlInnerWhereClause +
         " union" +
         " select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
-        " sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
+        " sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal," +
+        " 0 as hasOwnerRecordInternal" +
         " from ParkingTickets" +
         sqlInnerWhereClause +
         " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +

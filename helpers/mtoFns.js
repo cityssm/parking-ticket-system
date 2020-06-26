@@ -18,14 +18,14 @@ const resetCurrentDate = () => {
     currentDatePrefix = currentYearPrefix * 10000;
 };
 const twoDigitYearToFourDigit = (twoDigitYear) => {
-    let fourDigitYear = twoDigitYear + currentYearPrefix;
+    const fourDigitYear = twoDigitYear + currentYearPrefix;
     if (fourDigitYear > currentDate.getFullYear() + 5) {
         return fourDigitYear - 100;
     }
     return fourDigitYear;
 };
 const sixDigitDateNumberToEightDigit = (sixDigitDateNumber) => {
-    let eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
+    const eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
     if (eightDigitDateNumber > currentDateNumber) {
         return eightDigitDateNumber - 1000000;
     }

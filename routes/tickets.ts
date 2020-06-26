@@ -145,10 +145,11 @@ router.post("/doReconcileAsMatch", (req, res) => {
       });
 
     return;
-
   }
 
-  const ownerRecord = parkingDB.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
+  const ownerRecord =
+    parkingDB.getLicencePlateOwner(
+      req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
 
   if (!ownerRecord) {
 
@@ -191,7 +192,8 @@ router.post("/doReconcileAsError", (req, res) => {
 
   }
 
-  const ownerRecord = parkingDB.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
+  const ownerRecord = parkingDB.getLicencePlateOwner(
+    req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
 
   if (!ownerRecord) {
 
@@ -232,7 +234,7 @@ router.post("/doQuickReconcileMatches", (req, res) => {
 
   const records = parkingDBLookup.getOwnershipReconciliationRecords();
 
-  let statusRecords: { ticketID: number, statusIndex: number }[] = [];
+  const statusRecords: { ticketID: number, statusIndex: number }[] = [];
 
   for (const record of records) {
 

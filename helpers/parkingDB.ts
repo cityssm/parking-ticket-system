@@ -240,7 +240,8 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
 
 
 export const getParkingTicketsByLicencePlate =
-  (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) => {
+  (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string,
+    reqSession: Express.Session) => {
 
     const db = sqlite(dbPath, {
       readonly: true
@@ -1148,7 +1149,8 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
     " union" +
 
     " select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
-    " sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal, 0 as hasOwnerRecordInternal" +
+    " sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal," +
+    " 0 as hasOwnerRecordInternal" +
     " from ParkingTickets" +
     sqlInnerWhereClause +
     " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
@@ -1188,7 +1190,8 @@ export const getLicencePlateOwner =
       readonly: true
     });
 
-    const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
+    const ownerRecord =
+      getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
 
     db.close();
 

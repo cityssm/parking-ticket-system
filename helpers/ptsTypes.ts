@@ -330,6 +330,14 @@ export interface ParkingTicketConvictionBatch extends Record {
 }
 
 
+export interface NHTSAMakeModel {
+  makeId: number;
+  makeName: string;
+  modelID: number;
+  modelName: string;
+}
+
+
 /*
  * USER DB TYPES
  */

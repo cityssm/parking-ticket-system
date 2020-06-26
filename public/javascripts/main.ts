@@ -82,6 +82,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     );
   };
 
+  // tslint:disable-next-line:no-any
   pts.getDefaultConfigProperty = (propertyName, propertyValueCallbackFn: (propertyValue: any) => void) => {
 
     // Check memory
@@ -156,8 +157,9 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
 
-      licencePlateProvinceAlias =
-        defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+      const provinceAliases = defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias];
+
+      licencePlateProvinceAlias = provinceAliases[originalLicencePlateProvince.toUpperCase()] ||
         originalLicencePlateProvince;
 
     }
@@ -169,7 +171,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
 
       licencePlateProvince =
-        defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+        defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
+        licencePlateProvinceDefault;
 
     }
 

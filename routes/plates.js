@@ -10,7 +10,7 @@ router.get("/", (_req, res) => {
     });
 });
 router.post("/doGetLicencePlates", (req, res) => {
-    let queryOptions = {
+    const queryOptions = {
         limit: req.body.limit,
         offset: req.body.offset,
         licencePlateNumber: req.body.licencePlateNumber

@@ -80,14 +80,15 @@ const pts = {};
             originalLicencePlateCountry;
         let licencePlateProvinceAlias = originalLicencePlateProvince;
         if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
-            licencePlateProvinceAlias =
-                defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
-                    originalLicencePlateProvince;
+            const provinceAliases = defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias];
+            licencePlateProvinceAlias = provinceAliases[originalLicencePlateProvince.toUpperCase()] ||
+                originalLicencePlateProvince;
         }
         let licencePlateProvince = licencePlateProvinceDefault;
         if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
             licencePlateProvince =
-                defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+                defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
+                    licencePlateProvinceDefault;
         }
         return {
             licencePlateCountryAlias,

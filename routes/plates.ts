@@ -17,7 +17,7 @@ router.get("/", (_req, res) => {
 
 router.post("/doGetLicencePlates", (req, res) => {
 
-  let queryOptions: parkingDB.GetLicencePlatesQueryOptions = {
+  const queryOptions: parkingDB.GetLicencePlatesQueryOptions = {
     limit: req.body.limit,
     offset: req.body.offset,
     licencePlateNumber: req.body.licencePlateNumber
@@ -249,7 +249,9 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", (r
 
   const owners = parkingDB.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
-  const tickets = parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
+  const tickets =
+    parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
+      req.session);
 
   res.render("plate-view", {
     headTitle: "Licence Plate " + licencePlateNumber,

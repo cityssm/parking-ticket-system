@@ -20,8 +20,10 @@ import * as sqlite from "better-sqlite3";
 
 import * as ncic from "../data/ncicCodes";
 
+import type { NHTSAMakeModel } from "./ptsTypes";
 
-const getModelsByMakeFromDB = (makeSearchString: string, db: sqlite.Database) => {
+
+const getModelsByMakeFromDB = (makeSearchString: string, db: sqlite.Database): NHTSAMakeModel[] => {
 
   return db.prepare("select makeID, makeName, modelID, modelName" +
     " from MakeModel" +
@@ -46,111 +48,112 @@ export const getModelsByMakeFromCache = (makeSearchStringOriginal: string) => {
 };
 
 
-export const getModelsByMake = (makeSearchStringOriginal: string, callbackFn: (makeModelResults: any[]) => void) => {
+export const getModelsByMake =
+  (makeSearchStringOriginal: string, callbackFn: (makeModelResults: NHTSAMakeModel[]) => void) => {
 
-  const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
+    const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
 
-  const db = sqlite(dbPath);
+    const db = sqlite(dbPath);
 
-  const queryCloseCallbackFn = () => {
+    const queryCloseCallbackFn = () => {
 
-    const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
-    db.close();
-    callbackFn(makeModelResults);
+      const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
+      db.close();
+      callbackFn(makeModelResults);
 
-  };
+    };
 
-  let useAPI = false;
+    let useAPI = false;
 
-  // check if the search string has been searched for recently
+    // check if the search string has been searched for recently
 
-  const nowMillis = Date.now();
+    const nowMillis = Date.now();
 
-  const searchRecord = db.prepare("select searchExpiryMillis from MakeModelSearchHistory" +
-    " where searchString = ?")
-    .get(makeSearchString);
+    const searchRecord = db.prepare("select searchExpiryMillis from MakeModelSearchHistory" +
+      " where searchString = ?")
+      .get(makeSearchString);
 
-  if (searchRecord) {
+    if (searchRecord) {
 
-    if (searchRecord.searchExpiryMillis < nowMillis) {
+      if (searchRecord.searchExpiryMillis < nowMillis) {
 
-      // expired
-      // update searchExpiryMillis to avoid multiple queries
+        // expired
+        // update searchExpiryMillis to avoid multiple queries
+
+        useAPI = true;
+
+        db.prepare("update MakeModelSearchHistory" +
+          " set searchExpiryMillis = ?" +
+          " where searchString = ?")
+          .run(nowMillis + nhtsaSearchExpiryDurationMillis, makeSearchString);
+
+      }
+
+    } else {
 
       useAPI = true;
 
-      db.prepare("update MakeModelSearchHistory" +
-        " set searchExpiryMillis = ?" +
-        " where searchString = ?")
-        .run(nowMillis + nhtsaSearchExpiryDurationMillis, makeSearchString);
-
+      db.prepare("insert into MakeModelSearchHistory" +
+        " (searchString, resultCount, searchExpiryMillis)" +
+        " values (?, ?, ?)")
+        .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis);
     }
 
-  } else {
+    if (useAPI) {
 
-    useAPI = true;
+      fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
+        .then((response) => response.json())
+        .then((data: {
+          Count: number,
+          Results: {
+            Make_ID: number,
+            Make_Name: string,
+            Model_ID: number,
+            Model_Name: string
+          }[]
+        }) => {
 
-    db.prepare("insert into MakeModelSearchHistory" +
-      " (searchString, resultCount, searchExpiryMillis)" +
-      " values (?, ?, ?)")
-      .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis);
-  }
+          db.prepare("update MakeModelSearchHistory" +
+            " set resultCount = ?" +
+            "where searchString = ?")
+            .run(data.Count, makeSearchString);
 
-  if (useAPI) {
+          const insertSQL = "insert or ignore into MakeModel (makeID, makeName, modelID, modelName," +
+            " recordCreate_timeMillis, recordUpdate_timeMillis)" +
+            " values (?, ?, ?, ?, ?, ?)";
 
-    fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
-      .then((response) => response.json())
-      .then((data: {
-        Count: number,
-        Results: {
-          Make_ID: number,
-          Make_Name: string,
-          Model_ID: number,
-          Model_Name: string
-        }[]
-      }) => {
+          const updateSQL = "update MakeModel" +
+            " set recordUpdate_timeMillis = ?" +
+            " where makeName = ?" +
+            " and modelName = ?";
 
-        db.prepare("update MakeModelSearchHistory" +
-          " set resultCount = ?" +
-          "where searchString = ?")
-          .run(data.Count, makeSearchString);
+          for (const record of data.Results) {
 
-        const insertSQL = "insert or ignore into MakeModel (makeID, makeName, modelID, modelName," +
-          " recordCreate_timeMillis, recordUpdate_timeMillis)" +
-          " values (?, ?, ?, ?, ?, ?)";
+            const info = db.prepare(insertSQL)
+              .run(record.Make_ID, record.Make_Name,
+                record.Model_ID, record.Model_Name,
+                nowMillis, nowMillis);
 
-        const updateSQL = "update MakeModel" +
-          " set recordUpdate_timeMillis = ?" +
-          " where makeName = ?" +
-          " and modelName = ?";
-
-        for (const record of data.Results) {
-
-          const info = db.prepare(insertSQL)
-            .run(record.Make_ID, record.Make_Name,
-              record.Model_ID, record.Model_Name,
-              nowMillis, nowMillis);
-
-          if (info.changes === 0) {
-            db.prepare(updateSQL).run(nowMillis, record.Make_Name, record.Model_Name);
+            if (info.changes === 0) {
+              db.prepare(updateSQL).run(nowMillis, record.Make_Name, record.Model_Name);
+            }
           }
-        }
 
-        queryCloseCallbackFn();
-        return;
-      })
-      .catch((_err) => {
+          queryCloseCallbackFn();
+          return;
+        })
+        .catch((_err) => {
 
-        queryCloseCallbackFn();
-        return;
-      });
+          queryCloseCallbackFn();
+          return;
+        });
 
-  } else {
+    } else {
 
-    queryCloseCallbackFn();
-    return;
-  }
-};
+      queryCloseCallbackFn();
+      return;
+    }
+  };
 
 
 export const getMakeFromNCIC = (vehicleNCIC: string): string => {

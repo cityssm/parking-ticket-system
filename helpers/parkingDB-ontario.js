@@ -50,7 +50,7 @@ exports.getParkingTicketsAvailableForMTOConvictionBatch = () => {
     const db = sqlite(parkingDB_1.dbPath, {
         readonly: true
     });
-    let issueDate = new Date();
+    const issueDate = new Date();
     issueDate.setDate(issueDate.getDate() - 60);
     const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
     const parkingTickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber," +

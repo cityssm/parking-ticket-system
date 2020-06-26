@@ -55,7 +55,7 @@ exports.getProperty = (propertyName) => {
 exports.keepAliveMillis = exports.getProperty("session.doKeepAlive") ?
     Math.max(exports.getProperty("session.maxAgeMillis") / 2, exports.getProperty("session.maxAgeMillis") - (10 * 60 * 1000)) :
     0;
-let parkingTicketStatusMap = new Map();
+const parkingTicketStatusMap = new Map();
 let parkingTicketStatusMapIsLoaded = false;
 exports.getParkingTicketStatus = (statusKey) => {
     if (!parkingTicketStatusMapIsLoaded) {

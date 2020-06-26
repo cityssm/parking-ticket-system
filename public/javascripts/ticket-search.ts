@@ -98,14 +98,18 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
             "</td>" +
             "<td class=\"is-nowrap\">" + ticketObj.issueDateString + "</td>" +
             ("<td>" +
-              "<div class=\"licence-plate is-fullwidth\" style=\"--color:" + locationProperties.licencePlateProvince.color + ";--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
+              "<div class=\"licence-plate is-fullwidth\"" +
+              " style=\"--color:" + locationProperties.licencePlateProvince.color + ";" +
+              "--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
 
               ("<div class=\"licence-plate-province\">" +
                 locationProperties.licencePlateProvinceAlias +
                 "</div>") +
 
               ("<div class=\"licence-plate-number\">" +
-                (ticketObj.licencePlateNumber === "" ? "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>" : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
+                (ticketObj.licencePlateNumber === "" ?
+                  "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>" :
+                  cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
                 "</div>") +
 
               "</div>" +
@@ -177,7 +181,11 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
             const nextEle = document.createElement("a");
             nextEle.className = "button ml-3";
-            nextEle.innerHTML = "<span>Next Tickets</span><span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
+
+            nextEle.innerHTML =
+              "<span>Next Tickets</span>" +
+              "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
+
             nextEle.addEventListener("click", (clickEvent) => {
 
               clickEvent.preventDefault();

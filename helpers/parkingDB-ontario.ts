@@ -78,7 +78,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
     readonly: true
   });
 
-  let issueDate = new Date();
+  const issueDate = new Date();
   issueDate.setDate(issueDate.getDate() - 60);
   const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
 

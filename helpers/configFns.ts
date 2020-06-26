@@ -11,6 +11,7 @@ import * as config from "../data/config";
  * SET UP FALLBACK VALUES
  */
 
+// tslint:disable-next-line:no-any
 const configFallbackValues = new Map<string, any>();
 
 configFallbackValues.set("application.applicationName", "Parking Ticket System");
@@ -66,6 +67,7 @@ configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
 
 
+// tslint:disable-next-line:no-any
 export const getProperty = (propertyName: string): any => {
 
   const propertyNameSplit = propertyName.split(".");
@@ -95,7 +97,7 @@ export const keepAliveMillis =
     0;
 
 
-let parkingTicketStatusMap = new Map<string, pts.ConfigParkingTicketStatus>();
+const parkingTicketStatusMap = new Map<string, pts.ConfigParkingTicketStatus>();
 let parkingTicketStatusMapIsLoaded = false;
 
 export const getParkingTicketStatus = (statusKey: string) => {

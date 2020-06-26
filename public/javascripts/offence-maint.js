@@ -250,7 +250,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</td>") +
                     ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Discount Rate\">" +
                         "$" + offence.discountOffenceAmount.toFixed(2) + "<br />" +
-                        "<span class=\"is-size-7\">" + offence.discountDays + " day" + (offence.discountDays === 1 ? "" : "s") + "</span>" +
+                        "<span class=\"is-size-7\">" +
+                        offence.discountDays + " day" + (offence.discountDays === 1 ? "" : "s") +
+                        "</span>" +
                         "</td>") +
                     ("<td class=\"has-border-right-width-2\">" +
                         "<div class=\"is-size-7\">" +

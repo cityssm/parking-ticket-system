@@ -184,7 +184,8 @@ reportDefinitions.set("cleanup-licencePlateOwners", {
 reportDefinitions.set("cleanup-parkingOffences", {
     sql: "select * from ParkingOffences o" +
         " where isActive = 0" +
-        " and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)"
+        (" and not exists (" +
+            "select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)")
 });
 reportDefinitions.set("cleanup-parkingBylaws", {
     sql: "select * from ParkingBylaws b" +

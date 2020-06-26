@@ -24,7 +24,7 @@ const resetCurrentDate = () => {
 
 const twoDigitYearToFourDigit = (twoDigitYear: number) => {
 
-  let fourDigitYear = twoDigitYear + currentYearPrefix;
+  const fourDigitYear = twoDigitYear + currentYearPrefix;
 
   if (fourDigitYear > currentDate.getFullYear() + 5) {
     return fourDigitYear - 100;
@@ -36,7 +36,7 @@ const twoDigitYearToFourDigit = (twoDigitYear: number) => {
 
 const sixDigitDateNumberToEightDigit = (sixDigitDateNumber: number) => {
 
-  let eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
+  const eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
 
   if (eightDigitDateNumber > currentDateNumber) {
     return eightDigitDateNumber - 1000000;
@@ -337,7 +337,8 @@ export const importLicencePlateOwnership = (batchID: number, ownershipData: stri
             recordRow.vehicleNCIC, recordRow.vehicleYear, recordRow.vehicleColor,
             recordRow.licencePlateExpiryDate,
             recordRow.ownerName1, recordRow.ownerName2,
-            recordRow.ownerAddress, recordRow.ownerCity, recordRow.ownerProvince, recordRow.ownerPostalCode, recordRow.ownerGenderKey,
+            recordRow.ownerAddress, recordRow.ownerCity, recordRow.ownerProvince, recordRow.ownerPostalCode,
+            recordRow.ownerGenderKey,
             recordRow.driverLicenceNumber,
             reqSession.user.userName, rightNowMillis,
             reqSession.user.userName, rightNowMillis

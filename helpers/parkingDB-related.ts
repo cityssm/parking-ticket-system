@@ -276,7 +276,12 @@ export const deleteParkingBylaw = (bylawNumber: string): AddUpdateParkingBylawRe
 };
 
 
-export const updateParkingOffencesByBylawNumber = (reqBody: any): AddUpdateParkingBylawReturn => {
+export const updateParkingOffencesByBylawNumber = (reqBody: {
+  bylawNumber: string,
+  offenceAmount: string,
+  discountDays: string,
+  discountOffenceAmount: string
+}): AddUpdateParkingBylawReturn => {
 
   const db = sqlite(dbPath);
 

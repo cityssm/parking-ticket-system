@@ -39,7 +39,8 @@ declare const cityssm: cityssmGlobal;
 
     const toggleVisibilityFn = (buttonEvent: Event) => {
 
-      const inputEle = (<HTMLButtonElement>buttonEvent.currentTarget).closest(".field").getElementsByClassName("input")[0];
+      const inputEle =
+        (<HTMLButtonElement>buttonEvent.currentTarget).closest(".field").getElementsByClassName("input")[0];
 
       inputEle.setAttribute(
         "type",

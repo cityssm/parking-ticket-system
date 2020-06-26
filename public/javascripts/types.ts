@@ -1,6 +1,8 @@
 export type ptsGlobal = {
 
   loadDefaultConfigProperties?: (callbackFn: () => void) => void,
+
+  // tslint:disable-next-line:no-any
   getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void
 
   getLicencePlateCountryProperties?: (originalLicencePlateCountry: string) => {

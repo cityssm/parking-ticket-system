@@ -248,6 +248,12 @@ export interface ParkingTicketConvictionBatch extends Record {
     sentDateString: string;
     batchEntries?: ParkingTicketStatusLog[];
 }
+export interface NHTSAMakeModel {
+    makeId: number;
+    makeName: string;
+    modelID: number;
+    modelName: string;
+}
 export interface User {
     userName: string;
     firstName?: string;

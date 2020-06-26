@@ -561,7 +561,8 @@ export const getOwnershipReconciliationRecords = () => {
     record.dateDifference =
       dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
 
-    record.isVehicleMakeMatch = (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
+    record.isVehicleMakeMatch =
+      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
       (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
 
     record.isLicencePlateExpiryDateMatch =

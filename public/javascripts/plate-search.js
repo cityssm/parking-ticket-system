@@ -61,7 +61,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</td>") +
                     ("<td class=\"has-text-right is-vcentered\">" +
                         (plateObj.hasOwnerRecord ?
-                            "<span data-tooltip=\"Has Ownership Record\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
+                            "<span data-tooltip=\"Has Ownership Record\">" +
+                                "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>" +
+                                "</span>" +
                                 "<span class=\"sr-only\">Has Ownership Record</span>" :
                             "") +
                         "</td>") +

@@ -179,7 +179,7 @@ export const addParkingTicketToConvictionBatch =
 
     // Check if the ticket has been convicted or not
 
-    let convictedStatusCheck = db.prepare("select statusIndex from ParkingTicketStatusLog" +
+    const convictedStatusCheck = db.prepare("select statusIndex from ParkingTicketStatusLog" +
       " where recordDelete_timeMillis is null" +
       " and ticketID = ?" +
       " and statusKey = 'convicted'")
@@ -254,7 +254,7 @@ export const addAllParkingTicketsToConvictionBatch =
 
     // Ensure batch is not locked
 
-    let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
+    const lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
       " where recordDelete_timeMillis is null" +
       " and batchID = ?")
       .get(batchID);
@@ -302,7 +302,7 @@ export const addAllParkingTicketsToConvictionBatch =
 
       // Check if the ticket has been convicted or not
 
-      let convictedStatusCheck = db.prepare("select statusIndex from ParkingTicketStatusLog" +
+      const convictedStatusCheck = db.prepare("select statusIndex from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +
         " and ticketID = ?" +
         " and statusKey = 'convicted'")
@@ -367,7 +367,7 @@ export const removeParkingTicketFromConvictionBatch =
 
     // Ensure batch is not locked
 
-    let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
+    const lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
       " where recordDelete_timeMillis is null" +
       " and batchID = ?")
       .get(batchID);
@@ -419,7 +419,7 @@ export const clearConvictionBatch = (batchID: number, reqSession: Express.Sessio
 
   // Ensure batch is not locked
 
-  let lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
+  const lockedBatchCheck = db.prepare("select lockDate from ParkingTicketConvictionBatches" +
     " where recordDelete_timeMillis is null" +
     " and batchID = ?")
     .get(batchID);
@@ -498,7 +498,7 @@ export const unlockConvictionBatch = (batchID: number, reqSession: Express.Sessi
 
   const rightNowMillis = Date.now();
 
-  let info = db.prepare("update ParkingTicketConvictionBatches" +
+  const info = db.prepare("update ParkingTicketConvictionBatches" +
     " set lockDate = null," +
     " recordUpdate_userName = ?," +
     " recordUpdate_timeMillis = ?" +
