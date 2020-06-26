@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     let batchID = -1;
     let batchIsLocked = true;
     let batchIsSent = false;
-    // Available Plates
     const availableIssueDaysAgoEle = document.getElementById("available--issueDaysAgo");
     const availablePlatesContainerEle = document.getElementById("is-available-plates-container");
     const licencePlateNumberFilterEle = document.getElementById("available--licencePlateNumber");
@@ -26,10 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ticketID: plateRecord.ticketIDMin
         }, (responseJSON) => {
             if (responseJSON.success) {
-                // Remove element from available list
                 plateContainerEle.remove();
-                // Set tombstone in available plates list
-                // eslint-disable-next-line detect-object-injection
                 availablePlatesList[recordIndex] = null;
                 fn_populateBatchView(responseJSON.batch);
             }
@@ -52,7 +48,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
             licencePlateNumber: batchEntry.licencePlateNumber
         }, (responseJSON) => {
             if (responseJSON.success) {
-                // Remove element from list
                 entryContainerEle.remove();
                 fn_refreshAvailablePlates();
             }
@@ -102,7 +97,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
             .split(" ");
         const includedLicencePlates = [];
         availablePlatesList.forEach((plateRecord, recordIndex) => {
-            // Tombstone record
             if (!plateRecord) {
                 return;
             }
@@ -214,7 +208,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     });
     licencePlateNumberFilterEle.addEventListener("keyup", fn_populateAvailablePlatesView);
     availableIssueDaysAgoEle.addEventListener("change", fn_refreshAvailablePlates);
-    // Current Batch
     const lockBatchButtonEle = document.getElementById("is-lock-batch-button");
     const batchEntriesContainerEle = document.getElementById("is-batch-entries-container");
     const fn_populateBatchView = (batch) => {

@@ -6,7 +6,7 @@
     "isolatedModules": false,
     "declaration": true,
     "noImplicitAny": false,
-    "removeComments": false,
+    "removeComments": true,
     "allowUnreachableCode": false,
     "resolveJsonModule": true
   },

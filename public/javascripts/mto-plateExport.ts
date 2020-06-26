@@ -67,7 +67,6 @@ type AvailableLicencePlate = {
           plateContainerEle.remove();
 
           // Set tombstone in available plates list
-          // eslint-disable-next-line detect-object-injection
           availablePlatesList[recordIndex] = null;
 
           fn_populateBatchView(responseJSON.batch);
