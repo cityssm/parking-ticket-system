@@ -5,7 +5,7 @@
     "isolatedModules": false,
     "declaration": true,
     "noImplicitAny": false,
-    "removeComments": true,
+    "removeComments": false,
     "allowUnreachableCode": false
   },
   "compileOnSave": true,
