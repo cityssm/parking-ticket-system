@@ -17,26 +17,27 @@ The **Records to Reconcile** section shows parking ticket records
 matched with the nearest future ownership records.
 The following information is shown to help with reconciling records.
 
-- Licence Plate Number
+-   Licence Plate Number
 
-- Unresolved Parking Ticket Details
-  - Parking Ticket Number and Issue Date
-  - Vehicle Make
-  - Licence Plate Expiry Date
+-   Unresolved Parking Ticket Details
 
-- Ownership Information
+    -   Parking Ticket Number and Issue Date
+    -   Vehicle Make
+    -   Licence Plate Expiry Date
 
-  - Vehicle Make
-    (When the vehicle make on the parking ticket matches the vehicle make on the ownership,
-      a checkmark is shown.)
+-   Ownership Information
 
-  - Licence Plate Expiry Date
-    (When the expiry date on the parking ticket matches the expiry date on the ownership,
-      a checkmark is shown.)
+    -   Vehicle Make
+        (When the vehicle make on the parking ticket matches the vehicle make on the ownership,
+          a checkmark is shown.)
 
-- Record Date Difference
-  (The number of days between the date when the ticket was issued
-    and the date when the ownership information was retrieved.)
+    -   Licence Plate Expiry Date
+        (When the expiry date on the parking ticket matches the expiry date on the ownership,
+          a checkmark is shown.)
+
+-   Record Date Difference
+    (The number of days between the date when the ticket was issued
+      and the date when the ownership information was retrieved.)
 
 Each row can be considered individually.
 If the details on the parking ticket are considered to match the ownership details,
@@ -46,8 +47,7 @@ If there is a significant discrepancy, the red **X** button should be selected.
 Alternatively, records with matching vehicle makes and licence plate expiry dates
 can be quickly reconciled together using the green **Quick Reconcile Matches** button.
 
-
 ## Related Documentation
 
-- [Licence Plate Ownership Lookup](platesOntario-ownershipLookup.md) *(Ontario, Canada Only)*
-- [Parking Tickets](tickets.md)
+-   [Licence Plate Ownership Lookup](platesOntario-ownershipLookup.md) _(Ontario, Canada Only)_
+-   [Parking Tickets](tickets.md)

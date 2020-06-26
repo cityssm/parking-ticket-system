@@ -14,13 +14,12 @@ You can get to it from the main dashboard or from the Tickets link at the top of
 
 The search offers the following filters:
 
-- Ticket Number
-- Licence Plate Number
-- Location
-- Resolution Status (Unfiltered, Unresolved, or Resolved)
+-   Ticket Number
+-   Licence Plate Number
+-   Location
+-   Resolution Status (Unfiltered, Unresolved, or Resolved)
 
 Selecting any ticket number will open the parking ticket record.
-
 
 ## Creating a Parking Ticket Record
 
@@ -35,10 +34,10 @@ An details of some of the key fields.
 
 You can use the config file to customize this field.
 
-- You can change the name of this field.
-- You can make the value unique, so the same parking ticket number cannot be used more than once.
-- You can apply a regular expression to the field, so the value must match a pattern.
-- You can define the `nextTicketNumberFn()` function to assist with entering sequential ticket numbers.
+-   You can change the name of this field.
+-   You can make the value unique, so the same parking ticket number cannot be used more than once.
+-   You can apply a regular expression to the field, so the value must match a pattern.
+-   You can define the `nextTicketNumberFn()` function to assist with entering sequential ticket numbers.
 
 **Location**
 
@@ -69,7 +68,6 @@ A setting in the config file can change the two fields into a single date field.
 
 When selected, the licence plate country, province, and number fields will no longer be required.
 
-
 ## Maintaining Parking Ticket Records
 
 ![Parking Ticket Remarks and Statuses](images/ticket-remarks-status.png)
@@ -99,8 +97,7 @@ an option to resolve the ticket will be shown in the status section.
 Once resolved, the ticket will be locked to prevent future changes.
 If the ticket is resolved in error, the ticket can be unresolved for a short period of time afterwards.
 
-
 ## Related Documentation
 
-- [Ownership Reconciliation](tickets-ownershipReconciliation.md)
-- [Convict Parking Tickets](ticketsOntario-convict.md) *(Ontario, Canada Only)*
+-   [Ownership Reconciliation](tickets-ownershipReconciliation.md)
+-   [Convict Parking Tickets](ticketsOntario-convict.md) _(Ontario, Canada Only)_

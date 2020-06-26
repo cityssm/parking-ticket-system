@@ -5,7 +5,6 @@
 In no particular order, here are some tips to change transform you
 from an average user to a power user.
 
-
 ## Web Application Basics
 
 If you are moving from another application or environment to a web application,
@@ -20,7 +19,6 @@ Alternatively, right-click the link, and choose "Open Link in New Tab".
 Just print it!  Web applications make it easy to print any page you want.
 The Parking Ticket System is no different, and makes every effort
 to ensure that no matter which page you're on, when you print, you get a decent result.
-
 
 ## Parking Ticket System Tricks
 

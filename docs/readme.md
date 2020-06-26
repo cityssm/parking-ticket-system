@@ -4,7 +4,6 @@
 
 **[Live Documentation Site on GitHub](https://cityssm.github.io/parking-ticket-system/)**
 
-
 ## User Documentation
 
 **[Tips and Tricks](tipsTricks.md)**<br />
@@ -13,19 +12,19 @@ Become a Parking Ticket System wizard!
 **[Parking Tickets](tickets.md)**<br />
 How do I search parking ticket records?  How do I create and maintain parking ticket records?
 
-- [Ownership Reconciliation](tickets-ownershipReconciliation.md)
-- [Convict Parking Tickets](ticketsOntario-convict.md) *(Ontario, Canada Only)*
+-   [Ownership Reconciliation](tickets-ownershipReconciliation.md)
+-   [Convict Parking Tickets](ticketsOntario-convict.md) _(Ontario, Canada Only)_
 
 **[Licence Plates](plates.md)**<br />
 How do I search licence plate records?
 
-- [Licence Plates for Ownership Lookup](platesOntario-ownershipLookup.md) *(Ontario, Canada Only)*
+-   [Licence Plates for Ownership Lookup](platesOntario-ownershipLookup.md) _(Ontario, Canada Only)_
 
 **[Parking Offences](offences.md)**<br />
 What are parking offences?  How do I maintain them?
 
-- [Parking Locations](locations.md)
-- [Parking By-Laws](bylaws.md)
+-   [Parking Locations](locations.md)
+-   [Parking By-Laws](bylaws.md)
 
 ## Administrator Documentation
 
