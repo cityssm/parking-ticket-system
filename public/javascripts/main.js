@@ -66,13 +66,13 @@ const pts = {};
         const licencePlateProvinceDefault = {
             provinceShortName: originalLicencePlateProvince,
             color: "#000",
-            backgroundColor: "#fff",
+            backgroundColor: "#fff"
         };
         if (!defaultConfigPropertiesIsLoaded) {
             return {
                 licencePlateCountryAlias: originalLicencePlateCountry,
                 licencePlateProvinceAlias: originalLicencePlateProvince,
-                licencePlateProvince: licencePlateProvinceDefault,
+                licencePlateProvince: licencePlateProvinceDefault
             };
         }
         const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] || originalLicencePlateCountry;
@@ -92,7 +92,7 @@ const pts = {};
         return {
             licencePlateCountryAlias,
             licencePlateProvinceAlias,
-            licencePlateProvince,
+            licencePlateProvince
         };
     };
     const ticketStatusKeyToObject = new Map();
@@ -100,7 +100,7 @@ const pts = {};
     pts.getTicketStatus = (statusKey) => {
         const noResult = {
             statusKey,
-            status: statusKey,
+            status: statusKey
         };
         if (!defaultConfigPropertiesIsLoaded) {
             return noResult;
@@ -143,7 +143,7 @@ pts.initializeTabs = (tabsListEle, callbackFns) => {
             tabContentEle.classList.remove("is-active");
         }
         tabContentEle.classList.add("is-active");
-        if (callbackFns && callbackFns.onshown) {
+        if (callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onshown) {
             callbackFns.onshown(tabContentEle);
         }
     };

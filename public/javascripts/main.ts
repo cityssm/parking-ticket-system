@@ -1,10 +1,10 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
-const pts: ptsGlobal = {};
 
 import type * as ptsTypes from "../../helpers/ptsTypes";
+
+declare const cityssm: cityssmGlobal;
+const pts: ptsGlobal = {};
 
 // CONFIG DEFAULTS
 
@@ -131,14 +131,14 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     const licencePlateProvinceDefault = {
       provinceShortName: originalLicencePlateProvince,
       color: "#000",
-      backgroundColor: "#fff",
+      backgroundColor: "#fff"
     };
 
     if (!defaultConfigPropertiesIsLoaded) {
       return {
         licencePlateCountryAlias: originalLicencePlateCountry,
         licencePlateProvinceAlias: originalLicencePlateProvince,
-        licencePlateProvince: licencePlateProvinceDefault,
+        licencePlateProvince: licencePlateProvinceDefault
       };
     }
 
@@ -187,7 +187,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     return {
       licencePlateCountryAlias,
       licencePlateProvinceAlias,
-      licencePlateProvince,
+      licencePlateProvince
     };
   };
 
@@ -197,7 +197,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
   pts.getTicketStatus = (statusKey) => {
     const noResult = {
       statusKey,
-      status: statusKey,
+      status: statusKey
     };
 
     if (!defaultConfigPropertiesIsLoaded) {
@@ -266,7 +266,7 @@ pts.initializeTabs = (tabsListEle, callbackFns) => {
 
     tabContentEle.classList.add("is-active");
 
-    if (callbackFns && callbackFns.onshown) {
+    if (callbackFns?.onshown) {
       callbackFns.onshown(tabContentEle);
     }
   };
