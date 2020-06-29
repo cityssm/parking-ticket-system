@@ -40,7 +40,7 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
     cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
       batchID: currentBatch.batchID,
       ticketID
-    }, (resultJSON: { success: boolean, batch?: ParkingTicketConvictionBatch }) => {
+    }, (resultJSON: { success: boolean, message?: string, batch?: ParkingTicketConvictionBatch }) => {
 
       if (resultJSON.success) {
 
@@ -52,6 +52,8 @@ import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/
 
       } else {
         buttonEle.removeAttribute("disabled");
+
+        cityssm.alertModal("Ticket Not Added", resultJSON.message, "OK", "danger");
       }
     });
   };

@@ -2,7 +2,6 @@ import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/
 declare const cityssm: cityssmGlobal;
 
 import type { ptsGlobal } from "./types";
-
 const pts: ptsGlobal = {};
 
 import type * as ptsTypes from "../../helpers/ptsTypes";

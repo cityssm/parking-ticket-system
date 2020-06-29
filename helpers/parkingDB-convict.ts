@@ -161,6 +161,32 @@ export const addParkingTicketToConvictionBatch =
       };
     }
 
+    // Ensure ticket has not been resolved
+
+    const resolvedDateRecord = db.prepare("select resolvedDate from ParkingTickets" +
+      " where ticketID = ?" +
+      " and recordDelete_timeMillis is null")
+      .get(ticketID);
+
+    if (!resolvedDateRecord) {
+
+      db.close();
+
+      return {
+        success: false,
+        message: "The ticket is unavailable."
+      };
+
+    } else if (resolvedDateRecord.resolvedDate) {
+
+      db.close();
+
+      return {
+        success: false,
+        message: "The ticket has been resolved and cannot be added to a conviction batch."
+      };
+    }
+
     // Get the next status index
 
     let newStatusIndex = db.prepare("select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +

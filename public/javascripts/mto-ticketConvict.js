@@ -27,6 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             else {
                 buttonEle.removeAttribute("disabled");
+                cityssm.alertModal("Ticket Not Added", resultJSON.message, "OK", "danger");
             }
         });
     };

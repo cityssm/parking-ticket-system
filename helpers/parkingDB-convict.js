@@ -114,6 +114,24 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
             message: "The batch is locked and cannot be updated."
         };
     }
+    const resolvedDateRecord = db.prepare("select resolvedDate from ParkingTickets" +
+        " where ticketID = ?" +
+        " and recordDelete_timeMillis is null")
+        .get(ticketID);
+    if (!resolvedDateRecord) {
+        db.close();
+        return {
+            success: false,
+            message: "The ticket is unavailable."
+        };
+    }
+    else if (resolvedDateRecord.resolvedDate) {
+        db.close();
+        return {
+            success: false,
+            message: "The ticket has been resolved and cannot be added to a conviction batch."
+        };
+    }
     let newStatusIndex = db.prepare("select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
         " from ParkingTicketStatusLog" +
         " where ticketID = ?")
