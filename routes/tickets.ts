@@ -198,7 +198,7 @@ router.post("/doReconcileAsError", (req, res) => {
       ticketID: parseInt(req.body.ticketID, 10),
       statusKey: "ownerLookupError",
       statusField: ownerRecord.vehicleNCIC,
-      statusNote: "",
+      statusNote: ""
     },
     req.session,
     false
@@ -296,7 +296,7 @@ router.post("/doCreateConvictionBatch", (req, res) => {
   if (!req.session.user.userProperties.canUpdate) {
     return res.status(403).json({
       success: false,
-      message: "Forbidden",
+      message: "Forbidden"
     });
   }
 
@@ -311,7 +311,7 @@ router.post("/doAddTicketToConvictionBatch", (req, res) => {
   if (!req.session.user.userProperties.canUpdate) {
     return res.status(403).json({
       success: false,
-      message: "Forbidden",
+      message: "Forbidden"
     });
   }
 
@@ -388,7 +388,7 @@ router.get(["/new", "/new/:ticketNumber"], (req, res) => {
       licencePlateProvince: configFns.getProperty("defaults.province"),
     },
     issueDateMaxString: dateTimeFns.dateToString(new Date()),
-    vehicleMakeModelDatalist,
+    vehicleMakeModelDatalist
   });
 });
 
@@ -519,7 +519,7 @@ router.post("/doUpdateRemark", (req, res) => {
   if (!req.session.user.userProperties.canCreate) {
     res.status(403).json({
       success: false,
-      message: "Forbidden",
+      message: "Forbidden"
     });
 
     return;
@@ -580,7 +580,7 @@ router.post("/doUpdateStatus", (req, res) => {
   if (!req.session.user.userProperties.canCreate) {
     res.status(403).json({
       success: false,
-      message: "Forbidden",
+      message: "Forbidden"
     });
 
     return;
@@ -681,7 +681,7 @@ router.get("/:ticketID/edit", (req, res) => {
     isCreate: false,
     ticket,
     issueDateMaxString: dateTimeFns.dateToString(new Date()),
-    vehicleMakeModelDatalist,
+    vehicleMakeModelDatalist
   });
 });
 

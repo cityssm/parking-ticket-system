@@ -1,11 +1,12 @@
 "use strict";
 const express_1 = require("express");
-const router = express_1.Router();
 const parkingDBOntario = require("../helpers/parkingDB-ontario");
 const parkingDBConvict = require("../helpers/parkingDB-convict");
+const userFns_1 = require("../helpers/userFns");
 const mtoFns = require("../helpers/mtoFns");
+const router = express_1.Router();
 router.get("/convict", (req, res) => {
-    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+    if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
         res.redirect("/tickets/?error=accessDenied");
         return;
     }
@@ -18,24 +19,18 @@ router.get("/convict", (req, res) => {
     });
 });
 router.get("/convict/:batchID", (req, res) => {
-    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-        res.redirect("/tickets/?error=accessDenied");
-        return;
+    if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
+        return res.redirect("/tickets/?error=accessDenied");
     }
     const batchID = parseInt(req.params.batchID, 10);
     const output = mtoFns.exportConvictionBatch(batchID, req.session);
-    res.setHeader("Content-Disposition", "attachment; filename=convictBatch-" + batchID + ".txt");
+    res.setHeader("Content-Disposition", "attachment; filename=convictBatch-" + batchID.toString() + ".txt");
     res.setHeader("Content-Type", "text/plain");
     res.send(output);
 });
 router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
-        return res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
+    if (!userFns_1.userCanUpdate(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const batchID = req.body.batchID;
     const ticketIDs = req.body.ticketIDs;
@@ -47,13 +42,8 @@ router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
     return res.json(result);
 });
 router.post("/doClearConvictionBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
-        return res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
+    if (!userFns_1.userCanUpdate(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const batchID = req.body.batchID;
     const result = parkingDBConvict.clearConvictionBatch(batchID, req.session);
@@ -64,13 +54,8 @@ router.post("/doClearConvictionBatch", (req, res) => {
     return res.json(result);
 });
 router.post("/doRemoveTicketFromConvictionBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
-        return res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
+    if (!userFns_1.userCanUpdate(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const batchID = req.body.batchID;
     const ticketID = req.body.ticketID;

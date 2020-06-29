@@ -1,4 +1,3 @@
-const dbPath = "data/users.db";
 import * as sqlite from "better-sqlite3";
 
 import * as bcrypt from "bcrypt";
@@ -7,6 +6,8 @@ import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
 import * as configFns from "./configFns";
 import type { User, UserProperties } from "./ptsTypes";
 
+const dbPath = "data/users.db";
+
 
 export const getUser = (userNameSubmitted: string, passwordPlain: string): User => {
 
@@ -14,12 +15,16 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
 
   // Check if an active user exists
 
-  const row = db.prepare("select userName, passwordHash, isActive" +
+  const row: {
+    userName: string;
+    passwordHash: string;
+    isActive: boolean;
+  } = db.prepare("select userName, passwordHash, isActive" +
     " from Users" +
     " where userName = ?")
     .get(userNameSubmitted);
 
-  if (!row) {
+  if (row == null) {
 
     db.close();
 
@@ -46,7 +51,7 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
 
     return null;
 
-  } else if (row.isActive === 0) {
+  } else if (!row.isActive) {
 
     db.close();
     return null;
@@ -118,7 +123,7 @@ export const tryResetPassword = (userName: string, oldPasswordPlain: string, new
     " and isActive = 1")
     .get(userName);
 
-  if (!row) {
+  if (row == null) {
 
     db.close();
     return {
@@ -197,9 +202,9 @@ export const getUserProperties = (userName: string) => {
 };
 
 export const createUser = (reqBody: {
-  userName: string,
-  lastName: string,
-  firstName: string
+  userName: string;
+  lastName: string;
+  firstName: string;
 }) => {
 
   const newPasswordPlain = stringFns.generatePassword();
@@ -207,18 +212,18 @@ export const createUser = (reqBody: {
 
   const db = sqlite(dbPath);
 
-  const row = db.prepare("select isActive" +
+  const row: {
+    isActive: boolean;
+  } = db.prepare("select isActive" +
     " from Users" +
     " where userName = ?")
     .get(reqBody.userName);
 
-  if (row) {
+  if (row != null) {
 
     if (row.isActive) {
-
       db.close();
       return false;
-
     }
 
     db.prepare("update Users" +
@@ -247,9 +252,9 @@ export const createUser = (reqBody: {
 };
 
 export const updateUser = (reqBody: {
-  userName: string,
-  lastName: string,
-  firstName: string
+  userName: string;
+  lastName: string;
+  firstName: string;
 }) => {
 
   const db = sqlite(dbPath);
@@ -271,9 +276,9 @@ export const updateUser = (reqBody: {
 };
 
 export const updateUserProperty = (reqBody: {
-  userName: string,
-  propertyName: string,
-  propertyValue: string
+  userName: string;
+  propertyName: string;
+  propertyValue: string;
 }) => {
 
   const db = sqlite(dbPath);

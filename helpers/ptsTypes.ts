@@ -62,13 +62,13 @@ export interface ConfigLocationClass {
 
 interface ConfigParkingTickets {
   ticketNumber: {
-    fieldLabel?: string,
-    pattern?: RegExp,
-    isUnique?: boolean,
-    nextTicketNumberFn?: (currentTicketNumber: string) => string
+    fieldLabel?: string;
+    pattern?: RegExp;
+    isUnique?: boolean;
+    nextTicketNumberFn?: (currentTicketNumber: string) => string;
   };
   licencePlateExpiryDate: {
-    includeDay?: boolean
+    includeDay?: boolean;
   };
 }
 
@@ -76,10 +76,10 @@ export interface ConfigParkingTicketStatus {
   statusKey: string;
   status: string;
   statusField?: {
-    fieldLabel: string
+    fieldLabel: string;
   };
   statusField2?: {
-    fieldLabel: string
+    fieldLabel: string;
   };
   isFinalStatus: boolean;
   isUserSettable: boolean;
@@ -87,7 +87,7 @@ export interface ConfigParkingTicketStatus {
 
 export interface ConfigParkingOffences {
   accountNumber: {
-    pattern?: RegExp
+    pattern?: RegExp;
   };
 }
 

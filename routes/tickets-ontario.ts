@@ -1,12 +1,15 @@
 import { Router } from "express";
-const router = Router();
 
 import * as parkingDBOntario from "../helpers/parkingDB-ontario";
 import * as parkingDBConvict from "../helpers/parkingDB-convict";
 
+import { userCanUpdate, userIsOperator, forbiddenJSON } from "../helpers/userFns";
 import * as mtoFns from "../helpers/mtoFns";
 
 import type * as pts from "../helpers/ptsTypes";
+
+
+const router = Router();
 
 
 // Ticket Convictions
@@ -14,7 +17,7 @@ import type * as pts from "../helpers/ptsTypes";
 
 router.get("/convict", (req, res) => {
 
-  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+  if (!(userCanUpdate(req) || userIsOperator(req))) {
 
     res.redirect("/tickets/?error=accessDenied");
     return;
@@ -34,19 +37,18 @@ router.get("/convict", (req, res) => {
 });
 
 
-
 router.get("/convict/:batchID", (req, res) => {
 
-  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-    res.redirect ("/tickets/?error=accessDenied");
-    return;
+  if (!(userCanUpdate(req) || userIsOperator(req))) {
+    return res.redirect("/tickets/?error=accessDenied");
   }
 
   const batchID = parseInt(req.params.batchID, 10);
 
   const output = mtoFns.exportConvictionBatch(batchID, req.session);
 
-  res.setHeader("Content-Disposition", "attachment; filename=convictBatch-" + batchID + ".txt");
+  res.setHeader("Content-Disposition",
+    "attachment; filename=convictBatch-" + batchID.toString() + ".txt");
   res.setHeader("Content-Type", "text/plain");
   res.send(output);
 
@@ -55,25 +57,18 @@ router.get("/convict/:batchID", (req, res) => {
 
 router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+  if (!userCanUpdate(req)) {
+    return forbiddenJSON(res);
   }
 
   const batchID = req.body.batchID;
   const ticketIDs: number[] = req.body.ticketIDs;
 
   const result: {
-    successCount?: number,
-    message?: string,
-    batch?: pts.ParkingTicketConvictionBatch,
-    tickets?: pts.ParkingTicket[]
+    successCount?: number;
+    message?: string;
+    batch?: pts.ParkingTicketConvictionBatch;
+    tickets?: pts.ParkingTicket[];
   } = parkingDBConvict.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
 
   if (result.successCount > 0) {
@@ -88,24 +83,17 @@ router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
 
 router.post("/doClearConvictionBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+  if (!userCanUpdate(req)) {
+    return forbiddenJSON(res);
   }
 
   const batchID = req.body.batchID;
 
   const result: {
-    success: boolean,
-    message?: string,
-    batch?: pts.ParkingTicketConvictionBatch,
-    tickets?: pts.ParkingTicket[]
+    success: boolean;
+    message?: string;
+    batch?: pts.ParkingTicketConvictionBatch;
+    tickets?: pts.ParkingTicket[];
   } = parkingDBConvict.clearConvictionBatch(batchID, req.session);
 
   if (result.success) {
@@ -114,30 +102,22 @@ router.post("/doClearConvictionBatch", (req, res) => {
   }
 
   return res.json(result);
-
 });
 
 
 router.post("/doRemoveTicketFromConvictionBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+  if (!userCanUpdate(req)) {
+    return forbiddenJSON(res);
   }
 
   const batchID = req.body.batchID;
   const ticketID = req.body.ticketID;
 
   const result: {
-    success: boolean,
-    message?: string,
-    tickets?: pts.ParkingTicket[]
+    success: boolean;
+    message?: string;
+    tickets?: pts.ParkingTicket[];
   } = parkingDBConvict.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
 
   if (result.success) {
@@ -145,7 +125,6 @@ router.post("/doRemoveTicketFromConvictionBatch", (req, res) => {
   }
 
   return res.json(result);
-
 });
 
 

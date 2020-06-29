@@ -32,8 +32,8 @@ configFallbackValues.set("parkingTicketStatuses", []);
 configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\d\w -]{1,20}$/);
 configFallbackValues.set("locationClasses", []);
 configFallbackValues.set("licencePlateCountryAliases", Object.freeze({
-    "CA": "Canada",
-    "US": "USA"
+    CA: "Canada",
+    US: "USA"
 }));
 configFallbackValues.set("licencePlateProvinceAliases", {});
 configFallbackValues.set("licencePlateProvinces", {});
@@ -52,9 +52,9 @@ exports.getProperty = (propertyName) => {
     }
     return currentObj;
 };
-exports.keepAliveMillis = exports.getProperty("session.doKeepAlive") ?
-    Math.max(exports.getProperty("session.maxAgeMillis") / 2, exports.getProperty("session.maxAgeMillis") - (10 * 60 * 1000)) :
-    0;
+exports.keepAliveMillis = exports.getProperty("session.doKeepAlive")
+    ? Math.max(exports.getProperty("session.maxAgeMillis") / 2, exports.getProperty("session.maxAgeMillis") - (10 * 60 * 1000))
+    : 0;
 const parkingTicketStatusMap = new Map();
 let parkingTicketStatusMapIsLoaded = false;
 exports.getParkingTicketStatus = (statusKey) => {
@@ -73,8 +73,9 @@ exports.getLicencePlateLocationProperties = (originalLicencePlateCountry, origin
         color: "#000",
         backgroundColor: "#fff"
     };
-    const licencePlateCountryAlias = exports.getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()] ||
-        originalLicencePlateCountry;
+    const licencePlateCountryAlias = exports.getProperty("licencePlateCountryAliases").hasOwnProperty(originalLicencePlateCountry.toUpperCase())
+        ? exports.getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()]
+        : originalLicencePlateCountry;
     let licencePlateProvinceAlias = originalLicencePlateProvince;
     if (exports.getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
         licencePlateProvinceAlias =

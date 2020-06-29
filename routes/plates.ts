@@ -1,9 +1,12 @@
 import { Router } from "express";
-const router = Router();
 
 import * as vehicleFns from "../helpers/vehicleFns";
 import * as parkingDB from "../helpers/parkingDB";
 import * as parkingDBLookup from "../helpers/parkingDB-lookup";
+
+import { userCanUpdate, userIsOperator } from "../helpers/userFns";
+
+const router = Router();
 
 
 router.get("/", (_req, res) => {
@@ -38,7 +41,7 @@ router.post("/doGetLicencePlates", (req, res) => {
 
 router.post("/doGetUnreceivedLicencePlateLookupBatches", (req, res) => {
 
-  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+  if (!(userCanUpdate(req) || userIsOperator(req))) {
 
     res
       .status(403)
@@ -58,7 +61,7 @@ router.post("/doGetUnreceivedLicencePlateLookupBatches", (req, res) => {
 
 router.post("/doCreateLookupBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
+  if (!userCanUpdate(req)) {
 
     res
       .status(403)
@@ -79,7 +82,7 @@ router.post("/doCreateLookupBatch", (req, res) => {
 
 router.post("/doGetLookupBatch", (req, res) => {
 
-  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+  if (!(userCanUpdate(req) || userIsOperator(req))) {
 
     res
       .status(403)
@@ -98,17 +101,14 @@ router.post("/doGetLookupBatch", (req, res) => {
 
 router.post("/doAddLicencePlateToLookupBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
+  if (!userCanUpdate(req)) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
-
   }
 
   const result = parkingDBLookup.addLicencePlateToLookupBatch(req.body, req.session);
@@ -123,28 +123,26 @@ router.post("/doAddLicencePlateToLookupBatch", (req, res) => {
 
 router.post("/doAddAllLicencePlatesToLookupBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
+  if (!userCanUpdate(req)) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
 
-    return;
-
   }
 
   const result = parkingDBLookup.addAllLicencePlatesToLookupBatch(req.body, req.session);
 
-  res.json(result);
+  return res.json(result);
 
 });
 
 router.post("/doRemoveLicencePlateFromLookupBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
+  if (!userCanUpdate(req)) {
 
     res
       .status(403)
@@ -165,16 +163,14 @@ router.post("/doRemoveLicencePlateFromLookupBatch", (req, res) => {
 
 router.post("/doClearLookupBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
+  if (!userCanUpdate(req)) {
 
-    res
+    return res
       .status(403)
       .json({
         success: false,
         message: "Forbidden"
       });
-
-    return;
 
   }
 
@@ -192,7 +188,7 @@ router.post("/doClearLookupBatch", (req, res) => {
 
 router.post("/doLockLookupBatch", (req, res) => {
 
-  if (!req.session.user.userProperties.canUpdate) {
+  if (!userCanUpdate(req)) {
 
     res
       .status(403)

@@ -1,9 +1,10 @@
 "use strict";
 const express_1 = require("express");
-const router = express_1.Router();
 const vehicleFns = require("../helpers/vehicleFns");
 const parkingDB = require("../helpers/parkingDB");
 const parkingDBLookup = require("../helpers/parkingDB-lookup");
+const userFns_1 = require("../helpers/userFns");
+const router = express_1.Router();
 router.get("/", (_req, res) => {
     res.render("plate-search", {
         headTitle: "Licence Plates"
@@ -24,7 +25,7 @@ router.post("/doGetLicencePlates", (req, res) => {
     res.json(parkingDB.getLicencePlates(queryOptions));
 });
 router.post("/doGetUnreceivedLicencePlateLookupBatches", (req, res) => {
-    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+    if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
         res
             .status(403)
             .json({
@@ -37,7 +38,7 @@ router.post("/doGetUnreceivedLicencePlateLookupBatches", (req, res) => {
     res.json(batches);
 });
 router.post("/doCreateLookupBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
+    if (!userFns_1.userCanUpdate(req)) {
         res
             .status(403)
             .json({
@@ -50,7 +51,7 @@ router.post("/doCreateLookupBatch", (req, res) => {
     res.json(createBatchResponse);
 });
 router.post("/doGetLookupBatch", (req, res) => {
-    if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
+    if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
         res
             .status(403)
             .json({
@@ -63,14 +64,13 @@ router.post("/doGetLookupBatch", (req, res) => {
     res.json(batch);
 });
 router.post("/doAddLicencePlateToLookupBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
-        res
+    if (!userFns_1.userCanUpdate(req)) {
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const result = parkingDBLookup.addLicencePlateToLookupBatch(req.body, req.session);
     if (result.success) {
@@ -79,20 +79,19 @@ router.post("/doAddLicencePlateToLookupBatch", (req, res) => {
     res.json(result);
 });
 router.post("/doAddAllLicencePlatesToLookupBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
-        res
+    if (!userFns_1.userCanUpdate(req)) {
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const result = parkingDBLookup.addAllLicencePlatesToLookupBatch(req.body, req.session);
-    res.json(result);
+    return res.json(result);
 });
 router.post("/doRemoveLicencePlateFromLookupBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
+    if (!userFns_1.userCanUpdate(req)) {
         res
             .status(403)
             .json({
@@ -105,14 +104,13 @@ router.post("/doRemoveLicencePlateFromLookupBatch", (req, res) => {
     res.json(result);
 });
 router.post("/doClearLookupBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
-        res
+    if (!userFns_1.userCanUpdate(req)) {
+        return res
             .status(403)
             .json({
             success: false,
             message: "Forbidden"
         });
-        return;
     }
     const batchID = parseInt(req.body.batchID, 10);
     const result = parkingDBLookup.clearLookupBatch(batchID, req.session);
@@ -122,7 +120,7 @@ router.post("/doClearLookupBatch", (req, res) => {
     res.json(result);
 });
 router.post("/doLockLookupBatch", (req, res) => {
-    if (!req.session.user.userProperties.canUpdate) {
+    if (!userFns_1.userCanUpdate(req)) {
         res
             .status(403)
             .json({

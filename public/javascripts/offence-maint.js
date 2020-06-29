@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+;
 (() => {
     const locationClassMap = new Map();
     const offenceMap = new Map();
@@ -67,9 +68,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("offenceEdit--bylawNumber").value = offence.bylawNumber;
                 document.getElementById("offenceEdit--locationName").innerText = location.locationName;
                 document.getElementById("offenceEdit--locationClass").innerText =
-                    (locationClassMap.has(location.locationClassKey) ?
-                        locationClassMap.get(location.locationClassKey).locationClass :
-                        location.locationClassKey);
+                    (locationClassMap.has(location.locationClassKey)
+                        ? locationClassMap.get(location.locationClassKey).locationClass
+                        : location.locationClassKey);
                 document.getElementById("offenceEdit--bylawNumberSpan").innerText = bylaw.bylawNumber;
                 document.getElementById("offenceEdit--bylawDescription").innerText = bylaw.bylawDescription;
                 document.getElementById("offenceEdit--parkingOffence").value = offence.parkingOffence;
@@ -175,9 +176,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         linkEle.setAttribute("data-location-key", location.locationKey);
                         linkEle.innerHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
                             "<span class=\"is-size-7\">" +
-                            (locationClassMap.has(location.locationClassKey) ?
-                                cityssm.escapeHTML(locationClassMap.get(location.locationClassKey).locationClass) :
-                                location.locationClassKey) +
+                            (locationClassMap.has(location.locationClassKey)
+                                ? cityssm.escapeHTML(locationClassMap.get(location.locationClassKey).locationClass)
+                                : location.locationClassKey) +
                             "</span>";
                         linkEle.addEventListener("click", addFn);
                         listEle.appendChild(linkEle);
@@ -207,9 +208,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const renderOffencesFn = () => {
         const tbodyEle = document.createElement("tbody");
         let matchCount = 0;
-        const displayLimit = (limitResultsCheckboxEle.checked ?
-            parseInt(limitResultsCheckboxEle.value, 10) :
-            offenceMap.size);
+        const displayLimit = (limitResultsCheckboxEle.checked
+            ? parseInt(limitResultsCheckboxEle.value, 10)
+            : offenceMap.size);
         offenceMap.forEach((offence) => {
             if (matchCount >= displayLimit) {
                 return;
@@ -235,9 +236,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ("<td class=\"has-border-right-width-2\">" +
                     cityssm.escapeHTML(location.locationName) + "<br />" +
                     "<span class=\"is-size-7\">" +
-                    (locationClassMap.has(location.locationClassKey) ?
-                        locationClassMap.get(location.locationClassKey).locationClass :
-                        location.locationClassKey) +
+                    (locationClassMap.has(location.locationClassKey)
+                        ? locationClassMap.get(location.locationClassKey).locationClass
+                        : location.locationClassKey) +
                     "</span>" +
                     "</td>") +
                     ("<td class=\"has-border-right-width-2\">" +
@@ -251,7 +252,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Discount Rate\">" +
                         "$" + offence.discountOffenceAmount.toFixed(2) + "<br />" +
                         "<span class=\"is-size-7\">" +
-                        offence.discountDays + " day" + (offence.discountDays === 1 ? "" : "s") +
+                        offence.discountDays.toString() + " day" + (offence.discountDays === 1 ? "" : "s") +
                         "</span>" +
                         "</td>") +
                     ("<td class=\"has-border-right-width-2\">" +
@@ -307,9 +308,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ("<div class=\"column has-text-centered\">" +
                     cityssm.escapeHTML(location.locationName) + "<br />" +
                     "<span class=\"is-size-7\">" +
-                    (locationClassMap.has(location.locationClassKey) ?
-                        locationClassMap.get(location.locationClassKey).locationClass :
-                        location.locationClassKey) +
+                    (locationClassMap.has(location.locationClassKey)
+                        ? locationClassMap.get(location.locationClassKey).locationClass
+                        : location.locationClassKey) +
                     "</span>" +
                     "</div>") +
                 ("<div class=\"column has-text-centered\">" +
@@ -367,9 +368,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             cityssm.escapeHTML(location.locationName) +
                             "</div>") +
                         "<div class=\"level-right\">" +
-                        cityssm.escapeHTML(locationClassMap.has(location.locationClassKey) ?
-                            locationClassMap.get(location.locationClassKey).locationClass :
-                            location.locationClassKey) +
+                        cityssm.escapeHTML(locationClassMap.has(location.locationClassKey)
+                            ? locationClassMap.get(location.locationClassKey).locationClass
+                            : location.locationClassKey) +
                         "</div>" +
                         "</div>";
                     linkEle.addEventListener("click", selectFn);

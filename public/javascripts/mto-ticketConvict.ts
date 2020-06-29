@@ -3,7 +3,7 @@ declare const cityssm: cityssmGlobal;
 
 import type {
   ParkingTicket,
-  ParkingTicketConvictionBatch,
+    ParkingTicketConvictionBatch,
 } from "../../helpers/ptsTypes";
 
 (() => {
@@ -376,8 +376,8 @@ import type {
     cityssm.confirmModal(
       "Lock Batch?",
       "<strong>Are you sure you want to lock this batch?</strong><br />" +
-        "Once locked, no further changes to the batch will be allowed." +
-        " The option to download the batch will become available.",
+      "Once locked, no further changes to the batch will be allowed." +
+      " The option to download the batch will become available.",
       "Yes, Lock the Batch",
       "warning",
       lockFn
@@ -408,7 +408,7 @@ import type {
     cityssm.confirmModal(
       "Lock Batch?",
       "<strong>Are you sure you want to unlock this batch?</strong><br />" +
-        "Once unlocked, changes to the batch will be allowed.",
+      "Once unlocked, changes to the batch will be allowed.",
       "Yes, Unlock the Batch",
       "warning",
       lockFn
@@ -426,7 +426,7 @@ import type {
       cityssm.confirmModal(
         "Download Batch",
         "<strong>You are about to download the batch for the first time.</strong><br />" +
-          "Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.",
+        "Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.",
         "Yes, Download the Batch",
         "warning",
         () => {
@@ -459,9 +459,9 @@ import type {
       "</span>" +
       (currentBatch.lockDate
         ? '<br /><span class="has-tooltip-left" data-tooltip="Lock Date">' +
-          '<span class="icon"><i class="fas fa-lock" aria-hidden="true"></i></span> ' +
-          currentBatch.lockDateString +
-          "</span>"
+        '<span class="icon"><i class="fas fa-lock" aria-hidden="true"></i></span> ' +
+        currentBatch.lockDateString +
+        "</span>"
         : "");
 
     cityssm.clearElement(batchEntriesContainerEle);
@@ -500,13 +500,13 @@ import type {
           "</td>") +
         (canRemove
           ? '<td class="has-text-right">' +
-            '<button class="button is-small" data-index="' +
-            index +
-            '" type="button">' +
-            '<span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>' +
-            "<span>Remove</span>" +
-            "</button>" +
-            "</td>"
+          '<button class="button is-small" data-index="' +
+          index +
+          '" type="button">' +
+          '<span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>' +
+          "<span>Remove</span>" +
+          "</button>" +
+          "</td>"
           : "");
 
       if (canRemove) {
@@ -595,10 +595,10 @@ import type {
       tableEle.insertAdjacentHTML(
         "beforebegin",
         '<a class="button is-fullwidth mb-3"' +
-          ' href="https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp" target="_blank" rel="noreferrer">' +
-          '<span class="icon is-small"><i class="fas fa-building" aria-hidden="true"></i></span>' +
-          "<span>MTO ARIS Login</span>" +
-          "</a>"
+        ' href="https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp" target="_blank" rel="noreferrer">' +
+        '<span class="icon is-small"><i class="fas fa-building" aria-hidden="true"></i></span>' +
+        "<span>MTO ARIS Login</span>" +
+        "</a>"
       );
     }
   };
@@ -715,10 +715,10 @@ import type {
                   batch.batchDateString +
                   (batch.lockDate
                     ? '<br /><div class="tags justify-flex-end">' +
-                      '<span class="tag">' +
-                      '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
-                      "<span>Locked</span>" +
-                      "</span>"
+                    '<span class="tag">' +
+                    '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
+                    "<span>Locked</span>" +
+                    "</span>"
                     : "") +
                   "</div>" +
                   "</div>";

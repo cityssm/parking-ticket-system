@@ -1,11 +1,13 @@
 import { Router } from "express";
-const router = Router();
 
 import * as usersDB from "../helpers/usersDB";
 import * as parkingDBCleanup from "../helpers/parkingDB-cleanup";
 import * as parkingDBRelated from "../helpers/parkingDB-related";
 
+import { userIsAdmin, forbiddenJSON } from "../helpers/userFns";
 import * as configFns from "../helpers/configFns";
+
+const router = Router();
 
 
 // User Management
@@ -13,35 +15,22 @@ import * as configFns from "../helpers/configFns";
 
 router.get("/userManagement", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res.redirect("/dashboard/?error=accessDenied");
-    return;
-
+  if (!userIsAdmin(req)) {
+    return res.redirect("/dashboard/?error=accessDenied");
   }
 
   const users = usersDB.getAllUsers();
 
-  res.render("admin-userManagement", {
+  return res.render("admin-userManagement", {
     headTitle: "User Management",
     users
   });
-
 });
 
 router.post("/doCreateUser", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
-    return;
-
+  if (!userIsAdmin(req)) {
+    return forbiddenJSON(res);
   }
 
   const newPassword = usersDB.createUser(req.body);
@@ -66,17 +55,8 @@ router.post("/doCreateUser", (req, res) => {
 
 router.post("/doUpdateUser", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
-    return;
-
+  if (!userIsAdmin(req)) {
+    return forbiddenJSON(res);
   }
 
   const changeCount = usersDB.updateUser(req.body);
@@ -89,17 +69,8 @@ router.post("/doUpdateUser", (req, res) => {
 
 router.post("/doUpdateUserProperty", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
-    return;
-
+  if (!userIsAdmin(req)) {
+    return forbiddenJSON(res);
   }
 
   const changeCount = usersDB.updateUserProperty(req.body);
@@ -112,17 +83,8 @@ router.post("/doUpdateUserProperty", (req, res) => {
 
 router.post("/doResetPassword", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
-    return;
-
+  if (!userIsAdmin(req)) {
+    return forbiddenJSON(res);
   }
 
   const newPassword = usersDB.generateNewPassword(req.body.userName);
@@ -136,16 +98,8 @@ router.post("/doResetPassword", (req, res) => {
 
 router.post("/doGetUserProperties", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-    return;
-
+  if (!userIsAdmin(req)) {
+    return forbiddenJSON(res);
   }
 
   const userProperties = usersDB.getUserProperties(req.body.userName);
@@ -156,16 +110,8 @@ router.post("/doGetUserProperties", (req, res) => {
 
 router.post("/doDeleteUser", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-    return;
-
+  if (!userIsAdmin(req)) {
+    return forbiddenJSON(res);
   }
 
   const userNameToDelete = req.body.userName;
@@ -173,14 +119,7 @@ router.post("/doDeleteUser", (req, res) => {
   if (userNameToDelete === req.session.user.userName) {
 
     // You can't delete yourself!
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-    return;
+    return forbiddenJSON(res);
 
   }
 
@@ -196,11 +135,8 @@ router.post("/doDeleteUser", (req, res) => {
 
 router.get("/cleanup", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res.redirect("/dashboard/?error=accessDenied");
-    return;
-
+  if (!userIsAdmin(req)) {
+    return res.redirect("/dashboard/?error=accessDenied");
   }
 
   const counts = parkingDBCleanup.getDatabaseCleanupCounts();
@@ -214,17 +150,8 @@ router.get("/cleanup", (req, res) => {
 
 router.post("/doCleanupTable", (req, res) => {
 
-  if (!req.session.user.userProperties.isAdmin) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
-    return;
-
+  if (!userIsAdmin(req)) {
+    return forbiddenJSON(res);
   }
 
   const table = req.body.table;

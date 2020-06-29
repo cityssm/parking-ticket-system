@@ -1,21 +1,20 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
-declare const pts: ptsGlobal;
-
 import type * as ptsTypes from "../../helpers/ptsTypes";
 
-type UpdateOffenceResponseJSON = {
-  success: boolean,
-  message?: string,
-  offences?: ptsTypes.ParkingOffence[]
+declare const cityssm: cityssmGlobal;
+declare const pts: ptsGlobal;
+
+interface UpdateOffenceResponseJSON {
+  success: boolean;
+  message?: string;
+  offences?: ptsTypes.ParkingOffence[];
 };
 
 
 (() => {
 
-  const locationClassMap = new Map();
+  const locationClassMap = new Map<string, ptsTypes.ConfigLocationClass>();
 
   const offenceMap = new Map<string, ptsTypes.ParkingOffence>();
 
@@ -129,9 +128,9 @@ type UpdateOffenceResponseJSON = {
         (<HTMLSpanElement>document.getElementById("offenceEdit--locationName")).innerText = location.locationName;
 
         (<HTMLSpanElement>document.getElementById("offenceEdit--locationClass")).innerText =
-          (locationClassMap.has(location.locationClassKey) ?
-            locationClassMap.get(location.locationClassKey).locationClass :
-            location.locationClassKey);
+          (locationClassMap.has(location.locationClassKey)
+            ? locationClassMap.get(location.locationClassKey).locationClass
+            : location.locationClassKey);
 
         document.getElementById("offenceEdit--bylawNumberSpan").innerText = bylaw.bylawNumber;
 
@@ -297,9 +296,9 @@ type UpdateOffenceResponseJSON = {
 
             linkEle.innerHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
               "<span class=\"is-size-7\">" +
-              (locationClassMap.has(location.locationClassKey) ?
-                cityssm.escapeHTML(locationClassMap.get(location.locationClassKey).locationClass) :
-                location.locationClassKey) +
+              (locationClassMap.has(location.locationClassKey)
+                ? cityssm.escapeHTML(locationClassMap.get(location.locationClassKey).locationClass)
+                : location.locationClassKey) +
               "</span>";
 
             linkEle.addEventListener("click", addFn);
@@ -343,9 +342,9 @@ type UpdateOffenceResponseJSON = {
 
     let matchCount = 0;
 
-    const displayLimit = (limitResultsCheckboxEle.checked ?
-      parseInt(limitResultsCheckboxEle.value, 10) :
-      offenceMap.size);
+    const displayLimit = (limitResultsCheckboxEle.checked
+      ? parseInt(limitResultsCheckboxEle.value, 10)
+      : offenceMap.size);
 
     offenceMap.forEach((offence) => {
 
@@ -389,9 +388,9 @@ type UpdateOffenceResponseJSON = {
         ("<td class=\"has-border-right-width-2\">" +
           cityssm.escapeHTML(location.locationName) + "<br />" +
           "<span class=\"is-size-7\">" +
-          (locationClassMap.has(location.locationClassKey) ?
-            locationClassMap.get(location.locationClassKey).locationClass :
-            location.locationClassKey) +
+          (locationClassMap.has(location.locationClassKey)
+            ? locationClassMap.get(location.locationClassKey).locationClass
+            : location.locationClassKey) +
           "</span>" +
           "</td>") +
         ("<td class=\"has-border-right-width-2\">" +
@@ -405,7 +404,7 @@ type UpdateOffenceResponseJSON = {
         ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Discount Rate\">" +
           "$" + offence.discountOffenceAmount.toFixed(2) + "<br />" +
           "<span class=\"is-size-7\">" +
-          offence.discountDays + " day" + (offence.discountDays === 1 ? "" : "s") +
+          offence.discountDays.toString() + " day" + (offence.discountDays === 1 ? "" : "s") +
           "</span>" +
           "</td>") +
         ("<td class=\"has-border-right-width-2\">" +
@@ -483,9 +482,9 @@ type UpdateOffenceResponseJSON = {
         ("<div class=\"column has-text-centered\">" +
           cityssm.escapeHTML(location.locationName) + "<br />" +
           "<span class=\"is-size-7\">" +
-          (locationClassMap.has(location.locationClassKey) ?
-            locationClassMap.get(location.locationClassKey).locationClass :
-            location.locationClassKey) +
+          (locationClassMap.has(location.locationClassKey)
+            ? locationClassMap.get(location.locationClassKey).locationClass
+            : location.locationClassKey) +
           "</span>" +
           "</div>") +
         ("<div class=\"column has-text-centered\">" +
@@ -592,9 +591,9 @@ type UpdateOffenceResponseJSON = {
               cityssm.escapeHTML(location.locationName) +
               "</div>") +
             "<div class=\"level-right\">" +
-            cityssm.escapeHTML(locationClassMap.has(location.locationClassKey) ?
-              locationClassMap.get(location.locationClassKey).locationClass :
-              location.locationClassKey) +
+            cityssm.escapeHTML(locationClassMap.has(location.locationClassKey)
+              ? locationClassMap.get(location.locationClassKey).locationClass
+              : location.locationClassKey) +
             "</div>" +
             "</div>";
 

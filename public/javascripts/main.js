@@ -56,8 +56,7 @@ const pts = {};
         if (!defaultConfigPropertiesIsLoaded) {
             return {};
         }
-        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
-            originalLicencePlateCountry;
+        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] || originalLicencePlateCountry;
         if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
             return defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias];
         }
@@ -67,33 +66,33 @@ const pts = {};
         const licencePlateProvinceDefault = {
             provinceShortName: originalLicencePlateProvince,
             color: "#000",
-            backgroundColor: "#fff"
+            backgroundColor: "#fff",
         };
         if (!defaultConfigPropertiesIsLoaded) {
             return {
                 licencePlateCountryAlias: originalLicencePlateCountry,
                 licencePlateProvinceAlias: originalLicencePlateProvince,
-                licencePlateProvince: licencePlateProvinceDefault
+                licencePlateProvince: licencePlateProvinceDefault,
             };
         }
-        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ||
-            originalLicencePlateCountry;
+        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] || originalLicencePlateCountry;
         let licencePlateProvinceAlias = originalLicencePlateProvince;
         if (defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(licencePlateCountryAlias)) {
             const provinceAliases = defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias];
-            licencePlateProvinceAlias = provinceAliases[originalLicencePlateProvince.toUpperCase()] ||
-                originalLicencePlateProvince;
+            licencePlateProvinceAlias =
+                provinceAliases[originalLicencePlateProvince.toUpperCase()] ||
+                    originalLicencePlateProvince;
         }
         let licencePlateProvince = licencePlateProvinceDefault;
         if (defaultConfigProperties.licencePlateProvinces.hasOwnProperty(licencePlateCountryAlias)) {
             licencePlateProvince =
-                defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
-                    licencePlateProvinceDefault;
+                defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias]
+                    .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
         }
         return {
             licencePlateCountryAlias,
             licencePlateProvinceAlias,
-            licencePlateProvince
+            licencePlateProvince,
         };
     };
     const ticketStatusKeyToObject = new Map();
@@ -101,7 +100,7 @@ const pts = {};
     pts.getTicketStatus = (statusKey) => {
         const noResult = {
             statusKey,
-            status: statusKey
+            status: statusKey,
         };
         if (!defaultConfigPropertiesIsLoaded) {
             return noResult;
@@ -112,16 +111,21 @@ const pts = {};
             }
             ticketStatusKeyToObjectIsLoaded = true;
         }
-        return ticketStatusKeyToObject.has(statusKey) ? ticketStatusKeyToObject.get(statusKey) : noResult;
+        return ticketStatusKeyToObject.has(statusKey)
+            ? ticketStatusKeyToObject.get(statusKey)
+            : noResult;
     };
 })();
 pts.initializeTabs = (tabsListEle, callbackFns) => {
     if (!tabsListEle) {
         return;
     }
-    const isPanelOrMenuListTabs = tabsListEle.classList.contains("panel-tabs") || tabsListEle.classList.contains("menu-list");
+    const isPanelOrMenuListTabs = tabsListEle.classList.contains("panel-tabs") ||
+        tabsListEle.classList.contains("menu-list");
     const listItemEles = tabsListEle.getElementsByTagName(isPanelOrMenuListTabs ? "a" : "li");
-    const tabLinkEles = (isPanelOrMenuListTabs ? listItemEles : tabsListEle.getElementsByTagName("a"));
+    const tabLinkEles = isPanelOrMenuListTabs
+        ? listItemEles
+        : tabsListEle.getElementsByTagName("a");
     const tabClickFn = (clickEvent) => {
         clickEvent.preventDefault();
         const tabLinkEle = clickEvent.currentTarget;
@@ -130,7 +134,9 @@ pts.initializeTabs = (tabsListEle, callbackFns) => {
             listItemEles[index].classList.remove("is-active");
             tabLinkEles[index].setAttribute("aria-selected", "false");
         }
-        (isPanelOrMenuListTabs ? tabLinkEle : tabLinkEle.parentElement).classList.add("is-active");
+        (isPanelOrMenuListTabs
+            ? tabLinkEle
+            : tabLinkEle.parentElement).classList.add("is-active");
         tabLinkEle.setAttribute("aria-selected", "true");
         const tabContentEles = tabContentEle.parentElement.getElementsByClassName("tab-content");
         for (const tabContentEle of tabContentEles) {
@@ -142,9 +148,9 @@ pts.initializeTabs = (tabsListEle, callbackFns) => {
         }
     };
     for (const listItemEle of listItemEles) {
-        (isPanelOrMenuListTabs ?
-            listItemEle :
-            listItemEle.getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
+        (isPanelOrMenuListTabs
+            ? listItemEle
+            : listItemEle.getElementsByTagName("a")[0]).addEventListener("click", tabClickFn);
     }
 };
 (() => {

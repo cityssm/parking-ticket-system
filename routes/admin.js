@@ -1,30 +1,24 @@
 "use strict";
 const express_1 = require("express");
-const router = express_1.Router();
 const usersDB = require("../helpers/usersDB");
 const parkingDBCleanup = require("../helpers/parkingDB-cleanup");
 const parkingDBRelated = require("../helpers/parkingDB-related");
+const userFns_1 = require("../helpers/userFns");
 const configFns = require("../helpers/configFns");
+const router = express_1.Router();
 router.get("/userManagement", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res.redirect("/dashboard/?error=accessDenied");
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return res.redirect("/dashboard/?error=accessDenied");
     }
     const users = usersDB.getAllUsers();
-    res.render("admin-userManagement", {
+    return res.render("admin-userManagement", {
         headTitle: "User Management",
         users
     });
 });
 router.post("/doCreateUser", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const newPassword = usersDB.createUser(req.body);
     if (!newPassword) {
@@ -41,14 +35,8 @@ router.post("/doCreateUser", (req, res) => {
     }
 });
 router.post("/doUpdateUser", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const changeCount = usersDB.updateUser(req.body);
     res.json({
@@ -56,14 +44,8 @@ router.post("/doUpdateUser", (req, res) => {
     });
 });
 router.post("/doUpdateUserProperty", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const changeCount = usersDB.updateUserProperty(req.body);
     res.json({
@@ -71,14 +53,8 @@ router.post("/doUpdateUserProperty", (req, res) => {
     });
 });
 router.post("/doResetPassword", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const newPassword = usersDB.generateNewPassword(req.body.userName);
     res.json({
@@ -87,45 +63,26 @@ router.post("/doResetPassword", (req, res) => {
     });
 });
 router.post("/doGetUserProperties", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const userProperties = usersDB.getUserProperties(req.body.userName);
     res.json(userProperties);
 });
 router.post("/doDeleteUser", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const userNameToDelete = req.body.userName;
     if (userNameToDelete === req.session.user.userName) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+        return userFns_1.forbiddenJSON(res);
     }
     const success = usersDB.inactivateUser(userNameToDelete);
     res.json({ success });
 });
 router.get("/cleanup", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res.redirect("/dashboard/?error=accessDenied");
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return res.redirect("/dashboard/?error=accessDenied");
     }
     const counts = parkingDBCleanup.getDatabaseCleanupCounts();
     res.render("admin-cleanup", {
@@ -134,14 +91,8 @@ router.get("/cleanup", (req, res) => {
     });
 });
 router.post("/doCleanupTable", (req, res) => {
-    if (!req.session.user.userProperties.isAdmin) {
-        res
-            .status(403)
-            .json({
-            success: false,
-            message: "Forbidden"
-        });
-        return;
+    if (!userFns_1.userIsAdmin(req)) {
+        return userFns_1.forbiddenJSON(res);
     }
     const table = req.body.table;
     const recordDelete_timeMillis = Math.min(parseInt(req.body.recordDelete_timeMillis, 10), Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));

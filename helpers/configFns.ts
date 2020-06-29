@@ -54,8 +54,8 @@ configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\d\w -]{1,2
 configFallbackValues.set("locationClasses", []);
 
 configFallbackValues.set("licencePlateCountryAliases", Object.freeze({
-  "CA": "Canada",
-  "US": "USA"
+  CA: "Canada",
+  US: "USA"
 }));
 
 configFallbackValues.set("licencePlateProvinceAliases", {});
@@ -67,7 +67,6 @@ configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
 
 
-// tslint:disable-next-line:no-any
 export const getProperty = (propertyName: string): any => {
 
   const propertyNameSplit = propertyName.split(".");
@@ -89,12 +88,12 @@ export const getProperty = (propertyName: string): any => {
 
 
 export const keepAliveMillis =
-  getProperty("session.doKeepAlive") ?
-    Math.max(
+  <boolean>getProperty("session.doKeepAlive")
+    ? Math.max(
       getProperty("session.maxAgeMillis") / 2,
       getProperty("session.maxAgeMillis") - (10 * 60 * 1000)
-    ) :
-    0;
+    )
+    : 0;
 
 
 const parkingTicketStatusMap = new Map<string, pts.ConfigParkingTicketStatus>();
@@ -129,8 +128,10 @@ export const getLicencePlateLocationProperties =
     // Get the country alias
 
     const licencePlateCountryAlias: string =
-      getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()] ||
-      originalLicencePlateCountry;
+
+      getProperty("licencePlateCountryAliases").hasOwnProperty(originalLicencePlateCountry.toUpperCase())
+        ? getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()]
+        : originalLicencePlateCountry;
 
     // Get the province alias
 
