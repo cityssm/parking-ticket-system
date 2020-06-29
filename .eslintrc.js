@@ -24,6 +24,7 @@ module.exports = {
       assertionStyle: "angle-bracket"
     }],
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/indent": "off",
     "@typescript-eslint/member-delimiter-style": ["error", {
       multiline: {
         delimiter: "semi",

@@ -22,8 +22,8 @@ exports.createParkingTicketConvictionBatch = (reqSession) => {
                 batchDateString: dateTimeFns.dateToString(rightNow),
                 lockDate: null,
                 lockDateString: "",
-                batchEntries: [],
-            },
+                batchEntries: []
+            }
         };
     }
     else {
@@ -32,7 +32,7 @@ exports.createParkingTicketConvictionBatch = (reqSession) => {
 };
 exports.getLastTenParkingTicketConvictionBatches = () => {
     const db = sqlite(parkingDB_1.dbPath, {
-        readonly: true,
+        readonly: true
     });
     const batches = db
         .prepare("select batchID, batchDate, lockDate, sentDate," +
@@ -52,7 +52,7 @@ exports.getLastTenParkingTicketConvictionBatches = () => {
 };
 exports.getParkingTicketConvictionBatch = (batchID_or_negOne) => {
     const db = sqlite(parkingDB_1.dbPath, {
-        readonly: true,
+        readonly: true
     });
     const baseBatchSQL = "select batchID, batchDate, lockDate, sentDate," +
         " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
@@ -110,14 +110,14 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
         db.close();
         return {
             success: false,
-            message: "The batch is unavailable.",
+            message: "The batch is unavailable."
         };
     }
     else if (lockedBatchCheck.lockDate) {
         db.close();
         return {
             success: false,
-            message: "The batch is locked and cannot be updated.",
+            message: "The batch is locked and cannot be updated."
         };
     }
     const resolvedDateRecord = db
@@ -129,14 +129,14 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
         db.close();
         return {
             success: false,
-            message: "The ticket is unavailable.",
+            message: "The ticket is unavailable."
         };
     }
     else if (resolvedDateRecord.resolvedDate) {
         db.close();
         return {
             success: false,
-            message: "The ticket has been resolved and cannot be added to a conviction batch.",
+            message: "The ticket has been resolved and cannot be added to a conviction batch."
         };
     }
     let newStatusIndex = db
@@ -174,13 +174,13 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
             " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").run(ticketID, newStatusIndex, statusDate, statusTime, "convictionBatch", batchID.toString(), "", reqSession.user.userName, timeMillis, reqSession.user.userName, timeMillis);
         db.close();
         return {
-            success: true,
+            success: true
         };
     }
     db.close();
     if (batchStatusCheck.statusField === batchID.toString()) {
         return {
-            success: true,
+            success: true
         };
     }
     else {
@@ -188,7 +188,7 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
             success: false,
             message: "Parking ticket already included in conviction batch #" +
                 batchStatusCheck.statusField +
-                ".",
+                "."
         };
     }
 };
@@ -203,14 +203,14 @@ exports.addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, reqSession)
         db.close();
         return {
             successCount: 0,
-            message: "The batch is unavailable.",
+            message: "The batch is unavailable."
         };
     }
     else if (lockedBatchCheck.lockDate) {
         db.close();
         return {
             successCount: 0,
-            message: "The batch is locked and cannot be updated.",
+            message: "The batch is locked and cannot be updated."
         };
     }
     const rightNow = new Date();
@@ -256,7 +256,7 @@ exports.addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, reqSession)
     }
     db.close();
     return {
-        successCount,
+        successCount
     };
 };
 exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession) => {
@@ -270,14 +270,14 @@ exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession)
         db.close();
         return {
             success: false,
-            message: "The batch is unavailable.",
+            message: "The batch is unavailable."
         };
     }
     else if (lockedBatchCheck.lockDate) {
         db.close();
         return {
             success: false,
-            message: "The batch is locked and cannot be updated.",
+            message: "The batch is locked and cannot be updated."
         };
     }
     const rightNowMillis = Date.now();
@@ -292,7 +292,7 @@ exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession)
         .run(reqSession.user.userName, rightNowMillis, ticketID, batchID.toString());
     db.close();
     return {
-        success: info.changes > 0,
+        success: info.changes > 0
     };
 };
 exports.clearConvictionBatch = (batchID, reqSession) => {
@@ -306,14 +306,14 @@ exports.clearConvictionBatch = (batchID, reqSession) => {
         db.close();
         return {
             success: false,
-            message: "The batch is unavailable.",
+            message: "The batch is unavailable."
         };
     }
     else if (lockedBatchCheck.lockDate) {
         db.close();
         return {
             success: false,
-            message: "The batch is locked and cannot be updated.",
+            message: "The batch is locked and cannot be updated."
         };
     }
     const rightNowMillis = Date.now();
@@ -327,7 +327,7 @@ exports.clearConvictionBatch = (batchID, reqSession) => {
         .run(reqSession.user.userName, rightNowMillis, batchID.toString());
     db.close();
     return {
-        success: info.changes > 0,
+        success: info.changes > 0
     };
 };
 exports.lockConvictionBatch = (batchID, reqSession) => {
@@ -347,7 +347,7 @@ exports.lockConvictionBatch = (batchID, reqSession) => {
     return {
         success: info.changes > 0,
         lockDate,
-        lockDateString: dateTimeFns.dateIntegerToString(lockDate),
+        lockDateString: dateTimeFns.dateIntegerToString(lockDate)
     };
 };
 exports.unlockConvictionBatch = (batchID, reqSession) => {

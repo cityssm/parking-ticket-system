@@ -24,7 +24,7 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
     " where userName = ?")
     .get(userNameSubmitted);
 
-  if (row == null) {
+  if (!row) {
 
     db.close();
 
@@ -123,7 +123,7 @@ export const tryResetPassword = (userName: string, oldPasswordPlain: string, new
     " and isActive = 1")
     .get(userName);
 
-  if (row == null) {
+  if (!row) {
 
     db.close();
     return {

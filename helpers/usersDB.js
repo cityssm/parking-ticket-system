@@ -12,7 +12,7 @@ exports.getUser = (userNameSubmitted, passwordPlain) => {
         " from Users" +
         " where userName = ?")
         .get(userNameSubmitted);
-    if (row == null) {
+    if (!row) {
         db.close();
         if (userNameSubmitted === "admin") {
             const adminPasswordPlain = configFns.getProperty("admin.defaultPassword");
@@ -77,7 +77,7 @@ exports.tryResetPassword = (userName, oldPasswordPlain, newPasswordPlain) => {
         " where userName = ?" +
         " and isActive = 1")
         .get(userName);
-    if (row == null) {
+    if (!row) {
         db.close();
         return {
             success: false,

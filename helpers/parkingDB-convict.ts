@@ -15,8 +15,8 @@ export const createParkingTicketConvictionBatch = (
   const info = db
     .prepare(
       "insert into ParkingTicketConvictionBatches" +
-        " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?)"
+      " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+      " values (?, ?, ?, ?, ?)"
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),
@@ -37,8 +37,8 @@ export const createParkingTicketConvictionBatch = (
         batchDateString: dateTimeFns.dateToString(rightNow),
         lockDate: null,
         lockDateString: "",
-        batchEntries: [],
-      },
+        batchEntries: []
+      }
     };
   } else {
     return { success: false };
@@ -47,17 +47,17 @@ export const createParkingTicketConvictionBatch = (
 
 export const getLastTenParkingTicketConvictionBatches = () => {
   const db = sqlite(dbPath, {
-    readonly: true,
+    readonly: true
   });
 
   const batches: pts.ParkingTicketConvictionBatch[] = db
     .prepare(
       "select batchID, batchDate, lockDate, sentDate," +
-        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
-        " from ParkingTicketConvictionBatches" +
-        " where recordDelete_timeMillis is null" +
-        " order by batchID desc" +
-        " limit 10"
+      " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
+      " from ParkingTicketConvictionBatches" +
+      " where recordDelete_timeMillis is null" +
+      " order by batchID desc" +
+      " limit 10"
     )
     .all();
 
@@ -74,7 +74,7 @@ export const getLastTenParkingTicketConvictionBatches = () => {
 
 export const getParkingTicketConvictionBatch = (batchID_or_negOne: number) => {
   const db = sqlite(dbPath, {
-    readonly: true,
+    readonly: true
   });
 
   const baseBatchSQL =
@@ -89,9 +89,9 @@ export const getParkingTicketConvictionBatch = (batchID_or_negOne: number) => {
     batch = db
       .prepare(
         baseBatchSQL +
-          " and lockDate is null" +
-          " order by batchID desc" +
-          " limit 1"
+        " and lockDate is null" +
+        " order by batchID desc" +
+        " limit 1"
       )
       .get();
   } else {
@@ -112,15 +112,15 @@ export const getParkingTicketConvictionBatch = (batchID_or_negOne: number) => {
   batch.batchEntries = db
     .prepare(
       "select s.statusIndex," +
-        " s.statusDate, s.statusTime," +
-        " t.ticketID, t.ticketNumber, t.issueDate," +
-        " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
-        " s.recordCreate_userName, s.recordCreate_timeMillis, s.recordUpdate_userName, s.recordUpdate_timeMillis" +
-        " from ParkingTicketStatusLog s" +
-        " left join ParkingTickets t on s.ticketID = t.ticketID" +
-        " where s.recordDelete_timeMillis is null" +
-        " and s.statusKey = 'convictionBatch' and s.statusField = ?" +
-        " order by t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber"
+      " s.statusDate, s.statusTime," +
+      " t.ticketID, t.ticketNumber, t.issueDate," +
+      " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
+      " s.recordCreate_userName, s.recordCreate_timeMillis, s.recordUpdate_userName, s.recordUpdate_timeMillis" +
+      " from ParkingTicketStatusLog s" +
+      " left join ParkingTickets t on s.ticketID = t.ticketID" +
+      " where s.recordDelete_timeMillis is null" +
+      " and s.statusKey = 'convictionBatch' and s.statusField = ?" +
+      " order by t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber"
     )
     .all(batch.batchID.toString());
 
@@ -153,8 +153,8 @@ export const addParkingTicketToConvictionBatch = (
   const lockedBatchCheck = db
     .prepare(
       "select lockDate from ParkingTicketConvictionBatches" +
-        " where recordDelete_timeMillis is null" +
-        " and batchID = ?"
+      " where recordDelete_timeMillis is null" +
+      " and batchID = ?"
     )
     .get(batchID);
 
@@ -163,14 +163,14 @@ export const addParkingTicketToConvictionBatch = (
 
     return {
       success: false,
-      message: "The batch is unavailable.",
+      message: "The batch is unavailable."
     };
   } else if (lockedBatchCheck.lockDate) {
     db.close();
 
     return {
       success: false,
-      message: "The batch is locked and cannot be updated.",
+      message: "The batch is locked and cannot be updated."
     };
   }
 
@@ -179,8 +179,8 @@ export const addParkingTicketToConvictionBatch = (
   const resolvedDateRecord = db
     .prepare(
       "select resolvedDate from ParkingTickets" +
-        " where ticketID = ?" +
-        " and recordDelete_timeMillis is null"
+      " where ticketID = ?" +
+      " and recordDelete_timeMillis is null"
     )
     .get(ticketID);
 
@@ -189,7 +189,7 @@ export const addParkingTicketToConvictionBatch = (
 
     return {
       success: false,
-      message: "The ticket is unavailable.",
+      message: "The ticket is unavailable."
     };
   } else if (resolvedDateRecord.resolvedDate) {
     db.close();
@@ -197,17 +197,17 @@ export const addParkingTicketToConvictionBatch = (
     return {
       success: false,
       message:
-        "The ticket has been resolved and cannot be added to a conviction batch.",
+        "The ticket has been resolved and cannot be added to a conviction batch."
     };
   }
 
   // Get the next status index
 
-  let newStatusIndex = db
+  let newStatusIndex = <number>db
     .prepare(
       "select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
-        " from ParkingTicketStatusLog" +
-        " where ticketID = ?"
+      " from ParkingTicketStatusLog" +
+      " where ticketID = ?"
     )
     .get(ticketID).newStatusIndex;
 
@@ -224,9 +224,9 @@ export const addParkingTicketToConvictionBatch = (
   const convictedStatusCheck = db
     .prepare(
       "select statusIndex from ParkingTicketStatusLog" +
-        " where recordDelete_timeMillis is null" +
-        " and ticketID = ?" +
-        " and statusKey = 'convicted'"
+      " where recordDelete_timeMillis is null" +
+      " and ticketID = ?" +
+      " and statusKey = 'convicted'"
     )
     .get(ticketID);
 
@@ -235,9 +235,9 @@ export const addParkingTicketToConvictionBatch = (
 
     db.prepare(
       "insert into ParkingTicketStatusLog" +
-        " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
-        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+      " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
+      " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+      " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     ).run(
       ticketID,
       newStatusIndex,
@@ -257,12 +257,14 @@ export const addParkingTicketToConvictionBatch = (
 
   // Check if the ticket is part of another conviction batch
 
-  const batchStatusCheck = db
+  const batchStatusCheck: {
+    statusField: string;
+  } = db
     .prepare(
       "select statusField from ParkingTicketStatusLog" +
-        " where recordDelete_timeMillis is null" +
-        " and ticketID = ?" +
-        " and statusKey = 'convictionBatch'"
+      " where recordDelete_timeMillis is null" +
+      " and ticketID = ?" +
+      " and statusKey = 'convictionBatch'"
     )
     .get(ticketID);
 
@@ -271,9 +273,9 @@ export const addParkingTicketToConvictionBatch = (
 
     db.prepare(
       "insert into ParkingTicketStatusLog" +
-        " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
-        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+      " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
+      " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+      " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     ).run(
       ticketID,
       newStatusIndex,
@@ -291,7 +293,7 @@ export const addParkingTicketToConvictionBatch = (
     db.close();
 
     return {
-      success: true,
+      success: true
     };
   }
 
@@ -300,7 +302,7 @@ export const addParkingTicketToConvictionBatch = (
   if (batchStatusCheck.statusField === batchID.toString()) {
     // Already part of the batch
     return {
-      success: true,
+      success: true
     };
   } else {
     // Part of a different batch
@@ -309,7 +311,7 @@ export const addParkingTicketToConvictionBatch = (
       message:
         "Parking ticket already included in conviction batch #" +
         batchStatusCheck.statusField +
-        ".",
+        "."
     };
   }
 };
@@ -326,8 +328,8 @@ export const addAllParkingTicketsToConvictionBatch = (
   const lockedBatchCheck = db
     .prepare(
       "select lockDate from ParkingTicketConvictionBatches" +
-        " where recordDelete_timeMillis is null" +
-        " and batchID = ?"
+      " where recordDelete_timeMillis is null" +
+      " and batchID = ?"
     )
     .get(batchID);
 
@@ -336,14 +338,14 @@ export const addAllParkingTicketsToConvictionBatch = (
 
     return {
       successCount: 0,
-      message: "The batch is unavailable.",
+      message: "The batch is unavailable."
     };
   } else if (lockedBatchCheck.lockDate) {
     db.close();
 
     return {
       successCount: 0,
-      message: "The batch is locked and cannot be updated.",
+      message: "The batch is locked and cannot be updated."
     };
   }
 
@@ -362,11 +364,11 @@ export const addAllParkingTicketsToConvictionBatch = (
   for (const ticketID of ticketIDs) {
     // Get the next status index
 
-    let newStatusIndex = db
+    let newStatusIndex = <number>db
       .prepare(
         "select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
-          " from ParkingTicketStatusLog" +
-          " where ticketID = ?"
+        " from ParkingTicketStatusLog" +
+        " where ticketID = ?"
       )
       .get(ticketID).newStatusIndex;
 
@@ -375,9 +377,9 @@ export const addAllParkingTicketsToConvictionBatch = (
     const convictedStatusCheck = db
       .prepare(
         "select statusIndex from ParkingTicketStatusLog" +
-          " where recordDelete_timeMillis is null" +
-          " and ticketID = ?" +
-          " and statusKey = 'convicted'"
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?" +
+        " and statusKey = 'convicted'"
       )
       .get(ticketID);
 
@@ -386,9 +388,9 @@ export const addAllParkingTicketsToConvictionBatch = (
 
       db.prepare(
         "insert into ParkingTicketStatusLog" +
-          " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
-          " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-          " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
       ).run(
         ticketID,
         newStatusIndex,
@@ -411,9 +413,9 @@ export const addAllParkingTicketsToConvictionBatch = (
     const batchStatusCheck = db
       .prepare(
         "select statusField from ParkingTicketStatusLog" +
-          " where recordDelete_timeMillis is null" +
-          " and ticketID = ?" +
-          " and statusKey = 'convictionBatch'"
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?" +
+        " and statusKey = 'convictionBatch'"
       )
       .get(ticketID);
 
@@ -422,9 +424,9 @@ export const addAllParkingTicketsToConvictionBatch = (
 
       db.prepare(
         "insert into ParkingTicketStatusLog" +
-          " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
-          " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-          " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
+        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
       ).run(
         ticketID,
         newStatusIndex,
@@ -448,7 +450,7 @@ export const addAllParkingTicketsToConvictionBatch = (
   db.close();
 
   return {
-    successCount,
+    successCount
   };
 };
 
@@ -464,8 +466,8 @@ export const removeParkingTicketFromConvictionBatch = (
   const lockedBatchCheck = db
     .prepare(
       "select lockDate from ParkingTicketConvictionBatches" +
-        " where recordDelete_timeMillis is null" +
-        " and batchID = ?"
+      " where recordDelete_timeMillis is null" +
+      " and batchID = ?"
     )
     .get(batchID);
 
@@ -474,14 +476,14 @@ export const removeParkingTicketFromConvictionBatch = (
 
     return {
       success: false,
-      message: "The batch is unavailable.",
+      message: "The batch is unavailable."
     };
   } else if (lockedBatchCheck.lockDate) {
     db.close();
 
     return {
       success: false,
-      message: "The batch is locked and cannot be updated.",
+      message: "The batch is locked and cannot be updated."
     };
   }
 
@@ -492,12 +494,12 @@ export const removeParkingTicketFromConvictionBatch = (
   const info = db
     .prepare(
       "update ParkingTicketStatusLog" +
-        " set recordDelete_userName = ?," +
-        " recordDelete_timeMillis = ?" +
-        " where recordDelete_timeMillis is null" +
-        " and ticketID = ?" +
-        " and statusKey in ('convicted', 'convictionBatch')" +
-        " and statusField = ?"
+      " set recordDelete_userName = ?," +
+      " recordDelete_timeMillis = ?" +
+      " where recordDelete_timeMillis is null" +
+      " and ticketID = ?" +
+      " and statusKey in ('convicted', 'convictionBatch')" +
+      " and statusField = ?"
     )
     .run(
       reqSession.user.userName,
@@ -509,7 +511,7 @@ export const removeParkingTicketFromConvictionBatch = (
   db.close();
 
   return {
-    success: info.changes > 0,
+    success: info.changes > 0
   };
 };
 
@@ -524,8 +526,8 @@ export const clearConvictionBatch = (
   const lockedBatchCheck = db
     .prepare(
       "select lockDate from ParkingTicketConvictionBatches" +
-        " where recordDelete_timeMillis is null" +
-        " and batchID = ?"
+      " where recordDelete_timeMillis is null" +
+      " and batchID = ?"
     )
     .get(batchID);
 
@@ -534,14 +536,14 @@ export const clearConvictionBatch = (
 
     return {
       success: false,
-      message: "The batch is unavailable.",
+      message: "The batch is unavailable."
     };
   } else if (lockedBatchCheck.lockDate) {
     db.close();
 
     return {
       success: false,
-      message: "The batch is locked and cannot be updated.",
+      message: "The batch is locked and cannot be updated."
     };
   }
 
@@ -552,18 +554,18 @@ export const clearConvictionBatch = (
   const info = db
     .prepare(
       "update ParkingTicketStatusLog" +
-        " set recordDelete_userName = ?," +
-        " recordDelete_timeMillis = ?" +
-        " where recordDelete_timeMillis is null" +
-        " and statusKey in ('convicted', 'convictionBatch')" +
-        " and statusField = ?"
+      " set recordDelete_userName = ?," +
+      " recordDelete_timeMillis = ?" +
+      " where recordDelete_timeMillis is null" +
+      " and statusKey in ('convicted', 'convictionBatch')" +
+      " and statusField = ?"
     )
     .run(reqSession.user.userName, rightNowMillis, batchID.toString());
 
   db.close();
 
   return {
-    success: info.changes > 0,
+    success: info.changes > 0
   };
 };
 
@@ -580,12 +582,12 @@ export const lockConvictionBatch = (
   const info = db
     .prepare(
       "update ParkingTicketConvictionBatches" +
-        " set lockDate = ?," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where recordDelete_timeMillis is null" +
-        " and batchID = ?" +
-        " and lockDate is null"
+      " set lockDate = ?," +
+      " recordUpdate_userName = ?," +
+      " recordUpdate_timeMillis = ?" +
+      " where recordDelete_timeMillis is null" +
+      " and batchID = ?" +
+      " and lockDate is null"
     )
     .run(lockDate, reqSession.user.userName, rightNow.getTime(), batchID);
 
@@ -594,7 +596,7 @@ export const lockConvictionBatch = (
   return {
     success: info.changes > 0,
     lockDate,
-    lockDateString: dateTimeFns.dateIntegerToString(lockDate),
+    lockDateString: dateTimeFns.dateIntegerToString(lockDate)
   };
 };
 
@@ -609,13 +611,13 @@ export const unlockConvictionBatch = (
   const info = db
     .prepare(
       "update ParkingTicketConvictionBatches" +
-        " set lockDate = null," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where recordDelete_timeMillis is null" +
-        " and batchID = ?" +
-        " and lockDate is not null" +
-        " and sentDate is null"
+      " set lockDate = null," +
+      " recordUpdate_userName = ?," +
+      " recordUpdate_timeMillis = ?" +
+      " where recordDelete_timeMillis is null" +
+      " and batchID = ?" +
+      " and lockDate is not null" +
+      " and sentDate is null"
     )
     .run(reqSession.user.userName, rightNowMillis, batchID);
 
@@ -635,13 +637,13 @@ export const markConvictionBatchAsSent = (
   const info = db
     .prepare(
       "update ParkingTicketConvictionBatches" +
-        " set sentDate = ?," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where batchID = ?" +
-        " and recordDelete_timeMillis is null" +
-        " and lockDate is not null" +
-        " and sentDate is null"
+      " set sentDate = ?," +
+      " recordUpdate_userName = ?," +
+      " recordUpdate_timeMillis = ?" +
+      " where batchID = ?" +
+      " and recordDelete_timeMillis is null" +
+      " and lockDate is not null" +
+      " and sentDate is null"
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),
@@ -652,16 +654,16 @@ export const markConvictionBatchAsSent = (
 
   db.prepare(
     "update ParkingTickets" +
-      " set resolvedDate = ?," +
-      " recordUpdate_userName = ?," +
-      " recordUpdate_timeMillis = ?" +
-      " where resolvedDate is null" +
-      (" and exists (" +
-        "select 1 from ParkingTicketStatusLog s" +
-        " where ParkingTickets.ticketID = s.ticketID" +
-        " and s.recordDelete_timeMillis is null" +
-        " and s.statusField = ?" +
-        ")")
+    " set resolvedDate = ?," +
+    " recordUpdate_userName = ?," +
+    " recordUpdate_timeMillis = ?" +
+    " where resolvedDate is null" +
+    (" and exists (" +
+      "select 1 from ParkingTicketStatusLog s" +
+      " where ParkingTickets.ticketID = s.ticketID" +
+      " and s.recordDelete_timeMillis is null" +
+      " and s.statusField = ?" +
+      ")")
   ).run(
     dateTimeFns.dateToInteger(rightNow),
     reqSession.user.userName,
