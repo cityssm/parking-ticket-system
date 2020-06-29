@@ -4,9 +4,9 @@ import type * as pts from "../helpers/ptsTypes";
 
 export const userIsAdmin = (req: Request) => {
 
-  const user = req.session.user as pts.User;
+  const user = <pts.User>req.session.user;
 
-  if (user == null) {
+  if (!user) {
     return false;
   }
 
@@ -16,9 +16,9 @@ export const userIsAdmin = (req: Request) => {
 
 export const userCanUpdate = (req: Request) => {
 
-  const user = req.session.user as pts.User;
+  const user = <pts.User>req.session.user;
 
-  if (user == null) {
+  if (!user) {
     return false;
   }
 
@@ -28,9 +28,9 @@ export const userCanUpdate = (req: Request) => {
 
 export const userIsOperator = (req: Request) => {
 
-  const user = req.session.user as pts.User;
+  const user = <pts.User>req.session.user;
 
-  if (user == null) {
+  if (!user) {
     return false;
   }
 

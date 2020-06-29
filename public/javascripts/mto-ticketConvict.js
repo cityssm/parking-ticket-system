@@ -18,7 +18,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const ticketID = convictableTickets[index].ticketID;
         cityssm.postJSON("/tickets/doAddTicketToConvictionBatch", {
             batchID: currentBatch.batchID,
-            ticketID,
+            ticketID
         }, (resultJSON) => {
             if (resultJSON.success) {
                 currentBatch = resultJSON.batch;
@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const addFn = () => {
             cityssm.postJSON("/tickets-ontario/doAddAllTicketsToConvictionBatch", {
                 batchID: currentBatch.batchID,
-                ticketIDs: displayedTicketIDs,
+                ticketIDs: displayedTicketIDs
             }, (responseJSON) => {
                 loadingCloseModalFn();
                 if (responseJSON.batch) {
@@ -60,7 +60,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshow() {
                 document.getElementById("is-loading-modal-message").innerText =
                     "Adding " +
-                        displayedTicketIDs.length +
+                        displayedTicketIDs.length.toString() +
                         " ticket" +
                         (displayedTicketIDs.length === 1 ? "" : "s") +
                         "...";
@@ -68,7 +68,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshown(_modalEle, closeModalFn) {
                 loadingCloseModalFn = closeModalFn;
                 addFn();
-            },
+            }
         });
     };
     const renderConvictableTicketsFn = () => {
@@ -76,47 +76,47 @@ Object.defineProperty(exports, "__esModule", { value: true });
         displayedTicketIDs = [];
         if (!currentBatch) {
             convictableTicketsContainerEle.innerHTML =
-                '<div class="message is-warning">' +
-                    '<div class="message-body">Select a target batch to get started.</div>' +
+                "<div class=\"message is-warning\">" +
+                    "<div class=\"message-body\">Select a target batch to get started.</div>" +
                     "</div>";
             return;
         }
         if (!canUpdate) {
             convictableTicketsContainerEle.innerHTML =
-                '<div class="message is-warning">' +
-                    '<div class="message-body">Parking tickets can only be added by users with update permissions.</div>' +
+                "<div class=\"message is-warning\">" +
+                    "<div class=\"message-body\">Parking tickets can only be added by users with update permissions.</div>" +
                     "</div>";
             return;
         }
         if (currentBatch.lockDate) {
             convictableTicketsContainerEle.innerHTML =
-                '<div class="message is-warning">' +
-                    '<div class="message-body">The target batch is locked and cannot accept additional tickets.</div>' +
+                "<div class=\"message is-warning\">" +
+                    "<div class=\"message-body\">The target batch is locked and cannot accept additional tickets.</div>" +
                     "</div>";
             return;
         }
         if (convictableTickets.length === 0) {
             convictableTicketsContainerEle.innerHTML =
-                '<div class="message is-info">' +
-                    '<div class="message-body">There are no parking tickets currently eligible for conviction.</div>' +
+                "<div class=\"message is-info\">" +
+                    "<div class=\"message-body\">There are no parking tickets currently eligible for conviction.</div>" +
                     "</div>";
             return;
         }
         const ticketFilter = ticketFilterEle.value.trim().toLowerCase();
         const tbodyEle = document.createElement("tbody");
         convictableTickets.forEach((ticket, index) => {
-            if (ticket.ticketNumber.toLowerCase().indexOf(ticketFilter) === -1 &&
-                ticket.licencePlateNumber.toLowerCase().indexOf(ticketFilter) === -1) {
+            if (ticket.ticketNumber.toLowerCase().includes(ticketFilter) &&
+                ticket.licencePlateNumber.toLowerCase().includes(ticketFilter)) {
                 return;
             }
             displayedTicketIDs.push(ticket.ticketID);
             const trEle = document.createElement("tr");
             trEle.innerHTML =
                 "<td>" +
-                    '<a data-tooltip="View Ticket (Opens in New Window)"' +
-                    ' href="/tickets/' +
-                    ticket.ticketID +
-                    '" target="_blank">' +
+                    "<a data-tooltip=\"View Ticket (Opens in New Window)\"" +
+                    " href=\"/tickets/" +
+                    ticket.ticketID.toString() +
+                    "\" target=\"_blank\">" +
                     cityssm.escapeHTML(ticket.ticketNumber) +
                     "</a>" +
                     "</td>" +
@@ -124,18 +124,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     ticket.issueDateString +
                     "</td>" +
                     ("<td>" +
-                        '<span class="licence-plate-number is-size-6">' +
+                        "<span class=\"licence-plate-number is-size-6\">" +
                         cityssm.escapeHTML(ticket.licencePlateNumber) +
                         "</span><br />" +
-                        '<span class="has-tooltip-right is-size-7" data-tooltip="Primary Owner">' +
+                        "<span class=\"has-tooltip-right is-size-7\" data-tooltip=\"Primary Owner\">" +
                         cityssm.escapeHTML(ticket.licencePlateOwner_ownerName1) +
                         "</span>" +
                         "</td>") +
-                    ('<td class="has-text-right">' +
-                        '<button class="button is-small" data-index="' +
-                        index +
-                        '" type="button">' +
-                        '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
+                    ("<td class=\"has-text-right\">" +
+                        "<button class=\"button is-small\" data-index=\"" +
+                        index.toString() +
+                        "\" type=\"button\">" +
+                        "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                         "<span>Add</span>" +
                         "</button>" +
                         "</td>");
@@ -146,18 +146,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
         if (displayedTicketIDs.length === 0) {
             convictableTicketsContainerEle.innerHTML =
-                '<div class="message is-info">' +
-                    '<div class="message-body">There are no parking tickets that meet the search criteria.</div>' +
+                "<div class=\"message is-info\">" +
+                    "<div class=\"message-body\">There are no parking tickets that meet the search criteria.</div>" +
                     "</div>";
             return;
         }
         const addAllButtonEle = document.createElement("button");
         addAllButtonEle.className = "button is-fullwidth mb-3";
         addAllButtonEle.innerHTML =
-            '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
+            "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                 "<span>" +
                 "Add " +
-                displayedTicketIDs.length +
+                displayedTicketIDs.length.toString() +
                 " Parking Ticket" +
                 (displayedTicketIDs.length === 1 ? "" : "s") +
                 "</span>";
@@ -185,7 +185,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const ticketID = currentBatch.batchEntries[index].ticketID;
         cityssm.postJSON("/tickets-ontario/doRemoveTicketFromConvictionBatch", {
             batchID: currentBatch.batchID,
-            ticketID,
+            ticketID
         }, (resultJSON) => {
             if (resultJSON.success) {
                 currentBatch.batchEntries.splice(index, 1);
@@ -202,7 +202,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         const clearFn = () => {
             cityssm.postJSON("/tickets-ontario/doClearConvictionBatch", {
-                batchID: currentBatch.batchID,
+                batchID: currentBatch.batchID
             }, (responseJSON) => {
                 if (!responseJSON.success) {
                     cityssm.alertModal("Batch Not Cleared", responseJSON.message, "OK", "danger");
@@ -223,7 +223,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         const lockFn = () => {
             cityssm.postJSON("/tickets/doLockConvictionBatch", {
-                batchID: currentBatch.batchID,
+                batchID: currentBatch.batchID
             }, (responseJSON) => {
                 if (responseJSON.success) {
                     currentBatch.lockDate = responseJSON.lockDate;
@@ -241,7 +241,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         const lockFn = () => {
             cityssm.postJSON("/tickets/doUnlockConvictionBatch", {
-                batchID: currentBatch.batchID,
+                batchID: currentBatch.batchID
             }, (responseJSON) => {
                 if (responseJSON.success) {
                     currentBatch.lockDate = null;
@@ -257,7 +257,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const downloadBatchFn = (clickEvent) => {
         clickEvent.preventDefault();
         const downloadFn = () => {
-            window.open("/tickets-ontario/convict/" + currentBatch.batchID);
+            window.open("/tickets-ontario/convict/" + currentBatch.batchID.toString());
         };
         if (!currentBatch.sentDate) {
             cityssm.confirmModal("Download Batch", "<strong>You are about to download the batch for the first time.</strong><br />" +
@@ -275,23 +275,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
     };
     const renderCurrentBatchFn = () => {
         document.getElementById("batchSelector--batchID").innerText =
-            "Batch #" + currentBatch.batchID;
+            "Batch #" + currentBatch.batchID.toString();
         document.getElementById("batchSelector--batchDetails").innerHTML =
-            '<span class="has-tooltip-left" data-tooltip="Batch Date">' +
-                '<span class="icon"><i class="fas fa-star" aria-hidden="true"></i></span> ' +
+            "<span class=\"has-tooltip-left\" data-tooltip=\"Batch Date\">" +
+                "<span class=\"icon\"><i class=\"fas fa-star\" aria-hidden=\"true\"></i></span> " +
                 currentBatch.batchDateString +
                 "</span>" +
                 (currentBatch.lockDate
-                    ? '<br /><span class="has-tooltip-left" data-tooltip="Lock Date">' +
-                        '<span class="icon"><i class="fas fa-lock" aria-hidden="true"></i></span> ' +
+                    ? "<br /><span class=\"has-tooltip-left\" data-tooltip=\"Lock Date\">" +
+                        "<span class=\"icon\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span> " +
                         currentBatch.lockDateString +
                         "</span>"
                     : "");
         cityssm.clearElement(batchEntriesContainerEle);
         if (currentBatch.batchEntries.length === 0) {
             batchEntriesContainerEle.innerHTML =
-                '<div class="message is-info">' +
-                    '<div class="message-body">There are no parking tickets in this batch.</div>' +
+                "<div class=\"message is-info\">" +
+                    "<div class=\"message-body\">There are no parking tickets in this batch.</div>" +
                     "</div>";
             return;
         }
@@ -301,9 +301,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const trEle = document.createElement("tr");
             trEle.innerHTML =
                 "<td>" +
-                    '<a href="/tickets/' +
-                    batchEntry.ticketID +
-                    '" target="_blank">' +
+                    "<a href=\"/tickets/" + batchEntry.ticketID.toString() + "\" target=\"_blank\">" +
                     batchEntry.ticketNumber +
                     "</a>" +
                     "</td>" +
@@ -311,16 +309,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     batchEntry.issueDateString +
                     "</td>" +
                     ("<td>" +
-                        '<span class="licence-plate-number is-size-6">' +
+                        "<span class=\"licence-plate-number is-size-6\">" +
                         cityssm.escapeHTML(batchEntry.licencePlateNumber) +
                         "</span>" +
                         "</td>") +
                     (canRemove
-                        ? '<td class="has-text-right">' +
-                            '<button class="button is-small" data-index="' +
-                            index +
-                            '" type="button">' +
-                            '<span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>' +
+                        ? "<td class=\"has-text-right\">" +
+                            "<button class=\"button is-small\" data-index=\"" +
+                            index.toString() +
+                            "\" type=\"button\">" +
+                            "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
                             "<span>Remove</span>" +
                             "</button>" +
                             "</td>"
@@ -347,14 +345,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const lockButtonEle = document.createElement("button");
             lockButtonEle.className = "button is-fullwidth mb-3";
             lockButtonEle.innerHTML =
-                '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
+                "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                     "<span>Lock Batch</span>";
             lockButtonEle.addEventListener("click", lockBatchFn);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", lockButtonEle);
             const clearButtonEle = document.createElement("button");
             clearButtonEle.className = "button is-fullwidth mb-3";
             clearButtonEle.innerHTML =
-                '<span class="icon is-small"><i class="fas fa-broom" aria-hidden="true"></i></span>' +
+                "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
                     "<span>Clear Batch</span>";
             clearButtonEle.addEventListener("click", clearBatchFn);
             tableEle.insertAdjacentElement("beforebegin", clearButtonEle);
@@ -363,7 +361,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const unlockButtonEle = document.createElement("button");
             unlockButtonEle.className = "button is-fullwidth mb-3";
             unlockButtonEle.innerHTML =
-                '<span class="icon is-small"><i class="fas fa-unlock" aria-hidden="true"></i></span>' +
+                "<span class=\"icon is-small\"><i class=\"fas fa-unlock\" aria-hidden=\"true\"></i></span>" +
                     "<span>Unlock Batch</span>";
             unlockButtonEle.addEventListener("click", unlockBatchFn);
             batchEntriesContainerEle.insertAdjacentElement("afterbegin", unlockButtonEle);
@@ -372,13 +370,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const downloadButtonEle = document.createElement("button");
             downloadButtonEle.className = "button is-fullwidth mb-3";
             downloadButtonEle.innerHTML =
-                '<span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>' +
+                "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
                     "<span>Download File for MTO</span>";
             downloadButtonEle.addEventListener("click", downloadBatchFn);
             tableEle.insertAdjacentElement("beforebegin", downloadButtonEle);
-            tableEle.insertAdjacentHTML("beforebegin", '<a class="button is-fullwidth mb-3"' +
-                ' href="https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp" target="_blank" rel="noreferrer">' +
-                '<span class="icon is-small"><i class="fas fa-building" aria-hidden="true"></i></span>' +
+            tableEle.insertAdjacentHTML("beforebegin", "<a class=\"button is-fullwidth mb-3\"" +
+                " href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
+                "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
                 "<span>MTO ARIS Login</span>" +
                 "</a>");
         }
@@ -404,7 +402,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             const batchID = (clickEvent.currentTarget).getAttribute("data-batch-id");
             cityssm.postJSON("/tickets/doGetConvictionBatch", {
-                batchID,
+                batchID
             }, (batchObj) => {
                 currentBatch = batchObj;
                 renderCurrentBatchFn();
@@ -429,7 +427,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     if (batchList.length === 0) {
                         resultsContainerEle.className = "message is-info";
                         resultsContainerEle.innerHTML =
-                            '<div class="message-body">There are no recent conviction batches.</div>';
+                            "<div class=\"message-body\">There are no recent conviction batches.</div>";
                         return;
                     }
                     resultsContainerEle.className = "list is-hoverable";
@@ -439,16 +437,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         batchListItemEle.setAttribute("data-batch-id", batch.batchID.toString());
                         batchListItemEle.href = "#";
                         batchListItemEle.innerHTML =
-                            '<div class="columns">' +
-                                '<div class="column is-narrow">#' +
-                                batch.batchID +
+                            "<div class=\"columns\">" +
+                                "<div class=\"column is-narrow\">#" +
+                                batch.batchID.toString() +
                                 "</div>" +
-                                '<div class="column has-text-right">' +
+                                "<div class=\"column has-text-right\">" +
                                 batch.batchDateString +
                                 (batch.lockDate
-                                    ? '<br /><div class="tags justify-flex-end">' +
-                                        '<span class="tag">' +
-                                        '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
+                                    ? "<br /><div class=\"tags justify-flex-end\">" +
+                                        "<span class=\"tag\">" +
+                                        "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                                         "<span>Locked</span>" +
                                         "</span>"
                                     : "") +
@@ -461,7 +459,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             },
             onshown(_modalEle, closeModalFn) {
                 selectBatchCloseModalFn = closeModalFn;
-            },
+            }
         });
     });
     if (currentBatch) {
