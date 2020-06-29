@@ -10,112 +10,101 @@ import * as parkingDBConvict from "../helpers/parkingDB-convict";
 
 import type * as pts from "../helpers/ptsTypes";
 
-
 /*
  * Ticket Search
  */
 
-
 router.get("/", (_req, res) => {
-
   res.render("ticket-search", {
-    headTitle: "Parking Tickets"
+    headTitle: "Parking Tickets",
   });
-
 });
 
-
 router.post("/doGetTickets", (req, res) => {
-
   const queryOptions: parkingDB.GetParkingTicketsQueryOptions = {
     limit: req.body.limit,
     offset: req.body.offset,
     ticketNumber: req.body.ticketNumber,
     licencePlateNumber: req.body.licencePlateNumber,
-    location: req.body.location
+    location: req.body.location,
   };
 
   if (req.body.isResolved !== "") {
-    queryOptions.isResolved = (req.body.isResolved === "1");
+    queryOptions.isResolved = req.body.isResolved === "1";
   }
 
   res.json(parkingDB.getParkingTickets(req.session, queryOptions));
-
 });
-
 
 /*
  * Ownership Reconciliation
  */
 
-
 router.get("/reconcile", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
     res.redirect("/tickets/?error=accessDenied");
     return;
-
   }
 
   const reconciliationRecords = parkingDBLookup.getOwnershipReconciliationRecords();
 
-  const lookupErrors = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1);
+  const lookupErrors = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(
+    -1,
+    -1
+  );
 
   res.render("ticket-reconcile", {
     headTitle: "Ownership Reconciliation",
     records: reconciliationRecords,
-    errorLog: lookupErrors
+    errorLog: lookupErrors,
   });
-
 });
 
-
 router.post("/doAcknowledgeLookupError", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   // Get log entry
 
-  const logEntries = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(req.body.batchID, req.body.logIndex);
+  const logEntries = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(
+    req.body.batchID,
+    req.body.logIndex
+  );
 
   if (logEntries.length === 0) {
-
     res.json({
       success: false,
-      message: "Log entry not found.  It may have already been acknowledged."
+      message: "Log entry not found.  It may have already been acknowledged.",
     });
     return;
-
   }
 
   // Set status on parking ticket
 
-  const statusResponse = parkingDB.createParkingTicketStatus({
-    recordType: "status",
-    ticketID: logEntries[0].ticketID,
-    statusKey: "ownerLookupError",
-    statusField: "",
-    statusNote: logEntries[0].errorMessage + " (" + logEntries[0].errorCode + ")"
-
-  }, req.session, false);
+  const statusResponse = parkingDB.createParkingTicketStatus(
+    {
+      recordType: "status",
+      ticketID: logEntries[0].ticketID,
+      statusKey: "ownerLookupError",
+      statusField: "",
+      statusNote:
+        logEntries[0].errorMessage + " (" + logEntries[0].errorCode + ")",
+    },
+    req.session,
+    false
+  );
 
   if (!statusResponse.success) {
-
     res.json({
       success: false,
-      message: "Unable to update the status on the parking ticket.  It may have been resolved."
+      message:
+        "Unable to update the status on the parking ticket.  It may have been resolved.",
     });
 
     return;
@@ -123,39 +112,38 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
 
   // Mark log entry as acknowledged
 
-  const success =
-    parkingDBLookup.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
+  const success = parkingDBLookup.markLicencePlateLookupErrorLogEntryAcknowledged(
+    req.body.batchID,
+    req.body.logIndex,
+    req.session
+  );
 
   res.json({
-    success
+    success,
   });
-
 });
 
-
 router.post("/doReconcileAsMatch", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
   }
 
-  const ownerRecord =
-    parkingDB.getLicencePlateOwner(
-      req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
+  const ownerRecord = parkingDB.getLicencePlateOwner(
+    req.body.licencePlateCountry,
+    req.body.licencePlateProvince,
+    req.body.licencePlateNumber,
+    req.body.recordDate
+  );
 
   if (!ownerRecord) {
-
     res.json({
       success: false,
-      message: "Ownership record not found."
+      message: "Ownership record not found.",
     });
 
     return;
@@ -163,217 +151,196 @@ router.post("/doReconcileAsMatch", (req, res) => {
 
   const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
 
-  const statusResponse = parkingDB.createParkingTicketStatus({
-    recordType: "status",
-    ticketID: parseInt(req.body.ticketID, 10),
-    statusKey: "ownerLookupMatch",
-    statusField: ownerRecord.recordDate.toString(),
-    statusNote: ownerAddress
-
-  }, req.session, false);
+  const statusResponse = parkingDB.createParkingTicketStatus(
+    {
+      recordType: "status",
+      ticketID: parseInt(req.body.ticketID, 10),
+      statusKey: "ownerLookupMatch",
+      statusField: ownerRecord.recordDate.toString(),
+      statusNote: ownerAddress,
+    },
+    req.session,
+    false
+  );
 
   res.json(statusResponse);
-
 });
 
-
 router.post("/doReconcileAsError", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
-    return;
-
-  }
-
-  const ownerRecord = parkingDB.getLicencePlateOwner(
-    req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
-
-  if (!ownerRecord) {
-
-    res.json({
+    res.status(403).json({
       success: false,
-      message: "Ownership record not found."
+      message: "Forbidden",
     });
 
     return;
   }
 
-  const statusResponse = parkingDB.createParkingTicketStatus({
-    recordType: "status",
-    ticketID: parseInt(req.body.ticketID, 10),
-    statusKey: "ownerLookupError",
-    statusField: ownerRecord.vehicleNCIC,
-    statusNote: ""
+  const ownerRecord = parkingDB.getLicencePlateOwner(
+    req.body.licencePlateCountry,
+    req.body.licencePlateProvince,
+    req.body.licencePlateNumber,
+    req.body.recordDate
+  );
 
-  }, req.session, false);
+  if (!ownerRecord) {
+    res.json({
+      success: false,
+      message: "Ownership record not found.",
+    });
+
+    return;
+  }
+
+  const statusResponse = parkingDB.createParkingTicketStatus(
+    {
+      recordType: "status",
+      ticketID: parseInt(req.body.ticketID, 10),
+      statusKey: "ownerLookupError",
+      statusField: ownerRecord.vehicleNCIC,
+      statusNote: "",
+    },
+    req.session,
+    false
+  );
 
   res.json(statusResponse);
-
 });
 
-
 router.post("/doQuickReconcileMatches", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
   }
 
   const records = parkingDBLookup.getOwnershipReconciliationRecords();
 
-  const statusRecords: { ticketID: number, statusIndex: number }[] = [];
+  const statusRecords: { ticketID: number; statusIndex: number }[] = [];
 
   for (const record of records) {
-
     if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
       continue;
     }
 
     const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
 
-    const statusResponse = parkingDB.createParkingTicketStatus({
-      recordType: "status",
-      ticketID: record.ticket_ticketID,
-      statusKey: "ownerLookupMatch",
-      statusField: record.owner_recordDateString,
-      statusNote: ownerAddress
-
-    }, req.session, false);
+    const statusResponse = parkingDB.createParkingTicketStatus(
+      {
+        recordType: "status",
+        ticketID: record.ticket_ticketID,
+        statusKey: "ownerLookupMatch",
+        statusField: record.owner_recordDateString,
+        statusNote: ownerAddress,
+      },
+      req.session,
+      false
+    );
 
     if (statusResponse.success) {
       statusRecords.push({
         ticketID: record.ticket_ticketID,
-        statusIndex: statusResponse.statusIndex
+        statusIndex: statusResponse.statusIndex,
       });
     }
   }
 
   return res.json({
     success: true,
-    statusRecords
+    statusRecords,
   });
-
 });
-
 
 // TICKET CONVICTIONS
 
-
 router.post("/doGetRecentConvictionBatches", (req, res) => {
-
-  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+  if (
+    !(
+      req.session.user.userProperties.canUpdate ||
+      req.session.user.userProperties.isOperator
+    )
+  ) {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
   }
 
   const batches = parkingDBConvict.getLastTenParkingTicketConvictionBatches();
 
   return res.json(batches);
-
 });
-
 
 router.post("/doGetConvictionBatch", (req, res) => {
-
-  if (!(req.session.user.userProperties.canUpdate || req.session.user.userProperties.isOperator)) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+  if (
+    !(
+      req.session.user.userProperties.canUpdate ||
+      req.session.user.userProperties.isOperator
+    )
+  ) {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
   }
 
-  const batch = parkingDBConvict.getParkingTicketConvictionBatch(req.body.batchID);
+  const batch = parkingDBConvict.getParkingTicketConvictionBatch(
+    req.body.batchID
+  );
 
   return res.json(batch);
-
 });
-
 
 router.post("/doCreateConvictionBatch", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
   }
 
-  const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(req.session);
+  const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(
+    req.session
+  );
 
   return res.json(batchResult);
-
 });
 
-
 router.post("/doAddTicketToConvictionBatch", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
   }
 
   const batchID = req.body.batchID;
   const ticketID = req.body.ticketID;
 
   const result: {
-    success: boolean,
-    message?: string,
-    batch?: pts.ParkingTicketConvictionBatch
-  } = parkingDBConvict.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
+    success: boolean;
+    message?: string;
+    batch?: pts.ParkingTicketConvictionBatch;
+  } = parkingDBConvict.addParkingTicketToConvictionBatch(
+    batchID,
+    ticketID,
+    req.session
+  );
 
   if (result.success) {
     result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
   }
 
   return res.json(result);
-
 });
 
-
 router.post("/doLockConvictionBatch", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
   }
 
   const batchID = req.body.batchID;
@@ -381,21 +348,14 @@ router.post("/doLockConvictionBatch", (req, res) => {
   const result = parkingDBConvict.lockConvictionBatch(batchID, req.session);
 
   return res.json(result);
-
 });
 
-
 router.post("/doUnlockConvictionBatch", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
-
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
   }
 
   const batchID = req.body.batchID;
@@ -403,20 +363,13 @@ router.post("/doUnlockConvictionBatch", (req, res) => {
   const success = parkingDBConvict.unlockConvictionBatch(batchID, req.session);
 
   return res.json({ success });
-
 });
-
 
 /*
  * New Ticket
  */
 
-
-router.get([
-  "/new",
-  "/new/:ticketNumber"
-], (req, res) => {
-
+router.get(["/new", "/new/:ticketNumber"], (req, res) => {
   if (!req.session.user.userProperties.canCreate) {
     res.redirect("/tickets/?error=accessDenied");
     return;
@@ -432,317 +385,236 @@ router.get([
     ticket: {
       ticketNumber,
       licencePlateCountry: configFns.getProperty("defaults.country"),
-      licencePlateProvince: configFns.getProperty("defaults.province")
+      licencePlateProvince: configFns.getProperty("defaults.province"),
     },
     issueDateMaxString: dateTimeFns.dateToString(new Date()),
-    vehicleMakeModelDatalist
+    vehicleMakeModelDatalist,
   });
-
 });
 
-
 router.post("/doCreateTicket", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.createParkingTicket(req.body, req.session);
 
   if (result.success) {
-
     const ticketNumber = req.body.ticketNumber;
-    result.nextTicketNumber = configFns.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(ticketNumber);
-
+    result.nextTicketNumber = configFns.getProperty(
+      "parkingTickets.ticketNumber.nextTicketNumberFn"
+    )(ticketNumber);
   }
 
   res.json(result);
-
 });
 
-
 router.post("/doUpdateTicket", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.updateParkingTicket(req.body, req.session);
 
   res.json(result);
-
 });
 
-
 router.post("/doDeleteTicket", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.deleteParkingTicket(req.body.ticketID, req.session);
 
   res.json(result);
-
 });
 
-
 router.post("/doResolveTicket", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.resolveParkingTicket(req.body.ticketID, req.session);
 
   res.json(result);
-
 });
-
 
 router.post("/doUnresolveTicket", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
-  const result = parkingDB.unresolveParkingTicket(req.body.ticketID, req.session);
+  const result = parkingDB.unresolveParkingTicket(
+    req.body.ticketID,
+    req.session
+  );
 
   res.json(result);
-
 });
 
-
 router.post("/doRestoreTicket", (req, res) => {
-
   if (!req.session.user.userProperties.canUpdate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.restoreParkingTicket(req.body.ticketID, req.session);
 
   res.json(result);
-
 });
-
 
 /*
  * Ticket Remarks
  */
 
-
 router.post("/doGetRemarks", (req, res) => {
-
   res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
-
 });
 
-
 router.post("/doAddRemark", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.createParkingTicketRemark(req.body, req.session);
 
   res.json(result);
-
 });
 
-
 router.post("/doUpdateRemark", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.updateParkingTicketRemark(req.body, req.session);
 
   res.json(result);
-
 });
-
 
 router.post("/doDeleteRemark", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
-  const result = parkingDB.deleteParkingTicketRemark(req.body.ticketID, req.body.remarkIndex, req.session);
+  const result = parkingDB.deleteParkingTicketRemark(
+    req.body.ticketID,
+    req.body.remarkIndex,
+    req.session
+  );
 
   res.json(result);
-
 });
-
 
 /*
  * Ticket Statuses
  */
 
-
 router.post("/doGetStatuses", (req, res) => {
-
   res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
-
 });
-
 
 router.post("/doAddStatus", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
-  const result = parkingDB.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
+  const result = parkingDB.createParkingTicketStatus(
+    req.body,
+    req.session,
+    req.body.resolveTicket === "1"
+  );
 
   res.json(result);
-
 });
 
-
 router.post("/doUpdateStatus", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
   const result = parkingDB.updateParkingTicketStatus(req.body, req.session);
 
   res.json(result);
-
 });
-
 
 router.post("/doDeleteStatus", (req, res) => {
-
   if (!req.session.user.userProperties.canCreate) {
-
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Forbidden"
-      });
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
 
     return;
-
   }
 
-  const result = parkingDB.deleteParkingTicketStatus(req.body.ticketID, req.body.statusIndex, req.session);
+  const result = parkingDB.deleteParkingTicketStatus(
+    req.body.ticketID,
+    req.body.statusIndex,
+    req.session
+  );
 
   res.json(result);
-
 });
-
 
 /*
  * Ticket View
  */
 
-
 router.get("/:ticketID", (req, res) => {
-
   const ticketID = parseInt(req.params.ticketID, 10);
 
   const ticket = parkingDB.getParkingTicket(ticketID, req.session);
@@ -750,22 +622,21 @@ router.get("/:ticketID", (req, res) => {
   if (!ticket) {
     res.redirect("/tickets/?error=ticketNotFound");
     return;
-
-  } else if (ticket.recordDelete_timeMillis && !req.session.user.userProperties.isAdmin) {
-
+  } else if (
+    ticket.recordDelete_timeMillis &&
+    !req.session.user.userProperties.isAdmin
+  ) {
     res.redirect("/tickets/?error=accessDenied");
     return;
   }
 
   res.render("ticket-view", {
     headTitle: "Ticket " + ticket.ticketNumber,
-    ticket
+    ticket,
   });
-
 });
 
 router.get("/byTicketNumber/:ticketNumber", (req, res) => {
-
   const ticketNumber = req.params.ticketNumber;
 
   const ticketID = parkingDB.getParkingTicketID(ticketNumber);
@@ -775,17 +646,13 @@ router.get("/byTicketNumber/:ticketNumber", (req, res) => {
   } else {
     res.redirect("/tickets/?error=ticketNotFound");
   }
-
 });
-
 
 /*
  * Ticket Edit
  */
 
-
 router.get("/:ticketID/edit", (req, res) => {
-
   const ticketID = parseInt(req.params.ticketID, 10);
 
   if (!req.session.user.userProperties.canCreate) {
@@ -796,15 +663,15 @@ router.get("/:ticketID/edit", (req, res) => {
   const ticket = parkingDB.getParkingTicket(ticketID, req.session);
 
   if (!ticket) {
-
     res.redirect("/tickets/?error=ticketNotFound");
     return;
-
-  } else if (!ticket.canUpdate || ticket.resolvedDate || ticket.recordDelete_timeMillis) {
-
+  } else if (
+    !ticket.canUpdate ||
+    ticket.resolvedDate ||
+    ticket.recordDelete_timeMillis
+  ) {
     res.redirect("/tickets/" + ticketID + "/?error=accessDenied");
     return;
-
   }
 
   const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
@@ -814,10 +681,8 @@ router.get("/:ticketID/edit", (req, res) => {
     isCreate: false,
     ticket,
     issueDateMaxString: dateTimeFns.dateToString(new Date()),
-    vehicleMakeModelDatalist
+    vehicleMakeModelDatalist,
   });
-
 });
-
 
 export = router;
