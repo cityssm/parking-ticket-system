@@ -57,7 +57,7 @@ exports.getParkingTicketsAvailableForMTOConvictionBatch = () => {
         " o.ownerName1 as licencePlateOwner_ownerName1" +
         " from ParkingTickets t" +
         (" inner join ParkingTicketStatusLog ol on t.ticketID = ol.ticketID" +
-            "	and ol.recordDelete_timeMillis is null" +
+            " and ol.recordDelete_timeMillis is null" +
             " and ol.statusKey = 'ownerLookupMatch'") +
         (" left join LicencePlateOwners o" +
             " on t.licencePlateCountry = o.licencePlateCountry" +

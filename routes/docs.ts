@@ -1,5 +1,4 @@
 import { Router } from "express";
-const router = Router();
 
 import * as createError from "http-errors";
 import * as fs from "fs";
@@ -7,6 +6,8 @@ import * as path from "path";
 import * as marked from "marked";
 
 import * as configFns from "../helpers/configFns";
+
+const router = Router();
 
 
 router.all("/", (_req, res) => {
@@ -29,7 +30,7 @@ router.all("/:mdFileName", (req, res, next) => {
       return;
     }
 
-    const applicationName = configFns.getProperty("application.applicationName");
+    const applicationName = <string>configFns.getProperty("application.applicationName");
 
     res.send(`<html>
       <head>

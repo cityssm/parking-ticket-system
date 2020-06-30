@@ -1,7 +1,8 @@
 import { Router } from "express";
-const router = Router();
 
 import * as parkingDBRelated from "../helpers/parkingDB-related";
+
+const router = Router();
 
 
 router.post("/doGetAllLocations", (_req, res) => {

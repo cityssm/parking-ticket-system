@@ -19,7 +19,7 @@ export declare const getParkingTickets: (reqSession: Express.Session, queryOptio
 };
 export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) => pts.ParkingTicket[];
 export declare const getParkingTicket: (ticketID: number, reqSession: Express.Session) => pts.ParkingTicket;
-export declare const getParkingTicketID: (ticketNumber: string) => any;
+export declare const getParkingTicketID: (ticketNumber: string) => number;
 export declare const createParkingTicket: (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
     success: boolean;
     message: string;
@@ -68,7 +68,7 @@ export declare const deleteParkingTicketRemark: (ticketID: number, remarkIndex: 
 export declare const getParkingTicketStatuses: (ticketID: number, reqSession: Express.Session) => any[];
 export declare const createParkingTicketStatus: (reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) => {
     success: boolean;
-    statusIndex: any;
+    statusIndex: number;
 };
 export declare const updateParkingTicketStatus: (reqBody: pts.ParkingTicketStatusLog, reqSession: Express.Session) => {
     success: boolean;

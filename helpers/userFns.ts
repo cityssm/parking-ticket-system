@@ -26,6 +26,18 @@ export const userCanUpdate = (req: Request) => {
 };
 
 
+export const userCanCreate = (req: Request) => {
+
+  const user = <pts.User>req.session.user;
+
+  if (!user) {
+    return false;
+  }
+
+  return user.userProperties.canCreate;
+};
+
+
 export const userIsOperator = (req: Request) => {
 
   const user = <pts.User>req.session.user;

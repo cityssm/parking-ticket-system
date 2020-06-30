@@ -698,8 +698,8 @@ exports.getLicencePlates = (queryOptions) => {
         .cnt;
     const rows = db.prepare(innerSql +
         " order by licencePlateNumber, licencePlateProvince, licencePlateCountry" +
-        " limit " + queryOptions.limit +
-        " offset " + queryOptions.offset)
+        " limit " + queryOptions.limit.toString() +
+        " offset " + queryOptions.offset.toString())
         .all(sqlParams);
     db.close();
     return {

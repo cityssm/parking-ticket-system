@@ -1,14 +1,15 @@
 import { Router } from "express";
-const router = Router();
 
 import * as mtoFns from "../helpers/mtoFns";
 
 import * as parkingDBOntario from "../helpers/parkingDB-ontario";
 import * as parkingDBLookup from "../helpers/parkingDB-lookup";
 
-import * as multer from 'multer';
+import * as multer from "multer";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+const router = Router();
 
 
 router.get("/mtoExport", (req, res) => {
@@ -61,7 +62,7 @@ router.get("/mtoExport/:batchID", (req, res) => {
 
   const output = mtoFns.exportLicencePlateBatch(batchID, req.session);
 
-  res.setHeader("Content-Disposition", "attachment; filename=lookupBatch-" + batchID + ".txt");
+  res.setHeader("Content-Disposition", "attachment; filename=lookupBatch-" + batchID.toString() + ".txt");
   res.setHeader("Content-Type", "text/plain");
   res.send(output);
 

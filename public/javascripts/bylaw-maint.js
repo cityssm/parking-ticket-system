@@ -89,8 +89,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const bylawNumberLowerCase = bylaw.bylawNumber.toLowerCase();
             const bylawDescriptionLowerCase = bylaw.bylawDescription.toLowerCase();
             for (const searchStringPiece of bylawFilterSplit) {
-                if (bylawNumberLowerCase.indexOf(searchStringPiece) === -1 &&
-                    bylawDescriptionLowerCase.indexOf(searchStringPiece) === -1) {
+                if (!bylawNumberLowerCase.includes(searchStringPiece) &&
+                    !bylawDescriptionLowerCase.includes(searchStringPiece)) {
                     showRecord = false;
                     break;
                 }
@@ -113,18 +113,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
                 offenceAmountRange =
                     "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\"" +
-                        " data-index=\"" + bylawIndex + "\" href=\"#\">" +
+                        " data-index=\"" + bylawIndex.toString() + "\" href=\"#\">" +
                         offenceAmountRange +
                         "</a>";
             }
             trEle.innerHTML =
                 "<td>" +
-                    "<a data-index=\"" + bylawIndex + "\" href=\"#\">" +
+                    "<a data-index=\"" + bylawIndex.toString() + "\" href=\"#\">" +
                     cityssm.escapeHTML(bylaw.bylawNumber) +
                     "</a>" +
                     "</td>" +
                     "<td class=\"has-border-right-width-2\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>" +
-                    "<td class=\"has-text-right\">" + bylaw.offenceCount + "</td>" +
+                    "<td class=\"has-text-right\">" + bylaw.offenceCount.toString() + "</td>" +
                     "<td class=\"has-text-right\">" + offenceAmountRange + "</td>";
             trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModalFn);
             if (hasOffences) {

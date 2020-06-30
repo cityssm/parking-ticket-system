@@ -1,11 +1,11 @@
 "use strict";
 const express_1 = require("express");
-const router = express_1.Router();
 const createError = require("http-errors");
 const fs = require("fs");
 const path = require("path");
 const marked = require("marked");
 const configFns = require("../helpers/configFns");
+const router = express_1.Router();
 router.all("/", (_req, res) => {
     res.redirect("/docs/readme.md");
 });

@@ -1,19 +1,19 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
 
-type AvailableLicencePlate = {
-  licencePlateNumber: string,
-  ticketIDMin: number,
-  ticketCount: number,
-  issueDateMin: number,
-  issueDateMinString: string,
-  issueDateMax: number,
-  issueDateMaxString: string,
-  ticketNumbersConcat: string,
-  ticketNumbers: string[]
-};
+declare const cityssm: cityssmGlobal;
+
+interface AvailableLicencePlate {
+  licencePlateNumber: string;
+  ticketIDMin: number;
+  ticketCount: number;
+  issueDateMin: number;
+  issueDateMinString: string;
+  issueDateMax: number;
+  issueDateMaxString: string;
+  ticketNumbersConcat: string;
+  ticketNumbers: string[];
+}
 
 
 (() => {
@@ -59,7 +59,7 @@ type AvailableLicencePlate = {
         licencePlateNumber: plateRecord.licencePlateNumber,
         ticketID: plateRecord.ticketIDMin
       },
-      (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
+      (responseJSON: { success: boolean; batch?: LicencePlateLookupBatch }) => {
 
         if (responseJSON.success) {
 
@@ -123,7 +123,7 @@ type AvailableLicencePlate = {
       cityssm.postJSON("/plates/doClearLookupBatch", {
         batchID
       },
-        (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
+        (responseJSON: { success: boolean; batch?: LicencePlateLookupBatch }) => {
 
           if (responseJSON.success) {
             fn_populateBatchView(responseJSON.batch);
@@ -146,7 +146,7 @@ type AvailableLicencePlate = {
     clickEvent.preventDefault();
 
     const downloadFn = () => {
-      window.open("/plates-ontario/mtoExport/" + batchID);
+      window.open("/plates-ontario/mtoExport/" + batchID.toString());
       batchIsSent = true;
     };
 
@@ -197,7 +197,7 @@ type AvailableLicencePlate = {
       const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
 
       for (const searchStringPiece of filterStringSplit) {
-        if (licencePlateNumberLowerCase.indexOf(searchStringPiece) === -1) {
+        if (!licencePlateNumberLowerCase.includes(searchStringPiece)) {
           displayRecord = false;
           break;
         }
@@ -222,7 +222,7 @@ type AvailableLicencePlate = {
           "</div>" +
           "</div>") +
         ("<div class=\"level-right\">" +
-          "<button class=\"button is-small\" data-index=\"" + recordIndex + "\"" +
+          "<button class=\"button is-small\" data-index=\"" + recordIndex.toString() + "\"" +
           " data-tooltip=\"Add to Batch\" type=\"button\">" +
           "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
           "<span>Add</span>" +
@@ -236,9 +236,9 @@ type AvailableLicencePlate = {
         "</div></div>" +
         "<div class=\"level-right is-size-7\">" +
         plateRecord.issueDateMinString +
-        (plateRecord.issueDateMin === plateRecord.issueDateMax ?
-          "" :
-          " to " + plateRecord.issueDateMaxString) +
+        (plateRecord.issueDateMin === plateRecord.issueDateMax
+          ? ""
+          : " to " + plateRecord.issueDateMaxString) +
         "</div>" +
         "</div>";
 
@@ -256,7 +256,8 @@ type AvailableLicencePlate = {
       addAllButtonEle.innerHTML =
         "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
         ("<span>" +
-          "Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
+          "Add " + includedLicencePlates.length.toString() +
+          " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
           "</span>");
 
       addAllButtonEle.addEventListener("click", () => {
@@ -265,7 +266,7 @@ type AvailableLicencePlate = {
           onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
             document.getElementById("is-loading-modal-message").innerText =
-              "Adding " + includedLicencePlates.length +
+              "Adding " + includedLicencePlates.length.toString() +
               " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
 
             cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
@@ -274,7 +275,7 @@ type AvailableLicencePlate = {
               licencePlateProvince: "ON",
               licencePlateNumbers: includedLicencePlates
             },
-              (resultJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
+              (resultJSON: { success: boolean; batch?: LicencePlateLookupBatch }) => {
 
                 closeModalFn();
 
@@ -365,17 +366,17 @@ type AvailableLicencePlate = {
       }
     }
 
-    document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID;
+    document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID.toString();
 
     document.getElementById("batchSelector--batchDetails").innerHTML =
       "<span class=\"icon is-small\"><i class=\"fas fa-calendar\" aria-hidden=\"true\"></i></span>" +
       "<span>" + batch.batchDateString + "</span> " +
-      (batchIsLocked ?
-        "<span class=\"tag is-light\">" +
+      (batchIsLocked
+        ? "<span class=\"tag is-light\">" +
         "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
         " <span>" + batch.lockDateString + "</span>" +
-        "</span>" :
-        "");
+        "</span>"
+        : "");
 
     cityssm.clearElement(batchEntriesContainerEle);
 
@@ -405,10 +406,10 @@ type AvailableLicencePlate = {
           "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</div>" +
           "</div>" +
           "</div>") +
-        (batchIsLocked ?
-          "" :
-          "<div class=\"level-right\">" +
-          "<button class=\"button is-small\" data-index=\"" + index + "\" type=\"button\">" +
+        (batchIsLocked
+          ? ""
+          : "<div class=\"level-right\">" +
+          "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" type=\"button\">" +
           "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
           "<span>Remove</span>" +
           "</button>" +
@@ -517,22 +518,22 @@ type AvailableLicencePlate = {
             linkEle.setAttribute("data-batch-id", batch.batchID.toString());
 
             linkEle.innerHTML = "<div class=\"columns\">" +
-              "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
+              "<div class=\"column is-narrow\">#" + batch.batchID.toString() + "</div>" +
               "<div class=\"column has-text-right\">" +
               batch.batchDateString + "<br />" +
               ("<div class=\"tags justify-flex-end\">" +
-                (batch.lockDate ?
-                  "<span class=\"tag\">" +
+                (batch.lockDate
+                  ? "<span class=\"tag\">" +
                   "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                   "<span>Locked</span>" +
-                  "</span>" :
-                  "") +
-                (batch.sentDate ?
-                  "<span class=\"tag\">" +
+                  "</span>"
+                  : "") +
+                (batch.sentDate
+                  ? "<span class=\"tag\">" +
                   "<span class=\"icon is-small\"><i class=\"fas fa-share\" aria-hidden=\"true\"></i></span>" +
                   "<span>Sent to MTO</span>" +
-                  "</span>" :
-                  "") +
+                  "</span>"
+                  : "") +
                 "</div>") +
               "</div>" +
               "</div>";
@@ -566,7 +567,7 @@ type AvailableLicencePlate = {
             const createFn = () => {
 
               cityssm.postJSON("/plates/doCreateLookupBatch", {},
-                (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
+                (responseJSON: { success: boolean; batch?: LicencePlateLookupBatch }) => {
 
                   if (responseJSON.success) {
 
@@ -606,7 +607,7 @@ type AvailableLicencePlate = {
 
         cityssm.postJSON("/plates/doLockLookupBatch", {
           batchID
-        }, (responseJSON: { success: boolean, batch?: LicencePlateLookupBatch }) => {
+        }, (responseJSON: { success: boolean; batch?: LicencePlateLookupBatch }) => {
 
           if (responseJSON.success) {
             fn_populateBatchView(responseJSON.batch);

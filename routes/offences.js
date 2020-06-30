@@ -1,7 +1,7 @@
 "use strict";
 const express_1 = require("express");
-const router = express_1.Router();
 const parkingDBRelated = require("../helpers/parkingDB-related");
+const router = express_1.Router();
 router.post("/doGetAllLocations", (_req, res) => {
     res.json(parkingDBRelated.getParkingLocations());
 });

@@ -1,8 +1,9 @@
 import { Router } from "express";
-const router = Router();
 
 import * as configFns from "../helpers/configFns";
 import * as usersDB from "../helpers/usersDB";
+
+const router = Router();
 
 
 router.get("/", (_req, res) => {

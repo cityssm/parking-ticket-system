@@ -1,16 +1,15 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
-declare const pts: ptsGlobal;
-
 import type * as ptsTypes from "../../helpers/ptsTypes";
 
-type UpdateLocationResponseJSON = {
-  success: boolean,
-  message?: string,
-  locations?: ptsTypes.ParkingLocation[]
-};
+declare const cityssm: cityssmGlobal;
+declare const pts: ptsGlobal;
+
+interface UpdateLocationResponseJSON {
+  success: boolean;
+  message?: string;
+  locations?: ptsTypes.ParkingLocation[];
+}
 
 
 (() => {
@@ -141,7 +140,7 @@ type UpdateLocationResponseJSON = {
 
       for (const locationNamePiece of locationNameFilterSplit) {
 
-        if (locationNameLowerCase.indexOf(locationNamePiece) === -1) {
+        if (!locationNameLowerCase.includes(locationNamePiece)) {
 
           showRecord = false;
           break;
@@ -154,15 +153,15 @@ type UpdateLocationResponseJSON = {
 
       displayCount += 1;
 
-      const locationClass = locationClassKeyMap.has(location.locationClassKey) ?
-        locationClassKeyMap.get(location.locationClassKey).locationClass :
-        location.locationClassKey;
+      const locationClass = locationClassKeyMap.has(location.locationClassKey)
+        ? locationClassKeyMap.get(location.locationClassKey).locationClass
+        : location.locationClassKey;
 
       const trEle = document.createElement("tr");
 
       trEle.innerHTML =
         "<td>" +
-        "<a data-index=\"" + locationIndex + "\" href=\"#\">" +
+        "<a data-index=\"" + locationIndex.toString() + "\" href=\"#\">" +
         cityssm.escapeHTML(location.locationName) +
         "</a>" +
         "</td>" +

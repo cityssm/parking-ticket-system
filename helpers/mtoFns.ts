@@ -168,7 +168,7 @@ const parsePKRD = (rowData: string) => {
 
     record.ownerName1 = rowData.substring(54, 104).replace(/,/g, ", ").trim();
 
-    if (record.ownerName1.indexOf("/") !== -1) {
+    if (record.ownerName1.includes("/")) {
 
       const slashIndex = record.ownerName1.indexOf("/");
 
@@ -178,7 +178,7 @@ const parsePKRD = (rowData: string) => {
 
     record.ownerAddress = rowData.substring(104, 144).trim();
 
-    if (record.ownerAddress.indexOf(",") !== -1) {
+    if (record.ownerAddress.includes(",")) {
 
       const lastCommaIndex = record.ownerAddress.lastIndexOf(",");
 
@@ -264,7 +264,7 @@ export const importLicencePlateOwnership = (batchID: number, ownershipData: stri
 
     return {
       success: false,
-      message: "Batch #" + batchID + " is unavailable for imports."
+      message: "Batch #" + batchID.toString() + " is unavailable for imports."
     };
 
   } else if (batchRow.sentDate !== headerRow.sentDate) {
@@ -373,12 +373,12 @@ export const importLicencePlateOwnership = (batchID: number, ownershipData: stri
 };
 
 
-const exportBatch = (sentDate: number, batchEntries: {
-  ticketID?: number,
-  ticketNumber?: string,
-  issueDate?: number,
-  licencePlateNumber?: string
-}[]) => {
+const exportBatch = (sentDate: number, batchEntries: Array<{
+  ticketID?: number;
+  ticketNumber?: string;
+  issueDate?: number;
+  licencePlateNumber?: string;
+}>) => {
 
   const newline = "\n";
 
@@ -396,7 +396,7 @@ const exportBatch = (sentDate: number, batchEntries: {
    * Authorized User | 4 characters  | "XX00"
    */
 
-  const authorizedUserPadded = (configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
+  const authorizedUserPadded = (<string>configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
 
   for (const entry of batchEntries) {
 

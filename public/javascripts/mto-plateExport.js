@@ -73,7 +73,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const clickFn_downloadBatch = (clickEvent) => {
         clickEvent.preventDefault();
         const downloadFn = () => {
-            window.open("/plates-ontario/mtoExport/" + batchID);
+            window.open("/plates-ontario/mtoExport/" + batchID.toString());
             batchIsSent = true;
         };
         if (batchIsSent) {
@@ -103,7 +103,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             let displayRecord = true;
             const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
             for (const searchStringPiece of filterStringSplit) {
-                if (licencePlateNumberLowerCase.indexOf(searchStringPiece) === -1) {
+                if (!licencePlateNumberLowerCase.includes(searchStringPiece)) {
                     displayRecord = false;
                     break;
                 }
@@ -124,7 +124,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>" +
                     "</div>") +
                 ("<div class=\"level-right\">" +
-                    "<button class=\"button is-small\" data-index=\"" + recordIndex + "\"" +
+                    "<button class=\"button is-small\" data-index=\"" + recordIndex.toString() + "\"" +
                     " data-tooltip=\"Add to Batch\" type=\"button\">" +
                     "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     "<span>Add</span>" +
@@ -137,9 +137,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div></div>" +
                 "<div class=\"level-right is-size-7\">" +
                 plateRecord.issueDateMinString +
-                (plateRecord.issueDateMin === plateRecord.issueDateMax ?
-                    "" :
-                    " to " + plateRecord.issueDateMaxString) +
+                (plateRecord.issueDateMin === plateRecord.issueDateMax
+                    ? ""
+                    : " to " + plateRecord.issueDateMaxString) +
                 "</div>" +
                 "</div>";
             resultEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_addLicencePlateToBatch);
@@ -151,13 +151,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
             addAllButtonEle.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     ("<span>" +
-                        "Add " + includedLicencePlates.length + " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
+                        "Add " + includedLicencePlates.length.toString() +
+                        " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
                         "</span>");
             addAllButtonEle.addEventListener("click", () => {
                 cityssm.openHtmlModal("loading", {
                     onshown(_modalEle, closeModalFn) {
                         document.getElementById("is-loading-modal-message").innerText =
-                            "Adding " + includedLicencePlates.length +
+                            "Adding " + includedLicencePlates.length.toString() +
                                 " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
                         cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
                             batchID,
@@ -223,16 +224,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 lockBatchButtonEle.removeAttribute("disabled");
             }
         }
-        document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID;
+        document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID.toString();
         document.getElementById("batchSelector--batchDetails").innerHTML =
             "<span class=\"icon is-small\"><i class=\"fas fa-calendar\" aria-hidden=\"true\"></i></span>" +
                 "<span>" + batch.batchDateString + "</span> " +
-                (batchIsLocked ?
-                    "<span class=\"tag is-light\">" +
+                (batchIsLocked
+                    ? "<span class=\"tag is-light\">" +
                         "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                         " <span>" + batch.lockDateString + "</span>" +
-                        "</span>" :
-                    "");
+                        "</span>"
+                    : "");
         cityssm.clearElement(batchEntriesContainerEle);
         if (batchEntriesList.length === 0) {
             batchEntriesContainerEle.innerHTML = "<div class=\"message is-info\">" +
@@ -252,10 +253,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</div>" +
                     "</div>" +
                     "</div>") +
-                (batchIsLocked ?
-                    "" :
-                    "<div class=\"level-right\">" +
-                        "<button class=\"button is-small\" data-index=\"" + index + "\" type=\"button\">" +
+                (batchIsLocked
+                    ? ""
+                    : "<div class=\"level-right\">" +
+                        "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" type=\"button\">" +
                         "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
                         "<span>Remove</span>" +
                         "</button>" +
@@ -325,22 +326,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     linkEle.setAttribute("href", "#");
                     linkEle.setAttribute("data-batch-id", batch.batchID.toString());
                     linkEle.innerHTML = "<div class=\"columns\">" +
-                        "<div class=\"column is-narrow\">#" + batch.batchID + "</div>" +
+                        "<div class=\"column is-narrow\">#" + batch.batchID.toString() + "</div>" +
                         "<div class=\"column has-text-right\">" +
                         batch.batchDateString + "<br />" +
                         ("<div class=\"tags justify-flex-end\">" +
-                            (batch.lockDate ?
-                                "<span class=\"tag\">" +
+                            (batch.lockDate
+                                ? "<span class=\"tag\">" +
                                     "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                                     "<span>Locked</span>" +
-                                    "</span>" :
-                                "") +
-                            (batch.sentDate ?
-                                "<span class=\"tag\">" +
+                                    "</span>"
+                                : "") +
+                            (batch.sentDate
+                                ? "<span class=\"tag\">" +
                                     "<span class=\"icon is-small\"><i class=\"fas fa-share\" aria-hidden=\"true\"></i></span>" +
                                     "<span>Sent to MTO</span>" +
-                                    "</span>" :
-                                "") +
+                                    "</span>"
+                                : "") +
                             "</div>") +
                         "</div>" +
                         "</div>";

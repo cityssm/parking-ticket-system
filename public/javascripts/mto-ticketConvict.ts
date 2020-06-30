@@ -1,5 +1,4 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-
 import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../helpers/ptsTypes";
 
 declare const cityssm: cityssmGlobal;
@@ -7,8 +6,7 @@ declare const cityssm: cityssmGlobal;
 
 (() => {
   const canUpdate =
-    document.getElementsByTagName("main")[0].getAttribute("data-can-update") ===
-    "true";
+    document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
 
   let currentBatch: ParkingTicketConvictionBatch = exports.currentBatch;
   delete exports.currentBatch;
@@ -178,8 +176,8 @@ declare const cityssm: cityssmGlobal;
 
     convictableTickets.forEach((ticket, index) => {
       if (
-        ticket.ticketNumber.toLowerCase().includes(ticketFilter) &&
-        ticket.licencePlateNumber.toLowerCase().includes(ticketFilter)
+        !ticket.ticketNumber.toLowerCase().includes(ticketFilter) &&
+        !ticket.licencePlateNumber.toLowerCase().includes(ticketFilter)
       ) {
         return;
       }

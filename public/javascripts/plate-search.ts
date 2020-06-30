@@ -1,7 +1,7 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
+
+declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
 
 
@@ -27,14 +27,14 @@ declare const pts: ptsGlobal;
 
     cityssm.postJSON("/plates/doGetLicencePlates", formEle,
       (licencePlateResults: {
-        count: number,
-        licencePlates: {
-          licencePlateCountry: string,
-          licencePlateProvince: string,
-          licencePlateNumber: string,
-          unresolvedTicketCount: number,
-          hasOwnerRecord: boolean
-        }[]
+        count: number;
+        licencePlates: Array<{
+          licencePlateCountry: string;
+          licencePlateProvince: string;
+          licencePlateNumber: string;
+          unresolvedTicketCount: number;
+          hasOwnerRecord: boolean;
+        }>;
       }) => {
 
         const plateList = licencePlateResults.licencePlates;
@@ -80,31 +80,31 @@ declare const pts: ptsGlobal;
 
           trEle.innerHTML = "<td>" +
             "<a href=\"" + url + "\" data-tooltip=\"View Licence Plate\">" +
-            (plateObj.licencePlateNumber === "" ?
-              "(Blank)" :
-              "<span class=\"licence-plate-number\">" + plateObj.licencePlateNumber + "</span>") +
+            (plateObj.licencePlateNumber === ""
+              ? "(Blank)"
+              : "<span class=\"licence-plate-number\">" + plateObj.licencePlateNumber + "</span>") +
             "</a>" +
             "</td>" +
             ("<td class=\"is-vcentered\">" +
-              (plateObj.licencePlateProvince === "" ?
-                "<span class=\"has-text-grey\">(Blank)</span>" :
-                plateObj.licencePlateProvince) +
+              (plateObj.licencePlateProvince === ""
+                ? "<span class=\"has-text-grey\">(Blank)</span>"
+                : plateObj.licencePlateProvince) +
               "</td>") +
             ("<td class=\"is-vcentered\">" +
-              (plateObj.licencePlateCountry === "" ?
-                "<span class=\"has-text-grey\">(Blank)</span>" :
-                plateObj.licencePlateCountry) +
+              (plateObj.licencePlateCountry === ""
+                ? "<span class=\"has-text-grey\">(Blank)</span>"
+                : plateObj.licencePlateCountry) +
               "</td>") +
             ("<td class=\"has-text-right is-vcentered\">" +
-              (plateObj.hasOwnerRecord ?
-                "<span data-tooltip=\"Has Ownership Record\">" +
+              (plateObj.hasOwnerRecord
+                ? "<span data-tooltip=\"Has Ownership Record\">" +
                 "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>" +
                 "</span>" +
-                "<span class=\"sr-only\">Has Ownership Record</span>" :
-                "") +
+                "<span class=\"sr-only\">Has Ownership Record</span>"
+                : "") +
               "</td>") +
             ("<td class=\"has-text-right is-vcentered\">" +
-              plateObj.unresolvedTicketCount +
+              plateObj.unresolvedTicketCount.toString() +
               "</td>");
 
           tbodyEle.appendChild(trEle);
@@ -114,11 +114,11 @@ declare const pts: ptsGlobal;
         searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
           "<div class=\"level-left has-text-weight-bold\">" +
           "Displaying licence plates " +
-          (currentOffset + 1) +
+          (currentOffset + 1).toString() +
           " to " +
-          Math.min(currentLimit + currentOffset, licencePlateResults.count) +
+          Math.min(currentLimit + currentOffset, licencePlateResults.count).toString() +
           " of " +
-          licencePlateResults.count +
+          licencePlateResults.count.toString() +
           "</div>" +
           "</div>");
 

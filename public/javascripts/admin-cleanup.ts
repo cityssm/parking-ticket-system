@@ -4,7 +4,7 @@ declare const cityssm: cityssmGlobal;
 
 (() => {
 
-  const recordDelete_timeMillis = exports.recordDelete_timeMillis;
+  const recordDelete_timeMillis: number = exports.recordDelete_timeMillis;
   delete exports.recordDelete_timeMillis;
 
   const purgeTableFn = (clickEvent: Event) => {

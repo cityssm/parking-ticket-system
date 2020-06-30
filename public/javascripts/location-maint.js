@@ -71,7 +71,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             let showRecord = true;
             const locationNameLowerCase = location.locationName.toLowerCase();
             for (const locationNamePiece of locationNameFilterSplit) {
-                if (locationNameLowerCase.indexOf(locationNamePiece) === -1) {
+                if (!locationNameLowerCase.includes(locationNamePiece)) {
                     showRecord = false;
                     break;
                 }
@@ -80,13 +80,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 return;
             }
             displayCount += 1;
-            const locationClass = locationClassKeyMap.has(location.locationClassKey) ?
-                locationClassKeyMap.get(location.locationClassKey).locationClass :
-                location.locationClassKey;
+            const locationClass = locationClassKeyMap.has(location.locationClassKey)
+                ? locationClassKeyMap.get(location.locationClassKey).locationClass
+                : location.locationClassKey;
             const trEle = document.createElement("tr");
             trEle.innerHTML =
                 "<td>" +
-                    "<a data-index=\"" + locationIndex + "\" href=\"#\">" +
+                    "<a data-index=\"" + locationIndex.toString() + "\" href=\"#\">" +
                     cityssm.escapeHTML(location.locationName) +
                     "</a>" +
                     "</td>" +

@@ -138,7 +138,7 @@ exports.createUser = (reqBody) => {
         " from Users" +
         " where userName = ?")
         .get(reqBody.userName);
-    if (row != null) {
+    if (row) {
         if (row.isActive) {
             db.close();
             return false;

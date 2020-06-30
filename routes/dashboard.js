@@ -1,8 +1,8 @@
 "use strict";
 const express_1 = require("express");
-const router = express_1.Router();
 const configFns = require("../helpers/configFns");
 const usersDB = require("../helpers/usersDB");
+const router = express_1.Router();
 router.get("/", (_req, res) => {
     res.render("dashboard", {
         headTitle: "Dashboard"

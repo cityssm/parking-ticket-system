@@ -6,17 +6,17 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 
-type MTO_AvailableLicencePlate = {
-  licencePlateNumber: string,
-  ticketIDMin: number,
-  ticketCount: number,
-  issueDateMin: number,
-  issueDateMinString: string,
-  issueDateMax: number,
-  issueDateMaxString: string,
-  ticketNumbersConcat: string,
-  ticketNumbers: string[]
-};
+interface MTO_AvailableLicencePlate {
+  licencePlateNumber: string;
+  ticketIDMin: number;
+  ticketCount: number;
+  issueDateMin: number;
+  issueDateMinString: string;
+  issueDateMax: number;
+  issueDateMaxString: string;
+  ticketNumbersConcat: string;
+  ticketNumbers: string[];
+}
 
 
 export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: number, issueDaysAgo: number) => {
@@ -89,7 +89,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
 
     // Matching Ownership Record
     (" inner join ParkingTicketStatusLog ol on t.ticketID = ol.ticketID" +
-      "	and ol.recordDelete_timeMillis is null" +
+      " and ol.recordDelete_timeMillis is null" +
       " and ol.statusKey = 'ownerLookupMatch'") +
     (" left join LicencePlateOwners o" +
       " on t.licencePlateCountry = o.licencePlateCountry" +

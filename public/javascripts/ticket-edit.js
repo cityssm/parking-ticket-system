@@ -41,7 +41,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 cityssm.openHtmlModal("ticket-createSuccess", {
                     onshow() {
                         document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
-                        document.getElementById("createSuccess--editTicketButton").setAttribute("href", "/tickets/" + responseJSON.ticketID + "/edit");
+                        document.getElementById("createSuccess--editTicketButton").setAttribute("href", "/tickets/" + responseJSON.ticketID.toString() + "/edit");
                         document.getElementById("createSuccess--newTicketButton").setAttribute("href", "/tickets/new/" + responseJSON.nextTicketNumber);
                     }
                 });
@@ -99,11 +99,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     linkEle.innerHTML =
                         "<div class=\"level\">" +
                             "<div class=\"level-left\">" + cityssm.escapeHTML(locationObj.locationName) + "</div>" +
-                            (locationClassObj ?
-                                "<div class=\"level-right\">" +
+                            (locationClassObj
+                                ? "<div class=\"level-right\">" +
                                     "<span class=\"tag is-primary\">" + cityssm.escapeHTML(locationClassObj.locationClass) + "</span>" +
-                                    "</div>" :
-                                "") +
+                                    "</div>"
+                                : "") +
                             "</div>";
                     listEle.insertAdjacentElement("beforeend", linkEle);
                 });
@@ -222,8 +222,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             offenceList.forEach((offenceRecord, recordIndex) => {
                 let displayRecord = true;
                 for (const searchPiece of searchStringSplit) {
-                    if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 &&
-                        offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
+                    if (!offenceRecord.bylawNumber.toLowerCase().includes(searchPiece) &&
+                        !offenceRecord.bylawDescription.toLowerCase().includes(searchPiece)) {
                         displayRecord = false;
                         break;
                     }
@@ -275,7 +275,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.clearElement(datalistEle);
         const countryString = document.getElementById("ticket--licencePlateCountry").value;
         const countryProperties = pts.getLicencePlateCountryProperties(countryString);
-        if (countryProperties && countryProperties.provinces) {
+        if (countryProperties === null || countryProperties === void 0 ? void 0 : countryProperties.provinces) {
             const provincesList = Object.values(countryProperties.provinces);
             for (const province of provincesList) {
                 const optionEle = document.createElement("option");

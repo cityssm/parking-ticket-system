@@ -221,8 +221,8 @@ exports.addParkingOffence = (reqBody) => {
             const info = db.prepare("update ParkingOffences" +
                 " set isActive = 1" +
                 " where bylawNumber = ?" +
-                " and locationKey = ?").
-                run(reqBody.bylawNumber, reqBody.locationKey);
+                " and locationKey = ?")
+                .run(reqBody.bylawNumber, reqBody.locationKey);
             db.close();
             return {
                 success: (info.changes > 0),
@@ -235,9 +235,9 @@ exports.addParkingOffence = (reqBody) => {
     let discountDays = 0;
     if (reqBody.hasOwnProperty("offenceAmount")) {
         offenceAmount = reqBody.offenceAmount;
-        discountOffenceAmount = reqBody.hasOwnProperty("discountOffenceAmount") ?
-            reqBody.discountOffenceAmount :
-            reqBody.offenceAmount;
+        discountOffenceAmount = reqBody.hasOwnProperty("discountOffenceAmount")
+            ? reqBody.discountOffenceAmount
+            : reqBody.offenceAmount;
         discountDays = reqBody.discountDays || 0;
     }
     else {

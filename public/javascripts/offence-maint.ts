@@ -9,7 +9,7 @@ interface UpdateOffenceResponseJSON {
   success: boolean;
   message?: string;
   offences?: ptsTypes.ParkingOffence[];
-};
+}
 
 
 (() => {

@@ -1,13 +1,13 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ParkingBylaw } from "../../helpers/ptsTypes";
 
-type UpdateBylawResponseJSON = {
-  success: boolean,
-  message?: string,
-  bylaws?: ParkingBylaw[]
-};
+declare const cityssm: cityssmGlobal;
+
+interface UpdateBylawResponseJSON {
+  success: boolean;
+  message?: string;
+  bylaws?: ParkingBylaw[];
+}
 
 
 (() => {
@@ -162,8 +162,8 @@ type UpdateBylawResponseJSON = {
 
       for (const searchStringPiece of bylawFilterSplit) {
 
-        if (bylawNumberLowerCase.indexOf(searchStringPiece) === -1 &&
-          bylawDescriptionLowerCase.indexOf(searchStringPiece) === -1) {
+        if (!bylawNumberLowerCase.includes(searchStringPiece) &&
+          !bylawDescriptionLowerCase.includes(searchStringPiece)) {
 
           showRecord = false;
           break;
@@ -195,19 +195,19 @@ type UpdateBylawResponseJSON = {
 
         offenceAmountRange =
           "<a class=\"has-tooltip-left\" data-tooltip=\"Update Offence Amounts\"" +
-          " data-index=\"" + bylawIndex + "\" href=\"#\">" +
+          " data-index=\"" + bylawIndex.toString() + "\" href=\"#\">" +
           offenceAmountRange +
           "</a>";
       }
 
       trEle.innerHTML =
         "<td>" +
-        "<a data-index=\"" + bylawIndex + "\" href=\"#\">" +
+        "<a data-index=\"" + bylawIndex.toString() + "\" href=\"#\">" +
         cityssm.escapeHTML(bylaw.bylawNumber) +
         "</a>" +
         "</td>" +
         "<td class=\"has-border-right-width-2\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</td>" +
-        "<td class=\"has-text-right\">" + bylaw.offenceCount + "</td>" +
+        "<td class=\"has-text-right\">" + bylaw.offenceCount.toString() + "</td>" +
         "<td class=\"has-text-right\">" + offenceAmountRange + "</td>";
 
       trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModalFn);

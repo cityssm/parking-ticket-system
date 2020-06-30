@@ -1,8 +1,15 @@
+import * as sqlite from "better-sqlite3";
+import fetch from "node-fetch";
+
+import * as ncic from "../data/ncicCodes";
+
+import type { NHTSAMakeModel } from "./ptsTypes";
+
+
 /*
  * API
  */
 
-import fetch from "node-fetch";
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
@@ -12,16 +19,10 @@ const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
  */
 
 const dbPath = "data/nhtsa.db";
-import * as sqlite from "better-sqlite3";
 
 /*
  * More Data
  */
-
-import * as ncic from "../data/ncicCodes";
-
-import type { NHTSAMakeModel } from "./ptsTypes";
-
 
 const getModelsByMakeFromDB = (makeSearchString: string, db: sqlite.Database): NHTSAMakeModel[] => {
 
@@ -102,15 +103,15 @@ export const getModelsByMake =
     if (useAPI) {
 
       fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
-        .then((response) => response.json())
+        .then(async(response) => await response.json())
         .then((data: {
-          Count: number,
-          Results: {
-            Make_ID: number,
-            Make_Name: string,
-            Model_ID: number,
-            Model_Name: string
-          }[]
+          Count: number;
+          Results: Array<{
+            Make_ID: number;
+            Make_Name: string;
+            Model_ID: number;
+            Model_Name: string;
+          }>;
         }) => {
 
           db.prepare("update MakeModelSearchHistory" +
@@ -140,18 +141,18 @@ export const getModelsByMake =
           }
 
           queryCloseCallbackFn();
-          return;
+          // return;
         })
         .catch((_err) => {
 
           queryCloseCallbackFn();
-          return;
+          // return;
         });
 
     } else {
 
       queryCloseCallbackFn();
-      return;
+      // return;
     }
   };
 

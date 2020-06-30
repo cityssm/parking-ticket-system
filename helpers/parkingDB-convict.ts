@@ -5,6 +5,7 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type * as pts from "./ptsTypes";
 
+
 export const createParkingTicketConvictionBatch = (
   reqSession: Express.Session
 ) => {

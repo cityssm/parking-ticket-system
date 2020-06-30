@@ -1,10 +1,9 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
-declare const pts: ptsGlobal;
-
 import type * as ptsTypes from "../../helpers/ptsTypes";
+
+declare const cityssm: cityssmGlobal;
+declare const pts: ptsGlobal;
 
 
 (() => {
@@ -53,7 +52,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
     cityssm.postJSON(
       (isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"),
       formEvent.currentTarget,
-      (responseJSON: { success: boolean, message?: string, ticketID?: number, nextTicketNumber?: string }) => {
+      (responseJSON: { success: boolean; message?: string; ticketID?: number; nextTicketNumber?: string }) => {
 
         if (responseJSON.success) {
 
@@ -81,7 +80,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
               document.getElementById("createSuccess--editTicketButton").setAttribute(
                 "href",
-                "/tickets/" + responseJSON.ticketID + "/edit"
+                "/tickets/" + responseJSON.ticketID.toString() + "/edit"
               );
 
               document.getElementById("createSuccess--newTicketButton").setAttribute(
@@ -191,11 +190,11 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           linkEle.innerHTML =
             "<div class=\"level\">" +
             "<div class=\"level-left\">" + cityssm.escapeHTML(locationObj.locationName) + "</div>" +
-            (locationClassObj ?
-              "<div class=\"level-right\">" +
+            (locationClassObj
+              ? "<div class=\"level-right\">" +
               "<span class=\"tag is-primary\">" + cityssm.escapeHTML(locationClassObj.locationClass) + "</span>" +
-              "</div>" :
-              "") +
+              "</div>"
+              : "") +
             "</div>";
 
           listEle.insertAdjacentElement("beforeend", linkEle);
@@ -390,8 +389,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
         for (const searchPiece of searchStringSplit) {
 
-          if (offenceRecord.bylawNumber.toLowerCase().indexOf(searchPiece) === -1 &&
-            offenceRecord.bylawDescription.toLowerCase().indexOf(searchPiece) === -1) {
+          if (!offenceRecord.bylawNumber.toLowerCase().includes(searchPiece) &&
+            !offenceRecord.bylawDescription.toLowerCase().includes(searchPiece)) {
 
             displayRecord = false;
             break;
@@ -472,7 +471,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     const countryProperties = pts.getLicencePlateCountryProperties(countryString);
 
-    if (countryProperties && countryProperties.provinces) {
+    if (countryProperties?.provinces) {
 
       const provincesList = Object.values(countryProperties.provinces);
 

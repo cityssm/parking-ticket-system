@@ -50,6 +50,7 @@ router.get("/convict/:batchID", (req, res) => {
   res.setHeader("Content-Disposition",
     "attachment; filename=convictBatch-" + batchID.toString() + ".txt");
   res.setHeader("Content-Type", "text/plain");
+
   res.send(output);
 
 });

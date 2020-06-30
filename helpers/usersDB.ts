@@ -219,7 +219,7 @@ export const createUser = (reqBody: {
     " where userName = ?")
     .get(reqBody.userName);
 
-  if (row != null) {
+  if (row) {
 
     if (row.isActive) {
       db.close();

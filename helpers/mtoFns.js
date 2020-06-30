@@ -86,13 +86,13 @@ const parsePKRD = (rowData) => {
         record.driverLicenceNumber = rowData.substring(32, 47).trim();
         record.ownerGenderKey = rowData.substring(53, 54);
         record.ownerName1 = rowData.substring(54, 104).replace(/,/g, ", ").trim();
-        if (record.ownerName1.indexOf("/") !== -1) {
+        if (record.ownerName1.includes("/")) {
             const slashIndex = record.ownerName1.indexOf("/");
             record.ownerName2 = record.ownerName1.substring(slashIndex + 1);
             record.ownerName1 = record.ownerName1.substring(0, slashIndex);
         }
         record.ownerAddress = rowData.substring(104, 144).trim();
-        if (record.ownerAddress.indexOf(",") !== -1) {
+        if (record.ownerAddress.includes(",")) {
             const lastCommaIndex = record.ownerAddress.lastIndexOf(",");
             record.ownerCity = record.ownerAddress.substring(lastCommaIndex + 1);
             record.ownerAddress = record.ownerAddress.substring(0, lastCommaIndex);
@@ -147,7 +147,7 @@ exports.importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
         db.close();
         return {
             success: false,
-            message: "Batch #" + batchID + " is unavailable for imports."
+            message: "Batch #" + batchID.toString() + " is unavailable for imports."
         };
     }
     else if (batchRow.sentDate !== headerRow.sentDate) {

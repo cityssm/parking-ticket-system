@@ -1,5 +1,5 @@
 import type { ParkingTicket } from "./ptsTypes";
-declare type MTO_AvailableLicencePlate = {
+interface MTO_AvailableLicencePlate {
     licencePlateNumber: string;
     ticketIDMin: number;
     ticketCount: number;
@@ -9,7 +9,7 @@ declare type MTO_AvailableLicencePlate = {
     issueDateMaxString: string;
     ticketNumbersConcat: string;
     ticketNumbers: string[];
-};
+}
 export declare const getLicencePlatesAvailableForMTOLookupBatch: (currentBatchID: number, issueDaysAgo: number) => MTO_AvailableLicencePlate[];
 export declare const getParkingTicketsAvailableForMTOConvictionBatch: () => ParkingTicket[];
 export {};

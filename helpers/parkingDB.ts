@@ -400,7 +400,7 @@ export const getParkingTicketID = (ticketNumber: string) => {
   db.close();
 
   if (ticketRow) {
-    return ticketRow.ticketID;
+    return <number>ticketRow.ticketID;
   }
 
   return null;
@@ -442,8 +442,8 @@ export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string, 10) || 0;
-    const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string, 10) || 0;
+    const licencePlateExpiryYear = parseInt(<string>reqBody.licencePlateExpiryYear, 10) || 0;
+    const licencePlateExpiryMonth = parseInt(<string>reqBody.licencePlateExpiryMonth, 10) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;
@@ -549,8 +549,8 @@ export const updateParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string, 10) || 0;
-    const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string, 10) || 0;
+    const licencePlateExpiryYear = parseInt(<string>reqBody.licencePlateExpiryYear, 10) || 0;
+    const licencePlateExpiryMonth = parseInt(<string>reqBody.licencePlateExpiryMonth, 10) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;
@@ -836,11 +836,11 @@ export const createParkingTicketRemark = (reqBody: pts.ParkingTicketRemark, reqS
 
   // Get new remark index
 
-  const remarkIndexNew = db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
+  const remarkIndexNew = (<number>db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
     " from ParkingTicketRemarks" +
     " where ticketID = ?")
     .get(reqBody.ticketID)
-    .remarkIndexMax + 1;
+    .remarkIndexMax) + 1;
 
   // Create the record
 
@@ -963,11 +963,12 @@ export const createParkingTicketStatus =
 
     // Get new status index
 
-    const statusIndexNew = db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
-      " from ParkingTicketStatusLog" +
-      " where ticketID = ?")
-      .get(reqBodyOrObj.ticketID)
-      .statusIndexMax + 1;
+    const statusIndexNew =
+      (<number>db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
+        " from ParkingTicketStatusLog" +
+        " where ticketID = ?")
+        .get(reqBodyOrObj.ticketID)
+        .statusIndexMax) + 1;
 
     // Create the record
 
@@ -1169,8 +1170,8 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
 
   const rows = db.prepare(innerSql +
     " order by licencePlateNumber, licencePlateProvince, licencePlateCountry" +
-    " limit " + queryOptions.limit +
-    " offset " + queryOptions.offset)
+    " limit " + queryOptions.limit.toString() +
+    " offset " + queryOptions.offset.toString())
     .all(sqlParams);
 
   db.close();

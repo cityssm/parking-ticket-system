@@ -1,8 +1,8 @@
 "use strict";
 const express_1 = require("express");
-const router = express_1.Router();
 const configFns = require("../helpers/configFns");
 const usersDB = require("../helpers/usersDB");
+const router = express_1.Router();
 router.route("/")
     .get((req, res) => {
     const sessionCookieName = configFns.getProperty("session.cookieName");

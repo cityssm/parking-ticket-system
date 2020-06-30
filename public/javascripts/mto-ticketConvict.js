@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") ===
-        "true";
+    const canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
     let currentBatch = exports.currentBatch;
     delete exports.currentBatch;
     let convictableTickets = exports.convictableTickets;
@@ -105,8 +104,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const ticketFilter = ticketFilterEle.value.trim().toLowerCase();
         const tbodyEle = document.createElement("tbody");
         convictableTickets.forEach((ticket, index) => {
-            if (ticket.ticketNumber.toLowerCase().includes(ticketFilter) &&
-                ticket.licencePlateNumber.toLowerCase().includes(ticketFilter)) {
+            if (!ticket.ticketNumber.toLowerCase().includes(ticketFilter) &&
+                !ticket.licencePlateNumber.toLowerCase().includes(ticketFilter)) {
                 return;
             }
             displayedTicketIDs.push(ticket.ticketID);

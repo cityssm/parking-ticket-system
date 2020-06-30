@@ -277,10 +277,10 @@ export const deleteParkingBylaw = (bylawNumber: string): AddUpdateParkingBylawRe
 
 
 export const updateParkingOffencesByBylawNumber = (reqBody: {
-  bylawNumber: string,
-  offenceAmount: string,
-  discountDays: string,
-  discountOffenceAmount: string
+  bylawNumber: string;
+  offenceAmount: string;
+  discountDays: string;
+  discountOffenceAmount: string;
 }): AddUpdateParkingBylawReturn => {
 
   const db = sqlite(dbPath);
@@ -388,8 +388,8 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
       const info = db.prepare("update ParkingOffences" +
         " set isActive = 1" +
         " where bylawNumber = ?" +
-        " and locationKey = ?").
-        run(reqBody.bylawNumber, reqBody.locationKey);
+        " and locationKey = ?")
+        .run(reqBody.bylawNumber, reqBody.locationKey);
 
       db.close();
 
@@ -413,9 +413,9 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
 
     offenceAmount = reqBody.offenceAmount;
 
-    discountOffenceAmount = reqBody.hasOwnProperty("discountOffenceAmount") ?
-      reqBody.discountOffenceAmount :
-      reqBody.offenceAmount;
+    discountOffenceAmount = reqBody.hasOwnProperty("discountOffenceAmount")
+      ? reqBody.discountOffenceAmount
+      : reqBody.offenceAmount;
 
     discountDays = reqBody.discountDays || 0;
 

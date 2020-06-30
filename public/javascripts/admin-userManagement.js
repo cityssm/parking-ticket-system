@@ -92,7 +92,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             "<input name=\"propertyName\" type=\"hidden\" value=\"" + propertyName + "\" />" +
                             "<div class=\"columns\">" +
                             ("<div class=\"column is-4\">" +
-                                "<label class=\"label\" for=\"userProperties--propertyValue-" + propertyIndex + "\">" +
+                                "<label class=\"label\" for=\"userProperties--propertyValue-" + propertyIndex.toString() + "\">" +
                                 propertyName +
                                 "</label>" +
                                 "</div>") +
@@ -100,7 +100,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                 "<div class=\"field has-addons\">" +
                                 "<div class=\"control is-expanded\">" +
                                 ("<input class=\"input is-primary\"" +
-                                    " id=\"userProperties--propertyValue-" + propertyIndex + "\" name=\"propertyValue\"" +
+                                    " id=\"userProperties--propertyValue-" + propertyIndex.toString() + "\" name=\"propertyValue\"" +
                                     " type=\"text\" value=\"" + cityssm.escapeHTML(propertyValue) + "\"" +
                                     " placeholder=\"(Use Default)\" />") +
                                 "</div>" +

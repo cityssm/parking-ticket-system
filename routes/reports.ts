@@ -1,9 +1,10 @@
 import { Router } from "express";
-const router = Router();
 
 import * as parkingDBReporting from "../helpers/parkingDB-reporting";
 import { rawToCSV } from "@cityssm/expressjs-server-js/stringFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+
+const router = Router();
 
 
 router.get("/", (_req, res) => {
@@ -31,7 +32,7 @@ router.all("/:reportName", (req, res) => {
 
   const csv = rawToCSV(rowsColumnsObj);
 
-  res.setHeader("Content-Disposition", "attachment; filename=" + reportName + "-" + Date.now() + ".csv");
+  res.setHeader("Content-Disposition", "attachment; filename=" + reportName + "-" + Date.now().toString() + ".csv");
   res.setHeader("Content-Type", "text/csv");
   res.send(csv);
 

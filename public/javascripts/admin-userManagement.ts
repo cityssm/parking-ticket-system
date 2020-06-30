@@ -1,7 +1,7 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
+
+declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
 
 
@@ -190,7 +190,7 @@ declare const pts: ptsGlobal;
               "<input name=\"propertyName\" type=\"hidden\" value=\"" + propertyName + "\" />" +
               "<div class=\"columns\">" +
               ("<div class=\"column is-4\">" +
-                "<label class=\"label\" for=\"userProperties--propertyValue-" + propertyIndex + "\">" +
+                "<label class=\"label\" for=\"userProperties--propertyValue-" + propertyIndex.toString() + "\">" +
                 propertyName +
                 "</label>" +
                 "</div>") +
@@ -198,7 +198,7 @@ declare const pts: ptsGlobal;
                 "<div class=\"field has-addons\">" +
                 "<div class=\"control is-expanded\">" +
                 ("<input class=\"input is-primary\"" +
-                  " id=\"userProperties--propertyValue-" + propertyIndex + "\" name=\"propertyValue\"" +
+                  " id=\"userProperties--propertyValue-" + propertyIndex.toString() + "\" name=\"propertyValue\"" +
                   " type=\"text\" value=\"" + cityssm.escapeHTML(propertyValue) + "\"" +
                   " placeholder=\"(Use Default)\" />") +
                 "</div>" +
@@ -277,7 +277,7 @@ declare const pts: ptsGlobal;
       cityssm.postJSON(
         "/admin/doResetPassword",
         formEvent.currentTarget,
-        (responseJSON: { success: boolean, newPassword?: string }) => {
+        (responseJSON: { success: boolean; newPassword?: string }) => {
 
           if (responseJSON.success) {
 
