@@ -396,7 +396,8 @@ const exportBatch = (sentDate: number, batchEntries: Array<{
    * Authorized User | 4 characters  | "XX00"
    */
 
-  const authorizedUserPadded = (<string>configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
+  const authorizedUserPadded =
+    (<string>configFns.getProperty("mtoExportImport.authorizedUser") + "    ").substring(0, 4);
 
   for (const entry of batchEntries) {
 

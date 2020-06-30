@@ -38,7 +38,7 @@ const processNCIC = (index: number) => {
 };
 
 
-export const scheduleRun = async () => {
+export const scheduleRun = () => {
 
   const nextScheduleDate = new Date();
 

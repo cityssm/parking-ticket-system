@@ -58,7 +58,7 @@ router.get("/reconcile", (req, res) => {
     -1
   );
 
-  res.render("ticket-reconcile", {
+  return res.render("ticket-reconcile", {
     headTitle: "Ownership Reconciliation",
     records: reconciliationRecords,
     errorLog: lookupErrors
@@ -102,13 +102,12 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
   );
 
   if (!statusResponse.success) {
-    res.json({
+
+    return res.json({
       success: false,
       message:
         "Unable to update the status on the parking ticket.  It may have been resolved."
     });
-
-    return;
   }
 
   // Mark log entry as acknowledged
@@ -119,7 +118,7 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
     req.session
   );
 
-  res.json({
+  return res.json({
     success
   });
 });
@@ -138,12 +137,11 @@ router.post("/doReconcileAsMatch", (req, res) => {
   );
 
   if (!ownerRecord) {
-    res.json({
+
+    return res.json({
       success: false,
       message: "Ownership record not found."
     });
-
-    return;
   }
 
   const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
@@ -160,7 +158,7 @@ router.post("/doReconcileAsMatch", (req, res) => {
     false
   );
 
-  res.json(statusResponse);
+  return res.json(statusResponse);
 });
 
 router.post("/doReconcileAsError", (req, res) => {
@@ -196,7 +194,7 @@ router.post("/doReconcileAsError", (req, res) => {
     false
   );
 
-  res.json(statusResponse);
+  return res.json(statusResponse);
 });
 
 router.post("/doQuickReconcileMatches", (req, res) => {
@@ -256,16 +254,9 @@ router.post("/doGetRecentConvictionBatches", (req, res) => {
 });
 
 router.post("/doGetConvictionBatch", (req, res) => {
-  if (
-    !(
-      req.session.user.userProperties.canUpdate ||
-      req.session.user.userProperties.isOperator
-    )
-  ) {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden"
-    });
+
+  if (!(userCanUpdate(req) || userIsOperator(req))) {
+    return forbiddenJSON(res);
   }
 
   const batch = parkingDBConvict.getParkingTicketConvictionBatch(
@@ -276,11 +267,9 @@ router.post("/doGetConvictionBatch", (req, res) => {
 });
 
 router.post("/doCreateConvictionBatch", (req, res) => {
-  if (!req.session.user.userProperties.canUpdate) {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden"
-    });
+
+  if (!userCanUpdate(req)) {
+    return forbiddenJSON(res);
   }
 
   const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(
@@ -291,11 +280,9 @@ router.post("/doCreateConvictionBatch", (req, res) => {
 });
 
 router.post("/doAddTicketToConvictionBatch", (req, res) => {
-  if (!req.session.user.userProperties.canUpdate) {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden"
-    });
+
+  if (!userCanUpdate(req)) {
+    return forbiddenJSON(res);
   }
 
   const batchID = req.body.batchID;
@@ -319,11 +306,9 @@ router.post("/doAddTicketToConvictionBatch", (req, res) => {
 });
 
 router.post("/doLockConvictionBatch", (req, res) => {
-  if (!req.session.user.userProperties.canUpdate) {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden"
-    });
+
+  if (!userCanUpdate(req)) {
+    return forbiddenJSON(res);
   }
 
   const batchID = req.body.batchID;
@@ -334,11 +319,9 @@ router.post("/doLockConvictionBatch", (req, res) => {
 });
 
 router.post("/doUnlockConvictionBatch", (req, res) => {
-  if (!req.session.user.userProperties.canUpdate) {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden"
-    });
+
+  if (!userCanUpdate(req)) {
+    return forbiddenJSON(res);
   }
 
   const batchID = req.body.batchID;
@@ -353,16 +336,16 @@ router.post("/doUnlockConvictionBatch", (req, res) => {
  */
 
 router.get(["/new", "/new/:ticketNumber"], (req, res) => {
-  if (!req.session.user.userProperties.canCreate) {
-    res.redirect("/tickets/?error=accessDenied");
-    return;
+
+  if (!userCanCreate(req)) {
+    return res.redirect("/tickets/?error=accessDenied");
   }
 
   const ticketNumber = req.params.ticketNumber;
 
   const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
 
-  res.render("ticket-edit", {
+  return res.render("ticket-edit", {
     headTitle: "New Ticket",
     isCreate: true,
     ticket: {
@@ -390,7 +373,7 @@ router.post("/doCreateTicket", (req, res) => {
     )(ticketNumber);
   }
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doUpdateTicket", (req, res) => {
@@ -401,7 +384,7 @@ router.post("/doUpdateTicket", (req, res) => {
 
   const result = parkingDB.updateParkingTicket(req.body, req.session);
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doDeleteTicket", (req, res) => {
@@ -412,7 +395,7 @@ router.post("/doDeleteTicket", (req, res) => {
 
   const result = parkingDB.deleteParkingTicket(req.body.ticketID, req.session);
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doResolveTicket", (req, res) => {
@@ -423,7 +406,7 @@ router.post("/doResolveTicket", (req, res) => {
 
   const result = parkingDB.resolveParkingTicket(req.body.ticketID, req.session);
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doUnresolveTicket", (req, res) => {
@@ -437,7 +420,7 @@ router.post("/doUnresolveTicket", (req, res) => {
     req.session
   );
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doRestoreTicket", (req, res) => {
@@ -448,7 +431,7 @@ router.post("/doRestoreTicket", (req, res) => {
 
   const result = parkingDB.restoreParkingTicket(req.body.ticketID, req.session);
 
-  res.json(result);
+  return res.json(result);
 });
 
 /*
@@ -456,7 +439,7 @@ router.post("/doRestoreTicket", (req, res) => {
  */
 
 router.post("/doGetRemarks", (req, res) => {
-  res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
+  return res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
 });
 
 router.post("/doAddRemark", (req, res) => {
@@ -467,7 +450,7 @@ router.post("/doAddRemark", (req, res) => {
 
   const result = parkingDB.createParkingTicketRemark(req.body, req.session);
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doUpdateRemark", (req, res) => {
@@ -478,7 +461,7 @@ router.post("/doUpdateRemark", (req, res) => {
 
   const result = parkingDB.updateParkingTicketRemark(req.body, req.session);
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doDeleteRemark", (req, res) => {
@@ -493,7 +476,7 @@ router.post("/doDeleteRemark", (req, res) => {
     req.session
   );
 
-  res.json(result);
+  return res.json(result);
 });
 
 /*
@@ -501,7 +484,7 @@ router.post("/doDeleteRemark", (req, res) => {
  */
 
 router.post("/doGetStatuses", (req, res) => {
-  res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
+  return res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
 });
 
 router.post("/doAddStatus", (req, res) => {
@@ -516,7 +499,7 @@ router.post("/doAddStatus", (req, res) => {
     req.body.resolveTicket === "1"
   );
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doUpdateStatus", (req, res) => {
@@ -527,7 +510,7 @@ router.post("/doUpdateStatus", (req, res) => {
 
   const result = parkingDB.updateParkingTicketStatus(req.body, req.session);
 
-  res.json(result);
+  return res.json(result);
 });
 
 router.post("/doDeleteStatus", (req, res) => {
@@ -542,7 +525,7 @@ router.post("/doDeleteStatus", (req, res) => {
     req.session
   );
 
-  res.json(result);
+  return res.json(result);
 });
 
 /*
@@ -556,23 +539,20 @@ router.get("/:ticketID", (req, res) => {
   const ticket = parkingDB.getParkingTicket(ticketID, req.session);
 
   if (!ticket) {
-    res.redirect("/tickets/?error=ticketNotFound");
-    return;
-  } else if (
-    ticket.recordDelete_timeMillis &&
-    !req.session.user.userProperties.isAdmin
-  ) {
-    res.redirect("/tickets/?error=accessDenied");
-    return;
+    return res.redirect("/tickets/?error=ticketNotFound");
+
+  } else if (ticket.recordDelete_timeMillis && !req.session.user.userProperties.isAdmin) {
+    return res.redirect("/tickets/?error=accessDenied");
   }
 
-  res.render("ticket-view", {
+  return res.render("ticket-view", {
     headTitle: "Ticket " + ticket.ticketNumber,
     ticket
   });
 });
 
 router.get("/byTicketNumber/:ticketNumber", (req, res) => {
+
   const ticketNumber = req.params.ticketNumber;
 
   const ticketID = parkingDB.getParkingTicketID(ticketNumber);
@@ -591,26 +571,22 @@ router.get("/byTicketNumber/:ticketNumber", (req, res) => {
 router.get("/:ticketID/edit", (req, res) => {
   const ticketID = parseInt(req.params.ticketID, 10);
 
-  if (!req.session.user.userProperties.canCreate) {
+  if (!userCanCreate(req)) {
     return res.redirect("/tickets/" + ticketID.toString());
   }
 
   const ticket = parkingDB.getParkingTicket(ticketID, req.session);
 
   if (!ticket) {
-    res.redirect("/tickets/?error=ticketNotFound");
-    return;
-  } else if (
-    !ticket.canUpdate ||
-    ticket.resolvedDate ||
-    ticket.recordDelete_timeMillis
-  ) {
+    return res.redirect("/tickets/?error=ticketNotFound");
+
+  } else if (!ticket.canUpdate || ticket.resolvedDate || ticket.recordDelete_timeMillis) {
     return res.redirect("/tickets/" + ticketID.toString() + "/?error=accessDenied");
   }
 
   const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
 
-  res.render("ticket-edit", {
+  return res.render("ticket-edit", {
     headTitle: "Ticket " + ticket.ticketNumber,
     isCreate: false,
     ticket,
@@ -618,5 +594,6 @@ router.get("/:ticketID/edit", (req, res) => {
     vehicleMakeModelDatalist
   });
 });
+
 
 export = router;

@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.scheduleRun = void 0;
 const log = require("fancy-log");
@@ -34,7 +25,7 @@ const processNCIC = (index) => {
         exports.scheduleRun();
     }
 };
-exports.scheduleRun = () => __awaiter(void 0, void 0, void 0, function* () {
+exports.scheduleRun = () => {
     const nextScheduleDate = new Date();
     nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
     nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
@@ -44,4 +35,4 @@ exports.scheduleRun = () => __awaiter(void 0, void 0, void 0, function* () {
         vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
         processNCIC(0);
     }, nextScheduleDate.getTime() - Date.now());
-});
+};
