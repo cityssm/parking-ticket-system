@@ -2,6 +2,8 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/3428568fcab54a1285b8e139e4fd9f41)](https://www.codacy.com/gh/cityssm/parking-ticket-system?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cityssm/parking-ticket-system&amp;utm_campaign=Badge_Grade)
 
+![Parking Ticket Search](docs/images/ticket-search.png)
+
 The Parking Ticket System is a web application project by the
 [City of Sault Ste. Marie](https://saultstemarie.ca/)
 to track parking tickets issued in our municipality.
