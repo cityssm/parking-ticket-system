@@ -6,6 +6,7 @@ const log = require("fancy-log");
 const http = require("http");
 const https = require("https");
 const fs = require("fs");
+const child_process_1 = require("child_process");
 const configFns = require("../helpers/configFns");
 const onError = (error) => {
     if (error.syscall !== "listen") {
@@ -32,7 +33,7 @@ const onListening = (server) => {
     const addr = server.address();
     const bind = typeof addr === "string"
         ? "pipe " + addr
-        : "port " + addr.port;
+        : "port " + addr.port.toString();
     log.info("Listening on " + bind);
 };
 const httpPort = configFns.getProperty("application.httpPort");
@@ -43,7 +44,7 @@ if (httpPort) {
     httpServer.on("listening", () => {
         onListening(httpServer);
     });
-    log.info("HTTP listening on " + httpPort);
+    log.info("HTTP listening on " + httpPort.toString());
 }
 const httpsConfig = configFns.getProperty("application.https");
 if (httpsConfig) {
@@ -57,5 +58,8 @@ if (httpsConfig) {
     httpsServer.on("listening", () => {
         onListening(httpsServer);
     });
-    log.info("HTTPS listening on " + httpsConfig.port);
+    log.info("HTTPS listening on " + httpsConfig.port.toString());
+}
+if (configFns.getProperty("application.task_nhtsa.runTask")) {
+    child_process_1.fork("./tasks/nhtsaChildProcess");
 }

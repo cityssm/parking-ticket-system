@@ -1,10 +1,11 @@
-export const dbPath = "data/parking.db";
 import * as sqlite from "better-sqlite3";
 
 import * as vehicleFns from "./vehicleFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "./configFns";
 import type * as pts from "./ptsTypes";
+
+export const dbPath = "data/parking.db";
 
 
 const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
@@ -31,7 +32,7 @@ const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
   } else if (userProperties.canCreate &&
     (obj.recordCreate_userName === reqSession.user.userName ||
       obj.recordUpdate_userName === reqSession.user.userName) &&
-    obj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+    obj.recordUpdate_timeMillis + <number>configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     // Users with only create permission can update their own records within the time window
     canUpdate = true;
@@ -40,7 +41,7 @@ const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
 
   // If recently updated, send back permission
 
-  if (obj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+  if (obj.recordUpdate_timeMillis + <number>configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     return canUpdate;
 
@@ -209,13 +210,15 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
 
     " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
     (" and s.statusIndex = (" +
-      "select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID" +
+      "select statusIndex from ParkingTicketStatusLog s" +
+      " where t.ticketID = s.ticketID" +
+      " and s.recordDelete_timeMillis is null" +
       " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
 
     sqlWhereClause +
     " order by t.issueDate desc, t.ticketNumber desc" +
-    " limit " + queryOptions.limit +
-    " offset " + queryOptions.offset)
+    " limit " + queryOptions.limit.toString() +
+    " offset " + queryOptions.offset.toString())
     .all(sqlParams);
 
   db.close();
@@ -696,7 +699,9 @@ export const unresolveParkingTicket = (ticketID: number, reqSession: Express.Ses
 
   // Check if the ticket is in the window
 
-  const ticketObj = db.prepare("select recordUpdate_timeMillis from ParkingTickets" +
+  const ticketObj: {
+    recordUpdate_timeMillis: number;
+  } = db.prepare("select recordUpdate_timeMillis from ParkingTickets" +
     " where ticketID = ?" +
     " and recordDelete_timeMillis is null" +
     " and resolvedDate is not null")
@@ -711,7 +716,7 @@ export const unresolveParkingTicket = (ticketID: number, reqSession: Express.Ses
       message: "The ticket has either been deleted, or is no longer marked as resolved."
     };
 
-  } else if (ticketObj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") < Date.now()) {
+  } else if (ticketObj.recordUpdate_timeMillis + <number>configFns.getProperty("user.createUpdateWindowMillis") < Date.now()) {
 
     db.close();
 
@@ -1236,7 +1241,10 @@ export const getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate: number) => 
     readonly: true
   });
 
-  const rows = db.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +
+  const rows: Array<{
+    vehicleNCIC: string;
+    recordDateMax: number;
+  }> = db.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +
     " from LicencePlateOwners" +
     " where recordDate >= ?" +
     " group by vehicleNCIC" +

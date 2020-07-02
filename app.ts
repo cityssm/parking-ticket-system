@@ -6,10 +6,8 @@ import * as path from "path";
 import * as cookieParser from "cookie-parser";
 import * as logger from "morgan";
 
-
 import * as session from "express-session";
 import * as sqlite from "connect-sqlite3";
-const SQLiteStore = sqlite(session);
 
 import { version as buildNumber } from "./package.json";
 
@@ -30,8 +28,6 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
 import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns";
 import * as vehicleFns from "./helpers/vehicleFns";
-
-import * as nhtsaTask from "./tasks/nhtsaTask";
 
 
 /*
@@ -95,6 +91,8 @@ app.use("/cityssm-bulma-webapp-js",
 /*
  * SESSION MANAGEMENT
  */
+
+const SQLiteStore = sqlite(session);
 
 
 const sessionCookieName: string = configFns.getProperty("session.cookieName");
@@ -229,13 +227,5 @@ app.use((err: createError.HttpError, req: express.Request, res: express.Response
   res.render("error");
 });
 
-
-/*
- * Background tasks
- */
-
-if (configFns.getProperty("application.task_nhtsa.runTask")) {
-  nhtsaTask.scheduleRun();
-}
 
 export = app;

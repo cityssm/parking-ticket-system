@@ -3,8 +3,8 @@
 /// <reference types="express-session" />
 /// <reference types="multer" />
 /// <reference types="integer" />
-export declare const dbPath = "data/parking.db";
 import type * as pts from "./ptsTypes";
+export declare const dbPath = "data/parking.db";
 export interface GetParkingTicketsQueryOptions {
     isResolved?: boolean;
     ticketNumber?: string;
@@ -89,4 +89,7 @@ export declare const getLicencePlates: (queryOptions: GetLicencePlatesQueryOptio
 };
 export declare const getLicencePlateOwner: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, recordDateOrBefore: number) => pts.LicencePlateOwner;
 export declare const getAllLicencePlateOwners: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) => pts.LicencePlateOwner[];
-export declare const getDistinctLicencePlateOwnerVehicleNCICs: (cutoffDate: number) => any[];
+export declare const getDistinctLicencePlateOwnerVehicleNCICs: (cutoffDate: number) => {
+    vehicleNCIC: string;
+    recordDateMax: number;
+}[];

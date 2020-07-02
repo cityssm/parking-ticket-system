@@ -36,3 +36,4 @@ exports.scheduleRun = () => {
         processNCIC(0);
     }, nextScheduleDate.getTime() - Date.now());
 };
+exports.scheduleRun();

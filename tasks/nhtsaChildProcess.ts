@@ -57,3 +57,6 @@ export const scheduleRun = () => {
   }, nextScheduleDate.getTime() - Date.now());
 
 };
+
+
+scheduleRun();

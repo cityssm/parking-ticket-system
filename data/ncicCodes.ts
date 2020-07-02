@@ -10,6 +10,9 @@
  */
 
 
+/* eslint-disable quote-props */
+
+
 export const autoNCIC = {
   "ABAR": "Abarth",
   "AC": "A C",
@@ -418,7 +421,6 @@ export const constructionNCIC = {
   "NISS": "Nissan",
   "TOYT": "Toyota"
 };
-
 
 
 export const motorcycleNCIC = {

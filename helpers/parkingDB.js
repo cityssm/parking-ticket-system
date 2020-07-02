@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDistinctLicencePlateOwnerVehicleNCICs = exports.getAllLicencePlateOwners = exports.getLicencePlateOwner = exports.getLicencePlates = exports.deleteParkingTicketStatus = exports.updateParkingTicketStatus = exports.createParkingTicketStatus = exports.getParkingTicketStatuses = exports.deleteParkingTicketRemark = exports.updateParkingTicketRemark = exports.createParkingTicketRemark = exports.getParkingTicketRemarks = exports.getRecentParkingTicketVehicleMakeModelValues = exports.restoreParkingTicket = exports.unresolveParkingTicket = exports.resolveParkingTicket = exports.deleteParkingTicket = exports.updateParkingTicket = exports.createParkingTicket = exports.getParkingTicketID = exports.getParkingTicket = exports.getParkingTicketsByLicencePlate = exports.getParkingTickets = exports.dbPath = void 0;
-exports.dbPath = "data/parking.db";
 const sqlite = require("better-sqlite3");
 const vehicleFns = require("./vehicleFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const configFns = require("./configFns");
+exports.dbPath = "data/parking.db";
 const canUpdateObject = (obj, reqSession) => {
     const userProperties = reqSession.user.userProperties;
     let canUpdate = false;
@@ -122,12 +122,14 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
         " left join ParkingLocations l on t.locationKey = l.locationKey" +
         " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
         (" and s.statusIndex = (" +
-            "select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID" +
+            "select statusIndex from ParkingTicketStatusLog s" +
+            " where t.ticketID = s.ticketID" +
+            " and s.recordDelete_timeMillis is null" +
             " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
         sqlWhereClause +
         " order by t.issueDate desc, t.ticketNumber desc" +
-        " limit " + queryOptions.limit +
-        " offset " + queryOptions.offset)
+        " limit " + queryOptions.limit.toString() +
+        " offset " + queryOptions.offset.toString())
         .all(sqlParams);
     db.close();
     for (const ticket of rows) {

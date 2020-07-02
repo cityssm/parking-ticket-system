@@ -53,11 +53,11 @@ config.genders = [
     }
 ];
 config.licencePlateCountryAliases = {
-    "CA": "Canada",
-    "US": "USA"
+    CA: "Canada",
+    US: "USA"
 };
 config.licencePlateProvinceAliases = {
-    "Canada": {
+    Canada: {
         AB: "Alberta",
         ALB: "Alberta",
         ALTA: "Alberta",
@@ -83,7 +83,7 @@ config.licencePlateProvinceAliases = {
         YUK: "Yukon",
         YN: "Yukon"
     },
-    "USA": {
+    USA: {
         AL: "Alabama",
         AK: "Alaska",
         AZ: "Arizona",
@@ -138,10 +138,10 @@ config.licencePlateProvinceAliases = {
     }
 };
 config.licencePlateProvinces = {
-    "Canada": {
+    Canada: {
         countryShortName: "CA",
         provinces: {
-            "Alberta": {
+            Alberta: {
                 provinceShortName: "AB",
                 color: "#dd262b",
                 backgroundColor: "#fff"
@@ -151,7 +151,7 @@ config.licencePlateProvinces = {
                 color: "#0049b9",
                 backgroundColor: "#fff"
             },
-            "Manitoba": {
+            Manitoba: {
                 provinceShortName: "MB",
                 color: "#0c1b46",
                 backgroundColor: "#e7e9f8"
@@ -176,12 +176,12 @@ config.licencePlateProvinces = {
                 color: "#002786",
                 backgroundColor: "#c1c9cb"
             },
-            "Nunavut": {
+            Nunavut: {
                 provinceShortName: "NU",
                 color: "#252525",
                 backgroundColor: "#5aa5c2"
             },
-            "Ontario": {
+            Ontario: {
                 provinceShortName: "ON",
                 color: "#0661a4",
                 backgroundColor: "#fff"
@@ -191,27 +191,27 @@ config.licencePlateProvinces = {
                 color: "#241f21",
                 backgroundColor: "#e5e1d8"
             },
-            "Quebec": {
+            Quebec: {
                 provinceShortName: "QC",
                 color: "#080427",
                 backgroundColor: "#fff"
             },
-            "Saskatchewan": {
+            Saskatchewan: {
                 provinceShortName: "SK",
                 color: "#008a59",
                 backgroundColor: "#dfe5e2"
             },
-            "Yukon": {
+            Yukon: {
                 provinceShortName: "YT",
                 color: "#252525",
                 backgroundColor: "#fff"
             }
         }
     },
-    "USA": {
+    USA: {
         countryShortName: "US",
         provinces: {
-            "Michigan": {
+            Michigan: {
                 provinceShortName: "MI",
                 color: "#0357a0",
                 backgroundColor: "#fff"

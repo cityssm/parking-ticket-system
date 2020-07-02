@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const session = require("express-session");
 const sqlite = require("connect-sqlite3");
-const SQLiteStore = sqlite(session);
 const package_json_1 = require("./package.json");
 const routerDocs = require("./routes/docs");
 const routerLogin = require("./routes/login");
@@ -24,7 +23,6 @@ const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const stringFns = require("@cityssm/expressjs-server-js/stringFns");
 const htmlFns = require("@cityssm/expressjs-server-js/htmlFns");
 const vehicleFns = require("./helpers/vehicleFns");
-const nhtsaTask = require("./tasks/nhtsaTask");
 const dbInit = require("./helpers/dbInit");
 dbInit.initUsersDB();
 dbInit.initParkingDB();
@@ -45,6 +43,7 @@ app.use("/fa", express.static(path.join(__dirname, "node_modules", "@fortawesome
 app.use("/typeface-inter", express.static(path.join(__dirname, "node_modules", "typeface-inter", "Inter (web)")));
 app.use("/typeface-pt-mono", express.static(path.join(__dirname, "node_modules", "typeface-pt-mono", "files")));
 app.use("/cityssm-bulma-webapp-js", express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js")));
+const SQLiteStore = sqlite(session);
 const sessionCookieName = configFns.getProperty("session.cookieName");
 app.use(session({
     store: new SQLiteStore({
@@ -127,7 +126,4 @@ app.use((err, req, res, _next) => {
     res.status(err.status || 500);
     res.render("error");
 });
-if (configFns.getProperty("application.task_nhtsa.runTask")) {
-    nhtsaTask.scheduleRun();
-}
 module.exports = app;

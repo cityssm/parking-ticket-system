@@ -8,6 +8,8 @@ import * as http from "http";
 import * as https from "https";
 import * as fs from "fs";
 
+import { fork } from "child_process";
+
 import * as configFns from "../helpers/configFns";
 import type { ConfigHttpsConfig } from "../helpers/ptsTypes";
 
@@ -49,7 +51,7 @@ const onListening = (server: http.Server | https.Server) => {
 
   const bind = typeof addr === "string"
     ? "pipe " + addr
-    : "port " + addr.port;
+    : "port " + addr.port.toString();
 
   log.info("Listening on " + bind);
 };
@@ -60,7 +62,7 @@ const onListening = (server: http.Server | https.Server) => {
  */
 
 
-const httpPort = configFns.getProperty("application.httpPort");
+const httpPort = <number>configFns.getProperty("application.httpPort");
 
 if (httpPort) {
 
@@ -73,7 +75,7 @@ if (httpPort) {
     onListening(httpServer);
   });
 
-  log.info("HTTP listening on " + httpPort);
+  log.info("HTTP listening on " + httpPort.toString());
 }
 
 /**
@@ -98,5 +100,17 @@ if (httpsConfig) {
     onListening(httpsServer);
   });
 
-  log.info("HTTPS listening on " + httpsConfig.port);
+  log.info("HTTPS listening on " + httpsConfig.port.toString());
+}
+
+/**
+ * Initialize background task
+ */
+
+/*
+ * Background tasks
+ */
+
+if (configFns.getProperty("application.task_nhtsa.runTask")) {
+  fork("./tasks/nhtsaChildProcess");
 }
