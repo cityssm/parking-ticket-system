@@ -109,9 +109,9 @@ export const getDatabaseCleanupCounts = () => {
     parkingBylaws,
     parkingOffences
 
-    //licencePlateLookupErrorLog: licencePlateLookupErrorLog
-    //parkingTicketConvictionBatches: parkingTicketConvictionBatches,
-    //licencePlateLookupBatches: licencePlateLookupBatches,
+    // licencePlateLookupErrorLog: licencePlateLookupErrorLog
+    // parkingTicketConvictionBatches: parkingTicketConvictionBatches,
+    // licencePlateLookupBatches: licencePlateLookupBatches,
   };
 };
 

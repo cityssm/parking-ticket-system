@@ -19,7 +19,8 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
     canCreate: false,
     canUpdate: false,
     isAdmin: false,
-    isOperator: false
+    isOperator: false,
+    isDefaultAdmin: false
 }));
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
 configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);
@@ -39,7 +40,7 @@ configFallbackValues.set("licencePlateProvinceAliases", {});
 configFallbackValues.set("licencePlateProvinces", {});
 configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
-exports.getProperty = (propertyName) => {
+function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");
     let currentObj = config;
     for (const propertyNamePiece of propertyNameSplit) {
@@ -51,15 +52,17 @@ exports.getProperty = (propertyName) => {
         }
     }
     return currentObj;
-};
-exports.keepAliveMillis = exports.getProperty("session.doKeepAlive")
-    ? Math.max(exports.getProperty("session.maxAgeMillis") / 2, exports.getProperty("session.maxAgeMillis") - (10 * 60 * 1000))
+}
+exports.getProperty = getProperty;
+;
+exports.keepAliveMillis = getProperty("session.doKeepAlive")
+    ? Math.max(getProperty("session.maxAgeMillis") / 2, getProperty("session.maxAgeMillis") - (10 * 60 * 1000))
     : 0;
 const parkingTicketStatusMap = new Map();
 let parkingTicketStatusMapIsLoaded = false;
 exports.getParkingTicketStatus = (statusKey) => {
     if (!parkingTicketStatusMapIsLoaded) {
-        const parkingTicketStatusList = exports.getProperty("parkingTicketStatuses");
+        const parkingTicketStatusList = getProperty("parkingTicketStatuses");
         for (const parkingTicketStatusObj of parkingTicketStatusList) {
             parkingTicketStatusMap.set(parkingTicketStatusObj.statusKey, parkingTicketStatusObj);
         }
@@ -73,19 +76,19 @@ exports.getLicencePlateLocationProperties = (originalLicencePlateCountry, origin
         color: "#000",
         backgroundColor: "#fff"
     };
-    const licencePlateCountryAlias = exports.getProperty("licencePlateCountryAliases").hasOwnProperty(originalLicencePlateCountry.toUpperCase())
-        ? exports.getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()]
+    const licencePlateCountryAlias = getProperty("licencePlateCountryAliases").hasOwnProperty(originalLicencePlateCountry.toUpperCase())
+        ? getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()]
         : originalLicencePlateCountry;
     let licencePlateProvinceAlias = originalLicencePlateProvince;
-    if (exports.getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
+    if (getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
         licencePlateProvinceAlias =
-            exports.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+            getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
                 originalLicencePlateProvince;
     }
     let licencePlateProvince = licencePlateProvinceDefault;
-    if (exports.getProperty("licencePlateProvinces").hasOwnProperty(licencePlateCountryAlias)) {
+    if (getProperty("licencePlateProvinces").hasOwnProperty(licencePlateCountryAlias)) {
         licencePlateProvince =
-            exports.getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
+            getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
                 licencePlateProvinceDefault;
     }
     return {

@@ -5,9 +5,9 @@ const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
 const configFns = require("../helpers/configFns");
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis) => {
-    return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== "" ?
-        possibleRecordDeleteTimeMillis :
-        Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
+    return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== ""
+        ? possibleRecordDeleteTimeMillis
+        : Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
 };
 const reportDefinitions = new Map();
 reportDefinitions.set("tickets-all", {

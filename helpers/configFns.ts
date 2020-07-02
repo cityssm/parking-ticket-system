@@ -35,7 +35,8 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
   canCreate: false,
   canUpdate: false,
   isAdmin: false,
-  isOperator: false
+  isOperator: false,
+  isDefaultAdmin: false
 }));
 
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
@@ -67,7 +68,100 @@ configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
 
 
-export const getProperty = (propertyName: string): any => {
+/*
+ * Set up getProperty()
+ */
+
+
+type PropertyName =
+  "admin.defaultPassword" |
+
+  "application.applicationName" |
+  "application.logoURL" |
+  "application.httpPort" |
+  "application.https" |
+
+  "databaseCleanup.windowDays" |
+
+  "defaults.country" |
+  "defaults.province" |
+
+  "licencePlateCountryAliases" |
+  "licencePlateProvinceAliases" |
+  "licencePlateProvinces" |
+  "locationClasses" |
+
+  "parkingOffences.accountNumber.pattern" |
+
+  "parkingTickets.licencePlateExpiryDate.includeDay" |
+
+  "parkingTickets.ticketNumber.fieldLabel" |
+  "parkingTickets.ticketNumber.isUnique" |
+  "parkingTickets.ticketNumber.nextTicketNumberFn" |
+  "parkingTickets.ticketNumber.pattern" |
+
+  "parkingTicketStatuses" |
+
+  "session.cookieName" |
+  "session.doKeepAlive" |
+  "session.maxAgeMillis" |
+  "session.secret" |
+
+  "user.createUpdateWindowMillis" |
+  "user.defaultProperties" |
+
+  "application.feature_mtoExportImport" |
+  "mtoExportImport.authorizedUser" |
+
+  "application.task_nhtsa.runTask" |
+  "application.task_nhtsa.executeHour";
+
+
+export function getProperty(propertyName: "admin.defaultPassword"): string;
+
+export function getProperty(propertyName: "application.applicationName"): string;
+export function getProperty(propertyName: "application.logoURL"): string;
+export function getProperty(propertyName: "application.httpPort"): number;
+
+export function getProperty(propertyName: "application.https"): pts.ConfigHttpsConfig;
+
+export function getProperty(propertyName: "databaseCleanup.windowDays"): number;
+
+export function getProperty(propertyName: "defaults.country"): string;
+export function getProperty(propertyName: "defaults.province"): string;
+
+export function getProperty(propertyName: "locationClasses"): pts.ConfigLocationClass[];
+export function getProperty(propertyName: "licencePlateCountryAliases"): { [countryShortName: string]: string };
+export function getProperty(propertyName: "licencePlateProvinceAliases"): { [countryName: string]: { [provinceShortName: string]: string } };
+export function getProperty(propertyName: "licencePlateProvinces"): { [countryName: string]: pts.ConfigLicencePlateCountry };
+
+export function getProperty(propertyName: "parkingOffences.accountNumber.pattern"): RegExp;
+
+export function getProperty(propertyName: "parkingTickets.licencePlateExpiryDate.includeDay"): boolean;
+
+export function getProperty(propertyName: "parkingTickets.ticketNumber.fieldLabel"): string;
+export function getProperty(propertyName: "parkingTickets.ticketNumber.isUnique"): boolean;
+export function getProperty(propertyName: "parkingTickets.ticketNumber.nextTicketNumberFn"): (currentTicketNumber: string) => string;
+export function getProperty(propertyName: "parkingTickets.ticketNumber.pattern"): RegExp;
+
+export function getProperty(propertyName: "parkingTicketStatuses"): pts.ConfigParkingTicketStatus[];
+
+export function getProperty(propertyName: "session.cookieName"): string;
+export function getProperty(propertyName: "session.doKeepAlive"): boolean;
+export function getProperty(propertyName: "session.maxAgeMillis"): number;
+export function getProperty(propertyName: "session.secret"): string;
+
+export function getProperty(propertyName: "user.createUpdateWindowMillis"): number;
+export function getProperty(propertyName: "user.defaultProperties"): pts.UserProperties;
+
+export function getProperty(propertyName: "application.feature_mtoExportImport"): boolean;
+export function getProperty(propertyName: "mtoExportImport.authorizedUser"): string;
+
+export function getProperty(propertyName: "application.task_nhtsa.runTask"): boolean;
+export function getProperty(propertyName: "application.task_nhtsa.executeHour"): number;
+
+
+export function getProperty(propertyName: PropertyName) {
 
   const propertyNameSplit = propertyName.split(".");
 
@@ -88,7 +182,7 @@ export const getProperty = (propertyName: string): any => {
 
 
 export const keepAliveMillis =
-  <boolean>getProperty("session.doKeepAlive")
+  getProperty("session.doKeepAlive")
     ? Math.max(
       getProperty("session.maxAgeMillis") / 2,
       getProperty("session.maxAgeMillis") - (10 * 60 * 1000)
@@ -103,7 +197,7 @@ export const getParkingTicketStatus = (statusKey: string) => {
 
   if (!parkingTicketStatusMapIsLoaded) {
 
-    const parkingTicketStatusList: pts.ConfigParkingTicketStatus[] = getProperty("parkingTicketStatuses");
+    const parkingTicketStatusList = getProperty("parkingTicketStatuses");
 
     for (const parkingTicketStatusObj of parkingTicketStatusList) {
       parkingTicketStatusMap.set(parkingTicketStatusObj.statusKey, parkingTicketStatusObj);

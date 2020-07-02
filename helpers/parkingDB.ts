@@ -32,7 +32,7 @@ const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
   } else if (userProperties.canCreate &&
     (obj.recordCreate_userName === reqSession.user.userName ||
       obj.recordUpdate_userName === reqSession.user.userName) &&
-    obj.recordUpdate_timeMillis + <number>configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+    obj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     // Users with only create permission can update their own records within the time window
     canUpdate = true;
@@ -41,7 +41,7 @@ const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
 
   // If recently updated, send back permission
 
-  if (obj.recordUpdate_timeMillis + <number>configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+  if (obj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     return canUpdate;
 
@@ -716,7 +716,7 @@ export const unresolveParkingTicket = (ticketID: number, reqSession: Express.Ses
       message: "The ticket has either been deleted, or is no longer marked as resolved."
     };
 
-  } else if (ticketObj.recordUpdate_timeMillis + <number>configFns.getProperty("user.createUpdateWindowMillis") < Date.now()) {
+  } else if (ticketObj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") < Date.now()) {
 
     db.close();
 

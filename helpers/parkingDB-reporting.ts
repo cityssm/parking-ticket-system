@@ -8,9 +8,9 @@ import * as configFns from "../helpers/configFns";
 
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis: string) => {
 
-  return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== "" ?
-    possibleRecordDeleteTimeMillis :
-    Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
+  return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== ""
+    ? possibleRecordDeleteTimeMillis
+    : Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
 };
 
 /*
@@ -19,7 +19,7 @@ const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis: string
 
 interface ReportDefinition {
   sql: string;
-  getParams?: (params: { [key: string]: string }) => (string | number)[];
+  getParams?: (params: { [key: string]: string }) => Array<string | number>;
 }
 
 const reportDefinitions = new Map<string, ReportDefinition>();
@@ -258,7 +258,7 @@ reportDefinitions.set("cleanup-parkingLocations", {
 });
 
 
-const executeQuery = (sql: string, params: (string | number)[]): RawRowsColumnsReturn => {
+const executeQuery = (sql: string, params: Array<string | number>): RawRowsColumnsReturn => {
 
   const db = sqlite(dbPath, {
     readonly: true

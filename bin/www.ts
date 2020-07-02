@@ -11,7 +11,6 @@ import * as fs from "fs";
 import { fork } from "child_process";
 
 import * as configFns from "../helpers/configFns";
-import type { ConfigHttpsConfig } from "../helpers/ptsTypes";
 
 
 const onError = (error: Error) => {
@@ -62,7 +61,7 @@ const onListening = (server: http.Server | https.Server) => {
  */
 
 
-const httpPort = <number>configFns.getProperty("application.httpPort");
+const httpPort = configFns.getProperty("application.httpPort");
 
 if (httpPort) {
 
@@ -82,7 +81,7 @@ if (httpPort) {
  * Initialize HTTPS
  */
 
-const httpsConfig = <ConfigHttpsConfig>configFns.getProperty("application.https");
+const httpsConfig = configFns.getProperty("application.https");
 
 if (httpsConfig) {
 

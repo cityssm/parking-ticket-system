@@ -30,7 +30,7 @@ router.all("/:mdFileName", (req, res, next) => {
       return;
     }
 
-    const applicationName = <string>configFns.getProperty("application.applicationName");
+    const applicationName = configFns.getProperty("application.applicationName");
 
     res.send(`<html>
       <head>
