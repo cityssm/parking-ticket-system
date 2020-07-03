@@ -32,7 +32,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        cityssm.confirmModal("Delete User?", "Are you sure you want to delete <em>" + cityssm.escapeHTML(userNameToDelete) + "</em>?<br />", "Yes, Delete", "warning", doDeleteFn);
+        cityssm.confirmModal("Delete User?", `Are you sure you want to delete <em>${userNameToDelete}/em>?<br />`, "Yes, Delete", "warning", doDeleteFn);
     };
     const deleteUserButtonEles = userContainerEle.getElementsByClassName("is-delete-user-button");
     for (const deleteUserButtonEle of deleteUserButtonEles) {
@@ -88,30 +88,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     const propertyValue = userPropertiesJSON[propertyName];
                     const formEle = document.createElement("form");
                     formEle.innerHTML =
-                        "<input name=\"userName\" type=\"hidden\" value=\"" + userName + "\" />" +
-                            "<input name=\"propertyName\" type=\"hidden\" value=\"" + propertyName + "\" />" +
-                            "<div class=\"columns\">" +
-                            ("<div class=\"column is-4\">" +
-                                "<label class=\"label\" for=\"userProperties--propertyValue-" + propertyIndex.toString() + "\">" +
-                                propertyName +
-                                "</label>" +
-                                "</div>") +
-                            ("<div class=\"column\">" +
-                                "<div class=\"field has-addons\">" +
-                                "<div class=\"control is-expanded\">" +
-                                ("<input class=\"input is-primary\"" +
-                                    " id=\"userProperties--propertyValue-" + propertyIndex.toString() + "\" name=\"propertyValue\"" +
-                                    " type=\"text\" value=\"" + cityssm.escapeHTML(propertyValue) + "\"" +
-                                    " placeholder=\"(Use Default)\" />") +
-                                "</div>" +
-                                "<div class=\"control\">" +
-                                "<button class=\"button is-outlined is-primary\" type=\"submit\">" +
-                                "Save" +
-                                "</button>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>") +
-                            "</div>";
+                        `<input name="userName" type="hidden" value="${userName}" />
+              <input name="propertyName" type="hidden" value="${propertyName}" />
+              <div class="columns">
+              <div class="column is-4">
+                <label class="label" for="userProperties--propertyValue-${propertyIndex.toString()}">
+                ${propertyName}
+                </label>
+                </div>
+              <div class="column">
+                <div class="field has-addons">
+                <div class="control is-expanded">
+                <input class="input is-primary" +
+                  id="userProperties--propertyValue-${propertyIndex.toString()}"
+                  name="propertyValue"
+                  type="text"
+                  value="${cityssm.escapeHTML(propertyValue)}"
+                  placeholder="(Use Default)" />
+                </div>
+                <div class="control">
+                <button class="button is-outlined is-primary" type="submit">Save</button>
+                </div>
+                </div>
+                </div>
+              </div>`;
                     formEle.getElementsByClassName("input")[0].addEventListener("keyup", keyupFn_markSettingUnsaved);
                     formEle.addEventListener("submit", submitFn_updateUserSetting);
                     userPropertiesContainerEle.insertAdjacentElement("beforeend", formEle);

@@ -71,12 +71,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</td>") +
                     ("<td>" +
                         (ticketObj.locationDescription
-                            ? cityssm.escapeHTML(ticketObj.locationDescription) + "<br />"
+                            ? `${ticketObj.locationDescription}<br />`
                             : "") +
                         (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName
-                            ? "<small class=\"has-tooltip-right\" data-tooltip=\"" + cityssm.escapeHTML(locationClass) + "\">" +
-                                "<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i> " + ticketObj.locationName +
-                                "</small>"
+                            ? `<small class="has-tooltip-right" data-tooltip="${locationClass}">
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                    ${cityssm.escapeHTML(ticketObj.locationName)}
+                    </small>`
                             : "") +
                         "</td>") +
                     "<td>" + cityssm.escapeHTML(ticketObj.parkingOffence) + "</td>" +

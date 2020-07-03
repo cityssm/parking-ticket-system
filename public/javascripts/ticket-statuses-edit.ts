@@ -123,7 +123,7 @@ declare const pts: ptsGlobal;
       const statusField2Ele = document.getElementById("editStatus--statusField2") as HTMLInputElement;
       statusField2Ele.value = "";
 
-      if (statusKeyObj ?.statusField2) {
+      if (statusKeyObj?.statusField2) {
 
         const fieldEle = statusField2Ele.closest(".field");
         fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
@@ -256,7 +256,7 @@ declare const pts: ptsGlobal;
             ? ""
             : "<p class=\"is-size-7\">" +
             "<strong>" +
-            (statusDefinitionObj ?.statusField
+            (statusDefinitionObj?.statusField
               ? statusDefinitionObj.statusField.fieldLabel
               : "") +
             ":</strong> " +
@@ -267,7 +267,7 @@ declare const pts: ptsGlobal;
             ? ""
             : "<p class=\"is-size-7\">" +
             "<strong>" +
-            (statusDefinitionObj ?.statusField2
+            (statusDefinitionObj?.statusField2
               ? statusDefinitionObj.statusField2.fieldLabel
               : "") +
             ":</strong> " +

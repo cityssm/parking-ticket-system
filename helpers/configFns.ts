@@ -35,8 +35,7 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
   canCreate: false,
   canUpdate: false,
   isAdmin: false,
-  isOperator: false,
-  isDefaultAdmin: false
+  isOperator: false
 }));
 
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
@@ -178,7 +177,7 @@ export function getProperty(propertyName: PropertyName) {
   }
 
   return currentObj;
-};
+}
 
 
 export const keepAliveMillis =

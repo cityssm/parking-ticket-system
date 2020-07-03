@@ -21,7 +21,7 @@ export interface ptsGlobal {
   getTicketStatus?: (statusKey: string) => {
     statusKey: string;
     status: string;
-    statusField: {
+    statusField?: {
       fieldLabel: string;
     };
     statusField2?: {

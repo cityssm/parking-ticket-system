@@ -19,8 +19,7 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
     canCreate: false,
     canUpdate: false,
     isAdmin: false,
-    isOperator: false,
-    isDefaultAdmin: false
+    isOperator: false
 }));
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
 configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);
@@ -54,7 +53,6 @@ function getProperty(propertyName) {
     return currentObj;
 }
 exports.getProperty = getProperty;
-;
 exports.keepAliveMillis = getProperty("session.doKeepAlive")
     ? Math.max(getProperty("session.maxAgeMillis") / 2, getProperty("session.maxAgeMillis") - (10 * 60 * 1000))
     : 0;
