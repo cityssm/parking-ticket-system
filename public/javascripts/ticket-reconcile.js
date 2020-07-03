@@ -87,7 +87,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                 "<span>Match</span>" +
                                 "</span>") +
                             "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
-                            " data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+                            " data-status-index=\"" + responseJSON.statusIndex.toString() + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
                             "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
                             "<span class=\"sr-only\">Remove Match</span>" +
                             "</a>" +
@@ -117,9 +117,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<strong>Parking Ticket</strong><br />" +
                     "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +
                     "<span class=\"is-size-5\">" +
-                    (ticketExpiryDate === "" ?
-                        "(Not Set)" :
-                        cityssm.escapeHTML(ticketExpiryDate)) +
+                    (ticketExpiryDate === ""
+                        ? "(Not Set)"
+                        : cityssm.escapeHTML(ticketExpiryDate)) +
                     "</span>" +
                     "</div>") +
                 ("<div class=\"column has-text-centered\">" +
@@ -158,7 +158,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                 "<span>Match Error</span>" +
                                 "</span>") +
                             "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
-                            " data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+                            " data-status-index=\"" + responseJSON.statusIndex.toString() + "\"" +
+                            " data-tooltip=\"Remove Match\" href=\"#\">" +
                             "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
                             "<span class=\"sr-only\">Remove Match</span>" +
                             "</a>" +
@@ -186,9 +187,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<strong>Parking Ticket</strong><br />" +
                     "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +
                     "<span class=\"is-size-5\">" +
-                    (ticketExpiryDate === "" ?
-                        "(Not Set)" :
-                        cityssm.escapeHTML(ticketExpiryDate)) +
+                    (ticketExpiryDate === ""
+                        ? "(Not Set)"
+                        : cityssm.escapeHTML(ticketExpiryDate)) +
                     "</span>" +
                     "</div>") +
                 ("<div class=\"column has-text-centered\">" +
@@ -219,11 +220,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 cityssm.postJSON("/tickets/doQuickReconcileMatches", {}, (responseJSON) => {
                     loadingCloseModalFn();
                     if (responseJSON.success) {
-                        cityssm.alertModal("Quick Reconcile Complete", (responseJSON.statusRecords.length === 1 ?
-                            "One record was successfully reconciled as a match." :
-                            responseJSON.statusRecords.length + " records were successfully reconciled as matches."), "OK", "success");
+                        cityssm.alertModal("Quick Reconcile Complete", (responseJSON.statusRecords.length === 1
+                            ? "One record was successfully reconciled as a match."
+                            : responseJSON.statusRecords.length.toString() + " records were successfully reconciled as matches."), "OK", "success");
                         for (const statusRecord of responseJSON.statusRecords) {
-                            const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
+                            const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID.toString());
                             if (optionsTdEle) {
                                 cityssm.clearElement(optionsTdEle);
                                 optionsTdEle.innerHTML =
@@ -233,7 +234,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                             "<span>Match</span>" +
                                             "</span>") +
                                         "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
-                                        " data-status-index=\"" + statusRecord.statusIndex + "\"" +
+                                        " data-status-index=\"" + statusRecord.statusIndex.toString() + "\"" +
                                         " data-tooltip=\"Remove Match\" href=\"#\">" +
                                         "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
                                         "<span class=\"sr-only\">Remove Match</span>" +

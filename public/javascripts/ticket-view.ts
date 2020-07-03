@@ -12,7 +12,7 @@ declare const cityssm: cityssmGlobal;
 
       clickEvent.preventDefault();
 
-      const ticketID = (<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-ticket-id");
+      const ticketID = (clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-ticket-id");
 
       cityssm.confirmModal(
         "Remove Resolved Status?",
@@ -45,7 +45,7 @@ declare const cityssm: cityssmGlobal;
 
       clickEvent.preventDefault();
 
-      const ticketID = (<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-ticket-id");
+      const ticketID = (clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-ticket-id");
 
       cityssm.confirmModal(
         "Restore Ticket?",

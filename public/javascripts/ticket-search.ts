@@ -1,10 +1,9 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
-declare const pts: ptsGlobal;
-
 import type * as ptsTypes from "../../helpers/ptsTypes";
+
+declare const cityssm: cityssmGlobal;
+declare const pts: ptsGlobal;
 
 
 (() => {
@@ -14,8 +13,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   const formEle = document.getElementById("form--filters");
 
-  const limitEle = <HTMLInputElement>document.getElementById("filter--limit");
-  const offsetEle = <HTMLInputElement>document.getElementById("filter--offset");
+  const limitEle = document.getElementById("filter--limit") as HTMLInputElement;
+  const offsetEle = document.getElementById("filter--offset") as HTMLInputElement;
 
   const searchResultsEle = document.getElementById("container--searchResults");
 
@@ -33,7 +32,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
       "</p>";
 
     cityssm.postJSON("/tickets/doGetTickets", formEle,
-      (ticketResults: { count: number, tickets: ptsTypes.ParkingTicket[] }) => {
+      (ticketResults: { count: number; tickets: ptsTypes.ParkingTicket[] }) => {
 
         const ticketList = ticketResults.tickets;
 
@@ -92,7 +91,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           // Output row
 
           trEle.innerHTML = "<td>" +
-            "<a href=\"/tickets/" + ticketObj.ticketID + "\" data-tooltip=\"View Parking Ticket\">" +
+            "<a href=\"/tickets/" + ticketObj.ticketID.toString() + "\" data-tooltip=\"View Parking Ticket\">" +
             ticketObj.ticketNumber +
             "</a>" +
             "</td>" +
@@ -107,34 +106,34 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
                 "</div>") +
 
               ("<div class=\"licence-plate-number\">" +
-                (ticketObj.licencePlateNumber === "" ?
-                  "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>" :
-                  cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
+                (ticketObj.licencePlateNumber === ""
+                  ? "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>"
+                  : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
                 "</div>") +
 
               "</div>" +
               "</td>") +
             ("<td>" +
-              (ticketObj.locationDescription ?
-                cityssm.escapeHTML(ticketObj.locationDescription) + "<br />" :
-                "") +
-              (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName ?
-                "<small class=\"has-tooltip-right\" data-tooltip=\"" + cityssm.escapeHTML(locationClass) + "\">" +
+              (ticketObj.locationDescription
+                ? cityssm.escapeHTML(ticketObj.locationDescription) + "<br />"
+                : "") +
+              (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName
+                ? "<small class=\"has-tooltip-right\" data-tooltip=\"" + cityssm.escapeHTML(locationClass) + "\">" +
                 "<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i> " + ticketObj.locationName +
-                "</small>" :
-                "") +
+                "</small>"
+                : "") +
               "</td>") +
             "<td>" + cityssm.escapeHTML(ticketObj.parkingOffence) + "</td>" +
             "<td>" +
 
-            (ticketObj.resolvedDateString === "" ?
-              "Unresolved" :
-              "<span class=\"sr-only\">Resolved</span>" +
+            (ticketObj.resolvedDateString === ""
+              ? "Unresolved"
+              : "<span class=\"sr-only\">Resolved</span>" +
               "<i class=\"fas fa-check\" aria-hidden=\"true\"></i> " + ticketObj.resolvedDateString) +
 
-            (ticketObj.latestStatus_statusKey ?
-              "<br /><span class=\"tag is-light is-primary\">" + ticketStatusObj.status + "</span>" :
-              "") +
+            (ticketObj.latestStatus_statusKey
+              ? "<br /><span class=\"tag is-light is-primary\">" + ticketStatusObj.status + "</span>"
+              : "") +
             "</td>";
 
           tbodyEle.appendChild(trEle);
@@ -143,11 +142,11 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
           "<div class=\"level-left has-text-weight-bold\">" +
           "Displaying parking tickets " +
-          (currentOffset + 1) +
+          (currentOffset + 1).toString() +
           " to " +
-          Math.min(currentLimit + currentOffset, ticketResults.count) +
+          Math.min(currentLimit + currentOffset, ticketResults.count).toString() +
           " of " +
-          ticketResults.count +
+          ticketResults.count.toString() +
           "</div>" +
           "</div>");
 

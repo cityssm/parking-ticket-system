@@ -54,7 +54,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const statusKeyObj = pts.getTicketStatus(changeEvent.currentTarget.value);
             const statusFieldEle = document.getElementById("editStatus--statusField");
             statusFieldEle.value = "";
-            if (statusKeyObj && statusKeyObj.statusField) {
+            if (statusKeyObj === null || statusKeyObj === void 0 ? void 0 : statusKeyObj.statusField) {
                 const fieldEle = statusFieldEle.closest(".field");
                 fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
                 fieldEle.classList.remove("is-hidden");
@@ -64,7 +64,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             const statusField2Ele = document.getElementById("editStatus--statusField2");
             statusField2Ele.value = "";
-            if (statusKeyObj && statusKeyObj.statusField2) {
+            if (statusKeyObj === null || statusKeyObj === void 0 ? void 0 : statusKeyObj.statusField2) {
                 const fieldEle = statusField2Ele.closest(".field");
                 fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
                 fieldEle.classList.remove("is-hidden");
@@ -76,14 +76,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.openHtmlModal("ticket-editStatus", {
             onshow(modalEle) {
                 document.getElementById("editStatus--ticketID").value = ticketID;
-                document.getElementById("editStatus--statusIndex").value = statusObj.statusIndex;
+                document.getElementById("editStatus--statusIndex").value =
+                    statusObj.statusIndex.toString();
                 document.getElementById("editStatus--statusField").value = statusObj.statusField;
                 document.getElementById("editStatus--statusField2").value = statusObj.statusField2;
                 document.getElementById("editStatus--statusNote").value = statusObj.statusNote;
                 const statusDateEle = document.getElementById("editStatus--statusDateString");
                 statusDateEle.value = statusObj.statusDateString;
                 statusDateEle.setAttribute("max", cityssm.dateToString(new Date()));
-                document.getElementById("editStatus--statusTimeString").value = statusObj.statusTimeString;
+                document.getElementById("editStatus--statusTimeString").value =
+                    statusObj.statusTimeString;
                 pts.getDefaultConfigProperty("parkingTicketStatuses", (parkingTicketStatuses) => {
                     let statusKeyFound = false;
                     const statusKeyEle = document.getElementById("editStatus--statusKey");
@@ -146,23 +148,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</div>" +
                         "<div class=\"level-right\">" + statusObj.statusDateString + "</div>" +
                         "</div>") +
-                    (!statusObj.statusField || statusObj.statusField === "" ?
-                        "" :
-                        "<p class=\"is-size-7\">" +
+                    (!statusObj.statusField || statusObj.statusField === ""
+                        ? ""
+                        : "<p class=\"is-size-7\">" +
                             "<strong>" +
-                            (statusDefinitionObj && statusDefinitionObj.statusField ?
-                                statusDefinitionObj.statusField.fieldLabel :
-                                "") +
+                            ((statusDefinitionObj === null || statusDefinitionObj === void 0 ? void 0 : statusDefinitionObj.statusField) ? statusDefinitionObj.statusField.fieldLabel
+                                : "") +
                             ":</strong> " +
                             statusObj.statusField +
                             "</p>") +
-                    (!statusObj.statusField2 || statusObj.statusField2 === "" ?
-                        "" :
-                        "<p class=\"is-size-7\">" +
+                    (!statusObj.statusField2 || statusObj.statusField2 === ""
+                        ? ""
+                        : "<p class=\"is-size-7\">" +
                             "<strong>" +
-                            (statusDefinitionObj && statusDefinitionObj.statusField2 ?
-                                statusDefinitionObj.statusField2.fieldLabel :
-                                "") +
+                            ((statusDefinitionObj === null || statusDefinitionObj === void 0 ? void 0 : statusDefinitionObj.statusField2) ? statusDefinitionObj.statusField2.fieldLabel
+                                : "") +
                             ":</strong> " +
                             statusObj.statusField2 +
                             "</p>") +
@@ -182,7 +182,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     " <span>Edit</span>" +
                     "</button>") +
                 ("<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\"" +
-                    " data-status-index=\"" + firstStatusObj.statusIndex + "\" type=\"button\">" +
+                    " data-status-index=\"" + firstStatusObj.statusIndex.toString() + "\" type=\"button\">" +
                     "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
                     "<span class=\"sr-only\">Delete</span>" +
                     "</button>") +
@@ -194,7 +194,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 .addEventListener("click", confirmDeleteStatusFn);
         }
         const firstStatusDefinitionObj = pts.getTicketStatus(firstStatusObj.statusKey);
-        if (firstStatusDefinitionObj && firstStatusDefinitionObj.isFinalStatus) {
+        if (firstStatusDefinitionObj === null || firstStatusDefinitionObj === void 0 ? void 0 : firstStatusDefinitionObj.isFinalStatus) {
             const finalizePanelBlockEle = document.createElement("div");
             finalizePanelBlockEle.className = "panel-block is-block";
             finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
@@ -253,7 +253,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const statusObj = pts.getTicketStatus(changeEvent.currentTarget.value);
             const statusFieldEle = document.getElementById("addStatus--statusField");
             statusFieldEle.value = "";
-            if (statusObj && statusObj.statusField) {
+            if (statusObj === null || statusObj === void 0 ? void 0 : statusObj.statusField) {
                 const fieldEle = statusFieldEle.closest(".field");
                 fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField.fieldLabel;
                 fieldEle.classList.remove("is-hidden");
@@ -263,7 +263,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             const statusField2Ele = document.getElementById("addStatus--statusField2");
             statusField2Ele.value = "";
-            if (statusObj && statusObj.statusField2) {
+            if (statusObj === null || statusObj === void 0 ? void 0 : statusObj.statusField2) {
                 const fieldEle = statusField2Ele.closest(".field");
                 fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField2.fieldLabel;
                 fieldEle.classList.remove("is-hidden");
@@ -273,7 +273,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             const resolveTicketEle = document.getElementById("addStatus--resolveTicket");
             resolveTicketEle.checked = false;
-            if (statusObj && statusObj.isFinalStatus) {
+            if (statusObj === null || statusObj === void 0 ? void 0 : statusObj.isFinalStatus) {
                 resolveTicketEle.closest(".field").classList.remove("is-hidden");
             }
             else {
@@ -333,7 +333,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     const currentDateString = cityssm.dateToString(new Date());
                     const dateDifference = cityssm.dateStringDifferenceInDays(issueDateString, currentDateString);
                     if (dateDifference <= parseInt(discountDays, 10)) {
-                        statusFieldEle.value = document.getElementById("ticket--discountOffenceAmount").value;
+                        statusFieldEle.value =
+                            document.getElementById("ticket--discountOffenceAmount").value;
                     }
                     else {
                         statusFieldEle.value = offenceAmount;

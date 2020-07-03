@@ -20,9 +20,6 @@ module.exports = {
     quotes: ["error", "double"],
     semi: ["error", "always"],
 
-    "@typescript-eslint/consistent-type-assertions": ["error", {
-      assertionStyle: "angle-bracket"
-    }],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/member-delimiter-style": ["error", {

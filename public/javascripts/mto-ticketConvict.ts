@@ -18,9 +18,7 @@ declare const cityssm: cityssmGlobal;
    * Convictable Tickets Side
    */
 
-  const ticketFilterEle = <HTMLInputElement>(
-    document.getElementById("filter--parkingTicket")
-  );
+  const ticketFilterEle = document.getElementById("filter--parkingTicket") as HTMLInputElement;
 
   const convictableTicketsContainerEle = document.getElementById(
     "convictable-tickets-container"
@@ -31,7 +29,7 @@ declare const cityssm: cityssmGlobal;
   const addTicketToBatchByIndexFn = (clickEvent: Event) => {
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
 
     buttonEle.setAttribute("disabled", "disabled");
 
@@ -276,7 +274,7 @@ declare const cityssm: cityssmGlobal;
   const removeTicketFromBatchByIndexFn = (clickEvent: Event) => {
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
 
     buttonEle.setAttribute("disabled", "disabled");
 
@@ -635,9 +633,7 @@ declare const cityssm: cityssmGlobal;
       const selectFn = (clickEvent: Event) => {
         clickEvent.preventDefault();
 
-        const batchID = (<HTMLAnchorElement>(
-          clickEvent.currentTarget
-        )).getAttribute("data-batch-id");
+        const batchID = (clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-batch-id");
 
         cityssm.postJSON(
           "/tickets/doGetConvictionBatch",
@@ -675,9 +671,7 @@ declare const cityssm: cityssmGlobal;
             "/tickets/doGetRecentConvictionBatches",
             [],
             (batchList: ParkingTicketConvictionBatch[]) => {
-              const resultsContainerEle = <HTMLDivElement>(
-                modalEle.getElementsByClassName("is-results-container")[0]
-              );
+              const resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0] as HTMLDivElement;
 
               cityssm.clearElement(resultsContainerEle);
 

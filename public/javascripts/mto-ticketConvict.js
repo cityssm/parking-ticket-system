@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     delete exports.currentBatch;
     let convictableTickets = exports.convictableTickets;
     delete exports.convictableTickets;
-    const ticketFilterEle = (document.getElementById("filter--parkingTicket"));
+    const ticketFilterEle = document.getElementById("filter--parkingTicket");
     const convictableTicketsContainerEle = document.getElementById("convictable-tickets-container");
     let displayedTicketIDs = [];
     const addTicketToBatchByIndexFn = (clickEvent) => {
@@ -399,7 +399,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let selectBatchCloseModalFn;
         const selectFn = (clickEvent) => {
             clickEvent.preventDefault();
-            const batchID = (clickEvent.currentTarget).getAttribute("data-batch-id");
+            const batchID = clickEvent.currentTarget.getAttribute("data-batch-id");
             cityssm.postJSON("/tickets/doGetConvictionBatch", {
                 batchID
             }, (batchObj) => {
@@ -421,7 +421,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     });
                 }
                 cityssm.postJSON("/tickets/doGetRecentConvictionBatches", [], (batchList) => {
-                    const resultsContainerEle = (modalEle.getElementsByClassName("is-results-container")[0]);
+                    const resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
                     cityssm.clearElement(resultsContainerEle);
                     if (batchList.length === 0) {
                         resultsContainerEle.className = "message is-info";

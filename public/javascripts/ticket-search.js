@@ -50,7 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
                 const ticketStatusObj = pts.getTicketStatus(ticketObj.latestStatus_statusKey);
                 trEle.innerHTML = "<td>" +
-                    "<a href=\"/tickets/" + ticketObj.ticketID + "\" data-tooltip=\"View Parking Ticket\">" +
+                    "<a href=\"/tickets/" + ticketObj.ticketID.toString() + "\" data-tooltip=\"View Parking Ticket\">" +
                     ticketObj.ticketNumber +
                     "</a>" +
                     "</td>" +
@@ -63,42 +63,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             locationProperties.licencePlateProvinceAlias +
                             "</div>") +
                         ("<div class=\"licence-plate-number\">" +
-                            (ticketObj.licencePlateNumber === "" ?
-                                "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>" :
-                                cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
+                            (ticketObj.licencePlateNumber === ""
+                                ? "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>"
+                                : cityssm.escapeHTML(ticketObj.licencePlateNumber)) +
                             "</div>") +
                         "</div>" +
                         "</td>") +
                     ("<td>" +
-                        (ticketObj.locationDescription ?
-                            cityssm.escapeHTML(ticketObj.locationDescription) + "<br />" :
-                            "") +
-                        (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName ?
-                            "<small class=\"has-tooltip-right\" data-tooltip=\"" + cityssm.escapeHTML(locationClass) + "\">" +
+                        (ticketObj.locationDescription
+                            ? cityssm.escapeHTML(ticketObj.locationDescription) + "<br />"
+                            : "") +
+                        (ticketObj.locationKey && ticketObj.locationKey !== "" && ticketObj.locationName
+                            ? "<small class=\"has-tooltip-right\" data-tooltip=\"" + cityssm.escapeHTML(locationClass) + "\">" +
                                 "<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i> " + ticketObj.locationName +
-                                "</small>" :
-                            "") +
+                                "</small>"
+                            : "") +
                         "</td>") +
                     "<td>" + cityssm.escapeHTML(ticketObj.parkingOffence) + "</td>" +
                     "<td>" +
-                    (ticketObj.resolvedDateString === "" ?
-                        "Unresolved" :
-                        "<span class=\"sr-only\">Resolved</span>" +
+                    (ticketObj.resolvedDateString === ""
+                        ? "Unresolved"
+                        : "<span class=\"sr-only\">Resolved</span>" +
                             "<i class=\"fas fa-check\" aria-hidden=\"true\"></i> " + ticketObj.resolvedDateString) +
-                    (ticketObj.latestStatus_statusKey ?
-                        "<br /><span class=\"tag is-light is-primary\">" + ticketStatusObj.status + "</span>" :
-                        "") +
+                    (ticketObj.latestStatus_statusKey
+                        ? "<br /><span class=\"tag is-light is-primary\">" + ticketStatusObj.status + "</span>"
+                        : "") +
                     "</td>";
                 tbodyEle.appendChild(trEle);
             }
             searchResultsEle.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
                 "<div class=\"level-left has-text-weight-bold\">" +
                 "Displaying parking tickets " +
-                (currentOffset + 1) +
+                (currentOffset + 1).toString() +
                 " to " +
-                Math.min(currentLimit + currentOffset, ticketResults.count) +
+                Math.min(currentLimit + currentOffset, ticketResults.count).toString() +
                 " of " +
-                ticketResults.count +
+                ticketResults.count.toString() +
                 "</div>" +
                 "</div>");
             if (currentLimit < ticketResults.count) {

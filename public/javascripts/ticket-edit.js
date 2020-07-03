@@ -4,10 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const ticketID = document.getElementById("ticket--ticketID").value;
     const isCreate = (ticketID === "");
     const formMessageEle = document.getElementById("container--form-message");
-    let hasUnsavedChanges = false;
     const setUnsavedChangesFn = () => {
         cityssm.enableNavBlocker();
-        hasUnsavedChanges = true;
         formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
             "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
             " <span>Unsaved Changes</span>" +
@@ -27,7 +25,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON((isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"), formEvent.currentTarget, (responseJSON) => {
             if (responseJSON.success) {
                 cityssm.disableNavBlocker();
-                hasUnsavedChanges = false;
                 formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
                     "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
                     " <span>Saved Successfully</span>" +

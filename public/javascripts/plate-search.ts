@@ -7,10 +7,10 @@ declare const pts: ptsGlobal;
 
 (() => {
 
-  const formEle = <HTMLFormElement>document.getElementById("form--filters");
+  const formEle = document.getElementById("form--filters") as HTMLFormElement;
 
-  const limitEle = <HTMLInputElement>document.getElementById("filter--limit");
-  const offsetEle = <HTMLInputElement>document.getElementById("filter--offset");
+  const limitEle = document.getElementById("filter--limit") as HTMLInputElement;
+  const offsetEle = document.getElementById("filter--offset") as HTMLInputElement;
 
   const searchResultsEle = document.getElementById("container--searchResults");
 

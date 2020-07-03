@@ -289,7 +289,10 @@ export const getReportRowsColumns = (reportName: string, reqQuery: { [key: strin
   }
 
   const reportDefinition = reportDefinitions.get(reportName);
-  const params = reportDefinition.getParams ? reportDefinition.getParams(reqQuery) : [];
+
+  const params = reportDefinition.hasOwnProperty("getParams")
+    ? reportDefinition.getParams(reqQuery)
+    : [];
 
   return executeQuery(reportDefinition.sql, params);
 };

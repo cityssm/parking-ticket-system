@@ -29,10 +29,10 @@ interface AvailableLicencePlate {
   // Available Plates
 
 
-  const availableIssueDaysAgoEle = <HTMLSelectElement>document.getElementById("available--issueDaysAgo");
+  const availableIssueDaysAgoEle = document.getElementById("available--issueDaysAgo") as HTMLSelectElement;
   const availablePlatesContainerEle = document.getElementById("is-available-plates-container");
 
-  const licencePlateNumberFilterEle = <HTMLInputElement>document.getElementById("available--licencePlateNumber");
+  const licencePlateNumberFilterEle = document.getElementById("available--licencePlateNumber") as HTMLInputElement;
 
   let availablePlatesList: AvailableLicencePlate[] = [];
 
@@ -42,7 +42,7 @@ interface AvailableLicencePlate {
 
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
     buttonEle.setAttribute("disabled", "disabled");
 
     const recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
@@ -82,7 +82,7 @@ interface AvailableLicencePlate {
 
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
     buttonEle.setAttribute("disabled", "disabled");
 
     const recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
@@ -486,7 +486,7 @@ interface AvailableLicencePlate {
 
       batchClickEvent.preventDefault();
 
-      batchID = parseInt((<HTMLAnchorElement>batchClickEvent.currentTarget).getAttribute("data-batch-id"), 10);
+      batchID = parseInt((batchClickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-batch-id"), 10);
 
       selectBatchCloseModalFn();
       fn_refreshBatch();
@@ -551,7 +551,7 @@ interface AvailableLicencePlate {
     cityssm.openHtmlModal("mto-selectBatch", {
       onshow(modalEle: HTMLElement): void {
 
-        resultsContainerEle = <HTMLDivElement>modalEle.getElementsByClassName("is-results-container")[0];
+        resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0] as HTMLDivElement;
         fn_loadBatches();
 
         if (canUpdate) {

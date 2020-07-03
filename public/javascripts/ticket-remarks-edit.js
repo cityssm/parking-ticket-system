@@ -73,29 +73,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     cityssm.escapeHTML(remarkObj.remark) +
                     "</p>" +
                     "<p class=\"is-size-7\">" +
-                    (remarkObj.recordCreate_timeMillis === remarkObj.recordUpdate_timeMillis ?
-                        "" :
-                        "<i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i> ") +
+                    (remarkObj.recordCreate_timeMillis === remarkObj.recordUpdate_timeMillis
+                        ? ""
+                        : "<i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i> ") +
                     remarkObj.recordUpdate_userName + " - " +
                     remarkObj.remarkDateString + " " + remarkObj.remarkTimeString +
                     "</p>" +
                     "</div>") +
-                (remarkObj.canUpdate ?
-                    "<div class=\"column is-narrow\">" +
+                (remarkObj.canUpdate
+                    ? "<div class=\"column is-narrow\">" +
                         "<div class=\"buttons is-right has-addons\">" +
                         ("<button class=\"button is-small is-edit-remark-button\"" +
-                            " data-tooltip=\"Edit Remark\" data-index=\"" + index + "\" type=\"button\">" +
+                            " data-tooltip=\"Edit Remark\" data-index=\"" + index.toString() + "\" type=\"button\">" +
                             "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
                             " <span>Edit</span>" +
                             "</button>") +
                         ("<button class=\"button is-small has-text-danger is-delete-remark-button\"" +
-                            " data-tooltip=\"Delete Remark\" data-remark-index=\"" + remarkObj.remarkIndex + "\" type=\"button\">" +
+                            " data-tooltip=\"Delete Remark\"" +
+                            " data-remark-index=\"" + remarkObj.remarkIndex.toString() + "\" type=\"button\">" +
                             "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
                             "<span class=\"sr-only\">Delete</span>" +
                             "</button>") +
                         "</div>" +
-                        "</div>" :
-                    "") +
+                        "</div>"
+                    : "") +
                 "</div>";
             if (remarkObj.canUpdate) {
                 panelBlockEle.getElementsByClassName("is-edit-remark-button")[0]

@@ -8,7 +8,7 @@ declare const pts: ptsGlobal;
 
 (() => {
 
-  const ticketID = (<HTMLInputElement>document.getElementById("ticket--ticketID")).value;
+  const ticketID = (document.getElementById("ticket--ticketID") as HTMLInputElement).value;
   const isCreate = (ticketID === "");
 
   /*
@@ -17,13 +17,13 @@ declare const pts: ptsGlobal;
 
   const formMessageEle = document.getElementById("container--form-message");
 
-  let hasUnsavedChanges = false;
+  // let hasUnsavedChanges = false;
 
   const setUnsavedChangesFn = () => {
 
     cityssm.enableNavBlocker();
 
-    hasUnsavedChanges = true;
+    // hasUnsavedChanges = true;
 
     formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
       "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
@@ -42,7 +42,7 @@ declare const pts: ptsGlobal;
 
     formEvent.preventDefault();
 
-    const ticketNumber = (<HTMLInputElement>document.getElementById("ticket--ticketNumber")).value;
+    const ticketNumber = (document.getElementById("ticket--ticketNumber") as HTMLInputElement).value;
 
     formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
       "<span>Saving ticket... </span>" +
@@ -57,7 +57,7 @@ declare const pts: ptsGlobal;
         if (responseJSON.success) {
 
           cityssm.disableNavBlocker();
-          hasUnsavedChanges = false;
+          // hasUnsavedChanges = false;
 
           formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
             "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
@@ -144,8 +144,8 @@ declare const pts: ptsGlobal;
 
       clickEvent.preventDefault();
 
-      (<HTMLInputElement>document.getElementById("ticket--locationKey")).value = "";
-      (<HTMLInputElement>document.getElementById("ticket--locationName")).value = "";
+      (document.getElementById("ticket--locationKey") as HTMLInputElement).value = "";
+      (document.getElementById("ticket--locationName") as HTMLInputElement).value = "";
 
       locationLookupCloseModalFn();
 
@@ -158,10 +158,10 @@ declare const pts: ptsGlobal;
       clickEvent.preventDefault();
 
       const locationObj =
-        locationList[parseInt((<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
+        locationList[parseInt((clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-index"), 10)];
 
-      (<HTMLInputElement>document.getElementById("ticket--locationKey")).value = locationObj.locationKey;
-      (<HTMLInputElement>document.getElementById("ticket--locationName")).value = locationObj.locationName;
+      (document.getElementById("ticket--locationKey") as HTMLInputElement).value = locationObj.locationKey;
+      (document.getElementById("ticket--locationName") as HTMLInputElement).value = locationObj.locationName;
 
       locationLookupCloseModalFn();
 
@@ -244,11 +244,11 @@ declare const pts: ptsGlobal;
 
       clickEvent.preventDefault();
 
-      (<HTMLInputElement>document.getElementById("ticket--bylawNumber")).value = "";
+      (document.getElementById("ticket--bylawNumber") as HTMLInputElement).value = "";
 
       // Offence Amount
 
-      const offenceAmountEle = <HTMLInputElement>document.getElementById("ticket--offenceAmount");
+      const offenceAmountEle = document.getElementById("ticket--offenceAmount") as HTMLInputElement;
 
       offenceAmountEle.classList.add("is-readonly");
       offenceAmountEle.setAttribute("readonly", "readonly");
@@ -258,7 +258,7 @@ declare const pts: ptsGlobal;
 
       // Discount Offence Amount
 
-      const discountOffenceAmountEle = <HTMLInputElement>document.getElementById("ticket--discountOffenceAmount");
+      const discountOffenceAmountEle = document.getElementById("ticket--discountOffenceAmount") as HTMLInputElement;
 
       discountOffenceAmountEle.classList.add("is-readonly");
       discountOffenceAmountEle.setAttribute("readonly", "readonly");
@@ -268,7 +268,7 @@ declare const pts: ptsGlobal;
 
       // Discount Days
 
-      const discountDaysEle = <HTMLInputElement>document.getElementById("ticket--discountDays");
+      const discountDaysEle = document.getElementById("ticket--discountDays") as HTMLInputElement;
 
       discountDaysEle.classList.add("is-readonly");
       discountDaysEle.setAttribute("readonly", "readonly");
@@ -278,7 +278,7 @@ declare const pts: ptsGlobal;
 
       // Offence Description
 
-      (<HTMLTextAreaElement>document.getElementById("ticket--parkingOffence")).value = "";
+      (document.getElementById("ticket--parkingOffence") as HTMLTextAreaElement).value = "";
 
       bylawLookupCloseModalFn();
 
@@ -290,13 +290,13 @@ declare const pts: ptsGlobal;
       clickEvent.preventDefault();
 
       const offenceObj =
-        offenceList[parseInt((<HTMLInputElement>clickEvent.currentTarget).getAttribute("data-index"), 10)];
+        offenceList[parseInt((clickEvent.currentTarget as HTMLInputElement).getAttribute("data-index"), 10)];
 
-      (<HTMLInputElement>document.getElementById("ticket--bylawNumber")).value = offenceObj.bylawNumber;
+      (document.getElementById("ticket--bylawNumber") as HTMLInputElement).value = offenceObj.bylawNumber;
 
       // Offence Amount
 
-      const offenceAmountEle = <HTMLInputElement>document.getElementById("ticket--offenceAmount");
+      const offenceAmountEle = document.getElementById("ticket--offenceAmount") as HTMLInputElement;
 
       offenceAmountEle.classList.add("is-readonly");
       offenceAmountEle.setAttribute("readonly", "readonly");
@@ -306,7 +306,7 @@ declare const pts: ptsGlobal;
 
       // Discount Offence Amount
 
-      const discountOffenceAmountEle = <HTMLInputElement>document.getElementById("ticket--discountOffenceAmount");
+      const discountOffenceAmountEle = document.getElementById("ticket--discountOffenceAmount") as HTMLInputElement;
 
       discountOffenceAmountEle.classList.add("is-readonly");
       discountOffenceAmountEle.setAttribute("readonly", "readonly");
@@ -316,7 +316,7 @@ declare const pts: ptsGlobal;
 
       // Discount Days
 
-      const discountDaysEle = <HTMLInputElement>document.getElementById("ticket--discountDays");
+      const discountDaysEle = document.getElementById("ticket--discountDays") as HTMLInputElement;
 
       discountDaysEle.classList.add("is-readonly");
       discountDaysEle.setAttribute("readonly", "readonly");
@@ -326,7 +326,7 @@ declare const pts: ptsGlobal;
 
       // Offence Description
 
-      (<HTMLTextAreaElement>document.getElementById("ticket--parkingOffence")).value = offenceObj.bylawDescription;
+      (document.getElementById("ticket--parkingOffence") as HTMLTextAreaElement).value = offenceObj.bylawDescription;
 
       bylawLookupCloseModalFn();
 
@@ -336,7 +336,7 @@ declare const pts: ptsGlobal;
 
     const populateBylawsFn = () => {
 
-      const locationKey = (<HTMLInputElement>document.getElementById("ticket--locationKey")).value;
+      const locationKey = (document.getElementById("ticket--locationKey") as HTMLInputElement).value;
       // const locationName = document.getElementById("ticket--locationName").value;
 
       cityssm.postJSON("/offences/doGetOffencesByLocation", {
@@ -381,7 +381,7 @@ declare const pts: ptsGlobal;
 
     const filterBylawsFn = (keyupEvent: Event) => {
 
-      const searchStringSplit = (<HTMLInputElement>keyupEvent.currentTarget).value.trim().toLowerCase().split(" ");
+      const searchStringSplit = (keyupEvent.currentTarget as HTMLInputElement).value.trim().toLowerCase().split(" ");
 
       offenceList.forEach((offenceRecord, recordIndex) => {
 
@@ -415,7 +415,7 @@ declare const pts: ptsGlobal;
           bylawLookupCloseModalFn = closeModalFn;
           populateBylawsFn();
 
-          const searchStringEle = <HTMLInputElement>document.getElementById("bylawLookup--searchStr");
+          const searchStringEle = document.getElementById("bylawLookup--searchStr") as HTMLInputElement;
 
           searchStringEle.focus();
           searchStringEle.addEventListener("keyup", filterBylawsFn);
@@ -439,7 +439,8 @@ declare const pts: ptsGlobal;
    */
 
   {
-    const licencePlateIsMissingCheckboxEle = <HTMLInputElement>document.getElementById("ticket--licencePlateIsMissing");
+    const licencePlateIsMissingCheckboxEle =
+      document.getElementById("ticket--licencePlateIsMissing") as HTMLInputElement;
 
     licencePlateIsMissingCheckboxEle.addEventListener("change", () => {
 
@@ -467,11 +468,11 @@ declare const pts: ptsGlobal;
     const datalistEle = document.getElementById("datalist--licencePlateProvince");
     cityssm.clearElement(datalistEle);
 
-    const countryString = (<HTMLInputElement>document.getElementById("ticket--licencePlateCountry")).value;
+    const countryString = (document.getElementById("ticket--licencePlateCountry") as HTMLInputElement).value;
 
     const countryProperties = pts.getLicencePlateCountryProperties(countryString);
 
-    if (countryProperties?.provinces) {
+    if (countryProperties ?.provinces) {
 
       const provincesList = Object.values(countryProperties.provinces);
 
@@ -498,11 +499,11 @@ declare const pts: ptsGlobal;
 
     unlockBtnClickEvent.preventDefault();
 
-    const unlockBtnEle = <HTMLButtonElement>unlockBtnClickEvent.currentTarget;
+    const unlockBtnEle = unlockBtnClickEvent.currentTarget as HTMLButtonElement;
 
     const inputTag = unlockBtnEle.getAttribute("data-unlock");
 
-    const readOnlyEle = <HTMLInputElement>unlockBtnEle.closest(".field").getElementsByTagName(inputTag)[0];
+    const readOnlyEle = unlockBtnEle.closest(".field").getElementsByTagName(inputTag)[0] as HTMLInputElement;
 
     readOnlyEle.removeAttribute("readonly");
     readOnlyEle.classList.remove("is-readonly");

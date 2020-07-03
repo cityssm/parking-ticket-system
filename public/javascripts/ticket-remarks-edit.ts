@@ -1,12 +1,12 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type * as ptsTypes from "../../helpers/ptsTypes";
+
+declare const cityssm: cityssmGlobal;
 
 
 (() => {
 
-  const ticketID = (<HTMLInputElement>document.getElementById("ticket--ticketID")).value;
+  const ticketID = (document.getElementById("ticket--ticketID") as HTMLInputElement).value;
 
   const remarkPanelEle = document.getElementById("is-remark-panel");
 
@@ -25,7 +25,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   const confirmDeleteRemarkFn = (clickEvent: Event) => {
 
-    const remarkIndex = (<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-remark-index");
+    const remarkIndex = (clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-remark-index");
 
     cityssm.confirmModal(
       "Delete Remark?",
@@ -55,7 +55,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     let editRemarkCloseModalFn: () => void;
 
-    const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
+    const index = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
 
     const remarkObj = remarkList[index];
 
@@ -79,11 +79,11 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       onshow(modalEle: HTMLElement): void {
 
-        (<HTMLInputElement>document.getElementById("editRemark--ticketID")).value = ticketID;
-        (<HTMLInputElement>document.getElementById("editRemark--remarkIndex")).value = remarkObj.remarkIndex.toString();
-        (<HTMLInputElement>document.getElementById("editRemark--remark")).value = remarkObj.remark;
-        (<HTMLInputElement>document.getElementById("editRemark--remarkDateString")).value = remarkObj.remarkDateString;
-        (<HTMLInputElement>document.getElementById("editRemark--remarkTimeString")).value = remarkObj.remarkTimeString;
+        (document.getElementById("editRemark--ticketID") as HTMLInputElement).value = ticketID;
+        (document.getElementById("editRemark--remarkIndex") as HTMLInputElement).value = remarkObj.remarkIndex.toString();
+        (document.getElementById("editRemark--remark") as HTMLInputElement).value = remarkObj.remark;
+        (document.getElementById("editRemark--remarkDateString") as HTMLInputElement).value = remarkObj.remarkDateString;
+        (document.getElementById("editRemark--remarkTimeString") as HTMLInputElement).value = remarkObj.remarkTimeString;
 
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
@@ -124,30 +124,31 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           cityssm.escapeHTML(remarkObj.remark) +
           "</p>" +
           "<p class=\"is-size-7\">" +
-          (remarkObj.recordCreate_timeMillis === remarkObj.recordUpdate_timeMillis ?
-            "" :
-            "<i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i> ") +
+          (remarkObj.recordCreate_timeMillis === remarkObj.recordUpdate_timeMillis
+            ? ""
+            : "<i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i> ") +
           remarkObj.recordUpdate_userName + " - " +
           remarkObj.remarkDateString + " " + remarkObj.remarkTimeString +
           "</p>" +
           "</div>") +
 
-        (remarkObj.canUpdate ?
-          "<div class=\"column is-narrow\">" +
+        (remarkObj.canUpdate
+          ? "<div class=\"column is-narrow\">" +
           "<div class=\"buttons is-right has-addons\">" +
           ("<button class=\"button is-small is-edit-remark-button\"" +
-            " data-tooltip=\"Edit Remark\" data-index=\"" + index + "\" type=\"button\">" +
+            " data-tooltip=\"Edit Remark\" data-index=\"" + index.toString() + "\" type=\"button\">" +
             "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
             " <span>Edit</span>" +
             "</button>") +
           ("<button class=\"button is-small has-text-danger is-delete-remark-button\"" +
-            " data-tooltip=\"Delete Remark\" data-remark-index=\"" + remarkObj.remarkIndex + "\" type=\"button\">" +
+            " data-tooltip=\"Delete Remark\"" +
+            " data-remark-index=\"" + remarkObj.remarkIndex.toString() + "\" type=\"button\">" +
             "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
             "<span class=\"sr-only\">Delete</span>" +
             "</button>") +
           "</div>" +
-          "</div>" :
-          "") +
+          "</div>"
+          : "") +
         "</div>";
 
       if (remarkObj.canUpdate) {
@@ -215,7 +216,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       onshow(modalEle: HTMLElement): void {
 
-        (<HTMLInputElement>document.getElementById("addRemark--ticketID")).value = ticketID;
+        (document.getElementById("addRemark--ticketID") as HTMLInputElement).value = ticketID;
         modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
 
       },

@@ -53,7 +53,7 @@ const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
 
       case "ticket":
 
-        if ((<pts.ParkingTicket>obj).resolvedDate) {
+        if ((obj as pts.ParkingTicket).resolvedDate) {
           canUpdate = false;
         }
         break;
@@ -403,7 +403,7 @@ export const getParkingTicketID = (ticketNumber: string) => {
   db.close();
 
   if (ticketRow) {
-    return <number>ticketRow.ticketID;
+    return ticketRow.ticketID as number;
   }
 
   return null;
@@ -445,8 +445,8 @@ export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    const licencePlateExpiryYear = parseInt(<string>reqBody.licencePlateExpiryYear, 10) || 0;
-    const licencePlateExpiryMonth = parseInt(<string>reqBody.licencePlateExpiryMonth, 10) || 0;
+    const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string, 10) || 0;
+    const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string, 10) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;
@@ -552,8 +552,8 @@ export const updateParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    const licencePlateExpiryYear = parseInt(<string>reqBody.licencePlateExpiryYear, 10) || 0;
-    const licencePlateExpiryMonth = parseInt(<string>reqBody.licencePlateExpiryMonth, 10) || 0;
+    const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string, 10) || 0;
+    const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string, 10) || 0;
 
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
       licencePlateExpiryDate = 0;
@@ -841,11 +841,11 @@ export const createParkingTicketRemark = (reqBody: pts.ParkingTicketRemark, reqS
 
   // Get new remark index
 
-  const remarkIndexNew = (<number>db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
+  const remarkIndexNew = (db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
     " from ParkingTicketRemarks" +
     " where ticketID = ?")
     .get(reqBody.ticketID)
-    .remarkIndexMax) + 1;
+    .remarkIndexMax as number) + 1;
 
   // Create the record
 
@@ -969,11 +969,11 @@ export const createParkingTicketStatus =
     // Get new status index
 
     const statusIndexNew =
-      (<number>db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
+      (db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
         " from ParkingTicketStatusLog" +
         " where ticketID = ?")
         .get(reqBodyOrObj.ticketID)
-        .statusIndexMax) + 1;
+        .statusIndexMax as number) + 1;
 
     // Create the record
 

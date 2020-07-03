@@ -1,10 +1,10 @@
-export declare type ptsGlobal = {
+export interface ptsGlobal {
     loadDefaultConfigProperties?: (callbackFn: () => void) => void;
     getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void;
     getLicencePlateCountryProperties?: (originalLicencePlateCountry: string) => {
-        provinces?: {
+        provinces?: Array<{
             provinceShortName: string;
-        }[];
+        }>;
     };
     getLicencePlateLocationProperties?: (originalLicencePlateCountry: string, originalLicencePlateProvince: string) => {
         licencePlateCountryAlias: string;
@@ -30,4 +30,4 @@ export declare type ptsGlobal = {
         onshown?: (tabContentEle: HTMLElement) => void;
     }) => void;
     initializeToggleHiddenLinks?: (containerEle: HTMLElement) => void;
-};
+}

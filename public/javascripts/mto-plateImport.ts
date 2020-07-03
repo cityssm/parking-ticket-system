@@ -9,7 +9,7 @@ declare const cityssm: cityssmGlobal;
     const fileNameEle = document.getElementById("mtoImport--importFileName");
     const messageEle = document.getElementById("mtoImport--importFileMessage");
 
-    const fileInputEle = <HTMLInputElement>fileChangeEvent.currentTarget;
+    const fileInputEle = fileChangeEvent.currentTarget as HTMLInputElement;
 
     if (fileInputEle.files.length > 0) {
 
@@ -54,7 +54,7 @@ declare const cityssm: cityssmGlobal;
     document.getElementById("step--update").classList.remove("is-hidden");
 
     cityssm.postJSON("/plates-ontario/doMTOImportUpload", formEle,
-      (responseJSON: { success: boolean, message?: string }) => {
+      (responseJSON: { success: boolean; message?: string }) => {
 
         updateStepItemEle.classList.add("is-completed");
         updateStepItemEle.classList.remove("is-active");

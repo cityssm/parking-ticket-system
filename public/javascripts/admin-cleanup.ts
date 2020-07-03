@@ -11,7 +11,7 @@ declare const cityssm: cityssmGlobal;
 
     clickEvent.preventDefault();
 
-    const buttonEle = (<HTMLButtonElement>clickEvent.currentTarget);
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
     buttonEle.setAttribute("disabled", "disabled");
 
     const table = buttonEle.getAttribute("data-table");
@@ -46,7 +46,7 @@ declare const cityssm: cityssmGlobal;
       purgeFn);
   };
 
-  const purgeButtonEles = <HTMLCollectionOf<HTMLButtonElement>>document.getElementsByClassName("is-purge-button");
+  const purgeButtonEles = document.getElementsByClassName("is-purge-button") as HTMLCollectionOf<HTMLButtonElement>;
 
   for (const purgeButtonEle of purgeButtonEles) {
     purgeButtonEle.addEventListener("click", purgeTableFn);

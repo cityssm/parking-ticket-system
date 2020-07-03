@@ -22,10 +22,10 @@ interface UpdateOffenceResponseJSON {
   delete exports.accountNumberPattern;
 
   const locationMap = new Map<string, ptsTypes.ParkingLocation>();
-  const limitResultsCheckboxEle = <HTMLInputElement>document.getElementById("offenceFilter--limitResults");
+  const limitResultsCheckboxEle = document.getElementById("offenceFilter--limitResults") as HTMLInputElement;
   const resultsEle = document.getElementById("offenceResults");
 
-  const locationInputEle = <HTMLInputElement>document.getElementById("offenceFilter--location");
+  const locationInputEle = document.getElementById("offenceFilter--location") as HTMLInputElement;
   const locationTextEle = document.getElementById("offenceFilter--locationText");
 
   let locationKeyFilterIsSet = false;
@@ -33,7 +33,7 @@ interface UpdateOffenceResponseJSON {
 
   const bylawMap = new Map<string, ptsTypes.ParkingBylaw>();
 
-  const bylawInputEle = <HTMLInputElement>document.getElementById("offenceFilter--bylaw");
+  const bylawInputEle = document.getElementById("offenceFilter--bylaw") as HTMLInputElement;
   const bylawTextEle = document.getElementById("offenceFilter--bylawText");
 
   let bylawNumberFilterIsSet = false;
@@ -61,7 +61,7 @@ interface UpdateOffenceResponseJSON {
 
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
 
     const offenceMapKey =
       getOffenceMapKeyFn(buttonEle.getAttribute("data-bylaw-number"), buttonEle.getAttribute("data-location-key"));
@@ -122,12 +122,12 @@ interface UpdateOffenceResponseJSON {
     cityssm.openHtmlModal("offence-edit", {
       onshow(): void {
 
-        (<HTMLInputElement>document.getElementById("offenceEdit--locationKey")).value = offence.locationKey;
-        (<HTMLInputElement>document.getElementById("offenceEdit--bylawNumber")).value = offence.bylawNumber;
+        (document.getElementById("offenceEdit--locationKey") as HTMLInputElement).value = offence.locationKey;
+        (document.getElementById("offenceEdit--bylawNumber") as HTMLInputElement).value = offence.bylawNumber;
 
-        (<HTMLSpanElement>document.getElementById("offenceEdit--locationName")).innerText = location.locationName;
+        (document.getElementById("offenceEdit--locationName") as HTMLSpanElement).innerText = location.locationName;
 
-        (<HTMLSpanElement>document.getElementById("offenceEdit--locationClass")).innerText =
+        (document.getElementById("offenceEdit--locationClass") as HTMLSpanElement).innerText =
           (locationClassMap.has(location.locationClassKey)
             ? locationClassMap.get(location.locationClassKey).locationClass
             : location.locationClassKey);
@@ -136,18 +136,18 @@ interface UpdateOffenceResponseJSON {
 
         document.getElementById("offenceEdit--bylawDescription").innerText = bylaw.bylawDescription;
 
-        (<HTMLInputElement>document.getElementById("offenceEdit--parkingOffence")).value = offence.parkingOffence;
+        (document.getElementById("offenceEdit--parkingOffence") as HTMLInputElement).value = offence.parkingOffence;
 
-        (<HTMLInputElement>document.getElementById("offenceEdit--offenceAmount")).value =
+        (document.getElementById("offenceEdit--offenceAmount") as HTMLInputElement).value =
           offence.offenceAmount.toFixed(2);
 
-        (<HTMLInputElement>document.getElementById("offenceEdit--discountOffenceAmount")).value =
+        (document.getElementById("offenceEdit--discountOffenceAmount") as HTMLInputElement).value =
           offence.discountOffenceAmount.toFixed(2);
 
-        (<HTMLInputElement>document.getElementById("offenceEdit--discountDays")).value =
+        (document.getElementById("offenceEdit--discountDays") as HTMLInputElement).value =
           offence.discountDays.toString();
 
-        const accountNumberEle = <HTMLInputElement>document.getElementById("offenceEdit--accountNumber");
+        const accountNumberEle = document.getElementById("offenceEdit--accountNumber") as HTMLInputElement;
         accountNumberEle.value = offence.accountNumber;
         accountNumberEle.setAttribute("pattern", offenceAccountNumberPatternString);
 
@@ -197,7 +197,7 @@ interface UpdateOffenceResponseJSON {
 
       clickEvent.preventDefault();
 
-      const linkEle = <HTMLAnchorElement>clickEvent.currentTarget;
+      const linkEle = clickEvent.currentTarget as HTMLAnchorElement;
 
       const bylawNumber = linkEle.getAttribute("data-bylaw-number");
       const locationKey = linkEle.getAttribute("data-location-key");
@@ -558,7 +558,7 @@ interface UpdateOffenceResponseJSON {
 
       clickEvent.preventDefault();
 
-      const location = locationMap.get((<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-location-key"));
+      const location = locationMap.get((clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-location-key"));
 
       locationKeyFilterIsSet = true;
       locationKeyFilter = location.locationKey;
@@ -651,7 +651,7 @@ interface UpdateOffenceResponseJSON {
 
       clickEvent.preventDefault();
 
-      const bylaw = bylawMap.get((<HTMLAnchorElement>clickEvent.currentTarget).getAttribute("data-bylaw-number"));
+      const bylaw = bylawMap.get((clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-bylaw-number"));
 
       bylawNumberFilterIsSet = true;
       bylawNumberFilter = bylaw.bylawNumber;

@@ -12,10 +12,10 @@ interface UpdateBylawResponseJSON {
 
 (() => {
 
-  const bylawFilterEle = <HTMLInputElement>document.getElementById("bylawFilter--bylaw");
+  const bylawFilterEle = document.getElementById("bylawFilter--bylaw") as HTMLInputElement;
   const bylawResultsEle = document.getElementById("bylawResults");
 
-  let bylawList = <ParkingBylaw[]>exports.bylaws;
+  let bylawList = exports.bylaws as ParkingBylaw[];
   delete exports.bylaws;
 
 
@@ -23,7 +23,7 @@ interface UpdateBylawResponseJSON {
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
+    const listIndex = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
     let updateOffencesCloseModalFn: () => void;
@@ -46,16 +46,16 @@ interface UpdateBylawResponseJSON {
     cityssm.openHtmlModal("bylaw-updateOffences", {
       onshow(): void {
 
-        (<HTMLInputElement>document.getElementById("updateOffences--bylawNumber")).value = bylaw.bylawNumber;
-        (<HTMLInputElement>document.getElementById("updateOffences--bylawDescription")).value = bylaw.bylawDescription;
+        (document.getElementById("updateOffences--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
+        (document.getElementById("updateOffences--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
 
-        (<HTMLInputElement>document.getElementById("updateOffences--offenceAmount")).value =
+        (document.getElementById("updateOffences--offenceAmount") as HTMLInputElement).value =
           bylaw.offenceAmountMin.toFixed(2);
 
-        (<HTMLInputElement>document.getElementById("updateOffences--discountDays")).value =
+        (document.getElementById("updateOffences--discountDays") as HTMLInputElement).value =
           bylaw.discountDaysMin.toString();
 
-        (<HTMLInputElement>document.getElementById("updateOffences--discountOffenceAmount")).value =
+        (document.getElementById("updateOffences--discountOffenceAmount") as HTMLInputElement).value =
           bylaw.discountOffenceAmountMin.toFixed(2);
 
       },
@@ -72,7 +72,7 @@ interface UpdateBylawResponseJSON {
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
+    const listIndex = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
     let editBylawCloseModalFn: () => void;
@@ -127,8 +127,8 @@ interface UpdateBylawResponseJSON {
     cityssm.openHtmlModal("bylaw-edit", {
       onshow(): void {
 
-        (<HTMLInputElement>document.getElementById("editBylaw--bylawNumber")).value = bylaw.bylawNumber;
-        (<HTMLInputElement>document.getElementById("editBylaw--bylawDescription")).value = bylaw.bylawDescription;
+        (document.getElementById("editBylaw--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
+        (document.getElementById("editBylaw--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
 
       },
       onshown(modalEle: HTMLElement, closeModalFn: () => void): void {

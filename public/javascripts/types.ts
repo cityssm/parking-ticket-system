@@ -1,39 +1,38 @@
-export type ptsGlobal = {
+export interface ptsGlobal {
 
-  loadDefaultConfigProperties?: (callbackFn: () => void) => void,
+  loadDefaultConfigProperties?: (callbackFn: () => void) => void;
 
-  // tslint:disable-next-line:no-any
-  getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void
+  getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void;
 
   getLicencePlateCountryProperties?: (originalLicencePlateCountry: string) => {
-    provinces?: { provinceShortName: string }[]
-  },
+    provinces?: Array<{ provinceShortName: string }>;
+  };
 
   getLicencePlateLocationProperties?: (originalLicencePlateCountry: string, originalLicencePlateProvince: string) => {
-    licencePlateCountryAlias: string,
-    licencePlateProvinceAlias: string,
+    licencePlateCountryAlias: string;
+    licencePlateProvinceAlias: string;
     licencePlateProvince: {
-      provinceShortName: string,
-      color: string,
-      backgroundColor: string
-    }
-  }
+      provinceShortName: string;
+      color: string;
+      backgroundColor: string;
+    };
+  };
 
   getTicketStatus?: (statusKey: string) => {
-    statusKey: string,
-    status: string,
+    statusKey: string;
+    status: string;
     statusField: {
-      fieldLabel: string
-    },
+      fieldLabel: string;
+    };
     statusField2?: {
-      fieldLabel: string
-    },
-    isFinalStatus: boolean
-  },
+      fieldLabel: string;
+    };
+    isFinalStatus: boolean;
+  };
 
   initializeTabs?: (tabsListEle: HTMLElement, callbackFns?: {
-    onshown?: (tabContentEle: HTMLElement) => void
-  }) => void,
+    onshown?: (tabContentEle: HTMLElement) => void;
+  }) => void;
 
-  initializeToggleHiddenLinks?: (containerEle: HTMLElement) => void
-};
+  initializeToggleHiddenLinks?: (containerEle: HTMLElement) => void;
+}

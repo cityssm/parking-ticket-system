@@ -6,6 +6,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 declare const cityssm: cityssmGlobal;
 const pts: ptsGlobal = {};
 
+
 // CONFIG DEFAULTS
 
 (() => {
@@ -108,7 +109,7 @@ const pts: ptsGlobal = {};
 
     const licencePlateCountryAlias =
       defaultConfigProperties.licencePlateCountryAliases[
-        originalLicencePlateCountry.toUpperCase()
+      originalLicencePlateCountry.toUpperCase()
       ] || originalLicencePlateCountry;
 
     if (
@@ -146,7 +147,7 @@ const pts: ptsGlobal = {};
 
     const licencePlateCountryAlias =
       defaultConfigProperties.licencePlateCountryAliases[
-        originalLicencePlateCountry.toUpperCase()
+      originalLicencePlateCountry.toUpperCase()
       ] || originalLicencePlateCountry;
 
     // Get the province alias
@@ -160,7 +161,7 @@ const pts: ptsGlobal = {};
     ) {
       const provinceAliases =
         defaultConfigProperties.licencePlateProvinceAliases[
-          licencePlateCountryAlias
+        licencePlateCountryAlias
         ];
 
       licencePlateProvinceAlias =
@@ -239,7 +240,7 @@ pts.initializeTabs = (tabsListEle, callbackFns) => {
   const tabClickFn = (clickEvent: Event) => {
     clickEvent.preventDefault();
 
-    const tabLinkEle = <HTMLAnchorElement>clickEvent.currentTarget;
+    const tabLinkEle = clickEvent.currentTarget as HTMLAnchorElement;
     const tabContentEle = document.getElementById(
       tabLinkEle.getAttribute("href").substring(1)
     );
@@ -266,7 +267,7 @@ pts.initializeTabs = (tabsListEle, callbackFns) => {
 
     tabContentEle.classList.add("is-active");
 
-    if (callbackFns?.onshown) {
+    if (callbackFns ?.onshown) {
       callbackFns.onshown(tabContentEle);
     }
   };
@@ -285,7 +286,7 @@ pts.initializeTabs = (tabsListEle, callbackFns) => {
   const toggleHiddenFn = (clickEvent: Event) => {
     clickEvent.preventDefault();
 
-    const href = (<HTMLAnchorElement>clickEvent.currentTarget).href;
+    const href = (clickEvent.currentTarget as HTMLAnchorElement).href;
     const divID = href.substring(href.indexOf("#") + 1);
 
     document.getElementById(divID).classList.toggle("is-hidden");

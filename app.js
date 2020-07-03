@@ -120,7 +120,7 @@ app.get("/logout", (req, res) => {
 app.use((_req, _res, next) => {
     next(createError(404));
 });
-app.use((err, req, res, _next) => {
+app.use((err, req, res) => {
     res.locals.message = err.message;
     res.locals.error = req.app.get("env") === "development" ? err : {};
     res.status(err.status || 500);

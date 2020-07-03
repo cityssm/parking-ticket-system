@@ -1,7 +1,7 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
+
+declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
 
 
@@ -15,7 +15,7 @@ declare const pts: ptsGlobal;
 
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
     buttonEle.setAttribute("disabled", "disabled");
 
     const batchID = buttonEle.getAttribute("data-batch-id");
@@ -56,7 +56,7 @@ declare const pts: ptsGlobal;
 
     clickEvent.preventDefault();
 
-    const anchorEle = <HTMLAnchorElement>clickEvent.currentTarget;
+    const anchorEle = clickEvent.currentTarget as HTMLAnchorElement;
 
     const optionsTdEle = anchorEle.closest("td");
     const trEle = optionsTdEle.closest("tr");
@@ -111,7 +111,7 @@ declare const pts: ptsGlobal;
 
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
 
     const optionsTdEle = buttonEle.closest("td");
     const trEle = optionsTdEle.closest("tr");
@@ -134,7 +134,7 @@ declare const pts: ptsGlobal;
         ticketID,
         recordDate
       },
-        (responseJSON: { success: boolean, message?: string, statusIndex?: number }) => {
+        (responseJSON: { success: boolean; message?: string; statusIndex?: number }) => {
 
           if (responseJSON.success) {
 
@@ -147,7 +147,7 @@ declare const pts: ptsGlobal;
                 "<span>Match</span>" +
                 "</span>") +
               "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
-              " data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+              " data-status-index=\"" + responseJSON.statusIndex.toString() + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
               "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
               "<span class=\"sr-only\">Remove Match</span>" +
               "</a>" +
@@ -191,9 +191,9 @@ declare const pts: ptsGlobal;
           "<strong>Parking Ticket</strong><br />" +
           "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +
           "<span class=\"is-size-5\">" +
-          (ticketExpiryDate === "" ?
-            "(Not Set)" :
-            cityssm.escapeHTML(ticketExpiryDate)
+          (ticketExpiryDate === ""
+            ? "(Not Set)"
+            : cityssm.escapeHTML(ticketExpiryDate)
           ) +
           "</span>" +
           "</div>") +
@@ -214,7 +214,7 @@ declare const pts: ptsGlobal;
 
     clickEvent.preventDefault();
 
-    const buttonEle = <HTMLButtonElement>clickEvent.currentTarget;
+    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
 
     const optionsTdEle = buttonEle.closest("td");
     const trEle = optionsTdEle.closest("tr");
@@ -237,7 +237,7 @@ declare const pts: ptsGlobal;
         ticketID,
         recordDate
       },
-        (responseJSON: { success: boolean, message?: string, statusIndex?: number }) => {
+        (responseJSON: { success: boolean; message?: string; statusIndex?: number }) => {
 
           if (responseJSON.success) {
 
@@ -250,7 +250,8 @@ declare const pts: ptsGlobal;
                 "<span>Match Error</span>" +
                 "</span>") +
               "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
-              " data-status-index=\"" + responseJSON.statusIndex + "\" data-tooltip=\"Remove Match\" href=\"#\">" +
+              " data-status-index=\"" + responseJSON.statusIndex.toString() + "\"" +
+              " data-tooltip=\"Remove Match\" href=\"#\">" +
               "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
               "<span class=\"sr-only\">Remove Match</span>" +
               "</a>" +
@@ -291,9 +292,9 @@ declare const pts: ptsGlobal;
           "<strong>Parking Ticket</strong><br />" +
           "<span class=\"is-size-4\">" + cityssm.escapeHTML(ticketVehicle) + "</span><br />" +
           "<span class=\"is-size-5\">" +
-          (ticketExpiryDate === "" ?
-            "(Not Set)" :
-            cityssm.escapeHTML(ticketExpiryDate)
+          (ticketExpiryDate === ""
+            ? "(Not Set)"
+            : cityssm.escapeHTML(ticketExpiryDate)
           ) +
           "</span>" +
           "</div>") +
@@ -339,11 +340,11 @@ declare const pts: ptsGlobal;
 
         cityssm.postJSON("/tickets/doQuickReconcileMatches", {},
           (responseJSON: {
-            success: boolean,
-            statusRecords: {
-              ticketID: number,
-              statusIndex: number
-            }[]
+            success: boolean;
+            statusRecords: Array<{
+              ticketID: number;
+              statusIndex: number;
+            }>;
           }) => {
 
             loadingCloseModalFn();
@@ -352,16 +353,16 @@ declare const pts: ptsGlobal;
 
               cityssm.alertModal(
                 "Quick Reconcile Complete",
-                (responseJSON.statusRecords.length === 1 ?
-                  "One record was successfully reconciled as a match." :
-                  responseJSON.statusRecords.length + " records were successfully reconciled as matches."),
+                (responseJSON.statusRecords.length === 1
+                  ? "One record was successfully reconciled as a match."
+                  : responseJSON.statusRecords.length.toString() + " records were successfully reconciled as matches."),
                 "OK",
                 "success"
               );
 
               for (const statusRecord of responseJSON.statusRecords) {
 
-                const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID);
+                const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID.toString());
 
                 if (optionsTdEle) {
 
@@ -374,7 +375,7 @@ declare const pts: ptsGlobal;
                       "<span>Match</span>" +
                       "</span>") +
                     "<a class=\"tag\" data-tooltip=\"Remove Match\"" +
-                    " data-status-index=\"" + statusRecord.statusIndex + "\"" +
+                    " data-status-index=\"" + statusRecord.statusIndex.toString() + "\"" +
                     " data-tooltip=\"Remove Match\" href=\"#\">" +
                     "<i class=\"far fa-trash-alt\" aria-hidden=\"true\"></i>" +
                     "<span class=\"sr-only\">Remove Match</span>" +

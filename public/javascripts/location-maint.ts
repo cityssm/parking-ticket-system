@@ -16,20 +16,20 @@ interface UpdateLocationResponseJSON {
 
   let locationClassKeyOptionsHTML = "";
 
-  const locationClassKeyFilterEle = <HTMLSelectElement>document.getElementById("locationFilter--locationClassKey");
-  const locationNameFilterEle = <HTMLInputElement>document.getElementById("locationFilter--locationName");
+  const locationClassKeyFilterEle = document.getElementById("locationFilter--locationClassKey") as HTMLSelectElement;
+  const locationNameFilterEle = document.getElementById("locationFilter--locationName") as HTMLInputElement;
   const locationResultsEle = document.getElementById("locationResults");
 
   const locationClassKeyMap = new Map();
 
-  let locationList = <ptsTypes.ParkingLocation[]>exports.locations;
+  let locationList = exports.locations as ptsTypes.ParkingLocation[];
   delete exports.locations;
 
   const openEditLocationModalFn = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
+    const listIndex = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
     const location = locationList[listIndex];
 
     let editLocationCloseModalFn: () => void;
@@ -83,10 +83,10 @@ interface UpdateLocationResponseJSON {
     cityssm.openHtmlModal("location-edit", {
       onshow(): void {
 
-        (<HTMLInputElement>document.getElementById("editLocation--locationKey")).value = location.locationKey;
+        (document.getElementById("editLocation--locationKey") as HTMLInputElement).value = location.locationKey;
 
         const locationClassKeyEditSelectEle =
-          <HTMLSelectElement>document.getElementById("editLocation--locationClassKey");
+          document.getElementById("editLocation--locationClassKey") as HTMLSelectElement;
 
         locationClassKeyEditSelectEle.innerHTML = locationClassKeyOptionsHTML;
 
@@ -103,7 +103,7 @@ interface UpdateLocationResponseJSON {
 
         locationClassKeyEditSelectEle.value = location.locationClassKey;
 
-        (<HTMLInputElement>document.getElementById("editLocation--locationName")).value = location.locationName;
+        (document.getElementById("editLocation--locationName") as HTMLInputElement).value = location.locationName;
 
       },
       onshown(modalEle: HTMLElement, closeModalFn: () => void): void {

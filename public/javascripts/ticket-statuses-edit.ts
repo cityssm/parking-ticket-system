@@ -1,19 +1,18 @@
 import type { cityssmGlobal } from "../../node_modules/@cityssm/bulma-webapp-js/src/types";
-declare const cityssm: cityssmGlobal;
-
 import type { ptsGlobal } from "./types";
-declare const pts: ptsGlobal;
-
 import type * as ptsTypes from "../../helpers/ptsTypes";
+
+declare const cityssm: cityssmGlobal;
+declare const pts: ptsGlobal;
 
 
 (() => {
 
-  const ticketID = (<HTMLInputElement>document.getElementById("ticket--ticketID")).value;
+  const ticketID = (document.getElementById("ticket--ticketID") as HTMLInputElement).value;
 
   const statusPanelEle = document.getElementById("is-status-panel");
 
-  let statusList = exports.ticketStatusLog;
+  let statusList = exports.ticketStatusLog as ptsTypes.ParkingTicketStatusLog[];
   delete exports.ticketStatusLog;
 
   const clearStatusPanelFn = () => {
@@ -55,7 +54,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
   const confirmDeleteStatusFn = (clickEvent: Event) => {
 
-    const statusIndex = (<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-status-index");
+    const statusIndex = (clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-status-index");
 
     cityssm.confirmModal(
       "Delete Remark?",
@@ -85,7 +84,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     let editStatusCloseModalFn: () => void;
 
-    const index = parseInt((<HTMLButtonElement>clickEvent.currentTarget).getAttribute("data-index"), 10);
+    const index = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
 
     const statusObj = statusList[index];
 
@@ -105,12 +104,12 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     const statusKeyChangeFn = (changeEvent: Event) => {
 
-      const statusKeyObj = pts.getTicketStatus((<HTMLSelectElement>changeEvent.currentTarget).value);
+      const statusKeyObj = pts.getTicketStatus((changeEvent.currentTarget as HTMLSelectElement).value);
 
-      const statusFieldEle = <HTMLInputElement>document.getElementById("editStatus--statusField");
+      const statusFieldEle = document.getElementById("editStatus--statusField") as HTMLInputElement;
       statusFieldEle.value = "";
 
-      if (statusKeyObj && statusKeyObj.statusField) {
+      if (statusKeyObj?.statusField) {
 
         const fieldEle = statusFieldEle.closest(".field");
         fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
@@ -121,10 +120,10 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         statusFieldEle.closest(".field").classList.add("is-hidden");
       }
 
-      const statusField2Ele = <HTMLInputElement>document.getElementById("editStatus--statusField2");
+      const statusField2Ele = document.getElementById("editStatus--statusField2") as HTMLInputElement;
       statusField2Ele.value = "";
 
-      if (statusKeyObj && statusKeyObj.statusField2) {
+      if (statusKeyObj ?.statusField2) {
 
         const fieldEle = statusField2Ele.closest(".field");
         fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
@@ -140,25 +139,28 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       onshow(modalEle: HTMLElement): void {
 
-        (<HTMLInputElement>document.getElementById("editStatus--ticketID")).value = ticketID;
-        (<HTMLInputElement>document.getElementById("editStatus--statusIndex")).value = statusObj.statusIndex;
+        (document.getElementById("editStatus--ticketID") as HTMLInputElement).value = ticketID;
 
-        (<HTMLInputElement>document.getElementById("editStatus--statusField")).value = statusObj.statusField;
-        (<HTMLInputElement>document.getElementById("editStatus--statusField2")).value = statusObj.statusField2;
-        (<HTMLTextAreaElement>document.getElementById("editStatus--statusNote")).value = statusObj.statusNote;
+        (document.getElementById("editStatus--statusIndex") as HTMLInputElement).value =
+          statusObj.statusIndex.toString();
 
-        const statusDateEle = <HTMLInputElement>document.getElementById("editStatus--statusDateString");
+        (document.getElementById("editStatus--statusField") as HTMLInputElement).value = statusObj.statusField;
+        (document.getElementById("editStatus--statusField2") as HTMLInputElement).value = statusObj.statusField2;
+        (document.getElementById("editStatus--statusNote") as HTMLTextAreaElement).value = statusObj.statusNote;
+
+        const statusDateEle = document.getElementById("editStatus--statusDateString") as HTMLInputElement;
         statusDateEle.value = statusObj.statusDateString;
         statusDateEle.setAttribute("max", cityssm.dateToString(new Date()));
 
-        (<HTMLInputElement>document.getElementById("editStatus--statusTimeString")).value = statusObj.statusTimeString;
+        (document.getElementById("editStatus--statusTimeString") as HTMLInputElement).value =
+          statusObj.statusTimeString;
 
         pts.getDefaultConfigProperty("parkingTicketStatuses",
           (parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) => {
 
             let statusKeyFound = false;
 
-            const statusKeyEle = <HTMLSelectElement>document.getElementById("editStatus--statusKey");
+            const statusKeyEle = document.getElementById("editStatus--statusKey") as HTMLSelectElement;
 
             for (const statusKeyObj of parkingTicketStatuses) {
 
@@ -250,24 +252,24 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
             "<div class=\"level-right\">" + statusObj.statusDateString + "</div>" +
             "</div>") +
 
-          (!statusObj.statusField || statusObj.statusField === "" ?
-            "" :
-            "<p class=\"is-size-7\">" +
+          (!statusObj.statusField || statusObj.statusField === ""
+            ? ""
+            : "<p class=\"is-size-7\">" +
             "<strong>" +
-            (statusDefinitionObj && statusDefinitionObj.statusField ?
-              statusDefinitionObj.statusField.fieldLabel :
-              "") +
+            (statusDefinitionObj ?.statusField
+              ? statusDefinitionObj.statusField.fieldLabel
+              : "") +
             ":</strong> " +
             statusObj.statusField +
             "</p>") +
 
-          (!statusObj.statusField2 || statusObj.statusField2 === "" ?
-            "" :
-            "<p class=\"is-size-7\">" +
+          (!statusObj.statusField2 || statusObj.statusField2 === ""
+            ? ""
+            : "<p class=\"is-size-7\">" +
             "<strong>" +
-            (statusDefinitionObj && statusDefinitionObj.statusField2 ?
-              statusDefinitionObj.statusField2.fieldLabel :
-              "") +
+            (statusDefinitionObj ?.statusField2
+              ? statusDefinitionObj.statusField2.fieldLabel
+              : "") +
             ":</strong> " +
             statusObj.statusField2 +
             "</p>") +
@@ -298,7 +300,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
           " <span>Edit</span>" +
           "</button>") +
         ("<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\"" +
-          " data-status-index=\"" + firstStatusObj.statusIndex + "\" type=\"button\">" +
+          " data-status-index=\"" + firstStatusObj.statusIndex.toString() + "\" type=\"button\">" +
           "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
           "<span class=\"sr-only\">Delete</span>" +
           "</button>") +
@@ -317,7 +319,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     const firstStatusDefinitionObj = pts.getTicketStatus(firstStatusObj.statusKey);
 
-    if (firstStatusDefinitionObj && firstStatusDefinitionObj.isFinalStatus) {
+    if (firstStatusDefinitionObj ?.isFinalStatus) {
 
       const finalizePanelBlockEle = document.createElement("div");
       finalizePanelBlockEle.className = "panel-block is-block";
@@ -386,7 +388,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       formEvent.preventDefault();
 
-      const resolveTicket = (<HTMLInputElement>document.getElementById("addStatus--resolveTicket")).checked;
+      const resolveTicket = (document.getElementById("addStatus--resolveTicket") as HTMLInputElement).checked;
 
       cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget,
         (responseJSON: { success: boolean }) => {
@@ -409,12 +411,12 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
     const statusKeyChangeFn = (changeEvent: Event) => {
 
-      const statusObj = pts.getTicketStatus((<HTMLInputElement>changeEvent.currentTarget).value);
+      const statusObj = pts.getTicketStatus((changeEvent.currentTarget as HTMLInputElement).value);
 
-      const statusFieldEle = <HTMLInputElement>document.getElementById("addStatus--statusField");
+      const statusFieldEle = document.getElementById("addStatus--statusField") as HTMLInputElement;
       statusFieldEle.value = "";
 
-      if (statusObj && statusObj.statusField) {
+      if (statusObj ?.statusField) {
 
         const fieldEle = statusFieldEle.closest(".field");
         fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField.fieldLabel;
@@ -426,10 +428,10 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       }
 
-      const statusField2Ele = <HTMLInputElement>document.getElementById("addStatus--statusField2");
+      const statusField2Ele = document.getElementById("addStatus--statusField2") as HTMLInputElement;
       statusField2Ele.value = "";
 
-      if (statusObj && statusObj.statusField2) {
+      if (statusObj ?.statusField2) {
 
         const fieldEle = statusField2Ele.closest(".field");
         fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField2.fieldLabel;
@@ -439,10 +441,10 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
         statusField2Ele.closest(".field").classList.add("is-hidden");
       }
 
-      const resolveTicketEle = <HTMLInputElement>document.getElementById("addStatus--resolveTicket");
+      const resolveTicketEle = document.getElementById("addStatus--resolveTicket") as HTMLInputElement;
       resolveTicketEle.checked = false;
 
-      if (statusObj && statusObj.isFinalStatus) {
+      if (statusObj ?.isFinalStatus) {
 
         resolveTicketEle.closest(".field").classList.remove("is-hidden");
 
@@ -455,7 +457,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       onshow(modalEle: HTMLElement): void {
 
-        (<HTMLInputElement>document.getElementById("addStatus--ticketID")).value = ticketID;
+        (document.getElementById("addStatus--ticketID") as HTMLInputElement).value = ticketID;
 
         pts.getDefaultConfigProperty("parkingTicketStatuses",
           (parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) => {
@@ -495,7 +497,7 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       formEvent.preventDefault();
 
-      const resolveTicket = (<HTMLInputElement>document.getElementById("addPaidStatus--resolveTicket")).checked;
+      const resolveTicket = (document.getElementById("addPaidStatus--resolveTicket") as HTMLInputElement).checked;
 
       cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget,
         (responseJSON: { success: boolean }) => {
@@ -518,17 +520,17 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
       onshow(modalEle: HTMLElement): void {
 
-        (<HTMLInputElement>document.getElementById("addPaidStatus--ticketID")).value = ticketID;
+        (document.getElementById("addPaidStatus--ticketID") as HTMLInputElement).value = ticketID;
 
         // Set amount
 
-        const statusFieldEle = <HTMLInputElement>document.getElementById("addPaidStatus--statusField");
+        const statusFieldEle = document.getElementById("addPaidStatus--statusField") as HTMLInputElement;
 
-        const offenceAmount = (<HTMLInputElement>document.getElementById("ticket--offenceAmount")).value;
+        const offenceAmount = (document.getElementById("ticket--offenceAmount") as HTMLInputElement).value;
 
-        const issueDateString = (<HTMLInputElement>document.getElementById("ticket--issueDateString")).value;
+        const issueDateString = (document.getElementById("ticket--issueDateString") as HTMLInputElement).value;
 
-        const discountDays = (<HTMLInputElement>document.getElementById("ticket--discountDays")).value;
+        const discountDays = (document.getElementById("ticket--discountDays") as HTMLInputElement).value;
 
         if (issueDateString === "" || discountDays === "") {
           statusFieldEle.value = offenceAmount;
@@ -541,7 +543,8 @@ import type * as ptsTypes from "../../helpers/ptsTypes";
 
           if (dateDifference <= parseInt(discountDays, 10)) {
 
-            statusFieldEle.value = (<HTMLInputElement>document.getElementById("ticket--discountOffenceAmount")).value;
+            statusFieldEle.value =
+              (document.getElementById("ticket--discountOffenceAmount") as HTMLInputElement).value;
 
           } else {
             statusFieldEle.value = offenceAmount;
