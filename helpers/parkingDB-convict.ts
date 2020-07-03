@@ -204,13 +204,13 @@ export const addParkingTicketToConvictionBatch = (
 
   // Get the next status index
 
-  let newStatusIndex = <number>db
+  let newStatusIndex = db
     .prepare(
       "select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
       " from ParkingTicketStatusLog" +
       " where ticketID = ?"
     )
-    .get(ticketID).newStatusIndex;
+    .get(ticketID).newStatusIndex as number;
 
   // Prepare for inserts
 
@@ -365,13 +365,13 @@ export const addAllParkingTicketsToConvictionBatch = (
   for (const ticketID of ticketIDs) {
     // Get the next status index
 
-    let newStatusIndex = <number>db
+    let newStatusIndex = db
       .prepare(
         "select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
         " from ParkingTicketStatusLog" +
         " where ticketID = ?"
       )
-      .get(ticketID).newStatusIndex;
+      .get(ticketID).newStatusIndex as number;
 
     // Check if the ticket has been convicted or not
 

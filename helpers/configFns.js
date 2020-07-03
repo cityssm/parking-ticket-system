@@ -21,6 +21,8 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
     isAdmin: false,
     isOperator: false
 }));
+configFallbackValues.set("defaults.country", "");
+configFallbackValues.set("defaults.province", "");
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
 configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);
 configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);

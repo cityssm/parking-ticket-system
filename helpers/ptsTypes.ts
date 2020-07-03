@@ -351,7 +351,7 @@ export interface User {
 }
 
 export interface UserProperties {
-  isDefaultAdmin: boolean;
+  isDefaultAdmin?: boolean;
   canCreate: boolean;
   canUpdate: boolean;
   isAdmin: boolean;

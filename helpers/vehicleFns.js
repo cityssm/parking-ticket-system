@@ -84,7 +84,7 @@ exports.getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
             }
             queryCloseCallbackFn();
         })
-            .catch((_err) => {
+            .catch(() => {
             queryCloseCallbackFn();
         });
     }

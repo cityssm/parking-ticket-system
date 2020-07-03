@@ -38,6 +38,9 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
   isOperator: false
 }));
 
+configFallbackValues.set("defaults.country", "");
+configFallbackValues.set("defaults.province", "");
+
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
 configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);
 configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);
@@ -122,7 +125,7 @@ export function getProperty(propertyName: "application.applicationName"): string
 export function getProperty(propertyName: "application.logoURL"): string;
 export function getProperty(propertyName: "application.httpPort"): number;
 
-export function getProperty(propertyName: "application.https"): pts.ConfigHttpsConfig;
+export function getProperty(propertyName: "application.https"): pts.ConfigHttpsConfig | null;
 
 export function getProperty(propertyName: "databaseCleanup.windowDays"): number;
 

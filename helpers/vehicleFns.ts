@@ -143,7 +143,7 @@ export const getModelsByMake =
           queryCloseCallbackFn();
           // return;
         })
-        .catch((_err) => {
+        .catch(() => {
 
           queryCloseCallbackFn();
           // return;
