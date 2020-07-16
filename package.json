@@ -26,7 +26,7 @@
     "typeface-pt-mono": "0.0.72"
   },
   "devDependencies": {
-    "@cityssm/bulma-webapp-css": "^0.3.0",
+    "@cityssm/bulma-webapp-css": "^0.4.1",
     "@types/bcrypt": "^3.0.0",
     "@types/better-sqlite3": "^5.4.0",
     "@types/compression": "^1.7.0",
