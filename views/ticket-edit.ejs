@@ -30,8 +30,10 @@
         <div class="panel-block is-block">
           <div class="columns is-multiline is-desktop">
             <div class="column is-6-widescreen is-12-desktop">
-              <label class="label" for="ticket--ticketNumber"><%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %></label>
-              <div class="field has-addons">
+              <label class="label" for="ticket--ticketNumber">
+                <%= configFns.getProperty("parkingTickets.ticketNumber.fieldLabel") %>
+              </label>
+              <div class="field <%= (isCreate ? "" : "has-addons") %>">
                 <div class="control is-expanded">
                   <input
                     class="input <%= (isCreate ? "" : "is-readonly") %>"
@@ -43,18 +45,19 @@
                     <%= (isCreate ? "" : "readonly") %>
                     required />
                 </div>
-                <div class="control">
-                  <button class="button is-unlock-field-button"
-                    data-unlock="input" data-tooltip="Unlock Ticket Number Field"
-                    type="button"
-                    <%= (isCreate ? "disabled" : "") %>>
-                    <span class="sr-only">Unlock Field</span>
-                    <i class="fas fa-unlock" aria-hidden="false"></i>
-                  </button>
-                </div>
+                <% if (!isCreate) { %>
+                  <div class="control">
+                    <button class="button is-unlock-field-button"
+                      data-unlock="input" data-tooltip="Unlock Ticket Number Field"
+                      type="button">
+                      <span class="sr-only">Unlock Field</span>
+                      <i class="fas fa-unlock" aria-hidden="false"></i>
+                    </button>
+                  </div>
+                <% } %>
               </div>
 
-              <div class="columns">
+              <div class="columns is-variable">
                 <div class="column">
                   <div class="field">
                     <label class="label" for="ticket--issueDateString">Issue Date</label>
@@ -106,7 +109,7 @@
           <div class="columns">
             <div class="column">
 
-              <label class="label" for="ticket--bylawNumber">By-law Number</label>
+              <label class="label" for="ticket--bylawNumber">By-Law Number</label>
               <div class="field has-addons">
                 <div class="control is-expanded">
                   <input class="input is-readonly" id="ticket--bylawNumber" name="bylawNumber" type="text" value="<%= ticket.bylawNumber %>" maxlength="20" readonly required />
