@@ -8,23 +8,25 @@ import { getAllUsers } from "../helpers/usersDB";
 import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
 
 
+export const fakeSession = {
+  id: "",
+  cookie: null,
+  destroy: null,
+  regenerate: null,
+  reload: null,
+  save: null,
+  touch: null,
+  user: {
+    userProperties: { canUpdate: false }
+  }
+};
+
+
 describe("parking-ticket-system", () => {
 
   const httpServer = http.createServer(app);
   const portNumber = 54333;
 
-  const fakeSession = {
-    id: "",
-    cookie: null,
-    destroy: null,
-    regenerate: null,
-    reload: null,
-    save: null,
-    touch: null,
-    user: {
-      userProperties: { canUpdate: false }
-    }
-  };
 
   let serverStarted = false;
 
@@ -35,7 +37,6 @@ describe("parking-ticket-system", () => {
     httpServer.on("listening", () => {
       serverStarted = true;
       httpServer.close();
-
     });
   });
 
@@ -54,5 +55,4 @@ describe("parking-ticket-system", () => {
   it("Ensure nhtsa.db exists", () => {
     assert.ok(getModelsByMakeFromCache(""));
   });
-
 });
