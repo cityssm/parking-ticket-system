@@ -1,6 +1,7 @@
 # Parking Ticket System
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/3428568fcab54a1285b8e139e4fd9f41)](https://www.codacy.com/gh/cityssm/parking-ticket-system?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cityssm/parking-ticket-system&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.com/cityssm/parking-ticket-system.svg?branch=master)](https://travis-ci.com/cityssm/parking-ticket-system)
 
 ![Parking Ticket Search](docs/images/ticket-search.png)
 
