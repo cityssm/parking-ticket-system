@@ -1,7 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLicencePlateLocationProperties = exports.getParkingTicketStatus = exports.keepAliveMillis = exports.getProperty = void 0;
-const config = require("../data/config");
+const log = require("fancy-log");
+let config = require("../data/config");
+if (!config) {
+    log.warn("Using data/config-default.js");
+    config = require("../data/config-default");
+}
 const configFallbackValues = new Map();
 configFallbackValues.set("application.applicationName", "Parking Ticket System");
 configFallbackValues.set("application.logoURL", "/images/noParking.svg");

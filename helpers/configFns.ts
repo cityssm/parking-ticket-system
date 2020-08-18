@@ -1,10 +1,18 @@
+import * as log from "fancy-log";
+
 import type * as pts from "../helpers/ptsTypes";
 
 /*
  * LOAD CONFIGURATION
  */
 
-import * as config from "../data/config";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+let config = require("../data/config");
+
+if (!config) {
+  log.warn("Using data/config-default.js");
+  config = require("../data/config-default");
+}
 
 
 /*

@@ -1,253 +1,255 @@
 <%- include('_header'); -%>
 
-<div class="level">
-  <div class="level-left has-flex-shrink-1">
-    <h1 class="title is-1">
-      <%= configFns.getProperty("application.applicationName") %>
-    </h1>
+<div id="is-site-layout">
+  <div class="level">
+    <div class="level-left has-flex-shrink-1">
+      <h1 class="title is-1">
+        <%= configFns.getProperty("application.applicationName") %>
+      </h1>
+    </div>
+    <% if (!user.userProperties.isDefaultAdmin) { %>
+      <div class="level-right has-text-right">
+        <button class="button is-change-password-button" type="button">
+          <span class="icon"><i class="fas fa-key" aria-hidden="true"></i></span>
+          <span>Change Password</span>
+        </button>
+      </div>
+    <% } %>
   </div>
-  <% if (!user.userProperties.isDefaultAdmin) { %>
-    <div class="level-right has-text-right">
-      <button class="button is-change-password-button" type="button">
-        <span class="icon"><i class="fas fa-key" aria-hidden="true"></i></span>
-        <span>Change Password</span>
-      </button>
+
+  <% if (user.userProperties.isDefaultAdmin) { %>
+    <div class="message is-danger">
+      <p class="message-body">
+        <strong>You are currently logged into the admin user account using credentials in your config.js file.</strong><br />
+        It is highly recommended that you create a proper admin user under <a href="/admin/userManagement">User Management</a>.
+      </p>
+    </div>
+  <% } %>
+
+  <div class="columns">
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <i class="fas fa-3x fa-fw fa-file-invoice" aria-hidden="true"></i>
+            </div>
+            <div class="media-content has-text-black">
+              <h2 class="title is-4 is-marginless">
+                <a href="/tickets">Parking Tickets</a>
+              </h2>
+              <p>
+                Track parking tickets.
+                <% if (user.userProperties.canUpdate) { %>
+                  Reconcile ownership records.
+                <% } %>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a class="card-footer-item" href="/tickets">
+            <span class="icon">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+            Find Tickets
+          </a>
+          <% if (user.userProperties.canCreate) { %>
+            <a class="card-footer-item" href="/tickets/new">
+              <span class="icon">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+              </span>
+              New Ticket
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <i class="fas fa-3x fa-fw fa-car" aria-hidden="true"></i>
+            </div>
+            <div class="media-content has-text-black">
+              <h2 class="title is-4 is-marginless">
+                <a href="/plates">Licence Plate Lookup</a>
+              </h2>
+              <p>
+                Look up licence plate owners.
+                <% if (user.userProperties.canUpdate && configFns.getProperty("application.feature_mtoExportImport")) { %>
+                  Manage exports to and imports from the MTO.
+                <% } %>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a class="card-footer-item" href="/plates">
+            <span class="icon">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+            Find Licence Plates
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <i class="fas fa-3x fa-fw fa-file" aria-hidden="true"></i>
+            </div>
+            <div class="media-content has-text-black">
+              <h2 class="title is-4 is-marginless">
+                <a href="/reports">Report Library</a>
+              </h2>
+              <p>Produce reports and export data.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a class="card-footer-item" href="/reports">
+            <span class="icon">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+            Find Reports
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <i class="fas fa-3x fa-fw fa-question-circle" aria-hidden="true"></i>
+            </div>
+            <div class="media-content has-text-black">
+              <h2 class="title is-4 is-marginless">
+                <a href="/docs" target="_blank">Help Documentation</a>
+              </h2>
+              <p>Instructions on how to use this application.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a class="card-footer-item" href="/docs" target="_blank">
+            <span class="icon">
+              <i class="fas fa-question-circle" aria-hidden="true"></i>
+            </span>
+            Help
+          </a>
+          <a class="card-footer-item has-tooltip-bottom" data-tooltip="Latest Updates, Issue Tracker, Say Hello (Opens in New Window)" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">
+            <span class="icon">
+              <i class="fab fa-github" aria-hidden="true"></i>
+            </span>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if (user.userProperties.isAdmin) { %>
+    <h2 class="title is-3">Administrator Tools</h2>
+
+    <div class="columns is-tablet is-multiline">
+      <div class="column">
+        <div class="card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-left">
+                <i class="fas fa-3x fa-fw fa-user-cog" aria-hidden="true"></i>
+              </div>
+              <div class="media-content has-text-black">
+                <h2 class="title is-4 is-marginless">
+                  <a href="/admin/userManagement">User Management</a>
+                </h2>
+                <p>Add and remove users. Grant permissions.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a class="card-footer-item" href="/admin/userManagement">
+              <span class="icon">
+                <i class="fas fa-cog" aria-hidden="true"></i>
+              </span>
+              Maintain Users
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-left">
+                <i class="fas fa-3x fa-fw fa-database" aria-hidden="true"></i>
+              </div>
+              <div class="media-content has-text-black">
+                <h2 class="title is-4 is-marginless">
+                  <a href="/admin/cleanup">Database Cleanup</a>
+                </h2>
+                <p>Purge deleted records.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a class="card-footer-item" href="/admin/cleanup">
+              <span class="icon">
+                <i class="fas fa-bomb" aria-hidden="true"></i>
+              </span>
+              Purge Records
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="column is-5-widescreen is-12-tablet">
+        <div class="card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-left">
+                <i class="fas fa-3x fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
+              </div>
+              <div class="media-content has-text-black">
+                <h2 class="title is-4 is-marginless">
+                  <a href="/admin/offences">Parking Offences</a>
+                </h2>
+                <p>Configure parking offences, their related locations and by-laws.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a class="card-footer-item" href="/admin/offences">
+              <span class="icon">
+                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+              </span>
+              Offences
+            </a>
+            <a class="card-footer-item" href="/admin/locations">
+              <span class="icon">
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+              </span>
+              Locations
+            </a>
+            <a class="card-footer-item" href="/admin/bylaws">
+              <span class="icon">
+                <i class="fas fa-gavel" aria-hidden="true"></i>
+              </span>
+              By-Laws
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   <% } %>
 </div>
-
-<% if (user.userProperties.isDefaultAdmin) { %>
-  <div class="message is-danger">
-    <p class="message-body">
-      <strong>You are currently logged into the admin user account using credentials in your config.js file.</strong><br />
-      It is highly recommended that you create a proper admin user under <a href="/admin/userManagement">User Management</a>.
-    </p>
-  </div>
-<% } %>
-
-<div class="columns">
-  <div class="column">
-    <div class="card">
-      <div class="card-content">
-        <div class="media">
-          <div class="media-left">
-            <i class="fas fa-3x fa-fw fa-file-invoice" aria-hidden="true"></i>
-          </div>
-          <div class="media-content has-text-black">
-            <h2 class="title is-4 is-marginless">
-              <a href="/tickets">Parking Tickets</a>
-            </h2>
-            <p>
-              Track parking tickets.
-              <% if (user.userProperties.canUpdate) { %>
-                Reconcile ownership records.
-              <% } %>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a class="card-footer-item" href="/tickets">
-          <span class="icon">
-            <i class="fas fa-search" aria-hidden="true"></i>
-          </span>
-          Find Tickets
-        </a>
-        <% if (user.userProperties.canCreate) { %>
-          <a class="card-footer-item" href="/tickets/new">
-            <span class="icon">
-              <i class="fas fa-plus" aria-hidden="true"></i>
-            </span>
-            New Ticket
-          </a>
-        <% } %>
-      </div>
-    </div>
-  </div>
-  <div class="column">
-    <div class="card">
-      <div class="card-content">
-        <div class="media">
-          <div class="media-left">
-            <i class="fas fa-3x fa-fw fa-car" aria-hidden="true"></i>
-          </div>
-          <div class="media-content has-text-black">
-            <h2 class="title is-4 is-marginless">
-              <a href="/plates">Licence Plate Lookup</a>
-            </h2>
-            <p>
-              Look up licence plate owners.
-              <% if (user.userProperties.canUpdate && configFns.getProperty("application.feature_mtoExportImport")) { %>
-                Manage exports to and imports from the MTO.
-              <% } %>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a class="card-footer-item" href="/plates">
-          <span class="icon">
-            <i class="fas fa-search" aria-hidden="true"></i>
-          </span>
-          Find Licence Plates
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="columns">
-  <div class="column">
-    <div class="card">
-      <div class="card-content">
-        <div class="media">
-          <div class="media-left">
-            <i class="fas fa-3x fa-fw fa-file" aria-hidden="true"></i>
-          </div>
-          <div class="media-content has-text-black">
-            <h2 class="title is-4 is-marginless">
-              <a href="/reports">Report Library</a>
-            </h2>
-            <p>Produce reports and export data.</p>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a class="card-footer-item" href="/reports">
-          <span class="icon">
-            <i class="fas fa-search" aria-hidden="true"></i>
-          </span>
-          Find Reports
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="column">
-    <div class="card">
-      <div class="card-content">
-        <div class="media">
-          <div class="media-left">
-            <i class="fas fa-3x fa-fw fa-question-circle" aria-hidden="true"></i>
-          </div>
-          <div class="media-content has-text-black">
-            <h2 class="title is-4 is-marginless">
-              <a href="/docs" target="_blank">Help Documentation</a>
-            </h2>
-            <p>Instructions on how to use this application.</p>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a class="card-footer-item" href="/docs" target="_blank">
-          <span class="icon">
-            <i class="fas fa-question-circle" aria-hidden="true"></i>
-          </span>
-          Help
-        </a>
-        <a class="card-footer-item has-tooltip-bottom" data-tooltip="Latest Updates, Issue Tracker, Say Hello (Opens in New Window)" href="https://github.com/cityssm/parking-ticket-system" target="_blank" rel="noreferrer">
-          <span class="icon">
-            <i class="fab fa-github" aria-hidden="true"></i>
-          </span>
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<% if (user.userProperties.isAdmin) { %>
-  <h2 class="title is-3">Administrator Tools</h2>
-
-  <div class="columns is-tablet is-multiline">
-    <div class="column">
-      <div class="card">
-        <div class="card-content">
-          <div class="media">
-            <div class="media-left">
-              <i class="fas fa-3x fa-fw fa-user-cog" aria-hidden="true"></i>
-            </div>
-            <div class="media-content has-text-black">
-              <h2 class="title is-4 is-marginless">
-                <a href="/admin/userManagement">User Management</a>
-              </h2>
-              <p>Add and remove users. Grant permissions.</p>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer">
-          <a class="card-footer-item" href="/admin/userManagement">
-            <span class="icon">
-              <i class="fas fa-cog" aria-hidden="true"></i>
-            </span>
-            Maintain Users
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="column">
-      <div class="card">
-        <div class="card-content">
-          <div class="media">
-            <div class="media-left">
-              <i class="fas fa-3x fa-fw fa-database" aria-hidden="true"></i>
-            </div>
-            <div class="media-content has-text-black">
-              <h2 class="title is-4 is-marginless">
-                <a href="/admin/cleanup">Database Cleanup</a>
-              </h2>
-              <p>Purge deleted records.</p>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer">
-          <a class="card-footer-item" href="/admin/cleanup">
-            <span class="icon">
-              <i class="fas fa-bomb" aria-hidden="true"></i>
-            </span>
-            Purge Records
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="column is-5-widescreen is-12-tablet">
-      <div class="card">
-        <div class="card-content">
-          <div class="media">
-            <div class="media-left">
-              <i class="fas fa-3x fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
-            </div>
-            <div class="media-content has-text-black">
-              <h2 class="title is-4 is-marginless">
-                <a href="/admin/offences">Parking Offences</a>
-              </h2>
-              <p>Configure parking offences, their related locations and by-laws.</p>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer">
-          <a class="card-footer-item" href="/admin/offences">
-            <span class="icon">
-              <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
-            </span>
-            Offences
-          </a>
-          <a class="card-footer-item" href="/admin/locations">
-            <span class="icon">
-              <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-            </span>
-            Locations
-          </a>
-          <a class="card-footer-item" href="/admin/bylaws">
-            <span class="icon">
-              <i class="fas fa-gavel" aria-hidden="true"></i>
-            </span>
-            By-Laws
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-<% } %>
 
 <% if (!user.userProperties.isDefaultAdmin) { %>
   <div class="modal" id="is-change-password-modal">

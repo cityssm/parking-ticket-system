@@ -2,18 +2,30 @@
   "name": "parking-ticket-system",
   "version": "0.3.0-dev",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha",
+    "coverage": "nyc npm run test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cityssm/parking-ticket-system.git"
+  },
+  "author": "The Corporation of the City of Sault Ste. Marie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cityssm/parking-ticket-system/issues"
+  },
+  "homepage": "https://github.com/cityssm/parking-ticket-system#readme",
   "dependencies": {
     "@cityssm/bulma-webapp-js": "^0.4.2",
-    "@cityssm/expressjs-server-js": "^0.5.0",
+    "@cityssm/expressjs-server-js": "^0.6.0",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "bcrypt": "^5.0.0",
     "better-sqlite3": "^7.1.0",
     "compression": "^1.7.4",
     "connect-sqlite3": "^0.9.11",
     "cookie-parser": "^1.4.5",
-    "ejs": "^3.1.3",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "fancy-log": "^1.3.3",
@@ -41,12 +53,13 @@
     "@types/html-pdf": "^2.2.0",
     "@types/http-errors": "^1.8.0",
     "@types/marked": "^1.1.0",
+    "@types/mocha": "^8.0.3",
     "@types/morgan": "^1.9.1",
     "@types/multer": "^1.4.4",
     "@types/node-fetch": "^2.5.7",
-    "@typescript-eslint/eslint-plugin": "^3.9.0",
-    "@typescript-eslint/parser": "^3.9.0",
-    "eslint": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^3.9.1",
+    "@typescript-eslint/parser": "^3.9.1",
+    "eslint": "^7.7.0",
     "eslint-config-standard-with-typescript": "^18.0.2",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
@@ -55,6 +68,8 @@
     "github-markdown-css": "^4.0.0",
     "gulp": "^4.0.2",
     "gulp-minify": "^3.1.0",
+    "mocha": "^8.1.1",
+    "nyc": "^15.1.0",
     "typescript": "^3.9.7"
   }
 }
