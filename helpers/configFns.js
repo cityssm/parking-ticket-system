@@ -2,8 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLicencePlateLocationProperties = exports.getParkingTicketStatus = exports.keepAliveMillis = exports.getProperty = void 0;
 const log = require("fancy-log");
-let config = require("../data/config");
-if (!config) {
+let config = "";
+try {
+    config = require("../data/config");
+}
+catch (_e) {
     log.warn("Using data/config-default.js");
     config = require("../data/config-default");
 }

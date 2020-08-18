@@ -6,10 +6,11 @@ import type * as pts from "../helpers/ptsTypes";
  * LOAD CONFIGURATION
  */
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-let config = require("../data/config");
+let config = "";
 
-if (!config) {
+try {
+  config = require("../data/config");
+} catch (_e) {
   log.warn("Using data/config-default.js");
   config = require("../data/config-default");
 }
