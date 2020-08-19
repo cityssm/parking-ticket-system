@@ -7,11 +7,11 @@ describe("configFns", () => {
 
   describe("#getProperty", () => {
     it("Includes string value for property \"parkingTickets.ticketNumber.fieldLabel\"", () => {
-      assert(typeof configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"), "string");
+      assert.equal(typeof configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"), "string");
     });
 
-    it("Includes function value for property \"parkingTickets.ticketNumber.nextTicketNumberFn\"", () => {
-      assert(typeof configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"), "function");
+    it("Ensure function value for property \"parkingTickets.ticketNumber.nextTicketNumberFn\" returns a string", () => {
+      assert.equal(typeof configFns.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(""), "string");
     });
 
 

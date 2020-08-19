@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = void 0;
+exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = exports.sixDigitDateNumberToEightDigit = exports.twoDigitYearToFourDigit = void 0;
 const sqlite = require("better-sqlite3");
 const parkingDB = require("./parkingDB");
 const parkingDBLookup = require("./parkingDB-lookup");
 const parkingDBConvict = require("./parkingDB-convict");
 const configFns = require("./configFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-let currentDate = new Date();
+let currentDate;
 let currentDateNumber;
 let currentDatePrefix;
 let currentYearPrefix;
@@ -17,14 +17,18 @@ const resetCurrentDate = () => {
     currentYearPrefix = Math.floor(currentDate.getFullYear() / 100) * 100;
     currentDatePrefix = currentYearPrefix * 10000;
 };
-const twoDigitYearToFourDigit = (twoDigitYear) => {
+resetCurrentDate();
+exports.twoDigitYearToFourDigit = (twoDigitYear) => {
     const fourDigitYear = twoDigitYear + currentYearPrefix;
-    if (fourDigitYear > currentDate.getFullYear() + 5) {
+    if (fourDigitYear > currentDate.getFullYear() + 10) {
         return fourDigitYear - 100;
+    }
+    else if (currentDate.getFullYear() - fourDigitYear > 60) {
+        return fourDigitYear + 100;
     }
     return fourDigitYear;
 };
-const sixDigitDateNumberToEightDigit = (sixDigitDateNumber) => {
+exports.sixDigitDateNumberToEightDigit = (sixDigitDateNumber) => {
     const eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
     if (eightDigitDateNumber > currentDateNumber) {
         return eightDigitDateNumber - 1000000;
@@ -44,12 +48,12 @@ const parsePKRA = (rowData) => {
         if (rawSentDate === "") {
             return false;
         }
-        record.sentDate = sixDigitDateNumberToEightDigit(parseInt(rawSentDate, 10));
+        record.sentDate = exports.sixDigitDateNumberToEightDigit(parseInt(rawSentDate, 10));
         const rawRecordDate = rowData.substring(29, 35).trim();
         if (rawRecordDate === "") {
             return false;
         }
-        record.recordDate = sixDigitDateNumberToEightDigit(parseInt(rawRecordDate, 10));
+        record.recordDate = exports.sixDigitDateNumberToEightDigit(parseInt(rawRecordDate, 10));
         return record;
     }
     catch (e) {
@@ -81,7 +85,7 @@ const parsePKRD = (rowData) => {
             licencePlateExpiryDate: 0
         };
         record.licencePlateNumber = rowData.substring(4, 14).trim();
-        record.issueDate = sixDigitDateNumberToEightDigit(parseInt(rowData.substring(14, 20), 10));
+        record.issueDate = exports.sixDigitDateNumberToEightDigit(parseInt(rowData.substring(14, 20), 10));
         record.ticketNumber = rowData.substring(20, 28).trim();
         record.driverLicenceNumber = rowData.substring(32, 47).trim();
         record.ownerGenderKey = rowData.substring(53, 54);
@@ -102,11 +106,11 @@ const parsePKRD = (rowData) => {
         }
         record.ownerPostalCode = rowData.substring(144, 150).trim();
         record.vehicleNCIC = rowData.substring(150, 154).trim();
-        record.vehicleYear = twoDigitYearToFourDigit(parseInt(rowData.substring(154, 156), 10));
+        record.vehicleYear = exports.twoDigitYearToFourDigit(parseInt(rowData.substring(154, 156), 10));
         record.vehicleColor = rowData.substring(166, 169).trim();
         record.errorCode = rowData.substring(169, 175).trim();
         record.errorMessage = rowData.substring(175, 204).trim();
-        const expiryYear = twoDigitYearToFourDigit(parseInt(rowData.substring(204, 206), 10));
+        const expiryYear = exports.twoDigitYearToFourDigit(parseInt(rowData.substring(204, 206), 10));
         const expiryDate = new Date(expiryYear, (parseInt(rowData.substring(206, 208), 10) - 1) + 1, 1);
         expiryDate.setDate(expiryDate.getDate() - 1);
         record.licencePlateExpiryDate = dateTimeFns.dateToInteger(expiryDate);

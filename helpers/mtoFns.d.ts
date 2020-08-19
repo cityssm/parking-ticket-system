@@ -2,6 +2,8 @@
 /// <reference types="compression" />
 /// <reference types="express-session" />
 /// <reference types="multer" />
+export declare const twoDigitYearToFourDigit: (twoDigitYear: number) => number;
+export declare const sixDigitDateNumberToEightDigit: (sixDigitDateNumber: number) => number;
 export declare const importLicencePlateOwnership: (batchID: number, ownershipData: string, reqSession: Express.Session) => {
     success: boolean;
     message: string;

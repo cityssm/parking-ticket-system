@@ -124,7 +124,7 @@ interface AddAllLicencePlatesToLookupBatchBody {
   batchID: number;
   licencePlateCountry: string;
   licencePlateProvince: string;
-  licencePlateNumbers: [string, number][];
+  licencePlateNumbers: Array<[string, number]>;
 }
 
 

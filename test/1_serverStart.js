@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fakeAdminRequest = exports.fakeViewOnlyRequest = exports.fakeAdminSession = exports.fakeViewOnlySession = void 0;
+exports.fakeAdminRequest = exports.fakeViewOnlyRequest = exports.fakeRequest = exports.fakeAdminSession = exports.fakeViewOnlySession = void 0;
 const assert = require("assert");
 const http = require("http");
 const app = require("../app");
@@ -41,19 +41,29 @@ exports.fakeAdminSession = {
         }
     }
 };
-const fakeRequest = {
+exports.fakeRequest = {
     accepted: null,
     accepts: null,
     acceptsCharsets: null,
     acceptsEncodings: null,
     acceptsLanguages: null,
+    app: null,
+    baseUrl: null,
     body: null,
     cookies: null,
+    complete: null,
+    connection: null,
+    destroy: null,
+    destroyed: null,
     fresh: null,
     get: null,
     header: null,
+    headers: null,
     host: null,
     hostname: null,
+    httpVersion: null,
+    httpVersionMajor: null,
+    httpVersionMinor: null,
     ip: null,
     ips: null,
     is: null,
@@ -65,18 +75,27 @@ const fakeRequest = {
     protocol: null,
     query: null,
     range: null,
+    rawHeaders: null,
+    rawTrailers: null,
+    readable: null,
+    readableLength: null,
+    readableHighWaterMark: null,
+    readableObjectMode: null,
     route: null,
     secure: null,
+    setTimeout: null,
     signedCookies: null,
+    socket: null,
     stale: null,
     subdomains: null,
+    trailers: null,
     url: null,
     xhr: null
 };
-exports.fakeViewOnlyRequest = Object.assign({}, fakeRequest, {
+exports.fakeViewOnlyRequest = Object.assign({}, exports.fakeRequest, {
     session: exports.fakeViewOnlySession
 });
-exports.fakeAdminRequest = Object.assign({}, fakeRequest, {
+exports.fakeAdminRequest = Object.assign({}, exports.fakeRequest, {
     session: exports.fakeAdminSession
 });
 describe("parking-ticket-system", () => {

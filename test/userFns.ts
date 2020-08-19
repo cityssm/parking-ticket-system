@@ -1,46 +1,70 @@
 import * as assert from "assert";
 
-import { fakeViewOnlyRequest, fakeAdminRequest } from "./1_serverStart";
+import { fakeRequest, fakeViewOnlyRequest, fakeAdminRequest } from "./1_serverStart";
 
 import * as userFns from "../helpers/userFns";
 
 
 describe("userFns", () => {
 
-  // View Only
+  describe("request.session.user = null", () => {
 
-  it("userCanCreate(fakeViewOnlyRequest) is false", () => {
-    assert.equal(userFns.userCanCreate(fakeViewOnlyRequest), false);
+    it("userCanCreate()  => false", () => {
+      assert.equal(userFns.userCanCreate(fakeRequest), false);
+    });
+
+    it("userCanUpdate()  => false", () => {
+      assert.equal(userFns.userCanUpdate(fakeRequest), false);
+    });
+
+    it("userIsAdmin()    => false", () => {
+      assert.equal(userFns.userIsAdmin(fakeRequest), false);
+    });
+
+    it("userIsOperator() => false", () => {
+      assert.equal(userFns.userIsOperator(fakeRequest), false);
+    });
   });
 
-  it("userCanUpdate(fakeViewOnlyRequest) is false", () => {
-    assert.equal(userFns.userCanUpdate(fakeViewOnlyRequest), false);
+  describe("request.session.user = viewOnly", () => {
+
+    it("userCanCreate()  => false", () => {
+      assert.equal(userFns.userCanCreate(fakeViewOnlyRequest), false);
+    });
+
+    it("userCanUpdate()  => false", () => {
+      assert.equal(userFns.userCanUpdate(fakeViewOnlyRequest), false);
+    });
+
+    it("userIsAdmin()    => false", () => {
+      assert.equal(userFns.userIsAdmin(fakeViewOnlyRequest), false);
+    });
+
+    it("userIsOperator() => false", () => {
+      assert.equal(userFns.userIsOperator(fakeViewOnlyRequest), false);
+    });
   });
 
-  it("userIsAdmin(fakeViewOnlyRequest) is false", () => {
-    assert.equal(userFns.userIsAdmin(fakeViewOnlyRequest), false);
-  });
+  describe("request.session.user = admin", () => {
 
-  it("userIsOperator(fakeViewOnlyRequest) is false", () => {
-    assert.equal(userFns.userIsOperator(fakeViewOnlyRequest), false);
-  });
+    // Admin
 
-  // Admin
+    it("userCanCreate()  => true", () => {
+      assert.ok(userFns.userCanCreate(fakeAdminRequest));
+    });
 
-  it("userCanCreate(fakeAdminRequest) is true", () => {
-    assert.ok(userFns.userCanCreate(fakeAdminRequest));
-  });
+    it("userCanUpdate()  => true", () => {
+      assert.ok(userFns.userCanUpdate(fakeAdminRequest));
+    });
 
-  it("userCanUpdate(fakeAdminRequest) is true", () => {
-    assert.ok(userFns.userCanUpdate(fakeAdminRequest));
-  });
+    it("userIsAdmin()    => true", () => {
+      assert.ok(userFns.userIsAdmin(fakeAdminRequest));
+    });
 
-  it("userIsAdmin(fakeAdminRequest) is true", () => {
-    assert.ok(userFns.userIsAdmin(fakeAdminRequest));
-  });
+    it("userIsOperator() => true", () => {
+      assert.ok(userFns.userIsOperator(fakeAdminRequest));
+    });
 
-  it("userIsOperator(fakeAdminRequest) is true", () => {
-    assert.ok(userFns.userIsOperator(fakeAdminRequest));
   });
 
 });

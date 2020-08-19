@@ -7,7 +7,7 @@ import * as configFns from "./configFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 
-let currentDate = new Date();
+let currentDate: Date;
 let currentDateNumber: number;
 let currentDatePrefix: number;
 let currentYearPrefix: number;
@@ -21,20 +21,25 @@ const resetCurrentDate = () => {
   currentDatePrefix = currentYearPrefix * 10000;
 };
 
+resetCurrentDate();
 
-const twoDigitYearToFourDigit = (twoDigitYear: number) => {
+
+export const twoDigitYearToFourDigit = (twoDigitYear: number) => {
 
   const fourDigitYear = twoDigitYear + currentYearPrefix;
 
-  if (fourDigitYear > currentDate.getFullYear() + 5) {
+  if (fourDigitYear > currentDate.getFullYear() + 10) {
     return fourDigitYear - 100;
+
+  } else if (currentDate.getFullYear() - fourDigitYear > 60) {
+    return fourDigitYear + 100;
   }
 
   return fourDigitYear;
 };
 
 
-const sixDigitDateNumberToEightDigit = (sixDigitDateNumber: number) => {
+export const sixDigitDateNumberToEightDigit = (sixDigitDateNumber: number) => {
 
   const eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
 

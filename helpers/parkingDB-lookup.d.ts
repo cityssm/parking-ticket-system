@@ -15,7 +15,7 @@ interface AddAllLicencePlatesToLookupBatchBody {
     batchID: number;
     licencePlateCountry: string;
     licencePlateProvince: string;
-    licencePlateNumbers: [string, number][];
+    licencePlateNumbers: Array<[string, number]>;
 }
 export declare const addAllLicencePlatesToLookupBatch: (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: Express.Session) => {
     success: boolean;

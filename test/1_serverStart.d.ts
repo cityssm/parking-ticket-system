@@ -33,6 +33,7 @@ export declare const fakeAdminSession: {
         };
     };
 };
+export declare const fakeRequest: Request;
 export declare const fakeViewOnlyRequest: Request<import("express-serve-static-core").ParamsDictionary, any, any, any> & {
     session: {
         id: string;
