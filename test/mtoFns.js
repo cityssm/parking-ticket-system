@@ -25,7 +25,7 @@ describe("mtoFns", () => {
         const currentDateEightDigits = (currentDate.getFullYear() * 10000) +
             ((currentDate.getMonth() + 1) * 100) +
             currentDate.getDate();
-        const currentDateSixDigits = parseInt(currentDateEightDigits.toString().slice(-6));
+        const currentDateSixDigits = parseInt(currentDateEightDigits.toString().slice(-6), 10);
         it("(" + currentDateSixDigits.toString() + ") => " + currentDateEightDigits.toString(), () => {
             assert.equal(mtoFns.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
         });

@@ -8,6 +8,8 @@ const parkingDB_cleanup = require("../helpers/parkingDB-cleanup");
 const parkingDB_convict = require("../helpers/parkingDB-convict");
 const parkingDB_lookup = require("../helpers/parkingDB-lookup");
 const parkingDB_ontario = require("../helpers/parkingDB-ontario");
+const parkingDB_related = require("../helpers/parkingDB-related");
+const parkingDB_reporting = require("../helpers/parkingDB-reporting");
 describe("parkingDB", () => {
     before(() => {
         dbInit_1.initParkingDB();
@@ -61,6 +63,33 @@ describe("parkingDB", () => {
         });
         it("Execute getParkingTicketsAvailableForMTOConvictionBatch()", () => {
             assert.ok(parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch());
+        });
+    });
+    describe("related", () => {
+        it("Execute getParkingLocations()", () => {
+            assert.ok(parkingDB_related.getParkingLocations());
+        });
+        it("Execute getParkingBylaws()", () => {
+            assert.ok(parkingDB_related.getParkingBylaws());
+        });
+        it("Execute getParkingBylawsWithOffenceStats()", () => {
+            assert.ok(parkingDB_related.getParkingBylawsWithOffenceStats());
+        });
+        it("Execute getParkingOffences()", () => {
+            assert.ok(parkingDB_related.getParkingOffences());
+        });
+        it("Execute getParkingOffencesByLocationKey()", () => {
+            assert.ok(parkingDB_related.getParkingOffencesByLocationKey(""));
+        });
+    });
+    describe("reporting", () => {
+        describe("#getReportRowsColumns()", () => {
+            it("Invalid report name", () => {
+                assert.equal(parkingDB_reporting.getReportRowsColumns("invalid-report-name", {}), null);
+            });
+            it("Bylaws report", () => {
+                assert.ok(parkingDB_reporting.getReportRowsColumns("bylaws-all", {}));
+            });
         });
     });
 });

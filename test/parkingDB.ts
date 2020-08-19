@@ -3,11 +3,14 @@ import * as assert from "assert";
 import { fakeViewOnlySession } from "./1_serverStart";
 
 import { initParkingDB } from "../helpers/dbInit";
+
 import * as parkingDB from "../helpers/parkingDB";
 import * as parkingDB_cleanup from "../helpers/parkingDB-cleanup";
 import * as parkingDB_convict from "../helpers/parkingDB-convict";
 import * as parkingDB_lookup from "../helpers/parkingDB-lookup";
 import * as parkingDB_ontario from "../helpers/parkingDB-ontario";
+import * as parkingDB_related from "../helpers/parkingDB-related";
+import * as parkingDB_reporting from "../helpers/parkingDB-reporting";
 
 
 describe("parkingDB", () => {
@@ -83,6 +86,43 @@ describe("parkingDB", () => {
 
     it("Execute getParkingTicketsAvailableForMTOConvictionBatch()", () => {
       assert.ok(parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch());
+    });
+  });
+
+  describe("related", () => {
+
+    it("Execute getParkingLocations()", () => {
+      assert.ok(parkingDB_related.getParkingLocations());
+    });
+
+    it("Execute getParkingBylaws()", () => {
+      assert.ok(parkingDB_related.getParkingBylaws());
+    });
+
+    it("Execute getParkingBylawsWithOffenceStats()", () => {
+      assert.ok(parkingDB_related.getParkingBylawsWithOffenceStats());
+    });
+
+    it("Execute getParkingOffences()", () => {
+      assert.ok(parkingDB_related.getParkingOffences());
+    });
+
+    it("Execute getParkingOffencesByLocationKey()", () => {
+      assert.ok(parkingDB_related.getParkingOffencesByLocationKey(""));
+    });
+  });
+
+  describe("reporting", () => {
+
+    describe("#getReportRowsColumns()", () => {
+
+      it("Invalid report name", () => {
+        assert.equal(parkingDB_reporting.getReportRowsColumns("invalid-report-name", {}), null);
+      });
+
+      it("Bylaws report", () => {
+        assert.ok(parkingDB_reporting.getReportRowsColumns("bylaws-all", {}));
+      });
     });
   });
 });
