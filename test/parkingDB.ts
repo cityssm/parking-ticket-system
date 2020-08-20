@@ -4,7 +4,8 @@ import { fakeViewOnlySession } from "./_globals";
 
 import { initParkingDB } from "../helpers/dbInit";
 
-import * as parkingDB from "../helpers/parkingDB";
+import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
+import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
 import * as parkingDB_cleanup from "../helpers/parkingDB-cleanup";
 import * as parkingDB_convict from "../helpers/parkingDB-convict";
 import * as parkingDB_lookup from "../helpers/parkingDB-lookup";
@@ -20,11 +21,11 @@ describe("helpers/parkingDB", () => {
   });
 
   it("should execute getParkingTickets()", () => {
-    assert.ok(parkingDB.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
+    assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
   });
 
   it("should execute getParkingTicket(-1)", () => {
-    assert.equal(parkingDB.getParkingTicket(-1, fakeViewOnlySession), null);
+    assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), null);
   });
 
   describe("-cleanup", () => {

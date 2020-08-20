@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDistinctLicencePlateOwnerVehicleNCICs = exports.getAllLicencePlateOwners = exports.getLicencePlateOwner = exports.getLicencePlates = exports.deleteParkingTicketStatus = exports.updateParkingTicketStatus = exports.createParkingTicketStatus = exports.getParkingTicketStatuses = exports.deleteParkingTicketRemark = exports.updateParkingTicketRemark = exports.createParkingTicketRemark = exports.getParkingTicketRemarks = exports.getRecentParkingTicketVehicleMakeModelValues = exports.restoreParkingTicket = exports.unresolveParkingTicket = exports.resolveParkingTicket = exports.deleteParkingTicket = exports.updateParkingTicket = exports.createParkingTicket = exports.getParkingTicketID = exports.getParkingTicket = exports.getParkingTicketsByLicencePlate = exports.getParkingTickets = exports.dbPath = void 0;
+exports.getDistinctLicencePlateOwnerVehicleNCICs = exports.getAllLicencePlateOwners = exports.getLicencePlateOwner = exports.getLicencePlates = exports.deleteParkingTicketStatus = exports.updateParkingTicketStatus = exports.createParkingTicketStatus = exports.getParkingTicketStatuses = exports.deleteParkingTicketRemark = exports.updateParkingTicketRemark = exports.createParkingTicketRemark = exports.getParkingTicketRemarks = exports.getRecentParkingTicketVehicleMakeModelValues = exports.getParkingTicketID = exports.getParkingTicketsByLicencePlate = exports.getLicencePlateOwnerWithDB = exports.getParkingLocationWithDB = exports.canUpdateObject = exports.dbPath = void 0;
 const sqlite = require("better-sqlite3");
 const vehicleFns = require("./vehicleFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const configFns = require("./configFns");
 exports.dbPath = "data/parking.db";
-const canUpdateObject = (obj, reqSession) => {
+exports.canUpdateObject = (obj, reqSession) => {
     const userProperties = reqSession.user.userProperties;
     let canUpdate = false;
     if (!reqSession) {
@@ -38,14 +38,14 @@ const canUpdateObject = (obj, reqSession) => {
     }
     return canUpdate;
 };
-const getParkingLocationWithDB = (db, locationKey) => {
+exports.getParkingLocationWithDB = (db, locationKey) => {
     const location = db.prepare("select locationKey, locationName, locationClassKey, isActive" +
         " from ParkingLocations" +
         " where locationKey = ?")
         .get(locationKey);
     return location;
 };
-const getLicencePlateOwnerWithDB = (db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore) => {
+exports.getLicencePlateOwnerWithDB = (db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore) => {
     const licencePlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
     const licencePlateProvinceAlias = (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})[licencePlateProvince] || licencePlateProvince;
     const possibleOwners = db.prepare("select * from LicencePlateOwners" +
@@ -68,81 +68,6 @@ const getLicencePlateOwnerWithDB = (db, licencePlateCountry, licencePlateProvinc
         }
     }
     return null;
-};
-exports.getParkingTickets = (reqSession, queryOptions) => {
-    const db = sqlite(exports.dbPath, {
-        readonly: true
-    });
-    const sqlParams = [];
-    let sqlWhereClause = " where t.recordDelete_timeMillis is null";
-    if (queryOptions.hasOwnProperty("isResolved")) {
-        if (queryOptions.isResolved) {
-            sqlWhereClause += " and t.resolvedDate is not null";
-        }
-        else {
-            sqlWhereClause += " and t.resolvedDate is null";
-        }
-    }
-    if (queryOptions.ticketNumber && queryOptions.ticketNumber !== "") {
-        const ticketNumberPieces = queryOptions.ticketNumber.toLowerCase().split(" ");
-        for (const ticketNumberPiece of ticketNumberPieces) {
-            sqlWhereClause += " and instr(lower(t.ticketNumber), ?)";
-            sqlParams.push(ticketNumberPiece);
-        }
-    }
-    if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
-        const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
-        for (const licencePlateNumberPiece of licencePlateNumberPieces) {
-            sqlWhereClause += " and instr(lower(t.licencePlateNumber), ?)";
-            sqlParams.push(licencePlateNumberPiece);
-        }
-    }
-    if (queryOptions.location && queryOptions.location !== "") {
-        const locationPieces = queryOptions.location.toLowerCase().split(" ");
-        for (const locationPiece of locationPieces) {
-            sqlWhereClause += " and (instr(lower(t.locationDescription), ?) or instr(lower(l.locationName), ?))";
-            sqlParams.push(locationPiece);
-            sqlParams.push(locationPiece);
-        }
-    }
-    const count = db.prepare("select ifnull(count(*), 0) as cnt" +
-        " from ParkingTickets t" +
-        " left join ParkingLocations l on t.locationKey = l.locationKey" +
-        sqlWhereClause)
-        .get(sqlParams)
-        .cnt;
-    const rows = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
-        " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing," +
-        " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
-        " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
-        " s.statusDate as latestStatus_statusDate," +
-        " s.statusKey as latestStatus_statusKey," +
-        " t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis" +
-        " from ParkingTickets t" +
-        " left join ParkingLocations l on t.locationKey = l.locationKey" +
-        " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
-        (" and s.statusIndex = (" +
-            "select statusIndex from ParkingTicketStatusLog s" +
-            " where t.ticketID = s.ticketID" +
-            " and s.recordDelete_timeMillis is null" +
-            " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
-        sqlWhereClause +
-        " order by t.issueDate desc, t.ticketNumber desc" +
-        " limit " + queryOptions.limit.toString() +
-        " offset " + queryOptions.offset.toString())
-        .all(sqlParams);
-    db.close();
-    for (const ticket of rows) {
-        ticket.recordType = "ticket";
-        ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
-        ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
-        ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-        ticket.canUpdate = canUpdateObject(ticket, reqSession);
-    }
-    return {
-        count,
-        tickets: rows
-    };
 };
 exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProvince, licencePlateNumber, reqSession) => {
     const db = sqlite(exports.dbPath, {
@@ -172,79 +97,9 @@ exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProv
         ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
         ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
         ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-        ticket.canUpdate = canUpdateObject(ticket, reqSession);
+        ticket.canUpdate = exports.canUpdateObject(ticket, reqSession);
     }
     return tickets;
-};
-exports.getParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(exports.dbPath, {
-        readonly: true
-    });
-    const ticket = db.prepare("select t.*," +
-        " l.locationName," +
-        " s.statusKey as ownerLookup_statusKey," +
-        " s.statusField as ownerLookup_statusField" +
-        " from ParkingTickets t" +
-        (" left join ParkingTicketStatusLog s" +
-            " on t.ticketID = s.ticketID" +
-            " and s.statusKey in ('ownerLookupPending', 'ownerLookupError', 'ownerLookupMatch')" +
-            " and s.recordDelete_timeMillis is null") +
-        (" left join ParkingLocations l" +
-            " on t.locationKey = l.locationKey") +
-        " where t.ticketID = ?" +
-        " order by s.statusDate desc, s.statusIndex desc" +
-        " limit 1")
-        .get(ticketID);
-    if (!ticket) {
-        db.close();
-        return ticket;
-    }
-    ticket.recordType = "ticket";
-    ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
-    ticket.issueTimeString = dateTimeFns.timeIntegerToString(ticket.issueTime);
-    ticket.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(ticket.licencePlateExpiryDate);
-    if (ticket.licencePlateExpiryDateString !== "") {
-        ticket.licencePlateExpiryYear = parseInt(ticket.licencePlateExpiryDateString.substring(0, 4), 10);
-        ticket.licencePlateExpiryMonth = parseInt(ticket.licencePlateExpiryDateString.substring(5, 7), 10);
-    }
-    ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
-    ticket.canUpdate = canUpdateObject(ticket, reqSession);
-    if (ticket.ownerLookup_statusKey === "ownerLookupMatch") {
-        ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, parseInt(ticket.ownerLookup_statusField, 10));
-    }
-    ticket.location = getParkingLocationWithDB(db, ticket.locationKey);
-    ticket.statusLog = db.prepare("select * from ParkingTicketStatusLog" +
-        " where recordDelete_timeMillis is null" +
-        " and ticketID = ?" +
-        " order by statusDate desc, statusTime desc, statusIndex desc")
-        .all(ticketID);
-    for (const statusObj of ticket.statusLog) {
-        statusObj.statusDateString = dateTimeFns.dateIntegerToString(statusObj.statusDate);
-        statusObj.statusTimeString = dateTimeFns.timeIntegerToString(statusObj.statusTime);
-        if (!ticket.canUpdate) {
-            statusObj.canUpdate = false;
-        }
-        else {
-            statusObj.canUpdate = canUpdateObject(statusObj, reqSession);
-        }
-    }
-    ticket.remarks = db.prepare("select * from ParkingTicketRemarks" +
-        " where recordDelete_timeMillis is null" +
-        " and ticketID = ?" +
-        " order by remarkDate desc, remarkTime desc, remarkIndex desc")
-        .all(ticketID);
-    for (const remarkObj of ticket.remarks) {
-        remarkObj.remarkDateString = dateTimeFns.dateIntegerToString(remarkObj.remarkDate);
-        remarkObj.remarkTimeString = dateTimeFns.timeIntegerToString(remarkObj.remarkTime);
-        if (!ticket.canUpdate) {
-            remarkObj.canUpdate = false;
-        }
-        else {
-            remarkObj.canUpdate = canUpdateObject(remarkObj, reqSession);
-        }
-    }
-    db.close();
-    return ticket;
 };
 exports.getParkingTicketID = (ticketNumber) => {
     const db = sqlite(exports.dbPath, {
@@ -262,213 +117,6 @@ exports.getParkingTicketID = (ticketNumber) => {
         return ticketRow.ticketID;
     }
     return null;
-};
-exports.createParkingTicket = (reqBody, reqSession) => {
-    const db = sqlite(exports.dbPath);
-    const nowMillis = Date.now();
-    const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
-    if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
-        const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
-            " where recordDelete_timeMillis is null" +
-            " and ticketNumber = ?" +
-            " and abs(issueDate - ?) <= 20000")
-            .get(reqBody.ticketNumber, issueDate);
-        if (duplicateTicket) {
-            db.close();
-            return {
-                success: false,
-                message: "A ticket with the same ticket number was seen in the last two years."
-            };
-        }
-    }
-    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
-    if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
-        const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
-        if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
-            licencePlateExpiryDate = 0;
-        }
-        else if (licencePlateExpiryYear === 0 || licencePlateExpiryMonth === 0) {
-            db.close();
-            return {
-                success: false,
-                message: "The licence plate expiry date fields must both be blank or both be completed."
-            };
-        }
-        else {
-            const dateObj = new Date(licencePlateExpiryYear, (licencePlateExpiryMonth - 1) + 1, (1 - 1), 0, 0, 0, 0);
-            licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObj);
-        }
-    }
-    const info = db.prepare("insert into ParkingTickets" +
-        " (ticketNumber, issueDate, issueTime, issuingOfficer," +
-        " locationKey, locationDescription," +
-        " bylawNumber, parkingOffence, offenceAmount, discountOffenceAmount, discountDays," +
-        " licencePlateCountry, licencePlateProvince, licencePlateNumber," +
-        " licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN," +
-        " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.discountOffenceAmount, reqBody.discountDays, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqSession.user.userName, nowMillis);
-    db.close();
-    return {
-        success: true,
-        ticketID: info.lastInsertRowid,
-        nextTicketNumber: ""
-    };
-};
-exports.updateParkingTicket = (reqBody, reqSession) => {
-    const db = sqlite(exports.dbPath);
-    const nowMillis = Date.now();
-    const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
-    if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
-        const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
-            " where recordDelete_timeMillis is null" +
-            " and ticketNumber = ?" +
-            " and ticketID != ?" +
-            " and abs(issueDate - ?) <= 20000")
-            .get(reqBody.ticketNumber, reqBody.ticketID, issueDate);
-        if (duplicateTicket) {
-            db.close();
-            return {
-                success: false,
-                message: "A ticket with the same ticket number was seen in the last two years."
-            };
-        }
-    }
-    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
-    if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
-        const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
-        if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
-            licencePlateExpiryDate = 0;
-        }
-        else if (licencePlateExpiryYear === 0 || licencePlateExpiryMonth === 0) {
-            db.close();
-            return {
-                success: false,
-                message: "The licence plate expiry date fields must both be blank or both be completed."
-            };
-        }
-        else {
-            const dateObj = new Date(licencePlateExpiryYear, (licencePlateExpiryMonth - 1) + 1, (1 - 1), 0, 0, 0, 0);
-            licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObj);
-        }
-    }
-    const info = db.prepare("update ParkingTickets" +
-        " set ticketNumber = ?," +
-        " issueDate = ?," +
-        " issueTime = ?," +
-        " issuingOfficer = ?," +
-        " locationKey = ?," +
-        " locationDescription = ?," +
-        " bylawNumber = ?," +
-        " parkingOffence = ?," +
-        " offenceAmount = ?," +
-        " discountOffenceAmount = ?," +
-        " discountDays = ?," +
-        " licencePlateCountry = ?," +
-        " licencePlateProvince = ?," +
-        " licencePlateNumber = ?," +
-        " licencePlateIsMissing = ?," +
-        " licencePlateExpiryDate = ?," +
-        " vehicleMakeModel = ?," +
-        " vehicleVIN = ?," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where ticketID = ?" +
-        " and resolvedDate is null" +
-        " and recordDelete_timeMillis is null")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.discountOffenceAmount, reqBody.discountDays, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqBody.ticketID);
-    db.close();
-    if (info.changes) {
-        return {
-            success: true
-        };
-    }
-    else {
-        return {
-            success: false,
-            message: "An error occurred saving this ticket.  Please try again."
-        };
-    }
-};
-exports.deleteParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(exports.dbPath);
-    const info = db.prepare("update ParkingTickets" +
-        " set recordDelete_userName = ?," +
-        " recordDelete_timeMillis = ?" +
-        " where ticketID = ?" +
-        " and recordDelete_timeMillis is null")
-        .run(reqSession.user.userName, Date.now(), ticketID);
-    db.close();
-    return {
-        success: (info.changes > 0)
-    };
-};
-exports.resolveParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(exports.dbPath);
-    const rightNow = new Date();
-    const info = db.prepare("update ParkingTickets" +
-        " set resolvedDate = ?," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where ticketID = ?" +
-        " and resolvedDate is null" +
-        " and recordDelete_timeMillis is null")
-        .run(dateTimeFns.dateToInteger(rightNow), reqSession.user.userName, rightNow.getTime(), ticketID);
-    db.close();
-    return {
-        success: (info.changes > 0)
-    };
-};
-exports.unresolveParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(exports.dbPath);
-    const ticketObj = db.prepare("select recordUpdate_timeMillis from ParkingTickets" +
-        " where ticketID = ?" +
-        " and recordDelete_timeMillis is null" +
-        " and resolvedDate is not null")
-        .get(ticketID);
-    if (!ticketObj) {
-        db.close();
-        return {
-            success: false,
-            message: "The ticket has either been deleted, or is no longer marked as resolved."
-        };
-    }
-    else if (ticketObj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") < Date.now()) {
-        db.close();
-        return {
-            success: false,
-            message: "The ticket is outside of the window for removing the resolved status."
-        };
-    }
-    const info = db.prepare("update ParkingTickets" +
-        " set resolvedDate = null," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where ticketID = ?" +
-        " and resolvedDate is not null" +
-        " and recordDelete_timeMillis is null")
-        .run(reqSession.user.userName, Date.now(), ticketID);
-    db.close();
-    return {
-        success: (info.changes > 0)
-    };
-};
-exports.restoreParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(exports.dbPath);
-    const info = db.prepare("update ParkingTickets" +
-        " set recordDelete_userName = null," +
-        " recordDelete_timeMillis = null," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where ticketID = ?" +
-        " and recordDelete_timeMillis is not null")
-        .run(reqSession.user.userName, Date.now(), ticketID);
-    db.close();
-    return {
-        success: (info.changes > 0)
-    };
 };
 exports.getRecentParkingTicketVehicleMakeModelValues = () => {
     const db = sqlite(exports.dbPath, {
@@ -508,7 +156,7 @@ exports.getParkingTicketRemarks = (ticketID, reqSession) => {
         remark.recordType = "remark";
         remark.remarkDateString = dateTimeFns.dateIntegerToString(remark.remarkDate);
         remark.remarkTimeString = dateTimeFns.timeIntegerToString(remark.remarkTime);
-        remark.canUpdate = canUpdateObject(remark, reqSession);
+        remark.canUpdate = exports.canUpdateObject(remark, reqSession);
     }
     return remarkRows;
 };
@@ -578,7 +226,7 @@ exports.getParkingTicketStatuses = (ticketID, reqSession) => {
         status.recordType = "status";
         status.statusDateString = dateTimeFns.dateIntegerToString(status.statusDate);
         status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime);
-        status.canUpdate = canUpdateObject(status, reqSession);
+        status.canUpdate = exports.canUpdateObject(status, reqSession);
     }
     return statusRows;
 };
@@ -713,7 +361,7 @@ exports.getLicencePlateOwner = (licencePlateCountry, licencePlateProvince, licen
     const db = sqlite(exports.dbPath, {
         readonly: true
     });
-    const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
+    const ownerRecord = exports.getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
     db.close();
     return ownerRecord;
 };

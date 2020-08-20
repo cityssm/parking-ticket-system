@@ -8,9 +8,19 @@ import * as parkingDB from "../helpers/parkingDB";
 import * as parkingDBLookup from "../helpers/parkingDB-lookup";
 import * as parkingDBConvict from "../helpers/parkingDB-convict";
 
+import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
+import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
+import * as parkingDB_createParkingTicket from "../helpers/parkingDB/createParkingTicket";
+import * as parkingDB_updateParkingTicket from "../helpers/parkingDB/updateParkingTicket";
+import * as parkingDB_resolveParkingTicket from "../helpers/parkingDB/resolveParkingTicket";
+import * as parkingDB_unresolveParkingTicket from "../helpers/parkingDB/unresolveParkingTicket";
+import * as parkingDB_deleteParkingTicket from "../helpers/parkingDB/deleteParkingTicket";
+import * as parkingDB_restoreParkingTicket from "../helpers/parkingDB/restoreParkingTicket";
+
 import type * as pts from "../helpers/ptsTypes";
 
 import { userCanCreate, userCanUpdate, userIsOperator, forbiddenJSON } from "../helpers/userFns";
+
 
 const router = Router();
 
@@ -27,7 +37,7 @@ router.get("/", (_req, res) => {
 
 router.post("/doGetTickets", (req, res) => {
 
-  const queryOptions: parkingDB.GetParkingTicketsQueryOptions = {
+  const queryOptions: parkingDB_getParkingTickets.GetParkingTicketsQueryOptions = {
     limit: req.body.limit,
     offset: req.body.offset,
     ticketNumber: req.body.ticketNumber,
@@ -39,7 +49,7 @@ router.post("/doGetTickets", (req, res) => {
     queryOptions.isResolved = req.body.isResolved === "1";
   }
 
-  res.json(parkingDB.getParkingTickets(req.session, queryOptions));
+  res.json(parkingDB_getParkingTickets.getParkingTickets(req.session, queryOptions));
 });
 
 /*
@@ -365,7 +375,7 @@ router.post("/doCreateTicket", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.createParkingTicket(req.body, req.session);
+  const result = parkingDB_createParkingTicket.createParkingTicket(req.body, req.session);
 
   if (result.success) {
     const ticketNumber = req.body.ticketNumber;
@@ -383,7 +393,7 @@ router.post("/doUpdateTicket", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.updateParkingTicket(req.body, req.session);
+  const result = parkingDB_updateParkingTicket.updateParkingTicket(req.body, req.session);
 
   return res.json(result);
 });
@@ -394,7 +404,7 @@ router.post("/doDeleteTicket", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.deleteParkingTicket(req.body.ticketID, req.session);
+  const result = parkingDB_deleteParkingTicket.deleteParkingTicket(req.body.ticketID, req.session);
 
   return res.json(result);
 });
@@ -405,7 +415,7 @@ router.post("/doResolveTicket", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.resolveParkingTicket(req.body.ticketID, req.session);
+  const result = parkingDB_resolveParkingTicket.resolveParkingTicket(req.body.ticketID, req.session);
 
   return res.json(result);
 });
@@ -416,7 +426,7 @@ router.post("/doUnresolveTicket", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.unresolveParkingTicket(
+  const result = parkingDB_unresolveParkingTicket.unresolveParkingTicket(
     req.body.ticketID,
     req.session
   );
@@ -430,7 +440,7 @@ router.post("/doRestoreTicket", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.restoreParkingTicket(req.body.ticketID, req.session);
+  const result = parkingDB_restoreParkingTicket.restoreParkingTicket(req.body.ticketID, req.session);
 
   return res.json(result);
 });
@@ -537,7 +547,7 @@ router.get("/:ticketID", (req, res) => {
 
   const ticketID = parseInt(req.params.ticketID, 10);
 
-  const ticket = parkingDB.getParkingTicket(ticketID, req.session);
+  const ticket = parkingDB_getParkingTicket.getParkingTicket(ticketID, req.session);
 
   if (!ticket) {
     return res.redirect("/tickets/?error=ticketNotFound");
@@ -576,7 +586,7 @@ router.get("/:ticketID/edit", (req, res) => {
     return res.redirect("/tickets/" + ticketID.toString());
   }
 
-  const ticket = parkingDB.getParkingTicket(ticketID, req.session);
+  const ticket = parkingDB_getParkingTicket.getParkingTicket(ticketID, req.session);
 
   if (!ticket) {
     return res.redirect("/tickets/?error=ticketNotFound");

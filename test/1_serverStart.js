@@ -13,7 +13,7 @@ const assert = require("assert");
 const puppeteer = require("puppeteer");
 const http = require("http");
 const app = require("../app");
-const parkingDB_1 = require("../helpers/parkingDB");
+const getParkingTickets_1 = require("../helpers/parkingDB/getParkingTickets");
 const usersDB = require("../helpers/usersDB");
 const vehicleFns_1 = require("../helpers/vehicleFns");
 const _globals_1 = require("./_globals");
@@ -48,7 +48,7 @@ describe("parking-ticket-system", () => {
     });
     describe("databases", () => {
         it("should create data/parking.db (or ensure it exists)", () => {
-            assert.ok(parkingDB_1.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
+            assert.ok(getParkingTickets_1.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
         });
         it("should create data/users.db (or ensure it exists)", () => {
             assert.ok(usersDB.getAllUsers());

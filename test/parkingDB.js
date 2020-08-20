@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const _globals_1 = require("./_globals");
 const dbInit_1 = require("../helpers/dbInit");
-const parkingDB = require("../helpers/parkingDB");
+const parkingDB_getParkingTickets = require("../helpers/parkingDB/getParkingTickets");
+const parkingDB_getParkingTicket = require("../helpers/parkingDB/getParkingTicket");
 const parkingDB_cleanup = require("../helpers/parkingDB-cleanup");
 const parkingDB_convict = require("../helpers/parkingDB-convict");
 const parkingDB_lookup = require("../helpers/parkingDB-lookup");
@@ -15,10 +16,10 @@ describe("helpers/parkingDB", () => {
         dbInit_1.initParkingDB();
     });
     it("should execute getParkingTickets()", () => {
-        assert.ok(parkingDB.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
+        assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
     });
     it("should execute getParkingTicket(-1)", () => {
-        assert.equal(parkingDB.getParkingTicket(-1, _globals_1.fakeViewOnlySession), null);
+        assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, _globals_1.fakeViewOnlySession), null);
     });
     describe("-cleanup", () => {
         const deleteTimeMillis = Date.now() + (3600 * 1000);

@@ -5,7 +5,7 @@ import * as puppeteer from "puppeteer";
 import * as http from "http";
 import * as app from "../app";
 
-import { getParkingTickets } from "../helpers/parkingDB";
+import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets";
 import * as usersDB from "../helpers/usersDB";
 import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
 
