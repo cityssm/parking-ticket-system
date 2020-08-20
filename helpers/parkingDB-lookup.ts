@@ -462,14 +462,14 @@ export interface ReconciliationRecord extends pts.LicencePlate {
   ticket_ticketID: number;
   ticket_ticketNumber: string;
   ticket_issueDate: number;
-  ticket_issueDateString: string;
+  ticket_issueDateString?: string;
   ticket_vehicleMakeModel: string;
 
   ticket_licencePlateExpiryDate: number;
-  ticket_licencePlateExpiryDateString: string;
+  ticket_licencePlateExpiryDateString?: string;
 
   owner_recordDate: number;
-  owner_recordDateString: string;
+  owner_recordDateString?: string;
 
   owner_vehicleNCIC: string;
   owner_vehicleMake: string;
@@ -477,7 +477,7 @@ export interface ReconciliationRecord extends pts.LicencePlate {
   owner_vehicleColor: string;
 
   owner_licencePlateExpiryDate: number;
-  owner_licencePlateExpiryDateString: string;
+  owner_licencePlateExpiryDateString?: string;
 
   owner_ownerName1: string;
   owner_ownerName2: string;

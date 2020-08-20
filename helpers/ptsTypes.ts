@@ -141,10 +141,10 @@ export interface LicencePlate {
   licencePlateNumber: string;
 
   licencePlateExpiryDate: number;
-  licencePlateExpiryDateString: string;
-  licencePlateExpiryYear: number | string;
-  licencePlateExpiryMonth: number | string;
-  licencePlateExpiryDay: number;
+  licencePlateExpiryDateString?: string;
+  licencePlateExpiryYear?: number | string;
+  licencePlateExpiryMonth?: number | string;
+  licencePlateExpiryDay?: number;
 }
 
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
@@ -272,10 +272,10 @@ export interface LicencePlateOwner extends Record, LicencePlate {
   recordType: "owner";
 
   recordDate: number;
-  recordDateString: string;
+  recordDateString?: string;
 
   vehicleNCIC: string;
-  vehicleMake: string;
+  vehicleMake?: string;
 
   ownerName1: string;
   ownerName2: string;

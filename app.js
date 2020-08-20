@@ -76,7 +76,7 @@ const adminChecker = (req, res, next) => {
     if (req.session.user.userProperties.isAdmin) {
         return next();
     }
-    return res.redirect("/login?redirect=" + req.originalUrl);
+    return res.redirect("/dashboard");
 };
 app.use((req, res, next) => {
     res.locals.buildNumber = package_json_1.version;

@@ -19,15 +19,32 @@ describe("parking-ticket-system", () => {
 
   let serverStarted = false;
 
+  const userName = "__testUser";
+  let password = "";
+
   before(() => {
+
     httpServer.listen(portNumber);
 
     httpServer.on("listening", () => {
       serverStarted = true;
     });
+
+    // ensure the test user is not active
+    usersDB.inactivateUser(userName);
+
+    password = usersDB.createUser({
+      userName,
+      firstName: "Test",
+      lastName: "User"
+    }) as string;
+
   });
 
   after(() => {
+
+    usersDB.inactivateUser(userName);
+
     try {
       httpServer.close();
     } catch (_e) {
@@ -76,25 +93,6 @@ describe("parking-ticket-system", () => {
   });
 
   describe("transaction page tests", () => {
-
-    const userName = "__testUser";
-    let password = "";
-
-    before(() => {
-
-      // ensure the test user is not active
-      usersDB.inactivateUser(userName);
-
-      password = usersDB.createUser({
-        userName,
-        firstName: "Test",
-        lastName: "User"
-      }) as string;
-    });
-
-    after(() => {
-      usersDB.inactivateUser(userName);
-    });
 
     const pageTests: {
       [pageName: string]: {
@@ -156,6 +154,8 @@ describe("parking-ticket-system", () => {
           await page.goto(appURL + "/logout");
 
           await browser.close();
+
+          assert.ok(true);
         })()
           .finally(() => {
             done();
@@ -165,24 +165,27 @@ describe("parking-ticket-system", () => {
 
   });
 
-  describe("error page test", () => {
+  describe("error page tests", () => {
 
-    it("should return a 404 error", (done) => {
+    it("should return a 404 not found error", (done) => {
 
-      let browser;
+      let browser: puppeteer.Browser;
 
-      (async() => {
+      (async () => {
         browser = await puppeteer.launch();
         const page = await browser.newPage();
 
+        let status = 0;
+
         await page.goto(appURL + "/page-not-found")
           .then((res) => {
-            assert.equal(res.status, 404);
+            status = res.status();
           })
           .catch(() => {
             assert.fail();
           })
           .finally(() => {
+            assert.equal(status, 404);
             done();
           });
       })()
@@ -190,7 +193,133 @@ describe("parking-ticket-system", () => {
           assert.fail();
         })
         .finally(() => {
-          browser.close();
+          // eslint-disable-next-line no-void
+          void browser.close();
+        });
+    });
+
+    it("should return a 400 bad request error on missing docs", (done) => {
+
+      let browser: puppeteer.Browser;
+
+      (async () => {
+        browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        let status = 0;
+
+        await page.goto(appURL + "/docs/missing-doc.md")
+          .then((res) => {
+            status = res.status();
+          })
+          .catch(() => {
+            assert.fail();
+          })
+          .finally(() => {
+            assert.equal(status, 400);
+            done();
+          });
+      })()
+        .catch(() => {
+          assert.fail();
+        })
+        .finally(() => {
+          // eslint-disable-next-line no-void
+          void browser.close();
+        });
+    });
+
+    it("should redirect to login if not logged in", (done) => {
+
+      (async () => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto(appURL + "/plates");
+
+        assert.ok(page.url().includes("/login"));
+
+        await browser.close();
+      })()
+        .finally(() => {
+          done();
+        });
+    });
+
+    it("should redirect to login if incorrect user name/password", (done) => {
+
+      let isLoginPage = false;
+
+      const p = (async () => {
+
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        await page.goto(appURL + "/login");
+
+        await page.focus("#login--userName");
+        await page.type("#login--userName", userName);
+
+        await page.focus("#login--password");
+        await page.type("#login--password", password + "-incorrect");
+
+        const loginFormEle = await page.$("#form--login");
+        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
+          formEle.submit();
+        });
+
+        await page.waitForNavigation();
+
+        isLoginPage = page.url().includes("/login");
+
+        await browser.close();
+      })();
+
+      p.catch(() => {
+        // ignore
+      })
+        .finally(() => {
+          assert.ok(isLoginPage);
+          done();
+        });
+    });
+
+    it("should redirect to dashboard if insufficient user permissions", (done) => {
+
+      let isDashboardPage = false;
+
+      const p = (async () => {
+
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        await page.goto(appURL + "/login");
+
+        await page.focus("#login--userName");
+        await page.type("#login--userName", userName);
+
+        await page.focus("#login--password");
+        await page.type("#login--password", password);
+
+        const loginFormEle = await page.$("#form--login");
+        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
+          formEle.submit();
+        });
+
+        await page.waitForNavigation();
+
+        await page.goto(appURL + "/admin/userManagement");
+
+        isDashboardPage = page.url().includes("/dashboard");
+
+        await browser.close();
+      })();
+
+      p.catch(() => {
+        // ignore
+      })
+        .finally(() => {
+          assert.ok(isDashboardPage);
+          done();
         });
     });
 

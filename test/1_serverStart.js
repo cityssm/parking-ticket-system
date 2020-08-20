@@ -21,13 +21,22 @@ describe("parking-ticket-system", () => {
     const httpServer = http.createServer(app);
     const portNumber = 54333;
     let serverStarted = false;
+    const userName = "__testUser";
+    let password = "";
     before(() => {
         httpServer.listen(portNumber);
         httpServer.on("listening", () => {
             serverStarted = true;
         });
+        usersDB.inactivateUser(userName);
+        password = usersDB.createUser({
+            userName,
+            firstName: "Test",
+            lastName: "User"
+        });
     });
     after(() => {
+        usersDB.inactivateUser(userName);
         try {
             httpServer.close();
         }
@@ -64,19 +73,6 @@ describe("parking-ticket-system", () => {
         });
     });
     describe("transaction page tests", () => {
-        const userName = "__testUser";
-        let password = "";
-        before(() => {
-            usersDB.inactivateUser(userName);
-            password = usersDB.createUser({
-                userName,
-                firstName: "Test",
-                lastName: "User"
-            });
-        });
-        after(() => {
-            usersDB.inactivateUser(userName);
-        });
         const pageTests = {
             reports: {
                 goto: "/reports",
@@ -113,6 +109,7 @@ describe("parking-ticket-system", () => {
                     }
                     yield page.goto(appURL + "/logout");
                     yield browser.close();
+                    assert.ok(true);
                 }))()
                     .finally(() => {
                     done();
@@ -120,20 +117,22 @@ describe("parking-ticket-system", () => {
             });
         }
     });
-    describe("error page test", () => {
-        it("should return a 404 error", (done) => {
+    describe("error page tests", () => {
+        it("should return a 404 not found error", (done) => {
             let browser;
             (() => __awaiter(void 0, void 0, void 0, function* () {
                 browser = yield puppeteer.launch();
                 const page = yield browser.newPage();
+                let status = 0;
                 yield page.goto(appURL + "/page-not-found")
                     .then((res) => {
-                    assert.equal(res.status, 404);
+                    status = res.status();
                 })
                     .catch(() => {
                     assert.fail();
                 })
                     .finally(() => {
+                    assert.equal(status, 404);
                     done();
                 });
             }))()
@@ -141,7 +140,95 @@ describe("parking-ticket-system", () => {
                 assert.fail();
             })
                 .finally(() => {
-                browser.close();
+                void browser.close();
+            });
+        });
+        it("should return a 400 bad request error on missing docs", (done) => {
+            let browser;
+            (() => __awaiter(void 0, void 0, void 0, function* () {
+                browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                let status = 0;
+                yield page.goto(appURL + "/docs/missing-doc.md")
+                    .then((res) => {
+                    status = res.status();
+                })
+                    .catch(() => {
+                    assert.fail();
+                })
+                    .finally(() => {
+                    assert.equal(status, 400);
+                    done();
+                });
+            }))()
+                .catch(() => {
+                assert.fail();
+            })
+                .finally(() => {
+                void browser.close();
+            });
+        });
+        it("should redirect to login if not logged in", (done) => {
+            (() => __awaiter(void 0, void 0, void 0, function* () {
+                const browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                yield page.goto(appURL + "/plates");
+                assert.ok(page.url().includes("/login"));
+                yield browser.close();
+            }))()
+                .finally(() => {
+                done();
+            });
+        });
+        it("should redirect to login if incorrect user name/password", (done) => {
+            let isLoginPage = false;
+            const p = (() => __awaiter(void 0, void 0, void 0, function* () {
+                const browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                yield page.goto(appURL + "/login");
+                yield page.focus("#login--userName");
+                yield page.type("#login--userName", userName);
+                yield page.focus("#login--password");
+                yield page.type("#login--password", password + "-incorrect");
+                const loginFormEle = yield page.$("#form--login");
+                yield loginFormEle.evaluate((formEle) => {
+                    formEle.submit();
+                });
+                yield page.waitForNavigation();
+                isLoginPage = page.url().includes("/login");
+                yield browser.close();
+            }))();
+            p.catch(() => {
+            })
+                .finally(() => {
+                assert.ok(isLoginPage);
+                done();
+            });
+        });
+        it("should redirect to dashboard if insufficient user permissions", (done) => {
+            let isDashboardPage = false;
+            const p = (() => __awaiter(void 0, void 0, void 0, function* () {
+                const browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                yield page.goto(appURL + "/login");
+                yield page.focus("#login--userName");
+                yield page.type("#login--userName", userName);
+                yield page.focus("#login--password");
+                yield page.type("#login--password", password);
+                const loginFormEle = yield page.$("#form--login");
+                yield loginFormEle.evaluate((formEle) => {
+                    formEle.submit();
+                });
+                yield page.waitForNavigation();
+                yield page.goto(appURL + "/admin/userManagement");
+                isDashboardPage = page.url().includes("/dashboard");
+                yield browser.close();
+            }))();
+            p.catch(() => {
+            })
+                .finally(() => {
+                assert.ok(isDashboardPage);
+                done();
             });
         });
     });

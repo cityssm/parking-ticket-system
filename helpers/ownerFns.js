@@ -8,6 +8,7 @@ exports.getFormattedOwnerAddress = (owner) => {
             ? owner[fieldPrefix + "ownerName2"] + "\n"
             : "") +
         owner[fieldPrefix + "ownerAddress"] + "\n" +
-        owner[fieldPrefix + "ownerCity"] + ", " + owner[fieldPrefix + "ownerProvince"] + "  " +
+        owner[fieldPrefix + "ownerCity"] + ", " +
+        owner[fieldPrefix + "ownerProvince"] + "  " +
         owner[fieldPrefix + "ownerPostalCode"];
 };

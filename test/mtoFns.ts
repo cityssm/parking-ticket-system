@@ -53,7 +53,7 @@ describe("helpers/mtoFns", () => {
 
     describe("valid PKRD string", () => {
 
-      const validString = "PKRDSAMPLE    200102TKT123      xxxxxxxxxxxxxxx700101MDOE,JOHN/DOE,JANE                                 1234 FAKE ST,CITY                       A1A1A1CHEV19130000  KMBLK                                   2101                         ";
+      const validString = "PKRDSAMPLE    200102TKT123      xxxxxxxxxxxxxxx700101MDOE,JOHN/DOE,JANE                                 1234 FAKE ST,SAULT STE MARIE            A1A1A1CHEV19130000  KMBLK                                   2101                         ";
 
       const parsed = mtoFns.parsePKRD(validString);
 

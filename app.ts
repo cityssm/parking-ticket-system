@@ -142,7 +142,7 @@ const adminChecker = (req: express.Request, res: express.Response, next: express
     return next();
   }
 
-  return res.redirect("/login?redirect=" + req.originalUrl);
+  return res.redirect("/dashboard");
 };
 
 
