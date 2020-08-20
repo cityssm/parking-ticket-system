@@ -30,4 +30,39 @@ describe("helpers/mtoFns", () => {
             assert.equal(mtoFns.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
         });
     });
+    describe("#parsePKRD()", () => {
+        describe("valid PKRD string", () => {
+            const validString = "PKRDSAMPLE    200102TKT123      xxxxxxxxxxxxxxx700101MDOE,JOHN/DOE,JANE                                 1234 FAKE ST,CITY                       A1A1A1CHEV19130000  KMBLK                                   2101                         ";
+            const parsed = mtoFns.parsePKRD(validString);
+            it("should have licencePlateNumber = \"SAMPLE\"", () => {
+                if (parsed) {
+                    assert.equal(parsed.licencePlateNumber, "SAMPLE");
+                }
+                else {
+                    assert.fail();
+                }
+            });
+            it("should have ticketNumber = \"TKT123\"", () => {
+                if (parsed) {
+                    assert.equal(parsed.ticketNumber, "TKT123");
+                }
+                else {
+                    assert.fail();
+                }
+            });
+            it("should have vehicleNCIC = \"CHEV\"", () => {
+                if (parsed) {
+                    assert.equal(parsed.vehicleNCIC, "CHEV");
+                }
+                else {
+                    assert.fail();
+                }
+            });
+        });
+        describe("invalid PKRD string", () => {
+            it("returns false", () => {
+                assert.equal(mtoFns.parsePKRD(""), false);
+            });
+        });
+    });
 });

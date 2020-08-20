@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = exports.sixDigitDateNumberToEightDigit = exports.twoDigitYearToFourDigit = void 0;
+exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = exports.parsePKRD = exports.sixDigitDateNumberToEightDigit = exports.twoDigitYearToFourDigit = void 0;
 const sqlite = require("better-sqlite3");
 const parkingDB = require("./parkingDB");
 const parkingDBLookup = require("./parkingDB-lookup");
@@ -60,7 +60,7 @@ const parsePKRA = (rowData) => {
         return false;
     }
 };
-const parsePKRD = (rowData) => {
+exports.parsePKRD = (rowData) => {
     if (!rowData.startsWith("PKRD")) {
         return false;
     }
@@ -171,7 +171,7 @@ exports.importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
     let insertedRecordCount = 0;
     const rightNowMillis = Date.now();
     for (const ownershipDataRow of ownershipDataRows) {
-        const recordRow = parsePKRD(ownershipDataRow);
+        const recordRow = exports.parsePKRD(ownershipDataRow);
         if (recordRow) {
             rowCount += 1;
             if (recordRow.errorCode !== "") {

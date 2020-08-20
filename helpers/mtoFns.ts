@@ -103,7 +103,7 @@ const parsePKRA = (rowData: string) => {
 };
 
 
-const parsePKRD = (rowData: string) => {
+export const parsePKRD = (rowData: string) => {
 
   if (!rowData.startsWith("PKRD")) {
     return false;
