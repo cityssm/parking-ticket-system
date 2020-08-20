@@ -5,10 +5,12 @@ const log = require("fancy-log");
 const sqlite = require("better-sqlite3");
 exports.initUsersDB = () => {
     const usersDB = sqlite("data/users.db");
+    let doCreate = false;
     const row = usersDB.prepare("select name from sqlite_master where type = 'table' and name = 'Users'").get();
     if (!row) {
         log.warn("Creating users.db." +
             " To get started creating users, set the 'admin.defaultPassword' property in your config.js file.");
+        doCreate = true;
         usersDB.prepare("create table if not exists Users (" +
             "userName varchar(30) primary key not null," +
             " firstName varchar(50), lastName varchar(50)," +
@@ -22,19 +24,19 @@ exports.initUsersDB = () => {
             " primary key (userName, propertyName)" +
             " foreign key (userName) references Users (userName))" +
             " without rowid").run();
-        usersDB.close();
-        return true;
     }
     usersDB.close();
-    return false;
+    return doCreate;
 };
 exports.initParkingDB = () => {
     const parkingDB = sqlite("data/parking.db");
+    let doCreate = false;
     const row = parkingDB
         .prepare("select name from sqlite_master where type = 'table' and name = 'ParkingTickets'")
         .get();
     if (!row) {
         log.warn("Creating parking.db");
+        doCreate = true;
         parkingDB.prepare("create table if not exists ParkingLocations (" +
             "locationKey varchar(20) primary key not null," +
             " locationName varchar(200) not null," +
@@ -214,13 +216,15 @@ exports.initParkingDB = () => {
             .run();
     }
     parkingDB.close();
-    return false;
+    return doCreate;
 };
 exports.initNHTSADB = () => {
     const nhtsaDB = sqlite("data/nhtsa.db");
+    let doCreate = false;
     const row = nhtsaDB.prepare("select name from sqlite_master where type = 'table' and name = 'MakeModel'").get();
     if (!row) {
         log.warn("Creating nhtsa.db.");
+        doCreate = true;
         nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +
             "searchString varchar(50) primary key not null," +
             " resultCount integer not null," +
@@ -233,8 +237,7 @@ exports.initNHTSADB = () => {
             " recordDelete_timeMillis integer," +
             " primary key (makeName, modelName)" +
             ") without rowid").run();
-        return true;
     }
     nhtsaDB.close();
-    return false;
+    return doCreate;
 };

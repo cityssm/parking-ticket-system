@@ -7,12 +7,16 @@ export const initUsersDB = () => {
 
   const usersDB = sqlite("data/users.db");
 
+  let doCreate = false;
+
   const row = usersDB.prepare("select name from sqlite_master where type = 'table' and name = 'Users'").get();
 
   if (!row) {
 
     log.warn("Creating users.db." +
       " To get started creating users, set the 'admin.defaultPassword' property in your config.js file.");
+
+    doCreate = true;
 
     usersDB.prepare("create table if not exists Users (" +
       "userName varchar(30) primary key not null," +
@@ -28,22 +32,19 @@ export const initUsersDB = () => {
       " primary key (userName, propertyName)" +
       " foreign key (userName) references Users (userName))" +
       " without rowid").run();
-
-    usersDB.close();
-
-    return true;
-
   }
 
   usersDB.close();
 
-  return false;
+  return doCreate;
 
 };
 
 export const initParkingDB = () => {
 
   const parkingDB = sqlite("data/parking.db");
+
+  let doCreate = false;
 
   const row = parkingDB
     .prepare("select name from sqlite_master where type = 'table' and name = 'ParkingTickets'")
@@ -52,6 +53,7 @@ export const initParkingDB = () => {
   if (!row) {
 
     log.warn("Creating parking.db");
+    doCreate = true;
 
     /*
      * Locations
@@ -304,7 +306,7 @@ export const initParkingDB = () => {
 
   parkingDB.close();
 
-  return false;
+  return doCreate;
 
 };
 
@@ -312,11 +314,14 @@ export const initNHTSADB = () => {
 
   const nhtsaDB = sqlite("data/nhtsa.db");
 
+  let doCreate = false;
+
   const row = nhtsaDB.prepare("select name from sqlite_master where type = 'table' and name = 'MakeModel'").get();
 
   if (!row) {
 
     log.warn("Creating nhtsa.db.");
+    doCreate = true;
 
     nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +
       "searchString varchar(50) primary key not null," +
@@ -331,12 +336,10 @@ export const initNHTSADB = () => {
       " recordDelete_timeMillis integer," +
       " primary key (makeName, modelName)" +
       ") without rowid").run();
-
-    return true;
   }
 
   nhtsaDB.close();
 
-  return false;
+  return doCreate;
 
 };

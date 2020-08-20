@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fakeAdminRequest = exports.fakeViewOnlyRequest = exports.fakeRequest = exports.fakeAdminSession = exports.fakeViewOnlySession = void 0;
 const assert = require("assert");
 const puppeteer = require("puppeteer");
 const http = require("http");
@@ -17,97 +16,7 @@ const app = require("../app");
 const parkingDB_1 = require("../helpers/parkingDB");
 const usersDB = require("../helpers/usersDB");
 const vehicleFns_1 = require("../helpers/vehicleFns");
-exports.fakeViewOnlySession = {
-    id: "",
-    cookie: null,
-    destroy: null,
-    regenerate: null,
-    reload: null,
-    save: null,
-    touch: null,
-    user: {
-        userProperties: {
-            canCreate: false,
-            canUpdate: false,
-            isAdmin: false,
-            isOperator: false
-        }
-    }
-};
-exports.fakeAdminSession = {
-    id: "",
-    cookie: null,
-    destroy: null,
-    regenerate: null,
-    reload: null,
-    save: null,
-    touch: null,
-    user: {
-        userProperties: {
-            canCreate: true,
-            canUpdate: true,
-            isAdmin: true,
-            isOperator: true
-        }
-    }
-};
-exports.fakeRequest = {
-    accepted: null,
-    accepts: null,
-    acceptsCharsets: null,
-    acceptsEncodings: null,
-    acceptsLanguages: null,
-    app: null,
-    baseUrl: null,
-    body: null,
-    cookies: null,
-    complete: null,
-    connection: null,
-    destroy: null,
-    destroyed: null,
-    fresh: null,
-    get: null,
-    header: null,
-    headers: null,
-    host: null,
-    hostname: null,
-    httpVersion: null,
-    httpVersionMajor: null,
-    httpVersionMinor: null,
-    ip: null,
-    ips: null,
-    is: null,
-    method: null,
-    originalUrl: null,
-    param: null,
-    params: null,
-    path: null,
-    protocol: null,
-    query: null,
-    range: null,
-    rawHeaders: null,
-    rawTrailers: null,
-    readable: null,
-    readableLength: null,
-    readableHighWaterMark: null,
-    readableObjectMode: null,
-    route: null,
-    secure: null,
-    setTimeout: null,
-    signedCookies: null,
-    socket: null,
-    stale: null,
-    subdomains: null,
-    trailers: null,
-    url: null,
-    xhr: null
-};
-exports.fakeViewOnlyRequest = Object.assign({}, exports.fakeRequest, {
-    session: exports.fakeViewOnlySession
-});
-exports.fakeAdminRequest = Object.assign({}, exports.fakeRequest, {
-    session: exports.fakeAdminSession
-});
+const _globals_1 = require("./_globals");
 describe("parking-ticket-system", () => {
     const httpServer = http.createServer(app);
     const portNumber = 54333;
@@ -130,7 +39,7 @@ describe("parking-ticket-system", () => {
     });
     describe("databases", () => {
         it("should create data/parking.db (or ensure it exists)", () => {
-            assert.ok(parkingDB_1.getParkingTickets(exports.fakeViewOnlySession, { limit: 1, offset: 0 }));
+            assert.ok(parkingDB_1.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
         });
         it("should create data/users.db (or ensure it exists)", () => {
             assert.ok(usersDB.getAllUsers());
@@ -160,7 +69,7 @@ describe("parking-ticket-system", () => {
         before(() => {
             usersDB.inactivateUser(userName);
             password = usersDB.createUser({
-                userName: userName,
+                userName,
                 firstName: "Test",
                 lastName: "User"
             });
@@ -168,26 +77,71 @@ describe("parking-ticket-system", () => {
         after(() => {
             usersDB.inactivateUser(userName);
         });
-        it("should login, perform a ticket search, and log out - ", (done) => {
-            (() => __awaiter(void 0, void 0, void 0, function* () {
-                const browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
-                yield page.goto(appURL);
-                yield page.focus("#login--userName");
-                yield page.type("#login--userName", userName);
-                yield page.focus("#login--password");
-                yield page.type("#login--password", password);
-                const loginFormEle = yield page.$("#form--login");
-                yield loginFormEle.evaluate((formEle) => {
-                    formEle.submit();
+        const pageTests = {
+            reports: {
+                goto: "/reports",
+                waitFor: null
+            },
+            tickets: {
+                goto: "/tickets",
+                waitFor: "/tickets/doGetTickets"
+            },
+            plates: {
+                goto: "/plates",
+                waitFor: "/plates/doGetLicencePlates"
+            }
+        };
+        for (const pageName of Object.keys(pageTests)) {
+            it("should login, navigate to " + pageName + ", and log out", (done) => {
+                const pageURLs = pageTests[pageName];
+                (() => __awaiter(void 0, void 0, void 0, function* () {
+                    const browser = yield puppeteer.launch();
+                    const page = yield browser.newPage();
+                    yield page.goto(appURL);
+                    yield page.focus("#login--userName");
+                    yield page.type("#login--userName", userName);
+                    yield page.focus("#login--password");
+                    yield page.type("#login--password", password);
+                    const loginFormEle = yield page.$("#form--login");
+                    yield loginFormEle.evaluate((formEle) => {
+                        formEle.submit();
+                    });
+                    yield page.waitForNavigation();
+                    yield page.goto(appURL + pageURLs.goto);
+                    if (pageURLs.waitFor) {
+                        yield page.waitForResponse(appURL + pageURLs.waitFor);
+                    }
+                    yield page.goto(appURL + "/logout");
+                    yield browser.close();
+                }))()
+                    .finally(() => {
+                    done();
                 });
-                yield page.waitForNavigation();
-                yield page.goto(appURL + "/tickets");
-                yield page.goto(appURL + "/logout");
-                yield browser.close();
+            });
+        }
+    });
+    describe("error page test", () => {
+        it("should return a 404 error", (done) => {
+            let browser;
+            (() => __awaiter(void 0, void 0, void 0, function* () {
+                browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                yield page.goto(appURL + "/page-not-found")
+                    .then((res) => {
+                    assert.equal(res.status, 404);
+                })
+                    .catch(() => {
+                    assert.fail();
+                })
+                    .finally(() => {
+                    done();
+                });
             }))()
+                .catch(() => {
+                assert.fail();
+            })
                 .finally(() => {
-                done();
+                browser.close();
             });
         });
     });

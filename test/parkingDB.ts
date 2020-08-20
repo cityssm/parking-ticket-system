@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import { fakeViewOnlySession } from "./1_serverStart";
+import { fakeViewOnlySession } from "./_globals";
 
 import { initParkingDB } from "../helpers/dbInit";
 

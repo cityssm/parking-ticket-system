@@ -9,109 +9,7 @@ import { getParkingTickets } from "../helpers/parkingDB";
 import * as usersDB from "../helpers/usersDB";
 import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
 
-import type { Request } from "express";
-
-
-export const fakeViewOnlySession = {
-  id: "",
-  cookie: null,
-  destroy: null,
-  regenerate: null,
-  reload: null,
-  save: null,
-  touch: null,
-  user: {
-    userProperties: {
-      canCreate: false,
-      canUpdate: false,
-      isAdmin: false,
-      isOperator: false
-    }
-  }
-};
-
-
-export const fakeAdminSession = {
-  id: "",
-  cookie: null,
-  destroy: null,
-  regenerate: null,
-  reload: null,
-  save: null,
-  touch: null,
-  user: {
-    userProperties: {
-      canCreate: true,
-      canUpdate: true,
-      isAdmin: true,
-      isOperator: true
-    }
-  }
-};
-
-
-export const fakeRequest: Request = {
-  accepted: null,
-  accepts: null,
-  acceptsCharsets: null,
-  acceptsEncodings: null,
-  acceptsLanguages: null,
-  app: null,
-  baseUrl: null,
-  body: null,
-  cookies: null,
-  complete: null,
-  connection: null,
-  destroy: null,
-  destroyed: null,
-  fresh: null,
-  get: null,
-  header: null,
-  headers: null,
-  host: null,
-  hostname: null,
-  httpVersion: null,
-  httpVersionMajor: null,
-  httpVersionMinor: null,
-  ip: null,
-  ips: null,
-  is: null,
-  method: null,
-  originalUrl: null,
-  param: null,
-  params: null,
-  path: null,
-  protocol: null,
-  query: null,
-  range: null,
-  rawHeaders: null,
-  rawTrailers: null,
-  readable: null,
-  readableLength: null,
-  readableHighWaterMark: null,
-  readableObjectMode: null,
-  route: null,
-  secure: null,
-  setTimeout: null,
-  signedCookies: null,
-  socket: null,
-  stale: null,
-  subdomains: null,
-  trailers: null,
-  url: null,
-  xhr: null
-};
-
-
-export const fakeViewOnlyRequest =
-  Object.assign({}, fakeRequest, {
-    session: fakeViewOnlySession
-  });
-
-export const fakeAdminRequest =
-  Object.assign({}, fakeRequest, {
-    session: fakeAdminSession
-  });
+import { fakeViewOnlySession } from "./_globals";
 
 
 describe("parking-ticket-system", () => {
@@ -188,7 +86,7 @@ describe("parking-ticket-system", () => {
       usersDB.inactivateUser(userName);
 
       password = usersDB.createUser({
-        userName: userName,
+        userName,
         firstName: "Test",
         lastName: "User"
       }) as string;
@@ -198,42 +96,103 @@ describe("parking-ticket-system", () => {
       usersDB.inactivateUser(userName);
     });
 
-    it("should login, perform a ticket search, and log out - ", (done) => {
+    const pageTests: {
+      [pageName: string]: {
+        goto: string;
+        waitFor: string | null;
+      };
+    } = {
+      reports: {
+        goto: "/reports",
+        waitFor: null
+      },
+      tickets: {
+        goto: "/tickets",
+        waitFor: "/tickets/doGetTickets"
+      },
+      plates: {
+        goto: "/plates",
+        waitFor: "/plates/doGetLicencePlates"
+      }
+    };
+
+    for (const pageName of Object.keys(pageTests)) {
+
+      it("should login, navigate to " + pageName + ", and log out", (done) => {
+
+        const pageURLs = pageTests[pageName];
+
+        (async () => {
+          const browser = await puppeteer.launch();
+          const page = await browser.newPage();
+
+          // Load the login page
+
+          await page.goto(appURL);
+
+          await page.focus("#login--userName");
+          await page.type("#login--userName", userName);
+
+          await page.focus("#login--password");
+          await page.type("#login--password", password);
+
+          const loginFormEle = await page.$("#form--login");
+          await loginFormEle.evaluate((formEle: HTMLFormElement) => {
+            formEle.submit();
+          });
+
+          await page.waitForNavigation();
+
+          // Navigate to the ticket search
+
+          await page.goto(appURL + pageURLs.goto);
+
+          if (pageURLs.waitFor) {
+            await page.waitForResponse(appURL + pageURLs.waitFor);
+          }
+
+          // Log out
+
+          await page.goto(appURL + "/logout");
+
+          await browser.close();
+        })()
+          .finally(() => {
+            done();
+          });
+      });
+    }
+
+  });
+
+  describe("error page test", () => {
+
+    it("should return a 404 error", (done) => {
+
+      let browser;
 
       (async() => {
-        const browser = await puppeteer.launch();
+        browser = await puppeteer.launch();
         const page = await browser.newPage();
 
-        // Load the login page
-
-        await page.goto(appURL);
-
-        await page.focus("#login--userName");
-        await page.type("#login--userName", userName);
-
-        await page.focus("#login--password");
-        await page.type("#login--password", password);
-
-        const loginFormEle = await page.$("#form--login");
-        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
-          formEle.submit();
-        });
-
-        await page.waitForNavigation();
-
-        // Navigate to the ticket search
-
-        await page.goto(appURL + "/tickets");
-
-        // Log out
-
-        await page.goto(appURL + "/logout");
-
-        await browser.close();
+        await page.goto(appURL + "/page-not-found")
+          .then((res) => {
+            assert.equal(res.status, 404);
+          })
+          .catch(() => {
+            assert.fail();
+          })
+          .finally(() => {
+            done();
+          });
       })()
+        .catch(() => {
+          assert.fail();
+        })
         .finally(() => {
-          done();
+          browser.close();
         });
     });
+
   });
 });

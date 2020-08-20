@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import { fakeRequest, fakeViewOnlyRequest, fakeAdminRequest } from "./1_serverStart";
+import { fakeRequest, fakeViewOnlyRequest, fakeAdminRequest } from "./_globals";
 
 import * as userFns from "../helpers/userFns";
 
