@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const _1_serverStart_1 = require("./1_serverStart");
 const userFns = require("../helpers/userFns");
-describe("userFns", () => {
+describe("helpers/userFns", () => {
     describe("request.session.user = null", () => {
         it("userCanCreate()  => false", () => {
             assert.equal(userFns.userCanCreate(_1_serverStart_1.fakeRequest), false);

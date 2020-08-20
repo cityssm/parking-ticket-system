@@ -1,7 +1,17 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fakeAdminRequest = exports.fakeViewOnlyRequest = exports.fakeRequest = exports.fakeAdminSession = exports.fakeViewOnlySession = void 0;
 const assert = require("assert");
+const puppeteer = require("puppeteer");
 const http = require("http");
 const app = require("../app");
 const parkingDB_1 = require("../helpers/parkingDB");
@@ -106,19 +116,52 @@ describe("parking-ticket-system", () => {
         httpServer.listen(portNumber);
         httpServer.on("listening", () => {
             serverStarted = true;
-            httpServer.close();
         });
     });
-    it("Ensure server starts on port " + portNumber.toString(), () => {
+    after(() => {
+        try {
+            httpServer.close();
+        }
+        catch (_e) { }
+    });
+    it("should start server starts on port " + portNumber.toString(), () => {
         assert.ok(serverStarted);
     });
-    it("Ensure parking.db exists", () => {
-        assert.ok(parkingDB_1.getParkingTickets(exports.fakeViewOnlySession, { limit: 1, offset: 0 }));
+    describe("databases", () => {
+        it("should create data/parking.db (or ensure it exists)", () => {
+            assert.ok(parkingDB_1.getParkingTickets(exports.fakeViewOnlySession, { limit: 1, offset: 0 }));
+        });
+        it("should create data/users.db (or ensure it exists)", () => {
+            assert.ok(usersDB_1.getAllUsers());
+        });
+        it("should create data/nhtsa.db (or ensure it exists)", () => {
+            assert.ok(vehicleFns_1.getModelsByMakeFromCache(""));
+        });
     });
-    it("Ensure users.db exists", () => {
-        assert.ok(usersDB_1.getAllUsers());
-    });
-    it("Ensure nhtsa.db exists", () => {
-        assert.ok(vehicleFns_1.getModelsByMakeFromCache(""));
+    describe("page tests", () => {
+        const appURL = "http://localhost:" + portNumber.toString();
+        const docsURL = appURL + "/docs";
+        it("should load docs page - " + appURL, (done) => {
+            (() => __awaiter(void 0, void 0, void 0, function* () {
+                const browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                yield page.goto(appURL);
+                yield browser.close();
+            }))()
+                .finally(() => {
+                done();
+            });
+        });
+        it("should load login page - " + docsURL, (done) => {
+            (() => __awaiter(void 0, void 0, void 0, function* () {
+                const browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                yield page.goto(docsURL);
+                yield browser.close();
+            }))()
+                .finally(() => {
+                done();
+            });
+        });
     });
 });

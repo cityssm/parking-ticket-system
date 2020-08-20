@@ -3,7 +3,7 @@ import * as assert from "assert";
 import * as mtoFns from "../helpers/mtoFns";
 
 
-describe("mtoFns", () => {
+describe("helpers/mtoFns", () => {
 
   const currentDate = new Date();
 
@@ -22,14 +22,14 @@ describe("mtoFns", () => {
     const futureYear = currentYear + 5;
     const futureYearTwoDigits = futureYear % 100;
 
-    it("(" + futureYearTwoDigits.toString() + ") => " + futureYear.toString(), () => {
+    it("should convert " + futureYearTwoDigits.toString() + " to " + futureYear.toString(), () => {
       assert.equal(mtoFns.twoDigitYearToFourDigit(futureYearTwoDigits), futureYear);
     });
 
     const pastYear = (currentYear + 15) - 100;
     const pastYearTwoDigits = pastYear % 100;
 
-    it("(" + pastYearTwoDigits.toString() + ") => " + pastYear.toString(), () => {
+    it("should convert " + pastYearTwoDigits.toString() + " to " + pastYear.toString(), () => {
       assert.equal(mtoFns.twoDigitYearToFourDigit(pastYearTwoDigits), pastYear);
     });
 
@@ -44,7 +44,7 @@ describe("mtoFns", () => {
 
     const currentDateSixDigits = parseInt(currentDateEightDigits.toString().slice(-6), 10);
 
-    it("(" + currentDateSixDigits.toString() + ") => " + currentDateEightDigits.toString(), () => {
+    it("should convert " + currentDateSixDigits.toString() + " to " + currentDateEightDigits.toString(), () => {
       assert.equal(mtoFns.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
     });
   });

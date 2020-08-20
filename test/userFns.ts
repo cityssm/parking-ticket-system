@@ -5,7 +5,7 @@ import { fakeRequest, fakeViewOnlyRequest, fakeAdminRequest } from "./1_serverSt
 import * as userFns from "../helpers/userFns";
 
 
-describe("userFns", () => {
+describe("helpers/userFns", () => {
 
   describe("request.session.user = null", () => {
 

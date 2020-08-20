@@ -1,5 +1,7 @@
 import * as assert from "assert";
 
+import * as puppeteer from "puppeteer";
+
 import * as http from "http";
 import * as app from "../app";
 
@@ -117,32 +119,70 @@ describe("parking-ticket-system", () => {
   const httpServer = http.createServer(app);
   const portNumber = 54333;
 
-
   let serverStarted = false;
 
   before(() => {
-
     httpServer.listen(portNumber);
 
     httpServer.on("listening", () => {
       serverStarted = true;
-      httpServer.close();
     });
   });
 
-  it("Ensure server starts on port " + portNumber.toString(), () => {
+  after(() => {
+    try {
+      httpServer.close();
+    } catch (_e) { }
+  });
+
+  it("should start server starts on port " + portNumber.toString(), () => {
     assert.ok(serverStarted);
   });
 
-  it("Ensure parking.db exists", () => {
-    assert.ok(getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
+  describe("databases", () => {
+
+    it("should create data/parking.db (or ensure it exists)", () => {
+      assert.ok(getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
+    });
+
+    it("should create data/users.db (or ensure it exists)", () => {
+      assert.ok(getAllUsers());
+    });
+
+    it("should create data/nhtsa.db (or ensure it exists)", () => {
+      assert.ok(getModelsByMakeFromCache(""));
+    });
   });
 
-  it("Ensure users.db exists", () => {
-    assert.ok(getAllUsers());
-  });
+  describe("page tests", () => {
 
-  it("Ensure nhtsa.db exists", () => {
-    assert.ok(getModelsByMakeFromCache(""));
+    const appURL = "http://localhost:" + portNumber.toString();
+    const docsURL = appURL + "/docs";
+
+    it("should load docs page - " + appURL, (done) => {
+      (async() => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto(appURL);
+
+        await browser.close();
+      })()
+      .finally(() => {
+        done();
+      });
+    });
+
+    it("should load login page - " + docsURL, (done) => {
+      (async() => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto(docsURL);
+
+        await browser.close();
+      })()
+      .finally(() => {
+        done();
+      });
+    });
   });
 });

@@ -2,6 +2,7 @@ import * as sqlite from "better-sqlite3";
 import fetch from "node-fetch";
 
 import * as ncic from "../data/ncicCodes";
+import { trailerNCIC } from "../data/ncicCodes-trailer";
 
 import type { NHTSAMakeModel } from "./ptsTypes";
 
@@ -164,7 +165,7 @@ export const getMakeFromNCIC = (vehicleNCIC: string): string => {
 
 export const isNCICExclusivelyTrailer = (vehicleNCIC: string) => {
 
-  if (ncic.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
+  if (trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
     return true;
   }
 

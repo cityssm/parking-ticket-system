@@ -3,20 +3,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const dbInit_1 = require("../helpers/dbInit");
 const usersDB = require("../helpers/usersDB");
-describe("usersDB", () => {
+describe("helpers/usersDB", () => {
     before(() => {
         dbInit_1.initUsersDB();
     });
-    it("Execute getUser()", () => {
+    it("should execute getUser()", () => {
         assert.equal(usersDB.getUser("", ""), null);
     });
-    it("Execute getAllUsers()", () => {
+    it("should execute getAllUsers()", () => {
         assert.ok(usersDB.getAllUsers());
     });
-    it("Execute getUserProperties()", () => {
+    it("should execute getUserProperties()", () => {
         assert.ok(usersDB.getUserProperties(""));
     });
-    it("Execute inactivateUser() with blank user name", () => {
+    it("should execute inactivateUser() with blank user name", () => {
         assert.equal(usersDB.inactivateUser(""), 0);
     });
 });

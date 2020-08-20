@@ -2,22 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const configFns = require("../helpers/configFns");
-describe("configFns", () => {
+describe("helpers/configFns", () => {
     describe("#getProperty", () => {
-        it("Includes string value for property \"parkingTickets.ticketNumber.fieldLabel\"", () => {
+        it("should include string value for property \"parkingTickets.ticketNumber.fieldLabel\"", () => {
             assert.equal(typeof configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"), "string");
         });
-        it("Ensure function value for property \"parkingTickets.ticketNumber.nextTicketNumberFn\" returns a string", () => {
+        it("should return a string from function property \"parkingTickets.ticketNumber.nextTicketNumberFn\"", () => {
             assert.equal(typeof configFns.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(""), "string");
         });
     });
     describe("#getParkingTicketStatus()", () => {
-        it("Includes record = \"paid\"", () => {
+        it("should include a ticket status \"paid\"", () => {
             assert.ok(configFns.getParkingTicketStatus("paid"));
         });
     });
     describe("#getLicencePlateLocationProperties()", () => {
-        it("Includes record = \"CA\", \"ON\"", () => {
+        it("should include the location \"CA\", \"ON\"", () => {
             assert.equal(configFns.getLicencePlateLocationProperties("CA", "ON").licencePlateProvinceAlias, "Ontario");
         });
     });

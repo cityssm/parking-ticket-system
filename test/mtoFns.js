@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const mtoFns = require("../helpers/mtoFns");
-describe("mtoFns", () => {
+describe("helpers/mtoFns", () => {
     const currentDate = new Date();
     describe("#twoDigitYearToFourDigit()", () => {
         const currentYear = currentDate.getFullYear();
@@ -12,12 +12,12 @@ describe("mtoFns", () => {
         });
         const futureYear = currentYear + 5;
         const futureYearTwoDigits = futureYear % 100;
-        it("(" + futureYearTwoDigits.toString() + ") => " + futureYear.toString(), () => {
+        it("should convert " + futureYearTwoDigits.toString() + " to " + futureYear.toString(), () => {
             assert.equal(mtoFns.twoDigitYearToFourDigit(futureYearTwoDigits), futureYear);
         });
         const pastYear = (currentYear + 15) - 100;
         const pastYearTwoDigits = pastYear % 100;
-        it("(" + pastYearTwoDigits.toString() + ") => " + pastYear.toString(), () => {
+        it("should convert " + pastYearTwoDigits.toString() + " to " + pastYear.toString(), () => {
             assert.equal(mtoFns.twoDigitYearToFourDigit(pastYearTwoDigits), pastYear);
         });
     });
@@ -26,7 +26,7 @@ describe("mtoFns", () => {
             ((currentDate.getMonth() + 1) * 100) +
             currentDate.getDate();
         const currentDateSixDigits = parseInt(currentDateEightDigits.toString().slice(-6), 10);
-        it("(" + currentDateSixDigits.toString() + ") => " + currentDateEightDigits.toString(), () => {
+        it("should convert " + currentDateSixDigits.toString() + " to " + currentDateEightDigits.toString(), () => {
             assert.equal(mtoFns.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
         });
     });
