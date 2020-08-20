@@ -9,14 +9,16 @@
  * and abbreviations or expansions (i.e. GMC instead of General Motors).
  */
 
-import { autoNCIC } from "./ncicCodes-auto";
-import { constructionNCIC } from "./ncicCodes-construction";
-import { motorcycleNCIC } from "./ncicCodes-motorcycle";
-import { trailerNCIC } from "./ncicCodes-trailer";
-import { truckNCIC } from "./ncicCodes-truck";
+import { autoNCIC } from "./ncicCodes/auto";
+import { constructionNCIC } from "./ncicCodes/construction";
+import { motorcycleNCIC } from "./ncicCodes/motorcycle";
+import { trailerNCIC } from "./ncicCodes/trailer";
+import { truckNCIC } from "./ncicCodes/truck";
 
 
-export const vehicleNCIC = Object.assign({}, autoNCIC, motorcycleNCIC, truckNCIC, constructionNCIC);
+export const vehicleNCIC: { [ncic: string]: string } =
+  Object.assign({}, autoNCIC, motorcycleNCIC, truckNCIC, constructionNCIC);
 
 
-export const allNCIC = Object.assign({}, vehicleNCIC, trailerNCIC);
+export const allNCIC: { [ncic: string]: string } =
+  Object.assign({}, vehicleNCIC, trailerNCIC);

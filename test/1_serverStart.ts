@@ -6,7 +6,7 @@ import * as http from "http";
 import * as app from "../app";
 
 import { getParkingTickets } from "../helpers/parkingDB";
-import { getAllUsers } from "../helpers/usersDB";
+import * as usersDB from "../helpers/usersDB";
 import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
 
 import type { Request } from "express";
@@ -132,7 +132,9 @@ describe("parking-ticket-system", () => {
   after(() => {
     try {
       httpServer.close();
-    } catch (_e) { }
+    } catch (_e) {
+      // ignore
+    }
   });
 
   it("should start server starts on port " + portNumber.toString(), () => {
@@ -146,7 +148,7 @@ describe("parking-ticket-system", () => {
     });
 
     it("should create data/users.db (or ensure it exists)", () => {
-      assert.ok(getAllUsers());
+      assert.ok(usersDB.getAllUsers());
     });
 
     it("should create data/nhtsa.db (or ensure it exists)", () => {
@@ -154,35 +156,84 @@ describe("parking-ticket-system", () => {
     });
   });
 
-  describe("page tests", () => {
+  const appURL = "http://localhost:" + portNumber.toString();
 
-    const appURL = "http://localhost:" + portNumber.toString();
+  describe("simple page tests", () => {
+
     const docsURL = appURL + "/docs";
 
-    it("should load docs page - " + appURL, (done) => {
-      (async() => {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto(appURL);
-
-        await browser.close();
-      })()
-      .finally(() => {
-        done();
-      });
-    });
-
-    it("should load login page - " + docsURL, (done) => {
-      (async() => {
+    it("should load docs page - " + docsURL, (done) => {
+      (async () => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.goto(docsURL);
 
         await browser.close();
       })()
-      .finally(() => {
-        done();
-      });
+        .finally(() => {
+          done();
+        });
+    });
+
+  });
+
+  describe("transaction page tests", () => {
+
+    const userName = "__testUser";
+    let password = "";
+
+    before(() => {
+
+      // ensure the test user is not active
+      usersDB.inactivateUser(userName);
+
+      password = usersDB.createUser({
+        userName: userName,
+        firstName: "Test",
+        lastName: "User"
+      }) as string;
+    });
+
+    after(() => {
+      usersDB.inactivateUser(userName);
+    });
+
+    it("should login, perform a ticket search, and log out - ", (done) => {
+
+      (async() => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        // Load the login page
+
+        await page.goto(appURL);
+
+        await page.focus("#login--userName");
+        await page.type("#login--userName", userName);
+
+        await page.focus("#login--password");
+        await page.type("#login--password", password);
+
+        const loginFormEle = await page.$("#form--login");
+        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
+          formEle.submit();
+        });
+
+        await page.waitForNavigation();
+
+        // Navigate to the ticket search
+
+        await page.goto(appURL + "/tickets");
+
+        // Log out
+
+        await page.goto(appURL + "/logout");
+
+        await browser.close();
+      })()
+        .finally(() => {
+          done();
+        });
     });
   });
 });

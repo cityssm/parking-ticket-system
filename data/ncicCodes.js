@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.allNCIC = exports.vehicleNCIC = void 0;
-const ncicCodes_auto_1 = require("./ncicCodes-auto");
-const ncicCodes_construction_1 = require("./ncicCodes-construction");
-const ncicCodes_motorcycle_1 = require("./ncicCodes-motorcycle");
-const ncicCodes_trailer_1 = require("./ncicCodes-trailer");
-const ncicCodes_truck_1 = require("./ncicCodes-truck");
-exports.vehicleNCIC = Object.assign({}, ncicCodes_auto_1.autoNCIC, ncicCodes_motorcycle_1.motorcycleNCIC, ncicCodes_truck_1.truckNCIC, ncicCodes_construction_1.constructionNCIC);
-exports.allNCIC = Object.assign({}, exports.vehicleNCIC, ncicCodes_trailer_1.trailerNCIC);
+const auto_1 = require("./ncicCodes/auto");
+const construction_1 = require("./ncicCodes/construction");
+const motorcycle_1 = require("./ncicCodes/motorcycle");
+const trailer_1 = require("./ncicCodes/trailer");
+const truck_1 = require("./ncicCodes/truck");
+exports.vehicleNCIC = Object.assign({}, auto_1.autoNCIC, motorcycle_1.motorcycleNCIC, truck_1.truckNCIC, construction_1.constructionNCIC);
+exports.allNCIC = Object.assign({}, exports.vehicleNCIC, trailer_1.trailerNCIC);

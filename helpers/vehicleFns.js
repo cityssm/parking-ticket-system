@@ -13,7 +13,7 @@ exports.isNCICExclusivelyTrailer = exports.getMakeFromNCIC = exports.getModelsBy
 const sqlite = require("better-sqlite3");
 const node_fetch_1 = require("node-fetch");
 const ncic = require("../data/ncicCodes");
-const ncicCodes_trailer_1 = require("../data/ncicCodes-trailer");
+const trailer_1 = require("../data/ncicCodes/trailer");
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
 const dbPath = "data/nhtsa.db";
@@ -97,7 +97,7 @@ exports.getMakeFromNCIC = (vehicleNCIC) => {
     return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
 };
 exports.isNCICExclusivelyTrailer = (vehicleNCIC) => {
-    if (ncicCodes_trailer_1.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
+    if (trailer_1.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
         return true;
     }
     return false;

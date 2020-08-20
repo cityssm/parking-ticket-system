@@ -1,2 +1,6 @@
-export declare const vehicleNCIC: any;
-export declare const allNCIC: any;
+export declare const vehicleNCIC: {
+    [ncic: string]: string;
+};
+export declare const allNCIC: {
+    [ncic: string]: string;
+};

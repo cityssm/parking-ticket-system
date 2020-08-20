@@ -15,7 +15,7 @@ const puppeteer = require("puppeteer");
 const http = require("http");
 const app = require("../app");
 const parkingDB_1 = require("../helpers/parkingDB");
-const usersDB_1 = require("../helpers/usersDB");
+const usersDB = require("../helpers/usersDB");
 const vehicleFns_1 = require("../helpers/vehicleFns");
 exports.fakeViewOnlySession = {
     id: "",
@@ -122,7 +122,8 @@ describe("parking-ticket-system", () => {
         try {
             httpServer.close();
         }
-        catch (_e) { }
+        catch (_e) {
+        }
     });
     it("should start server starts on port " + portNumber.toString(), () => {
         assert.ok(serverStarted);
@@ -132,31 +133,57 @@ describe("parking-ticket-system", () => {
             assert.ok(parkingDB_1.getParkingTickets(exports.fakeViewOnlySession, { limit: 1, offset: 0 }));
         });
         it("should create data/users.db (or ensure it exists)", () => {
-            assert.ok(usersDB_1.getAllUsers());
+            assert.ok(usersDB.getAllUsers());
         });
         it("should create data/nhtsa.db (or ensure it exists)", () => {
             assert.ok(vehicleFns_1.getModelsByMakeFromCache(""));
         });
     });
-    describe("page tests", () => {
-        const appURL = "http://localhost:" + portNumber.toString();
+    const appURL = "http://localhost:" + portNumber.toString();
+    describe("simple page tests", () => {
         const docsURL = appURL + "/docs";
-        it("should load docs page - " + appURL, (done) => {
+        it("should load docs page - " + docsURL, (done) => {
             (() => __awaiter(void 0, void 0, void 0, function* () {
                 const browser = yield puppeteer.launch();
                 const page = yield browser.newPage();
-                yield page.goto(appURL);
+                yield page.goto(docsURL);
                 yield browser.close();
             }))()
                 .finally(() => {
                 done();
             });
         });
-        it("should load login page - " + docsURL, (done) => {
+    });
+    describe("transaction page tests", () => {
+        const userName = "__testUser";
+        let password = "";
+        before(() => {
+            usersDB.inactivateUser(userName);
+            password = usersDB.createUser({
+                userName: userName,
+                firstName: "Test",
+                lastName: "User"
+            });
+        });
+        after(() => {
+            usersDB.inactivateUser(userName);
+        });
+        it("should login, perform a ticket search, and log out - ", (done) => {
             (() => __awaiter(void 0, void 0, void 0, function* () {
                 const browser = yield puppeteer.launch();
                 const page = yield browser.newPage();
-                yield page.goto(docsURL);
+                yield page.goto(appURL);
+                yield page.focus("#login--userName");
+                yield page.type("#login--userName", userName);
+                yield page.focus("#login--password");
+                yield page.type("#login--password", password);
+                const loginFormEle = yield page.$("#form--login");
+                yield loginFormEle.evaluate((formEle) => {
+                    formEle.submit();
+                });
+                yield page.waitForNavigation();
+                yield page.goto(appURL + "/tickets");
+                yield page.goto(appURL + "/logout");
                 yield browser.close();
             }))()
                 .finally(() => {
