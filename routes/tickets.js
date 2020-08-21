@@ -8,12 +8,22 @@ const parkingDBLookup = require("../helpers/parkingDB-lookup");
 const parkingDBConvict = require("../helpers/parkingDB-convict");
 const parkingDB_getParkingTickets = require("../helpers/parkingDB/getParkingTickets");
 const parkingDB_getParkingTicket = require("../helpers/parkingDB/getParkingTicket");
+const parkingDB_getParkingTicketID = require("../helpers/parkingDB/getParkingTicketID");
 const parkingDB_createParkingTicket = require("../helpers/parkingDB/createParkingTicket");
 const parkingDB_updateParkingTicket = require("../helpers/parkingDB/updateParkingTicket");
 const parkingDB_resolveParkingTicket = require("../helpers/parkingDB/resolveParkingTicket");
 const parkingDB_unresolveParkingTicket = require("../helpers/parkingDB/unresolveParkingTicket");
 const parkingDB_deleteParkingTicket = require("../helpers/parkingDB/deleteParkingTicket");
 const parkingDB_restoreParkingTicket = require("../helpers/parkingDB/restoreParkingTicket");
+const parkingDB_getParkingTicketRemarks = require("../helpers/parkingDB/getParkingTicketRemarks");
+const parkingDB_createParkingTicketRemark = require("../helpers/parkingDB/createParkingTicketRemark");
+const parkingDB_updateParkingTicketRemark = require("../helpers/parkingDB/updateParkingTicketRemark");
+const parkingDB_deleteParkingTicketRemark = require("../helpers/parkingDB/deleteParkingTicketRemark");
+const parkingDB_getParkingTicketStatuses = require("../helpers/parkingDB/getParkingTicketStatuses");
+const parkingDB_createParkingTicketStatus = require("../helpers/parkingDB/createParkingTicketStatus");
+const parkingDB_updateParkingTicketStatus = require("../helpers/parkingDB/updateParkingTicketStatus");
+const parkingDB_deleteParkingTicketStatus = require("../helpers/parkingDB/deleteParkingTicketStatus");
+const parkingDB_getLicencePlateOwner = require("../helpers/parkingDB/getLicencePlateOwner");
 const userFns_1 = require("../helpers/userFns");
 const router = express_1.Router();
 router.get("/", (_req, res) => {
@@ -57,7 +67,7 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
             message: "Log entry not found.  It may have already been acknowledged."
         });
     }
-    const statusResponse = parkingDB.createParkingTicketStatus({
+    const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus({
         recordType: "status",
         ticketID: logEntries[0].ticketID,
         statusKey: "ownerLookupError",
@@ -79,7 +89,7 @@ router.post("/doReconcileAsMatch", (req, res) => {
     if (!userFns_1.userCanUpdate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const ownerRecord = parkingDB.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
+    const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
     if (!ownerRecord) {
         return res.json({
             success: false,
@@ -87,7 +97,7 @@ router.post("/doReconcileAsMatch", (req, res) => {
         });
     }
     const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
-    const statusResponse = parkingDB.createParkingTicketStatus({
+    const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus({
         recordType: "status",
         ticketID: parseInt(req.body.ticketID, 10),
         statusKey: "ownerLookupMatch",
@@ -100,14 +110,14 @@ router.post("/doReconcileAsError", (req, res) => {
     if (!userFns_1.userCanUpdate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const ownerRecord = parkingDB.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
+    const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(req.body.licencePlateCountry, req.body.licencePlateProvince, req.body.licencePlateNumber, req.body.recordDate);
     if (!ownerRecord) {
         return res.json({
             success: false,
             message: "Ownership record not found."
         });
     }
-    const statusResponse = parkingDB.createParkingTicketStatus({
+    const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus({
         recordType: "status",
         ticketID: parseInt(req.body.ticketID, 10),
         statusKey: "ownerLookupError",
@@ -127,7 +137,7 @@ router.post("/doQuickReconcileMatches", (req, res) => {
             continue;
         }
         const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
-        const statusResponse = parkingDB.createParkingTicketStatus({
+        const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus({
             recordType: "status",
             ticketID: record.ticket_ticketID,
             statusKey: "ownerLookupMatch",
@@ -260,51 +270,51 @@ router.post("/doRestoreTicket", (req, res) => {
     return res.json(result);
 });
 router.post("/doGetRemarks", (req, res) => {
-    return res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
+    return res.json(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(req.body.ticketID, req.session));
 });
 router.post("/doAddRemark", (req, res) => {
     if (!userFns_1.userCanCreate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const result = parkingDB.createParkingTicketRemark(req.body, req.session);
+    const result = parkingDB_createParkingTicketRemark.createParkingTicketRemark(req.body, req.session);
     return res.json(result);
 });
 router.post("/doUpdateRemark", (req, res) => {
     if (!userFns_1.userCanCreate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const result = parkingDB.updateParkingTicketRemark(req.body, req.session);
+    const result = parkingDB_updateParkingTicketRemark.updateParkingTicketRemark(req.body, req.session);
     return res.json(result);
 });
 router.post("/doDeleteRemark", (req, res) => {
     if (!userFns_1.userCanCreate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const result = parkingDB.deleteParkingTicketRemark(req.body.ticketID, req.body.remarkIndex, req.session);
+    const result = parkingDB_deleteParkingTicketRemark.deleteParkingTicketRemark(req.body.ticketID, req.body.remarkIndex, req.session);
     return res.json(result);
 });
 router.post("/doGetStatuses", (req, res) => {
-    return res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
+    return res.json(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(req.body.ticketID, req.session));
 });
 router.post("/doAddStatus", (req, res) => {
     if (!userFns_1.userCanCreate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const result = parkingDB.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
+    const result = parkingDB_createParkingTicketStatus.createParkingTicketStatus(req.body, req.session, req.body.resolveTicket === "1");
     return res.json(result);
 });
 router.post("/doUpdateStatus", (req, res) => {
     if (!userFns_1.userCanCreate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const result = parkingDB.updateParkingTicketStatus(req.body, req.session);
+    const result = parkingDB_updateParkingTicketStatus.updateParkingTicketStatus(req.body, req.session);
     return res.json(result);
 });
 router.post("/doDeleteStatus", (req, res) => {
     if (!userFns_1.userCanCreate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const result = parkingDB.deleteParkingTicketStatus(req.body.ticketID, req.body.statusIndex, req.session);
+    const result = parkingDB_deleteParkingTicketStatus.deleteParkingTicketStatus(req.body.ticketID, req.body.statusIndex, req.session);
     return res.json(result);
 });
 router.get("/:ticketID", (req, res) => {
@@ -323,7 +333,7 @@ router.get("/:ticketID", (req, res) => {
 });
 router.get("/byTicketNumber/:ticketNumber", (req, res) => {
     const ticketNumber = req.params.ticketNumber;
-    const ticketID = parkingDB.getParkingTicketID(ticketNumber);
+    const ticketID = parkingDB_getParkingTicketID.getParkingTicketID(ticketNumber);
     if (ticketID) {
         res.redirect("/tickets/" + ticketID.toString());
     }

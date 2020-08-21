@@ -1,7 +1,11 @@
 import { Router } from "express";
 
 import * as vehicleFns from "../helpers/vehicleFns";
-import * as parkingDB from "../helpers/parkingDB";
+
+import * as parkingDB_getParkingTicketsByLicencePlate from "../helpers/parkingDB/getParkingTicketsByLicencePlate";
+import * as parkingDB_getLicencePlates from "../helpers/parkingDB/getLicencePlates";
+import * as parkingDB_getAllLicencePlateOwners from "../helpers/parkingDB/getAllLicencePlateOwners";
+
 import * as parkingDBLookup from "../helpers/parkingDB-lookup";
 
 import { userCanUpdate, userIsOperator } from "../helpers/userFns";
@@ -20,7 +24,7 @@ router.get("/", (_req, res) => {
 
 router.post("/doGetLicencePlates", (req, res) => {
 
-  const queryOptions: parkingDB.GetLicencePlatesQueryOptions = {
+  const queryOptions: parkingDB_getLicencePlates.GetLicencePlatesQueryOptions = {
     limit: req.body.limit,
     offset: req.body.offset,
     licencePlateNumber: req.body.licencePlateNumber
@@ -34,7 +38,7 @@ router.post("/doGetLicencePlates", (req, res) => {
     queryOptions.hasUnresolvedTickets = (req.body.hasUnresolvedTickets === "1");
   }
 
-  res.json(parkingDB.getLicencePlates(queryOptions));
+  res.json(parkingDB_getLicencePlates.getLicencePlates(queryOptions));
 
 });
 
@@ -243,10 +247,10 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", (r
     licencePlateNumber = "";
   }
 
-  const owners = parkingDB.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+  const owners = parkingDB_getAllLicencePlateOwners.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
   const tickets =
-    parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
+    parkingDB_getParkingTicketsByLicencePlate.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
       req.session);
 
   res.render("plate-view", {

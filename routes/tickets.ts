@@ -10,12 +10,26 @@ import * as parkingDBConvict from "../helpers/parkingDB-convict";
 
 import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
 import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
+import * as parkingDB_getParkingTicketID from "../helpers/parkingDB/getParkingTicketID";
+
 import * as parkingDB_createParkingTicket from "../helpers/parkingDB/createParkingTicket";
 import * as parkingDB_updateParkingTicket from "../helpers/parkingDB/updateParkingTicket";
 import * as parkingDB_resolveParkingTicket from "../helpers/parkingDB/resolveParkingTicket";
 import * as parkingDB_unresolveParkingTicket from "../helpers/parkingDB/unresolveParkingTicket";
 import * as parkingDB_deleteParkingTicket from "../helpers/parkingDB/deleteParkingTicket";
 import * as parkingDB_restoreParkingTicket from "../helpers/parkingDB/restoreParkingTicket";
+
+import * as parkingDB_getParkingTicketRemarks from "../helpers/parkingDB/getParkingTicketRemarks";
+import * as parkingDB_createParkingTicketRemark from "../helpers/parkingDB/createParkingTicketRemark";
+import * as parkingDB_updateParkingTicketRemark from "../helpers/parkingDB/updateParkingTicketRemark";
+import * as parkingDB_deleteParkingTicketRemark from "../helpers/parkingDB/deleteParkingTicketRemark";
+
+import * as parkingDB_getParkingTicketStatuses from "../helpers/parkingDB/getParkingTicketStatuses";
+import * as parkingDB_createParkingTicketStatus from "../helpers/parkingDB/createParkingTicketStatus";
+import * as parkingDB_updateParkingTicketStatus from "../helpers/parkingDB/updateParkingTicketStatus";
+import * as parkingDB_deleteParkingTicketStatus from "../helpers/parkingDB/deleteParkingTicketStatus";
+
+import * as parkingDB_getLicencePlateOwner from "../helpers/parkingDB/getLicencePlateOwner";
 
 import type * as pts from "../helpers/ptsTypes";
 
@@ -99,7 +113,7 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
 
   // Set status on parking ticket
 
-  const statusResponse = parkingDB.createParkingTicketStatus(
+  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
     {
       recordType: "status",
       ticketID: logEntries[0].ticketID,
@@ -140,7 +154,7 @@ router.post("/doReconcileAsMatch", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const ownerRecord = parkingDB.getLicencePlateOwner(
+  const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(
     req.body.licencePlateCountry,
     req.body.licencePlateProvince,
     req.body.licencePlateNumber,
@@ -157,7 +171,7 @@ router.post("/doReconcileAsMatch", (req, res) => {
 
   const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
 
-  const statusResponse = parkingDB.createParkingTicketStatus(
+  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
     {
       recordType: "status",
       ticketID: parseInt(req.body.ticketID, 10),
@@ -178,7 +192,7 @@ router.post("/doReconcileAsError", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const ownerRecord = parkingDB.getLicencePlateOwner(
+  const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(
     req.body.licencePlateCountry,
     req.body.licencePlateProvince,
     req.body.licencePlateNumber,
@@ -193,7 +207,7 @@ router.post("/doReconcileAsError", (req, res) => {
     });
   }
 
-  const statusResponse = parkingDB.createParkingTicketStatus(
+  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
     {
       recordType: "status",
       ticketID: parseInt(req.body.ticketID, 10),
@@ -225,7 +239,7 @@ router.post("/doQuickReconcileMatches", (req, res) => {
 
     const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
 
-    const statusResponse = parkingDB.createParkingTicketStatus(
+    const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
       {
         recordType: "status",
         ticketID: record.ticket_ticketID,
@@ -450,7 +464,7 @@ router.post("/doRestoreTicket", (req, res) => {
  */
 
 router.post("/doGetRemarks", (req, res) => {
-  return res.json(parkingDB.getParkingTicketRemarks(req.body.ticketID, req.session));
+  return res.json(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(req.body.ticketID, req.session));
 });
 
 router.post("/doAddRemark", (req, res) => {
@@ -459,7 +473,7 @@ router.post("/doAddRemark", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.createParkingTicketRemark(req.body, req.session);
+  const result = parkingDB_createParkingTicketRemark.createParkingTicketRemark(req.body, req.session);
 
   return res.json(result);
 });
@@ -470,7 +484,7 @@ router.post("/doUpdateRemark", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.updateParkingTicketRemark(req.body, req.session);
+  const result = parkingDB_updateParkingTicketRemark.updateParkingTicketRemark(req.body, req.session);
 
   return res.json(result);
 });
@@ -481,7 +495,7 @@ router.post("/doDeleteRemark", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.deleteParkingTicketRemark(
+  const result = parkingDB_deleteParkingTicketRemark.deleteParkingTicketRemark(
     req.body.ticketID,
     req.body.remarkIndex,
     req.session
@@ -495,7 +509,7 @@ router.post("/doDeleteRemark", (req, res) => {
  */
 
 router.post("/doGetStatuses", (req, res) => {
-  return res.json(parkingDB.getParkingTicketStatuses(req.body.ticketID, req.session));
+  return res.json(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(req.body.ticketID, req.session));
 });
 
 router.post("/doAddStatus", (req, res) => {
@@ -504,7 +518,7 @@ router.post("/doAddStatus", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.createParkingTicketStatus(
+  const result = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
     req.body,
     req.session,
     req.body.resolveTicket === "1"
@@ -519,7 +533,7 @@ router.post("/doUpdateStatus", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.updateParkingTicketStatus(req.body, req.session);
+  const result = parkingDB_updateParkingTicketStatus.updateParkingTicketStatus(req.body, req.session);
 
   return res.json(result);
 });
@@ -530,7 +544,7 @@ router.post("/doDeleteStatus", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB.deleteParkingTicketStatus(
+  const result = parkingDB_deleteParkingTicketStatus.deleteParkingTicketStatus(
     req.body.ticketID,
     req.body.statusIndex,
     req.session
@@ -566,7 +580,7 @@ router.get("/byTicketNumber/:ticketNumber", (req, res) => {
 
   const ticketNumber = req.params.ticketNumber;
 
-  const ticketID = parkingDB.getParkingTicketID(ticketNumber);
+  const ticketID = parkingDB_getParkingTicketID.getParkingTicketID(ticketNumber);
 
   if (ticketID) {
     res.redirect("/tickets/" + ticketID.toString());

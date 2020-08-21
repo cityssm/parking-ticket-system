@@ -3,7 +3,8 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type * as pts from "../ptsTypes";
 
-import { dbPath, canUpdateObject, getParkingLocationWithDB, getLicencePlateOwnerWithDB } from "../parkingDB";
+import { dbPath, canUpdateObject, getParkingLocationWithDB } from "../parkingDB";
+import { getLicencePlateOwnerWithDB } from "./getLicencePlateOwner";
 
 
 export const getParkingTicket = (ticketID: number, reqSession: Express.Session) => {

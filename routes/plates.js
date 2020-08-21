@@ -1,7 +1,9 @@
 "use strict";
 const express_1 = require("express");
 const vehicleFns = require("../helpers/vehicleFns");
-const parkingDB = require("../helpers/parkingDB");
+const parkingDB_getParkingTicketsByLicencePlate = require("../helpers/parkingDB/getParkingTicketsByLicencePlate");
+const parkingDB_getLicencePlates = require("../helpers/parkingDB/getLicencePlates");
+const parkingDB_getAllLicencePlateOwners = require("../helpers/parkingDB/getAllLicencePlateOwners");
 const parkingDBLookup = require("../helpers/parkingDB-lookup");
 const userFns_1 = require("../helpers/userFns");
 const router = express_1.Router();
@@ -22,7 +24,7 @@ router.post("/doGetLicencePlates", (req, res) => {
     if (req.body.hasUnresolvedTickets !== "") {
         queryOptions.hasUnresolvedTickets = (req.body.hasUnresolvedTickets === "1");
     }
-    res.json(parkingDB.getLicencePlates(queryOptions));
+    res.json(parkingDB_getLicencePlates.getLicencePlates(queryOptions));
 });
 router.post("/doGetUnreceivedLicencePlateLookupBatches", (req, res) => {
     if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
@@ -153,8 +155,8 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", (r
     if (licencePlateNumber === "_") {
         licencePlateNumber = "";
     }
-    const owners = parkingDB.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
-    const tickets = parkingDB.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
+    const owners = parkingDB_getAllLicencePlateOwners.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+    const tickets = parkingDB_getParkingTicketsByLicencePlate.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
     res.render("plate-view", {
         headTitle: "Licence Plate " + licencePlateNumber,
         licencePlateNumber,
