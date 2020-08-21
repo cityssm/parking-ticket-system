@@ -1,16 +1,22 @@
 import { Router } from "express";
 
 import * as configFns from "../helpers/configFns";
-import * as ownerFns from "../helpers/ownerFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+
+import * as handler_doGetTickets from "../handlers/tickets-post/doGetTickets";
+
+// Reconciliation
+import * as handler_reconcile from "../handlers/tickets-get/reconcile";
+import * as handler_doAcknowledgeLookupError from "../handlers/tickets-post/doAcknowledgeLookupError";
+import * as handler_doQuickReconcileMatches from "../handlers/tickets-post/doQuickReconcileMatches";
+import * as handler_doReconcileAsMatch from "../handlers/tickets-post/doReconcileAsMatch";
+import * as handler_doReconcileAsError from "../handlers/tickets-post/doReconcileAsError";
 
 import * as parkingDB from "../helpers/parkingDB";
 
 // Get tickets
-import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
 import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
 import * as parkingDB_getParkingTicketID from "../helpers/parkingDB/getParkingTicketID";
-import * as parkingDB_getLicencePlateOwner from "../helpers/parkingDB/getLicencePlateOwner";
 
 // Update tickets
 import * as parkingDB_createParkingTicket from "../helpers/parkingDB/createParkingTicket";
@@ -21,16 +27,10 @@ import * as parkingDB_deleteParkingTicket from "../helpers/parkingDB/deleteParki
 import * as parkingDB_restoreParkingTicket from "../helpers/parkingDB/restoreParkingTicket";
 
 // Remarks
-import * as parkingDB_getParkingTicketRemarks from "../helpers/parkingDB/getParkingTicketRemarks";
-import * as parkingDB_createParkingTicketRemark from "../helpers/parkingDB/createParkingTicketRemark";
-import * as parkingDB_updateParkingTicketRemark from "../helpers/parkingDB/updateParkingTicketRemark";
-import * as parkingDB_deleteParkingTicketRemark from "../helpers/parkingDB/deleteParkingTicketRemark";
+import * as parkingDB_parkingTicketRemarks from "../helpers/parkingDB/parkingTicketRemarks";
 
 // Statuses
-import * as parkingDB_getParkingTicketStatuses from "../helpers/parkingDB/getParkingTicketStatuses";
-import * as parkingDB_createParkingTicketStatus from "../helpers/parkingDB/createParkingTicketStatus";
-import * as parkingDB_updateParkingTicketStatus from "../helpers/parkingDB/updateParkingTicketStatus";
-import * as parkingDB_deleteParkingTicketStatus from "../helpers/parkingDB/deleteParkingTicketStatus";
+import * as parkingDB_parkingTicketStatuses from "../helpers/parkingDB/parkingTicketStatuses";
 
 // Convictions
 import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/getLastTenConvictionBatches";
@@ -39,12 +39,6 @@ import * as parkingDB_createConvictionBatch from "../helpers/parkingDB/createCon
 import * as parkingDB_addParkingTicketToConvictionBatch from "../helpers/parkingDB/addParkingTicketToConvictionBatch";
 import * as parkingDB_lockConvictionBatch from "../helpers/parkingDB/lockConvictionBatch";
 import * as parkingDB_unlockConvictionBatch from "../helpers/parkingDB/unlockConvictionBatch";
-
-// Reconciliation
-import * as parkingDB_getOwnershipReconciliationRecords from "../helpers/parkingDB/getOwnershipReconciliationRecords";
-import * as parkingDB_getUnacknowledgedLookupErrorLog from "../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
-import * as parkingDB_acknowledgeLookupErrorLogEntry from "../helpers/parkingDB/acknowledgeLookupErrorLogEntry";
-
 
 import type * as pts from "../helpers/ptsTypes";
 
@@ -64,223 +58,30 @@ router.get("/", (_req, res) => {
   });
 });
 
-router.post("/doGetTickets", (req, res) => {
-
-  const queryOptions: parkingDB_getParkingTickets.GetParkingTicketsQueryOptions = {
-    limit: req.body.limit,
-    offset: req.body.offset,
-    ticketNumber: req.body.ticketNumber,
-    licencePlateNumber: req.body.licencePlateNumber,
-    location: req.body.location
-  };
-
-  if (req.body.isResolved !== "") {
-    queryOptions.isResolved = req.body.isResolved === "1";
-  }
-
-  res.json(parkingDB_getParkingTickets.getParkingTickets(req.session, queryOptions));
-});
+router.post("/doGetTickets", handler_doGetTickets.handler);
 
 /*
  * Ownership Reconciliation
  */
 
-router.get("/reconcile", (req, res) => {
+router.get("/reconcile",
+  handler_reconcile.handler);
 
-  if (!userCanUpdate(req)) {
-    return res.redirect("/tickets/?error=accessDenied");
-  }
+router.post("/doAcknowledgeLookupError",
+  handler_doAcknowledgeLookupError.handler);
 
-  const reconciliationRecords = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
+router.post("/doReconcileAsMatch",
+  handler_doReconcileAsMatch.handler);
 
-  const lookupErrors = parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(
-    -1,
-    -1
-  );
+router.post("/doReconcileAsError",
+  handler_doReconcileAsError.handler);
 
-  return res.render("ticket-reconcile", {
-    headTitle: "Ownership Reconciliation",
-    records: reconciliationRecords,
-    errorLog: lookupErrors
-  });
-});
+router.post("/doQuickReconcileMatches",
+  handler_doQuickReconcileMatches.handler);
 
-router.post("/doAcknowledgeLookupError", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  // Get log entry
-
-  const logEntries = parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(
-    req.body.batchID,
-    req.body.logIndex
-  );
-
-  if (logEntries.length === 0) {
-
-    return res.json({
-      success: false,
-      message: "Log entry not found.  It may have already been acknowledged."
-    });
-  }
-
-  // Set status on parking ticket
-
-  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
-    {
-      recordType: "status",
-      ticketID: logEntries[0].ticketID,
-      statusKey: "ownerLookupError",
-      statusField: "",
-      statusNote:
-        logEntries[0].errorMessage + " (" + logEntries[0].errorCode + ")"
-    },
-    req.session,
-    false
-  );
-
-  if (!statusResponse.success) {
-
-    return res.json({
-      success: false,
-      message:
-        "Unable to update the status on the parking ticket.  It may have been resolved."
-    });
-  }
-
-  // Mark log entry as acknowledged
-
-  const success = parkingDB_acknowledgeLookupErrorLogEntry.acknowledgeLookupErrorLogEntry(
-    req.body.batchID,
-    req.body.logIndex,
-    req.session
-  );
-
-  return res.json({
-    success
-  });
-});
-
-router.post("/doReconcileAsMatch", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(
-    req.body.licencePlateCountry,
-    req.body.licencePlateProvince,
-    req.body.licencePlateNumber,
-    req.body.recordDate
-  );
-
-  if (!ownerRecord) {
-
-    return res.json({
-      success: false,
-      message: "Ownership record not found."
-    });
-  }
-
-  const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
-
-  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
-    {
-      recordType: "status",
-      ticketID: parseInt(req.body.ticketID, 10),
-      statusKey: "ownerLookupMatch",
-      statusField: ownerRecord.recordDate.toString(),
-      statusNote: ownerAddress
-    },
-    req.session,
-    false
-  );
-
-  return res.json(statusResponse);
-});
-
-router.post("/doReconcileAsError", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(
-    req.body.licencePlateCountry,
-    req.body.licencePlateProvince,
-    req.body.licencePlateNumber,
-    req.body.recordDate
-  );
-
-  if (!ownerRecord) {
-
-    return res.json({
-      success: false,
-      message: "Ownership record not found."
-    });
-  }
-
-  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
-    {
-      recordType: "status",
-      ticketID: parseInt(req.body.ticketID, 10),
-      statusKey: "ownerLookupError",
-      statusField: ownerRecord.vehicleNCIC,
-      statusNote: ""
-    },
-    req.session,
-    false
-  );
-
-  return res.json(statusResponse);
-});
-
-router.post("/doQuickReconcileMatches", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const records = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
-
-  const statusRecords: Array<{ ticketID: number; statusIndex: number }> = [];
-
-  for (const record of records) {
-    if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
-      continue;
-    }
-
-    const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
-
-    const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
-      {
-        recordType: "status",
-        ticketID: record.ticket_ticketID,
-        statusKey: "ownerLookupMatch",
-        statusField: record.owner_recordDateString,
-        statusNote: ownerAddress
-      },
-      req.session,
-      false
-    );
-
-    if (statusResponse.success) {
-      statusRecords.push({
-        ticketID: record.ticket_ticketID,
-        statusIndex: statusResponse.statusIndex
-      });
-    }
-  }
-
-  return res.json({
-    success: true,
-    statusRecords
-  });
-});
-
-// TICKET CONVICTIONS
+/*
+ * Ticket Convictions
+ */
 
 router.post("/doGetRecentConvictionBatches", (req, res) => {
 
@@ -479,7 +280,7 @@ router.post("/doRestoreTicket", (req, res) => {
  */
 
 router.post("/doGetRemarks", (req, res) => {
-  return res.json(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(req.body.ticketID, req.session));
+  return res.json(parkingDB_parkingTicketRemarks.getParkingTicketRemarks(req.body.ticketID, req.session));
 });
 
 router.post("/doAddRemark", (req, res) => {
@@ -488,7 +289,7 @@ router.post("/doAddRemark", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB_createParkingTicketRemark.createParkingTicketRemark(req.body, req.session);
+  const result = parkingDB_parkingTicketRemarks.createParkingTicketRemark(req.body, req.session);
 
   return res.json(result);
 });
@@ -499,7 +300,7 @@ router.post("/doUpdateRemark", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB_updateParkingTicketRemark.updateParkingTicketRemark(req.body, req.session);
+  const result = parkingDB_parkingTicketRemarks.updateParkingTicketRemark(req.body, req.session);
 
   return res.json(result);
 });
@@ -510,7 +311,7 @@ router.post("/doDeleteRemark", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB_deleteParkingTicketRemark.deleteParkingTicketRemark(
+  const result = parkingDB_parkingTicketRemarks.deleteParkingTicketRemark(
     req.body.ticketID,
     req.body.remarkIndex,
     req.session
@@ -524,7 +325,7 @@ router.post("/doDeleteRemark", (req, res) => {
  */
 
 router.post("/doGetStatuses", (req, res) => {
-  return res.json(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(req.body.ticketID, req.session));
+  return res.json(parkingDB_parkingTicketStatuses.getParkingTicketStatuses(req.body.ticketID, req.session));
 });
 
 router.post("/doAddStatus", (req, res) => {
@@ -533,7 +334,7 @@ router.post("/doAddStatus", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
+  const result = parkingDB_parkingTicketStatuses.createParkingTicketStatus(
     req.body,
     req.session,
     req.body.resolveTicket === "1"
@@ -548,7 +349,7 @@ router.post("/doUpdateStatus", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB_updateParkingTicketStatus.updateParkingTicketStatus(req.body, req.session);
+  const result = parkingDB_parkingTicketStatuses.updateParkingTicketStatus(req.body, req.session);
 
   return res.json(result);
 });
@@ -559,7 +360,7 @@ router.post("/doDeleteStatus", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const result = parkingDB_deleteParkingTicketStatus.deleteParkingTicketStatus(
+  const result = parkingDB_parkingTicketStatuses.deleteParkingTicketStatus(
     req.body.ticketID,
     req.body.statusIndex,
     req.session

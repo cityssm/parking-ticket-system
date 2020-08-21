@@ -1,5 +1,5 @@
 import type { LicencePlateOwner } from "./ptsTypes";
-import type { ReconciliationRecord } from "./parkingDB-lookup";
+import type { ReconciliationRecord } from "./parkingDB/getOwnershipReconciliationRecords";
 
 
 export const getFormattedOwnerAddress = (owner: LicencePlateOwner | ReconciliationRecord) => {
