@@ -2,7 +2,7 @@ import * as sqlite from "better-sqlite3";
 
 import type { AddUpdateParkingLocationReturn } from "./getParkingLocations";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const deleteParkingLocation = (locationKey: string): AddUpdateParkingLocationReturn => {

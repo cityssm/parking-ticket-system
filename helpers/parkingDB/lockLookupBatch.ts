@@ -3,7 +3,7 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type { LookupBatchReturn } from "./getLookupBatch";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const lockLookupBatch = (batchID: number, reqSession: Express.Session): LookupBatchReturn => {

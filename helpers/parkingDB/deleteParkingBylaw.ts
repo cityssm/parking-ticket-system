@@ -2,7 +2,7 @@ import * as sqlite from "better-sqlite3";
 
 import type { AddUpdateParkingBylawReturn } from "./getParkingBylaws";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const deleteParkingBylaw = (bylawNumber: string): AddUpdateParkingBylawReturn => {

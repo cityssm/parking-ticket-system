@@ -2,7 +2,7 @@ import * as sqlite from "better-sqlite3";
 
 import type * as pts from "../ptsTypes";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export interface AddUpdateParkingOffenceReturn {

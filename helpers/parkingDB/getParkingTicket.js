@@ -5,8 +5,9 @@ const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB_1 = require("../parkingDB");
 const getLicencePlateOwner_1 = require("./getLicencePlateOwner");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.getParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath, {
+    const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
     const ticket = db.prepare("select t.*," +

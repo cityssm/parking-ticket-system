@@ -4,9 +4,9 @@ exports.getOwnershipReconciliationRecords = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const vehicleFns = require("../vehicleFns");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.getOwnershipReconciliationRecords = () => {
-    const db = sqlite(parkingDB_1.dbPath, {
+    const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
     const records = db.prepare("select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +

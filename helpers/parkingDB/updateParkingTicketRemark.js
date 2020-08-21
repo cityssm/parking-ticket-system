@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateParkingTicketRemark = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.updateParkingTicketRemark = (reqBody, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const info = db.prepare("update ParkingTicketRemarks" +
         " set remarkDate = ?," +
         " remarkTime = ?," +

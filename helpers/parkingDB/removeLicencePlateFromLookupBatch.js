@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeLicencePlateFromLookupBatch = void 0;
 const sqlite = require("better-sqlite3");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.removeLicencePlateFromLookupBatch = (reqBody, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +

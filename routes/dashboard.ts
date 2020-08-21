@@ -1,7 +1,9 @@
 import { Router } from "express";
 
 import * as configFns from "../helpers/configFns";
-import * as usersDB from "../helpers/usersDB";
+
+import * as usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword";
+
 
 const router = Router();
 
@@ -21,7 +23,7 @@ router.post("/doChangePassword", (req, res) => {
   const oldPassword = req.body.oldPassword;
   const newPassword = req.body.newPassword;
 
-  const result = usersDB.tryResetPassword(userName, oldPassword, newPassword);
+  const result = usersDB_tryResetPassword.tryResetPassword(userName, oldPassword, newPassword);
 
   res.json(result);
 

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteParkingTicketRemark = void 0;
 const sqlite = require("better-sqlite3");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.deleteParkingTicketRemark = (ticketID, remarkIndex, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const info = db.prepare("update ParkingTicketRemarks" +
         " set recordDelete_userName = ?," +
         " recordDelete_timeMillis = ?" +

@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import * as vehicleFns from "../helpers/vehicleFns";
 
-import * as parkingDB_getParkingTicketsByLicencePlate from "../helpers/parkingDB/getParkingTicketsByLicencePlate";
+import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
 import * as parkingDB_getLicencePlates from "../helpers/parkingDB/getLicencePlates";
 import * as parkingDB_getAllLicencePlateOwners from "../helpers/parkingDB/getAllLicencePlateOwners";
 
@@ -256,7 +256,7 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", (r
   const owners = parkingDB_getAllLicencePlateOwners.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
   const tickets =
-    parkingDB_getParkingTicketsByLicencePlate.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
+    parkingDB_getParkingTickets.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
       req.session);
 
   res.render("plate-view", {

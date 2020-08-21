@@ -1,7 +1,7 @@
 "use strict";
 const express_1 = require("express");
 const configFns = require("../helpers/configFns");
-const usersDB = require("../helpers/usersDB");
+const usersDB_getUser = require("../helpers/usersDB/getUser");
 const router = express_1.Router();
 router.route("/")
     .get((req, res) => {
@@ -26,7 +26,7 @@ router.route("/")
     const userName = req.body.userName;
     const passwordPlain = req.body.password;
     const redirectURL = req.body.redirect;
-    const userObj = usersDB.getUser(userName, passwordPlain);
+    const userObj = usersDB_getUser.getUser(userName, passwordPlain);
     if (userObj) {
         req.session.user = userObj;
         if (redirectURL && redirectURL !== "") {

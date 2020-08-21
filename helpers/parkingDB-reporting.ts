@@ -1,9 +1,10 @@
-import { dbPath } from "./parkingDB";
 import * as sqlite from "better-sqlite3";
 
-import { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
-
 import * as configFns from "../helpers/configFns";
+
+import type { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
+
+import { parkingDB as dbPath } from "../data/databasePaths";
 
 
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis: string) => {

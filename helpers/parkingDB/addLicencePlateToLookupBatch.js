@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addAllLicencePlatesToLookupBatch = exports.addLicencePlateToLookupBatch = void 0;
 const sqlite = require("better-sqlite3");
 const getLookupBatch_1 = require("./getLookupBatch");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.addLicencePlateToLookupBatch = (reqBody, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
@@ -38,7 +38,7 @@ exports.addLicencePlateToLookupBatch = (reqBody, reqSession) => {
     }
 };
 exports.addAllLicencePlatesToLookupBatch = (reqBody, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +

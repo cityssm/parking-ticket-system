@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getReportRowsColumns = void 0;
-const parkingDB_1 = require("./parkingDB");
 const sqlite = require("better-sqlite3");
 const configFns = require("../helpers/configFns");
+const databasePaths_1 = require("../data/databasePaths");
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis) => {
     return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== ""
         ? possibleRecordDeleteTimeMillis
@@ -200,7 +200,7 @@ reportDefinitions.set("cleanup-parkingLocations", {
         " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)"
 });
 const executeQuery = (sql, params) => {
-    const db = sqlite(parkingDB_1.dbPath, {
+    const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
     const stmt = db.prepare(sql);

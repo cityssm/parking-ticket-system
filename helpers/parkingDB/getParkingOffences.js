@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getParkingOffencesByLocationKey = exports.getParkingOffences = void 0;
 const sqlite = require("better-sqlite3");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.getParkingOffences = () => {
-    const db = sqlite(parkingDB_1.dbPath, {
+    const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
     const rows = db.prepare("select o.bylawNumber, o.locationKey, o.parkingOffence," +
@@ -19,7 +19,7 @@ exports.getParkingOffences = () => {
     return rows;
 };
 exports.getParkingOffencesByLocationKey = (locationKey) => {
-    const db = sqlite(parkingDB_1.dbPath, {
+    const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
     const rows = db.prepare("select o.bylawNumber, b.bylawDescription," +

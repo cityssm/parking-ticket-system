@@ -2,7 +2,7 @@ import * as sqlite from "better-sqlite3";
 
 import * as configFns from "../configFns";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const unresolveParkingTicket = (ticketID: number, reqSession: Express.Session) => {

@@ -35,9 +35,12 @@ import * as vehicleFns from "./helpers/vehicleFns";
  */
 
 
+import * as usersDB_init from "./helpers/usersDB/initializeDatabase";
+import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase";
 import * as dbInit from "./helpers/dbInit";
-dbInit.initUsersDB();
-dbInit.initParkingDB();
+
+usersDB_init.initializeDatabase();
+parkingDB_init.initializeDatabase();
 dbInit.initNHTSADB();
 
 

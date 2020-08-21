@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getParkingTicketID = void 0;
 const sqlite = require("better-sqlite3");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.getParkingTicketID = (ticketNumber) => {
-    const db = sqlite(parkingDB_1.dbPath, {
+    const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
     const ticketRow = db.prepare("select ticketID" +

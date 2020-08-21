@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeParkingTicketFromConvictionBatch = void 0;
 const sqlite = require("better-sqlite3");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const lockedBatchCheck = db
         .prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +

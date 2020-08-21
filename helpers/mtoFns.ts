@@ -1,7 +1,5 @@
 import * as sqlite from "better-sqlite3";
 
-import * as parkingDB from "./parkingDB";
-
 import * as parkingDB_getConvictionBatch from "./parkingDB/getConvictionBatch";
 import * as parkingDB_markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent";
 
@@ -10,6 +8,8 @@ import * as parkingDB_markLookupBatchAsSent from "./parkingDB/markLookupBatchAsS
 
 import * as configFns from "./configFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+
+import { parkingDB as dbPath } from "../data/databasePaths";
 
 
 let currentDate: Date;
@@ -259,7 +259,7 @@ export const importLicencePlateOwnership = (batchID: number, ownershipData: stri
 
   // Verify the batch with the sent date in the file
 
-  const db = sqlite(parkingDB.dbPath);
+  const db = sqlite(dbPath);
 
   const batchRow = db.prepare("select sentDate from LicencePlateLookupBatches" +
     " where batchID = ?" +

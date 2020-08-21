@@ -1,9 +1,12 @@
 import { Router } from "express";
 
-import * as usersDB from "../helpers/usersDB";
-import * as parkingDBCleanup from "../helpers/parkingDB-cleanup";
-
-import * as parkingDB_updateParkingOffencesByBylawNumber from "../helpers/parkingDB/updateParkingOffencesByBylawNumber";
+import * as usersDB_getAllUsers from "../helpers/usersDB/getAllUsers";
+import * as usersDB_getUserProperties from "../helpers/usersDB/getUserProperties";
+import * as usersDB_createUser from "../helpers/usersDB/createUser";
+import * as usersDB_updateUser from "../helpers/usersDB/updateUser";
+import * as usersDB_updateUserProperty from "../helpers/usersDB/updateUserProperty";
+import * as usersDB_generateNewPassword from "../helpers/usersDB/generateNewPassword";
+import * as usersDB_inactivateUser from "../helpers/usersDB/inactivateUser";
 
 import * as parkingDB_getParkingBylaws from "../helpers/parkingDB/getParkingBylaws";
 import * as parkingDB_addParkingBylaw from "../helpers/parkingDB/addParkingBylaw";
@@ -18,7 +21,17 @@ import * as parkingDB_deleteParkingLocation from "../helpers/parkingDB/deletePar
 import * as parkingDB_getParkingOffences from "../helpers/parkingDB/getParkingOffences";
 import * as parkingDB_addParkingOffence from "../helpers/parkingDB/addParkingOffence";
 import * as parkingDB_updateParkingOffence from "../helpers/parkingDB/updateParkingOffence";
+import * as parkingDB_updateParkingOffencesByBylawNumber from "../helpers/parkingDB/updateParkingOffencesByBylawNumber";
 import * as parkingDB_deleteParkingOffence from "../helpers/parkingDB/deleteParkingOffence";
+
+import * as parkingDB_getDatabaseCleanupCounts from "../helpers/parkingDB/getDatabaseCleanupCounts";
+import * as parkingDB_cleanupParkingBylawsTable from "../helpers/parkingDB/cleanupParkingBylawsTable";
+import * as parkingDB_cleanupParkingOffencesTable from "../helpers/parkingDB/cleanupParkingOffencesTable";
+import * as parkingDB_cleanupParkingLocationsTable from "../helpers/parkingDB/cleanupParkingLocationsTable";
+import * as parkingDB_cleanupParkingTicketsTable from "../helpers/parkingDB/cleanupParkingTicketsTable";
+import * as parkingDB_cleanupParkingTicketStatusLog from "../helpers/parkingDB/cleanupParkingTicketStatusLog";
+import * as parkingDB_cleanupParkingTicketRemarksTable from "../helpers/parkingDB/cleanupParkingTicketRemarksTable";
+import * as parkingDB_cleanupLicencePlateOwnersTable from "../helpers/parkingDB/cleanupLicencePlateOwnersTable";
 
 import { userIsAdmin, forbiddenJSON } from "../helpers/userFns";
 import * as configFns from "../helpers/configFns";
@@ -35,7 +48,7 @@ router.get("/userManagement", (req, res) => {
     return res.redirect("/dashboard/?error=accessDenied");
   }
 
-  const users = usersDB.getAllUsers();
+  const users = usersDB_getAllUsers.getAllUsers();
 
   return res.render("admin-userManagement", {
     headTitle: "User Management",
@@ -49,7 +62,7 @@ router.post("/doCreateUser", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const newPassword = usersDB.createUser(req.body);
+  const newPassword = usersDB_createUser.createUser(req.body);
 
   if (!newPassword) {
 
@@ -75,7 +88,7 @@ router.post("/doUpdateUser", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const changeCount = usersDB.updateUser(req.body);
+  const changeCount = usersDB_updateUser.updateUser(req.body);
 
   res.json({
     success: (changeCount === 1)
@@ -89,7 +102,7 @@ router.post("/doUpdateUserProperty", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const changeCount = usersDB.updateUserProperty(req.body);
+  const changeCount = usersDB_updateUserProperty.updateUserProperty(req.body);
 
   res.json({
     success: (changeCount === 1)
@@ -103,7 +116,7 @@ router.post("/doResetPassword", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const newPassword = usersDB.generateNewPassword(req.body.userName);
+  const newPassword = usersDB_generateNewPassword.generateNewPassword(req.body.userName);
 
   res.json({
     success: true,
@@ -118,7 +131,7 @@ router.post("/doGetUserProperties", (req, res) => {
     return forbiddenJSON(res);
   }
 
-  const userProperties = usersDB.getUserProperties(req.body.userName);
+  const userProperties = usersDB_getUserProperties.getUserProperties(req.body.userName);
 
   res.json(userProperties);
 
@@ -139,7 +152,7 @@ router.post("/doDeleteUser", (req, res) => {
 
   }
 
-  const success = usersDB.inactivateUser(userNameToDelete);
+  const success = usersDB_inactivateUser.inactivateUser(userNameToDelete);
 
   res.json({ success });
 
@@ -155,7 +168,7 @@ router.get("/cleanup", (req, res) => {
     return res.redirect("/dashboard/?error=accessDenied");
   }
 
-  const counts = parkingDBCleanup.getDatabaseCleanupCounts();
+  const counts = parkingDB_getDatabaseCleanupCounts.getDatabaseCleanupCounts();
 
   res.render("admin-cleanup", {
     headTitle: "Database Cleanup",
@@ -183,37 +196,37 @@ router.post("/doCleanupTable", (req, res) => {
 
     case "parkingTickets":
 
-      success = parkingDBCleanup.cleanupParkingTicketsTable(recordDelete_timeMillis);
+      success = parkingDB_cleanupParkingTicketsTable.cleanupParkingTicketsTable(recordDelete_timeMillis);
       break;
 
     case "parkingTicketRemarks":
 
-      success = parkingDBCleanup.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
+      success = parkingDB_cleanupParkingTicketRemarksTable.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
       break;
 
     case "parkingTicketStatusLog":
 
-      success = parkingDBCleanup.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
+      success = parkingDB_cleanupParkingTicketStatusLog.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
       break;
 
     case "licencePlateOwners":
 
-      success = parkingDBCleanup.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
+      success = parkingDB_cleanupLicencePlateOwnersTable.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
       break;
 
     case "parkingOffences":
 
-      success = parkingDBCleanup.cleanupParkingOffencesTable();
+      success = parkingDB_cleanupParkingOffencesTable.cleanupParkingOffencesTable();
       break;
 
     case "parkingLocations":
 
-      success = parkingDBCleanup.cleanupParkingLocationsTable();
+      success = parkingDB_cleanupParkingLocationsTable.cleanupParkingLocationsTable();
       break;
 
     case "parkingBylaws":
 
-      success = parkingDBCleanup.cleanupParkingBylawsTable();
+      success = parkingDB_cleanupParkingBylawsTable.cleanupParkingBylawsTable();
       break;
   }
 

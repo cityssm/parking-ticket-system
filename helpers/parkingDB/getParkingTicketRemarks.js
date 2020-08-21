@@ -4,8 +4,9 @@ exports.getParkingTicketRemarks = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.getParkingTicketRemarks = (ticketID, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath, {
+    const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
     const remarkRows = db.prepare("select remarkIndex, remarkDate, remarkTime, remark," +

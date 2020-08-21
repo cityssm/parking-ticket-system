@@ -4,7 +4,6 @@
 /// <reference types="multer" />
 import * as sqlite from "better-sqlite3";
 import type * as pts from "./ptsTypes";
-export declare const dbPath = "data/parking.db";
 export declare const canUpdateObject: (obj: pts.Record, reqSession: Express.Session) => boolean;
 export declare const getParkingLocationWithDB: (db: sqlite.Database, locationKey: string) => pts.ParkingLocation;
 export declare const getRecentParkingTicketVehicleMakeModelValues: () => any[];

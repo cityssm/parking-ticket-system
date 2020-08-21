@@ -5,7 +5,7 @@ import * as configFns from "../configFns";
 import * as vehicleFns from "../vehicleFns";
 import type * as pts from "../ptsTypes";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const getLicencePlateOwnerWithDB =

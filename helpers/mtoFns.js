@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = exports.parsePKRD = exports.sixDigitDateNumberToEightDigit = exports.twoDigitYearToFourDigit = void 0;
 const sqlite = require("better-sqlite3");
-const parkingDB = require("./parkingDB");
 const parkingDB_getConvictionBatch = require("./parkingDB/getConvictionBatch");
 const parkingDB_markConvictionBatchAsSent = require("./parkingDB/markConvictionBatchAsSent");
 const parkingDB_getLookupBatch = require("./parkingDB/getLookupBatch");
 const parkingDB_markLookupBatchAsSent = require("./parkingDB/markLookupBatchAsSent");
 const configFns = require("./configFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
+const databasePaths_1 = require("../data/databasePaths");
 let currentDate;
 let currentDateNumber;
 let currentDatePrefix;
@@ -142,7 +142,7 @@ exports.importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
             message: "An error occurred while trying to parse the first row of the file."
         };
     }
-    const db = sqlite(parkingDB.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const batchRow = db.prepare("select sentDate from LicencePlateLookupBatches" +
         " where batchID = ?" +
         " and recordDelete_timeMillis is null" +

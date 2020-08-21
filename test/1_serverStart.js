@@ -14,7 +14,9 @@ const puppeteer = require("puppeteer");
 const http = require("http");
 const app = require("../app");
 const getParkingTickets_1 = require("../helpers/parkingDB/getParkingTickets");
-const usersDB = require("../helpers/usersDB");
+const getAllUsers_1 = require("../helpers/usersDB/getAllUsers");
+const createUser_1 = require("../helpers/usersDB/createUser");
+const inactivateUser_1 = require("../helpers/usersDB/inactivateUser");
 const vehicleFns_1 = require("../helpers/vehicleFns");
 const _globals_1 = require("./_globals");
 describe("parking-ticket-system", () => {
@@ -28,15 +30,15 @@ describe("parking-ticket-system", () => {
         httpServer.on("listening", () => {
             serverStarted = true;
         });
-        usersDB.inactivateUser(userName);
-        password = usersDB.createUser({
+        inactivateUser_1.inactivateUser(userName);
+        password = createUser_1.createUser({
             userName,
             firstName: "Test",
             lastName: "User"
         });
     });
     after(() => {
-        usersDB.inactivateUser(userName);
+        inactivateUser_1.inactivateUser(userName);
         try {
             httpServer.close();
         }
@@ -51,7 +53,7 @@ describe("parking-ticket-system", () => {
             assert.ok(getParkingTickets_1.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
         });
         it("should create data/users.db (or ensure it exists)", () => {
-            assert.ok(usersDB.getAllUsers());
+            assert.ok(getAllUsers_1.getAllUsers());
         });
         it("should create data/nhtsa.db (or ensure it exists)", () => {
             assert.ok(vehicleFns_1.getModelsByMakeFromCache(""));

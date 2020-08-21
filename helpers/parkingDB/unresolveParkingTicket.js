@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.unresolveParkingTicket = void 0;
 const sqlite = require("better-sqlite3");
 const configFns = require("../configFns");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.unresolveParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const ticketObj = db.prepare("select recordUpdate_timeMillis from ParkingTickets" +
         " where ticketID = ?" +
         " and recordDelete_timeMillis is null" +

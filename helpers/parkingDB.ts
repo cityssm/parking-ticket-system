@@ -4,7 +4,7 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "./configFns";
 import type * as pts from "./ptsTypes";
 
-export const dbPath = "data/parking.db";
+import { parkingDB as dbPath } from "../data/databasePaths";
 
 
 export const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {

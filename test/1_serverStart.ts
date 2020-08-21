@@ -6,7 +6,11 @@ import * as http from "http";
 import * as app from "../app";
 
 import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets";
-import * as usersDB from "../helpers/usersDB";
+
+import { getAllUsers } from "../helpers/usersDB/getAllUsers";
+import { createUser } from "../helpers/usersDB/createUser";
+import { inactivateUser } from "../helpers/usersDB/inactivateUser";
+
 import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
 
 import { fakeViewOnlySession } from "./_globals";
@@ -31,9 +35,9 @@ describe("parking-ticket-system", () => {
     });
 
     // ensure the test user is not active
-    usersDB.inactivateUser(userName);
+    inactivateUser(userName);
 
-    password = usersDB.createUser({
+    password = createUser({
       userName,
       firstName: "Test",
       lastName: "User"
@@ -43,7 +47,7 @@ describe("parking-ticket-system", () => {
 
   after(() => {
 
-    usersDB.inactivateUser(userName);
+    inactivateUser(userName);
 
     try {
       httpServer.close();
@@ -63,7 +67,7 @@ describe("parking-ticket-system", () => {
     });
 
     it("should create data/users.db (or ensure it exists)", () => {
-      assert.ok(usersDB.getAllUsers());
+      assert.ok(getAllUsers());
     });
 
     it("should create data/nhtsa.db (or ensure it exists)", () => {

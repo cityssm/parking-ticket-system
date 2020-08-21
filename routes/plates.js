@@ -1,7 +1,7 @@
 "use strict";
 const express_1 = require("express");
 const vehicleFns = require("../helpers/vehicleFns");
-const parkingDB_getParkingTicketsByLicencePlate = require("../helpers/parkingDB/getParkingTicketsByLicencePlate");
+const parkingDB_getParkingTickets = require("../helpers/parkingDB/getParkingTickets");
 const parkingDB_getLicencePlates = require("../helpers/parkingDB/getLicencePlates");
 const parkingDB_getAllLicencePlateOwners = require("../helpers/parkingDB/getAllLicencePlateOwners");
 const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUnreceivedLookupBatches");
@@ -162,7 +162,7 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", (r
         licencePlateNumber = "";
     }
     const owners = parkingDB_getAllLicencePlateOwners.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
-    const tickets = parkingDB_getParkingTicketsByLicencePlate.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
+    const tickets = parkingDB_getParkingTickets.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
     res.render("plate-view", {
         headTitle: "Licence Plate " + licencePlateNumber,
         licencePlateNumber,

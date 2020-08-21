@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createParkingTicketStatus = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.createParkingTicketStatus = (reqBodyOrObj, reqSession, resolveTicket) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const statusIndexNew = db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
         " from ParkingTicketStatusLog" +
         " where ticketID = ?")

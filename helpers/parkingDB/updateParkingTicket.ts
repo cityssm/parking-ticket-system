@@ -4,7 +4,7 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "../configFns";
 import type * as pts from "../ptsTypes";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const updateParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {

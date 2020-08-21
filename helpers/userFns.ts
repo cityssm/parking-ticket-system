@@ -50,6 +50,11 @@ export const userIsOperator = (req: Request) => {
 };
 
 
+export const getHashString = (userName: string, passwordPlain: string) => {
+  return userName + "::" + passwordPlain;
+};
+
+
 export const forbiddenJSON = (res: Response) => {
   return res
     .status(403)

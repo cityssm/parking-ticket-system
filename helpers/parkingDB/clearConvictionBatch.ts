@@ -1,6 +1,6 @@
 import * as sqlite from "better-sqlite3";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const clearConvictionBatch = (

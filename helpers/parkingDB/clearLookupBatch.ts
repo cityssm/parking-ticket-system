@@ -2,7 +2,7 @@ import * as sqlite from "better-sqlite3";
 
 import type { LookupBatchReturn } from "./getLookupBatch";
 
-import { dbPath } from "../parkingDB";
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
 export const clearLookupBatch = (batchID: number, reqSession: Express.Session): LookupBatchReturn => {

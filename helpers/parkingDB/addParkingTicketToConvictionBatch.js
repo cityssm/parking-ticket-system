@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addAllParkingTicketsToConvictionBatch = exports.addParkingTicketToConvictionBatch = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const parkingDB_1 = require("../parkingDB");
+const databasePaths_1 = require("../../data/databasePaths");
 exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const lockedBatchCheck = db
         .prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +
@@ -98,7 +98,7 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
     }
 };
 exports.addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, reqSession) => {
-    const db = sqlite(parkingDB_1.dbPath);
+    const db = sqlite(databasePaths_1.parkingDB);
     const lockedBatchCheck = db
         .prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +

@@ -15,3 +15,4 @@ export declare const getParkingTickets: (reqSession: Express.Session, queryOptio
     count: any;
     tickets: pts.ParkingTicket[];
 };
+export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) => pts.ParkingTicket[];
