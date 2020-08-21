@@ -14,10 +14,13 @@ import * as parkingDB_getOwnershipReconciliationRecords from "../helpers/parking
 import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches";
 import * as parkingDB_getUnacknowledgedLookupErrorLog from "../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
 
+import * as parkingDB_getParkingOffences from "../helpers/parkingDB/getParkingOffences";
+import * as parkingDB_getParkingBylaws from "../helpers/parkingDB/getParkingBylaws";
+import * as parkingDB_getParkingLocations from "../helpers/parkingDB/getParkingLocations";
+
 import * as parkingDB_cleanup from "../helpers/parkingDB-cleanup";
 
 import * as parkingDB_ontario from "../helpers/parkingDB-ontario";
-import * as parkingDB_related from "../helpers/parkingDB-related";
 import * as parkingDB_reporting from "../helpers/parkingDB-reporting";
 
 
@@ -94,23 +97,23 @@ describe("helpers/parkingDB", () => {
   describe("-related", () => {
 
     it("should execute getParkingLocations()", () => {
-      assert.ok(parkingDB_related.getParkingLocations());
+      assert.ok(parkingDB_getParkingLocations.getParkingLocations());
     });
 
     it("should execute getParkingBylaws()", () => {
-      assert.ok(parkingDB_related.getParkingBylaws());
+      assert.ok(parkingDB_getParkingBylaws.getParkingBylaws());
     });
 
     it("should execute getParkingBylawsWithOffenceStats()", () => {
-      assert.ok(parkingDB_related.getParkingBylawsWithOffenceStats());
+      assert.ok(parkingDB_getParkingBylaws.getParkingBylawsWithOffenceStats());
     });
 
     it("should execute getParkingOffences()", () => {
-      assert.ok(parkingDB_related.getParkingOffences());
+      assert.ok(parkingDB_getParkingOffences.getParkingOffences());
     });
 
     it("should execute getParkingOffencesByLocationKey()", () => {
-      assert.ok(parkingDB_related.getParkingOffencesByLocationKey(""));
+      assert.ok(parkingDB_getParkingOffences.getParkingOffencesByLocationKey(""));
     });
   });
 

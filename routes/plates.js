@@ -8,7 +8,6 @@ const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUn
 const parkingDB_getLookupBatch = require("../helpers/parkingDB/getLookupBatch");
 const parkingDB_createLookupBatch = require("../helpers/parkingDB/createLookupBatch");
 const parkingDB_addLicencePlateToLookupBatch = require("../helpers/parkingDB/addLicencePlateToLookupBatch");
-const parkingDB_addAllLicencePlatesToLookupBatch = require("../helpers/parkingDB/addAllLicencePlatesToLookupBatch");
 const parkingDB_clearLookupBatch = require("../helpers/parkingDB/clearLookupBatch");
 const parkingDB_removeLicencePlateFromLookupBatch = require("../helpers/parkingDB/removeLicencePlateFromLookupBatch");
 const parkingDB_lockLookupBatch = require("../helpers/parkingDB/lockLookupBatch");
@@ -96,7 +95,7 @@ router.post("/doAddAllLicencePlatesToLookupBatch", (req, res) => {
             message: "Forbidden"
         });
     }
-    const result = parkingDB_addAllLicencePlatesToLookupBatch.addAllLicencePlatesToLookupBatch(req.body, req.session);
+    const result = parkingDB_addLicencePlateToLookupBatch.addAllLicencePlatesToLookupBatch(req.body, req.session);
     return res.json(result);
 });
 router.post("/doRemoveLicencePlateFromLookupBatch", (req, res) => {

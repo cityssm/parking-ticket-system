@@ -5,7 +5,7 @@ import * as parkingDBOntario from "../helpers/parkingDB-ontario";
 import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch";
 import * as parkingDB_clearConvictionBatch from "../helpers/parkingDB/clearConvictionBatch";
 import * as parkingDB_removeParkingTicketFromConvictionBatch from "../helpers/parkingDB/removeParkingTicketFromConvictionBatch";
-import * as parkingDB_addAllParkingTicketsToConvictionBatch from "../helpers/parkingDB/addAllParkingTicketsToConvictionBatch";
+import * as parkingDB_addParkingTicketToConvictionBatch from "../helpers/parkingDB/addParkingTicketToConvictionBatch";
 
 import { userCanUpdate, userIsOperator, forbiddenJSON } from "../helpers/userFns";
 import * as mtoFns from "../helpers/mtoFns";
@@ -74,7 +74,7 @@ router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
     message?: string;
     batch?: pts.ParkingTicketConvictionBatch;
     tickets?: pts.ParkingTicket[];
-  } = parkingDB_addAllParkingTicketsToConvictionBatch.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
+  } = parkingDB_addParkingTicketToConvictionBatch.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
 
   if (result.successCount > 0) {
     result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);

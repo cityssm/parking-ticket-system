@@ -10,9 +10,11 @@ const parkingDB_getLastTenConvictionBatches = require("../helpers/parkingDB/getL
 const parkingDB_getOwnershipReconciliationRecords = require("../helpers/parkingDB/getOwnershipReconciliationRecords");
 const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUnreceivedLookupBatches");
 const parkingDB_getUnacknowledgedLookupErrorLog = require("../helpers/parkingDB/getUnacknowledgedLookupErrorLog");
+const parkingDB_getParkingOffences = require("../helpers/parkingDB/getParkingOffences");
+const parkingDB_getParkingBylaws = require("../helpers/parkingDB/getParkingBylaws");
+const parkingDB_getParkingLocations = require("../helpers/parkingDB/getParkingLocations");
 const parkingDB_cleanup = require("../helpers/parkingDB-cleanup");
 const parkingDB_ontario = require("../helpers/parkingDB-ontario");
-const parkingDB_related = require("../helpers/parkingDB-related");
 const parkingDB_reporting = require("../helpers/parkingDB-reporting");
 describe("helpers/parkingDB", () => {
     before(() => {
@@ -67,19 +69,19 @@ describe("helpers/parkingDB", () => {
     });
     describe("-related", () => {
         it("should execute getParkingLocations()", () => {
-            assert.ok(parkingDB_related.getParkingLocations());
+            assert.ok(parkingDB_getParkingLocations.getParkingLocations());
         });
         it("should execute getParkingBylaws()", () => {
-            assert.ok(parkingDB_related.getParkingBylaws());
+            assert.ok(parkingDB_getParkingBylaws.getParkingBylaws());
         });
         it("should execute getParkingBylawsWithOffenceStats()", () => {
-            assert.ok(parkingDB_related.getParkingBylawsWithOffenceStats());
+            assert.ok(parkingDB_getParkingBylaws.getParkingBylawsWithOffenceStats());
         });
         it("should execute getParkingOffences()", () => {
-            assert.ok(parkingDB_related.getParkingOffences());
+            assert.ok(parkingDB_getParkingOffences.getParkingOffences());
         });
         it("should execute getParkingOffencesByLocationKey()", () => {
-            assert.ok(parkingDB_related.getParkingOffencesByLocationKey(""));
+            assert.ok(parkingDB_getParkingOffences.getParkingOffencesByLocationKey(""));
         });
     });
     describe("-reporting", () => {

@@ -10,7 +10,6 @@ import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getU
 import * as parkingDB_getLookupBatch from "../helpers/parkingDB/getLookupBatch";
 import * as parkingDB_createLookupBatch from "../helpers/parkingDB/createLookupBatch";
 import * as parkingDB_addLicencePlateToLookupBatch from "../helpers/parkingDB/addLicencePlateToLookupBatch";
-import * as parkingDB_addAllLicencePlatesToLookupBatch from "../helpers/parkingDB/addAllLicencePlatesToLookupBatch";
 import * as parkingDB_clearLookupBatch from "../helpers/parkingDB/clearLookupBatch";
 import * as parkingDB_removeLicencePlateFromLookupBatch from "../helpers/parkingDB/removeLicencePlateFromLookupBatch";
 import * as parkingDB_lockLookupBatch from "../helpers/parkingDB/lockLookupBatch";
@@ -145,7 +144,7 @@ router.post("/doAddAllLicencePlatesToLookupBatch", (req, res) => {
 
   }
 
-  const result = parkingDB_addAllLicencePlatesToLookupBatch.addAllLicencePlatesToLookupBatch(req.body, req.session);
+  const result = parkingDB_addLicencePlateToLookupBatch.addAllLicencePlatesToLookupBatch(req.body, req.session);
 
   return res.json(result);
 

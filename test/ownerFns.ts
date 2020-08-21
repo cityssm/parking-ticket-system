@@ -3,7 +3,7 @@ import * as assert from "assert";
 import * as ownerFns from "../helpers/ownerFns";
 
 import type { LicencePlateOwner } from "../helpers/ptsTypes";
-import type { ReconciliationRecord } from "../helpers/parkingDB-lookup";
+import type { ReconciliationRecord } from "../helpers/parkingDB/getOwnershipReconciliationRecords";
 
 
 describe("helpers/ownerFns", () => {

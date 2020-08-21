@@ -9,3 +9,10 @@ export declare const addParkingTicketToConvictionBatch: (batchID: number, ticket
     success: boolean;
     message?: undefined;
 };
+export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ticketIDs: number[], reqSession: Express.Session) => {
+    successCount: number;
+    message: string;
+} | {
+    successCount: number;
+    message?: undefined;
+};

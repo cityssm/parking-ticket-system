@@ -4,7 +4,7 @@ const parkingDBOntario = require("../helpers/parkingDB-ontario");
 const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
 const parkingDB_clearConvictionBatch = require("../helpers/parkingDB/clearConvictionBatch");
 const parkingDB_removeParkingTicketFromConvictionBatch = require("../helpers/parkingDB/removeParkingTicketFromConvictionBatch");
-const parkingDB_addAllParkingTicketsToConvictionBatch = require("../helpers/parkingDB/addAllParkingTicketsToConvictionBatch");
+const parkingDB_addParkingTicketToConvictionBatch = require("../helpers/parkingDB/addParkingTicketToConvictionBatch");
 const userFns_1 = require("../helpers/userFns");
 const mtoFns = require("../helpers/mtoFns");
 const router = express_1.Router();
@@ -37,7 +37,7 @@ router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
     }
     const batchID = req.body.batchID;
     const ticketIDs = req.body.ticketIDs;
-    const result = parkingDB_addAllParkingTicketsToConvictionBatch.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
+    const result = parkingDB_addParkingTicketToConvictionBatch.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
     if (result.successCount > 0) {
         result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
         result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
