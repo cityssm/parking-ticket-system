@@ -1,9 +1,16 @@
 import { Router } from "express";
 
-import * as configFns from "../helpers/configFns";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
+// Tickets
+import * as handler_new from "../handlers/tickets-get/new";
 import * as handler_doGetTickets from "../handlers/tickets-post/doGetTickets";
+import * as handler_doCreateTicket from "../handlers/tickets-post/doCreateTicket";
+import * as handler_doUpdateTicket from "../handlers/tickets-post/doUpdateTicket";
+import * as handler_doResolveTicket from "../handlers/tickets-post/doResolveTicket";
+import * as handler_doUnresolveTicket from "../handlers/tickets-post/doUnresolveTicket";
+import * as handler_doDeleteTicket from "../handlers/tickets-post/doDeleteTicket";
+import * as handler_doRestoreTicket from "../handlers/tickets-post/doRestoreTicket";
 
 // Reconciliation
 import * as handler_reconcile from "../handlers/tickets-get/reconcile";
@@ -12,19 +19,19 @@ import * as handler_doQuickReconcileMatches from "../handlers/tickets-post/doQui
 import * as handler_doReconcileAsMatch from "../handlers/tickets-post/doReconcileAsMatch";
 import * as handler_doReconcileAsError from "../handlers/tickets-post/doReconcileAsError";
 
+// Convictions
+import * as handler_doGetRecentConvictionBatches from "../handlers/tickets-post/doGetRecentConvictionBatches";
+import * as handler_doGetConvictionBatch from "../handlers/tickets-post/doGetConvictionBatch";
+import * as handler_doCreateConvictionBatch from "../handlers/tickets-post/doCreateConvictionBatch";
+import * as handler_doAddTicketToConvictionBatch from "../handlers/tickets-post/doAddTicketToConvictionBatch";
+import * as handler_doLockConvictionBatch from "../handlers/tickets-post/doLockConvictionBatch";
+import * as handler_doUnlockConvictionBatch from "../handlers/tickets-post/doUnlockConvictionBatch";
+
 import * as parkingDB from "../helpers/parkingDB";
 
 // Get tickets
 import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
 import * as parkingDB_getParkingTicketID from "../helpers/parkingDB/getParkingTicketID";
-
-// Update tickets
-import * as parkingDB_createParkingTicket from "../helpers/parkingDB/createParkingTicket";
-import * as parkingDB_updateParkingTicket from "../helpers/parkingDB/updateParkingTicket";
-import * as parkingDB_resolveParkingTicket from "../helpers/parkingDB/resolveParkingTicket";
-import * as parkingDB_unresolveParkingTicket from "../helpers/parkingDB/unresolveParkingTicket";
-import * as parkingDB_deleteParkingTicket from "../helpers/parkingDB/deleteParkingTicket";
-import * as parkingDB_restoreParkingTicket from "../helpers/parkingDB/restoreParkingTicket";
 
 // Remarks
 import * as parkingDB_parkingTicketRemarks from "../helpers/parkingDB/parkingTicketRemarks";
@@ -32,17 +39,7 @@ import * as parkingDB_parkingTicketRemarks from "../helpers/parkingDB/parkingTic
 // Statuses
 import * as parkingDB_parkingTicketStatuses from "../helpers/parkingDB/parkingTicketStatuses";
 
-// Convictions
-import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/getLastTenConvictionBatches";
-import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch";
-import * as parkingDB_createConvictionBatch from "../helpers/parkingDB/createConvictionBatch";
-import * as parkingDB_addParkingTicketToConvictionBatch from "../helpers/parkingDB/addParkingTicketToConvictionBatch";
-import * as parkingDB_lockConvictionBatch from "../helpers/parkingDB/lockConvictionBatch";
-import * as parkingDB_unlockConvictionBatch from "../helpers/parkingDB/unlockConvictionBatch";
-
-import type * as pts from "../helpers/ptsTypes";
-
-import { userCanCreate, userCanUpdate, userIsOperator, forbiddenJSON } from "../helpers/userFns";
+import { userCanCreate, forbiddenJSON } from "../helpers/userFns";
 
 
 const router = Router();
@@ -58,7 +55,8 @@ router.get("/", (_req, res) => {
   });
 });
 
-router.post("/doGetTickets", handler_doGetTickets.handler);
+router.post("/doGetTickets",
+  handler_doGetTickets.handler);
 
 /*
  * Ownership Reconciliation
@@ -83,197 +81,48 @@ router.post("/doQuickReconcileMatches",
  * Ticket Convictions
  */
 
-router.post("/doGetRecentConvictionBatches", (req, res) => {
+router.post("/doGetRecentConvictionBatches",
+  handler_doGetRecentConvictionBatches.handler);
 
-  if (!(userCanUpdate(req) || userIsOperator(req))) {
-    return forbiddenJSON(res);
-  }
+router.post("/doGetConvictionBatch",
+  handler_doGetConvictionBatch.handler);
 
-  const batches = parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches();
+router.post("/doCreateConvictionBatch",
+  handler_doCreateConvictionBatch.handler);
 
-  return res.json(batches);
-});
+router.post("/doAddTicketToConvictionBatch",
+  handler_doAddTicketToConvictionBatch.handler);
 
-router.post("/doGetConvictionBatch", (req, res) => {
+router.post("/doLockConvictionBatch",
+  handler_doLockConvictionBatch.handler);
 
-  if (!(userCanUpdate(req) || userIsOperator(req))) {
-    return forbiddenJSON(res);
-  }
-
-  const batch = parkingDB_getConvictionBatch.getConvictionBatch(
-    req.body.batchID
-  );
-
-  return res.json(batch);
-});
-
-router.post("/doCreateConvictionBatch", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const batchResult = parkingDB_createConvictionBatch.createConvictionBatch(
-    req.session
-  );
-
-  return res.json(batchResult);
-});
-
-router.post("/doAddTicketToConvictionBatch", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const batchID = req.body.batchID;
-  const ticketID = req.body.ticketID;
-
-  const result: {
-    success: boolean;
-    message?: string;
-    batch?: pts.ParkingTicketConvictionBatch;
-  } = parkingDB_addParkingTicketToConvictionBatch.addParkingTicketToConvictionBatch(
-    batchID,
-    ticketID,
-    req.session
-  );
-
-  if (result.success) {
-    result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
-  }
-
-  return res.json(result);
-});
-
-router.post("/doLockConvictionBatch", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const batchID = req.body.batchID;
-
-  const result = parkingDB_lockConvictionBatch.lockConvictionBatch(batchID, req.session);
-
-  return res.json(result);
-});
-
-router.post("/doUnlockConvictionBatch", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const batchID = req.body.batchID;
-
-  const success = parkingDB_unlockConvictionBatch.unlockConvictionBatch(batchID, req.session);
-
-  return res.json({ success });
-});
+router.post("/doUnlockConvictionBatch",
+  handler_doUnlockConvictionBatch.handler);
 
 /*
  * New Ticket
  */
 
-router.get(["/new", "/new/:ticketNumber"], (req, res) => {
+router.get(["/new", "/new/:ticketNumber"],
+  handler_new.handler);
 
-  if (!userCanCreate(req)) {
-    return res.redirect("/tickets/?error=accessDenied");
-  }
+router.post("/doCreateTicket",
+  handler_doCreateTicket.handler);
 
-  const ticketNumber = req.params.ticketNumber;
+router.post("/doUpdateTicket",
+  handler_doUpdateTicket.handler);
 
-  const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
+router.post("/doDeleteTicket",
+  handler_doDeleteTicket.handler);
 
-  return res.render("ticket-edit", {
-    headTitle: "New Ticket",
-    isCreate: true,
-    ticket: {
-      ticketNumber,
-      licencePlateCountry: configFns.getProperty("defaults.country"),
-      licencePlateProvince: configFns.getProperty("defaults.province")
-    },
-    issueDateMaxString: dateTimeFns.dateToString(new Date()),
-    vehicleMakeModelDatalist
-  });
-});
+router.post("/doResolveTicket",
+  handler_doResolveTicket.handler);
 
-router.post("/doCreateTicket", (req, res) => {
+router.post("/doUnresolveTicket",
+  handler_doUnresolveTicket.handler);
 
-  if (!userCanCreate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const result = parkingDB_createParkingTicket.createParkingTicket(req.body, req.session);
-
-  if (result.success) {
-    const ticketNumber = req.body.ticketNumber;
-    result.nextTicketNumber = configFns.getProperty(
-      "parkingTickets.ticketNumber.nextTicketNumberFn"
-    )(ticketNumber);
-  }
-
-  return res.json(result);
-});
-
-router.post("/doUpdateTicket", (req, res) => {
-
-  if (!userCanCreate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const result = parkingDB_updateParkingTicket.updateParkingTicket(req.body, req.session);
-
-  return res.json(result);
-});
-
-router.post("/doDeleteTicket", (req, res) => {
-
-  if (!userCanCreate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const result = parkingDB_deleteParkingTicket.deleteParkingTicket(req.body.ticketID, req.session);
-
-  return res.json(result);
-});
-
-router.post("/doResolveTicket", (req, res) => {
-
-  if (!userCanCreate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const result = parkingDB_resolveParkingTicket.resolveParkingTicket(req.body.ticketID, req.session);
-
-  return res.json(result);
-});
-
-router.post("/doUnresolveTicket", (req, res) => {
-
-  if (!userCanCreate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const result = parkingDB_unresolveParkingTicket.unresolveParkingTicket(
-    req.body.ticketID,
-    req.session
-  );
-
-  return res.json(result);
-});
-
-router.post("/doRestoreTicket", (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
-
-  const result = parkingDB_restoreParkingTicket.restoreParkingTicket(req.body.ticketID, req.session);
-
-  return res.json(result);
-});
+router.post("/doRestoreTicket",
+  handler_doRestoreTicket.handler);
 
 /*
  * Ticket Remarks
