@@ -5,9 +5,12 @@ const _globals_1 = require("./_globals");
 const dbInit_1 = require("../helpers/dbInit");
 const parkingDB_getParkingTickets = require("../helpers/parkingDB/getParkingTickets");
 const parkingDB_getParkingTicket = require("../helpers/parkingDB/getParkingTicket");
+const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
+const parkingDB_getLastTenConvictionBatches = require("../helpers/parkingDB/getLastTenConvictionBatches");
+const parkingDB_getOwnershipReconciliationRecords = require("../helpers/parkingDB/getOwnershipReconciliationRecords");
+const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUnreceivedLookupBatches");
+const parkingDB_getUnacknowledgedLookupErrorLog = require("../helpers/parkingDB/getUnacknowledgedLookupErrorLog");
 const parkingDB_cleanup = require("../helpers/parkingDB-cleanup");
-const parkingDB_convict = require("../helpers/parkingDB-convict");
-const parkingDB_lookup = require("../helpers/parkingDB-lookup");
 const parkingDB_ontario = require("../helpers/parkingDB-ontario");
 const parkingDB_related = require("../helpers/parkingDB-related");
 const parkingDB_reporting = require("../helpers/parkingDB-reporting");
@@ -20,6 +23,21 @@ describe("helpers/parkingDB", () => {
     });
     it("should execute getParkingTicket(-1)", () => {
         assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, _globals_1.fakeViewOnlySession), null);
+    });
+    it("should execute getLastTenConvictionBatches()", () => {
+        assert.ok(parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches());
+    });
+    it("should execute getConvictionBatch()", () => {
+        assert.equal(parkingDB_getConvictionBatch.getConvictionBatch(-1), null);
+    });
+    it("should execute getUnreceivedLookupBatches()", () => {
+        assert.ok(parkingDB_getUnreceivedLookupBatches.getUnreceivedLookupBatches(true));
+    });
+    it("should execute getOwnershipReconciliationRecords()", () => {
+        assert.ok(parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords());
+    });
+    it("should execute getUnacknowledgedLookupErrorLog()", () => {
+        assert.ok(parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(-1, -1));
     });
     describe("-cleanup", () => {
         const deleteTimeMillis = Date.now() + (3600 * 1000);
@@ -37,25 +55,6 @@ describe("helpers/parkingDB", () => {
         });
         it("should execute cleanupLicencePlateOwnersTable()", () => {
             assert.ok(parkingDB_cleanup.cleanupLicencePlateOwnersTable(deleteTimeMillis));
-        });
-    });
-    describe("-convict", () => {
-        it("should execute getLastTenParkingTicketConvictionBatches()", () => {
-            assert.ok(parkingDB_convict.getLastTenParkingTicketConvictionBatches());
-        });
-        it("should execute getParkingTicketConvictionBatch()", () => {
-            assert.equal(parkingDB_convict.getParkingTicketConvictionBatch(-1), null);
-        });
-    });
-    describe("-lookup", () => {
-        it("should execute getUnreceivedLicencePlateLookupBatches()", () => {
-            assert.ok(parkingDB_lookup.getUnreceivedLicencePlateLookupBatches(true));
-        });
-        it("should execute getOwnershipReconciliationRecords()", () => {
-            assert.ok(parkingDB_lookup.getOwnershipReconciliationRecords());
-        });
-        it("should execute getUnacknowledgedLicencePlateLookupErrorLog()", () => {
-            assert.ok(parkingDB_lookup.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1));
         });
     });
     describe("-ontario", () => {

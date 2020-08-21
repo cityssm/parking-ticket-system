@@ -4,11 +4,10 @@ const configFns = require("../helpers/configFns");
 const ownerFns = require("../helpers/ownerFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB = require("../helpers/parkingDB");
-const parkingDBLookup = require("../helpers/parkingDB-lookup");
-const parkingDBConvict = require("../helpers/parkingDB-convict");
 const parkingDB_getParkingTickets = require("../helpers/parkingDB/getParkingTickets");
 const parkingDB_getParkingTicket = require("../helpers/parkingDB/getParkingTicket");
 const parkingDB_getParkingTicketID = require("../helpers/parkingDB/getParkingTicketID");
+const parkingDB_getLicencePlateOwner = require("../helpers/parkingDB/getLicencePlateOwner");
 const parkingDB_createParkingTicket = require("../helpers/parkingDB/createParkingTicket");
 const parkingDB_updateParkingTicket = require("../helpers/parkingDB/updateParkingTicket");
 const parkingDB_resolveParkingTicket = require("../helpers/parkingDB/resolveParkingTicket");
@@ -23,7 +22,15 @@ const parkingDB_getParkingTicketStatuses = require("../helpers/parkingDB/getPark
 const parkingDB_createParkingTicketStatus = require("../helpers/parkingDB/createParkingTicketStatus");
 const parkingDB_updateParkingTicketStatus = require("../helpers/parkingDB/updateParkingTicketStatus");
 const parkingDB_deleteParkingTicketStatus = require("../helpers/parkingDB/deleteParkingTicketStatus");
-const parkingDB_getLicencePlateOwner = require("../helpers/parkingDB/getLicencePlateOwner");
+const parkingDB_getLastTenConvictionBatches = require("../helpers/parkingDB/getLastTenConvictionBatches");
+const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
+const parkingDB_createConvictionBatch = require("../helpers/parkingDB/createConvictionBatch");
+const parkingDB_addParkingTicketToConvictionBatch = require("../helpers/parkingDB/addParkingTicketToConvictionBatch");
+const parkingDB_lockConvictionBatch = require("../helpers/parkingDB/lockConvictionBatch");
+const parkingDB_unlockConvictionBatch = require("../helpers/parkingDB/unlockConvictionBatch");
+const parkingDB_getOwnershipReconciliationRecords = require("../helpers/parkingDB/getOwnershipReconciliationRecords");
+const parkingDB_getUnacknowledgedLookupErrorLog = require("../helpers/parkingDB/getUnacknowledgedLookupErrorLog");
+const parkingDB_acknowledgeLookupErrorLogEntry = require("../helpers/parkingDB/acknowledgeLookupErrorLogEntry");
 const userFns_1 = require("../helpers/userFns");
 const router = express_1.Router();
 router.get("/", (_req, res) => {
@@ -48,8 +55,8 @@ router.get("/reconcile", (req, res) => {
     if (!userFns_1.userCanUpdate(req)) {
         return res.redirect("/tickets/?error=accessDenied");
     }
-    const reconciliationRecords = parkingDBLookup.getOwnershipReconciliationRecords();
-    const lookupErrors = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1);
+    const reconciliationRecords = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
+    const lookupErrors = parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(-1, -1);
     return res.render("ticket-reconcile", {
         headTitle: "Ownership Reconciliation",
         records: reconciliationRecords,
@@ -60,7 +67,7 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
     if (!userFns_1.userCanUpdate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const logEntries = parkingDBLookup.getUnacknowledgedLicencePlateLookupErrorLog(req.body.batchID, req.body.logIndex);
+    const logEntries = parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(req.body.batchID, req.body.logIndex);
     if (logEntries.length === 0) {
         return res.json({
             success: false,
@@ -80,7 +87,7 @@ router.post("/doAcknowledgeLookupError", (req, res) => {
             message: "Unable to update the status on the parking ticket.  It may have been resolved."
         });
     }
-    const success = parkingDBLookup.markLicencePlateLookupErrorLogEntryAcknowledged(req.body.batchID, req.body.logIndex, req.session);
+    const success = parkingDB_acknowledgeLookupErrorLogEntry.acknowledgeLookupErrorLogEntry(req.body.batchID, req.body.logIndex, req.session);
     return res.json({
         success
     });
@@ -130,7 +137,7 @@ router.post("/doQuickReconcileMatches", (req, res) => {
     if (!userFns_1.userCanUpdate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const records = parkingDBLookup.getOwnershipReconciliationRecords();
+    const records = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
     const statusRecords = [];
     for (const record of records) {
         if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
@@ -160,21 +167,21 @@ router.post("/doGetRecentConvictionBatches", (req, res) => {
     if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
         return userFns_1.forbiddenJSON(res);
     }
-    const batches = parkingDBConvict.getLastTenParkingTicketConvictionBatches();
+    const batches = parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches();
     return res.json(batches);
 });
 router.post("/doGetConvictionBatch", (req, res) => {
     if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
         return userFns_1.forbiddenJSON(res);
     }
-    const batch = parkingDBConvict.getParkingTicketConvictionBatch(req.body.batchID);
+    const batch = parkingDB_getConvictionBatch.getConvictionBatch(req.body.batchID);
     return res.json(batch);
 });
 router.post("/doCreateConvictionBatch", (req, res) => {
     if (!userFns_1.userCanUpdate(req)) {
         return userFns_1.forbiddenJSON(res);
     }
-    const batchResult = parkingDBConvict.createParkingTicketConvictionBatch(req.session);
+    const batchResult = parkingDB_createConvictionBatch.createConvictionBatch(req.session);
     return res.json(batchResult);
 });
 router.post("/doAddTicketToConvictionBatch", (req, res) => {
@@ -183,9 +190,9 @@ router.post("/doAddTicketToConvictionBatch", (req, res) => {
     }
     const batchID = req.body.batchID;
     const ticketID = req.body.ticketID;
-    const result = parkingDBConvict.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
+    const result = parkingDB_addParkingTicketToConvictionBatch.addParkingTicketToConvictionBatch(batchID, ticketID, req.session);
     if (result.success) {
-        result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
+        result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
     }
     return res.json(result);
 });
@@ -194,7 +201,7 @@ router.post("/doLockConvictionBatch", (req, res) => {
         return userFns_1.forbiddenJSON(res);
     }
     const batchID = req.body.batchID;
-    const result = parkingDBConvict.lockConvictionBatch(batchID, req.session);
+    const result = parkingDB_lockConvictionBatch.lockConvictionBatch(batchID, req.session);
     return res.json(result);
 });
 router.post("/doUnlockConvictionBatch", (req, res) => {
@@ -202,7 +209,7 @@ router.post("/doUnlockConvictionBatch", (req, res) => {
         return userFns_1.forbiddenJSON(res);
     }
     const batchID = req.body.batchID;
-    const success = parkingDBConvict.unlockConvictionBatch(batchID, req.session);
+    const success = parkingDB_unlockConvictionBatch.unlockConvictionBatch(batchID, req.session);
     return res.json({ success });
 });
 router.get(["/new", "/new/:ticketNumber"], (req, res) => {

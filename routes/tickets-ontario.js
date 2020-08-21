@@ -1,7 +1,10 @@
 "use strict";
 const express_1 = require("express");
 const parkingDBOntario = require("../helpers/parkingDB-ontario");
-const parkingDBConvict = require("../helpers/parkingDB-convict");
+const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
+const parkingDB_clearConvictionBatch = require("../helpers/parkingDB/clearConvictionBatch");
+const parkingDB_removeParkingTicketFromConvictionBatch = require("../helpers/parkingDB/removeParkingTicketFromConvictionBatch");
+const parkingDB_addAllParkingTicketsToConvictionBatch = require("../helpers/parkingDB/addAllParkingTicketsToConvictionBatch");
 const userFns_1 = require("../helpers/userFns");
 const mtoFns = require("../helpers/mtoFns");
 const router = express_1.Router();
@@ -11,7 +14,7 @@ router.get("/convict", (req, res) => {
         return;
     }
     const tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
-    const batch = parkingDBConvict.getParkingTicketConvictionBatch(-1);
+    const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1);
     res.render("mto-ticketConvict", {
         headTitle: "Convict Parking Tickets",
         tickets,
@@ -34,9 +37,9 @@ router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
     }
     const batchID = req.body.batchID;
     const ticketIDs = req.body.ticketIDs;
-    const result = parkingDBConvict.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
+    const result = parkingDB_addAllParkingTicketsToConvictionBatch.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
     if (result.successCount > 0) {
-        result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
+        result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
         result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
     }
     return res.json(result);
@@ -46,9 +49,9 @@ router.post("/doClearConvictionBatch", (req, res) => {
         return userFns_1.forbiddenJSON(res);
     }
     const batchID = req.body.batchID;
-    const result = parkingDBConvict.clearConvictionBatch(batchID, req.session);
+    const result = parkingDB_clearConvictionBatch.clearConvictionBatch(batchID, req.session);
     if (result.success) {
-        result.batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
+        result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
         result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
     }
     return res.json(result);
@@ -59,7 +62,7 @@ router.post("/doRemoveTicketFromConvictionBatch", (req, res) => {
     }
     const batchID = req.body.batchID;
     const ticketID = req.body.ticketID;
-    const result = parkingDBConvict.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
+    const result = parkingDB_removeParkingTicketFromConvictionBatch.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
     if (result.success) {
         result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
     }

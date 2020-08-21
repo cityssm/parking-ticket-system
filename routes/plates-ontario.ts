@@ -3,7 +3,9 @@ import { Router } from "express";
 import * as mtoFns from "../helpers/mtoFns";
 
 import * as parkingDBOntario from "../helpers/parkingDB-ontario";
-import * as parkingDBLookup from "../helpers/parkingDB-lookup";
+
+import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches";
+import * as parkingDB_getLookupBatch from "../helpers/parkingDB/getLookupBatch";
 
 import * as multer from "multer";
 const storage = multer.memoryStorage();
@@ -19,7 +21,7 @@ router.get("/mtoExport", (req, res) => {
     return;
   }
 
-  const latestUnlockedBatch = parkingDBLookup.getLicencePlateLookupBatch(-1);
+  const latestUnlockedBatch = parkingDB_getLookupBatch.getLookupBatch(-1);
 
   res.render("mto-plateExport", {
     headTitle: "MTO Licence Plate Export",
@@ -75,7 +77,7 @@ router.get("/mtoImport", (req, res) => {
     return;
   }
 
-  const unreceivedBatches = parkingDBLookup.getUnreceivedLicencePlateLookupBatches(false);
+  const unreceivedBatches = parkingDB_getUnreceivedLookupBatches.getUnreceivedLookupBatches(false);
 
   res.render("mto-plateImport", {
     headTitle: "MTO Licence Plate Ownership Import",

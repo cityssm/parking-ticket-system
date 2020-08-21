@@ -6,9 +6,16 @@ import { initParkingDB } from "../helpers/dbInit";
 
 import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
 import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
+
+import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch";
+import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/getLastTenConvictionBatches";
+
+import * as parkingDB_getOwnershipReconciliationRecords from "../helpers/parkingDB/getOwnershipReconciliationRecords";
+import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches";
+import * as parkingDB_getUnacknowledgedLookupErrorLog from "../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
+
 import * as parkingDB_cleanup from "../helpers/parkingDB-cleanup";
-import * as parkingDB_convict from "../helpers/parkingDB-convict";
-import * as parkingDB_lookup from "../helpers/parkingDB-lookup";
+
 import * as parkingDB_ontario from "../helpers/parkingDB-ontario";
 import * as parkingDB_related from "../helpers/parkingDB-related";
 import * as parkingDB_reporting from "../helpers/parkingDB-reporting";
@@ -26,6 +33,26 @@ describe("helpers/parkingDB", () => {
 
   it("should execute getParkingTicket(-1)", () => {
     assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), null);
+  });
+
+  it("should execute getLastTenConvictionBatches()", () => {
+    assert.ok(parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches());
+  });
+
+  it("should execute getConvictionBatch()", () => {
+    assert.equal(parkingDB_getConvictionBatch.getConvictionBatch(-1), null);
+  });
+
+  it("should execute getUnreceivedLookupBatches()", () => {
+    assert.ok(parkingDB_getUnreceivedLookupBatches.getUnreceivedLookupBatches(true));
+  });
+
+  it("should execute getOwnershipReconciliationRecords()", () => {
+    assert.ok(parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords());
+  });
+
+  it("should execute getUnacknowledgedLookupErrorLog()", () => {
+    assert.ok(parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(-1, -1));
   });
 
   describe("-cleanup", () => {
@@ -50,32 +77,6 @@ describe("helpers/parkingDB", () => {
 
     it("should execute cleanupLicencePlateOwnersTable()", () => {
       assert.ok(parkingDB_cleanup.cleanupLicencePlateOwnersTable(deleteTimeMillis));
-    });
-  });
-
-  describe("-convict", () => {
-
-    it("should execute getLastTenParkingTicketConvictionBatches()", () => {
-      assert.ok(parkingDB_convict.getLastTenParkingTicketConvictionBatches());
-    });
-
-    it("should execute getParkingTicketConvictionBatch()", () => {
-      assert.equal(parkingDB_convict.getParkingTicketConvictionBatch(-1), null);
-    });
-  });
-
-  describe("-lookup", () => {
-
-    it("should execute getUnreceivedLicencePlateLookupBatches()", () => {
-      assert.ok(parkingDB_lookup.getUnreceivedLicencePlateLookupBatches(true));
-    });
-
-    it("should execute getOwnershipReconciliationRecords()", () => {
-      assert.ok(parkingDB_lookup.getOwnershipReconciliationRecords());
-    });
-
-    it("should execute getUnacknowledgedLicencePlateLookupErrorLog()", () => {
-      assert.ok(parkingDB_lookup.getUnacknowledgedLicencePlateLookupErrorLog(-1, -1));
     });
   });
 

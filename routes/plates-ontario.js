@@ -2,7 +2,8 @@
 const express_1 = require("express");
 const mtoFns = require("../helpers/mtoFns");
 const parkingDBOntario = require("../helpers/parkingDB-ontario");
-const parkingDBLookup = require("../helpers/parkingDB-lookup");
+const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUnreceivedLookupBatches");
+const parkingDB_getLookupBatch = require("../helpers/parkingDB/getLookupBatch");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -12,7 +13,7 @@ router.get("/mtoExport", (req, res) => {
         res.redirect("/plates/?error=accessDenied");
         return;
     }
-    const latestUnlockedBatch = parkingDBLookup.getLicencePlateLookupBatch(-1);
+    const latestUnlockedBatch = parkingDB_getLookupBatch.getLookupBatch(-1);
     res.render("mto-plateExport", {
         headTitle: "MTO Licence Plate Export",
         batch: latestUnlockedBatch
@@ -49,7 +50,7 @@ router.get("/mtoImport", (req, res) => {
         res.redirect("/plates/?error=accessDenied");
         return;
     }
-    const unreceivedBatches = parkingDBLookup.getUnreceivedLicencePlateLookupBatches(false);
+    const unreceivedBatches = parkingDB_getUnreceivedLookupBatches.getUnreceivedLookupBatches(false);
     res.render("mto-plateImport", {
         headTitle: "MTO Licence Plate Ownership Import",
         batches: unreceivedBatches

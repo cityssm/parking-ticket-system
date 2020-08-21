@@ -3,8 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = exports.parsePKRD = exports.sixDigitDateNumberToEightDigit = exports.twoDigitYearToFourDigit = void 0;
 const sqlite = require("better-sqlite3");
 const parkingDB = require("./parkingDB");
-const parkingDBLookup = require("./parkingDB-lookup");
-const parkingDBConvict = require("./parkingDB-convict");
+const parkingDB_getConvictionBatch = require("./parkingDB/getConvictionBatch");
+const parkingDB_markConvictionBatchAsSent = require("./parkingDB/markConvictionBatchAsSent");
+const parkingDB_getLookupBatch = require("./parkingDB/getLookupBatch");
+const parkingDB_markLookupBatchAsSent = require("./parkingDB/markLookupBatchAsSent");
 const configFns = require("./configFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 let currentDate;
@@ -243,12 +245,12 @@ const exportBatch = (sentDate, batchEntries) => {
     return output;
 };
 exports.exportLicencePlateBatch = (batchID, reqSession) => {
-    parkingDBLookup.markLookupBatchAsSent(batchID, reqSession);
-    const batch = parkingDBLookup.getLicencePlateLookupBatch(batchID);
+    parkingDB_markLookupBatchAsSent.markLookupBatchAsSent(batchID, reqSession);
+    const batch = parkingDB_getLookupBatch.getLookupBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);
 };
 exports.exportConvictionBatch = (batchID, reqSession) => {
-    parkingDBConvict.markConvictionBatchAsSent(batchID, reqSession);
-    const batch = parkingDBConvict.getParkingTicketConvictionBatch(batchID);
+    parkingDB_markConvictionBatchAsSent.markConvictionBatchAsSent(batchID, reqSession);
+    const batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);
 };
