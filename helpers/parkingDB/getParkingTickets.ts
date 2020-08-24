@@ -18,6 +18,19 @@ export interface GetParkingTicketsQueryOptions {
 }
 
 
+const addCalculatedFields = (ticket: pts.ParkingTicket, reqSession: Express.Session) => {
+
+  ticket.recordType = "ticket";
+
+  ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+  ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
+
+  ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
+
+  ticket.canUpdate = canUpdateObject(ticket, reqSession);
+};
+
+
 export const getParkingTickets = (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
 
   const db = sqlite(dbPath, {
@@ -107,17 +120,9 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
 
   db.close();
 
-  for (const ticket of rows) {
-
-    ticket.recordType = "ticket";
-
-    ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
-    ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
-
-    ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-
-    ticket.canUpdate = canUpdateObject(ticket, reqSession);
-  }
+  rows.forEach((ticket) => {
+    addCalculatedFields(ticket, reqSession);
+  });
 
   return {
     count,
@@ -134,7 +139,7 @@ export const getParkingTicketsByLicencePlate =
       readonly: true
     });
 
-    const tickets: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
+    const rows: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
       " t.vehicleMakeModel," +
       " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
       " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
@@ -155,17 +160,9 @@ export const getParkingTicketsByLicencePlate =
 
     db.close();
 
-    for (const ticket of tickets) {
+    rows.forEach((ticket) => {
+      addCalculatedFields(ticket, reqSession);
+    });
 
-      ticket.recordType = "ticket";
-
-      ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
-      ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
-
-      ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-
-      ticket.canUpdate = canUpdateObject(ticket, reqSession);
-    }
-
-    return tickets;
+    return rows;
   };

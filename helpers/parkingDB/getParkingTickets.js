@@ -5,6 +5,13 @@ const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB_1 = require("../parkingDB");
 const databasePaths_1 = require("../../data/databasePaths");
+const addCalculatedFields = (ticket, reqSession) => {
+    ticket.recordType = "ticket";
+    ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+    ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
+    ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
+    ticket.canUpdate = parkingDB_1.canUpdateObject(ticket, reqSession);
+};
 exports.getParkingTickets = (reqSession, queryOptions) => {
     const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
@@ -68,13 +75,9 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
         " offset " + queryOptions.offset.toString())
         .all(sqlParams);
     db.close();
-    for (const ticket of rows) {
-        ticket.recordType = "ticket";
-        ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
-        ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
-        ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-        ticket.canUpdate = parkingDB_1.canUpdateObject(ticket, reqSession);
-    }
+    rows.forEach((ticket) => {
+        addCalculatedFields(ticket, reqSession);
+    });
     return {
         count,
         tickets: rows
@@ -84,7 +87,7 @@ exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProv
     const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
-    const tickets = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
+    const rows = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
         " t.vehicleMakeModel," +
         " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
         " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
@@ -103,12 +106,8 @@ exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProv
         " order by t.issueDate desc, t.ticketNumber desc")
         .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
     db.close();
-    for (const ticket of tickets) {
-        ticket.recordType = "ticket";
-        ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
-        ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
-        ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-        ticket.canUpdate = parkingDB_1.canUpdateObject(ticket, reqSession);
-    }
-    return tickets;
+    rows.forEach((ticket) => {
+        addCalculatedFields(ticket, reqSession);
+    });
+    return rows;
 };
