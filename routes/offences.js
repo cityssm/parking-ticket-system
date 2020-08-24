@@ -1,15 +1,10 @@
 "use strict";
 const express_1 = require("express");
-const parkingDB_getParkingLocations = require("../helpers/parkingDB/getParkingLocations");
-const parkingDB_getParkingOffences = require("../helpers/parkingDB/getParkingOffences");
+const handler_doGetAllLocations = require("../handlers/offences-post/doGetAllLocations");
+const handler_doGetOffencesByLocation = require("../handlers/offences-post/doGetOffencesByLocation");
+const handler_doGetAllOffences = require("../handlers/offences-post/doGetAllOffences");
 const router = express_1.Router();
-router.post("/doGetAllLocations", (_req, res) => {
-    res.json(parkingDB_getParkingLocations.getParkingLocations());
-});
-router.post("/doGetOffencesByLocation", (req, res) => {
-    res.json(parkingDB_getParkingOffences.getParkingOffencesByLocationKey(req.body.locationKey));
-});
-router.post("/doGetAllOffences", (_req, res) => {
-    res.json(parkingDB_getParkingOffences.getParkingOffences());
-});
+router.post("/doGetAllLocations", handler_doGetAllLocations.handler);
+router.post("/doGetOffencesByLocation", handler_doGetOffencesByLocation.handler);
+router.post("/doGetAllOffences", handler_doGetAllOffences.handler);
 module.exports = router;

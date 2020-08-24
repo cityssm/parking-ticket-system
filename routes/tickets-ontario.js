@@ -1,71 +1,14 @@
 "use strict";
 const express_1 = require("express");
-const parkingDBOntario = require("../helpers/parkingDB-ontario");
-const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
-const parkingDB_clearConvictionBatch = require("../helpers/parkingDB/clearConvictionBatch");
-const parkingDB_removeParkingTicketFromConvictionBatch = require("../helpers/parkingDB/removeParkingTicketFromConvictionBatch");
-const parkingDB_addParkingTicketToConvictionBatch = require("../helpers/parkingDB/addParkingTicketToConvictionBatch");
-const userFns_1 = require("../helpers/userFns");
-const mtoFns = require("../helpers/mtoFns");
+const handler_convict = require("../handlers/tickets-ontario-get/convict");
+const handler_convictDownload = require("../handlers/tickets-ontario-get/convictDownload");
+const handler_doAddAllTicketsToConvictionBatch = require("../handlers/tickets-ontario-post/doAddAllTicketsToConvictionBatch");
+const handler_doClearConvictionBatch = require("../handlers/tickets-ontario-post/doClearConvictionBatch");
+const handler_doRemoveTicketFromConvictionBatch = require("../handlers/tickets-ontario-post/doRemoveTicketFromConvictionBatch");
 const router = express_1.Router();
-router.get("/convict", (req, res) => {
-    if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
-        res.redirect("/tickets/?error=accessDenied");
-        return;
-    }
-    const tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
-    const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1);
-    res.render("mto-ticketConvict", {
-        headTitle: "Convict Parking Tickets",
-        tickets,
-        batch
-    });
-});
-router.get("/convict/:batchID", (req, res) => {
-    if (!(userFns_1.userCanUpdate(req) || userFns_1.userIsOperator(req))) {
-        return res.redirect("/tickets/?error=accessDenied");
-    }
-    const batchID = parseInt(req.params.batchID, 10);
-    const output = mtoFns.exportConvictionBatch(batchID, req.session);
-    res.setHeader("Content-Disposition", "attachment; filename=convictBatch-" + batchID.toString() + ".txt");
-    res.setHeader("Content-Type", "text/plain");
-    res.send(output);
-});
-router.post("/doAddAllTicketsToConvictionBatch", (req, res) => {
-    if (!userFns_1.userCanUpdate(req)) {
-        return userFns_1.forbiddenJSON(res);
-    }
-    const batchID = req.body.batchID;
-    const ticketIDs = req.body.ticketIDs;
-    const result = parkingDB_addParkingTicketToConvictionBatch.addAllParkingTicketsToConvictionBatch(batchID, ticketIDs, req.session);
-    if (result.successCount > 0) {
-        result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
-        result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
-    }
-    return res.json(result);
-});
-router.post("/doClearConvictionBatch", (req, res) => {
-    if (!userFns_1.userCanUpdate(req)) {
-        return userFns_1.forbiddenJSON(res);
-    }
-    const batchID = req.body.batchID;
-    const result = parkingDB_clearConvictionBatch.clearConvictionBatch(batchID, req.session);
-    if (result.success) {
-        result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
-        result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
-    }
-    return res.json(result);
-});
-router.post("/doRemoveTicketFromConvictionBatch", (req, res) => {
-    if (!userFns_1.userCanUpdate(req)) {
-        return userFns_1.forbiddenJSON(res);
-    }
-    const batchID = req.body.batchID;
-    const ticketID = req.body.ticketID;
-    const result = parkingDB_removeParkingTicketFromConvictionBatch.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
-    if (result.success) {
-        result.tickets = parkingDBOntario.getParkingTicketsAvailableForMTOConvictionBatch();
-    }
-    return res.json(result);
-});
+router.get("/convict", handler_convict.handler);
+router.get("/convict/:batchID", handler_convictDownload.handler);
+router.post("/doAddAllTicketsToConvictionBatch", handler_doAddAllTicketsToConvictionBatch.handler);
+router.post("/doClearConvictionBatch", handler_doClearConvictionBatch.handler);
+router.post("/doRemoveTicketFromConvictionBatch", handler_doRemoveTicketFromConvictionBatch.handler);
 module.exports = router;

@@ -1,29 +1,23 @@
 import { Router } from "express";
 
-import * as parkingDB_getParkingLocations from "../helpers/parkingDB/getParkingLocations";
-import * as parkingDB_getParkingOffences from "../helpers/parkingDB/getParkingOffences";
+import * as handler_doGetAllLocations from "../handlers/offences-post/doGetAllLocations";
+import * as handler_doGetOffencesByLocation from "../handlers/offences-post/doGetOffencesByLocation";
+import * as handler_doGetAllOffences from "../handlers/offences-post/doGetAllOffences";
+
 
 const router = Router();
 
 
-router.post("/doGetAllLocations", (_req, res) => {
-
-  res.json(parkingDB_getParkingLocations.getParkingLocations());
-
-});
+router.post("/doGetAllLocations",
+  handler_doGetAllLocations.handler);
 
 
-router.post("/doGetOffencesByLocation", (req, res) => {
-
-  res.json(parkingDB_getParkingOffences.getParkingOffencesByLocationKey(req.body.locationKey));
-
-});
+router.post("/doGetOffencesByLocation",
+  handler_doGetOffencesByLocation.handler);
 
 
-router.post("/doGetAllOffences", (_req, res) => {
+router.post("/doGetAllOffences",
+  handler_doGetAllOffences.handler);
 
-  res.json(parkingDB_getParkingOffences.getParkingOffences());
-
-});
 
 export = router;
