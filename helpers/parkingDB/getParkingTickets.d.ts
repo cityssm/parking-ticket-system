@@ -7,9 +7,12 @@ export interface GetParkingTicketsQueryOptions {
     isResolved?: boolean;
     ticketNumber?: string;
     licencePlateNumber?: string;
+    licencePlateNumberEqual?: string;
+    licencePlateProvince?: string;
+    licencePlateCountry?: string;
     location?: string;
-    limit: number;
-    offset: number;
+    limit?: number;
+    offset?: number;
 }
 export declare const getParkingTickets: (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
     count: any;

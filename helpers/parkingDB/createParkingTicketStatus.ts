@@ -55,7 +55,6 @@ export const createParkingTicketStatus =
           reqSession.user.userName,
           rightNow.getTime(),
           reqBodyOrObj.ticketID);
-
     }
 
     db.close();
@@ -64,5 +63,4 @@ export const createParkingTicketStatus =
       success: (info.changes > 0),
       statusIndex: statusIndexNew
     };
-
   };

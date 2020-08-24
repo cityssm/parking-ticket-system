@@ -12,9 +12,12 @@ export interface GetParkingTicketsQueryOptions {
   isResolved?: boolean;
   ticketNumber?: string;
   licencePlateNumber?: string;
+  licencePlateNumberEqual?: string;
+  licencePlateProvince?: string;
+  licencePlateCountry?: string;
   location?: string;
-  limit: number;
-  offset: number;
+  limit?: number;
+  offset?: number;
 }
 
 
@@ -31,13 +34,7 @@ const addCalculatedFields = (ticket: pts.ParkingTicket, reqSession: Express.Sess
 };
 
 
-export const getParkingTickets = (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
-
-  const db = sqlite(dbPath, {
-    readonly: true
-  });
-
-  // build where clause
+const buildWhereClause = (queryOptions: GetParkingTicketsQueryOptions) => {
 
   const sqlParams = [];
 
@@ -72,6 +69,21 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
     }
   }
 
+  if (queryOptions.licencePlateNumberEqual && queryOptions.licencePlateNumberEqual !== "") {
+    sqlWhereClause += " and t.licencePlateNumber = ?";
+    sqlParams.push(queryOptions.licencePlateNumberEqual);
+  }
+
+  if (queryOptions.licencePlateProvince && queryOptions.licencePlateProvince !== "") {
+    sqlWhereClause += " and t.licencePlateProvince = ?";
+    sqlParams.push(queryOptions.licencePlateProvince);
+  }
+
+  if (queryOptions.licencePlateCountry && queryOptions.licencePlateCountry !== "") {
+    sqlWhereClause += " and t.licencePlateCountry = ?";
+    sqlParams.push(queryOptions.licencePlateCountry);
+  }
+
   if (queryOptions.location && queryOptions.location !== "") {
 
     const locationPieces = queryOptions.location.toLowerCase().split(" ");
@@ -83,13 +95,30 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
     }
   }
 
+  return {
+    sqlWhereClause,
+    sqlParams
+  };
+};
+
+
+export const getParkingTickets = (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  // build where clause
+
+  const sqlWhereClause = buildWhereClause(queryOptions);
+
   // get the count
 
   const count = db.prepare("select ifnull(count(*), 0) as cnt" +
     " from ParkingTickets t" +
     " left join ParkingLocations l on t.locationKey = l.locationKey" +
-    sqlWhereClause)
-    .get(sqlParams)
+    sqlWhereClause.sqlWhereClause)
+    .get(sqlWhereClause.sqlParams)
     .cnt;
 
   // do query
@@ -112,11 +141,11 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
       " and s.recordDelete_timeMillis is null" +
       " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
 
-    sqlWhereClause +
+    sqlWhereClause.sqlWhereClause +
     " order by t.issueDate desc, t.ticketNumber desc" +
     " limit " + queryOptions.limit.toString() +
     " offset " + queryOptions.offset.toString())
-    .all(sqlParams);
+    .all(sqlWhereClause.sqlParams);
 
   db.close();
 
@@ -139,6 +168,12 @@ export const getParkingTicketsByLicencePlate =
       readonly: true
     });
 
+    const sqlWhereClause = buildWhereClause({
+      licencePlateCountry,
+      licencePlateProvince,
+      licencePlateNumberEqual: licencePlateNumber
+    });
+
     const rows: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
       " t.vehicleMakeModel," +
       " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
@@ -151,12 +186,9 @@ export const getParkingTicketsByLicencePlate =
       " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
       (" and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID" +
         " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
-      " where t.recordDelete_timeMillis is null" +
-      " and t.licencePlateCountry = ?" +
-      " and t.licencePlateProvince = ?" +
-      " and t.licencePlateNumber = ?" +
+      sqlWhereClause.sqlWhereClause +
       " order by t.issueDate desc, t.ticketNumber desc")
-      .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+      .all(sqlWhereClause.sqlParams);
 
     db.close();
 

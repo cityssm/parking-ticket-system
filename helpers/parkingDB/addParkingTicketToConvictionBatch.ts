@@ -2,7 +2,27 @@ import * as sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
+import { isConvictionBatchUpdatable } from "./isConvictionBatchUpdatable";
+
 import { parkingDB as dbPath } from "../../data/databasePaths";
+
+
+const isTicketAvailableToAdd = (db: sqlite.Database, ticketID: number) => {
+
+  const check = db
+    .prepare(
+      "select resolvedDate from ParkingTickets" +
+      " where ticketID = ?" +
+      " and recordDelete_timeMillis is null"
+    )
+    .get(ticketID);
+
+  if (!check || check.resolvedDate) {
+    return false;
+  }
+
+  return true;
+};
 
 
 export const addParkingTicketToConvictionBatch = (
@@ -14,54 +34,27 @@ export const addParkingTicketToConvictionBatch = (
 
   // Ensure batch is not locked
 
-  const lockedBatchCheck = db
-    .prepare(
-      "select lockDate from ParkingTicketConvictionBatches" +
-      " where recordDelete_timeMillis is null" +
-      " and batchID = ?"
-    )
-    .get(batchID);
+  const batchIsAvailable = isConvictionBatchUpdatable(db, batchID);
 
-  if (!lockedBatchCheck) {
+  if (!batchIsAvailable) {
     db.close();
 
     return {
       success: false,
-      message: "The batch is unavailable."
-    };
-  } else if (lockedBatchCheck.lockDate) {
-    db.close();
-
-    return {
-      success: false,
-      message: "The batch is locked and cannot be updated."
+      message: "The batch cannot be updated."
     };
   }
 
   // Ensure ticket has not been resolved
 
-  const resolvedDateRecord = db
-    .prepare(
-      "select resolvedDate from ParkingTickets" +
-      " where ticketID = ?" +
-      " and recordDelete_timeMillis is null"
-    )
-    .get(ticketID);
+  const ticketIsAvailable = isTicketAvailableToAdd(db, ticketID);
 
-  if (!resolvedDateRecord) {
+  if (!ticketIsAvailable) {
     db.close();
 
     return {
       success: false,
-      message: "The ticket is unavailable."
-    };
-  } else if (resolvedDateRecord.resolvedDate) {
-    db.close();
-
-    return {
-      success: false,
-      message:
-        "The ticket has been resolved and cannot be added to a conviction batch."
+      message: "The ticket cannot be added to the batch."
     };
   }
 
@@ -190,27 +183,15 @@ export const addAllParkingTicketsToConvictionBatch = (
 
   // Ensure batch is not locked
 
-  const lockedBatchCheck = db
-    .prepare(
-      "select lockDate from ParkingTicketConvictionBatches" +
-      " where recordDelete_timeMillis is null" +
-      " and batchID = ?"
-    )
-    .get(batchID);
+  const batchIsAvailable = isConvictionBatchUpdatable(db, batchID);
 
-  if (!lockedBatchCheck) {
+  if (!batchIsAvailable) {
     db.close();
 
     return {
+      success: false,
       successCount: 0,
-      message: "The batch is unavailable."
-    };
-  } else if (lockedBatchCheck.lockDate) {
-    db.close();
-
-    return {
-      successCount: 0,
-      message: "The batch is locked and cannot be updated."
+      message: "The batch cannot be updated."
     };
   }
 

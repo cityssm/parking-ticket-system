@@ -2,26 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeParkingTicketFromConvictionBatch = void 0;
 const sqlite = require("better-sqlite3");
+const isConvictionBatchUpdatable_1 = require("./isConvictionBatchUpdatable");
 const databasePaths_1 = require("../../data/databasePaths");
 exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession) => {
     const db = sqlite(databasePaths_1.parkingDB);
-    const lockedBatchCheck = db
-        .prepare("select lockDate from ParkingTicketConvictionBatches" +
-        " where recordDelete_timeMillis is null" +
-        " and batchID = ?")
-        .get(batchID);
-    if (!lockedBatchCheck) {
+    const batchIsAvailable = isConvictionBatchUpdatable_1.isConvictionBatchUpdatable(db, batchID);
+    if (!batchIsAvailable) {
         db.close();
         return {
             success: false,
-            message: "The batch is unavailable."
-        };
-    }
-    else if (lockedBatchCheck.lockDate) {
-        db.close();
-        return {
-            success: false,
-            message: "The batch is locked and cannot be updated."
+            message: "The batch cannot be updated."
         };
     }
     const rightNowMillis = Date.now();

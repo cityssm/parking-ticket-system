@@ -12,10 +12,7 @@ const addCalculatedFields = (ticket, reqSession) => {
     ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
     ticket.canUpdate = parkingDB_1.canUpdateObject(ticket, reqSession);
 };
-exports.getParkingTickets = (reqSession, queryOptions) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
-        readonly: true
-    });
+const buildWhereClause = (queryOptions) => {
     const sqlParams = [];
     let sqlWhereClause = " where t.recordDelete_timeMillis is null";
     if (queryOptions.hasOwnProperty("isResolved")) {
@@ -40,6 +37,18 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
             sqlParams.push(licencePlateNumberPiece);
         }
     }
+    if (queryOptions.licencePlateNumberEqual && queryOptions.licencePlateNumberEqual !== "") {
+        sqlWhereClause += " and t.licencePlateNumber = ?";
+        sqlParams.push(queryOptions.licencePlateNumberEqual);
+    }
+    if (queryOptions.licencePlateProvince && queryOptions.licencePlateProvince !== "") {
+        sqlWhereClause += " and t.licencePlateProvince = ?";
+        sqlParams.push(queryOptions.licencePlateProvince);
+    }
+    if (queryOptions.licencePlateCountry && queryOptions.licencePlateCountry !== "") {
+        sqlWhereClause += " and t.licencePlateCountry = ?";
+        sqlParams.push(queryOptions.licencePlateCountry);
+    }
     if (queryOptions.location && queryOptions.location !== "") {
         const locationPieces = queryOptions.location.toLowerCase().split(" ");
         for (const locationPiece of locationPieces) {
@@ -48,11 +57,21 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
             sqlParams.push(locationPiece);
         }
     }
+    return {
+        sqlWhereClause,
+        sqlParams
+    };
+};
+exports.getParkingTickets = (reqSession, queryOptions) => {
+    const db = sqlite(databasePaths_1.parkingDB, {
+        readonly: true
+    });
+    const sqlWhereClause = buildWhereClause(queryOptions);
     const count = db.prepare("select ifnull(count(*), 0) as cnt" +
         " from ParkingTickets t" +
         " left join ParkingLocations l on t.locationKey = l.locationKey" +
-        sqlWhereClause)
-        .get(sqlParams)
+        sqlWhereClause.sqlWhereClause)
+        .get(sqlWhereClause.sqlParams)
         .cnt;
     const rows = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
         " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing," +
@@ -69,11 +88,11 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
             " where t.ticketID = s.ticketID" +
             " and s.recordDelete_timeMillis is null" +
             " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
-        sqlWhereClause +
+        sqlWhereClause.sqlWhereClause +
         " order by t.issueDate desc, t.ticketNumber desc" +
         " limit " + queryOptions.limit.toString() +
         " offset " + queryOptions.offset.toString())
-        .all(sqlParams);
+        .all(sqlWhereClause.sqlParams);
     db.close();
     rows.forEach((ticket) => {
         addCalculatedFields(ticket, reqSession);
@@ -87,6 +106,11 @@ exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProv
     const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
     });
+    const sqlWhereClause = buildWhereClause({
+        licencePlateCountry,
+        licencePlateProvince,
+        licencePlateNumberEqual: licencePlateNumber
+    });
     const rows = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
         " t.vehicleMakeModel," +
         " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
@@ -99,12 +123,9 @@ exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProv
         " left join ParkingTicketStatusLog s on t.ticketID = s.ticketID" +
         (" and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID" +
             " order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)") +
-        " where t.recordDelete_timeMillis is null" +
-        " and t.licencePlateCountry = ?" +
-        " and t.licencePlateProvince = ?" +
-        " and t.licencePlateNumber = ?" +
+        sqlWhereClause.sqlWhereClause +
         " order by t.issueDate desc, t.ticketNumber desc")
-        .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+        .all(sqlWhereClause.sqlParams);
     db.close();
     rows.forEach((ticket) => {
         addCalculatedFields(ticket, reqSession);

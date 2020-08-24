@@ -1,5 +1,7 @@
 import * as sqlite from "better-sqlite3";
 
+import { isConvictionBatchUpdatable } from "./isConvictionBatchUpdatable";
+
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
@@ -8,31 +10,19 @@ export const removeParkingTicketFromConvictionBatch = (
   ticketID: number,
   reqSession: Express.Session
 ) => {
+
   const db = sqlite(dbPath);
 
   // Ensure batch is not locked
 
-  const lockedBatchCheck = db
-    .prepare(
-      "select lockDate from ParkingTicketConvictionBatches" +
-      " where recordDelete_timeMillis is null" +
-      " and batchID = ?"
-    )
-    .get(batchID);
+  const batchIsAvailable = isConvictionBatchUpdatable(db, batchID);
 
-  if (!lockedBatchCheck) {
+  if (!batchIsAvailable) {
     db.close();
 
     return {
       success: false,
-      message: "The batch is unavailable."
-    };
-  } else if (lockedBatchCheck.lockDate) {
-    db.close();
-
-    return {
-      success: false,
-      message: "The batch is locked and cannot be updated."
+      message: "The batch cannot be updated."
     };
   }
 

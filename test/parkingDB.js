@@ -45,7 +45,8 @@ describe("helpers/parkingDB", () => {
             assert.ok(parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches());
         });
         it("should execute getConvictionBatch()", () => {
-            assert.equal(parkingDB_getConvictionBatch.getConvictionBatch(-1), null);
+            const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1);
+            assert.ok(batch === null || batch.lockDate === null);
         });
     });
     describe("lookup batch queries", () => {
