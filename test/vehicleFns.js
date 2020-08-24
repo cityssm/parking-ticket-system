@@ -8,12 +8,9 @@ describe("helpers/vehicleFns", () => {
             assert.equal(vehicleFns.getMakeFromNCIC("CHEV"), "Chevrolet");
         });
     });
-    describe("#getModelsByMake", () => {
-        it("should return results for \"Ford\"", (done) => {
-            vehicleFns.getModelsByMake("Ford", (results) => {
-                assert.ok(results);
-                done();
-            });
+    describe("#getModelsByMakeFromCache", () => {
+        it("should return results for \"Ford\"", () => {
+            assert.ok(vehicleFns.getModelsByMakeFromCache("Ford"));
         });
     });
     describe("#isNCICExclusivelyTrailer", () => {
