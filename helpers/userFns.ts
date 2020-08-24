@@ -2,51 +2,35 @@ import type { Request, Response } from "express";
 import type * as pts from "../helpers/ptsTypes";
 
 
-export const userIsAdmin = (req: Request) => {
+const getPermission = (req: Request, permissionName: string): boolean => {
 
-  const user = req.session?.user as pts.User;
+  const user = req.session ?.user as pts.User;
 
   if (!user) {
     return false;
   }
 
-  return user.userProperties.isAdmin;
+  return user.userProperties[permissionName];
+};
+
+
+export const userIsAdmin = (req: Request) => {
+  return getPermission(req, "isAdmin");
 };
 
 
 export const userCanUpdate = (req: Request) => {
-
-  const user = req.session?.user as pts.User;
-
-  if (!user) {
-    return false;
-  }
-
-  return user.userProperties.canUpdate;
+  return getPermission(req, "canUpdate");
 };
 
 
 export const userCanCreate = (req: Request) => {
-
-  const user = req.session?.user as pts.User;
-
-  if (!user) {
-    return false;
-  }
-
-  return user.userProperties.canCreate;
+  return getPermission(req, "canCreate");
 };
 
 
 export const userIsOperator = (req: Request) => {
-
-  const user = req.session?.user as pts.User;
-
-  if (!user) {
-    return false;
-  }
-
-  return user.userProperties.isOperator;
+  return getPermission(req, "isOperator");
 };
 
 

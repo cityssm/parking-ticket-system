@@ -43,6 +43,31 @@ export interface ReconciliationRecord extends pts.LicencePlate {
 }
 
 
+const addCalculatedFields = (record: ReconciliationRecord) => {
+
+  record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
+
+  record.ticket_licencePlateExpiryDateString =
+    dateTimeFns.dateIntegerToString(record.ticket_licencePlateExpiryDate);
+
+  record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
+  record.owner_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.owner_licencePlateExpiryDate);
+
+  record.owner_vehicleMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
+
+  record.dateDifference =
+    dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
+
+  record.isVehicleMakeMatch =
+    (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
+    (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
+
+  record.isLicencePlateExpiryDateMatch =
+    (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate);
+
+};
+
+
 export const getOwnershipReconciliationRecords = () => {
 
   const db = sqlite(dbPath, {
@@ -96,28 +121,7 @@ export const getOwnershipReconciliationRecords = () => {
 
   db.close();
 
-  for (const record of records) {
-
-    record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
-
-    record.ticket_licencePlateExpiryDateString =
-      dateTimeFns.dateIntegerToString(record.ticket_licencePlateExpiryDate);
-
-    record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
-    record.owner_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.owner_licencePlateExpiryDate);
-
-    record.owner_vehicleMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
-
-    record.dateDifference =
-      dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
-
-    record.isVehicleMakeMatch =
-      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
-      (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
-
-    record.isLicencePlateExpiryDateMatch =
-      (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate);
-  }
+  records.forEach(addCalculatedFields);
 
   return records;
 };

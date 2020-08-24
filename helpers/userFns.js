@@ -1,37 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.forbiddenJSON = exports.getHashString = exports.userIsOperator = exports.userCanCreate = exports.userCanUpdate = exports.userIsAdmin = void 0;
-exports.userIsAdmin = (req) => {
+const getPermission = (req, permissionName) => {
     var _a;
     const user = (_a = req.session) === null || _a === void 0 ? void 0 : _a.user;
     if (!user) {
         return false;
     }
-    return user.userProperties.isAdmin;
+    return user.userProperties[permissionName];
+};
+exports.userIsAdmin = (req) => {
+    return getPermission(req, "isAdmin");
 };
 exports.userCanUpdate = (req) => {
-    var _a;
-    const user = (_a = req.session) === null || _a === void 0 ? void 0 : _a.user;
-    if (!user) {
-        return false;
-    }
-    return user.userProperties.canUpdate;
+    return getPermission(req, "canUpdate");
 };
 exports.userCanCreate = (req) => {
-    var _a;
-    const user = (_a = req.session) === null || _a === void 0 ? void 0 : _a.user;
-    if (!user) {
-        return false;
-    }
-    return user.userProperties.canCreate;
+    return getPermission(req, "canCreate");
 };
 exports.userIsOperator = (req) => {
-    var _a;
-    const user = (_a = req.session) === null || _a === void 0 ? void 0 : _a.user;
-    if (!user) {
-        return false;
-    }
-    return user.userProperties.isOperator;
+    return getPermission(req, "isOperator");
 };
 exports.getHashString = (userName, passwordPlain) => {
     return userName + "::" + passwordPlain;

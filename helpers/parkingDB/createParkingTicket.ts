@@ -4,6 +4,8 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "../configFns";
 import type * as pts from "../ptsTypes";
 
+import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket";
+
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
@@ -42,30 +44,18 @@ export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
 
-    const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear as string, 10) || 0;
-    const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth as string, 10) || 0;
+    const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(reqBody);
 
-    if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
-      licencePlateExpiryDate = 0;
+    if (licencePlateExpiryDateReturn.success) {
+      licencePlateExpiryDate = licencePlateExpiryDateReturn.licencePlateExpiryDate;
 
-    } else if (licencePlateExpiryYear === 0 || licencePlateExpiryMonth === 0) {
-
+    } else {
       db.close();
 
       return {
         success: false,
-        message: "The licence plate expiry date fields must both be blank or both be completed."
+        message: licencePlateExpiryDateReturn.message
       };
-
-    } else {
-
-      const dateObj = new Date(licencePlateExpiryYear,
-        (licencePlateExpiryMonth - 1) + 1,
-        (1 - 1),
-        0, 0, 0, 0);
-
-      licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObj);
-
     }
   }
 

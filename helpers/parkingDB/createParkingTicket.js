@@ -4,6 +4,7 @@ exports.createParkingTicket = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const configFns = require("../configFns");
+const updateParkingTicket_1 = require("./updateParkingTicket");
 const databasePaths_1 = require("../../data/databasePaths");
 exports.createParkingTicket = (reqBody, reqSession) => {
     const db = sqlite(databasePaths_1.parkingDB);
@@ -25,21 +26,16 @@ exports.createParkingTicket = (reqBody, reqSession) => {
     }
     let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
     if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
-        const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
-        if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
-            licencePlateExpiryDate = 0;
+        const licencePlateExpiryDateReturn = updateParkingTicket_1.getLicencePlateExpiryDateFromPieces(reqBody);
+        if (licencePlateExpiryDateReturn.success) {
+            licencePlateExpiryDate = licencePlateExpiryDateReturn.licencePlateExpiryDate;
         }
-        else if (licencePlateExpiryYear === 0 || licencePlateExpiryMonth === 0) {
+        else {
             db.close();
             return {
                 success: false,
-                message: "The licence plate expiry date fields must both be blank or both be completed."
+                message: licencePlateExpiryDateReturn.message
             };
-        }
-        else {
-            const dateObj = new Date(licencePlateExpiryYear, (licencePlateExpiryMonth - 1) + 1, (1 - 1), 0, 0, 0, 0);
-            licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObj);
         }
     }
     const info = db.prepare("insert into ParkingTickets" +

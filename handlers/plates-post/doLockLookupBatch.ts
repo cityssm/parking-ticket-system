@@ -17,7 +17,6 @@ export const handler: RequestHandler = (req, res) => {
   const result = parkingDB_lockLookupBatch.lockLookupBatch(batchID, req.session);
 
   if (result.success) {
-
     result.batch = parkingDB_getLookupBatch.getLookupBatch(batchID);
   }
 
