@@ -9,6 +9,22 @@ import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket";
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
+const hasDuplicateTicket = (db, ticketNumber, issueDate) => {
+
+  const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
+    " where recordDelete_timeMillis is null" +
+    " and ticketNumber = ?" +
+    " and abs(issueDate - ?) <= 20000")
+    .get(ticketNumber, issueDate);
+
+  if (duplicateTicket) {
+    return true;
+  }
+
+  return false;
+};
+
+
 export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
 
   const db = sqlite(dbPath);
@@ -19,15 +35,7 @@ export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
 
   if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
 
-    // Ensure ticket number has not been used in the last two years
-
-    const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
-      " where recordDelete_timeMillis is null" +
-      " and ticketNumber = ?" +
-      " and abs(issueDate - ?) <= 20000")
-      .get(reqBody.ticketNumber, issueDate);
-
-    if (duplicateTicket) {
+    if (hasDuplicateTicket(db, reqBody.ticketNumber, issueDate)) {
 
       db.close();
 
@@ -35,9 +43,7 @@ export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
         success: false,
         message: "A ticket with the same ticket number was seen in the last two years."
       };
-
     }
-
   }
 
   let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
@@ -96,6 +102,6 @@ export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
   return {
     success: true,
     ticketID: info.lastInsertRowid,
-    nextTicketNumber: ""
+    nextTicketNumber: "" // populated in handler
   };
 };

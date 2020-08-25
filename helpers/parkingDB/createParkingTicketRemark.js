@@ -3,14 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createParkingTicketRemark = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
+const getNextParkingTicketRemarkIndex_1 = require("./getNextParkingTicketRemarkIndex");
 const databasePaths_1 = require("../../data/databasePaths");
 exports.createParkingTicketRemark = (reqBody, reqSession) => {
     const db = sqlite(databasePaths_1.parkingDB);
-    const remarkIndexNew = db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
-        " from ParkingTicketRemarks" +
-        " where ticketID = ?")
-        .get(reqBody.ticketID)
-        .remarkIndexMax + 1;
+    const remarkIndexNew = getNextParkingTicketRemarkIndex_1.getNextParkingTicketRemarkIndex(db, reqBody.ticketID);
     const rightNow = new Date();
     const info = db.prepare("insert into ParkingTicketRemarks" +
         " (ticketID, remarkIndex, remarkDate, remarkTime, remark," +

@@ -4,18 +4,9 @@ exports.addAllParkingTicketsToConvictionBatch = exports.addParkingTicketToConvic
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const isConvictionBatchUpdatable_1 = require("./isConvictionBatchUpdatable");
+const canParkingTicketBeAddedToConvictionBatch_1 = require("./canParkingTicketBeAddedToConvictionBatch");
+const getNextParkingTicketStatusIndex_1 = require("./getNextParkingTicketStatusIndex");
 const databasePaths_1 = require("../../data/databasePaths");
-const isTicketAvailableToAdd = (db, ticketID) => {
-    const check = db
-        .prepare("select resolvedDate from ParkingTickets" +
-        " where ticketID = ?" +
-        " and recordDelete_timeMillis is null")
-        .get(ticketID);
-    if (!check || check.resolvedDate) {
-        return false;
-    }
-    return true;
-};
 exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
     const db = sqlite(databasePaths_1.parkingDB);
     const batchIsAvailable = isConvictionBatchUpdatable_1.isConvictionBatchUpdatable(db, batchID);
@@ -26,7 +17,7 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
             message: "The batch cannot be updated."
         };
     }
-    const ticketIsAvailable = isTicketAvailableToAdd(db, ticketID);
+    const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch_1.canParkingTicketBeAddedToConvictionBatch(db, ticketID);
     if (!ticketIsAvailable) {
         db.close();
         return {
@@ -34,11 +25,7 @@ exports.addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
             message: "The ticket cannot be added to the batch."
         };
     }
-    let newStatusIndex = db
-        .prepare("select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
-        " from ParkingTicketStatusLog" +
-        " where ticketID = ?")
-        .get(ticketID).newStatusIndex;
+    let newStatusIndex = getNextParkingTicketStatusIndex_1.getNextParkingTicketStatusIndex(db, ticketID);
     const rightNow = new Date();
     const statusDate = dateTimeFns.dateToInteger(rightNow);
     const statusTime = dateTimeFns.dateToTimeInteger(rightNow);
@@ -104,11 +91,7 @@ exports.addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, reqSession)
     const timeMillis = rightNow.getTime();
     let successCount = 0;
     for (const ticketID of ticketIDs) {
-        let newStatusIndex = db
-            .prepare("select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
-            " from ParkingTicketStatusLog" +
-            " where ticketID = ?")
-            .get(ticketID).newStatusIndex;
+        let newStatusIndex = getNextParkingTicketStatusIndex_1.getNextParkingTicketStatusIndex(db, ticketID);
         const convictedStatusCheck = db
             .prepare("select statusIndex from ParkingTicketStatusLog" +
             " where recordDelete_timeMillis is null" +

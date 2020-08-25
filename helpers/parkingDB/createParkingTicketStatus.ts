@@ -3,6 +3,8 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type * as pts from "../ptsTypes";
 
+import { getNextParkingTicketStatusIndex } from "./getNextParkingTicketStatusIndex";
+
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
@@ -13,12 +15,7 @@ export const createParkingTicketStatus =
 
     // Get new status index
 
-    const statusIndexNew =
-      (db.prepare("select ifnull(max(statusIndex), 0) as statusIndexMax" +
-        " from ParkingTicketStatusLog" +
-        " where ticketID = ?")
-        .get(reqBodyOrObj.ticketID)
-        .statusIndexMax as number) + 1;
+    const statusIndexNew = getNextParkingTicketStatusIndex(db, reqBodyOrObj.ticketID);
 
     // Create the record
 

@@ -3,26 +3,10 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 import { isConvictionBatchUpdatable } from "./isConvictionBatchUpdatable";
+import { canParkingTicketBeAddedToConvictionBatch } from "./canParkingTicketBeAddedToConvictionBatch";
+import { getNextParkingTicketStatusIndex } from "./getNextParkingTicketStatusIndex";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
-
-
-const isTicketAvailableToAdd = (db: sqlite.Database, ticketID: number) => {
-
-  const check = db
-    .prepare(
-      "select resolvedDate from ParkingTickets" +
-      " where ticketID = ?" +
-      " and recordDelete_timeMillis is null"
-    )
-    .get(ticketID);
-
-  if (!check || check.resolvedDate) {
-    return false;
-  }
-
-  return true;
-};
 
 
 export const addParkingTicketToConvictionBatch = (
@@ -47,7 +31,7 @@ export const addParkingTicketToConvictionBatch = (
 
   // Ensure ticket has not been resolved
 
-  const ticketIsAvailable = isTicketAvailableToAdd(db, ticketID);
+  const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(db, ticketID);
 
   if (!ticketIsAvailable) {
     db.close();
@@ -60,13 +44,7 @@ export const addParkingTicketToConvictionBatch = (
 
   // Get the next status index
 
-  let newStatusIndex = db
-    .prepare(
-      "select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
-      " from ParkingTicketStatusLog" +
-      " where ticketID = ?"
-    )
-    .get(ticketID).newStatusIndex as number;
+  let newStatusIndex = getNextParkingTicketStatusIndex(db, ticketID);
 
   // Prepare for inserts
 
@@ -210,13 +188,7 @@ export const addAllParkingTicketsToConvictionBatch = (
   for (const ticketID of ticketIDs) {
     // Get the next status index
 
-    let newStatusIndex = db
-      .prepare(
-        "select ifnull(max(statusIndex), -1) + 1 as newStatusIndex" +
-        " from ParkingTicketStatusLog" +
-        " where ticketID = ?"
-      )
-      .get(ticketID).newStatusIndex as number;
+    let newStatusIndex = getNextParkingTicketStatusIndex(db, ticketID);
 
     // Check if the ticket has been convicted or not
 

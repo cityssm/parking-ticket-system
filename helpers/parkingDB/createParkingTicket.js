@@ -6,17 +6,23 @@ const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const configFns = require("../configFns");
 const updateParkingTicket_1 = require("./updateParkingTicket");
 const databasePaths_1 = require("../../data/databasePaths");
+const hasDuplicateTicket = (db, ticketNumber, issueDate) => {
+    const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketNumber = ?" +
+        " and abs(issueDate - ?) <= 20000")
+        .get(ticketNumber, issueDate);
+    if (duplicateTicket) {
+        return true;
+    }
+    return false;
+};
 exports.createParkingTicket = (reqBody, reqSession) => {
     const db = sqlite(databasePaths_1.parkingDB);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
     if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
-        const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
-            " where recordDelete_timeMillis is null" +
-            " and ticketNumber = ?" +
-            " and abs(issueDate - ?) <= 20000")
-            .get(reqBody.ticketNumber, issueDate);
-        if (duplicateTicket) {
+        if (hasDuplicateTicket(db, reqBody.ticketNumber, issueDate)) {
             db.close();
             return {
                 success: false,

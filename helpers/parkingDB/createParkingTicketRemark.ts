@@ -3,6 +3,8 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type * as pts from "../ptsTypes";
 
+import { getNextParkingTicketRemarkIndex } from "./getNextParkingTicketRemarkIndex";
+
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
@@ -12,11 +14,7 @@ export const createParkingTicketRemark = (reqBody: pts.ParkingTicketRemark, reqS
 
   // Get new remark index
 
-  const remarkIndexNew = (db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
-    " from ParkingTicketRemarks" +
-    " where ticketID = ?")
-    .get(reqBody.ticketID)
-    .remarkIndexMax as number) + 1;
+  const remarkIndexNew = getNextParkingTicketRemarkIndex(db, reqBody.ticketID);
 
   // Create the record
 
@@ -41,5 +39,4 @@ export const createParkingTicketRemark = (reqBody: pts.ParkingTicketRemark, reqS
   return {
     success: (info.changes > 0)
   };
-
 };
