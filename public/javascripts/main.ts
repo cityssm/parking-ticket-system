@@ -192,13 +192,16 @@ const pts: ptsGlobal = {};
     };
   };
 
-  const ticketStatusKeyToObject = new Map();
+  const ticketStatusKeyToObject = new Map<string, ptsTypes.ConfigParkingTicketStatus>();
   let ticketStatusKeyToObjectIsLoaded = false;
 
   pts.getTicketStatus = (statusKey) => {
+
     const noResult = {
       statusKey,
-      status: statusKey
+      status: statusKey,
+      isUserSettable: false,
+      isFinalStatus: false
     };
 
     if (!defaultConfigPropertiesIsLoaded) {
@@ -215,6 +218,33 @@ const pts: ptsGlobal = {};
 
     return ticketStatusKeyToObject.has(statusKey)
       ? ticketStatusKeyToObject.get(statusKey)
+      : noResult;
+  };
+
+  const locationClassKeyToObject = new Map<string, ptsTypes.ConfigLocationClass>();
+  let locationClassKeyToObjectIsLoaded = false;
+
+  pts.getLocationClass = (locationClassKey) => {
+
+    const noResult: ptsTypes.ConfigLocationClass = {
+      locationClassKey,
+      locationClass: locationClassKey
+    };
+
+    if (!defaultConfigPropertiesIsLoaded) {
+      return noResult;
+    }
+
+    if (!locationClassKeyToObjectIsLoaded) {
+      for (const locationClassObj of defaultConfigProperties.locationClasses) {
+        locationClassKeyToObject.set(locationClassObj.locationClassKey, locationClassObj);
+      }
+
+      locationClassKeyToObjectIsLoaded = true;
+    }
+
+    return locationClassKeyToObject.has(locationClassKey)
+      ? locationClassKeyToObject.get(locationClassKey)
       : noResult;
   };
 })();

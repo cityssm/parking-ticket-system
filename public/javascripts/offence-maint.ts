@@ -14,8 +14,6 @@ interface UpdateOffenceResponseJSON {
 
 (() => {
 
-  const locationClassMap = new Map<string, ptsTypes.ConfigLocationClass>();
-
   const offenceMap = new Map<string, ptsTypes.ParkingOffence>();
 
   const offenceAccountNumberPatternString = exports.accountNumberPattern;
@@ -128,9 +126,7 @@ interface UpdateOffenceResponseJSON {
         (document.getElementById("offenceEdit--locationName") as HTMLSpanElement).innerText = location.locationName;
 
         (document.getElementById("offenceEdit--locationClass") as HTMLSpanElement).innerText =
-          (locationClassMap.has(location.locationClassKey)
-            ? locationClassMap.get(location.locationClassKey).locationClass
-            : location.locationClassKey);
+          pts.getLocationClass(location.locationClassKey).locationClass;
 
         document.getElementById("offenceEdit--bylawNumberSpan").innerText = bylaw.bylawNumber;
 
@@ -222,11 +218,11 @@ interface UpdateOffenceResponseJSON {
           titleHTML = "Select By-Laws";
 
           const location = locationMap.get(locationKeyFilter);
-          const locationClass = locationClassMap.get(location.locationClassKey);
+          const locationClass = pts.getLocationClass(location.locationClassKey);
 
           selectedHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
             "<span class=\"is-size-7\">" +
-            cityssm.escapeHTML(locationClass ? locationClass.locationClass : location.locationClassKey) +
+            cityssm.escapeHTML(locationClass.locationClass) +
             "</span>";
 
         } else {
@@ -296,9 +292,7 @@ interface UpdateOffenceResponseJSON {
 
             linkEle.innerHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
               "<span class=\"is-size-7\">" +
-              (locationClassMap.has(location.locationClassKey)
-                ? cityssm.escapeHTML(locationClassMap.get(location.locationClassKey).locationClass)
-                : location.locationClassKey) +
+              cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
               "</span>";
 
             linkEle.addEventListener("click", addFn);
@@ -388,9 +382,7 @@ interface UpdateOffenceResponseJSON {
         ("<td class=\"has-border-right-width-2\">" +
           cityssm.escapeHTML(location.locationName) + "<br />" +
           "<span class=\"is-size-7\">" +
-          (locationClassMap.has(location.locationClassKey)
-            ? locationClassMap.get(location.locationClassKey).locationClass
-            : location.locationClassKey) +
+          cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
           "</span>" +
           "</td>") +
         ("<td class=\"has-border-right-width-2\">" +
@@ -482,9 +474,7 @@ interface UpdateOffenceResponseJSON {
         ("<div class=\"column has-text-centered\">" +
           cityssm.escapeHTML(location.locationName) + "<br />" +
           "<span class=\"is-size-7\">" +
-          (locationClassMap.has(location.locationClassKey)
-            ? locationClassMap.get(location.locationClassKey).locationClass
-            : location.locationClassKey) +
+          cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
           "</span>" +
           "</div>") +
         ("<div class=\"column has-text-centered\">" +
@@ -591,9 +581,7 @@ interface UpdateOffenceResponseJSON {
               cityssm.escapeHTML(location.locationName) +
               "</div>") +
             "<div class=\"level-right\">" +
-            cityssm.escapeHTML(locationClassMap.has(location.locationClassKey)
-              ? locationClassMap.get(location.locationClassKey).locationClass
-              : location.locationClassKey) +
+            cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
             "</div>" +
             "</div>";
 
@@ -748,12 +736,5 @@ interface UpdateOffenceResponseJSON {
   // Load locationClasses
 
 
-  pts.getDefaultConfigProperty("locationClasses", (locationClassList: ptsTypes.ConfigLocationClass[]) => {
-
-    for (const locationClass of locationClassList) {
-      locationClassMap.set(locationClass.locationClassKey, locationClass);
-    }
-
-    renderOffencesFn();
-  });
+  pts.getDefaultConfigProperty("locationClasses", renderOffencesFn);
 })();

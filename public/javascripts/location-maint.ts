@@ -20,8 +20,6 @@ interface UpdateLocationResponseJSON {
   const locationNameFilterEle = document.getElementById("locationFilter--locationName") as HTMLInputElement;
   const locationResultsEle = document.getElementById("locationResults");
 
-  const locationClassKeyMap = new Map();
-
   let locationList = exports.locations as ptsTypes.ParkingLocation[];
   delete exports.locations;
 
@@ -90,7 +88,7 @@ interface UpdateLocationResponseJSON {
 
         locationClassKeyEditSelectEle.innerHTML = locationClassKeyOptionsHTML;
 
-        if (!locationClassKeyMap.has(location.locationClassKey)) {
+        if (!locationClassKeyEditSelectEle.querySelector("[value='" + location.locationClassKey + "']")) {
 
           locationClassKeyEditSelectEle.insertAdjacentHTML(
             "beforeend",
@@ -153,9 +151,7 @@ interface UpdateLocationResponseJSON {
 
       displayCount += 1;
 
-      const locationClass = locationClassKeyMap.has(location.locationClassKey)
-        ? locationClassKeyMap.get(location.locationClassKey).locationClass
-        : location.locationClassKey;
+      const locationClass = pts.getLocationClass(location.locationClassKey).locationClass;
 
       const trEle = document.createElement("tr");
 
@@ -211,15 +207,11 @@ interface UpdateLocationResponseJSON {
         "<option value=\"" + locationClass.locationClassKey + "\">" +
         cityssm.escapeHTML(locationClass.locationClass) +
         "</option>";
-
-      locationClassKeyMap.set(locationClass.locationClassKey, locationClass);
-
     }
 
     locationClassKeyFilterEle.insertAdjacentHTML("beforeend", locationClassKeyOptionsHTML);
 
     renderLocationListFn();
-
   });
 
   // Initialize add button

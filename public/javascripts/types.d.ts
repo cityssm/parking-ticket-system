@@ -1,3 +1,4 @@
+import * as ptsTypes from "../../helpers/ptsTypes";
 export interface ptsGlobal {
     loadDefaultConfigProperties?: (callbackFn: () => void) => void;
     getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void;
@@ -15,17 +16,8 @@ export interface ptsGlobal {
             backgroundColor: string;
         };
     };
-    getTicketStatus?: (statusKey: string) => {
-        statusKey: string;
-        status: string;
-        statusField?: {
-            fieldLabel: string;
-        };
-        statusField2?: {
-            fieldLabel: string;
-        };
-        isFinalStatus: boolean;
-    };
+    getTicketStatus?: (statusKey: string) => ptsTypes.ConfigParkingTicketStatus;
+    getLocationClass?: (locationClassKey: string) => ptsTypes.ConfigLocationClass;
     initializeTabs?: (tabsListEle: HTMLElement, callbackFns?: {
         onshown?: (tabContentEle: HTMLElement) => void;
     }) => void;

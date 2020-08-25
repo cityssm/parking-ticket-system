@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const locationClassKeyFilterEle = document.getElementById("locationFilter--locationClassKey");
     const locationNameFilterEle = document.getElementById("locationFilter--locationName");
     const locationResultsEle = document.getElementById("locationResults");
-    const locationClassKeyMap = new Map();
     let locationList = exports.locations;
     delete exports.locations;
     const openEditLocationModalFn = (clickEvent) => {
@@ -43,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("editLocation--locationKey").value = location.locationKey;
                 const locationClassKeyEditSelectEle = document.getElementById("editLocation--locationClassKey");
                 locationClassKeyEditSelectEle.innerHTML = locationClassKeyOptionsHTML;
-                if (!locationClassKeyMap.has(location.locationClassKey)) {
+                if (!locationClassKeyEditSelectEle.querySelector("[value='" + location.locationClassKey + "']")) {
                     locationClassKeyEditSelectEle.insertAdjacentHTML("beforeend", "<option value=\"" + cityssm.escapeHTML(location.locationClassKey) + "\">" +
                         cityssm.escapeHTML(location.locationClassKey) +
                         "</option>");
@@ -80,9 +79,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 return;
             }
             displayCount += 1;
-            const locationClass = locationClassKeyMap.has(location.locationClassKey)
-                ? locationClassKeyMap.get(location.locationClassKey).locationClass
-                : location.locationClassKey;
+            const locationClass = pts.getLocationClass(location.locationClassKey).locationClass;
             const trEle = document.createElement("tr");
             trEle.innerHTML =
                 "<td>" +
@@ -118,7 +115,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<option value=\"" + locationClass.locationClassKey + "\">" +
                     cityssm.escapeHTML(locationClass.locationClass) +
                     "</option>";
-            locationClassKeyMap.set(locationClass.locationClassKey, locationClass);
         }
         locationClassKeyFilterEle.insertAdjacentHTML("beforeend", locationClassKeyOptionsHTML);
         renderLocationListFn();

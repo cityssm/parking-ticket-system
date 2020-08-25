@@ -5,11 +5,15 @@ const _globals_1 = require("./_globals");
 const initializeDatabase_1 = require("../helpers/parkingDB/initializeDatabase");
 const parkingDB_getParkingTickets = require("../helpers/parkingDB/getParkingTickets");
 const parkingDB_getParkingTicket = require("../helpers/parkingDB/getParkingTicket");
+const parkingDB_getParkingTicketID = require("../helpers/parkingDB/getParkingTicketID");
 const parkingDB_getParkingTicketRemarks = require("../helpers/parkingDB/getParkingTicketRemarks");
 const parkingDB_getParkingTicketStatuses = require("../helpers/parkingDB/getParkingTicketStatuses");
+const parkingDB_getLicencePlateOwner = require("../helpers/parkingDB/getLicencePlateOwner");
+const parkingDB_getLicencePlates = require("../helpers/parkingDB/getLicencePlates");
 const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
 const parkingDB_getLastTenConvictionBatches = require("../helpers/parkingDB/getLastTenConvictionBatches");
 const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUnreceivedLookupBatches");
+const parkingDB_getLookupBatch = require("../helpers/parkingDB/getLookupBatch");
 const parkingDB_getUnacknowledgedLookupErrorLog = require("../helpers/parkingDB/getUnacknowledgedLookupErrorLog");
 const parkingDB_getOwnershipReconciliationRecords = require("../helpers/parkingDB/getOwnershipReconciliationRecords");
 const parkingDB_getParkingOffences = require("../helpers/parkingDB/getParkingOffences");
@@ -33,11 +37,25 @@ describe("helpers/parkingDB", () => {
         it("should execute getParkingTicket(-1)", () => {
             assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, _globals_1.fakeViewOnlySession), null);
         });
+        it("should execute getParkingTicketID()", () => {
+            assert.equal(parkingDB_getParkingTicketID.getParkingTicketID("~~FAKE TICKET NUMBER~~"), null);
+        });
         it("should execute getParkingTicketRemarks(-1)", () => {
             assert.equal(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, _globals_1.fakeViewOnlySession).length, 0);
         });
         it("should execute getParkingTicketStatuses(-1)", () => {
             assert.equal(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, _globals_1.fakeViewOnlySession).length, 0);
+        });
+    });
+    describe("licence plate queries", () => {
+        it("should execute getLicencePlates()", () => {
+            assert.ok(parkingDB_getLicencePlates.getLicencePlates({
+                limit: 1,
+                offset: 0
+            }));
+        });
+        it("should execute getLicencePlateOwner()", () => {
+            assert.equal(parkingDB_getLicencePlateOwner.getLicencePlateOwner("CA", "ON", "~~FAKE PLATE NUMBER~~", 0), null);
         });
     });
     describe("conviction batch queries", () => {
@@ -52,6 +70,10 @@ describe("helpers/parkingDB", () => {
     describe("lookup batch queries", () => {
         it("should execute getUnreceivedLookupBatches()", () => {
             assert.ok(parkingDB_getUnreceivedLookupBatches.getUnreceivedLookupBatches(true));
+        });
+        it("should execute getLookupBatch()", () => {
+            const batch = parkingDB_getLookupBatch.getLookupBatch(-1);
+            assert.ok(batch === null || batch.lockDate === null);
         });
         it("should execute getOwnershipReconciliationRecords()", () => {
             assert.ok(parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords());

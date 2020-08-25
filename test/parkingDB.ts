@@ -7,8 +7,13 @@ import { initializeDatabase } from "../helpers/parkingDB/initializeDatabase";
 // Parking tickets
 import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
 import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
+import * as parkingDB_getParkingTicketID from "../helpers/parkingDB/getParkingTicketID";
 import * as parkingDB_getParkingTicketRemarks from "../helpers/parkingDB/getParkingTicketRemarks";
 import * as parkingDB_getParkingTicketStatuses from "../helpers/parkingDB/getParkingTicketStatuses";
+
+// Licence Plates
+import * as parkingDB_getLicencePlateOwner from "../helpers/parkingDB/getLicencePlateOwner";
+import * as parkingDB_getLicencePlates from "../helpers/parkingDB/getLicencePlates";
 
 // Conviction batches
 import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch";
@@ -16,6 +21,7 @@ import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/get
 
 // Lookup batches
 import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches";
+import * as parkingDB_getLookupBatch from "../helpers/parkingDB/getLookupBatch";
 import * as parkingDB_getUnacknowledgedLookupErrorLog from "../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
 import * as parkingDB_getOwnershipReconciliationRecords from "../helpers/parkingDB/getOwnershipReconciliationRecords";
 
@@ -51,12 +57,30 @@ describe("helpers/parkingDB", () => {
       assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), null);
     });
 
+    it("should execute getParkingTicketID()", () => {
+      assert.equal(parkingDB_getParkingTicketID.getParkingTicketID("~~FAKE TICKET NUMBER~~"), null);
+    });
+
     it("should execute getParkingTicketRemarks(-1)", () => {
       assert.equal(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, fakeViewOnlySession).length, 0);
     });
 
     it("should execute getParkingTicketStatuses(-1)", () => {
       assert.equal(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, fakeViewOnlySession).length, 0);
+    });
+  });
+
+  describe("licence plate queries", () => {
+
+    it("should execute getLicencePlates()", () => {
+      assert.ok(parkingDB_getLicencePlates.getLicencePlates({
+        limit: 1,
+        offset: 0
+      }));
+    });
+
+    it("should execute getLicencePlateOwner()", () => {
+      assert.equal(parkingDB_getLicencePlateOwner.getLicencePlateOwner("CA", "ON", "~~FAKE PLATE NUMBER~~", 0), null);
     });
   });
 
@@ -78,6 +102,13 @@ describe("helpers/parkingDB", () => {
 
     it("should execute getUnreceivedLookupBatches()", () => {
       assert.ok(parkingDB_getUnreceivedLookupBatches.getUnreceivedLookupBatches(true));
+    });
+
+    it("should execute getLookupBatch()", () => {
+
+      const batch = parkingDB_getLookupBatch.getLookupBatch(-1);
+
+      assert.ok(batch === null || batch.lockDate === null);
     });
 
     it("should execute getOwnershipReconciliationRecords()", () => {

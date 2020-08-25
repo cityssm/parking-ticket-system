@@ -10,6 +10,7 @@ import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets";
 import { getAllUsers } from "../helpers/usersDB/getAllUsers";
 import { createUser } from "../helpers/usersDB/createUser";
 import { inactivateUser } from "../helpers/usersDB/inactivateUser";
+import { updateUserProperty } from "../helpers/usersDB/updateUserProperty";
 
 import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
 
@@ -42,6 +43,30 @@ describe("parking-ticket-system", () => {
       firstName: "Test",
       lastName: "User"
     }) as string;
+
+    updateUserProperty({
+      userName,
+      propertyName: "isOperator",
+      propertyValue: "false"
+    });
+
+    updateUserProperty({
+      userName,
+      propertyName: "isAdmin",
+      propertyValue: "false"
+    });
+
+    updateUserProperty({
+      userName,
+      propertyName: "canUpdate",
+      propertyValue: "false"
+    });
+
+    updateUserProperty({
+      userName,
+      propertyName: "canCreate",
+      propertyValue: "false"
+    });
 
   });
 
@@ -327,5 +352,101 @@ describe("parking-ticket-system", () => {
         });
     });
 
+  });
+
+  describe("admin page tests", () => {
+
+    before(() => {
+
+      updateUserProperty({
+        userName,
+        propertyName: "isAdmin",
+        propertyValue: "true"
+      });
+
+      updateUserProperty({
+        userName,
+        propertyName: "canUpdate",
+        propertyValue: "true"
+      });
+
+      updateUserProperty({
+        userName,
+        propertyName: "canCreate",
+        propertyValue: "true"
+      });
+    });
+
+    after(() => {
+
+      updateUserProperty({
+        userName,
+        propertyName: "isOperator",
+        propertyValue: "false"
+      });
+
+      updateUserProperty({
+        userName,
+        propertyName: "isAdmin",
+        propertyValue: "false"
+      });
+
+      updateUserProperty({
+        userName,
+        propertyName: "canUpdate",
+        propertyValue: "false"
+      });
+
+      updateUserProperty({
+        userName,
+        propertyName: "canCreate",
+        propertyValue: "false"
+      });
+    });
+
+    it("should open all admin pages", (done) => {
+
+      (async () => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        // Load the login page
+
+        await page.goto(appURL);
+
+        await page.focus("#login--userName");
+        await page.type("#login--userName", userName);
+
+        await page.focus("#login--password");
+        await page.type("#login--password", password);
+
+        const loginFormEle = await page.$("#form--login");
+        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
+          formEle.submit();
+        });
+
+        await page.waitForNavigation();
+
+        // Navigate to the admin pages
+
+        await page.goto(appURL + "/tickets/new");
+        await page.goto(appURL + "/admin/userManagement");
+        await page.goto(appURL + "/admin/cleanup");
+        await page.goto(appURL + "/admin/offences");
+        await page.goto(appURL + "/admin/locations");
+        await page.goto(appURL + "/admin/bylaws");
+
+        // Log out
+
+        await page.goto(appURL + "/logout");
+
+        await browser.close();
+
+        assert.ok(true);
+      })()
+        .finally(() => {
+          done();
+        });
+    });
   });
 });

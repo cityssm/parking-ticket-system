@@ -17,6 +17,7 @@ const getParkingTickets_1 = require("../helpers/parkingDB/getParkingTickets");
 const getAllUsers_1 = require("../helpers/usersDB/getAllUsers");
 const createUser_1 = require("../helpers/usersDB/createUser");
 const inactivateUser_1 = require("../helpers/usersDB/inactivateUser");
+const updateUserProperty_1 = require("../helpers/usersDB/updateUserProperty");
 const vehicleFns_1 = require("../helpers/vehicleFns");
 const _globals_1 = require("./_globals");
 describe("parking-ticket-system", () => {
@@ -35,6 +36,26 @@ describe("parking-ticket-system", () => {
             userName,
             firstName: "Test",
             lastName: "User"
+        });
+        updateUserProperty_1.updateUserProperty({
+            userName,
+            propertyName: "isOperator",
+            propertyValue: "false"
+        });
+        updateUserProperty_1.updateUserProperty({
+            userName,
+            propertyName: "isAdmin",
+            propertyValue: "false"
+        });
+        updateUserProperty_1.updateUserProperty({
+            userName,
+            propertyName: "canUpdate",
+            propertyValue: "false"
+        });
+        updateUserProperty_1.updateUserProperty({
+            userName,
+            propertyName: "canCreate",
+            propertyValue: "false"
         });
     });
     after(() => {
@@ -230,6 +251,75 @@ describe("parking-ticket-system", () => {
             })
                 .finally(() => {
                 assert.ok(isDashboardPage);
+                done();
+            });
+        });
+    });
+    describe("admin page tests", () => {
+        before(() => {
+            updateUserProperty_1.updateUserProperty({
+                userName,
+                propertyName: "isAdmin",
+                propertyValue: "true"
+            });
+            updateUserProperty_1.updateUserProperty({
+                userName,
+                propertyName: "canUpdate",
+                propertyValue: "true"
+            });
+            updateUserProperty_1.updateUserProperty({
+                userName,
+                propertyName: "canCreate",
+                propertyValue: "true"
+            });
+        });
+        after(() => {
+            updateUserProperty_1.updateUserProperty({
+                userName,
+                propertyName: "isOperator",
+                propertyValue: "false"
+            });
+            updateUserProperty_1.updateUserProperty({
+                userName,
+                propertyName: "isAdmin",
+                propertyValue: "false"
+            });
+            updateUserProperty_1.updateUserProperty({
+                userName,
+                propertyName: "canUpdate",
+                propertyValue: "false"
+            });
+            updateUserProperty_1.updateUserProperty({
+                userName,
+                propertyName: "canCreate",
+                propertyValue: "false"
+            });
+        });
+        it("should open all admin pages", (done) => {
+            (() => __awaiter(void 0, void 0, void 0, function* () {
+                const browser = yield puppeteer.launch();
+                const page = yield browser.newPage();
+                yield page.goto(appURL);
+                yield page.focus("#login--userName");
+                yield page.type("#login--userName", userName);
+                yield page.focus("#login--password");
+                yield page.type("#login--password", password);
+                const loginFormEle = yield page.$("#form--login");
+                yield loginFormEle.evaluate((formEle) => {
+                    formEle.submit();
+                });
+                yield page.waitForNavigation();
+                yield page.goto(appURL + "/tickets/new");
+                yield page.goto(appURL + "/admin/userManagement");
+                yield page.goto(appURL + "/admin/cleanup");
+                yield page.goto(appURL + "/admin/offences");
+                yield page.goto(appURL + "/admin/locations");
+                yield page.goto(appURL + "/admin/bylaws");
+                yield page.goto(appURL + "/logout");
+                yield browser.close();
+                assert.ok(true);
+            }))()
+                .finally(() => {
                 done();
             });
         });

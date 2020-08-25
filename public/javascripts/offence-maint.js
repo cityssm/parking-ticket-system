@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const locationClassMap = new Map();
     const offenceMap = new Map();
     const offenceAccountNumberPatternString = exports.accountNumberPattern;
     delete exports.accountNumberPattern;
@@ -67,9 +66,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.getElementById("offenceEdit--bylawNumber").value = offence.bylawNumber;
                 document.getElementById("offenceEdit--locationName").innerText = location.locationName;
                 document.getElementById("offenceEdit--locationClass").innerText =
-                    (locationClassMap.has(location.locationClassKey)
-                        ? locationClassMap.get(location.locationClassKey).locationClass
-                        : location.locationClassKey);
+                    pts.getLocationClass(location.locationClassKey).locationClass;
                 document.getElementById("offenceEdit--bylawNumberSpan").innerText = bylaw.bylawNumber;
                 document.getElementById("offenceEdit--bylawDescription").innerText = bylaw.bylawDescription;
                 document.getElementById("offenceEdit--parkingOffence").value = offence.parkingOffence;
@@ -126,10 +123,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 if (locationKeyFilterIsSet) {
                     titleHTML = "Select By-Laws";
                     const location = locationMap.get(locationKeyFilter);
-                    const locationClass = locationClassMap.get(location.locationClassKey);
+                    const locationClass = pts.getLocationClass(location.locationClassKey);
                     selectedHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
                         "<span class=\"is-size-7\">" +
-                        cityssm.escapeHTML(locationClass ? locationClass.locationClass : location.locationClassKey) +
+                        cityssm.escapeHTML(locationClass.locationClass) +
                         "</span>";
                 }
                 else {
@@ -175,9 +172,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         linkEle.setAttribute("data-location-key", location.locationKey);
                         linkEle.innerHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
                             "<span class=\"is-size-7\">" +
-                            (locationClassMap.has(location.locationClassKey)
-                                ? cityssm.escapeHTML(locationClassMap.get(location.locationClassKey).locationClass)
-                                : location.locationClassKey) +
+                            cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
                             "</span>";
                         linkEle.addEventListener("click", addFn);
                         listEle.appendChild(linkEle);
@@ -235,9 +230,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ("<td class=\"has-border-right-width-2\">" +
                     cityssm.escapeHTML(location.locationName) + "<br />" +
                     "<span class=\"is-size-7\">" +
-                    (locationClassMap.has(location.locationClassKey)
-                        ? locationClassMap.get(location.locationClassKey).locationClass
-                        : location.locationClassKey) +
+                    cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
                     "</span>" +
                     "</td>") +
                     ("<td class=\"has-border-right-width-2\">" +
@@ -307,9 +300,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ("<div class=\"column has-text-centered\">" +
                     cityssm.escapeHTML(location.locationName) + "<br />" +
                     "<span class=\"is-size-7\">" +
-                    (locationClassMap.has(location.locationClassKey)
-                        ? locationClassMap.get(location.locationClassKey).locationClass
-                        : location.locationClassKey) +
+                    cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
                     "</span>" +
                     "</div>") +
                 ("<div class=\"column has-text-centered\">" +
@@ -367,9 +358,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             cityssm.escapeHTML(location.locationName) +
                             "</div>") +
                         "<div class=\"level-right\">" +
-                        cityssm.escapeHTML(locationClassMap.has(location.locationClassKey)
-                            ? locationClassMap.get(location.locationClassKey).locationClass
-                            : location.locationClassKey) +
+                        cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
                         "</div>" +
                         "</div>";
                     linkEle.addEventListener("click", selectFn);
@@ -455,10 +444,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
     delete exports.bylaws;
     loadOffenceMapFn(exports.offences);
     delete exports.offences;
-    pts.getDefaultConfigProperty("locationClasses", (locationClassList) => {
-        for (const locationClass of locationClassList) {
-            locationClassMap.set(locationClass.locationClassKey, locationClass);
-        }
-        renderOffencesFn();
-    });
+    pts.getDefaultConfigProperty("locationClasses", renderOffencesFn);
 })();
