@@ -2,6 +2,8 @@ import * as sqlite from "better-sqlite3";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
+import { getSplitWhereClauseFilter } from "../parkingDB";
+
 import * as pts from "../ptsTypes";
 
 
@@ -28,12 +30,9 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
 
   if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
 
-    const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
-
-    for (const licencePlateNumberPiece of licencePlateNumberPieces) {
-      sqlInnerWhereClause += " and instr(lower(licencePlateNumber), ?)";
-      sqlParams.push(licencePlateNumberPiece);
-    }
+    const filter = getSplitWhereClauseFilter("licencePlateNumber", queryOptions.licencePlateNumber);
+    sqlInnerWhereClause += filter.sqlWhereClause;
+    sqlParams.push.apply(sqlParams, filter.sqlParams);
   }
 
   sqlParams = sqlParams.concat(sqlParams);

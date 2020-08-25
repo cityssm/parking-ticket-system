@@ -64,17 +64,6 @@ export const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) =>
 };
 
 
-export const getParkingLocationWithDB = (db: sqlite.Database, locationKey: string) => {
-
-  const location: pts.ParkingLocation = db.prepare("select locationKey, locationName, locationClassKey, isActive" +
-    " from ParkingLocations" +
-    " where locationKey = ?")
-    .get(locationKey);
-
-  return location;
-};
-
-
 export const getRecentParkingTicketVehicleMakeModelValues = () => {
 
   const db = sqlite(dbPath, {
@@ -105,6 +94,25 @@ export const getRecentParkingTicketVehicleMakeModelValues = () => {
 
   return vehicleMakeModelList;
 
+};
+
+
+export const getSplitWhereClauseFilter = (columnName: string, searchString: string) => {
+
+  let sqlWhereClause = "";
+  const sqlParams = [];
+
+  const ticketNumberPieces = searchString.toLowerCase().split(" ");
+
+  for (const ticketNumberPiece of ticketNumberPieces) {
+    sqlWhereClause += " and instr(lower(" + columnName + "), ?)";
+    sqlParams.push(ticketNumberPiece);
+  }
+
+  return {
+    sqlWhereClause,
+    sqlParams
+  };
 };
 
 

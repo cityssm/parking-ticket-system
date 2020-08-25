@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDistinctLicencePlateOwnerVehicleNCICs = exports.getRecentParkingTicketVehicleMakeModelValues = exports.getParkingLocationWithDB = exports.canUpdateObject = void 0;
+exports.getDistinctLicencePlateOwnerVehicleNCICs = exports.getSplitWhereClauseFilter = exports.getRecentParkingTicketVehicleMakeModelValues = exports.canUpdateObject = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const configFns = require("./configFns");
@@ -37,13 +37,6 @@ exports.canUpdateObject = (obj, reqSession) => {
     }
     return canUpdate;
 };
-exports.getParkingLocationWithDB = (db, locationKey) => {
-    const location = db.prepare("select locationKey, locationName, locationClassKey, isActive" +
-        " from ParkingLocations" +
-        " where locationKey = ?")
-        .get(locationKey);
-    return location;
-};
 exports.getRecentParkingTicketVehicleMakeModelValues = () => {
     const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
@@ -65,6 +58,19 @@ exports.getRecentParkingTicketVehicleMakeModelValues = () => {
         vehicleMakeModelList.push(row.vehicleMakeModel);
     }
     return vehicleMakeModelList;
+};
+exports.getSplitWhereClauseFilter = (columnName, searchString) => {
+    let sqlWhereClause = "";
+    const sqlParams = [];
+    const ticketNumberPieces = searchString.toLowerCase().split(" ");
+    for (const ticketNumberPiece of ticketNumberPieces) {
+        sqlWhereClause += " and instr(lower(" + columnName + "), ?)";
+        sqlParams.push(ticketNumberPiece);
+    }
+    return {
+        sqlWhereClause,
+        sqlParams
+    };
 };
 exports.getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate) => {
     const db = sqlite(databasePaths_1.parkingDB, {

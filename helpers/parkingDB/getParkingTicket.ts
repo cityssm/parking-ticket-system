@@ -3,7 +3,8 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type * as pts from "../ptsTypes";
 
-import { canUpdateObject, getParkingLocationWithDB } from "../parkingDB";
+import { canUpdateObject } from "../parkingDB";
+import { getParkingLocationWithDB } from "./getParkingLocation";
 import { getLicencePlateOwnerWithDB } from "./getLicencePlateOwner";
 import { getParkingTicketRemarksWithDB } from "./getParkingTicketRemarks";
 import { getParkingTicketStatusesWithDB } from "./getParkingTicketStatuses";

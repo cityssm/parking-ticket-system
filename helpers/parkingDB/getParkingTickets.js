@@ -24,18 +24,14 @@ const buildWhereClause = (queryOptions) => {
         }
     }
     if (queryOptions.ticketNumber && queryOptions.ticketNumber !== "") {
-        const ticketNumberPieces = queryOptions.ticketNumber.toLowerCase().split(" ");
-        for (const ticketNumberPiece of ticketNumberPieces) {
-            sqlWhereClause += " and instr(lower(t.ticketNumber), ?)";
-            sqlParams.push(ticketNumberPiece);
-        }
+        const filter = parkingDB_1.getSplitWhereClauseFilter("t.ticketNumber", queryOptions.ticketNumber);
+        sqlWhereClause += filter.sqlWhereClause;
+        sqlParams.push.apply(sqlParams, filter.sqlParams);
     }
     if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
-        const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
-        for (const licencePlateNumberPiece of licencePlateNumberPieces) {
-            sqlWhereClause += " and instr(lower(t.licencePlateNumber), ?)";
-            sqlParams.push(licencePlateNumberPiece);
-        }
+        const filter = parkingDB_1.getSplitWhereClauseFilter("t.licencePlateNumber", queryOptions.licencePlateNumber);
+        sqlWhereClause += filter.sqlWhereClause;
+        sqlParams.push.apply(sqlParams, filter.sqlParams);
     }
     if (queryOptions.licencePlateNumberEqual && queryOptions.licencePlateNumberEqual !== "") {
         sqlWhereClause += " and t.licencePlateNumber = ?";

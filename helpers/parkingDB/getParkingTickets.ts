@@ -3,7 +3,7 @@ import * as sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type * as pts from "../ptsTypes";
 
-import { canUpdateObject } from "../parkingDB";
+import { canUpdateObject, getSplitWhereClauseFilter } from "../parkingDB";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
@@ -51,22 +51,16 @@ const buildWhereClause = (queryOptions: GetParkingTicketsQueryOptions) => {
 
   if (queryOptions.ticketNumber && queryOptions.ticketNumber !== "") {
 
-    const ticketNumberPieces = queryOptions.ticketNumber.toLowerCase().split(" ");
-
-    for (const ticketNumberPiece of ticketNumberPieces) {
-      sqlWhereClause += " and instr(lower(t.ticketNumber), ?)";
-      sqlParams.push(ticketNumberPiece);
-    }
+    const filter = getSplitWhereClauseFilter("t.ticketNumber", queryOptions.ticketNumber);
+    sqlWhereClause += filter.sqlWhereClause;
+    sqlParams.push.apply(sqlParams, filter.sqlParams);
   }
 
   if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
 
-    const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
-
-    for (const licencePlateNumberPiece of licencePlateNumberPieces) {
-      sqlWhereClause += " and instr(lower(t.licencePlateNumber), ?)";
-      sqlParams.push(licencePlateNumberPiece);
-    }
+    const filter = getSplitWhereClauseFilter("t.licencePlateNumber", queryOptions.licencePlateNumber);
+    sqlWhereClause += filter.sqlWhereClause;
+    sqlParams.push.apply(sqlParams, filter.sqlParams);
   }
 
   if (queryOptions.licencePlateNumberEqual && queryOptions.licencePlateNumberEqual !== "") {

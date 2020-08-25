@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLicencePlates = void 0;
 const sqlite = require("better-sqlite3");
 const databasePaths_1 = require("../../data/databasePaths");
+const parkingDB_1 = require("../parkingDB");
 exports.getLicencePlates = (queryOptions) => {
     const db = sqlite(databasePaths_1.parkingDB, {
         readonly: true
@@ -10,11 +11,9 @@ exports.getLicencePlates = (queryOptions) => {
     let sqlParams = [];
     let sqlInnerWhereClause = " where recordDelete_timeMillis is null";
     if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
-        const licencePlateNumberPieces = queryOptions.licencePlateNumber.toLowerCase().split(" ");
-        for (const licencePlateNumberPiece of licencePlateNumberPieces) {
-            sqlInnerWhereClause += " and instr(lower(licencePlateNumber), ?)";
-            sqlParams.push(licencePlateNumberPiece);
-        }
+        const filter = parkingDB_1.getSplitWhereClauseFilter("licencePlateNumber", queryOptions.licencePlateNumber);
+        sqlInnerWhereClause += filter.sqlWhereClause;
+        sqlParams.push.apply(sqlParams, filter.sqlParams);
     }
     sqlParams = sqlParams.concat(sqlParams);
     let sqlHavingClause = " having 1 = 1";

@@ -4,6 +4,7 @@ exports.getParkingTicket = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB_1 = require("../parkingDB");
+const getParkingLocation_1 = require("./getParkingLocation");
 const getLicencePlateOwner_1 = require("./getLicencePlateOwner");
 const getParkingTicketRemarks_1 = require("./getParkingTicketRemarks");
 const getParkingTicketStatuses_1 = require("./getParkingTicketStatuses");
@@ -44,7 +45,7 @@ exports.getParkingTicket = (ticketID, reqSession) => {
     if (ticket.ownerLookup_statusKey === "ownerLookupMatch") {
         ticket.licencePlateOwner = getLicencePlateOwner_1.getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, parseInt(ticket.ownerLookup_statusField, 10));
     }
-    ticket.location = parkingDB_1.getParkingLocationWithDB(db, ticket.locationKey);
+    ticket.location = getParkingLocation_1.getParkingLocationWithDB(db, ticket.locationKey);
     ticket.statusLog = getParkingTicketStatuses_1.getParkingTicketStatusesWithDB(db, ticketID, reqSession);
     if (!ticket.canUpdate) {
         for (const status of ticket.statusLog) {
