@@ -126,6 +126,8 @@ export interface LicencePlate {
     licencePlateExpiryYear?: number | string;
     licencePlateExpiryMonth?: number | string;
     licencePlateExpiryDay?: number;
+    hasOwnerRecord?: boolean;
+    unresolvedTicketCount?: number;
 }
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     recordType: "ticket";

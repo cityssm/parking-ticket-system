@@ -24,42 +24,41 @@ describe("parking-ticket-system", () => {
     const httpServer = http.createServer(app);
     const portNumber = 54333;
     let serverStarted = false;
-    const userName = "__testUser";
     let password = "";
     before(() => {
         httpServer.listen(portNumber);
         httpServer.on("listening", () => {
             serverStarted = true;
         });
-        inactivateUser_1.inactivateUser(userName);
+        inactivateUser_1.inactivateUser(_globals_1.userName);
         password = createUser_1.createUser({
-            userName,
+            userName: _globals_1.userName,
             firstName: "Test",
             lastName: "User"
         });
         updateUserProperty_1.updateUserProperty({
-            userName,
+            userName: _globals_1.userName,
             propertyName: "isOperator",
             propertyValue: "false"
         });
         updateUserProperty_1.updateUserProperty({
-            userName,
+            userName: _globals_1.userName,
             propertyName: "isAdmin",
             propertyValue: "false"
         });
         updateUserProperty_1.updateUserProperty({
-            userName,
+            userName: _globals_1.userName,
             propertyName: "canUpdate",
             propertyValue: "false"
         });
         updateUserProperty_1.updateUserProperty({
-            userName,
+            userName: _globals_1.userName,
             propertyName: "canCreate",
             propertyValue: "false"
         });
     });
     after(() => {
-        inactivateUser_1.inactivateUser(userName);
+        inactivateUser_1.inactivateUser(_globals_1.userName);
         try {
             httpServer.close();
         }
@@ -118,7 +117,7 @@ describe("parking-ticket-system", () => {
                     const page = yield browser.newPage();
                     yield page.goto(appURL);
                     yield page.focus("#login--userName");
-                    yield page.type("#login--userName", userName);
+                    yield page.type("#login--userName", _globals_1.userName);
                     yield page.focus("#login--password");
                     yield page.type("#login--password", password);
                     const loginFormEle = yield page.$("#form--login");
@@ -210,7 +209,7 @@ describe("parking-ticket-system", () => {
                 const page = yield browser.newPage();
                 yield page.goto(appURL + "/login");
                 yield page.focus("#login--userName");
-                yield page.type("#login--userName", userName);
+                yield page.type("#login--userName", _globals_1.userName);
                 yield page.focus("#login--password");
                 yield page.type("#login--password", password + "-incorrect");
                 const loginFormEle = yield page.$("#form--login");
@@ -235,7 +234,7 @@ describe("parking-ticket-system", () => {
                 const page = yield browser.newPage();
                 yield page.goto(appURL + "/login");
                 yield page.focus("#login--userName");
-                yield page.type("#login--userName", userName);
+                yield page.type("#login--userName", _globals_1.userName);
                 yield page.focus("#login--password");
                 yield page.type("#login--password", password);
                 const loginFormEle = yield page.$("#form--login");
@@ -258,39 +257,39 @@ describe("parking-ticket-system", () => {
     describe("admin page tests", () => {
         before(() => {
             updateUserProperty_1.updateUserProperty({
-                userName,
+                userName: _globals_1.userName,
                 propertyName: "isAdmin",
                 propertyValue: "true"
             });
             updateUserProperty_1.updateUserProperty({
-                userName,
+                userName: _globals_1.userName,
                 propertyName: "canUpdate",
                 propertyValue: "true"
             });
             updateUserProperty_1.updateUserProperty({
-                userName,
+                userName: _globals_1.userName,
                 propertyName: "canCreate",
                 propertyValue: "true"
             });
         });
         after(() => {
             updateUserProperty_1.updateUserProperty({
-                userName,
+                userName: _globals_1.userName,
                 propertyName: "isOperator",
                 propertyValue: "false"
             });
             updateUserProperty_1.updateUserProperty({
-                userName,
+                userName: _globals_1.userName,
                 propertyName: "isAdmin",
                 propertyValue: "false"
             });
             updateUserProperty_1.updateUserProperty({
-                userName,
+                userName: _globals_1.userName,
                 propertyName: "canUpdate",
                 propertyValue: "false"
             });
             updateUserProperty_1.updateUserProperty({
-                userName,
+                userName: _globals_1.userName,
                 propertyName: "canCreate",
                 propertyValue: "false"
             });
@@ -301,7 +300,7 @@ describe("parking-ticket-system", () => {
                 const page = yield browser.newPage();
                 yield page.goto(appURL);
                 yield page.focus("#login--userName");
-                yield page.type("#login--userName", userName);
+                yield page.type("#login--userName", _globals_1.userName);
                 yield page.focus("#login--password");
                 yield page.type("#login--password", password);
                 const loginFormEle = yield page.$("#form--login");

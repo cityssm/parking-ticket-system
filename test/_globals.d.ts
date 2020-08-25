@@ -72,3 +72,4 @@ export declare const fakeAdminRequest: Request<import("express-serve-static-core
         };
     };
 };
+export declare const userName = "__testUser";

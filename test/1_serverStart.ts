@@ -14,7 +14,7 @@ import { updateUserProperty } from "../helpers/usersDB/updateUserProperty";
 
 import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
 
-import { fakeViewOnlySession } from "./_globals";
+import { fakeViewOnlySession, userName } from "./_globals";
 
 
 describe("parking-ticket-system", () => {
@@ -24,7 +24,6 @@ describe("parking-ticket-system", () => {
 
   let serverStarted = false;
 
-  const userName = "__testUser";
   let password = "";
 
   before(() => {

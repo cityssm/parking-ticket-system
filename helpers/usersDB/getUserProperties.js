@@ -14,7 +14,7 @@ exports.getUserProperties = (userName) => {
         " where userName = ?")
         .all(userName);
     for (const userProperty of userPropertyRows) {
-        userProperties[userProperty.propertyName] = userProperty.propertyValue;
+        userProperties[userProperty.propertyName] = (userProperty.propertyValue === "true");
     }
     db.close();
     return userProperties;

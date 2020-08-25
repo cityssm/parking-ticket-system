@@ -22,7 +22,7 @@ export const getUserProperties = (userName: string) => {
     .all(userName);
 
   for (const userProperty of userPropertyRows) {
-    userProperties[userProperty.propertyName] = userProperty.propertyValue;
+    userProperties[userProperty.propertyName] = (userProperty.propertyValue === "true");
   }
 
   db.close();

@@ -63,6 +63,8 @@ exports.getLicencePlates = (queryOptions) => {
     db.close();
     return {
         count,
+        limit: queryOptions.limit,
+        offset: queryOptions.offset,
         licencePlates: rows
     };
 };

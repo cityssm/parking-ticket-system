@@ -4,8 +4,8 @@ exports.handler = void 0;
 const parkingDB_getLicencePlates = require("../../helpers/parkingDB/getLicencePlates");
 exports.handler = (req, res) => {
     const queryOptions = {
-        limit: req.body.limit,
-        offset: req.body.offset,
+        limit: parseInt(req.body.limit, 10),
+        offset: parseInt(req.body.offset, 10),
         licencePlateNumber: req.body.licencePlateNumber
     };
     if (req.body.hasOwnerRecord !== "") {

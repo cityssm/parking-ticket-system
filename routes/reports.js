@@ -1,8 +1,7 @@
 "use strict";
 const express_1 = require("express");
-const parkingDBReporting = require("../helpers/parkingDB-reporting");
-const stringFns_1 = require("@cityssm/expressjs-server-js/stringFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
+const handler_reportName = require("../handlers/reports-all/reportName");
 const router = express_1.Router();
 router.get("/", (_req, res) => {
     const rightNow = new Date();
@@ -11,16 +10,5 @@ router.get("/", (_req, res) => {
         todayDateString: dateTimeFns.dateToString(rightNow)
     });
 });
-router.all("/:reportName", (req, res) => {
-    const reportName = req.params.reportName;
-    const rowsColumnsObj = parkingDBReporting.getReportRowsColumns(reportName, req.query);
-    if (!rowsColumnsObj) {
-        res.redirect("/reports/?error=reportNotAvailable");
-        return;
-    }
-    const csv = stringFns_1.rawToCSV(rowsColumnsObj);
-    res.setHeader("Content-Disposition", "attachment; filename=" + reportName + "-" + Date.now().toString() + ".csv");
-    res.setHeader("Content-Type", "text/csv");
-    res.send(csv);
-});
+router.all("/:reportName", handler_reportName.handler);
 module.exports = router;

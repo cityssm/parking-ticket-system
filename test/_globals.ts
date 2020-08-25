@@ -128,7 +128,11 @@ export const fakeViewOnlyRequest =
     session: fakeViewOnlySession
   });
 
+
 export const fakeAdminRequest =
   Object.assign({}, fakeRequest, {
     session: fakeAdminSession
   });
+
+
+export const userName = "__testUser";

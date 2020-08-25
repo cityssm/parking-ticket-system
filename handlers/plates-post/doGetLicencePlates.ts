@@ -6,8 +6,8 @@ import * as parkingDB_getLicencePlates from "../../helpers/parkingDB/getLicenceP
 export const handler: RequestHandler = (req, res) => {
 
   const queryOptions: parkingDB_getLicencePlates.GetLicencePlatesQueryOptions = {
-    limit: req.body.limit,
-    offset: req.body.offset,
+    limit: parseInt(req.body.limit, 10),
+    offset: parseInt(req.body.offset, 10),
     licencePlateNumber: req.body.licencePlateNumber
   };
 

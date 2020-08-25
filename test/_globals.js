@@ -12,7 +12,7 @@ var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _ar
     function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fakeAdminRequest = exports.fakeViewOnlyRequest = exports.fakeRequest = exports.fakeAdminSession = exports.fakeViewOnlySession = void 0;
+exports.userName = exports.fakeAdminRequest = exports.fakeViewOnlyRequest = exports.fakeRequest = exports.fakeAdminSession = exports.fakeViewOnlySession = void 0;
 exports.fakeViewOnlySession = {
     id: "",
     cookie: null,
@@ -134,3 +134,4 @@ exports.fakeViewOnlyRequest = Object.assign({}, exports.fakeRequest, {
 exports.fakeAdminRequest = Object.assign({}, exports.fakeRequest, {
     session: exports.fakeAdminSession
 });
+exports.userName = "__testUser";

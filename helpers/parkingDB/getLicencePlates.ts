@@ -2,6 +2,8 @@ import * as sqlite from "better-sqlite3";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
+import * as pts from "../ptsTypes";
+
 
 export interface GetLicencePlatesQueryOptions {
   licencePlateNumber?: string;
@@ -91,7 +93,7 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
 
   // do query
 
-  const rows = db.prepare(innerSql +
+  const rows: pts.LicencePlate[] = db.prepare(innerSql +
     " order by licencePlateNumber, licencePlateProvince, licencePlateCountry" +
     " limit " + queryOptions.limit.toString() +
     " offset " + queryOptions.offset.toString())
@@ -101,6 +103,8 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
 
   return {
     count,
+    limit: queryOptions.limit,
+    offset: queryOptions.offset,
     licencePlates: rows
   };
 
