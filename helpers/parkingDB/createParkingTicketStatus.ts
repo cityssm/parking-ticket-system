@@ -4,6 +4,7 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import type * as pts from "../ptsTypes";
 
 import { getNextParkingTicketStatusIndex } from "./getNextParkingTicketStatusIndex";
+import { resolveParkingTicketWithDB } from "./resolveParkingTicket";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
@@ -40,18 +41,7 @@ export const createParkingTicketStatus =
         rightNow.getTime());
 
     if (info.changes > 0 && resolveTicket) {
-
-      db.prepare("update ParkingTickets" +
-        " set resolvedDate = ?," +
-        " recordUpdate_userName = ?," +
-        " recordUpdate_timeMillis = ?" +
-        " where ticketID = ?" +
-        " and resolvedDate is null" +
-        " and recordDelete_timeMillis is null")
-        .run(dateTimeFns.dateToInteger(rightNow),
-          reqSession.user.userName,
-          rightNow.getTime(),
-          reqBodyOrObj.ticketID);
+      resolveParkingTicketWithDB(db, reqBodyOrObj.ticketID, reqSession);
     }
 
     db.close();

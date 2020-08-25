@@ -5,6 +5,8 @@ const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB_1 = require("../parkingDB");
 const getLicencePlateOwner_1 = require("./getLicencePlateOwner");
+const getParkingTicketRemarks_1 = require("./getParkingTicketRemarks");
+const getParkingTicketStatuses_1 = require("./getParkingTicketStatuses");
 const databasePaths_1 = require("../../data/databasePaths");
 exports.getParkingTicket = (ticketID, reqSession) => {
     const db = sqlite(databasePaths_1.parkingDB, {
@@ -27,7 +29,7 @@ exports.getParkingTicket = (ticketID, reqSession) => {
         .get(ticketID);
     if (!ticket) {
         db.close();
-        return ticket;
+        return null;
     }
     ticket.recordType = "ticket";
     ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
@@ -43,34 +45,16 @@ exports.getParkingTicket = (ticketID, reqSession) => {
         ticket.licencePlateOwner = getLicencePlateOwner_1.getLicencePlateOwnerWithDB(db, ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, parseInt(ticket.ownerLookup_statusField, 10));
     }
     ticket.location = parkingDB_1.getParkingLocationWithDB(db, ticket.locationKey);
-    ticket.statusLog = db.prepare("select * from ParkingTicketStatusLog" +
-        " where recordDelete_timeMillis is null" +
-        " and ticketID = ?" +
-        " order by statusDate desc, statusTime desc, statusIndex desc")
-        .all(ticketID);
-    for (const statusObj of ticket.statusLog) {
-        statusObj.statusDateString = dateTimeFns.dateIntegerToString(statusObj.statusDate);
-        statusObj.statusTimeString = dateTimeFns.timeIntegerToString(statusObj.statusTime);
-        if (!ticket.canUpdate) {
-            statusObj.canUpdate = false;
-        }
-        else {
-            statusObj.canUpdate = parkingDB_1.canUpdateObject(statusObj, reqSession);
+    ticket.statusLog = getParkingTicketStatuses_1.getParkingTicketStatusesWithDB(db, ticketID, reqSession);
+    if (!ticket.canUpdate) {
+        for (const status of ticket.statusLog) {
+            status.canUpdate = false;
         }
     }
-    ticket.remarks = db.prepare("select * from ParkingTicketRemarks" +
-        " where recordDelete_timeMillis is null" +
-        " and ticketID = ?" +
-        " order by remarkDate desc, remarkTime desc, remarkIndex desc")
-        .all(ticketID);
-    for (const remarkObj of ticket.remarks) {
-        remarkObj.remarkDateString = dateTimeFns.dateIntegerToString(remarkObj.remarkDate);
-        remarkObj.remarkTimeString = dateTimeFns.timeIntegerToString(remarkObj.remarkTime);
-        if (!ticket.canUpdate) {
-            remarkObj.canUpdate = false;
-        }
-        else {
-            remarkObj.canUpdate = parkingDB_1.canUpdateObject(remarkObj, reqSession);
+    ticket.remarks = getParkingTicketRemarks_1.getParkingTicketRemarksWithDB(db, ticketID, reqSession);
+    if (!ticket.canUpdate) {
+        for (const remark of ticket.remarks) {
+            remark.canUpdate = false;
         }
     }
     db.close();

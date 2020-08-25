@@ -5,6 +5,8 @@ import type * as pts from "../ptsTypes";
 
 import { canUpdateObject, getParkingLocationWithDB } from "../parkingDB";
 import { getLicencePlateOwnerWithDB } from "./getLicencePlateOwner";
+import { getParkingTicketRemarksWithDB } from "./getParkingTicketRemarks";
+import { getParkingTicketStatusesWithDB } from "./getParkingTicketStatuses";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
@@ -33,7 +35,7 @@ export const getParkingTicket = (ticketID: number, reqSession: Express.Session) 
 
   if (!ticket) {
     db.close();
-    return ticket;
+    return null;
   }
 
   ticket.recordType = "ticket";
@@ -64,41 +66,21 @@ export const getParkingTicket = (ticketID: number, reqSession: Express.Session) 
 
   // Status Log
 
-  ticket.statusLog = db.prepare("select * from ParkingTicketStatusLog" +
-    " where recordDelete_timeMillis is null" +
-    " and ticketID = ?" +
-    " order by statusDate desc, statusTime desc, statusIndex desc")
-    .all(ticketID);
+  ticket.statusLog = getParkingTicketStatusesWithDB(db, ticketID, reqSession);
 
-  for (const statusObj of ticket.statusLog) {
-
-    statusObj.statusDateString = dateTimeFns.dateIntegerToString(statusObj.statusDate);
-    statusObj.statusTimeString = dateTimeFns.timeIntegerToString(statusObj.statusTime);
-
-    if (!ticket.canUpdate) {
-      statusObj.canUpdate = false;
-    } else {
-      statusObj.canUpdate = canUpdateObject(statusObj, reqSession);
+  if (!ticket.canUpdate) {
+    for (const status of ticket.statusLog) {
+      status.canUpdate = false;
     }
   }
 
   // Remarks
 
-  ticket.remarks = db.prepare("select * from ParkingTicketRemarks" +
-    " where recordDelete_timeMillis is null" +
-    " and ticketID = ?" +
-    " order by remarkDate desc, remarkTime desc, remarkIndex desc")
-    .all(ticketID);
+  ticket.remarks = getParkingTicketRemarksWithDB(db, ticketID, reqSession);
 
-  for (const remarkObj of ticket.remarks) {
-
-    remarkObj.remarkDateString = dateTimeFns.dateIntegerToString(remarkObj.remarkDate);
-    remarkObj.remarkTimeString = dateTimeFns.timeIntegerToString(remarkObj.remarkTime);
-
-    if (!ticket.canUpdate) {
-      remarkObj.canUpdate = false;
-    } else {
-      remarkObj.canUpdate = canUpdateObject(remarkObj, reqSession);
+  if (!ticket.canUpdate) {
+    for (const remark of ticket.remarks) {
+      remark.canUpdate = false;
     }
   }
 

@@ -8,23 +8,14 @@ import { canUpdateObject } from "../parkingDB";
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
-export const getParkingTicketStatuses = (ticketID: number, reqSession: Express.Session) => {
-
-  const db = sqlite(dbPath, {
-    readonly: true
-  });
+export const getParkingTicketStatusesWithDB = (db: sqlite.Database, ticketID: number, reqSession: Express.Session) => {
 
   const statusRows: pts.ParkingTicketStatusLog[] =
-    db.prepare("select statusIndex, statusDate, statusTime," +
-      " statusKey, statusField, statusField2, statusNote," +
-      " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
-      " from ParkingTicketStatusLog" +
+    db.prepare("select * from ParkingTicketStatusLog" +
       " where recordDelete_timeMillis is null" +
       " and ticketID = ?" +
       " order by statusDate desc, statusTime desc, statusIndex desc")
       .all(ticketID);
-
-  db.close();
 
   for (const status of statusRows) {
 
@@ -35,6 +26,20 @@ export const getParkingTicketStatuses = (ticketID: number, reqSession: Express.S
 
     status.canUpdate = canUpdateObject(status, reqSession);
   }
+
+  return statusRows;
+};
+
+
+export const getParkingTicketStatuses = (ticketID: number, reqSession: Express.Session) => {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const statusRows = getParkingTicketStatusesWithDB(db, ticketID, reqSession);
+
+  db.close();
 
   return statusRows;
 };

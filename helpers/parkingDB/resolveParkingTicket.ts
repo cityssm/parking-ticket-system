@@ -5,9 +5,7 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
-export const resolveParkingTicket = (ticketID: number, reqSession: Express.Session) => {
-
-  const db = sqlite(dbPath);
+export const resolveParkingTicketWithDB = (db: sqlite.Database, ticketID: number, reqSession: Express.Session) => {
 
   const rightNow = new Date();
 
@@ -23,9 +21,21 @@ export const resolveParkingTicket = (ticketID: number, reqSession: Express.Sessi
       rightNow.getTime(),
       ticketID);
 
+  return {
+    success: (info.changes > 0)
+  };
+};
+
+
+export const resolveParkingTicket = (ticketID: number, reqSession: Express.Session) => {
+
+  const db = sqlite(dbPath);
+
+  const success = resolveParkingTicketWithDB(db, ticketID, reqSession);
+
   db.close();
 
   return {
-    success: (info.changes > 0)
+    success
   };
 };
