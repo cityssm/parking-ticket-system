@@ -99,6 +99,8 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
     });
     return {
         count,
+        limit: queryOptions.limit,
+        offset: queryOptions.offset,
         tickets: rows
     };
 };

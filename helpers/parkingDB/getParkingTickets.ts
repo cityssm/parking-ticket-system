@@ -155,6 +155,8 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
 
   return {
     count,
+    limit: queryOptions.limit,
+    offset: queryOptions.offset,
     tickets: rows
   };
 };

@@ -7,8 +7,8 @@ import * as parkingDB_getParkingTickets from "../../helpers/parkingDB/getParking
 export const handler: RequestHandler = (req, res) => {
 
   const queryOptions: parkingDB_getParkingTickets.GetParkingTicketsQueryOptions = {
-    limit: req.body.limit,
-    offset: req.body.offset,
+    limit: parseInt(req.body.limit, 10),
+    offset: parseInt(req.body.offset, 10),
     ticketNumber: req.body.ticketNumber,
     licencePlateNumber: req.body.licencePlateNumber,
     location: req.body.location

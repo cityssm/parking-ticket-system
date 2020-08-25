@@ -15,7 +15,9 @@ export const handler: RequestHandler = (req, res) => {
 
   const output = mtoFns.exportLicencePlateBatch(batchID, req.session);
 
-  res.setHeader("Content-Disposition", "attachment; filename=lookupBatch-" + batchID.toString() + ".txt");
+  res.setHeader("Content-Disposition",
+    "attachment; filename=lookupBatch-" + batchID.toString() + ".txt");
   res.setHeader("Content-Type", "text/plain");
+
   res.send(output);
 };
