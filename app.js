@@ -74,12 +74,6 @@ const sessionChecker = (req, res, next) => {
     }
     return res.redirect("/login?redirect=" + req.originalUrl);
 };
-const adminChecker = (req, res, next) => {
-    if (req.session.user.userProperties.isAdmin) {
-        return next();
-    }
-    return res.redirect("/dashboard");
-};
 app.use((req, res, next) => {
     res.locals.buildNumber = package_json_1.version;
     res.locals.user = req.session.user;
@@ -103,7 +97,7 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
     app.use("/plates-ontario", sessionChecker, routePlatesOntario);
     app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
 }
-app.use("/admin", sessionChecker, adminChecker, routerAdmin);
+app.use("/admin", sessionChecker, routerAdmin);
 app.all("/keepAlive", (_req, res) => {
     res.json(true);
 });

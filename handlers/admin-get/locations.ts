@@ -2,14 +2,8 @@ import type { RequestHandler } from "express";
 
 import * as parkingDB_getParkingLocations from "../../helpers/parkingDB/getParkingLocations";
 
-import { userIsAdmin } from "../../helpers/userFns";
 
-
-export const handler: RequestHandler = (req, res) => {
-
-  if (!userIsAdmin(req)) {
-    return res.redirect("/dashboard/?error=accessDenied");
-  }
+export const handler: RequestHandler = (_req, res) => {
 
   const locations = parkingDB_getParkingLocations.getParkingLocations();
 

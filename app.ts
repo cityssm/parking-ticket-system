@@ -138,16 +138,6 @@ const sessionChecker = (req: express.Request, res: express.Response, next: expre
   return res.redirect("/login?redirect=" + req.originalUrl);
 };
 
-// Redirect non-admin users
-const adminChecker = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-
-  if (req.session.user.userProperties.isAdmin) {
-    return next();
-  }
-
-  return res.redirect("/dashboard");
-};
-
 
 /*
  * ROUTES
@@ -189,7 +179,7 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
   app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
 }
 
-app.use("/admin", sessionChecker, adminChecker, routerAdmin);
+app.use("/admin", sessionChecker, routerAdmin);
 
 app.all("/keepAlive", (_req, res) => {
   res.json(true);

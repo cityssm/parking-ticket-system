@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import { adminGetHandler, adminPostHandler } from "../handlers/permissions";
+
 import * as handler_userManagement from "../handlers/admin-get/userManagement";
 
 import * as handler_doCreateUser from "../handlers/admin-post/doCreateUser";
@@ -36,24 +38,31 @@ const router = Router();
 
 
 router.get("/userManagement",
+  adminGetHandler,
   handler_userManagement.handler);
 
 router.post("/doCreateUser",
+  adminPostHandler,
   handler_doCreateUser.handler);
 
 router.post("/doUpdateUser",
+  adminPostHandler,
   handler_doUpdateUser.handler);
 
 router.post("/doUpdateUserProperty",
+  adminPostHandler,
   handler_doUpdateUserProperty.handler);
 
 router.post("/doResetPassword",
+  adminPostHandler,
   handler_doResetPassword.handler);
 
 router.post("/doGetUserProperties",
+  adminPostHandler,
   handler_doGetUserProperties.handler);
 
 router.post("/doDeleteUser",
+  adminPostHandler,
   handler_doDeleteUser.handler);
 
 
@@ -61,9 +70,11 @@ router.post("/doDeleteUser",
 
 
 router.get("/cleanup",
+  adminGetHandler,
   handler_cleanup.handler);
 
 router.post("/doCleanupTable",
+  adminPostHandler,
   handler_doCleanupTable.handler);
 
 
@@ -71,15 +82,19 @@ router.post("/doCleanupTable",
 
 
 router.get("/offences",
+  adminGetHandler,
   handler_offences.handler);
 
 router.post("/doAddOffence",
+  adminPostHandler,
   handler_doAddOffence.handler);
 
 router.post("/doUpdateOffence",
+  adminPostHandler,
   handler_doUpdateOffence.handler);
 
 router.post("/doDeleteOffence",
+  adminPostHandler,
   handler_doDeleteOffence.handler);
 
 
@@ -87,15 +102,19 @@ router.post("/doDeleteOffence",
 
 
 router.get("/locations",
+  adminGetHandler,
   handler_locations.handler);
 
 router.post("/doAddLocation",
+  adminPostHandler,
   handler_doAddLocation.handler);
 
 router.post("/doUpdateLocation",
+  adminPostHandler,
   handler_doUpdateLocation.handler);
 
 router.post("/doDeleteLocation",
+  adminPostHandler,
   handler_doDeleteLocation.handler);
 
 
@@ -103,18 +122,24 @@ router.post("/doDeleteLocation",
 
 
 router.get("/bylaws",
+  adminGetHandler,
   handler_bylaws.handler);
 
 router.post("/doAddBylaw",
+  adminPostHandler,
   handler_doAddBylaw.handler);
 
 router.post("/doUpdateBylaw",
+  adminPostHandler,
   handler_doUpdateBylaw.handler);
 
 router.post("/doUpdateOffencesByBylaw",
+  adminPostHandler,
   handler_doUpdateOffencesByBylaw.handler);
 
 router.post("/doDeleteBylaw",
+  adminPostHandler,
   handler_doDeleteBylaw.handler);
+
 
 export = router;
