@@ -1,4 +1,4 @@
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 export interface AddUpdateParkingLocationReturn {
     success: boolean;
     message?: string;

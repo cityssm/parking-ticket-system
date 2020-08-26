@@ -1,5 +1,5 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type * as ptsTypes from "../../helpers/ptsTypes";
+import type * as recordTypes from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 
@@ -10,7 +10,7 @@ declare const cityssm: cityssmGlobal;
 
   const remarkPanelEle = document.getElementById("is-remark-panel");
 
-  let remarkList: ptsTypes.ParkingTicketRemark[] = exports.ticketRemarks;
+  let remarkList: recordTypes.ParkingTicketRemark[] = exports.ticketRemarks;
   delete exports.ticketRemarks;
 
 

@@ -1,6 +1,6 @@
 import * as sqlite from "better-sqlite3";
 
-import { isConvictionBatchUpdatable } from "./isConvictionBatchUpdatable";
+import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
@@ -15,7 +15,7 @@ export const removeParkingTicketFromConvictionBatch = (
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatable(db, batchID);
+  const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
 
   if (!batchIsAvailable) {
     db.close();

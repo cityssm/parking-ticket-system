@@ -52,7 +52,7 @@ const convictIfNotConvicted =
         ticketID,
         reqSession);
     }
-  }
+  };
 
 
 const addParkingTicketToConvictionBatchAfterBatchCheck =

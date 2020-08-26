@@ -1,5 +1,5 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { LicencePlateLookupBatch } from "../../helpers/ptsTypes";
+import type { LicencePlateLookupBatch } from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 

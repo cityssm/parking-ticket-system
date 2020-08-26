@@ -1,5 +1,5 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
+import type { ptsGlobal } from "../../types/publicTypes";
 
 declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
@@ -23,7 +23,7 @@ declare const pts: ptsGlobal;
       (responseJSON: { success: boolean }) => {
 
         if (responseJSON.success) {
-          window.location.reload(true);
+          window.location.reload();
         }
       }
     );
@@ -258,7 +258,7 @@ declare const pts: ptsGlobal;
         (responseJSON: { success: boolean }) => {
 
           if (responseJSON.success) {
-            window.location.reload(true);
+            window.location.reload();
           }
         }
       );

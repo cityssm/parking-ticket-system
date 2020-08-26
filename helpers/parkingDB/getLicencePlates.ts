@@ -4,7 +4,7 @@ import { parkingDB as dbPath } from "../../data/databasePaths";
 
 import { getSplitWhereClauseFilter } from "../parkingDB";
 
-import * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 
 
 export interface GetLicencePlatesQueryOptions {

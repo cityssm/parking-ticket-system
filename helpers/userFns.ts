@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type * as pts from "../helpers/ptsTypes";
+import type * as pts from "../types/recordTypes";
 
 
 const getPermission = (req: Request, permissionName: string): boolean => {

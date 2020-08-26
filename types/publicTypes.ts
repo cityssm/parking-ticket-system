@@ -1,4 +1,4 @@
-import * as ptsTypes from "../../helpers/ptsTypes";
+import * as configTypes from "./configTypes";
 
 export interface ptsGlobal {
 
@@ -20,9 +20,9 @@ export interface ptsGlobal {
     };
   };
 
-  getTicketStatus?: (statusKey: string) => ptsTypes.ConfigParkingTicketStatus;
+  getTicketStatus?: (statusKey: string) => configTypes.ConfigParkingTicketStatus;
 
-  getLocationClass?: (locationClassKey: string) => ptsTypes.ConfigLocationClass;
+  getLocationClass?: (locationClassKey: string) => configTypes.ConfigLocationClass;
 
   initializeTabs?: (tabsListEle: HTMLElement, callbackFns?: {
     onshown?: (tabContentEle: HTMLElement) => void;

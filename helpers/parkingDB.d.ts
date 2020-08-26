@@ -2,8 +2,8 @@
 /// <reference types="compression" />
 /// <reference types="express-session" />
 /// <reference types="multer" />
-import type * as pts from "./ptsTypes";
-export declare const canUpdateObject: (obj: pts.Record, reqSession: Express.Session) => boolean;
+import type * as recordTypes from "../types/recordTypes";
+export declare const canUpdateObject: (obj: recordTypes.Record, reqSession: Express.Session) => boolean;
 export declare const getRecentParkingTicketVehicleMakeModelValues: () => any[];
 export declare const getSplitWhereClauseFilter: (columnName: string, searchString: string) => {
     sqlWhereClause: string;

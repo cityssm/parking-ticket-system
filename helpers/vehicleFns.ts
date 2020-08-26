@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import * as ncic from "../data/ncicCodes";
 import { trailerNCIC } from "../data/ncicCodes/trailer";
 
-import type { NHTSAMakeModel } from "./ptsTypes";
+import type { NHTSAMakeModel } from "../types/recordTypes";
 
 
 /*

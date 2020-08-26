@@ -4,7 +4,7 @@ import * as parkingDB_ontario from "../../helpers/parkingDB-ontario";
 
 import * as parkingDB_removeParkingTicketFromConvictionBatch from "../../helpers/parkingDB/removeParkingTicketFromConvictionBatch";
 
-import type * as pts from "../../helpers/ptsTypes";
+import type * as pts from "../../types/recordTypes";
 
 
 export const handler: RequestHandler = (req, res) => {

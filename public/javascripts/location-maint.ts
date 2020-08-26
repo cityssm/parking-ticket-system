@@ -1,6 +1,7 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
-import type * as ptsTypes from "../../helpers/ptsTypes";
+import type { ptsGlobal } from "../../types/publicTypes";
+import type * as configTypes from "../../types/configTypes";
+import type * as recordTypes from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
@@ -8,7 +9,7 @@ declare const pts: ptsGlobal;
 interface UpdateLocationResponseJSON {
   success: boolean;
   message?: string;
-  locations?: ptsTypes.ParkingLocation[];
+  locations?: recordTypes.ParkingLocation[];
 }
 
 
@@ -20,7 +21,7 @@ interface UpdateLocationResponseJSON {
   const locationNameFilterEle = document.getElementById("locationFilter--locationName") as HTMLInputElement;
   const locationResultsEle = document.getElementById("locationResults");
 
-  let locationList = exports.locations as ptsTypes.ParkingLocation[];
+  let locationList = exports.locations as recordTypes.ParkingLocation[];
   delete exports.locations;
 
   const openEditLocationModalFn = (clickEvent: Event) => {
@@ -197,7 +198,7 @@ interface UpdateLocationResponseJSON {
   locationClassKeyFilterEle.addEventListener("change", renderLocationListFn);
   locationNameFilterEle.addEventListener("keyup", renderLocationListFn);
 
-  pts.getDefaultConfigProperty("locationClasses", (locationClassesList: ptsTypes.ConfigLocationClass[]) => {
+  pts.getDefaultConfigProperty("locationClasses", (locationClassesList: configTypes.ConfigLocationClass[]) => {
 
     locationClassKeyFilterEle.innerHTML = "<option value=\"\">(All Location Classes)</option>";
 

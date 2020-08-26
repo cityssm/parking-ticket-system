@@ -1,6 +1,6 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
-import type * as ptsTypes from "../../helpers/ptsTypes";
+import type { ptsGlobal } from "../../types/publicTypes";
+import type * as recordTypes from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
@@ -17,7 +17,7 @@ declare const pts: ptsGlobal;
   const searchResultsEle = document.getElementById("container--searchResults");
 
 
-  const buildTicketTrEle = (ticketObj: ptsTypes.ParkingTicket) => {
+  const buildTicketTrEle = (ticketObj: recordTypes.ParkingTicket) => {
 
     const trEle = document.createElement("tr");
 
@@ -91,7 +91,7 @@ declare const pts: ptsGlobal;
   };
 
 
-  const processTicketResults = (ticketResults: { count: number; limit: number; offset: number; tickets: ptsTypes.ParkingTicket[] }) => {
+  const processTicketResults = (ticketResults: { count: number; limit: number; offset: number; tickets: recordTypes.ParkingTicket[] }) => {
 
     const ticketList = ticketResults.tickets;
 

@@ -2,7 +2,7 @@ import * as sqlite from "better-sqlite3";
 
 import * as configFns from "../configFns";
 
-import type { UserProperties } from "../ptsTypes";
+import type { UserProperties } from "../../types/recordTypes";
 
 import { usersDB as dbPath } from "../../data/databasePaths";
 

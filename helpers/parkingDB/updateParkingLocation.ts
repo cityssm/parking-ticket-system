@@ -1,7 +1,7 @@
 import * as sqlite from "better-sqlite3";
 
 import type { AddUpdateParkingLocationReturn } from "./getParkingLocations";
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 

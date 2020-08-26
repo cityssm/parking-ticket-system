@@ -2,7 +2,7 @@
 /// <reference types="compression" />
 /// <reference types="express-session" />
 /// <reference types="multer" />
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 export interface GetParkingTicketsQueryOptions {
     isResolved?: boolean;
     ticketNumber?: string;

@@ -1,4 +1,4 @@
-import type { ParkingTicket } from "./ptsTypes";
+import type { ParkingTicket } from "../types/recordTypes";
 interface MTO_AvailableLicencePlate {
     licencePlateNumber: string;
     ticketIDMin: number;

@@ -3,7 +3,7 @@ import * as sqlite from "better-sqlite3";
 import * as bcrypt from "bcrypt";
 
 import * as configFns from "../configFns";
-import type { User, UserProperties } from "../ptsTypes";
+import type { User, UserProperties } from "../../types/recordTypes";
 
 import { usersDB as dbPath } from "../../data/databasePaths";
 

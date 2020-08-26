@@ -1,6 +1,7 @@
 import * as log from "fancy-log";
 
-import type * as pts from "../helpers/ptsTypes";
+import type * as configTypes from "../types/configTypes";
+import type * as recordTypes from "../types/recordTypes";
 
 /*
  * LOAD CONFIGURATION
@@ -134,17 +135,17 @@ export function getProperty(propertyName: "application.applicationName"): string
 export function getProperty(propertyName: "application.logoURL"): string;
 export function getProperty(propertyName: "application.httpPort"): number;
 
-export function getProperty(propertyName: "application.https"): pts.ConfigHttpsConfig | null;
+export function getProperty(propertyName: "application.https"): configTypes.ConfigHttpsConfig | null;
 
 export function getProperty(propertyName: "databaseCleanup.windowDays"): number;
 
 export function getProperty(propertyName: "defaults.country"): string;
 export function getProperty(propertyName: "defaults.province"): string;
 
-export function getProperty(propertyName: "locationClasses"): pts.ConfigLocationClass[];
+export function getProperty(propertyName: "locationClasses"): configTypes.ConfigLocationClass[];
 export function getProperty(propertyName: "licencePlateCountryAliases"): { [countryShortName: string]: string };
 export function getProperty(propertyName: "licencePlateProvinceAliases"): { [countryName: string]: { [provinceShortName: string]: string } };
-export function getProperty(propertyName: "licencePlateProvinces"): { [countryName: string]: pts.ConfigLicencePlateCountry };
+export function getProperty(propertyName: "licencePlateProvinces"): { [countryName: string]: configTypes.ConfigLicencePlateCountry };
 
 export function getProperty(propertyName: "parkingOffences.accountNumber.pattern"): RegExp;
 
@@ -155,7 +156,7 @@ export function getProperty(propertyName: "parkingTickets.ticketNumber.isUnique"
 export function getProperty(propertyName: "parkingTickets.ticketNumber.nextTicketNumberFn"): (currentTicketNumber: string) => string;
 export function getProperty(propertyName: "parkingTickets.ticketNumber.pattern"): RegExp;
 
-export function getProperty(propertyName: "parkingTicketStatuses"): pts.ConfigParkingTicketStatus[];
+export function getProperty(propertyName: "parkingTicketStatuses"): configTypes.ConfigParkingTicketStatus[];
 
 export function getProperty(propertyName: "session.cookieName"): string;
 export function getProperty(propertyName: "session.doKeepAlive"): boolean;
@@ -163,7 +164,7 @@ export function getProperty(propertyName: "session.maxAgeMillis"): number;
 export function getProperty(propertyName: "session.secret"): string;
 
 export function getProperty(propertyName: "user.createUpdateWindowMillis"): number;
-export function getProperty(propertyName: "user.defaultProperties"): pts.UserProperties;
+export function getProperty(propertyName: "user.defaultProperties"): recordTypes.UserProperties;
 
 export function getProperty(propertyName: "application.feature_mtoExportImport"): boolean;
 export function getProperty(propertyName: "mtoExportImport.authorizedUser"): string;
@@ -201,7 +202,7 @@ export const keepAliveMillis =
     : 0;
 
 
-const parkingTicketStatusMap = new Map<string, pts.ConfigParkingTicketStatus>();
+const parkingTicketStatusMap = new Map<string, configTypes.ConfigParkingTicketStatus>();
 let parkingTicketStatusMapIsLoaded = false;
 
 export const getParkingTicketStatus = (statusKey: string) => {

@@ -59,13 +59,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         });
     }
-    pts.getDefaultConfigProperty("locationClasses", (locationClassesList) => {
+    pts.getDefaultConfigProperty("locationClasses", () => {
         let locationLookupCloseModalFn;
-        const locationClassMap = new Map();
         let locationList = [];
-        for (const locationClassObj of locationClassesList) {
-            locationClassMap.set(locationClassObj.locationClassKey, locationClassObj);
-        }
         const clearLocationFn = (clickEvent) => {
             clickEvent.preventDefault();
             document.getElementById("ticket--locationKey").value = "";
@@ -87,7 +83,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
                 locationList.forEach((locationObj, index) => {
-                    const locationClassObj = locationClassMap.get(locationObj.locationClassKey);
+                    const locationClassObj = pts.getLocationClass(locationObj.locationClassKey);
                     const linkEle = document.createElement("a");
                     linkEle.className = "panel-block is-block";
                     linkEle.setAttribute("data-index", index.toString());

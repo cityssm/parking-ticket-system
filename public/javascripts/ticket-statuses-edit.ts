@@ -1,6 +1,7 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
-import type * as ptsTypes from "../../helpers/ptsTypes";
+import type { ptsGlobal } from "../../types/publicTypes";
+import type * as configTypes from "../../types/configTypes";
+import type * as recordTypes from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
@@ -12,7 +13,7 @@ declare const pts: ptsGlobal;
 
   const statusPanelEle = document.getElementById("is-status-panel");
 
-  let statusList = exports.ticketStatusLog as ptsTypes.ParkingTicketStatusLog[];
+  let statusList = exports.ticketStatusLog as recordTypes.ParkingTicketStatusLog[];
   delete exports.ticketStatusLog;
 
   const clearStatusPanelFn = () => {
@@ -156,7 +157,7 @@ declare const pts: ptsGlobal;
           statusObj.statusTimeString;
 
         pts.getDefaultConfigProperty("parkingTicketStatuses",
-          (parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) => {
+          (parkingTicketStatuses: configTypes.ConfigParkingTicketStatus[]) => {
 
             let statusKeyFound = false;
 
@@ -460,7 +461,7 @@ declare const pts: ptsGlobal;
         (document.getElementById("addStatus--ticketID") as HTMLInputElement).value = ticketID;
 
         pts.getDefaultConfigProperty("parkingTicketStatuses",
-          (parkingTicketStatuses: ptsTypes.ConfigParkingTicketStatus[]) => {
+          (parkingTicketStatuses: configTypes.ConfigParkingTicketStatus[]) => {
 
             const statusKeyEle = document.getElementById("addStatus--statusKey");
 

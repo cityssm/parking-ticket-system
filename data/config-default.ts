@@ -1,4 +1,4 @@
-import type * as pts from "../helpers/ptsTypes";
+import type * as pts from "../types/configTypes";
 import * as base from "../data/config-base";
 
 const config: pts.Config = {};

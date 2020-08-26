@@ -1,7 +1,7 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
+import type { ptsGlobal } from "../../types/publicTypes";
+import type * as configTypes from "../../types/configTypes";
 
-import type * as ptsTypes from "../../helpers/ptsTypes";
 
 declare const cityssm: cityssmGlobal;
 const pts: ptsGlobal = {};
@@ -11,15 +11,15 @@ const pts: ptsGlobal = {};
 
 (() => {
   let defaultConfigProperties: {
-    locationClasses?: ptsTypes.ConfigLocationClass[];
+    locationClasses?: configTypes.ConfigLocationClass[];
     ticketNumber_fieldLabel?: string;
-    parkingTicketStatuses?: ptsTypes.ConfigParkingTicketStatus[];
+    parkingTicketStatuses?: configTypes.ConfigParkingTicketStatus[];
     licencePlateCountryAliases?: { [countryShortName: string]: string };
     licencePlateProvinceAliases?: {
       [countryName: string]: { [provinceShortName: string]: string };
     };
     licencePlateProvinces?: {
-      [countryName: string]: ptsTypes.ConfigLicencePlateCountry;
+      [countryName: string]: configTypes.ConfigLicencePlateCountry;
     };
   } = {};
   let defaultConfigPropertiesIsLoaded = false;
@@ -192,7 +192,7 @@ const pts: ptsGlobal = {};
     };
   };
 
-  const ticketStatusKeyToObject = new Map<string, ptsTypes.ConfigParkingTicketStatus>();
+  const ticketStatusKeyToObject = new Map<string, configTypes.ConfigParkingTicketStatus>();
   let ticketStatusKeyToObjectIsLoaded = false;
 
   pts.getTicketStatus = (statusKey) => {
@@ -221,12 +221,12 @@ const pts: ptsGlobal = {};
       : noResult;
   };
 
-  const locationClassKeyToObject = new Map<string, ptsTypes.ConfigLocationClass>();
+  const locationClassKeyToObject = new Map<string, configTypes.ConfigLocationClass>();
   let locationClassKeyToObjectIsLoaded = false;
 
   pts.getLocationClass = (locationClassKey) => {
 
-    const noResult: ptsTypes.ConfigLocationClass = {
+    const noResult: configTypes.ConfigLocationClass = {
       locationClassKey,
       locationClass: locationClassKey
     };

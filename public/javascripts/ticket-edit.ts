@@ -1,6 +1,6 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
-import type * as ptsTypes from "../../helpers/ptsTypes";
+import type { ptsGlobal } from "../../types/publicTypes";
+import type * as recordTypes from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
@@ -130,15 +130,11 @@ declare const pts: ptsGlobal;
    * Location Lookup
    */
 
-  pts.getDefaultConfigProperty("locationClasses", (locationClassesList: ptsTypes.ConfigLocationClass[]) => {
+  pts.getDefaultConfigProperty("locationClasses", () => {
 
     let locationLookupCloseModalFn: () => void;
-    const locationClassMap = new Map<string, ptsTypes.ConfigLocationClass>();
-    let locationList = [];
 
-    for (const locationClassObj of locationClassesList) {
-      locationClassMap.set(locationClassObj.locationClassKey, locationClassObj);
-    }
+    let locationList = [];
 
     const clearLocationFn = (clickEvent: Event) => {
 
@@ -171,7 +167,7 @@ declare const pts: ptsGlobal;
 
     const populateLocationsFn = () => {
 
-      cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListRes: ptsTypes.ParkingLocation[]) => {
+      cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListRes: recordTypes.ParkingLocation[]) => {
 
         locationList = locationListRes;
 
@@ -180,7 +176,7 @@ declare const pts: ptsGlobal;
 
         locationList.forEach((locationObj, index) => {
 
-          const locationClassObj = locationClassMap.get(locationObj.locationClassKey);
+          const locationClassObj = pts.getLocationClass(locationObj.locationClassKey);
 
           const linkEle = document.createElement("a");
           linkEle.className = "panel-block is-block";
@@ -237,7 +233,7 @@ declare const pts: ptsGlobal;
   {
 
     let bylawLookupCloseModalFn: () => void;
-    let offenceList: ptsTypes.ParkingOffence[] = [];
+    let offenceList: recordTypes.ParkingOffence[] = [];
     const listItemEles: HTMLAnchorElement[] = [];
 
     const clearBylawOffenceFn = (clickEvent: Event) => {
@@ -342,7 +338,7 @@ declare const pts: ptsGlobal;
       cityssm.postJSON("/offences/doGetOffencesByLocation", {
         locationKey
       },
-        (offenceListRes: ptsTypes.ParkingOffence[]) => {
+        (offenceListRes: recordTypes.ParkingOffence[]) => {
 
           offenceList = offenceListRes;
 

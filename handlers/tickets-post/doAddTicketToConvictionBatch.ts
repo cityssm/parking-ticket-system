@@ -3,7 +3,7 @@ import type { RequestHandler } from "express";
 import * as parkingDB_addParkingTicketToConvictionBatch from "../../helpers/parkingDB/addParkingTicketToConvictionBatch";
 import * as parkingDB_getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch";
 
-import type * as pts from "../../helpers/ptsTypes";
+import type * as pts from "../../types/recordTypes";
 
 
 export const handler: RequestHandler = (req, res) => {

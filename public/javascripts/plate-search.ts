@@ -1,7 +1,6 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
-
-import type * as ptsTypes from "../../helpers/ptsTypes";
+import type { ptsGlobal } from "../../types/publicTypes";
+import type * as recordTypes from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
@@ -16,7 +15,7 @@ declare const pts: ptsGlobal;
   const searchResultsEle = document.getElementById("container--searchResults");
 
 
-  const buildPlateTrEleFn = (plateObj: ptsTypes.LicencePlate) => {
+  const buildPlateTrEleFn = (plateObj: recordTypes.LicencePlate) => {
 
     const trEle = document.createElement("tr");
 
@@ -67,7 +66,7 @@ declare const pts: ptsGlobal;
     count: number;
     limit: number;
     offset: number;
-    licencePlates: ptsTypes.LicencePlate[];
+    licencePlates: recordTypes.LicencePlate[];
   }) => {
 
     const plateList = licencePlateResults.licencePlates;

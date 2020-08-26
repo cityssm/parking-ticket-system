@@ -6,7 +6,7 @@ const isConvictionBatchUpdatable_1 = require("./isConvictionBatchUpdatable");
 const databasePaths_1 = require("../../data/databasePaths");
 exports.clearConvictionBatch = (batchID, reqSession) => {
     const db = sqlite(databasePaths_1.parkingDB);
-    const batchIsAvailable = isConvictionBatchUpdatable_1.isConvictionBatchUpdatable(db, batchID);
+    const batchIsAvailable = isConvictionBatchUpdatable_1.isConvictionBatchUpdatableWithDB(db, batchID);
     if (!batchIsAvailable) {
         db.close();
         return {

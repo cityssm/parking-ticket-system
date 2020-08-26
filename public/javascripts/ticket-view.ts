@@ -27,7 +27,7 @@ declare const cityssm: cityssmGlobal;
             (responseJSON: { success: boolean }) => {
 
               if (responseJSON.success) {
-                window.location.reload(true);
+                window.location.reload();
               }
             });
         }
@@ -60,7 +60,7 @@ declare const cityssm: cityssmGlobal;
             (responseJSON: { success: boolean }) => {
 
               if (responseJSON.success) {
-                window.location.reload(true);
+                window.location.reload();
               }
             });
         }

@@ -2,14 +2,14 @@ import * as sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "../configFns";
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 
 import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
-const hasDuplicateTicket = (db, ticketNumber, issueDate) => {
+const hasDuplicateTicket = (db: sqlite.Database, ticketNumber: string, issueDate: number) => {
 
   const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
     " where recordDelete_timeMillis is null" +

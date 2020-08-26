@@ -1,5 +1,5 @@
 import type * as sqlite from "better-sqlite3";
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 
 
 export const getParkingLocationWithDB = (db: sqlite.Database, locationKey: string) => {

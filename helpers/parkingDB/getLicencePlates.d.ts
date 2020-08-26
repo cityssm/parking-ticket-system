@@ -1,4 +1,4 @@
-import * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 export interface GetLicencePlatesQueryOptions {
     licencePlateNumber?: string;
     hasOwnerRecord?: boolean;

@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     ticketID
                 }, (responseJSON) => {
                     if (responseJSON.success) {
-                        window.location.reload(true);
+                        window.location.reload();
                     }
                 });
             });
@@ -27,7 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     ticketID
                 }, (responseJSON) => {
                     if (responseJSON.success) {
-                        window.location.reload(true);
+                        window.location.reload();
                     }
                 });
             });

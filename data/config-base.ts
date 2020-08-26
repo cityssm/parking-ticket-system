@@ -1,4 +1,4 @@
-import type * as pts from "../helpers/ptsTypes";
+import type * as pts from "../types/configTypes";
 
 export const baseParkingTicketStatuses: pts.ConfigParkingTicketStatus[] = [
   {

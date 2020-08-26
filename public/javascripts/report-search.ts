@@ -1,4 +1,4 @@
-import type { ptsGlobal } from "./types";
+import type { ptsGlobal } from "../../types/publicTypes";
 declare const pts: ptsGlobal;
 
 

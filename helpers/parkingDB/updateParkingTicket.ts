@@ -2,7 +2,7 @@ import * as sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "../configFns";
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 

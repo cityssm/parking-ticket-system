@@ -1,6 +1,6 @@
 import * as sqlite from "better-sqlite3";
 
-import type { User } from "../ptsTypes";
+import type { User } from "../../types/recordTypes";
 
 import { usersDB as dbPath } from "../../data/databasePaths";
 

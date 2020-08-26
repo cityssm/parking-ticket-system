@@ -1,4 +1,4 @@
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 export interface ReconciliationRecord extends pts.LicencePlate {
     ticket_ticketID: number;
     ticket_ticketNumber: string;

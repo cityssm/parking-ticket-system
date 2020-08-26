@@ -1,4 +1,4 @@
-import type * as pts from "../ptsTypes";
+import type * as pts from "../../types/recordTypes";
 interface LookupErrorLogEntry extends pts.LicencePlate {
     batchID: number;
     logIndex: number;

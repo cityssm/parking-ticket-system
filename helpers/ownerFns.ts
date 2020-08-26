@@ -1,4 +1,4 @@
-import type { LicencePlateOwner } from "./ptsTypes";
+import type { LicencePlateOwner } from "../types/recordTypes";
 import type { ReconciliationRecord } from "./parkingDB/getOwnershipReconciliationRecords";
 
 

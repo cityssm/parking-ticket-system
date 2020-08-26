@@ -1,6 +1,6 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "./types";
-import type * as ptsTypes from "../../helpers/ptsTypes";
+import type { ptsGlobal } from "../../types/publicTypes";
+import type * as recordTypes from "../../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 declare const pts: ptsGlobal;
@@ -8,18 +8,18 @@ declare const pts: ptsGlobal;
 interface UpdateOffenceResponseJSON {
   success: boolean;
   message?: string;
-  offences?: ptsTypes.ParkingOffence[];
+  offences?: recordTypes.ParkingOffence[];
 }
 
 
 (() => {
 
-  const offenceMap = new Map<string, ptsTypes.ParkingOffence>();
+  const offenceMap = new Map<string, recordTypes.ParkingOffence>();
 
   const offenceAccountNumberPatternString = exports.accountNumberPattern;
   delete exports.accountNumberPattern;
 
-  const locationMap = new Map<string, ptsTypes.ParkingLocation>();
+  const locationMap = new Map<string, recordTypes.ParkingLocation>();
   const limitResultsCheckboxEle = document.getElementById("offenceFilter--limitResults") as HTMLInputElement;
   const resultsEle = document.getElementById("offenceResults");
 
@@ -29,7 +29,7 @@ interface UpdateOffenceResponseJSON {
   let locationKeyFilterIsSet = false;
   let locationKeyFilter = "";
 
-  const bylawMap = new Map<string, ptsTypes.ParkingBylaw>();
+  const bylawMap = new Map<string, recordTypes.ParkingBylaw>();
 
   const bylawInputEle = document.getElementById("offenceFilter--bylaw") as HTMLInputElement;
   const bylawTextEle = document.getElementById("offenceFilter--bylawText");
@@ -43,7 +43,7 @@ interface UpdateOffenceResponseJSON {
   };
 
 
-  const loadOffenceMapFn = (offenceList: ptsTypes.ParkingOffence[]) => {
+  const loadOffenceMapFn = (offenceList: recordTypes.ParkingOffence[]) => {
 
     offenceMap.clear();
 

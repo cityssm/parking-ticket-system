@@ -2,14 +2,15 @@ import * as sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as configFns from "./configFns";
-import type * as pts from "./ptsTypes";
+
+import type * as recordTypes from "../types/recordTypes";
 
 import { parkingDB as dbPath } from "../data/databasePaths";
 
 
-export const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) => {
+export const canUpdateObject = (obj: recordTypes.Record, reqSession: Express.Session) => {
 
-  const userProperties: pts.UserProperties = reqSession.user.userProperties;
+  const userProperties: recordTypes.UserProperties = reqSession.user.userProperties;
 
   // check user permissions
 
@@ -52,7 +53,7 @@ export const canUpdateObject = (obj: pts.Record, reqSession: Express.Session) =>
 
       case "ticket":
 
-        if ((obj as pts.ParkingTicket).resolvedDate) {
+        if ((obj as recordTypes.ParkingTicket).resolvedDate) {
           canUpdate = false;
         }
         break;
