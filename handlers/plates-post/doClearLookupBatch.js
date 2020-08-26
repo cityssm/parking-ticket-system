@@ -3,11 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
 const parkingDB_getLookupBatch = require("../../helpers/parkingDB/getLookupBatch");
 const parkingDB_clearLookupBatch = require("../../helpers/parkingDB/clearLookupBatch");
-const userFns_1 = require("../../helpers/userFns");
 exports.handler = (req, res) => {
-    if (!userFns_1.userCanUpdate(req)) {
-        return userFns_1.forbiddenJSON(res);
-    }
     const batchID = parseInt(req.body.batchID, 10);
     const result = parkingDB_clearLookupBatch.clearLookupBatch(batchID, req.session);
     if (result.success) {

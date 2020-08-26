@@ -4,14 +4,8 @@ import * as configFns from "../../helpers/configFns";
 
 import * as parkingDB_createParkingTicket from "../../helpers/parkingDB/createParkingTicket";
 
-import { userCanCreate, forbiddenJSON } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!userCanCreate(req)) {
-    return forbiddenJSON(res);
-  }
 
   const result = parkingDB_createParkingTicket.createParkingTicket(req.body, req.session);
 

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPostHandler = exports.createGetHandler = exports.updatePostHandler = exports.updateGetHandler = exports.adminPostHandler = exports.adminGetHandler = void 0;
+exports.createPostHandler = exports.createGetHandler = exports.updateOrOperatorPostHandler = exports.updatePostHandler = exports.updateOrOperatorGetHandler = exports.updateGetHandler = exports.adminPostHandler = exports.adminGetHandler = void 0;
 const userFns = require("../helpers/userFns");
 exports.adminGetHandler = (req, res, next) => {
     if (userFns.userIsAdmin(req)) {
@@ -20,8 +20,20 @@ exports.updateGetHandler = (req, res, next) => {
     }
     return res.redirect("/dashboard");
 };
+exports.updateOrOperatorGetHandler = (req, res, next) => {
+    if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
+        return next();
+    }
+    return res.redirect("/dashboard");
+};
 exports.updatePostHandler = (req, res, next) => {
     if (userFns.userCanUpdate(req)) {
+        return next();
+    }
+    return res.json(userFns.forbiddenJSON);
+};
+exports.updateOrOperatorPostHandler = (req, res, next) => {
+    if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
         return next();
     }
     return res.json(userFns.forbiddenJSON);

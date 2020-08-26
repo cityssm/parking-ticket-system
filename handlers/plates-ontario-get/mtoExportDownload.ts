@@ -2,14 +2,8 @@ import type { RequestHandler } from "express";
 
 import * as mtoFns from "../../helpers/mtoFns";
 
-import { userCanUpdate, userIsOperator } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!(userCanUpdate(req) || userIsOperator(req))) {
-    return res.redirect("/plates/?error=accessDenied");
-  }
 
   const batchID = parseInt(req.params.batchID, 10);
 

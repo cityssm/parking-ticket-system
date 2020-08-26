@@ -5,16 +5,10 @@ import * as parkingDB_ontario from "../../helpers/parkingDB-ontario";
 import * as parkingDB_clearConvictionBatch from "../../helpers/parkingDB/clearConvictionBatch";
 import * as parkingDB_getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch";
 
-import { userCanUpdate, forbiddenJSON } from "../../helpers/userFns";
-
 import type * as pts from "../../helpers/ptsTypes";
 
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
 
   const batchID = req.body.batchID;
 

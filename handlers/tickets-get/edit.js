@@ -4,12 +4,8 @@ exports.handler = void 0;
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const parkingDB_getParkingTicket = require("../../helpers/parkingDB/getParkingTicket");
 const parkingDB = require("../../helpers/parkingDB");
-const userFns_1 = require("../../helpers/userFns");
 exports.handler = (req, res) => {
     const ticketID = parseInt(req.params.ticketID, 10);
-    if (!userFns_1.userCanCreate(req)) {
-        return res.redirect("/tickets/" + ticketID.toString());
-    }
     const ticket = parkingDB_getParkingTicket.getParkingTicket(ticketID, req.session);
     if (!ticket) {
         return res.redirect("/tickets/?error=ticketNotFound");

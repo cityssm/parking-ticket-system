@@ -4,14 +4,8 @@ import * as parkingDB_createParkingTicketStatus from "../../helpers/parkingDB/cr
 import * as parkingDB_acknowledgeLookupErrorLogEntry from "../../helpers/parkingDB/acknowledgeLookupErrorLogEntry";
 import * as parkingDB_getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
 
-import { userCanUpdate, forbiddenJSON } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
 
   // Get log entry
 

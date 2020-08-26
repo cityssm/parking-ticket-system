@@ -4,9 +4,6 @@ exports.handler = void 0;
 const usersDB_inactivateUser = require("../../helpers/usersDB/inactivateUser");
 const userFns_1 = require("../../helpers/userFns");
 exports.handler = (req, res) => {
-    if (!userFns_1.userIsAdmin(req)) {
-        return userFns_1.forbiddenJSON(res);
-    }
     const userNameToDelete = req.body.userName;
     if (userNameToDelete === req.session.user.userName) {
         return userFns_1.forbiddenJSON(res);

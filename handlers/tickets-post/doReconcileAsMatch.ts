@@ -5,14 +5,8 @@ import * as ownerFns from "../../helpers/ownerFns";
 import * as parkingDB_createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus";
 import * as parkingDB_getLicencePlateOwner from "../../helpers/parkingDB/getLicencePlateOwner";
 
-import { userCanUpdate, forbiddenJSON } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
 
   const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(
     req.body.licencePlateCountry,

@@ -6,18 +6,14 @@ import * as parkingDB_cleanupParkingTicketsTable from "../../helpers/parkingDB/c
 import * as parkingDB_cleanupParkingTicketRemarksTable from "../../helpers/parkingDB/cleanupParkingTicketRemarksTable";
 import * as parkingDB_cleanupParkingTicketStatusLog from "../../helpers/parkingDB/cleanupParkingTicketStatusLog";
 
+import * as parkingDB_cleanupLicencePlateOwnersTable from "../../helpers/parkingDB/cleanupLicencePlateOwnersTable";
+
 import * as parkingDB_cleanupParkingBylawsTable from "../../helpers/parkingDB/cleanupParkingBylawsTable";
 import * as parkingDB_cleanupParkingLocationsTable from "../../helpers/parkingDB/cleanupParkingLocationsTable";
 import * as parkingDB_cleanupParkingOffencesTable from "../../helpers/parkingDB/cleanupParkingOffencesTable";
 
-import { userIsAdmin, forbiddenJSON } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!userIsAdmin(req)) {
-    return forbiddenJSON(res);
-  }
 
   const table = req.body.table;
 

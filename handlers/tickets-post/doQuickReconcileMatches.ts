@@ -5,14 +5,8 @@ import * as ownerFns from "../../helpers/ownerFns";
 import * as parkingDB_createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus";
 import * as parkingDB_getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords";
 
-import { userCanUpdate, forbiddenJSON } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return forbiddenJSON(res);
-  }
 
   const records = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
 

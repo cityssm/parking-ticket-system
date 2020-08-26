@@ -2,14 +2,8 @@ import type { RequestHandler } from "express";
 
 import * as parkingDB_getLastTenConvictionBatches from "../../helpers/parkingDB/getLastTenConvictionBatches";
 
-import { userCanUpdate, userIsOperator, forbiddenJSON } from "../../helpers/userFns";
 
-
-export const handler: RequestHandler = (req, res) => {
-
-  if (!(userCanUpdate(req) || userIsOperator(req))) {
-    return forbiddenJSON(res);
-  }
+export const handler: RequestHandler = (_req, res) => {
 
   const batches = parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches();
 

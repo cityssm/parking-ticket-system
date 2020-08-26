@@ -33,9 +33,29 @@ export const updateGetHandler: RequestHandler = (req, res, next) => {
 };
 
 
+export const updateOrOperatorGetHandler: RequestHandler = (req, res, next) => {
+
+  if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
+    return next();
+  }
+
+  return res.redirect("/dashboard");
+};
+
+
 export const updatePostHandler: RequestHandler = (req, res, next) => {
 
   if (userFns.userCanUpdate(req)) {
+    return next();
+  }
+
+  return res.json(userFns.forbiddenJSON);
+};
+
+
+export const updateOrOperatorPostHandler: RequestHandler = (req, res, next) => {
+
+  if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
     return next();
   }
 

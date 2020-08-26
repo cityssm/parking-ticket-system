@@ -2,14 +2,8 @@ import type { RequestHandler } from "express";
 
 import * as parkingDB_getLookupBatch from "../../helpers/parkingDB/getLookupBatch";
 
-import { userCanUpdate, userIsOperator } from "../../helpers/userFns";
 
-
-export const handler: RequestHandler = (req, res) => {
-
-  if (!(userCanUpdate(req) || userIsOperator(req))) {
-    return res.redirect("/plates/?error=accessDenied");
-  }
+export const handler: RequestHandler = (_req, res) => {
 
   const latestUnlockedBatch = parkingDB_getLookupBatch.getLookupBatch(-1);
 

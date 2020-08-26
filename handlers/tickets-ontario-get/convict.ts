@@ -4,17 +4,8 @@ import * as parkingDB_ontario from "../../helpers/parkingDB-ontario";
 
 import * as parkingDB_getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch";
 
-import { userCanUpdate, userIsOperator } from "../../helpers/userFns";
 
-
-export const handler: RequestHandler = (req, res) => {
-
-  if (!(userCanUpdate(req) || userIsOperator(req))) {
-
-    res.redirect("/tickets/?error=accessDenied");
-    return;
-
-  }
+export const handler: RequestHandler = (_req, res) => {
 
   const tickets = parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch();
 

@@ -5,15 +5,10 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 import * as parkingDB_getParkingTicket from "../../helpers/parkingDB/getParkingTicket";
 import * as parkingDB from "../../helpers/parkingDB";
 
-import { userCanCreate } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-  const ticketID = parseInt(req.params.ticketID, 10);
 
-  if (!userCanCreate(req)) {
-    return res.redirect("/tickets/" + ticketID.toString());
-  }
+  const ticketID = parseInt(req.params.ticketID, 10);
 
   const ticket = parkingDB_getParkingTicket.getParkingTicket(ticketID, req.session);
 

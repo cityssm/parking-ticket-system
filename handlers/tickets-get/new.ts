@@ -5,14 +5,8 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 import * as parkingDB from "../../helpers/parkingDB";
 
-import { userCanCreate } from "../../helpers/userFns";
-
 
 export const handler: RequestHandler = (req, res) => {
-
-  if (!userCanCreate(req)) {
-    return res.redirect("/tickets/?error=accessDenied");
-  }
 
   const ticketNumber = req.params.ticketNumber;
 

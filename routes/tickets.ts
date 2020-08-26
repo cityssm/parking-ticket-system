@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import * as permissionHanders from "../handlers/permissions";
+
 // Tickets
 import * as handler_new from "../handlers/tickets-get/new";
 import * as handler_view from "../handlers/tickets-get/view";
@@ -63,18 +65,23 @@ router.post("/doGetTickets",
  */
 
 router.get("/reconcile",
+  permissionHanders.updateGetHandler,
   handler_reconcile.handler);
 
 router.post("/doAcknowledgeLookupError",
+  permissionHanders.updatePostHandler,
   handler_doAcknowledgeLookupError.handler);
 
 router.post("/doReconcileAsMatch",
+  permissionHanders.updatePostHandler,
   handler_doReconcileAsMatch.handler);
 
 router.post("/doReconcileAsError",
+  permissionHanders.updatePostHandler,
   handler_doReconcileAsError.handler);
 
 router.post("/doQuickReconcileMatches",
+  permissionHanders.updatePostHandler,
   handler_doQuickReconcileMatches.handler);
 
 /*
@@ -82,21 +89,27 @@ router.post("/doQuickReconcileMatches",
  */
 
 router.post("/doGetRecentConvictionBatches",
+  permissionHanders.updateOrOperatorPostHandler,
   handler_doGetRecentConvictionBatches.handler);
 
 router.post("/doGetConvictionBatch",
+  permissionHanders.updateOrOperatorPostHandler,
   handler_doGetConvictionBatch.handler);
 
 router.post("/doCreateConvictionBatch",
+  permissionHanders.updatePostHandler,
   handler_doCreateConvictionBatch.handler);
 
 router.post("/doAddTicketToConvictionBatch",
+  permissionHanders.updatePostHandler,
   handler_doAddTicketToConvictionBatch.handler);
 
 router.post("/doLockConvictionBatch",
+  permissionHanders.updatePostHandler,
   handler_doLockConvictionBatch.handler);
 
 router.post("/doUnlockConvictionBatch",
+  permissionHanders.updatePostHandler,
   handler_doUnlockConvictionBatch.handler);
 
 /*
@@ -104,24 +117,31 @@ router.post("/doUnlockConvictionBatch",
  */
 
 router.get(["/new", "/new/:ticketNumber"],
+  permissionHanders.createGetHandler,
   handler_new.handler);
 
 router.post("/doCreateTicket",
+  permissionHanders.createPostHandler,
   handler_doCreateTicket.handler);
 
 router.post("/doUpdateTicket",
+  permissionHanders.createPostHandler,
   handler_doUpdateTicket.handler);
 
 router.post("/doDeleteTicket",
+  permissionHanders.createPostHandler,
   handler_doDeleteTicket.handler);
 
 router.post("/doResolveTicket",
+  permissionHanders.createPostHandler,
   handler_doResolveTicket.handler);
 
 router.post("/doUnresolveTicket",
+  permissionHanders.createPostHandler,
   handler_doUnresolveTicket.handler);
 
 router.post("/doRestoreTicket",
+  permissionHanders.updatePostHandler,
   handler_doRestoreTicket.handler);
 
 /*
@@ -132,12 +152,15 @@ router.post("/doGetRemarks",
   handler_doGetRemarks.handler);
 
 router.post("/doAddRemark",
+  permissionHanders.createPostHandler,
   handler_doAddRemark.handler);
 
 router.post("/doUpdateRemark",
+  permissionHanders.createPostHandler,
   handler_doUpdateRemark.handler);
 
 router.post("/doDeleteRemark",
+  permissionHanders.createPostHandler,
   handler_doDeleteRemark.handler);
 
 /*
@@ -148,12 +171,15 @@ router.post("/doGetStatuses",
   handler_doGetStatuses.handler);
 
 router.post("/doAddStatus",
+  permissionHanders.createPostHandler,
   handler_doAddStatus.handler);
 
 router.post("/doUpdateStatus",
+  permissionHanders.createPostHandler,
   handler_doUpdateStatus.handler);
 
 router.post("/doDeleteStatus",
+  permissionHanders.createPostHandler,
   handler_doDeleteStatus.handler);
 
 /*
@@ -171,6 +197,7 @@ router.get("/byTicketNumber/:ticketNumber",
  */
 
 router.get("/:ticketID/edit",
+  permissionHanders.createGetHandler,
   handler_edit.handler);
 
 

@@ -3,14 +3,8 @@ import type { RequestHandler } from "express";
 import * as parkingDB_getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords";
 import * as parkingDB_getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
 
-import { userCanUpdate } from "../../helpers/userFns";
 
-
-export const handler: RequestHandler = (req, res) => {
-
-  if (!userCanUpdate(req)) {
-    return res.redirect("/tickets/?error=accessDenied");
-  }
+export const handler: RequestHandler = (_req, res) => {
 
   const reconciliationRecords = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
 
