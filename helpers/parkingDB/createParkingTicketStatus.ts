@@ -9,10 +9,8 @@ import { resolveParkingTicketWithDB } from "./resolveParkingTicket";
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
-export const createParkingTicketStatus =
-  (reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) => {
-
-    const db = sqlite(dbPath);
+export const createParkingTicketStatusWithDB =
+  (db: sqlite.Database, reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) => {
 
     // Get new status index
 
@@ -44,10 +42,21 @@ export const createParkingTicketStatus =
       resolveParkingTicketWithDB(db, reqBodyOrObj.ticketID, reqSession);
     }
 
-    db.close();
-
     return {
       success: (info.changes > 0),
       statusIndex: statusIndexNew
     };
+  };
+
+
+export const createParkingTicketStatus =
+  (reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) => {
+
+    const db = sqlite(dbPath);
+
+    const result = createParkingTicketStatusWithDB(db, reqBodyOrObj, reqSession, resolveTicket);
+
+    db.close();
+
+    return result;
   };

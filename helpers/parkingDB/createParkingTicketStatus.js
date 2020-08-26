@@ -1,13 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createParkingTicketStatus = void 0;
+exports.createParkingTicketStatus = exports.createParkingTicketStatusWithDB = void 0;
 const sqlite = require("better-sqlite3");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const getNextParkingTicketStatusIndex_1 = require("./getNextParkingTicketStatusIndex");
 const resolveParkingTicket_1 = require("./resolveParkingTicket");
 const databasePaths_1 = require("../../data/databasePaths");
-exports.createParkingTicketStatus = (reqBodyOrObj, reqSession, resolveTicket) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+exports.createParkingTicketStatusWithDB = (db, reqBodyOrObj, reqSession, resolveTicket) => {
     const statusIndexNew = getNextParkingTicketStatusIndex_1.getNextParkingTicketStatusIndex(db, reqBodyOrObj.ticketID);
     const rightNow = new Date();
     const info = db.prepare("insert into ParkingTicketStatusLog" +
@@ -19,9 +18,14 @@ exports.createParkingTicketStatus = (reqBodyOrObj, reqSession, resolveTicket) =>
     if (info.changes > 0 && resolveTicket) {
         resolveParkingTicket_1.resolveParkingTicketWithDB(db, reqBodyOrObj.ticketID, reqSession);
     }
-    db.close();
     return {
         success: (info.changes > 0),
         statusIndex: statusIndexNew
     };
+};
+exports.createParkingTicketStatus = (reqBodyOrObj, reqSession, resolveTicket) => {
+    const db = sqlite(databasePaths_1.parkingDB);
+    const result = exports.createParkingTicketStatusWithDB(db, reqBodyOrObj, reqSession, resolveTicket);
+    db.close();
+    return result;
 };

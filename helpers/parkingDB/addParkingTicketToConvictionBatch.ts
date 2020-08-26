@@ -1,76 +1,95 @@
 import * as sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import { createParkingTicketStatusWithDB } from "./createParkingTicketStatus";
 
 import { isParkingTicketConvicted } from "./isParkingTicketConvicted";
 import { isParkingTicketInConvictionBatch } from "./isParkingTicketInConvictionBatch";
 import { isConvictionBatchUpdatable } from "./isConvictionBatchUpdatable";
 import { canParkingTicketBeAddedToConvictionBatch } from "./canParkingTicketBeAddedToConvictionBatch";
-import { getNextParkingTicketStatusIndex } from "./getNextParkingTicketStatusIndex";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
-const createConvictedStatus = (db: sqlite.Database, params: {
-  ticketID: number;
-  newStatusIndex: number;
-  statusDate: number;
-  statusTime: number;
-  batchID: number;
-  userName: string;
-  timeMillis: number;
-}) => {
+const createConvictedStatus = (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
 
-  db.prepare(
-    "insert into ParkingTicketStatusLog" +
-    " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
-    " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-  ).run(
-    params.ticketID,
-    params.newStatusIndex,
-    params.statusDate,
-    params.statusTime,
-    "convicted",
-    params.batchID.toString(),
-    "",
-    params.userName,
-    params.timeMillis,
-    params.userName,
-    params.timeMillis
-  );
+  createParkingTicketStatusWithDB(db, {
+    recordType: "status",
+    ticketID,
+    statusKey: "convicted",
+    statusField: batchID.toString(),
+    statusField2: "",
+    statusNote: ""
+  }, reqSession, false);
 };
 
 
-const createConvictionBatchStatus = (db: sqlite.Database, params: {
-  ticketID: number;
-  newStatusIndex: number;
-  statusDate: number;
-  statusTime: number;
-  batchID: number;
-  userName: string;
-  timeMillis: number;
-}) => {
+const createConvictionBatchStatus = (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
 
-  db.prepare(
-    "insert into ParkingTicketStatusLog" +
-    " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
-    " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-  ).run(
-    params.ticketID,
-    params.newStatusIndex,
-    params.statusDate,
-    params.statusTime,
-    "convictionBatch",
-    params.batchID.toString(),
-    "",
-    params.userName,
-    params.timeMillis,
-    params.userName,
-    params.timeMillis
-  );
+  createParkingTicketStatusWithDB(db, {
+    recordType: "status",
+    ticketID,
+    statusKey: "convictionBatch",
+    statusField: batchID.toString(),
+    statusField2: "",
+    statusNote: ""
+  }, reqSession, false);
 };
+
+
+const addParkingTicketToConvictionBatchAfterBatchCheck =
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+
+    // Ensure ticket has not been resolved
+
+    const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(db, ticketID);
+
+    if (!ticketIsAvailable) {
+      return {
+        success: false,
+        message: "The ticket cannot be added to the batch."
+      };
+    }
+
+    // Check if the ticket has been convicted or not
+
+    const parkingTicketIsConvicted = isParkingTicketConvicted(db, ticketID);
+
+    if (!parkingTicketIsConvicted) {
+      // If not convicted, convict it now
+
+      createConvictedStatus(db,
+        batchID,
+        ticketID,
+        reqSession);
+    }
+
+    // Check if the ticket is part of another conviction batch
+
+    const parkingTicketInBatch = isParkingTicketInConvictionBatch(db, ticketID);
+
+    if (!parkingTicketInBatch.inBatch) {
+      // No record, add to batch now
+
+      createConvictionBatchStatus(db,
+        batchID,
+        ticketID,
+        reqSession);
+
+    } else {
+
+      return {
+        success: false,
+        message:
+          "Parking ticket already included in conviction batch #" +
+          parkingTicketInBatch.batchIDString +
+          "."
+      };
+    }
+
+    return {
+      success: true
+    };
+  };
 
 
 export const addParkingTicketToConvictionBatch = (
@@ -94,92 +113,9 @@ export const addParkingTicketToConvictionBatch = (
     };
   }
 
-  // Ensure ticket has not been resolved
+  const result = addParkingTicketToConvictionBatchAfterBatchCheck(db, batchID, ticketID, reqSession);
 
-  const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(db, ticketID);
-
-  if (!ticketIsAvailable) {
-    db.close();
-
-    return {
-      success: false,
-      message: "The ticket cannot be added to the batch."
-    };
-  }
-
-  // Get the next status index
-
-  let newStatusIndex = getNextParkingTicketStatusIndex(db, ticketID);
-
-  // Prepare for inserts
-
-  const rightNow = new Date();
-
-  const statusDate = dateTimeFns.dateToInteger(rightNow);
-  const statusTime = dateTimeFns.dateToTimeInteger(rightNow);
-  const timeMillis = rightNow.getTime();
-
-  // Check if the ticket has been convicted or not
-
-  const parkingTicketIsConvicted = isParkingTicketConvicted(db, ticketID);
-
-  if (!parkingTicketIsConvicted) {
-    // If not convicted, convict it now
-
-    createConvictedStatus(db, {
-      ticketID,
-      newStatusIndex,
-      statusDate,
-      statusTime,
-      batchID,
-      userName: reqSession.user.userName,
-      timeMillis
-    });
-
-    newStatusIndex += 1;
-  }
-
-  // Check if the ticket is part of another conviction batch
-
-  const parkingTicketInBatch = isParkingTicketInConvictionBatch(db, ticketID);
-
-  if (!parkingTicketInBatch.inBatch) {
-    // No record, add to batch now
-
-    createConvictionBatchStatus(db, {
-      ticketID,
-      newStatusIndex,
-      statusDate,
-      statusTime,
-      batchID,
-      userName: reqSession.user.userName,
-      timeMillis
-    });
-
-    db.close();
-
-    return {
-      success: true
-    };
-  }
-
-  db.close();
-
-  if (parkingTicketInBatch.batchIDString === batchID.toString()) {
-    // Already part of the batch
-    return {
-      success: true
-    };
-  } else {
-    // Part of a different batch
-    return {
-      success: false,
-      message:
-        "Parking ticket already included in conviction batch #" +
-        parkingTicketInBatch.batchIDString +
-        "."
-    };
-  }
+  return result;
 };
 
 
@@ -204,63 +140,15 @@ export const addAllParkingTicketsToConvictionBatch = (
     };
   }
 
-  // Prepare for inserts
-
-  const rightNow = new Date();
-
-  const statusDate = dateTimeFns.dateToInteger(rightNow);
-  const statusTime = dateTimeFns.dateToTimeInteger(rightNow);
-  const timeMillis = rightNow.getTime();
-
   // Loop through ticketIDs
 
   let successCount = 0;
 
   for (const ticketID of ticketIDs) {
-    // Get the next status index
 
-    let newStatusIndex = getNextParkingTicketStatusIndex(db, ticketID);
+    const result = addParkingTicketToConvictionBatchAfterBatchCheck(db, batchID, ticketID, reqSession);
 
-    // Check if the ticket has been convicted or not
-
-    const parkingTicketIsConvicted = isParkingTicketConvicted(db, ticketID);
-
-    if (!parkingTicketIsConvicted) {
-      // If not convicted, convict it now
-
-      createConvictedStatus(db, {
-        ticketID,
-        newStatusIndex,
-        statusDate,
-        statusTime,
-        batchID,
-        userName: reqSession.user.userName,
-        timeMillis
-      });
-
-      newStatusIndex += 1;
-    }
-
-    // Check if the ticket is part of another conviction batch
-
-    const parkingTicketInBatch = isParkingTicketInConvictionBatch(db, ticketID);
-
-    if (!parkingTicketInBatch.inBatch) {
-      // No record, add to batch now
-
-      createConvictionBatchStatus(db, {
-        ticketID,
-        newStatusIndex,
-        statusDate,
-        statusTime,
-        batchID,
-        userName: reqSession.user.userName,
-        timeMillis
-      });
-
-      successCount += 1;
-
-    } else if (parkingTicketInBatch.batchIDString === batchID.toString()) {
+    if (result.success) {
       successCount += 1;
     }
   }
