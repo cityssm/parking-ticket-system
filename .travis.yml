@@ -2,11 +2,20 @@ language: node_js
 node_js:
   - lts/*
 
+before_install:
+  - sudo apt-get install jq
+  - curl -LSs "$(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')" -o codacy-coverage-reporter-assembly.jar
+
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+
 script:
   - nyc --reporter=lcov npm run test
+
 after_script:
   - ./cc-test-reporter after-build -t lcov --exit-code $TRAVIS_TEST_RESULT
+
+after_success:
+  - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
