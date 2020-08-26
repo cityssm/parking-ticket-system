@@ -18,6 +18,9 @@ import * as parkingDB_getLicencePlates from "../helpers/parkingDB/getLicencePlat
 // Conviction batches
 import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch";
 import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/getLastTenConvictionBatches";
+import * as parkingDB_isConvictionBatchUpdatable from "../helpers/parkingDB/isConvictionBatchUpdatable";
+import * as parkingDB_isParkingTicketConvicted from "../helpers/parkingDB/isParkingTicketConvicted";
+import * as parkingDB_isParkingTicketInConvictionBatch from "../helpers/parkingDB/isParkingTicketInConvictionBatch";
 
 // Lookup batches
 import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches";
@@ -95,6 +98,27 @@ describe("helpers/parkingDB", () => {
       const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1);
 
       assert.ok(batch === null || batch.lockDate === null);
+    });
+
+    it("should execute parkingDB_isConvictionBatchUpdatable()", () => {
+
+      const isConvicted = parkingDB_isConvictionBatchUpdatable.isConvictionBatchUpdatable(-1);
+
+      assert.equal(isConvicted, false);
+    });
+
+    it("should execute parkingDB_isParkingTicketConvicted()", () => {
+
+      const isConvicted = parkingDB_isParkingTicketConvicted.isParkingTicketConvicted(-1);
+
+      assert.equal(isConvicted, false);
+    });
+
+    it("should execute isParkingTicketInConvictionBatch()", () => {
+
+      const result = parkingDB_isParkingTicketInConvictionBatch.isParkingTicketInConvictionBatch(-1);
+
+      assert.equal(result.inBatch, false);
     });
   });
 

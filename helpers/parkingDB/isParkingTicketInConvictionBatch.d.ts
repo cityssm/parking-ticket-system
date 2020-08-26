@@ -1,5 +1,12 @@
-import type * as sqlite from "better-sqlite3";
-export declare const isParkingTicketInConvictionBatch: (db: sqlite.Database, ticketID: number) => {
+import * as sqlite from "better-sqlite3";
+export declare const isParkingTicketInConvictionBatchWithDB: (db: sqlite.Database, ticketID: number) => {
+    inBatch: boolean;
+    batchIDString: string;
+} | {
+    inBatch: boolean;
+    batchIDString?: undefined;
+};
+export declare const isParkingTicketInConvictionBatch: (ticketID: number) => {
     inBatch: boolean;
     batchIDString: string;
 } | {

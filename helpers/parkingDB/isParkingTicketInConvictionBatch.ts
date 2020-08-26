@@ -1,7 +1,9 @@
-import type * as sqlite from "better-sqlite3";
+import * as sqlite from "better-sqlite3";
+
+import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
-export const isParkingTicketInConvictionBatch = (db: sqlite.Database, ticketID: number) => {
+export const isParkingTicketInConvictionBatchWithDB = (db: sqlite.Database, ticketID: number) => {
 
   const batchStatusCheck = db
     .prepare(
@@ -22,4 +24,18 @@ export const isParkingTicketInConvictionBatch = (db: sqlite.Database, ticketID: 
   return {
     inBatch: false
   };
+};
+
+
+export const isParkingTicketInConvictionBatch = (ticketID: number) => {
+
+  const db = sqlite(dbPath, {
+    readonly: true
+  });
+
+  const result = isParkingTicketInConvictionBatchWithDB(db, ticketID);
+
+  db.close();
+
+  return result;
 };

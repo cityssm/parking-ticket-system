@@ -2,38 +2,57 @@ import * as sqlite from "better-sqlite3";
 
 import { createParkingTicketStatusWithDB } from "./createParkingTicketStatus";
 
-import { isParkingTicketConvicted } from "./isParkingTicketConvicted";
-import { isParkingTicketInConvictionBatch } from "./isParkingTicketInConvictionBatch";
-import { isConvictionBatchUpdatable } from "./isConvictionBatchUpdatable";
+import { isParkingTicketConvictedWithDB } from "./isParkingTicketConvicted";
+import { isParkingTicketInConvictionBatchWithDB } from "./isParkingTicketInConvictionBatch";
+import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable";
 import { canParkingTicketBeAddedToConvictionBatch } from "./canParkingTicketBeAddedToConvictionBatch";
 
 import { parkingDB as dbPath } from "../../data/databasePaths";
 
 
-const createConvictedStatus = (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+const createStatus =
+  (db: sqlite.Database,
+    batchID: number, ticketID: number,
+    statusKey: "convicted" | "convictionBatch",
+    reqSession: Express.Session) => {
 
-  createParkingTicketStatusWithDB(db, {
-    recordType: "status",
-    ticketID,
-    statusKey: "convicted",
-    statusField: batchID.toString(),
-    statusField2: "",
-    statusNote: ""
-  }, reqSession, false);
-};
+    createParkingTicketStatusWithDB(db, {
+      recordType: "status",
+      ticketID,
+      statusKey,
+      statusField: batchID.toString(),
+      statusField2: "",
+      statusNote: ""
+    }, reqSession, false);
+  };
+
+const createConvictedStatus =
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+
+    createStatus(db, batchID, ticketID, "convicted", reqSession);
+  };
 
 
-const createConvictionBatchStatus = (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+const createConvictionBatchStatus =
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
 
-  createParkingTicketStatusWithDB(db, {
-    recordType: "status",
-    ticketID,
-    statusKey: "convictionBatch",
-    statusField: batchID.toString(),
-    statusField2: "",
-    statusNote: ""
-  }, reqSession, false);
-};
+    createStatus(db, batchID, ticketID, "convictionBatch", reqSession);
+  };
+
+
+const convictIfNotConvicted =
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+
+    const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(db, ticketID);
+
+    if (!parkingTicketIsConvicted) {
+
+      createConvictedStatus(db,
+        batchID,
+        ticketID,
+        reqSession);
+    }
+  }
 
 
 const addParkingTicketToConvictionBatchAfterBatchCheck =
@@ -50,22 +69,13 @@ const addParkingTicketToConvictionBatchAfterBatchCheck =
       };
     }
 
-    // Check if the ticket has been convicted or not
+    // Convict ticket
 
-    const parkingTicketIsConvicted = isParkingTicketConvicted(db, ticketID);
-
-    if (!parkingTicketIsConvicted) {
-      // If not convicted, convict it now
-
-      createConvictedStatus(db,
-        batchID,
-        ticketID,
-        reqSession);
-    }
+    convictIfNotConvicted(db, batchID, ticketID, reqSession);
 
     // Check if the ticket is part of another conviction batch
 
-    const parkingTicketInBatch = isParkingTicketInConvictionBatch(db, ticketID);
+    const parkingTicketInBatch = isParkingTicketInConvictionBatchWithDB(db, ticketID);
 
     if (!parkingTicketInBatch.inBatch) {
       // No record, add to batch now
@@ -102,7 +112,7 @@ export const addParkingTicketToConvictionBatch = (
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatable(db, batchID);
+  const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
 
   if (!batchIsAvailable) {
     db.close();
@@ -124,11 +134,12 @@ export const addAllParkingTicketsToConvictionBatch = (
   ticketIDs: number[],
   reqSession: Express.Session
 ) => {
+
   const db = sqlite(dbPath);
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatable(db, batchID);
+  const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
 
   if (!batchIsAvailable) {
     db.close();
@@ -156,6 +167,7 @@ export const addAllParkingTicketsToConvictionBatch = (
   db.close();
 
   return {
+    success: true,
     successCount
   };
 };

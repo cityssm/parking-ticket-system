@@ -12,6 +12,9 @@ const parkingDB_getLicencePlateOwner = require("../helpers/parkingDB/getLicenceP
 const parkingDB_getLicencePlates = require("../helpers/parkingDB/getLicencePlates");
 const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
 const parkingDB_getLastTenConvictionBatches = require("../helpers/parkingDB/getLastTenConvictionBatches");
+const parkingDB_isConvictionBatchUpdatable = require("../helpers/parkingDB/isConvictionBatchUpdatable");
+const parkingDB_isParkingTicketConvicted = require("../helpers/parkingDB/isParkingTicketConvicted");
+const parkingDB_isParkingTicketInConvictionBatch = require("../helpers/parkingDB/isParkingTicketInConvictionBatch");
 const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUnreceivedLookupBatches");
 const parkingDB_getLookupBatch = require("../helpers/parkingDB/getLookupBatch");
 const parkingDB_getUnacknowledgedLookupErrorLog = require("../helpers/parkingDB/getUnacknowledgedLookupErrorLog");
@@ -65,6 +68,18 @@ describe("helpers/parkingDB", () => {
         it("should execute getConvictionBatch()", () => {
             const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1);
             assert.ok(batch === null || batch.lockDate === null);
+        });
+        it("should execute parkingDB_isConvictionBatchUpdatable()", () => {
+            const isConvicted = parkingDB_isConvictionBatchUpdatable.isConvictionBatchUpdatable(-1);
+            assert.equal(isConvicted, false);
+        });
+        it("should execute parkingDB_isParkingTicketConvicted()", () => {
+            const isConvicted = parkingDB_isParkingTicketConvicted.isParkingTicketConvicted(-1);
+            assert.equal(isConvicted, false);
+        });
+        it("should execute isParkingTicketInConvictionBatch()", () => {
+            const result = parkingDB_isParkingTicketInConvictionBatch.isParkingTicketInConvictionBatch(-1);
+            assert.equal(result.inBatch, false);
         });
     });
     describe("lookup batch queries", () => {

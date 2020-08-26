@@ -1,2 +1,3 @@
-import type * as sqlite from "better-sqlite3";
-export declare const isParkingTicketConvicted: (db: sqlite.Database, ticketID: number) => boolean;
+import * as sqlite from "better-sqlite3";
+export declare const isParkingTicketConvictedWithDB: (db: sqlite.Database, ticketID: number) => boolean;
+export declare const isParkingTicketConvicted: (ticketID: number) => boolean;

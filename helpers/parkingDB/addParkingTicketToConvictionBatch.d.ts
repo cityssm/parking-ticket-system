@@ -14,7 +14,7 @@ export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ti
     successCount: number;
     message: string;
 } | {
+    success: boolean;
     successCount: number;
-    success?: undefined;
     message?: undefined;
 };
