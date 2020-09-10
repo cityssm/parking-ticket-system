@@ -18,7 +18,7 @@
   "homepage": "https://github.com/cityssm/parking-ticket-system#readme",
   "dependencies": {
     "@cityssm/bulma-webapp-js": "^0.4.2",
-    "@cityssm/expressjs-server-js": "^0.6.1",
+    "@cityssm/expressjs-server-js": "^0.6.2",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "bcrypt": "^5.0.0",
     "better-sqlite3": "^7.1.0",
