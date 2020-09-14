@@ -141,13 +141,12 @@ export const getModelsByMake =
             }
           }
 
-          queryCloseCallbackFn();
-          // return;
         })
-        .catch(() => {
-
+        .catch((_e) => {
+          // ignore
+        })
+        .finally(() => {
           queryCloseCallbackFn();
-          // return;
         });
 
     } else {

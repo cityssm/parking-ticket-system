@@ -83,9 +83,10 @@ exports.getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
                     db.prepare(updateSQL).run(nowMillis, record.Make_Name, record.Model_Name);
                 }
             }
-            queryCloseCallbackFn();
         })
-            .catch(() => {
+            .catch((_e) => {
+        })
+            .finally(() => {
             queryCloseCallbackFn();
         });
     }

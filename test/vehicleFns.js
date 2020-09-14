@@ -13,6 +13,14 @@ describe("helpers/vehicleFns", () => {
             assert.ok(vehicleFns.getModelsByMakeFromCache("Ford"));
         });
     });
+    describe("#getModelsByMake", () => {
+        it("should return results for \"Chevrolet\"", (done) => {
+            vehicleFns.getModelsByMake("Chevrolet", (makeModelResults) => {
+                assert.notEqual(makeModelResults.length, 0);
+                done();
+            });
+        });
+    });
     describe("#isNCICExclusivelyTrailer", () => {
         it("should return true for \"USCA\" (U.S. Cargo Inc.)", () => {
             assert.equal(vehicleFns.isNCICExclusivelyTrailer("USCA"), true);

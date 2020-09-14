@@ -34,8 +34,34 @@ describe("helpers/parkingDB", () => {
         initializeDatabase_1.initializeDatabase();
     });
     describe("parking ticket queries", () => {
-        it("should execute getParkingTickets()", () => {
-            assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
+        describe("getParkingTickets()", () => {
+            it("should execute with no filters", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
+            });
+            it("should execute with ticketNumber filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, ticketNumber: "TEST_TKT" }));
+            });
+            it("should execute with licencePlateNumber filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateNumber: "TEST PLATE" }));
+            });
+            it("should execute with licencePlateNumberEqual filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateNumber: "TEST PLATE" }));
+            });
+            it("should execute with licencePlateProvince filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateProvince: "ON" }));
+            });
+            it("should execute with licencePlateCountry filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateCountry: "CA" }));
+            });
+            it("should execute with location filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, location: "street" }));
+            });
+            it("should execute with isResolved=true filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, isResolved: true }));
+            });
+            it("should execute with isResolved=false filter", () => {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, isResolved: false }));
+            });
         });
         it("should execute getParkingTicket(-1)", () => {
             assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, _globals_1.fakeViewOnlySession), null);
