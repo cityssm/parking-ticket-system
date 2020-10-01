@@ -3,16 +3,31 @@ const express_1 = require("express");
 const configFns = require("../helpers/configFns");
 const usersDB_getUser = require("../helpers/usersDB/getUser");
 const router = express_1.Router();
+const getSafeRedirectURL = (possibleRedirectURL = "") => {
+    switch (possibleRedirectURL) {
+        case "/tickets":
+        case "/tickets/new":
+        case "/tickets/reconcile":
+        case "/tickets-ontario/convict":
+        case "/plates":
+        case "/plates-ontario/mtoExport":
+        case "/plates-ontario/mtoImport":
+        case "/reports":
+        case "/admin/userManagement":
+        case "/admin/cleanup":
+        case "/admin/offences":
+        case "/admin/locations":
+        case "/admin/bylaws":
+            return possibleRedirectURL;
+    }
+    return "/dashboard";
+};
 router.route("/")
     .get((req, res) => {
     const sessionCookieName = configFns.getProperty("session.cookieName");
     if (req.session.user && req.cookies[sessionCookieName]) {
-        if (req.query.redirect && req.query.redirect !== "") {
-            res.redirect(req.query.redirect);
-        }
-        else {
-            res.redirect("/dashboard");
-        }
+        const redirectURL = getSafeRedirectURL((req.query.redirect || ""));
+        res.redirect(redirectURL);
     }
     else {
         res.render("login", {
@@ -25,16 +40,11 @@ router.route("/")
     .post((req, res) => {
     const userName = req.body.userName;
     const passwordPlain = req.body.password;
-    const redirectURL = req.body.redirect;
+    const redirectURL = getSafeRedirectURL(req.body.redirect);
     const userObj = usersDB_getUser.getUser(userName, passwordPlain);
     if (userObj) {
         req.session.user = userObj;
-        if (redirectURL && redirectURL !== "") {
-            res.redirect(req.body.redirect);
-        }
-        else {
-            res.redirect("/dashboard");
-        }
+        res.redirect(req.body.redirect);
     }
     else {
         res.render("login", {

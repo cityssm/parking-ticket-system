@@ -4,7 +4,9 @@ const express = require("express");
 const compression = require("compression");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const csurf = require("csurf");
 const logger = require("morgan");
+const rateLimit = require("express-rate-limit");
 const session = require("express-session");
 const sqlite = require("connect-sqlite3");
 const package_json_1 = require("./package.json");
@@ -39,6 +41,12 @@ app.use(express.urlencoded({
     extended: false
 }));
 app.use(cookieParser());
+app.use(csurf({ cookie: true }));
+const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 500
+});
+app.use(limiter);
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/docs/images", express.static(path.join(__dirname, "docs", "images")));
 app.use("/fa", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
@@ -77,6 +85,7 @@ const sessionChecker = (req, res, next) => {
 app.use((req, res, next) => {
     res.locals.buildNumber = package_json_1.version;
     res.locals.user = req.session.user;
+    res.locals.csrfToken = req.csrfToken();
     res.locals.configFns = configFns;
     res.locals.dateTimeFns = dateTimeFns;
     res.locals.stringFns = stringFns;

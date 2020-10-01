@@ -6,6 +6,30 @@ import * as usersDB_getUser from "../helpers/usersDB/getUser";
 const router = Router();
 
 
+const getSafeRedirectURL = (possibleRedirectURL: string = "") => {
+
+  switch (possibleRedirectURL) {
+    case "/tickets":
+    case "/tickets/new":
+    case "/tickets/reconcile":
+    case "/tickets-ontario/convict":
+    case "/plates":
+    case "/plates-ontario/mtoExport":
+    case "/plates-ontario/mtoImport":
+    case "/reports":
+    case "/admin/userManagement":
+    case "/admin/cleanup":
+    case "/admin/offences":
+    case "/admin/locations":
+    case "/admin/bylaws":
+
+      return possibleRedirectURL;
+  }
+
+  return "/dashboard";
+};
+
+
 router.route("/")
   .get((req, res) => {
 
@@ -13,15 +37,9 @@ router.route("/")
 
     if (req.session.user && req.cookies[sessionCookieName]) {
 
-      if (req.query.redirect && req.query.redirect !== "") {
+      const redirectURL = getSafeRedirectURL((req.query.redirect || "") as string);
 
-        res.redirect(req.query.redirect);
-
-      } else {
-
-        res.redirect("/dashboard");
-
-      }
+      res.redirect(redirectURL);
 
     } else {
 
@@ -39,7 +57,7 @@ router.route("/")
     const userName = req.body.userName;
     const passwordPlain = req.body.password;
 
-    const redirectURL = req.body.redirect;
+    const redirectURL = getSafeRedirectURL(req.body.redirect);
 
     const userObj = usersDB_getUser.getUser(userName, passwordPlain);
 
@@ -47,15 +65,7 @@ router.route("/")
 
       req.session.user = userObj;
 
-      if (redirectURL && redirectURL !== "") {
-
-        res.redirect(req.body.redirect);
-
-      } else {
-
-        res.redirect("/dashboard");
-
-      }
+      res.redirect(req.body.redirect);
 
     } else {
 
@@ -64,9 +74,7 @@ router.route("/")
         message: "Login Failed",
         redirect: redirectURL
       });
-
     }
-
   });
 
 
