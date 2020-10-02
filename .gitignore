@@ -3,6 +3,7 @@ coverage/
 node_modules/
 
 app.min.js
+bin/daemon/
 data/*.db
 data/*.db-journal
 data/*.min.js
