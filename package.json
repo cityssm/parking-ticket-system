@@ -38,7 +38,7 @@
     "node-fetch": "^2.6.1",
     "sanitize-filename": "^1.6.3",
     "typeface-inter": "^3.15.0",
-    "typeface-pt-mono": "0.0.72"
+    "typeface-pt-mono": "1.1.13"
   },
   "devDependencies": {
     "@cityssm/bulma-webapp-css": "^0.4.2",
