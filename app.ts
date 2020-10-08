@@ -96,11 +96,11 @@ app.use("/docs/images",
 app.use("/fa",
   express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
 
-app.use("/typeface-inter",
-  express.static(path.join(__dirname, "node_modules", "typeface-inter", "Inter Web")));
+app.use("/fontsource-inter",
+  express.static(path.join(__dirname, "node_modules", "fontsource-inter", "files")));
 
-app.use("/typeface-pt-mono",
-  express.static(path.join(__dirname, "node_modules", "typeface-pt-mono", "files")));
+app.use("/fontsource-pt-mono",
+  express.static(path.join(__dirname, "node_modules", "fontsource-pt-mono", "files")));
 
 app.use("/cityssm-bulma-webapp-js",
   express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js")));

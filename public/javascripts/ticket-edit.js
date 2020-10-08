@@ -124,7 +124,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     {
         let bylawLookupCloseModalFn;
         let offenceList = [];
-        const listItemEles = [];
+        let listItemEles = [];
         const clearBylawOffenceFn = (clickEvent) => {
             clickEvent.preventDefault();
             document.getElementById("ticket--bylawNumber").value = "";
@@ -182,6 +182,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 locationKey
             }, (offenceListRes) => {
                 offenceList = offenceListRes;
+                listItemEles = [];
                 const listEle = document.createElement("div");
                 listEle.className = "panel mb-4";
                 offenceList.forEach((offenceObj, index) => {

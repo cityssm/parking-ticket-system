@@ -234,7 +234,7 @@ declare const pts: ptsGlobal;
 
     let bylawLookupCloseModalFn: () => void;
     let offenceList: recordTypes.ParkingOffence[] = [];
-    const listItemEles: HTMLAnchorElement[] = [];
+    let listItemEles: HTMLAnchorElement[] = [];
 
     const clearBylawOffenceFn = (clickEvent: Event) => {
 
@@ -341,6 +341,7 @@ declare const pts: ptsGlobal;
         (offenceListRes: recordTypes.ParkingOffence[]) => {
 
           offenceList = offenceListRes;
+          listItemEles = [];
 
           const listEle = document.createElement("div");
           listEle.className = "panel mb-4";
