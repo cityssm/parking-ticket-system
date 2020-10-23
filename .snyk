@@ -1,9 +1,4 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.14.1
-# ignores vulnerabilities until expiry date; change duration by modifying expiry date
-ignore:
-  SNYK-JS-FLAT-596927:
-    - '@cityssm/expressjs-server-js > @cityssm/simple-password-generator > random-words > mocha > yargs-unparser > flat':
-        reason: dev dependency
-        expires: '2020-11-22T15:55:17.977Z'
+ignore: {}
 patch: {}
