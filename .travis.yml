@@ -8,7 +8,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - nyc --reporter=lcov npm run test
+  - nyc --reporter=lcov mocha --timeout 30000
 
 after_script:
   - ./cc-test-reporter after-build -t lcov --exit-code $TRAVIS_TEST_RESULT
