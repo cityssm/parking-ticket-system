@@ -59,7 +59,7 @@
     "@types/http-errors": "^1.8.0",
     "@types/marked": "^1.1.0",
     "@types/mocha": "^8.0.3",
-    "@types/morgan": "^1.9.1",
+    "@types/morgan": "^1.9.2",
     "@types/multer": "^1.4.4",
     "@types/node-fetch": "^2.5.7",
     "@types/puppeteer": "^3.0.2",
