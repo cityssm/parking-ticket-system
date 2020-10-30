@@ -18,7 +18,7 @@
   "homepage": "https://github.com/cityssm/parking-ticket-system#readme",
   "dependencies": {
     "@cityssm/bulma-webapp-js": "^0.5.1",
-    "@cityssm/expressjs-server-js": "^1.0.1",
+    "@cityssm/expressjs-server-js": "^1.0.2",
     "@fortawesome/fontawesome-free": "^5.15.1",
     "bcrypt": "^5.0.0",
     "better-sqlite3": "^7.1.1",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@cityssm/bulma-webapp-css": "^0.4.2",
     "@types/bcrypt": "^3.0.0",
-    "@types/better-sqlite3": "^5.4.0",
+    "@types/better-sqlite3": "^5.4.1",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/csurf": "^1.9.36",
@@ -59,13 +59,13 @@
     "@types/http-errors": "^1.8.0",
     "@types/marked": "^1.1.0",
     "@types/mocha": "^8.0.3",
-    "@types/morgan": "^1.9.1",
+    "@types/morgan": "^1.9.2",
     "@types/multer": "^1.4.4",
     "@types/node-fetch": "^2.5.7",
-    "@types/puppeteer": "^3.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.5.0",
-    "@typescript-eslint/parser": "^4.5.0",
-    "eslint": "^7.11.0",
+    "@types/puppeteer": "^3.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "eslint": "^7.12.1",
     "eslint-config-standard-with-typescript": "^19.0.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
@@ -76,8 +76,8 @@
     "gulp-minify": "^3.1.0",
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
-    "puppeteer": "^5.4.0",
-    "snyk": "^1.420.0",
-    "typescript": "^4.0.3"
+    "puppeteer": "^5.4.1",
+    "snyk": "^1.421.1",
+    "typescript": "^4.0.5"
   }
 }
