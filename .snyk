@@ -1,4 +1,9 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.14.1
-ignore: {}
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-YARGSPARSER-560381:
+    - gulp > gulp-cli > yargs > yargs-parser:
+        reason: dev dependency
+        expires: '2020-12-02T15:57:35.561Z'
 patch: {}
