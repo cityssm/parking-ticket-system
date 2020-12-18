@@ -14,7 +14,7 @@ install:
   - node --version
   - npm --version
   # install modules
-  - sh: npm install
+  - sh: npm ci
   - sh: npm install -g mocha nyc
 
 before_test:
