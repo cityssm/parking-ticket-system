@@ -106,10 +106,6 @@ if (httpsConfig) {
  * Initialize background task
  */
 
-/*
- * Background tasks
- */
-
 if (configFns.getProperty("application.task_nhtsa.runTask")) {
   fork("./tasks/nhtsaChildProcess");
 }
