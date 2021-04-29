@@ -3,6 +3,9 @@ checks:
   file-lines:
     config:
       threshold: 500
+  method-complexity:
+    config:
+      threshold: 15
   method-lines:
     config:
       threshold: 200

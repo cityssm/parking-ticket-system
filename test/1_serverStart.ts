@@ -66,7 +66,6 @@ describe("parking-ticket-system", () => {
       propertyName: "canCreate",
       propertyValue: "false"
     });
-
   });
 
   after(() => {
