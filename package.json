@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@cityssm/bulma-webapp-css": "^0.7.0",
-    "@types/bcrypt": "^3.0.1",
+    "@types/bcrypt": "^5.0.0",
     "@types/better-sqlite3": "^5.4.1",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
