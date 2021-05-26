@@ -1,11 +1,14 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_removeLicencePlateFromLookupBatch from "../../helpers/parkingDB/removeLicencePlateFromLookupBatch";
+import removeLicencePlateFromLookupBatch from "../../helpers/parkingDB/removeLicencePlateFromLookupBatch.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const result = parkingDB_removeLicencePlateFromLookupBatch.removeLicencePlateFromLookupBatch(req.body, req.session);
+  const result = removeLicencePlateFromLookupBatch(req.body, req.session);
 
   return res.json(result);
 };
+
+
+export default handler;

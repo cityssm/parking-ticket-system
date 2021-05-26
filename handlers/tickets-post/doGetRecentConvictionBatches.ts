@@ -1,11 +1,14 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getLastTenConvictionBatches from "../../helpers/parkingDB/getLastTenConvictionBatches";
+import getLastTenConvictionBatches from "../../helpers/parkingDB/getLastTenConvictionBatches.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
 
-  const batches = parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches();
+  const batches = getLastTenConvictionBatches();
 
   return res.json(batches);
 };
+
+
+export default handler;

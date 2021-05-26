@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getAllLicencePlateOwners from "../../helpers/parkingDB/getAllLicencePlateOwners";
-import * as parkingDB_getParkingTickets from "../../helpers/parkingDB/getParkingTickets";
+import getAllLicencePlateOwners from "../../helpers/parkingDB/getAllLicencePlateOwners.js";
+import { getParkingTicketsByLicencePlate } from "../../helpers/parkingDB/getParkingTickets.js";
 
 
 export const handler: RequestHandler = (req, res) => {
@@ -24,10 +24,10 @@ export const handler: RequestHandler = (req, res) => {
     licencePlateNumber = "";
   }
 
-  const owners = parkingDB_getAllLicencePlateOwners.getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+  const owners = getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
   const tickets =
-    parkingDB_getParkingTickets.getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
+    getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
       req.session);
 
   res.render("plate-view", {
@@ -41,3 +41,6 @@ export const handler: RequestHandler = (req, res) => {
     tickets
   });
 };
+
+
+export default handler;

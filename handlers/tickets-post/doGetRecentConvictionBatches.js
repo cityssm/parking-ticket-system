@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getLastTenConvictionBatches = require("../../helpers/parkingDB/getLastTenConvictionBatches");
-exports.handler = (_req, res) => {
-    const batches = parkingDB_getLastTenConvictionBatches.getLastTenConvictionBatches();
+import getLastTenConvictionBatches from "../../helpers/parkingDB/getLastTenConvictionBatches.js";
+export const handler = (_req, res) => {
+    const batches = getLastTenConvictionBatches();
     return res.json(batches);
 };
+export default handler;

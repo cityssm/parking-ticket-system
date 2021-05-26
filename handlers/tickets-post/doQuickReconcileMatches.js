@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const ownerFns = require("../../helpers/ownerFns");
-const parkingDB_createParkingTicketStatus = require("../../helpers/parkingDB/createParkingTicketStatus");
-const parkingDB_getOwnershipReconciliationRecords = require("../../helpers/parkingDB/getOwnershipReconciliationRecords");
-exports.handler = (req, res) => {
-    const records = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
+import * as ownerFns from "../../helpers/ownerFns.js";
+import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
+export const handler = (req, res) => {
+    const records = getOwnershipReconciliationRecords();
     const statusRecords = [];
     for (const record of records) {
         if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
             continue;
         }
         const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
-        const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus({
+        const statusResponse = createParkingTicketStatus({
             recordType: "status",
             ticketID: record.ticket_ticketID,
             statusKey: "ownerLookupMatch",
@@ -31,3 +28,4 @@ exports.handler = (req, res) => {
         statusRecords
     });
 };
+export default handler;

@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getLicencePlates from "../../helpers/parkingDB/getLicencePlates";
+import * as parkingDB_getLicencePlates from "../../helpers/parkingDB/getLicencePlates.js";
 
 
 export const handler: RequestHandler = (req, res) => {
@@ -21,3 +21,6 @@ export const handler: RequestHandler = (req, res) => {
 
   res.json(parkingDB_getLicencePlates.getLicencePlates(queryOptions));
 };
+
+
+export default handler;

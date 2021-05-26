@@ -1,11 +1,11 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus";
+import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const result = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
+  const result = createParkingTicketStatus(
     req.body,
     req.session,
     req.body.resolveTicket === "1"
@@ -13,3 +13,6 @@ export const handler: RequestHandler = (req, res) => {
 
   return res.json(result);
 };
+
+
+export default handler;

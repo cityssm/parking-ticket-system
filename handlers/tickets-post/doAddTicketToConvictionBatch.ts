@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_addParkingTicketToConvictionBatch from "../../helpers/parkingDB/addParkingTicketToConvictionBatch";
-import * as parkingDB_getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch";
+import addParkingTicketToConvictionBatch from "../../helpers/parkingDB/addParkingTicketToConvictionBatch.js";
+import getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch.js";
 
 import type * as pts from "../../types/recordTypes";
 
@@ -15,14 +15,14 @@ export const handler: RequestHandler = (req, res) => {
     success: boolean;
     message?: string;
     batch?: pts.ParkingTicketConvictionBatch;
-  } = parkingDB_addParkingTicketToConvictionBatch.addParkingTicketToConvictionBatch(
+  } = addParkingTicketToConvictionBatch(
     batchID,
     ticketID,
     req.session
   );
 
   if (result.success) {
-    result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
+    result.batch = getConvictionBatch(batchID);
   }
 
   return res.json(result);

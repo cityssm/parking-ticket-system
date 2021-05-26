@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 
 
-import * as parkingDB_getParkingTickets from "../../helpers/parkingDB/getParkingTickets";
+import * as parkingDB_getParkingTickets from "../../helpers/parkingDB/getParkingTickets.js";
 
 
 export const handler: RequestHandler = (req, res) => {
@@ -20,3 +20,6 @@ export const handler: RequestHandler = (req, res) => {
 
   res.json(parkingDB_getParkingTickets.getParkingTickets(req.session, queryOptions));
 };
+
+
+export default handler;

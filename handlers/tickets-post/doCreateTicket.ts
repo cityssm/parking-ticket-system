@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import * as configFns from "../../helpers/configFns";
+import * as configFns from "../../helpers/configFns.js";
 
-import * as parkingDB_createParkingTicket from "../../helpers/parkingDB/createParkingTicket";
+import createParkingTicket from "../../helpers/parkingDB/createParkingTicket.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const result = parkingDB_createParkingTicket.createParkingTicket(req.body, req.session);
+  const result = createParkingTicket(req.body, req.session);
 
   if (result.success) {
     const ticketNumber = req.body.ticketNumber;
@@ -18,3 +18,6 @@ export const handler: RequestHandler = (req, res) => {
 
   return res.json(result);
 };
+
+
+export default handler;

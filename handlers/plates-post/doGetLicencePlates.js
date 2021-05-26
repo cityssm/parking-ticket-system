@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getLicencePlates = require("../../helpers/parkingDB/getLicencePlates");
-exports.handler = (req, res) => {
+import * as parkingDB_getLicencePlates from "../../helpers/parkingDB/getLicencePlates.js";
+export const handler = (req, res) => {
     const queryOptions = {
         limit: parseInt(req.body.limit, 10),
         offset: parseInt(req.body.offset, 10),
@@ -16,3 +13,4 @@ exports.handler = (req, res) => {
     }
     res.json(parkingDB_getLicencePlates.getLicencePlates(queryOptions));
 };
+export default handler;

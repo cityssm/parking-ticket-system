@@ -1,15 +1,15 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus";
-import * as parkingDB_acknowledgeLookupErrorLogEntry from "../../helpers/parkingDB/acknowledgeLookupErrorLogEntry";
-import * as parkingDB_getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
+import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import acknowledgeLookupErrorLogEntry from "../../helpers/parkingDB/acknowledgeLookupErrorLogEntry.js";
+import getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
   // Get log entry
 
-  const logEntries = parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(
+  const logEntries = getUnacknowledgedLookupErrorLog(
     req.body.batchID,
     req.body.logIndex
   );
@@ -24,7 +24,7 @@ export const handler: RequestHandler = (req, res) => {
 
   // Set status on parking ticket
 
-  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
+  const statusResponse = createParkingTicketStatus(
     {
       recordType: "status",
       ticketID: logEntries[0].ticketID,
@@ -48,7 +48,7 @@ export const handler: RequestHandler = (req, res) => {
 
   // Mark log entry as acknowledged
 
-  const success = parkingDB_acknowledgeLookupErrorLogEntry.acknowledgeLookupErrorLogEntry(
+  const success = acknowledgeLookupErrorLogEntry(
     req.body.batchID,
     req.body.logIndex,
     req.session
@@ -58,3 +58,5 @@ export const handler: RequestHandler = (req, res) => {
     success
   });
 };
+
+export default handler;

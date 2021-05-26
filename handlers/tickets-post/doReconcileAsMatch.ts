@@ -1,14 +1,14 @@
 import type { RequestHandler } from "express";
 
-import * as ownerFns from "../../helpers/ownerFns";
+import * as ownerFns from "../../helpers/ownerFns.js";
 
-import * as parkingDB_createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus";
-import * as parkingDB_getLicencePlateOwner from "../../helpers/parkingDB/getLicencePlateOwner";
+import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import getLicencePlateOwner from "../../helpers/parkingDB/getLicencePlateOwner.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const ownerRecord = parkingDB_getLicencePlateOwner.getLicencePlateOwner(
+  const ownerRecord = getLicencePlateOwner(
     req.body.licencePlateCountry,
     req.body.licencePlateProvince,
     req.body.licencePlateNumber,
@@ -25,7 +25,7 @@ export const handler: RequestHandler = (req, res) => {
 
   const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
 
-  const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
+  const statusResponse = createParkingTicketStatus(
     {
       recordType: "status",
       ticketID: parseInt(req.body.ticketID, 10),
@@ -39,3 +39,6 @@ export const handler: RequestHandler = (req, res) => {
 
   return res.json(statusResponse);
 };
+
+
+export default handler;

@@ -1,14 +1,14 @@
 import type { RequestHandler } from "express";
 
-import * as ownerFns from "../../helpers/ownerFns";
+import * as ownerFns from "../../helpers/ownerFns.js";
 
-import * as parkingDB_createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus";
-import * as parkingDB_getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords";
+import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const records = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
+  const records = getOwnershipReconciliationRecords();
 
   const statusRecords: Array<{ ticketID: number; statusIndex: number }> = [];
 
@@ -19,7 +19,7 @@ export const handler: RequestHandler = (req, res) => {
 
     const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
 
-    const statusResponse = parkingDB_createParkingTicketStatus.createParkingTicketStatus(
+    const statusResponse = createParkingTicketStatus(
       {
         recordType: "status",
         ticketID: record.ticket_ticketID,
@@ -44,3 +44,6 @@ export const handler: RequestHandler = (req, res) => {
     statusRecords
   });
 };
+
+
+export default handler;

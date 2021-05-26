@@ -1,13 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getLookupBatch = require("../../helpers/parkingDB/getLookupBatch");
-const parkingDB_clearLookupBatch = require("../../helpers/parkingDB/clearLookupBatch");
-exports.handler = (req, res) => {
+import getLookupBatch from "../../helpers/parkingDB/getLookupBatch.js";
+import clearLookupBatch from "../../helpers/parkingDB/clearLookupBatch.js";
+export const handler = (req, res) => {
     const batchID = parseInt(req.body.batchID, 10);
-    const result = parkingDB_clearLookupBatch.clearLookupBatch(batchID, req.session);
+    const result = clearLookupBatch(batchID, req.session);
     if (result.success) {
-        result.batch = parkingDB_getLookupBatch.getLookupBatch(batchID);
+        result.batch = getLookupBatch(batchID);
     }
     return res.json(result);
 };
+export default handler;

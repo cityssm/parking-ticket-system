@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getParkingTickets = require("../../helpers/parkingDB/getParkingTickets");
-exports.handler = (req, res) => {
+import * as parkingDB_getParkingTickets from "../../helpers/parkingDB/getParkingTickets.js";
+export const handler = (req, res) => {
     const queryOptions = {
         limit: parseInt(req.body.limit, 10),
         offset: parseInt(req.body.offset, 10),
@@ -15,3 +12,4 @@ exports.handler = (req, res) => {
     }
     res.json(parkingDB_getParkingTickets.getParkingTickets(req.session, queryOptions));
 };
+export default handler;

@@ -1,11 +1,14 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getLookupBatch from "../../helpers/parkingDB/getLookupBatch";
+import getLookupBatch from "../../helpers/parkingDB/getLookupBatch.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const batch = parkingDB_getLookupBatch.getLookupBatch(req.body.batchID);
+  const batch = getLookupBatch(req.body.batchID);
 
   return res.json(batch);
 };
+
+
+export default handler;
