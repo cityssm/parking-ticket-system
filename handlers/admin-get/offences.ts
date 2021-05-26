@@ -1,15 +1,15 @@
 import type { RequestHandler } from "express";
 
-import parkingDB_getParkingLocations from "../../helpers/parkingDB/getParkingLocations.js";
-import parkingDB_getParkingBylaws from "../../helpers/parkingDB/getParkingBylaws.js";
-import parkingDB_getParkingOffences from "../../helpers/parkingDB/getParkingOffences.js";
+import getParkingLocations from "../../helpers/parkingDB/getParkingLocations.js";
+import getParkingBylaws from "../../helpers/parkingDB/getParkingBylaws.js";
+import getParkingOffences from "../../helpers/parkingDB/getParkingOffences.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
 
-  const locations = parkingDB_getParkingLocations.getParkingLocations();
-  const bylaws = parkingDB_getParkingBylaws.getParkingBylaws();
-  const offences = parkingDB_getParkingOffences.getParkingOffences();
+  const locations = getParkingLocations();
+  const bylaws = getParkingBylaws();
+  const offences = getParkingOffences();
 
   return res.render("offence-maint", {
     headTitle: "Parking Offences",
