@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import * as puppeteer from "puppeteer";
+import puppeteer from "puppeteer";
 
 import * as http from "http";
 import app from "../app.js";
@@ -212,7 +212,7 @@ describe("parking-ticket-system", () => {
             assert.fail();
           })
           .finally(() => {
-            assert.equal(status, 404);
+            assert.strictEqual(status, 404);
             done();
           });
       })()
@@ -243,7 +243,7 @@ describe("parking-ticket-system", () => {
             assert.fail();
           })
           .finally(() => {
-            assert.equal(status, 400);
+            assert.strictEqual(status, 400);
             done();
           });
       })()

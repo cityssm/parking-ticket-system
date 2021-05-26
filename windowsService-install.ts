@@ -5,7 +5,7 @@ import * as path from "path";
 const svc = new Service({
   name: "Parking Ticket System",
   description: "A system for managing parking tickets tracked by municipalities.",
-  script: path.join(__dirname, "bin", "www.js")
+  script: path.join("bin", "www.js")
 });
 
 // Listen for the "install" event, which indicates the

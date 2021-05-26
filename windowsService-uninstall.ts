@@ -2,9 +2,9 @@ import { Service } from "node-windows";
 import * as path from "path";
 
 // Create a new service object
-var svc = new Service({
+const svc = new Service({
   name: "Parking Ticket System",
-  script: path.join(__dirname, "bin", "www.js")
+  script: path.join("bin", "www.js")
 });
 
 // Listen for the "uninstall" event so we know when it's done.

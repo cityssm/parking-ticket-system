@@ -7,7 +7,7 @@ describe("helpers/vehicleFns", () => {
 
   describe("#getMakeFromNCIC", () => {
     it("should convert \"CHEV\" to \"Chevrolet\"", () => {
-      assert.equal(vehicleFns.getMakeFromNCIC("CHEV"), "Chevrolet");
+      assert.strictEqual(vehicleFns.getMakeFromNCIC("CHEV"), "Chevrolet");
     });
   });
 
@@ -29,11 +29,11 @@ describe("helpers/vehicleFns", () => {
   describe("#isNCICExclusivelyTrailer", () => {
 
     it("should return true for \"USCA\" (U.S. Cargo Inc.)", () => {
-      assert.equal(vehicleFns.isNCICExclusivelyTrailer("USCA"), true);
+      assert.strictEqual(vehicleFns.isNCICExclusivelyTrailer("USCA"), true);
     });
 
     it("should return false for \"BOMB\" (Bombardier)", () => {
-      assert.equal(vehicleFns.isNCICExclusivelyTrailer("BOMB"), false);
+      assert.strictEqual(vehicleFns.isNCICExclusivelyTrailer("BOMB"), false);
     });
   });
 });

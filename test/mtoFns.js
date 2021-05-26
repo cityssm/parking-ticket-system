@@ -6,17 +6,17 @@ describe("helpers/mtoFns", () => {
         const currentYear = currentDate.getFullYear();
         const currentYearTwoDigits = currentYear % 100;
         it("(" + currentYearTwoDigits.toString() + ") => " + currentYear.toString(), () => {
-            assert.equal(mtoFns.twoDigitYearToFourDigit(currentYearTwoDigits), currentYear);
+            assert.strictEqual(mtoFns.twoDigitYearToFourDigit(currentYearTwoDigits), currentYear);
         });
         const futureYear = currentYear + 5;
         const futureYearTwoDigits = futureYear % 100;
         it("should convert " + futureYearTwoDigits.toString() + " to " + futureYear.toString(), () => {
-            assert.equal(mtoFns.twoDigitYearToFourDigit(futureYearTwoDigits), futureYear);
+            assert.strictEqual(mtoFns.twoDigitYearToFourDigit(futureYearTwoDigits), futureYear);
         });
         const pastYear = (currentYear + 15) - 100;
         const pastYearTwoDigits = pastYear % 100;
         it("should convert " + pastYearTwoDigits.toString() + " to " + pastYear.toString(), () => {
-            assert.equal(mtoFns.twoDigitYearToFourDigit(pastYearTwoDigits), pastYear);
+            assert.strictEqual(mtoFns.twoDigitYearToFourDigit(pastYearTwoDigits), pastYear);
         });
     });
     describe("#sixDigitDateNumberToEightDigit()", () => {
@@ -25,7 +25,7 @@ describe("helpers/mtoFns", () => {
             currentDate.getDate();
         const currentDateSixDigits = parseInt(currentDateEightDigits.toString().slice(-6), 10);
         it("should convert " + currentDateSixDigits.toString() + " to " + currentDateEightDigits.toString(), () => {
-            assert.equal(mtoFns.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
+            assert.strictEqual(mtoFns.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
         });
     });
     describe("#parsePKRD()", () => {
@@ -34,7 +34,7 @@ describe("helpers/mtoFns", () => {
             const parsed = mtoFns.parsePKRD(validString);
             it("should have licencePlateNumber = \"SAMPLE\"", () => {
                 if (parsed) {
-                    assert.equal(parsed.licencePlateNumber, "SAMPLE");
+                    assert.strictEqual(parsed.licencePlateNumber, "SAMPLE");
                 }
                 else {
                     assert.fail();
@@ -42,7 +42,7 @@ describe("helpers/mtoFns", () => {
             });
             it("should have ticketNumber = \"TKT123\"", () => {
                 if (parsed) {
-                    assert.equal(parsed.ticketNumber, "TKT123");
+                    assert.strictEqual(parsed.ticketNumber, "TKT123");
                 }
                 else {
                     assert.fail();
@@ -50,7 +50,7 @@ describe("helpers/mtoFns", () => {
             });
             it("should have vehicleNCIC = \"CHEV\"", () => {
                 if (parsed) {
-                    assert.equal(parsed.vehicleNCIC, "CHEV");
+                    assert.strictEqual(parsed.vehicleNCIC, "CHEV");
                 }
                 else {
                     assert.fail();
@@ -59,7 +59,7 @@ describe("helpers/mtoFns", () => {
         });
         describe("invalid PKRD string", () => {
             it("returns false", () => {
-                assert.equal(mtoFns.parsePKRD(""), false);
+                assert.strictEqual(mtoFns.parsePKRD(""), false);
             });
         });
     });

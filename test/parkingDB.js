@@ -62,16 +62,16 @@ describe("helpers/parkingDB", () => {
             });
         });
         it("should execute getParkingTicket(-1)", () => {
-            assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), null);
+            assert.strictEqual(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), null);
         });
         it("should execute getParkingTicketID()", () => {
-            assert.equal(parkingDB_getParkingTicketID.getParkingTicketID("~~FAKE TICKET NUMBER~~"), null);
+            assert.strictEqual(parkingDB_getParkingTicketID.getParkingTicketID("~~FAKE TICKET NUMBER~~"), null);
         });
         it("should execute getParkingTicketRemarks(-1)", () => {
-            assert.equal(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, fakeViewOnlySession).length, 0);
+            assert.strictEqual(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, fakeViewOnlySession).length, 0);
         });
         it("should execute getParkingTicketStatuses(-1)", () => {
-            assert.equal(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, fakeViewOnlySession).length, 0);
+            assert.strictEqual(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, fakeViewOnlySession).length, 0);
         });
     });
     describe("licence plate queries", () => {
@@ -82,7 +82,7 @@ describe("helpers/parkingDB", () => {
             }));
         });
         it("should execute getLicencePlateOwner()", () => {
-            assert.equal(parkingDB_getLicencePlateOwner.getLicencePlateOwner("CA", "ON", "~~FAKE PLATE NUMBER~~", 0), null);
+            assert.strictEqual(parkingDB_getLicencePlateOwner.getLicencePlateOwner("CA", "ON", "~~FAKE PLATE NUMBER~~", 0), null);
         });
     });
     describe("conviction batch queries", () => {
@@ -95,15 +95,15 @@ describe("helpers/parkingDB", () => {
         });
         it("should execute parkingDB_isConvictionBatchUpdatable()", () => {
             const isConvicted = parkingDB_isConvictionBatchUpdatable.isConvictionBatchUpdatable(-1);
-            assert.equal(isConvicted, false);
+            assert.strictEqual(isConvicted, false);
         });
         it("should execute parkingDB_isParkingTicketConvicted()", () => {
             const isConvicted = parkingDB_isParkingTicketConvicted.isParkingTicketConvicted(-1);
-            assert.equal(isConvicted, false);
+            assert.strictEqual(isConvicted, false);
         });
         it("should execute isParkingTicketInConvictionBatch()", () => {
             const result = parkingDB_isParkingTicketInConvictionBatch.isParkingTicketInConvictionBatch(-1);
-            assert.equal(result.inBatch, false);
+            assert.strictEqual(result.inBatch, false);
         });
     });
     describe("lookup batch queries", () => {
@@ -167,7 +167,7 @@ describe("helpers/parkingDB", () => {
     describe("-reporting", () => {
         describe("#getReportRowsColumns()", () => {
             it("should return null for an invalid report", () => {
-                assert.equal(parkingDB_reporting.getReportRowsColumns("invalid-report-name", {}), null);
+                assert.strictEqual(parkingDB_reporting.getReportRowsColumns("invalid-report-name", {}), null);
             });
             it("should return data for a valid report", () => {
                 assert.ok(parkingDB_reporting.getReportRowsColumns("bylaws-all", {}));
