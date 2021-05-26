@@ -1,10 +1,11 @@
 import { Router } from "express";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import * as handler_reportName from "../handlers/reports-all/reportName";
+import handler_reportName from "../handlers/reports-all/reportName.js";
 
-const router = Router();
+
+export const router = Router();
 
 
 router.get("/", (_req, res) => {
@@ -21,4 +22,4 @@ router.get("/", (_req, res) => {
 router.all("/:reportName", handler_reportName.handler);
 
 
-export = router;
+export default router;

@@ -1,45 +1,44 @@
-import * as createError from "http-errors";
-import * as express from "express";
+import createError from "http-errors";
+import express from "express";
 
-import * as compression from "compression";
-import * as path from "path";
-import * as cookieParser from "cookie-parser";
-import * as csurf from "csurf";
-import * as logger from "morgan";
-import * as rateLimit from "express-rate-limit";
+import compression from "compression";
+import path from "path";
+import cookieParser from "cookie-parser";
+import csurf from "csurf";
+import rateLimit from "express-rate-limit";
 
-import * as session from "express-session";
-import * as sqlite from "connect-sqlite3";
+import session from "express-session";
+import sqlite from "connect-sqlite3";
 
-import { version as buildNumber } from "./package.json";
+import routerDocs from "./routes/docs.js";
+import routerLogin from "./routes/login.js";
+import routerDashboard from "./routes/dashboard.js";
+import routerAdmin from "./routes/admin.js";
+import routerTickets from "./routes/tickets.js";
+import routerOffences from "./routes/offences.js";
+import routerPlates from "./routes/plates.js";
+import routerReports from "./routes/reports.js";
 
-import * as routerDocs from "./routes/docs";
-import * as routerLogin from "./routes/login";
-import * as routerDashboard from "./routes/dashboard";
-import * as routerAdmin from "./routes/admin";
-import * as routerTickets from "./routes/tickets";
-import * as routerOffences from "./routes/offences";
-import * as routerPlates from "./routes/plates";
-import * as routerReports from "./routes/reports";
+import routePlatesOntario from "./routes/plates-ontario.js";
+import routeTicketsOntario from "./routes/tickets-ontario.js";
 
-import * as routePlatesOntario from "./routes/plates-ontario";
-import * as routeTicketsOntario from "./routes/tickets-ontario";
+import * as configFns from "./helpers/configFns.js";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
+import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns.js";
+import * as vehicleFns from "./helpers/vehicleFns.js";
 
-import * as configFns from "./helpers/configFns";
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
-import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
-import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns";
-import * as vehicleFns from "./helpers/vehicleFns";
+import * as usersDB_init from "./helpers/usersDB/initializeDatabase.js";
+import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase.js";
+import * as dbInit from "./helpers/dbInit.js";
+
+import debug from "debug";
+const debugApp = debug("parking-ticket-system:app");
 
 
 /*
  * INITALIZE THE DATABASES
  */
-
-
-import * as usersDB_init from "./helpers/usersDB/initializeDatabase";
-import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase";
-import * as dbInit from "./helpers/dbInit";
 
 usersDB_init.initializeDatabase();
 parkingDB_init.initializeDatabase();
@@ -51,7 +50,7 @@ dbInit.initNHTSADB();
  */
 
 
-const app = express();
+export const app = express();
 
 
 // View engine setup
@@ -60,7 +59,12 @@ app.set("view engine", "ejs");
 
 
 app.use(compression());
-app.use(logger("dev"));
+
+app.use((req, _res, next) => {
+  debugApp(`${req.method} ${req.url}`);
+  next();
+});
+
 app.use(express.json());
 
 app.use(express.urlencoded({
@@ -162,7 +166,7 @@ const sessionChecker = (req: express.Request, res: express.Response, next: expre
 // Make the user and config objects available to the templates
 app.use((req, res, next) => {
 
-  res.locals.buildNumber = buildNumber;
+  res.locals.buildNumber = process.env.npm_package_version;
 
   res.locals.user = req.session.user;
   res.locals.csrfToken = req.csrfToken();
@@ -237,4 +241,4 @@ app.use((err: createError.HttpError, req: express.Request, res: express.Response
 });
 
 
-export = app;
+export default app;

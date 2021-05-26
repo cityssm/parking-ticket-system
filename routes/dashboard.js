@@ -1,8 +1,7 @@
-"use strict";
-const express_1 = require("express");
-const configFns = require("../helpers/configFns");
-const usersDB_tryResetPassword = require("../helpers/usersDB/tryResetPassword");
-const router = express_1.Router();
+import { Router } from "express";
+import * as configFns from "../helpers/configFns.js";
+import usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword.js";
+export const router = Router();
 router.get("/", (_req, res) => {
     res.render("dashboard", {
         headTitle: "Dashboard"
@@ -25,4 +24,4 @@ router.all("/doGetDefaultConfigProperties", (_req, res) => {
         licencePlateProvinces: configFns.getProperty("licencePlateProvinces")
     });
 });
-module.exports = router;
+export default router;

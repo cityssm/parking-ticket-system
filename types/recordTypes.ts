@@ -241,3 +241,9 @@ export interface UserProperties {
   isAdmin: boolean;
   isOperator: boolean;
 }
+
+declare module "express-session" {
+  interface Session {
+    user: User;
+  }
+};

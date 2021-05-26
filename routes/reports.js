@@ -1,8 +1,7 @@
-"use strict";
-const express_1 = require("express");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const handler_reportName = require("../handlers/reports-all/reportName");
-const router = express_1.Router();
+import { Router } from "express";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import handler_reportName from "../handlers/reports-all/reportName.js";
+export const router = Router();
 router.get("/", (_req, res) => {
     const rightNow = new Date();
     res.render("report-search", {
@@ -11,4 +10,4 @@ router.get("/", (_req, res) => {
     });
 });
 router.all("/:reportName", handler_reportName.handler);
-module.exports = router;
+export default router;

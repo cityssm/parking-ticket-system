@@ -1,16 +1,16 @@
 import { Router } from "express";
 
-import * as permissionHandlers from "../handlers/permissions";
+import * as permissionHandlers from "../handlers/permissions.js";
 
-import * as handler_mtoExport from "../handlers/plates-ontario-get/mtoExport";
-import * as handler_mtoExportDownload from "../handlers/plates-ontario-get/mtoExportDownload";
-import * as handler_doGetPlatesAvailableForMTOLookup from "../handlers/plates-ontario-post/doGetPlatesAvailableForMTOLookup";
+import handler_mtoExport from "../handlers/plates-ontario-get/mtoExport.js";
+import handler_mtoExportDownload from "../handlers/plates-ontario-get/mtoExportDownload.js";
+import handler_doGetPlatesAvailableForMTOLookup from "../handlers/plates-ontario-post/doGetPlatesAvailableForMTOLookup.js";
 
-import * as handler_mtoImport from "../handlers/plates-ontario-get/mtoImport";
-import * as handler_doMTOImportUpload from "../handlers/plates-ontario-post/doMTOImportUpload";
+import handler_mtoImport from "../handlers/plates-ontario-get/mtoImport.js";
+import handler_doMTOImportUpload from "../handlers/plates-ontario-post/doMTOImportUpload.js";
 
 
-const router = Router();
+export const router = Router();
 
 
 router.get("/mtoExport",
@@ -35,4 +35,4 @@ router.post("/doMTOImportUpload",
   handler_doMTOImportUpload.handler);
 
 
-export = router;
+export default router;

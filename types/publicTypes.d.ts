@@ -1,4 +1,4 @@
-import * as configTypes from "./configTypes";
+import type * as configTypes from "./configTypes";
 export interface ptsGlobal {
     loadDefaultConfigProperties?: (callbackFn: () => void) => void;
     getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void;

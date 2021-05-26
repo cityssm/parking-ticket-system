@@ -1,7 +1,7 @@
 import type * as pts from "../types/configTypes";
-import * as base from "../data/config-base";
+import * as base from "../data/config-base.js";
 
-const config: pts.Config = {};
+export const config: pts.Config = {};
 
 config.application = {
   feature_mtoExportImport: true,
@@ -270,4 +270,4 @@ config.databaseCleanup = {
   windowDays: 30
 };
 
-export = config;
+export default config;

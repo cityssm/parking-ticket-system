@@ -1,13 +1,12 @@
 #!/usr/bin/env node
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const app = require("../app");
-const log = require("fancy-log");
-const http = require("http");
-const https = require("https");
-const fs = require("fs");
-const child_process_1 = require("child_process");
-const configFns = require("../helpers/configFns");
+import app from "../app.js";
+import http from "http";
+import https from "https";
+import fs from "fs";
+import { fork } from "child_process";
+import * as configFns from "../helpers/configFns.js";
+import debug from "debug";
+const debugWWW = debug("parking-ticket-system:www");
 const onError = (error) => {
     if (error.syscall !== "listen") {
         throw error;
@@ -15,11 +14,11 @@ const onError = (error) => {
     let doProcessExit = false;
     switch (error.code) {
         case "EACCES":
-            log.error("Requires elevated privileges");
+            debugWWW("Requires elevated privileges");
             doProcessExit = true;
             break;
         case "EADDRINUSE":
-            log.error("Port is already in use.");
+            debugWWW("Port is already in use.");
             doProcessExit = true;
             break;
         default:
@@ -34,7 +33,7 @@ const onListening = (server) => {
     const bind = typeof addr === "string"
         ? "pipe " + addr
         : "port " + addr.port.toString();
-    log.info("Listening on " + bind);
+    debugWWW("Listening on " + bind);
 };
 const httpPort = configFns.getProperty("application.httpPort");
 if (httpPort) {
@@ -44,7 +43,7 @@ if (httpPort) {
     httpServer.on("listening", () => {
         onListening(httpServer);
     });
-    log.info("HTTP listening on " + httpPort.toString());
+    debugWWW("HTTP listening on " + httpPort.toString());
 }
 const httpsConfig = configFns.getProperty("application.https");
 if (httpsConfig) {
@@ -58,8 +57,8 @@ if (httpsConfig) {
     httpsServer.on("listening", () => {
         onListening(httpsServer);
     });
-    log.info("HTTPS listening on " + httpsConfig.port.toString());
+    debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
 if (configFns.getProperty("application.task_nhtsa.runTask")) {
-    child_process_1.fork("./tasks/nhtsaChildProcess");
+    fork("./tasks/nhtsaChildProcess");
 }

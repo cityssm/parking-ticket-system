@@ -1,50 +1,50 @@
 import { Router } from "express";
 
-import * as permissionHanders from "../handlers/permissions";
+import * as permissionHanders from "../handlers/permissions.js";
 
 // Tickets
-import * as handler_new from "../handlers/tickets-get/new";
-import * as handler_view from "../handlers/tickets-get/view";
-import * as handler_edit from "../handlers/tickets-get/edit";
-import * as handler_byTicketNumber from "../handlers/tickets-get/byTicketNumber";
+import handler_new from "../handlers/tickets-get/new.js";
+import handler_view from "../handlers/tickets-get/view.js";
+import handler_edit from "../handlers/tickets-get/edit.js";
+import handler_byTicketNumber from "../handlers/tickets-get/byTicketNumber.js";
 
-import * as handler_doGetTickets from "../handlers/tickets-post/doGetTickets";
-import * as handler_doCreateTicket from "../handlers/tickets-post/doCreateTicket";
-import * as handler_doUpdateTicket from "../handlers/tickets-post/doUpdateTicket";
-import * as handler_doResolveTicket from "../handlers/tickets-post/doResolveTicket";
-import * as handler_doUnresolveTicket from "../handlers/tickets-post/doUnresolveTicket";
-import * as handler_doDeleteTicket from "../handlers/tickets-post/doDeleteTicket";
-import * as handler_doRestoreTicket from "../handlers/tickets-post/doRestoreTicket";
+import handler_doGetTickets from "../handlers/tickets-post/doGetTickets.js";
+import handler_doCreateTicket from "../handlers/tickets-post/doCreateTicket.js";
+import handler_doUpdateTicket from "../handlers/tickets-post/doUpdateTicket.js";
+import handler_doResolveTicket from "../handlers/tickets-post/doResolveTicket.js";
+import handler_doUnresolveTicket from "../handlers/tickets-post/doUnresolveTicket.js";
+import handler_doDeleteTicket from "../handlers/tickets-post/doDeleteTicket.js";
+import handler_doRestoreTicket from "../handlers/tickets-post/doRestoreTicket.js";
 
 // Remarks
-import * as handler_doGetRemarks from "../handlers/tickets-post/doGetRemarks";
-import * as handler_doAddRemark from "../handlers/tickets-post/doAddRemark";
-import * as handler_doUpdateRemark from "../handlers/tickets-post/doUpdateRemark";
-import * as handler_doDeleteRemark from "../handlers/tickets-post/doDeleteRemark";
+import handler_doGetRemarks from "../handlers/tickets-post/doGetRemarks.js";
+import handler_doAddRemark from "../handlers/tickets-post/doAddRemark.js";
+import handler_doUpdateRemark from "../handlers/tickets-post/doUpdateRemark.js";
+import handler_doDeleteRemark from "../handlers/tickets-post/doDeleteRemark.js";
 
 // Statuses
-import * as handler_doGetStatuses from "../handlers/tickets-post/doGetStatuses";
-import * as handler_doAddStatus from "../handlers/tickets-post/doAddStatus";
-import * as handler_doUpdateStatus from "../handlers/tickets-post/doUpdateStatus";
-import * as handler_doDeleteStatus from "../handlers/tickets-post/doDeleteStatus";
+import handler_doGetStatuses from "../handlers/tickets-post/doGetStatuses.js";
+import handler_doAddStatus from "../handlers/tickets-post/doAddStatus.js";
+import handler_doUpdateStatus from "../handlers/tickets-post/doUpdateStatus.js";
+import handler_doDeleteStatus from "../handlers/tickets-post/doDeleteStatus.js";
 
 // Reconciliation
-import * as handler_reconcile from "../handlers/tickets-get/reconcile";
-import * as handler_doAcknowledgeLookupError from "../handlers/tickets-post/doAcknowledgeLookupError";
-import * as handler_doQuickReconcileMatches from "../handlers/tickets-post/doQuickReconcileMatches";
-import * as handler_doReconcileAsMatch from "../handlers/tickets-post/doReconcileAsMatch";
-import * as handler_doReconcileAsError from "../handlers/tickets-post/doReconcileAsError";
+import handler_reconcile from "../handlers/tickets-get/reconcile.js";
+import handler_doAcknowledgeLookupError from "../handlers/tickets-post/doAcknowledgeLookupError.js";
+import handler_doQuickReconcileMatches from "../handlers/tickets-post/doQuickReconcileMatches.js";
+import handler_doReconcileAsMatch from "../handlers/tickets-post/doReconcileAsMatch.js";
+import handler_doReconcileAsError from "../handlers/tickets-post/doReconcileAsError.js";
 
 // Convictions
-import * as handler_doGetRecentConvictionBatches from "../handlers/tickets-post/doGetRecentConvictionBatches";
-import * as handler_doGetConvictionBatch from "../handlers/tickets-post/doGetConvictionBatch";
-import * as handler_doCreateConvictionBatch from "../handlers/tickets-post/doCreateConvictionBatch";
-import * as handler_doAddTicketToConvictionBatch from "../handlers/tickets-post/doAddTicketToConvictionBatch";
-import * as handler_doLockConvictionBatch from "../handlers/tickets-post/doLockConvictionBatch";
-import * as handler_doUnlockConvictionBatch from "../handlers/tickets-post/doUnlockConvictionBatch";
+import handler_doGetRecentConvictionBatches from "../handlers/tickets-post/doGetRecentConvictionBatches.js";
+import handler_doGetConvictionBatch from "../handlers/tickets-post/doGetConvictionBatch.js";
+import handler_doCreateConvictionBatch from "../handlers/tickets-post/doCreateConvictionBatch.js";
+import handler_doAddTicketToConvictionBatch from "../handlers/tickets-post/doAddTicketToConvictionBatch.js";
+import handler_doLockConvictionBatch from "../handlers/tickets-post/doLockConvictionBatch.js";
+import handler_doUnlockConvictionBatch from "../handlers/tickets-post/doUnlockConvictionBatch.js";
 
 
-const router = Router();
+export const router = Router();
 
 
 /*
@@ -201,4 +201,4 @@ router.get("/:ticketID/edit",
   handler_edit.handler);
 
 
-export = router;
+export default router;

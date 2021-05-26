@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
-import * as app from "../app";
+import app from "../app.js";
 
-import * as log from "fancy-log";
-
-import * as http from "http";
-import * as https from "https";
-import * as fs from "fs";
+import http from "http";
+import https from "https";
+import fs from "fs";
 
 import { fork } from "child_process";
 
-import * as configFns from "../helpers/configFns";
+import * as configFns from "../helpers/configFns.js";
+
+import debug from "debug";
+const debugWWW = debug("parking-ticket-system:www");
 
 
 const onError = (error: Error) => {
@@ -25,12 +26,12 @@ const onError = (error: Error) => {
   switch (error.code) {
 
     case "EACCES":
-      log.error("Requires elevated privileges");
+      debugWWW("Requires elevated privileges");
       doProcessExit = true;
       break;
 
     case "EADDRINUSE":
-      log.error("Port is already in use.");
+      debugWWW("Port is already in use.");
       doProcessExit = true;
       break;
 
@@ -52,7 +53,7 @@ const onListening = (server: http.Server | https.Server) => {
     ? "pipe " + addr
     : "port " + addr.port.toString();
 
-  log.info("Listening on " + bind);
+  debugWWW("Listening on " + bind);
 };
 
 
@@ -74,7 +75,7 @@ if (httpPort) {
     onListening(httpServer);
   });
 
-  log.info("HTTP listening on " + httpPort.toString());
+  debugWWW("HTTP listening on " + httpPort.toString());
 }
 
 /**
@@ -99,7 +100,7 @@ if (httpsConfig) {
     onListening(httpsServer);
   });
 
-  log.info("HTTPS listening on " + httpsConfig.port.toString());
+  debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
 
 /**

@@ -1,4 +1,4 @@
-import * as configTypes from "./configTypes";
+import type * as configTypes from "./configTypes";
 
 export interface ptsGlobal {
 

@@ -1,6 +1,5 @@
-"use strict";
-const base = require("../data/config-base");
-const config = {};
+import * as base from "../data/config-base.js";
+export const config = {};
 config.application = {
     feature_mtoExportImport: true,
     task_nhtsa: {
@@ -223,4 +222,4 @@ config.mtoExportImport = {};
 config.databaseCleanup = {
     windowDays: 30
 };
-module.exports = config;
+export default config;

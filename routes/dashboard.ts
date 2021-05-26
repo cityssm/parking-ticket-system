@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import * as configFns from "../helpers/configFns";
+import * as configFns from "../helpers/configFns.js";
 
-import * as usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword";
+import usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword.js";
 
 
-const router = Router();
+export const router = Router();
 
 
 router.get("/", (_req, res) => {
@@ -44,4 +44,4 @@ router.all("/doGetDefaultConfigProperties", (_req, res) => {
 });
 
 
-export = router;
+export default router;

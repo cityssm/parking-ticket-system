@@ -1,16 +1,16 @@
 import { Router } from "express";
 
-import * as createError from "http-errors";
-import * as fs from "fs";
-import * as path from "path";
-import * as marked from "marked";
+import createError from "http-errors";
+import fs from "fs";
+import path from "path";
+import marked from "marked";
 
-import * as configFns from "../helpers/configFns";
+import * as configFns from "../helpers/configFns.js";
 
-import sanitize = require("sanitize-filename");
+import sanitize from "sanitize-filename";
 
 
-const router = Router();
+export const router = Router();
 
 
 router.all("/", (_req, res) => {
@@ -57,4 +57,4 @@ router.all("/:mdFileName", (req, res, next) => {
 });
 
 
-export = router;
+export default router;

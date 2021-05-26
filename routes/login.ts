@@ -1,9 +1,9 @@
 import { Router } from "express";
 
-import * as configFns from "../helpers/configFns";
-import * as usersDB_getUser from "../helpers/usersDB/getUser";
+import * as configFns from "../helpers/configFns.js";
+import * as usersDB_getUser from "../helpers/usersDB/getUser.js";
 
-const router = Router();
+export const router = Router();
 
 
 const getSafeRedirectURL = (possibleRedirectURL: string = "") => {
@@ -78,4 +78,4 @@ router.route("/")
   });
 
 
-export = router;
+export default router;

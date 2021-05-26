@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import * as handler_doGetAllLocations from "../handlers/offences-post/doGetAllLocations";
-import * as handler_doGetOffencesByLocation from "../handlers/offences-post/doGetOffencesByLocation";
-import * as handler_doGetAllOffences from "../handlers/offences-post/doGetAllOffences";
+import handler_doGetAllLocations from "../handlers/offences-post/doGetAllLocations.js";
+import handler_doGetOffencesByLocation from "../handlers/offences-post/doGetOffencesByLocation.js";
+import handler_doGetAllOffences from "../handlers/offences-post/doGetAllOffences.js";
 
 
-const router = Router();
+export const router = Router();
 
 
 router.post("/doGetAllLocations",
@@ -20,4 +20,4 @@ router.post("/doGetAllOffences",
   handler_doGetAllOffences.handler);
 
 
-export = router;
+export default router;

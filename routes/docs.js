@@ -1,12 +1,11 @@
-"use strict";
-const express_1 = require("express");
-const createError = require("http-errors");
-const fs = require("fs");
-const path = require("path");
-const marked = require("marked");
-const configFns = require("../helpers/configFns");
-const sanitize = require("sanitize-filename");
-const router = express_1.Router();
+import { Router } from "express";
+import createError from "http-errors";
+import fs from "fs";
+import path from "path";
+import marked from "marked";
+import * as configFns from "../helpers/configFns.js";
+import sanitize from "sanitize-filename";
+export const router = Router();
 router.all("/", (_req, res) => {
     res.redirect("/docs/readme.md");
 });
@@ -36,4 +35,4 @@ router.all("/:mdFileName", (req, res, next) => {
       </html>`);
     });
 });
-module.exports = router;
+export default router;

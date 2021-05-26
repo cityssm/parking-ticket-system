@@ -1,23 +1,23 @@
 import { Router } from "express";
 
-import * as permissionHandlers from "../handlers/permissions";
+import * as permissionHandlers from "../handlers/permissions.js";
 
-import * as handler_doGetLicencePlates from "../handlers/plates-post/doGetLicencePlates";
-import * as handler_doGetUnreceivedLicencePlateLookupBatches from "../handlers/plates-post/doGetUnreceivedLicencePlateLookupBatches";
-import * as handler_doGetLookupBatch from "../handlers/plates-post/doGetLookupBatch";
-import * as handler_doCreateLookupBatch from "../handlers/plates-post/doCreateLookupBatch";
-import * as handler_doAddLicencePlateToLookupBatch from "../handlers/plates-post/doAddLicencePlateToLookupBatch";
-import * as handler_doAddAllLicencePlatesToLookupBatch from "../handlers/plates-post/doAddAllLicencePlatesToLookupBatch";
-import * as handler_doRemoveLicencePlateFromLookupBatch from "../handlers/plates-post/doRemoveLicencePlateFromLookupBatch";
-import * as handler_doClearLookupBatch from "../handlers/plates-post/doClearLookupBatch";
-import * as handler_doLockLookupBatch from "../handlers/plates-post/doLockLookupBatch";
+import handler_doGetLicencePlates from "../handlers/plates-post/doGetLicencePlates.js";
+import handler_doGetUnreceivedLicencePlateLookupBatches from "../handlers/plates-post/doGetUnreceivedLicencePlateLookupBatches.js";
+import handler_doGetLookupBatch from "../handlers/plates-post/doGetLookupBatch.js";
+import handler_doCreateLookupBatch from "../handlers/plates-post/doCreateLookupBatch.js";
+import handler_doAddLicencePlateToLookupBatch from "../handlers/plates-post/doAddLicencePlateToLookupBatch.js";
+import handler_doAddAllLicencePlatesToLookupBatch from "../handlers/plates-post/doAddAllLicencePlatesToLookupBatch.js";
+import handler_doRemoveLicencePlateFromLookupBatch from "../handlers/plates-post/doRemoveLicencePlateFromLookupBatch.js";
+import handler_doClearLookupBatch from "../handlers/plates-post/doClearLookupBatch.js";
+import handler_doLockLookupBatch from "../handlers/plates-post/doLockLookupBatch.js";
 
-import * as handler_doGetModelsByMake from "../handlers/plates-post/doGetModelsByMake";
+import handler_doGetModelsByMake from "../handlers/plates-post/doGetModelsByMake.js";
 
-import * as handler_view from "../handlers/plates-get/view";
+import handler_view from "../handlers/plates-get/view.js";
 
 
-const router = Router();
+export const router = Router();
 
 
 router.get("/", (_req, res) => {
@@ -77,4 +77,4 @@ router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber",
   handler_view.handler);
 
 
-export = router;
+export default router;

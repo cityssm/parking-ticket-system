@@ -1,16 +1,16 @@
 import { Router } from "express";
 
-import * as permissionHandlers from "../handlers/permissions";
+import * as permissionHandlers from "../handlers/permissions.js";
 
-import * as handler_convict from "../handlers/tickets-ontario-get/convict";
-import * as handler_convictDownload from "../handlers/tickets-ontario-get/convictDownload";
+import handler_convict from "../handlers/tickets-ontario-get/convict.js";
+import handler_convictDownload from "../handlers/tickets-ontario-get/convictDownload.js";
 
-import * as handler_doAddAllTicketsToConvictionBatch from "../handlers/tickets-ontario-post/doAddAllTicketsToConvictionBatch";
-import * as handler_doClearConvictionBatch from "../handlers/tickets-ontario-post/doClearConvictionBatch";
-import * as handler_doRemoveTicketFromConvictionBatch from "../handlers/tickets-ontario-post/doRemoveTicketFromConvictionBatch";
+import handler_doAddAllTicketsToConvictionBatch from "../handlers/tickets-ontario-post/doAddAllTicketsToConvictionBatch.js";
+import handler_doClearConvictionBatch from "../handlers/tickets-ontario-post/doClearConvictionBatch.js";
+import handler_doRemoveTicketFromConvictionBatch from "../handlers/tickets-ontario-post/doRemoveTicketFromConvictionBatch.js";
 
 
-const router = Router();
+export const router = Router();
 
 
 router.get("/convict",
@@ -38,4 +38,4 @@ router.post("/doRemoveTicketFromConvictionBatch",
   handler_doRemoveTicketFromConvictionBatch.handler);
 
 
-export = router;
+export default router;

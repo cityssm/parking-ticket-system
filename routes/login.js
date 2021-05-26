@@ -1,8 +1,7 @@
-"use strict";
-const express_1 = require("express");
-const configFns = require("../helpers/configFns");
-const usersDB_getUser = require("../helpers/usersDB/getUser");
-const router = express_1.Router();
+import { Router } from "express";
+import * as configFns from "../helpers/configFns.js";
+import * as usersDB_getUser from "../helpers/usersDB/getUser.js";
+export const router = Router();
 const getSafeRedirectURL = (possibleRedirectURL = "") => {
     switch (possibleRedirectURL) {
         case "/tickets":
@@ -54,4 +53,4 @@ router.route("/")
         });
     }
 });
-module.exports = router;
+export default router;
