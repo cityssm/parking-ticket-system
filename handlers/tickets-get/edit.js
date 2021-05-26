@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const parkingDB_getParkingTicket = require("../../helpers/parkingDB/getParkingTicket");
-const parkingDB = require("../../helpers/parkingDB");
-exports.handler = (req, res) => {
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import getParkingTicket from "../../helpers/parkingDB/getParkingTicket.js";
+import * as parkingDB from "../../helpers/parkingDB.js";
+export const handler = (req, res) => {
     const ticketID = parseInt(req.params.ticketID, 10);
-    const ticket = parkingDB_getParkingTicket.getParkingTicket(ticketID, req.session);
+    const ticket = getParkingTicket(ticketID, req.session);
     if (!ticket) {
         return res.redirect("/tickets/?error=ticketNotFound");
     }
@@ -22,3 +19,4 @@ exports.handler = (req, res) => {
         vehicleMakeModelDatalist
     });
 };
+export default handler;

@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getParkingOffences = require("../../helpers/parkingDB/getParkingOffences");
-exports.handler = (_req, res) => {
-    res.json(parkingDB_getParkingOffences.getParkingOffences());
+import getParkingOffences from "../../helpers/parkingDB/getParkingOffences.js";
+export const handler = (_req, res) => {
+    res.json(getParkingOffences());
 };
+export default handler;

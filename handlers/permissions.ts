@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as userFns from "../helpers/userFns";
+import * as userFns from "../helpers/userFns.js";
 
 
 export const adminGetHandler: RequestHandler = (req, res, next) => {

@@ -1,14 +1,14 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords";
-import * as parkingDB_getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
+import getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
+import getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
 
-  const reconciliationRecords = parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords();
+  const reconciliationRecords = getOwnershipReconciliationRecords();
 
-  const lookupErrors = parkingDB_getUnacknowledgedLookupErrorLog.getUnacknowledgedLookupErrorLog(
+  const lookupErrors = getUnacknowledgedLookupErrorLog(
     -1,
     -1
   );
@@ -19,3 +19,6 @@ export const handler: RequestHandler = (_req, res) => {
     errorLog: lookupErrors
   });
 };
+
+
+export default handler;

@@ -1,9 +1,9 @@
 import type { RequestHandler } from "express";
 
-import * as configFns from "../../helpers/configFns";
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as configFns from "../../helpers/configFns.js";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import * as parkingDB from "../../helpers/parkingDB";
+import * as parkingDB from "../../helpers/parkingDB.js";
 
 
 export const handler: RequestHandler = (req, res) => {
@@ -24,3 +24,6 @@ export const handler: RequestHandler = (req, res) => {
     vehicleMakeModelDatalist
   });
 };
+
+
+export default handler;

@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const configFns = require("../../helpers/configFns");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const parkingDB = require("../../helpers/parkingDB");
-exports.handler = (req, res) => {
+import * as configFns from "../../helpers/configFns.js";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as parkingDB from "../../helpers/parkingDB.js";
+export const handler = (req, res) => {
     const ticketNumber = req.params.ticketNumber;
     const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
     return res.render("ticket-edit", {
@@ -19,3 +16,4 @@ exports.handler = (req, res) => {
         vehicleMakeModelDatalist
     });
 };
+export default handler;

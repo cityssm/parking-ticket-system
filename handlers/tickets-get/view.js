@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getParkingTicket = require("../../helpers/parkingDB/getParkingTicket");
-exports.handler = (req, res) => {
+import getParkingTicket from "../../helpers/parkingDB/getParkingTicket.js";
+export const handler = (req, res) => {
     const ticketID = parseInt(req.params.ticketID, 10);
-    const ticket = parkingDB_getParkingTicket.getParkingTicket(ticketID, req.session);
+    const ticket = getParkingTicket(ticketID, req.session);
     if (!ticket) {
         return res.redirect("/tickets/?error=ticketNotFound");
     }

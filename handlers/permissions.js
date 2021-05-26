@@ -1,50 +1,47 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPostHandler = exports.createGetHandler = exports.updateOrOperatorPostHandler = exports.updatePostHandler = exports.updateOrOperatorGetHandler = exports.updateGetHandler = exports.adminPostHandler = exports.adminGetHandler = void 0;
-const userFns = require("../helpers/userFns");
-exports.adminGetHandler = (req, res, next) => {
+import * as userFns from "../helpers/userFns.js";
+export const adminGetHandler = (req, res, next) => {
     if (userFns.userIsAdmin(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
-exports.adminPostHandler = (req, res, next) => {
+export const adminPostHandler = (req, res, next) => {
     if (userFns.userIsAdmin(req)) {
         return next();
     }
     return res.json(userFns.forbiddenJSON);
 };
-exports.updateGetHandler = (req, res, next) => {
+export const updateGetHandler = (req, res, next) => {
     if (userFns.userCanUpdate(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
-exports.updateOrOperatorGetHandler = (req, res, next) => {
+export const updateOrOperatorGetHandler = (req, res, next) => {
     if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
-exports.updatePostHandler = (req, res, next) => {
+export const updatePostHandler = (req, res, next) => {
     if (userFns.userCanUpdate(req)) {
         return next();
     }
     return res.json(userFns.forbiddenJSON);
 };
-exports.updateOrOperatorPostHandler = (req, res, next) => {
+export const updateOrOperatorPostHandler = (req, res, next) => {
     if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
         return next();
     }
     return res.json(userFns.forbiddenJSON);
 };
-exports.createGetHandler = (req, res, next) => {
+export const createGetHandler = (req, res, next) => {
     if (userFns.userCanCreate(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
-exports.createPostHandler = (req, res, next) => {
+export const createPostHandler = (req, res, next) => {
     if (userFns.userCanCreate(req)) {
         return next();
     }

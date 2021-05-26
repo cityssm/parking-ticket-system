@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getParkingTicket from "../../helpers/parkingDB/getParkingTicket";
+import getParkingTicket from "../../helpers/parkingDB/getParkingTicket.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
   const ticketID = parseInt(req.params.ticketID, 10);
 
-  const ticket = parkingDB_getParkingTicket.getParkingTicket(ticketID, req.session);
+  const ticket = getParkingTicket(ticketID, req.session);
 
   if (!ticket) {
     return res.redirect("/tickets/?error=ticketNotFound");

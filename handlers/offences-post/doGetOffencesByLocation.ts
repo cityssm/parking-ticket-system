@@ -1,8 +1,11 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getParkingOffences from "../../helpers/parkingDB/getParkingOffences";
+import { getParkingOffencesByLocationKey } from "../../helpers/parkingDB/getParkingOffences.js";
 
 
 export const handler: RequestHandler = (req, res) => {
-  res.json(parkingDB_getParkingOffences.getParkingOffencesByLocationKey(req.body.locationKey));
+  res.json(getParkingOffencesByLocationKey(req.body.locationKey));
 };
+
+
+export default handler;
