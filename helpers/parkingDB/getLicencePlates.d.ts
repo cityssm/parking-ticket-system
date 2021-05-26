@@ -12,3 +12,4 @@ export declare const getLicencePlates: (queryOptions: GetLicencePlatesQueryOptio
     offset: number;
     licencePlates: pts.LicencePlate[];
 };
+export default getLicencePlates;

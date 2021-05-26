@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.trailerNCIC = void 0;
-exports.trailerNCIC = {
+export const trailerNCIC = {
     "BOMB": "Bombardier",
     "CARG": "Carriage, Inc.",
     "CHRV": "Chateau Recreational Vehicle Div./LaStrada",
@@ -42,3 +39,4 @@ exports.trailerNCIC = {
     "VW": "Veenema & Wiegers, Inc.",
     "WELL": "Wells Cargo, Inc."
 };
+export default trailerNCIC;

@@ -13,4 +13,4 @@ interface LookupErrorLogEntry extends pts.LicencePlate {
     vehicleMakeModel: string;
 }
 export declare const getUnacknowledgedLookupErrorLog: (batchID_or_negOne: number, logIndex_or_negOne: number) => LookupErrorLogEntry[];
-export {};
+export default getUnacknowledgedLookupErrorLog;

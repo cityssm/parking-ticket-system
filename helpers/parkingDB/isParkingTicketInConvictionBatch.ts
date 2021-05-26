@@ -1,6 +1,6 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const isParkingTicketInConvictionBatchWithDB = (db: sqlite.Database, ticketID: number) => {
@@ -39,3 +39,6 @@ export const isParkingTicketInConvictionBatch = (ticketID: number) => {
 
   return result;
 };
+
+
+export default isParkingTicketInConvictionBatch;

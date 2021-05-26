@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.unresolveParkingTicket = void 0;
-const sqlite = require("better-sqlite3");
-const configFns = require("../configFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.unresolveParkingTicket = (ticketID, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import * as configFns from "../configFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const unresolveParkingTicket = (ticketID, reqSession) => {
+    const db = sqlite(dbPath);
     const ticketObj = db.prepare("select recordUpdate_timeMillis from ParkingTickets" +
         " where ticketID = ?" +
         " and recordDelete_timeMillis is null" +
@@ -38,3 +35,4 @@ exports.unresolveParkingTicket = (ticketID, reqSession) => {
         success: (info.changes > 0)
     };
 };
+export default unresolveParkingTicket;

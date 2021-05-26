@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeParkingTicketFromConvictionBatch = void 0;
-const sqlite = require("better-sqlite3");
-const isConvictionBatchUpdatable_1 = require("./isConvictionBatchUpdatable");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
-    const batchIsAvailable = isConvictionBatchUpdatable_1.isConvictionBatchUpdatableWithDB(db, batchID);
+import * as sqlite from "better-sqlite3";
+import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession) => {
+    const db = sqlite(dbPath);
+    const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
     if (!batchIsAvailable) {
         db.close();
         return {
@@ -29,3 +26,4 @@ exports.removeParkingTicketFromConvictionBatch = (batchID, ticketID, reqSession)
         success: info.changes > 0
     };
 };
+export default removeParkingTicketFromConvictionBatch;

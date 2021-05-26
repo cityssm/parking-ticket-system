@@ -1,18 +1,20 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { canUpdateObject } from "../parkingDB";
-import { getParkingLocationWithDB } from "./getParkingLocation";
-import { getLicencePlateOwnerWithDB } from "./getLicencePlateOwner";
-import { getParkingTicketRemarksWithDB } from "./getParkingTicketRemarks";
-import { getParkingTicketStatusesWithDB } from "./getParkingTicketStatuses";
+import { canUpdateObject } from "../parkingDB.js";
+import { getParkingLocationWithDB } from "./getParkingLocation.js";
+import { getLicencePlateOwnerWithDB } from "./getLicencePlateOwner.js";
+import { getParkingTicketRemarksWithDB } from "./getParkingTicketRemarks.js";
+import { getParkingTicketStatusesWithDB } from "./getParkingTicketStatuses.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
-export const getParkingTicket = (ticketID: number, reqSession: Express.Session) => {
+export const getParkingTicket = (ticketID: number, reqSession: expressSession.Session) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -89,3 +91,6 @@ export const getParkingTicket = (ticketID: number, reqSession: Express.Session) 
 
   return ticket;
 };
+
+
+export default getParkingTicket;

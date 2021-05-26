@@ -1,14 +1,16 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { canUpdateObject } from "../parkingDB";
+import { canUpdateObject } from "../parkingDB.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
-export const getParkingTicketStatusesWithDB = (db: sqlite.Database, ticketID: number, reqSession: Express.Session) => {
+export const getParkingTicketStatusesWithDB = (db: sqlite.Database, ticketID: number, reqSession: expressSession.Session) => {
 
   const statusRows: pts.ParkingTicketStatusLog[] =
     db.prepare("select * from ParkingTicketStatusLog" +
@@ -31,7 +33,7 @@ export const getParkingTicketStatusesWithDB = (db: sqlite.Database, ticketID: nu
 };
 
 
-export const getParkingTicketStatuses = (ticketID: number, reqSession: Express.Session) => {
+export const getParkingTicketStatuses = (ticketID: number, reqSession: expressSession.Session) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -43,3 +45,6 @@ export const getParkingTicketStatuses = (ticketID: number, reqSession: Express.S
 
   return statusRows;
 };
+
+
+export default getParkingTicketStatuses;

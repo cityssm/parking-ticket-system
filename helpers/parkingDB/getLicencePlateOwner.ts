@@ -1,11 +1,11 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
-import * as configFns from "../configFns";
-import * as vehicleFns from "../vehicleFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as configFns from "../configFns.js";
+import * as vehicleFns from "../vehicleFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const getLicencePlateOwnerWithDB =
@@ -71,3 +71,6 @@ export const getLicencePlateOwner =
     return ownerRecord;
 
   };
+
+
+export default getLicencePlateOwner;

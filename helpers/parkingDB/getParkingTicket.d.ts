@@ -1,6 +1,4 @@
-/// <reference types="express-serve-static-core" />
-/// <reference types="compression" />
-/// <reference types="express-session" />
-/// <reference types="multer" />
 import type * as pts from "../../types/recordTypes";
-export declare const getParkingTicket: (ticketID: number, reqSession: Express.Session) => pts.ParkingTicket;
+import type * as expressSession from "express-session";
+export declare const getParkingTicket: (ticketID: number, reqSession: expressSession.Session) => pts.ParkingTicket;
+export default getParkingTicket;

@@ -374,3 +374,4 @@ export declare const autoNCIC: {
     ZUND: string;
     ZWIC: string;
 };
+export default autoNCIC;

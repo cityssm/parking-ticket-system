@@ -1,8 +1,8 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
 import type { AddUpdateParkingLocationReturn } from "./getParkingLocations";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const deleteParkingLocation = (locationKey: string): AddUpdateParkingLocationReturn => {
@@ -23,3 +23,6 @@ export const deleteParkingLocation = (locationKey: string): AddUpdateParkingLoca
     success: (info.changes > 0)
   };
 };
+
+
+export default deleteParkingLocation;

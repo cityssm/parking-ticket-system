@@ -6,3 +6,4 @@ export declare const constructionNCIC: {
     NISS: string;
     TOYT: string;
 };
+export default constructionNCIC;

@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteParkingTicketStatus = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.deleteParkingTicketStatus = (ticketID, statusIndex, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const deleteParkingTicketStatus = (ticketID, statusIndex, reqSession) => {
+    const db = sqlite(dbPath);
     const info = db.prepare("update ParkingTicketStatusLog" +
         " set recordDelete_userName = ?," +
         " recordDelete_timeMillis = ?" +
@@ -17,3 +14,4 @@ exports.deleteParkingTicketStatus = (ticketID, statusIndex, reqSession) => {
         success: (info.changes > 0)
     };
 };
+export default deleteParkingTicketStatus;

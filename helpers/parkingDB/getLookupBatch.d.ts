@@ -5,3 +5,4 @@ export interface LookupBatchReturn {
     batch?: pts.LicencePlateLookupBatch;
 }
 export declare const getLookupBatch: (batchID_or_negOne: number) => pts.LicencePlateLookupBatch;
+export default getLookupBatch;

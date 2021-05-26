@@ -1,14 +1,16 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { getNextParkingTicketRemarkIndex } from "./getNextParkingTicketRemarkIndex";
+import getNextParkingTicketRemarkIndex from "./getNextParkingTicketRemarkIndex.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
-export const createParkingTicketRemark = (reqBody: pts.ParkingTicketRemark, reqSession: Express.Session) => {
+export const createParkingTicketRemark = (reqBody: pts.ParkingTicketRemark, reqSession: expressSession.Session) => {
 
   const db = sqlite(dbPath);
 
@@ -40,3 +42,6 @@ export const createParkingTicketRemark = (reqBody: pts.ParkingTicketRemark, reqS
     success: (info.changes > 0)
   };
 };
+
+
+export default createParkingTicketRemark;

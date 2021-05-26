@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createParkingTicketRemark = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const getNextParkingTicketRemarkIndex_1 = require("./getNextParkingTicketRemarkIndex");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.createParkingTicketRemark = (reqBody, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
-    const remarkIndexNew = getNextParkingTicketRemarkIndex_1.getNextParkingTicketRemarkIndex(db, reqBody.ticketID);
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import getNextParkingTicketRemarkIndex from "./getNextParkingTicketRemarkIndex.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const createParkingTicketRemark = (reqBody, reqSession) => {
+    const db = sqlite(dbPath);
+    const remarkIndexNew = getNextParkingTicketRemarkIndex(db, reqBody.ticketID);
     const rightNow = new Date();
     const info = db.prepare("insert into ParkingTicketRemarks" +
         " (ticketID, remarkIndex, remarkDate, remarkTime, remark," +
@@ -19,3 +16,4 @@ exports.createParkingTicketRemark = (reqBody, reqSession) => {
         success: (info.changes > 0)
     };
 };
+export default createParkingTicketRemark;

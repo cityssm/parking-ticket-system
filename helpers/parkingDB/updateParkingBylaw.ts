@@ -1,9 +1,9 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
 import type { AddUpdateParkingBylawReturn } from "./getParkingBylaws";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const updateParkingBylaw = (reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn => {
@@ -23,5 +23,7 @@ export const updateParkingBylaw = (reqBody: pts.ParkingBylaw): AddUpdateParkingB
   return {
     success: (info.changes > 0)
   };
-
 };
+
+
+export default updateParkingBylaw;

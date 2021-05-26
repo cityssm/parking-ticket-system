@@ -28,3 +28,4 @@ export declare const truckNCIC: {
     WILL: string;
     WSTR: string;
 };
+export default truckNCIC;

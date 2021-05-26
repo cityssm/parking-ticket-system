@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isConvictionBatchUpdatable = exports.isConvictionBatchUpdatableWithDB = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.isConvictionBatchUpdatableWithDB = (db, batchID) => {
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const isConvictionBatchUpdatableWithDB = (db, batchID) => {
     const check = db
         .prepare("select lockDate from ParkingTicketConvictionBatches" +
         " where recordDelete_timeMillis is null" +
@@ -14,11 +11,12 @@ exports.isConvictionBatchUpdatableWithDB = (db, batchID) => {
     }
     return true;
 };
-exports.isConvictionBatchUpdatable = (ticketID) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const isConvictionBatchUpdatable = (ticketID) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
-    const result = exports.isConvictionBatchUpdatableWithDB(db, ticketID);
+    const result = isConvictionBatchUpdatableWithDB(db, ticketID);
     db.close();
     return result;
 };
+export default isConvictionBatchUpdatable;

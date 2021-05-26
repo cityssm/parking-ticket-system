@@ -9,11 +9,11 @@
  * and abbreviations or expansions (i.e. GMC instead of General Motors).
  */
 
-import { autoNCIC } from "./ncicCodes/auto";
-import { constructionNCIC } from "./ncicCodes/construction";
-import { motorcycleNCIC } from "./ncicCodes/motorcycle";
-import { trailerNCIC } from "./ncicCodes/trailer";
-import { truckNCIC } from "./ncicCodes/truck";
+import autoNCIC from "./ncicCodes/auto.js";
+import constructionNCIC from "./ncicCodes/construction.js";
+import motorcycleNCIC from "./ncicCodes/motorcycle.js";
+import trailerNCIC from "./ncicCodes/trailer.js";
+import truckNCIC from "./ncicCodes/truck.js";
 
 
 export const vehicleNCIC: { [ncic: string]: string } =

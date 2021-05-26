@@ -58,7 +58,7 @@ router.get("/", (_req, res) => {
 });
 
 router.post("/doGetTickets",
-  handler_doGetTickets.handler);
+  handler_doGetTickets);
 
 /*
  * Ownership Reconciliation
@@ -66,23 +66,23 @@ router.post("/doGetTickets",
 
 router.get("/reconcile",
   permissionHanders.updateGetHandler,
-  handler_reconcile.handler);
+  handler_reconcile);
 
 router.post("/doAcknowledgeLookupError",
   permissionHanders.updatePostHandler,
-  handler_doAcknowledgeLookupError.handler);
+  handler_doAcknowledgeLookupError);
 
 router.post("/doReconcileAsMatch",
   permissionHanders.updatePostHandler,
-  handler_doReconcileAsMatch.handler);
+  handler_doReconcileAsMatch);
 
 router.post("/doReconcileAsError",
   permissionHanders.updatePostHandler,
-  handler_doReconcileAsError.handler);
+  handler_doReconcileAsError);
 
 router.post("/doQuickReconcileMatches",
   permissionHanders.updatePostHandler,
-  handler_doQuickReconcileMatches.handler);
+  handler_doQuickReconcileMatches);
 
 /*
  * Ticket Convictions
@@ -90,27 +90,27 @@ router.post("/doQuickReconcileMatches",
 
 router.post("/doGetRecentConvictionBatches",
   permissionHanders.updateOrOperatorPostHandler,
-  handler_doGetRecentConvictionBatches.handler);
+  handler_doGetRecentConvictionBatches);
 
 router.post("/doGetConvictionBatch",
   permissionHanders.updateOrOperatorPostHandler,
-  handler_doGetConvictionBatch.handler);
+  handler_doGetConvictionBatch);
 
 router.post("/doCreateConvictionBatch",
   permissionHanders.updatePostHandler,
-  handler_doCreateConvictionBatch.handler);
+  handler_doCreateConvictionBatch);
 
 router.post("/doAddTicketToConvictionBatch",
   permissionHanders.updatePostHandler,
-  handler_doAddTicketToConvictionBatch.handler);
+  handler_doAddTicketToConvictionBatch);
 
 router.post("/doLockConvictionBatch",
   permissionHanders.updatePostHandler,
-  handler_doLockConvictionBatch.handler);
+  handler_doLockConvictionBatch);
 
 router.post("/doUnlockConvictionBatch",
   permissionHanders.updatePostHandler,
-  handler_doUnlockConvictionBatch.handler);
+  handler_doUnlockConvictionBatch);
 
 /*
  * New Ticket
@@ -118,79 +118,79 @@ router.post("/doUnlockConvictionBatch",
 
 router.get(["/new", "/new/:ticketNumber"],
   permissionHanders.createGetHandler,
-  handler_new.handler);
+  handler_new);
 
 router.post("/doCreateTicket",
   permissionHanders.createPostHandler,
-  handler_doCreateTicket.handler);
+  handler_doCreateTicket);
 
 router.post("/doUpdateTicket",
   permissionHanders.createPostHandler,
-  handler_doUpdateTicket.handler);
+  handler_doUpdateTicket);
 
 router.post("/doDeleteTicket",
   permissionHanders.createPostHandler,
-  handler_doDeleteTicket.handler);
+  handler_doDeleteTicket);
 
 router.post("/doResolveTicket",
   permissionHanders.createPostHandler,
-  handler_doResolveTicket.handler);
+  handler_doResolveTicket);
 
 router.post("/doUnresolveTicket",
   permissionHanders.createPostHandler,
-  handler_doUnresolveTicket.handler);
+  handler_doUnresolveTicket);
 
 router.post("/doRestoreTicket",
   permissionHanders.updatePostHandler,
-  handler_doRestoreTicket.handler);
+  handler_doRestoreTicket);
 
 /*
  * Ticket Remarks
  */
 
 router.post("/doGetRemarks",
-  handler_doGetRemarks.handler);
+  handler_doGetRemarks);
 
 router.post("/doAddRemark",
   permissionHanders.createPostHandler,
-  handler_doAddRemark.handler);
+  handler_doAddRemark);
 
 router.post("/doUpdateRemark",
   permissionHanders.createPostHandler,
-  handler_doUpdateRemark.handler);
+  handler_doUpdateRemark);
 
 router.post("/doDeleteRemark",
   permissionHanders.createPostHandler,
-  handler_doDeleteRemark.handler);
+  handler_doDeleteRemark);
 
 /*
  * Ticket Statuses
  */
 
 router.post("/doGetStatuses",
-  handler_doGetStatuses.handler);
+  handler_doGetStatuses);
 
 router.post("/doAddStatus",
   permissionHanders.createPostHandler,
-  handler_doAddStatus.handler);
+  handler_doAddStatus);
 
 router.post("/doUpdateStatus",
   permissionHanders.createPostHandler,
-  handler_doUpdateStatus.handler);
+  handler_doUpdateStatus);
 
 router.post("/doDeleteStatus",
   permissionHanders.createPostHandler,
-  handler_doDeleteStatus.handler);
+  handler_doDeleteStatus);
 
 /*
  * Ticket View
  */
 
 router.get("/:ticketID",
-  handler_view.handler);
+  handler_view);
 
 router.get("/byTicketNumber/:ticketNumber",
-  handler_byTicketNumber.handler);
+  handler_byTicketNumber);
 
 /*
  * Ticket Edit
@@ -198,7 +198,7 @@ router.get("/byTicketNumber/:ticketNumber",
 
 router.get("/:ticketID/edit",
   permissionHanders.createGetHandler,
-  handler_edit.handler);
+  handler_edit);
 
 
 export default router;

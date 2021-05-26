@@ -1,10 +1,12 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
-import * as configFns from "../configFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as configFns from "../configFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 export const getLicencePlateExpiryDateFromPieces = (reqBody: pts.ParkingTicket) => {
@@ -41,7 +43,7 @@ export const getLicencePlateExpiryDateFromPieces = (reqBody: pts.ParkingTicket) 
 };
 
 
-export const updateParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
+export const updateParkingTicket = (reqBody: pts.ParkingTicket, reqSession: expressSession.Session) => {
 
   const db = sqlite(dbPath);
 
@@ -159,3 +161,6 @@ export const updateParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
   }
 
 };
+
+
+export default updateParkingTicket;

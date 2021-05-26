@@ -120,3 +120,4 @@ export declare const autoNCIC_NZ: {
     ZUND: string;
     ZWIC: string;
 };
+export default autoNCIC_NZ;

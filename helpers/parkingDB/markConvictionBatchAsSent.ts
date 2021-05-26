@@ -1,13 +1,15 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 export const markConvictionBatchAsSent = (
   batchID: number,
-  reqSession: Express.Session
+  reqSession: expressSession.Session
 ) => {
   const db = sqlite(dbPath);
 
@@ -54,3 +56,6 @@ export const markConvictionBatchAsSent = (
 
   return info.changes > 0;
 };
+
+
+export default markConvictionBatchAsSent;

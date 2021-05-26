@@ -1,11 +1,13 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as configFns from "../configFns";
+import * as configFns from "../configFns.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
-export const unresolveParkingTicket = (ticketID: number, reqSession: Express.Session) => {
+export const unresolveParkingTicket = (ticketID: number, reqSession: expressSession.Session) => {
 
   const db = sqlite(dbPath);
 
@@ -56,3 +58,6 @@ export const unresolveParkingTicket = (ticketID: number, reqSession: Express.Ses
     success: (info.changes > 0)
   };
 };
+
+
+export default unresolveParkingTicket;

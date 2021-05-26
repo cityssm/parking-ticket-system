@@ -1,12 +1,14 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 export const removeLicencePlateFromLookupBatch =
-  (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session) => {
+  (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: expressSession.Session) => {
 
     const db = sqlite(dbPath);
 
@@ -59,3 +61,6 @@ export const removeLicencePlateFromLookupBatch =
     }
 
   };
+
+
+export default removeLicencePlateFromLookupBatch;

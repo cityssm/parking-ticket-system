@@ -6,3 +6,4 @@ export interface AddUpdateParkingBylawReturn {
 }
 export declare const getParkingBylaws: () => pts.ParkingBylaw[];
 export declare const getParkingBylawsWithOffenceStats: () => pts.ParkingBylaw[];
+export default getParkingBylaws;

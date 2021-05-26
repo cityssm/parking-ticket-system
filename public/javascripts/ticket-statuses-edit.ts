@@ -320,7 +320,7 @@ declare const pts: ptsGlobal;
 
     const firstStatusDefinitionObj = pts.getTicketStatus(firstStatusObj.statusKey);
 
-    if (firstStatusDefinitionObj ?.isFinalStatus) {
+    if (firstStatusDefinitionObj?.isFinalStatus) {
 
       const finalizePanelBlockEle = document.createElement("div");
       finalizePanelBlockEle.className = "panel-block is-block";
@@ -417,7 +417,7 @@ declare const pts: ptsGlobal;
       const statusFieldEle = document.getElementById("addStatus--statusField") as HTMLInputElement;
       statusFieldEle.value = "";
 
-      if (statusObj ?.statusField) {
+      if (statusObj?.statusField) {
 
         const fieldEle = statusFieldEle.closest(".field");
         fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField.fieldLabel;
@@ -432,7 +432,7 @@ declare const pts: ptsGlobal;
       const statusField2Ele = document.getElementById("addStatus--statusField2") as HTMLInputElement;
       statusField2Ele.value = "";
 
-      if (statusObj ?.statusField2) {
+      if (statusObj?.statusField2) {
 
         const fieldEle = statusField2Ele.closest(".field");
         fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField2.fieldLabel;
@@ -445,7 +445,7 @@ declare const pts: ptsGlobal;
       const resolveTicketEle = document.getElementById("addStatus--resolveTicket") as HTMLInputElement;
       resolveTicketEle.checked = false;
 
-      if (statusObj ?.isFinalStatus) {
+      if (statusObj?.isFinalStatus) {
 
         resolveTicketEle.closest(".field").classList.remove("is-hidden");
 

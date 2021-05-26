@@ -15,3 +15,6 @@ export const handler: RequestHandler = (req, res) => {
     res.redirect("/tickets/?error=ticketNotFound");
   }
 };
+
+
+export default handler;

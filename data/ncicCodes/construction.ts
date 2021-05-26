@@ -1,5 +1,6 @@
 /* eslint-disable quote-props */
 
+
 export const constructionNCIC = {
   "BOMB": "Bombardier",
   "GMC": "GMC",
@@ -8,3 +9,6 @@ export const constructionNCIC = {
   "NISS": "Nissan",
   "TOYT": "Toyota"
 };
+
+
+export default constructionNCIC;

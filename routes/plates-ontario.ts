@@ -7,7 +7,7 @@ import handler_mtoExportDownload from "../handlers/plates-ontario-get/mtoExportD
 import handler_doGetPlatesAvailableForMTOLookup from "../handlers/plates-ontario-post/doGetPlatesAvailableForMTOLookup.js";
 
 import handler_mtoImport from "../handlers/plates-ontario-get/mtoImport.js";
-import handler_doMTOImportUpload from "../handlers/plates-ontario-post/doMTOImportUpload.js";
+import * as handler_doMTOImportUpload from "../handlers/plates-ontario-post/doMTOImportUpload.js";
 
 
 export const router = Router();
@@ -15,19 +15,19 @@ export const router = Router();
 
 router.get("/mtoExport",
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_mtoExport.handler);
+  handler_mtoExport);
 
 router.post("/doGetPlatesAvailableForMTOLookup",
   permissionHandlers.updatePostHandler,
-  handler_doGetPlatesAvailableForMTOLookup.handler);
+  handler_doGetPlatesAvailableForMTOLookup);
 
 router.get("/mtoExport/:batchID",
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_mtoExportDownload.handler);
+  handler_mtoExportDownload);
 
 router.get("/mtoImport",
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_mtoImport.handler);
+  handler_mtoImport);
 
 router.post("/doMTOImportUpload",
   permissionHandlers.updateOrOperatorPostHandler,

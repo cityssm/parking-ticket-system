@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.constructionNCIC = void 0;
-exports.constructionNCIC = {
+export const constructionNCIC = {
     "BOMB": "Bombardier",
     "GMC": "GMC",
     "HOND": "Honda",
@@ -9,3 +6,4 @@ exports.constructionNCIC = {
     "NISS": "Nissan",
     "TOYT": "Toyota"
 };
+export default constructionNCIC;

@@ -1,13 +1,11 @@
-/// <reference types="express-serve-static-core" />
-/// <reference types="compression" />
-/// <reference types="express-session" />
-/// <reference types="multer" />
-import * as sqlite from "better-sqlite3";
-export declare const resolveParkingTicketWithDB: (db: sqlite.Database, ticketID: number, reqSession: Express.Session) => {
+import sqlite from "better-sqlite3";
+import type * as expressSession from "express-session";
+export declare const resolveParkingTicketWithDB: (db: sqlite.Database, ticketID: number, reqSession: expressSession.Session) => {
     success: boolean;
 };
-export declare const resolveParkingTicket: (ticketID: number, reqSession: Express.Session) => {
+export declare const resolveParkingTicket: (ticketID: number, reqSession: expressSession.Session) => {
     success: {
         success: boolean;
     };
 };
+export default resolveParkingTicket;

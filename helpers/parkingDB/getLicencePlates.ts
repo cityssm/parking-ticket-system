@@ -1,8 +1,8 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
-import { getSplitWhereClauseFilter } from "../parkingDB";
+import { getSplitWhereClauseFilter } from "../parkingDB.js";
 
 import type * as pts from "../../types/recordTypes";
 
@@ -108,3 +108,6 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
   };
 
 };
+
+
+export default getLicencePlates;

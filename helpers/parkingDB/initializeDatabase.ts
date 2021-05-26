@@ -1,8 +1,9 @@
-import * as log from "fancy-log";
+import sqlite from "better-sqlite3";
 
-import * as sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import debug from "debug";
+const debugSQL = debug("parking-ticket-system:parkingDB:initializeDatabase");
 
 
 const createParkingLocations = (parkingDB: sqlite.Database) => {
@@ -266,7 +267,7 @@ export const initializeDatabase = () => {
 
   if (!row) {
 
-    log.warn("Creating parking.db");
+    debugSQL("Creating parking.db");
     doCreate = true;
 
     /*

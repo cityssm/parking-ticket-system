@@ -15,27 +15,27 @@ export const router = Router();
 
 router.get("/convict",
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_convict.handler);
+  handler_convict);
 
 
 router.get("/convict/:batchID",
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_convictDownload.handler);
+  handler_convictDownload);
 
 
 router.post("/doAddAllTicketsToConvictionBatch",
   permissionHandlers.updatePostHandler,
-  handler_doAddAllTicketsToConvictionBatch.handler);
+  handler_doAddAllTicketsToConvictionBatch);
 
 
 router.post("/doClearConvictionBatch",
   permissionHandlers.updatePostHandler,
-  handler_doClearConvictionBatch.handler);
+  handler_doClearConvictionBatch);
 
 
 router.post("/doRemoveTicketFromConvictionBatch",
   permissionHandlers.updatePostHandler,
-  handler_doRemoveTicketFromConvictionBatch.handler);
+  handler_doRemoveTicketFromConvictionBatch);
 
 
 export default router;

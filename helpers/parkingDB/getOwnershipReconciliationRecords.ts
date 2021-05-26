@@ -1,10 +1,10 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
-import * as vehicleFns from "../vehicleFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as vehicleFns from "../vehicleFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export interface ReconciliationRecord extends pts.LicencePlate {
@@ -125,3 +125,6 @@ export const getOwnershipReconciliationRecords = () => {
 
   return records;
 };
+
+
+export default getOwnershipReconciliationRecords;

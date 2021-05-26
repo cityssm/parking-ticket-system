@@ -1,11 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scheduleRun = void 0;
-const log = require("fancy-log");
-const parkingDB = require("../helpers/parkingDB");
-const vehicleFns = require("../helpers/vehicleFns");
-const configFns = require("../helpers/configFns");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
+import * as parkingDB from "../helpers/parkingDB.js";
+import * as vehicleFns from "../helpers/vehicleFns.js";
+import * as configFns from "../helpers/configFns.js";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import debug from "debug";
+const debugTask = debug("parking-ticket-system:task:nhtsaChildProcess");
 const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
@@ -15,25 +13,25 @@ const processNCIC = (index) => {
     if (ncicRecord) {
         cutoffDate = ncicRecord.recordDateMax;
         const vehicleMake = vehicleFns.getMakeFromNCIC(ncicRecord.vehicleNCIC);
-        log("Processing " + vehicleMake);
+        debugTask("Processing " + vehicleMake);
         vehicleFns.getModelsByMake(vehicleMake, () => {
             processNCIC(index + 1);
         });
     }
     else {
         vehicleNCICs = [];
-        exports.scheduleRun();
+        scheduleRun();
     }
 };
-exports.scheduleRun = () => {
+export const scheduleRun = () => {
     const nextScheduleDate = new Date();
     nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
     nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
-    log.info("NHTSA task scheduled for " + nextScheduleDate.toString());
+    debugTask("NHTSA task scheduled for " + nextScheduleDate.toString());
     setTimeout(() => {
-        log("NHTSA task starting");
+        debugTask("NHTSA task starting");
         vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
         processNCIC(0);
     }, nextScheduleDate.getTime() - Date.now());
 };
-exports.scheduleRun();
+scheduleRun();

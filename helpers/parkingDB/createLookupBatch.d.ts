@@ -1,9 +1,6 @@
-/// <reference types="express-serve-static-core" />
-/// <reference types="compression" />
-/// <reference types="express-session" />
-/// <reference types="multer" />
 /// <reference types="integer" />
-export declare const createLookupBatch: (reqSession: Express.Session) => {
+import type * as expressSession from "express-session";
+export declare const createLookupBatch: (reqSession: expressSession.Session) => {
     success: boolean;
     batch: {
         batchID: import("integer").IntLike;
@@ -17,3 +14,4 @@ export declare const createLookupBatch: (reqSession: Express.Session) => {
     success: boolean;
     batch?: undefined;
 };
+export default createLookupBatch;

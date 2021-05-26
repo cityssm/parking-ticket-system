@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDatabaseCleanupCounts = void 0;
-const sqlite = require("better-sqlite3");
-const configFns = require("../configFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getDatabaseCleanupCounts = () => {
+import sqlite from "better-sqlite3";
+import * as configFns from "../configFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getDatabaseCleanupCounts = () => {
     const recordDelete_timeMillisWindow = Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
-    const db = sqlite(databasePaths_1.parkingDB, {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const parkingTickets = db.prepare("select count(*) as cnt from ParkingTickets t" +
@@ -55,3 +52,4 @@ exports.getDatabaseCleanupCounts = () => {
         parkingOffences
     };
 };
+export default getDatabaseCleanupCounts;

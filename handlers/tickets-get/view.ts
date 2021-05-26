@@ -21,3 +21,6 @@ export const handler: RequestHandler = (req, res) => {
     ticket
   });
 };
+
+
+export default handler;

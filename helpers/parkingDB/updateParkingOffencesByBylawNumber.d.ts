@@ -5,3 +5,4 @@ export declare const updateParkingOffencesByBylawNumber: (reqBody: {
     discountDays: string;
     discountOffenceAmount: string;
 }) => AddUpdateParkingBylawReturn;
+export default updateParkingOffencesByBylawNumber;

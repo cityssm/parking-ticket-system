@@ -11,3 +11,6 @@ export const getNextParkingTicketRemarkIndex = (db: sqlite.Database, ticketID: n
 
   return remarkIndexNew;
 };
+
+
+export default getNextParkingTicketRemarkIndex;

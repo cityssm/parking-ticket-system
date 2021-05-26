@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getParkingTicketStatuses = exports.getParkingTicketStatusesWithDB = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const parkingDB_1 = require("../parkingDB");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getParkingTicketStatusesWithDB = (db, ticketID, reqSession) => {
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { canUpdateObject } from "../parkingDB.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getParkingTicketStatusesWithDB = (db, ticketID, reqSession) => {
     const statusRows = db.prepare("select * from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +
         " and ticketID = ?" +
@@ -15,15 +12,16 @@ exports.getParkingTicketStatusesWithDB = (db, ticketID, reqSession) => {
         status.recordType = "status";
         status.statusDateString = dateTimeFns.dateIntegerToString(status.statusDate);
         status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime);
-        status.canUpdate = parkingDB_1.canUpdateObject(status, reqSession);
+        status.canUpdate = canUpdateObject(status, reqSession);
     }
     return statusRows;
 };
-exports.getParkingTicketStatuses = (ticketID, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getParkingTicketStatuses = (ticketID, reqSession) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
-    const statusRows = exports.getParkingTicketStatusesWithDB(db, ticketID, reqSession);
+    const statusRows = getParkingTicketStatusesWithDB(db, ticketID, reqSession);
     db.close();
     return statusRows;
 };
+export default getParkingTicketStatuses;

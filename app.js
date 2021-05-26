@@ -31,7 +31,7 @@ usersDB_init.initializeDatabase();
 parkingDB_init.initializeDatabase();
 dbInit.initNHTSADB();
 export const app = express();
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join("views"));
 app.set("view engine", "ejs");
 app.use(compression());
 app.use((req, _res, next) => {
@@ -49,12 +49,12 @@ const limiter = rateLimit({
     max: 500
 });
 app.use(limiter);
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/docs/images", express.static(path.join(__dirname, "docs", "images")));
-app.use("/fa", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
-app.use("/fontsource-inter", express.static(path.join(__dirname, "node_modules", "@fontsource", "inter", "files")));
-app.use("/fontsource-pt-mono", express.static(path.join(__dirname, "node_modules", "@fontsource", "pt-mono", "files")));
-app.use("/cityssm-bulma-webapp-js", express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js")));
+app.use(express.static(path.join("public")));
+app.use("/docs/images", express.static(path.join("docs", "images")));
+app.use("/fa", express.static(path.join("node_modules", "@fortawesome", "fontawesome-free")));
+app.use("/fontsource-inter", express.static(path.join("node_modules", "@fontsource", "inter", "files")));
+app.use("/fontsource-pt-mono", express.static(path.join("node_modules", "@fontsource", "pt-mono", "files")));
+app.use("/cityssm-bulma-webapp-js", express.static(path.join("node_modules", "@cityssm", "bulma-webapp-js")));
 const SQLiteStore = sqlite(session);
 const sessionCookieName = configFns.getProperty("session.cookieName");
 app.use(session({

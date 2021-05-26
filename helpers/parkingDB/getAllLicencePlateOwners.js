@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllLicencePlateOwners = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const vehicleFns = require("../vehicleFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getAllLicencePlateOwners = (licencePlateCountry, licencePlateProvince, licencePlateNumber) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as vehicleFns from "../vehicleFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getAllLicencePlateOwners = (licencePlateCountry, licencePlateProvince, licencePlateNumber) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const owners = db.prepare("select recordDate, vehicleNCIC, vehicleYear, vehicleColor," +
@@ -25,3 +22,4 @@ exports.getAllLicencePlateOwners = (licencePlateCountry, licencePlateProvince, l
     }
     return owners;
 };
+export default getAllLicencePlateOwners;

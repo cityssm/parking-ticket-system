@@ -19,7 +19,7 @@ router.get("/", (_req, res) => {
 });
 
 
-router.all("/:reportName", handler_reportName.handler);
+router.all("/:reportName", handler_reportName);
 
 
 export default router;

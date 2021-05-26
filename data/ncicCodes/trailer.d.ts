@@ -39,3 +39,4 @@ export declare const trailerNCIC: {
     VW: string;
     WELL: string;
 };
+export default trailerNCIC;

@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createParkingTicket = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const configFns = require("../configFns");
-const updateParkingTicket_1 = require("./updateParkingTicket");
-const databasePaths_1 = require("../../data/databasePaths");
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as configFns from "../configFns.js";
+import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 const hasDuplicateTicket = (db, ticketNumber, issueDate) => {
     const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
         " where recordDelete_timeMillis is null" +
@@ -17,8 +14,8 @@ const hasDuplicateTicket = (db, ticketNumber, issueDate) => {
     }
     return false;
 };
-exports.createParkingTicket = (reqBody, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+export const createParkingTicket = (reqBody, reqSession) => {
+    const db = sqlite(dbPath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
     if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
@@ -32,7 +29,7 @@ exports.createParkingTicket = (reqBody, reqSession) => {
     }
     let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
     if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        const licencePlateExpiryDateReturn = updateParkingTicket_1.getLicencePlateExpiryDateFromPieces(reqBody);
+        const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(reqBody);
         if (licencePlateExpiryDateReturn.success) {
             licencePlateExpiryDate = licencePlateExpiryDateReturn.licencePlateExpiryDate;
         }
@@ -60,3 +57,4 @@ exports.createParkingTicket = (reqBody, reqSession) => {
         nextTicketNumber: ""
     };
 };
+export default createParkingTicket;

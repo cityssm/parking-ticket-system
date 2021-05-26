@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 
 import * as mtoFns from "../../helpers/mtoFns.js";
 
-import * as multer from "multer";
+import multer from "multer";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 

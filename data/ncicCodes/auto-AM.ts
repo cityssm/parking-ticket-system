@@ -1,5 +1,6 @@
 /* eslint-disable quote-props */
 
+
 export const autoNCIC_AM = {
   "ABAR": "Abarth",
   "AC": "A C",
@@ -267,3 +268,6 @@ export const autoNCIC_AM = {
   "MURE": "Murena",
   "MZMA": "Mzma"
 };
+
+
+export default autoNCIC_AM;

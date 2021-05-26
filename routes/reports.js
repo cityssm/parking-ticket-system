@@ -9,5 +9,5 @@ router.get("/", (_req, res) => {
         todayDateString: dateTimeFns.dateToString(rightNow)
     });
 });
-router.all("/:reportName", handler_reportName.handler);
+router.all("/:reportName", handler_reportName);
 export default router;

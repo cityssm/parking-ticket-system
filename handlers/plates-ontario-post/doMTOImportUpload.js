@@ -1,5 +1,5 @@
 import * as mtoFns from "../../helpers/mtoFns.js";
-import * as multer from "multer";
+import multer from "multer";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 export const uploadHandler = upload.single("importFile");

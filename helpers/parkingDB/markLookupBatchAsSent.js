@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.markLookupBatchAsSent = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.markLookupBatchAsSent = (batchID, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const markLookupBatchAsSent = (batchID, reqSession) => {
+    const db = sqlite(dbPath);
     const rightNow = new Date();
     const info = db.prepare("update LicencePlateLookupBatches" +
         " set sentDate = ?," +
@@ -19,3 +16,4 @@ exports.markLookupBatchAsSent = (batchID, reqSession) => {
     db.close();
     return (info.changes > 0);
 };
+export default markLookupBatchAsSent;

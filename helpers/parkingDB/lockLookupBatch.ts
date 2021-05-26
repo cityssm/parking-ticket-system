@@ -1,12 +1,14 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type { LookupBatchReturn } from "./getLookupBatch";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
-export const lockLookupBatch = (batchID: number, reqSession: Express.Session): LookupBatchReturn => {
+export const lockLookupBatch = (batchID: number, reqSession: expressSession.Session): LookupBatchReturn => {
 
   const db = sqlite(dbPath);
 
@@ -73,3 +75,6 @@ export const lockLookupBatch = (batchID: number, reqSession: Express.Session): L
   };
 
 };
+
+
+export default lockLookupBatch;

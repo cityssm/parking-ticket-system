@@ -1,8 +1,5 @@
-/// <reference types="express-serve-static-core" />
-/// <reference types="compression" />
-/// <reference types="express-session" />
-/// <reference types="multer" />
 import type * as pts from "../../types/recordTypes";
+import type * as expressSession from "express-session";
 export interface GetParkingTicketsQueryOptions {
     isResolved?: boolean;
     ticketNumber?: string;
@@ -14,10 +11,11 @@ export interface GetParkingTicketsQueryOptions {
     limit?: number;
     offset?: number;
 }
-export declare const getParkingTickets: (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
+export declare const getParkingTickets: (reqSession: expressSession.Session, queryOptions: GetParkingTicketsQueryOptions) => {
     count: any;
     limit: number;
     offset: number;
     tickets: pts.ParkingTicket[];
 };
-export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: Express.Session) => pts.ParkingTicket[];
+export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: expressSession.Session) => pts.ParkingTicket[];
+export default getParkingTickets;

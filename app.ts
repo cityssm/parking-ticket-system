@@ -54,7 +54,7 @@ export const app = express();
 
 
 // View engine setup
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join("views"));
 app.set("view engine", "ejs");
 
 
@@ -92,22 +92,22 @@ app.use(limiter);
  */
 
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join("public")));
 
 app.use("/docs/images",
-  express.static(path.join(__dirname, "docs", "images")));
+  express.static(path.join("docs", "images")));
 
 app.use("/fa",
-  express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
+  express.static(path.join("node_modules", "@fortawesome", "fontawesome-free")));
 
 app.use("/fontsource-inter",
-  express.static(path.join(__dirname, "node_modules", "@fontsource", "inter", "files")));
+  express.static(path.join("node_modules", "@fontsource", "inter", "files")));
 
 app.use("/fontsource-pt-mono",
-  express.static(path.join(__dirname, "node_modules", "@fontsource", "pt-mono", "files")));
+  express.static(path.join("node_modules", "@fontsource", "pt-mono", "files")));
 
 app.use("/cityssm-bulma-webapp-js",
-  express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js")));
+  express.static(path.join("node_modules", "@cityssm", "bulma-webapp-js")));
 
 
 /*

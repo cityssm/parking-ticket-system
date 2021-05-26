@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createLookupBatch = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.createLookupBatch = (reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const createLookupBatch = (reqSession) => {
+    const db = sqlite(dbPath);
     const rightNow = new Date();
     const info = db.prepare("insert into LicencePlateLookupBatches" +
         " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
@@ -29,3 +26,4 @@ exports.createLookupBatch = (reqSession) => {
         return { success: false };
     }
 };
+export default createLookupBatch;

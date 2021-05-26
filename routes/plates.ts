@@ -27,7 +27,7 @@ router.get("/", (_req, res) => {
 });
 
 router.post("/doGetLicencePlates",
-  handler_doGetLicencePlates.handler);
+  handler_doGetLicencePlates);
 
 
 // Lookup Batches
@@ -35,46 +35,46 @@ router.post("/doGetLicencePlates",
 
 router.post("/doGetUnreceivedLicencePlateLookupBatches",
   permissionHandlers.updateOrOperatorPostHandler,
-  handler_doGetUnreceivedLicencePlateLookupBatches.handler);
+  handler_doGetUnreceivedLicencePlateLookupBatches);
 
 router.post("/doCreateLookupBatch",
   permissionHandlers.updatePostHandler,
-  handler_doCreateLookupBatch.handler);
+  handler_doCreateLookupBatch);
 
 router.post("/doGetLookupBatch",
   permissionHandlers.updateOrOperatorPostHandler,
-  handler_doGetLookupBatch.handler);
+  handler_doGetLookupBatch);
 
 router.post("/doAddLicencePlateToLookupBatch",
   permissionHandlers.updatePostHandler,
-  handler_doAddLicencePlateToLookupBatch.handler);
+  handler_doAddLicencePlateToLookupBatch);
 
 router.post("/doAddAllLicencePlatesToLookupBatch",
   permissionHandlers.updatePostHandler,
-  handler_doAddAllLicencePlatesToLookupBatch.handler);
+  handler_doAddAllLicencePlatesToLookupBatch);
 
 router.post("/doRemoveLicencePlateFromLookupBatch",
   permissionHandlers.updatePostHandler,
-  handler_doRemoveLicencePlateFromLookupBatch.handler);
+  handler_doRemoveLicencePlateFromLookupBatch);
 
 router.post("/doClearLookupBatch",
   permissionHandlers.updatePostHandler,
-  handler_doClearLookupBatch.handler);
+  handler_doClearLookupBatch);
 
 router.post("/doLockLookupBatch",
   permissionHandlers.updatePostHandler,
-  handler_doLockLookupBatch.handler);
+  handler_doLockLookupBatch);
 
 
 router.post("/doGetModelsByMake",
-  handler_doGetModelsByMake.handler);
+  handler_doGetModelsByMake);
 
 
 // View
 
 
 router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber",
-  handler_view.handler);
+  handler_view);
 
 
 export default router;

@@ -1,8 +1,8 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export interface AddUpdateParkingOffenceReturn {
@@ -53,3 +53,6 @@ export const getParkingOffencesByLocationKey = (locationKey: string) => {
 
   return rows;
 };
+
+
+export default getParkingOffences;

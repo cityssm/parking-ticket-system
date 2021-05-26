@@ -1,8 +1,8 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
+import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const deleteParkingOffence = (bylawNumber: string, locationKey: string): AddUpdateParkingOffenceReturn => {
@@ -23,5 +23,7 @@ export const deleteParkingOffence = (bylawNumber: string, locationKey: string): 
   return {
     success: (info.changes > 0)
   };
-
 };
+
+
+export default deleteParkingOffence;

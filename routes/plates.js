@@ -17,15 +17,15 @@ router.get("/", (_req, res) => {
         headTitle: "Licence Plates"
     });
 });
-router.post("/doGetLicencePlates", handler_doGetLicencePlates.handler);
-router.post("/doGetUnreceivedLicencePlateLookupBatches", permissionHandlers.updateOrOperatorPostHandler, handler_doGetUnreceivedLicencePlateLookupBatches.handler);
-router.post("/doCreateLookupBatch", permissionHandlers.updatePostHandler, handler_doCreateLookupBatch.handler);
-router.post("/doGetLookupBatch", permissionHandlers.updateOrOperatorPostHandler, handler_doGetLookupBatch.handler);
-router.post("/doAddLicencePlateToLookupBatch", permissionHandlers.updatePostHandler, handler_doAddLicencePlateToLookupBatch.handler);
-router.post("/doAddAllLicencePlatesToLookupBatch", permissionHandlers.updatePostHandler, handler_doAddAllLicencePlatesToLookupBatch.handler);
-router.post("/doRemoveLicencePlateFromLookupBatch", permissionHandlers.updatePostHandler, handler_doRemoveLicencePlateFromLookupBatch.handler);
-router.post("/doClearLookupBatch", permissionHandlers.updatePostHandler, handler_doClearLookupBatch.handler);
-router.post("/doLockLookupBatch", permissionHandlers.updatePostHandler, handler_doLockLookupBatch.handler);
-router.post("/doGetModelsByMake", handler_doGetModelsByMake.handler);
-router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", handler_view.handler);
+router.post("/doGetLicencePlates", handler_doGetLicencePlates);
+router.post("/doGetUnreceivedLicencePlateLookupBatches", permissionHandlers.updateOrOperatorPostHandler, handler_doGetUnreceivedLicencePlateLookupBatches);
+router.post("/doCreateLookupBatch", permissionHandlers.updatePostHandler, handler_doCreateLookupBatch);
+router.post("/doGetLookupBatch", permissionHandlers.updateOrOperatorPostHandler, handler_doGetLookupBatch);
+router.post("/doAddLicencePlateToLookupBatch", permissionHandlers.updatePostHandler, handler_doAddLicencePlateToLookupBatch);
+router.post("/doAddAllLicencePlatesToLookupBatch", permissionHandlers.updatePostHandler, handler_doAddAllLicencePlatesToLookupBatch);
+router.post("/doRemoveLicencePlateFromLookupBatch", permissionHandlers.updatePostHandler, handler_doRemoveLicencePlateFromLookupBatch);
+router.post("/doClearLookupBatch", permissionHandlers.updatePostHandler, handler_doClearLookupBatch);
+router.post("/doLockLookupBatch", permissionHandlers.updatePostHandler, handler_doLockLookupBatch);
+router.post("/doGetModelsByMake", handler_doGetModelsByMake);
+router.get("/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber", handler_view);
 export default router;

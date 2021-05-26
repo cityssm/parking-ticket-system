@@ -1,16 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getParkingTicketsByLicencePlate = exports.getParkingTickets = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const parkingDB_1 = require("../parkingDB");
-const databasePaths_1 = require("../../data/databasePaths");
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { canUpdateObject, getSplitWhereClauseFilter } from "../parkingDB.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 const addCalculatedFields = (ticket, reqSession) => {
     ticket.recordType = "ticket";
     ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
     ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
     ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-    ticket.canUpdate = parkingDB_1.canUpdateObject(ticket, reqSession);
+    ticket.canUpdate = canUpdateObject(ticket, reqSession);
 };
 const buildWhereClause = (queryOptions) => {
     const sqlParams = [];
@@ -24,12 +21,12 @@ const buildWhereClause = (queryOptions) => {
         }
     }
     if (queryOptions.ticketNumber && queryOptions.ticketNumber !== "") {
-        const filter = parkingDB_1.getSplitWhereClauseFilter("t.ticketNumber", queryOptions.ticketNumber);
+        const filter = getSplitWhereClauseFilter("t.ticketNumber", queryOptions.ticketNumber);
         sqlWhereClause += filter.sqlWhereClause;
         sqlParams.push.apply(sqlParams, filter.sqlParams);
     }
     if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
-        const filter = parkingDB_1.getSplitWhereClauseFilter("t.licencePlateNumber", queryOptions.licencePlateNumber);
+        const filter = getSplitWhereClauseFilter("t.licencePlateNumber", queryOptions.licencePlateNumber);
         sqlWhereClause += filter.sqlWhereClause;
         sqlParams.push.apply(sqlParams, filter.sqlParams);
     }
@@ -58,8 +55,8 @@ const buildWhereClause = (queryOptions) => {
         sqlParams
     };
 };
-exports.getParkingTickets = (reqSession, queryOptions) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getParkingTickets = (reqSession, queryOptions) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const sqlWhereClause = buildWhereClause(queryOptions);
@@ -100,8 +97,8 @@ exports.getParkingTickets = (reqSession, queryOptions) => {
         tickets: rows
     };
 };
-exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProvince, licencePlateNumber, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProvince, licencePlateNumber, reqSession) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const sqlWhereClause = buildWhereClause({
@@ -130,3 +127,4 @@ exports.getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProv
     });
     return rows;
 };
+export default getParkingTickets;

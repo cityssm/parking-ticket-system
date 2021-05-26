@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isParkingTicketConvicted = exports.isParkingTicketConvictedWithDB = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.isParkingTicketConvictedWithDB = (db, ticketID) => {
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const isParkingTicketConvictedWithDB = (db, ticketID) => {
     const convictedStatusCheck = db
         .prepare("select statusIndex from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +
@@ -15,11 +12,12 @@ exports.isParkingTicketConvictedWithDB = (db, ticketID) => {
     }
     return false;
 };
-exports.isParkingTicketConvicted = (ticketID) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const isParkingTicketConvicted = (ticketID) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
-    const result = exports.isParkingTicketConvictedWithDB(db, ticketID);
+    const result = isParkingTicketConvictedWithDB(db, ticketID);
     db.close();
     return result;
 };
+export default isParkingTicketConvicted;

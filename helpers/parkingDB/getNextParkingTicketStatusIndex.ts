@@ -12,3 +12,6 @@ export const getNextParkingTicketStatusIndex = (db: sqlite.Database, ticketID: n
 
   return statusIndexNew;
 };
+
+
+export default getNextParkingTicketStatusIndex;

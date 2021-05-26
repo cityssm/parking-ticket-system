@@ -5,3 +5,4 @@ export interface AddUpdateParkingLocationReturn {
     locations?: pts.ParkingLocation[];
 }
 export declare const getParkingLocations: () => pts.ParkingLocation[];
+export default getParkingLocations;

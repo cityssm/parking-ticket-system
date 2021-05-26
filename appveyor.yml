@@ -15,7 +15,7 @@ install:
   - npm --version
   # install modules
   - sh: npm ci
-  - sh: npm install -g mocha nyc
+  - sh: npm install -g mocha c8
 
 before_test:
   # Download codeclimate test report
@@ -23,7 +23,8 @@ before_test:
   - sh: chmod +x ./codeclimate-test-reporter
 
 test_script:
-  - nyc --reporter=lcov mocha --timeout 30000
+  - cp ./data/config-example.js ./data/config.js
+  - c8 --reporter=lcov mocha --timeout 30000
 
 after_test:
   # Send test result to codeclimate

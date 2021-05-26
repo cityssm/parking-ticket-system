@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateParkingTicket = exports.getLicencePlateExpiryDateFromPieces = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const configFns = require("../configFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getLicencePlateExpiryDateFromPieces = (reqBody) => {
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as configFns from "../configFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getLicencePlateExpiryDateFromPieces = (reqBody) => {
     let licencePlateExpiryDate = 0;
     const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
     const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
@@ -27,8 +24,8 @@ exports.getLicencePlateExpiryDateFromPieces = (reqBody) => {
         licencePlateExpiryDate
     };
 };
-exports.updateParkingTicket = (reqBody, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+export const updateParkingTicket = (reqBody, reqSession) => {
+    const db = sqlite(dbPath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
     if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
@@ -48,7 +45,7 @@ exports.updateParkingTicket = (reqBody, reqSession) => {
     }
     let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
     if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        const licencePlateExpiryDateReturn = exports.getLicencePlateExpiryDateFromPieces(reqBody);
+        const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(reqBody);
         if (licencePlateExpiryDateReturn.success) {
             licencePlateExpiryDate = licencePlateExpiryDateReturn.licencePlateExpiryDate;
         }
@@ -98,3 +95,4 @@ exports.updateParkingTicket = (reqBody, reqSession) => {
         };
     }
 };
+export default updateParkingTicket;

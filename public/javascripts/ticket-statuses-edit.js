@@ -152,7 +152,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         ? ""
                         : "<p class=\"is-size-7\">" +
                             "<strong>" +
-                            ((statusDefinitionObj === null || statusDefinitionObj === void 0 ? void 0 : statusDefinitionObj.statusField) ? statusDefinitionObj.statusField.fieldLabel
+                            ((statusDefinitionObj === null || statusDefinitionObj === void 0 ? void 0 : statusDefinitionObj.statusField)
+                                ? statusDefinitionObj.statusField.fieldLabel
                                 : "") +
                             ":</strong> " +
                             statusObj.statusField +
@@ -161,7 +162,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         ? ""
                         : "<p class=\"is-size-7\">" +
                             "<strong>" +
-                            ((statusDefinitionObj === null || statusDefinitionObj === void 0 ? void 0 : statusDefinitionObj.statusField2) ? statusDefinitionObj.statusField2.fieldLabel
+                            ((statusDefinitionObj === null || statusDefinitionObj === void 0 ? void 0 : statusDefinitionObj.statusField2)
+                                ? statusDefinitionObj.statusField2.fieldLabel
                                 : "") +
                             ":</strong> " +
                             statusObj.statusField2 +

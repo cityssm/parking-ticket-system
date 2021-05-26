@@ -1,5 +1,6 @@
 /* eslint-disable quote-props */
 
+
 export const trailerNCIC = {
   "BOMB": "Bombardier",
   "CARG": "Carriage, Inc.",
@@ -41,3 +42,6 @@ export const trailerNCIC = {
   "VW": "Veenema & Wiegers, Inc.",
   "WELL": "Wells Cargo, Inc."
 };
+
+
+export default trailerNCIC;

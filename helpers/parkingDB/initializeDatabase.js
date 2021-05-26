@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeDatabase = void 0;
-const log = require("fancy-log");
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import debug from "debug";
+const debugSQL = debug("parking-ticket-system:parkingDB:initializeDatabase");
 const createParkingLocations = (parkingDB) => {
     parkingDB.prepare("create table if not exists ParkingLocations (" +
         "locationKey varchar(20) primary key not null," +
@@ -203,14 +201,14 @@ const createLicencePlateLookupErrorLog = (parkingDB) => {
         " on LicencePlateLookupErrorLog (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate)")
         .run();
 };
-exports.initializeDatabase = () => {
-    const parkingDB = sqlite(databasePaths_1.parkingDB);
+export const initializeDatabase = () => {
+    const parkingDB = sqlite(dbPath);
     let doCreate = false;
     const row = parkingDB
         .prepare("select name from sqlite_master where type = 'table' and name = 'ParkingTickets'")
         .get();
     if (!row) {
-        log.warn("Creating parking.db");
+        debugSQL("Creating parking.db");
         doCreate = true;
         createParkingLocations(parkingDB);
         createParkingBylaws(parkingDB);

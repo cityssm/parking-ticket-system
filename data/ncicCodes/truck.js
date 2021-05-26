@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.truckNCIC = void 0;
-exports.truckNCIC = {
+export const truckNCIC = {
     "ACUR": "Acura",
     "AMGN": "AM General",
     "AUST": "Austin",
@@ -31,3 +28,4 @@ exports.truckNCIC = {
     "WILL": "Willys-Overland",
     "WSTR": "Western Star"
 };
+export default truckNCIC;

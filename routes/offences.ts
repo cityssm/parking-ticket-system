@@ -9,15 +9,15 @@ export const router = Router();
 
 
 router.post("/doGetAllLocations",
-  handler_doGetAllLocations.handler);
+  handler_doGetAllLocations);
 
 
 router.post("/doGetOffencesByLocation",
-  handler_doGetOffencesByLocation.handler);
+  handler_doGetOffencesByLocation);
 
 
 router.post("/doGetAllOffences",
-  handler_doGetAllOffences.handler);
+  handler_doGetAllOffences);
 
 
 export default router;

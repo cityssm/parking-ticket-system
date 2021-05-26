@@ -1,9 +1,9 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 interface LookupErrorLogEntry extends pts.LicencePlate {
@@ -69,3 +69,6 @@ export const getUnacknowledgedLookupErrorLog =
 
     return logEntries;
   };
+
+
+export default getUnacknowledgedLookupErrorLog;

@@ -1,9 +1,9 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const getConvictionBatch = (batchID_or_negOne: number) => {
@@ -74,3 +74,6 @@ export const getConvictionBatch = (batchID_or_negOne: number) => {
 
   return batch;
 };
+
+
+export default getConvictionBatch;

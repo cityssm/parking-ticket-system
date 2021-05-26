@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getParkingLocations = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getParkingLocations = () => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getParkingLocations = () => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const rows = db.prepare("select locationKey, locationName, locationClassKey" +
@@ -15,3 +12,4 @@ exports.getParkingLocations = () => {
     db.close();
     return rows;
 };
+export default getParkingLocations;

@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getConvictionBatch = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getConvictionBatch = (batchID_or_negOne) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getConvictionBatch = (batchID_or_negOne) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const baseBatchSQL = "select batchID, batchDate, lockDate, sentDate," +
@@ -53,3 +50,4 @@ exports.getConvictionBatch = (batchID_or_negOne) => {
     db.close();
     return batch;
 };
+export default getConvictionBatch;

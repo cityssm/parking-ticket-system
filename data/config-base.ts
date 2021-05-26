@@ -1,5 +1,6 @@
 import type * as pts from "../types/configTypes";
 
+
 export const baseParkingTicketStatuses: pts.ConfigParkingTicketStatus[] = [
   {
     statusKey: "paid",

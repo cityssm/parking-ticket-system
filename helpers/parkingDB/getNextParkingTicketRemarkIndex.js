@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNextParkingTicketRemarkIndex = void 0;
-exports.getNextParkingTicketRemarkIndex = (db, ticketID) => {
+export const getNextParkingTicketRemarkIndex = (db, ticketID) => {
     const remarkIndexNew = db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
         " from ParkingTicketRemarks" +
         " where ticketID = ?")
@@ -9,3 +6,4 @@ exports.getNextParkingTicketRemarkIndex = (db, ticketID) => {
         .remarkIndexMax + 1;
     return remarkIndexNew;
 };
+export default getNextParkingTicketRemarkIndex;

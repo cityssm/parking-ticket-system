@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateParkingTicketStatus = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.updateParkingTicketStatus = (reqBody, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const updateParkingTicketStatus = (reqBody, reqSession) => {
+    const db = sqlite(dbPath);
     const info = db.prepare("update ParkingTicketStatusLog" +
         " set statusDate = ?," +
         " statusTime = ?," +
@@ -24,3 +21,4 @@ exports.updateParkingTicketStatus = (reqBody, reqSession) => {
         success: (info.changes > 0)
     };
 };
+export default updateParkingTicketStatus;

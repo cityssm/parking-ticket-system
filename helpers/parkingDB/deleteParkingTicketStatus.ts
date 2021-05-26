@@ -1,9 +1,11 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
-export const deleteParkingTicketStatus = (ticketID: number, statusIndex: number, reqSession: Express.Session) => {
+export const deleteParkingTicketStatus = (ticketID: number, statusIndex: number, reqSession: expressSession.Session) => {
 
   const db = sqlite(dbPath);
 
@@ -24,3 +26,6 @@ export const deleteParkingTicketStatus = (ticketID: number, statusIndex: number,
     success: (info.changes > 0)
   };
 };
+
+
+export default deleteParkingTicketStatus;

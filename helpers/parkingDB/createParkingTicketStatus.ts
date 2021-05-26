@@ -1,16 +1,18 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { getNextParkingTicketStatusIndex } from "./getNextParkingTicketStatusIndex";
-import { resolveParkingTicketWithDB } from "./resolveParkingTicket";
+import getNextParkingTicketStatusIndex from "./getNextParkingTicketStatusIndex.js";
+import { resolveParkingTicketWithDB } from "./resolveParkingTicket.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 export const createParkingTicketStatusWithDB =
-  (db: sqlite.Database, reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) => {
+  (db: sqlite.Database, reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: expressSession.Session, resolveTicket: boolean) => {
 
     // Get new status index
 
@@ -50,7 +52,7 @@ export const createParkingTicketStatusWithDB =
 
 
 export const createParkingTicketStatus =
-  (reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: Express.Session, resolveTicket: boolean) => {
+  (reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: expressSession.Session, resolveTicket: boolean) => {
 
     const db = sqlite(dbPath);
 
@@ -60,3 +62,6 @@ export const createParkingTicketStatus =
 
     return result;
   };
+
+
+export default createParkingTicketStatus;

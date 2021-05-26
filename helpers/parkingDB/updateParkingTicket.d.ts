@@ -1,8 +1,5 @@
-/// <reference types="express-serve-static-core" />
-/// <reference types="compression" />
-/// <reference types="express-session" />
-/// <reference types="multer" />
 import type * as pts from "../../types/recordTypes";
+import type * as expressSession from "express-session";
 export declare const getLicencePlateExpiryDateFromPieces: (reqBody: pts.ParkingTicket) => {
     success: boolean;
     message: string;
@@ -12,10 +9,11 @@ export declare const getLicencePlateExpiryDateFromPieces: (reqBody: pts.ParkingT
     licencePlateExpiryDate: number;
     message?: undefined;
 };
-export declare const updateParkingTicket: (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
+export declare const updateParkingTicket: (reqBody: pts.ParkingTicket, reqSession: expressSession.Session) => {
     success: boolean;
     message: string;
 } | {
     success: boolean;
     message?: undefined;
 };
+export default updateParkingTicket;

@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isParkingTicketInConvictionBatch = exports.isParkingTicketInConvictionBatchWithDB = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.isParkingTicketInConvictionBatchWithDB = (db, ticketID) => {
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const isParkingTicketInConvictionBatchWithDB = (db, ticketID) => {
     const batchStatusCheck = db
         .prepare("select statusField from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +
@@ -20,11 +17,12 @@ exports.isParkingTicketInConvictionBatchWithDB = (db, ticketID) => {
         inBatch: false
     };
 };
-exports.isParkingTicketInConvictionBatch = (ticketID) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const isParkingTicketInConvictionBatch = (ticketID) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
-    const result = exports.isParkingTicketInConvictionBatchWithDB(db, ticketID);
+    const result = isParkingTicketInConvictionBatchWithDB(db, ticketID);
     db.close();
     return result;
 };
+export default isParkingTicketInConvictionBatch;

@@ -15,3 +15,4 @@ export declare const motorcycleNCIC: {
     VESP: string;
     YAMA: string;
 };
+export default motorcycleNCIC;

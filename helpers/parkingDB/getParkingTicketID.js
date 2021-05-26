@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getParkingTicketID = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getParkingTicketID = (ticketNumber) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+import * as sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getParkingTicketID = (ticketNumber) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const ticketRow = db.prepare("select ticketID" +
@@ -20,3 +17,4 @@ exports.getParkingTicketID = (ticketNumber) => {
     }
     return null;
 };
+export default getParkingTicketID;

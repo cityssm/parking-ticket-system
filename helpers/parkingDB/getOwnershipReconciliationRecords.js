@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOwnershipReconciliationRecords = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const vehicleFns = require("../vehicleFns");
-const databasePaths_1 = require("../../data/databasePaths");
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as vehicleFns from "../vehicleFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 const addCalculatedFields = (record) => {
     record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
     record.ticket_licencePlateExpiryDateString =
@@ -20,8 +17,8 @@ const addCalculatedFields = (record) => {
     record.isLicencePlateExpiryDateMatch =
         (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate);
 };
-exports.getOwnershipReconciliationRecords = () => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getOwnershipReconciliationRecords = () => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const records = db.prepare("select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
@@ -69,3 +66,4 @@ exports.getOwnershipReconciliationRecords = () => {
     records.forEach(addCalculatedFields);
     return records;
 };
+export default getOwnershipReconciliationRecords;

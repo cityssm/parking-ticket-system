@@ -1,5 +1,6 @@
 /* eslint-disable quote-props */
 
+
 export const motorcycleNCIC = {
   "BMW": "BMW",
   "BOMB": "Bombardier",
@@ -17,3 +18,6 @@ export const motorcycleNCIC = {
   "VESP": "Vespa",
   "YAMA": "Yamaha"
 };
+
+
+export default motorcycleNCIC;

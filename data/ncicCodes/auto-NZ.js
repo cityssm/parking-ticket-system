@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.autoNCIC_NZ = void 0;
-exports.autoNCIC_NZ = {
+export const autoNCIC_NZ = {
     "NARD": "Mardi-Danese",
     "NASH": "Nash",
     "NISS": "Nissan",
@@ -123,3 +120,4 @@ exports.autoNCIC_NZ = {
     "ZUND": "Zundapp",
     "ZWIC": "Zwickau"
 };
+export default autoNCIC_NZ;

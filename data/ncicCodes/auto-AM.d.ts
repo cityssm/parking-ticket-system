@@ -253,3 +253,4 @@ export declare const autoNCIC_AM: {
     MURE: string;
     MZMA: string;
 };
+export default autoNCIC_AM;

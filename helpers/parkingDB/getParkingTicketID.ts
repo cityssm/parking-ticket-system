@@ -1,6 +1,6 @@
 import * as sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const getParkingTicketID = (ticketNumber: string) => {
@@ -25,3 +25,6 @@ export const getParkingTicketID = (ticketNumber: string) => {
 
   return null;
 };
+
+
+export default getParkingTicketID;

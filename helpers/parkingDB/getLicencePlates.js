@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLicencePlates = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-const parkingDB_1 = require("../parkingDB");
-exports.getLicencePlates = (queryOptions) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { getSplitWhereClauseFilter } from "../parkingDB.js";
+export const getLicencePlates = (queryOptions) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     let sqlParams = [];
     let sqlInnerWhereClause = " where recordDelete_timeMillis is null";
     if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
-        const filter = parkingDB_1.getSplitWhereClauseFilter("licencePlateNumber", queryOptions.licencePlateNumber);
+        const filter = getSplitWhereClauseFilter("licencePlateNumber", queryOptions.licencePlateNumber);
         sqlInnerWhereClause += filter.sqlWhereClause;
         sqlParams.push.apply(sqlParams, filter.sqlParams);
     }
@@ -67,3 +64,4 @@ exports.getLicencePlates = (queryOptions) => {
         licencePlates: rows
     };
 };
+export default getLicencePlates;

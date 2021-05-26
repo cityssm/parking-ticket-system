@@ -8,3 +8,4 @@ export declare const getDatabaseCleanupCounts: () => {
     parkingBylaws: any;
     parkingOffences: any;
 };
+export default getDatabaseCleanupCounts;

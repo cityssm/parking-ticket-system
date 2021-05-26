@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateParkingOffence = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.updateParkingOffence = (reqBody) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const updateParkingOffence = (reqBody) => {
+    const db = sqlite(dbPath);
     const info = db.prepare("update ParkingOffences" +
         " set parkingOffence = ?," +
         " offenceAmount = ?," +
@@ -20,3 +17,4 @@ exports.updateParkingOffence = (reqBody) => {
         success: (info.changes > 0)
     };
 };
+export default updateParkingOffence;

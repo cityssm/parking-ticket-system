@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLicencePlateOwner = exports.getLicencePlateOwnerWithDB = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const configFns = require("../configFns");
-const vehicleFns = require("../vehicleFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getLicencePlateOwnerWithDB = (db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore) => {
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as configFns from "../configFns.js";
+import * as vehicleFns from "../vehicleFns.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const getLicencePlateOwnerWithDB = (db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore) => {
     const licencePlateCountryAlias = configFns.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
     const licencePlateProvinceAlias = (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})[licencePlateProvince] || licencePlateProvince;
     const possibleOwners = db.prepare("select * from LicencePlateOwners" +
@@ -30,11 +27,12 @@ exports.getLicencePlateOwnerWithDB = (db, licencePlateCountry, licencePlateProvi
     }
     return null;
 };
-exports.getLicencePlateOwner = (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getLicencePlateOwner = (licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
-    const ownerRecord = exports.getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
+    const ownerRecord = getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
     db.close();
     return ownerRecord;
 };
+export default getLicencePlateOwner;

@@ -1,13 +1,13 @@
-import * as parkingDB_getParkingTicketStatuses from "./getParkingTicketStatuses";
-import * as parkingDB_createParkingTicketStatus from "./createParkingTicketStatus";
-import * as parkingDB_updateParkingTicketStatus from "./updateParkingTicketStatus";
-import * as parkingDB_deleteParkingTicketStatus from "./deleteParkingTicketStatus";
+import parkingDB_getParkingTicketStatuses from "./getParkingTicketStatuses.js";
+import parkingDB_createParkingTicketStatus from "./createParkingTicketStatus.js";
+import parkingDB_updateParkingTicketStatus from "./updateParkingTicketStatus.js";
+import parkingDB_deleteParkingTicketStatus from "./deleteParkingTicketStatus.js";
 
 
-export const getParkingTicketStatuses = parkingDB_getParkingTicketStatuses.getParkingTicketStatuses;
+export const getParkingTicketStatuses = parkingDB_getParkingTicketStatuses;
 
-export const createParkingTicketStatus = parkingDB_createParkingTicketStatus.createParkingTicketStatus;
+export const createParkingTicketStatus = parkingDB_createParkingTicketStatus;
 
-export const updateParkingTicketStatus = parkingDB_updateParkingTicketStatus.updateParkingTicketStatus;
+export const updateParkingTicketStatus = parkingDB_updateParkingTicketStatus;
 
-export const deleteParkingTicketStatus = parkingDB_deleteParkingTicketStatus.deleteParkingTicketStatus;
+export const deleteParkingTicketStatus = parkingDB_deleteParkingTicketStatus;

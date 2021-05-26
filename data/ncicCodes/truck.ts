@@ -1,5 +1,6 @@
 /* eslint-disable quote-props */
 
+
 export const truckNCIC = {
   "ACUR": "Acura",
   "AMGN": "AM General",
@@ -30,3 +31,6 @@ export const truckNCIC = {
   "WILL": "Willys-Overland",
   "WSTR": "Western Star"
 };
+
+
+export default truckNCIC;

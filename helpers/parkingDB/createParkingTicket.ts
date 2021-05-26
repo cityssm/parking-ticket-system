@@ -1,12 +1,14 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
-import * as configFns from "../configFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as configFns from "../configFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket";
+import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 const hasDuplicateTicket = (db: sqlite.Database, ticketNumber: string, issueDate: number) => {
@@ -25,7 +27,7 @@ const hasDuplicateTicket = (db: sqlite.Database, ticketNumber: string, issueDate
 };
 
 
-export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Express.Session) => {
+export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: expressSession.Session) => {
 
   const db = sqlite(dbPath);
 
@@ -105,3 +107,6 @@ export const createParkingTicket = (reqBody: pts.ParkingTicket, reqSession: Expr
     nextTicketNumber: "" // populated in handler
   };
 };
+
+
+export default createParkingTicket;

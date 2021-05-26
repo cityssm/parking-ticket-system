@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.autoNCIC_AM = void 0;
-exports.autoNCIC_AM = {
+export const autoNCIC_AM = {
     "ABAR": "Abarth",
     "AC": "A C",
     "ACAD": "Acadian (GM of Canada)",
@@ -256,3 +253,4 @@ exports.autoNCIC_AM = {
     "MURE": "Murena",
     "MZMA": "Mzma"
 };
+export default autoNCIC_AM;

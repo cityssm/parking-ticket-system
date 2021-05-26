@@ -1,14 +1,16 @@
 import * as sqlite from "better-sqlite3";
 
-import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable";
+import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 export const removeParkingTicketFromConvictionBatch = (
   batchID: number,
   ticketID: number,
-  reqSession: Express.Session
+  reqSession: expressSession.Session
 ) => {
 
   const db = sqlite(dbPath);
@@ -53,3 +55,6 @@ export const removeParkingTicketFromConvictionBatch = (
     success: info.changes > 0
   };
 };
+
+
+export default removeParkingTicketFromConvictionBatch;

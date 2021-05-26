@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.motorcycleNCIC = void 0;
-exports.motorcycleNCIC = {
+export const motorcycleNCIC = {
     "BMW": "BMW",
     "BOMB": "Bombardier",
     "BOND": "Bond",
@@ -18,3 +15,4 @@ exports.motorcycleNCIC = {
     "VESP": "Vespa",
     "YAMA": "Yamaha"
 };
+export default motorcycleNCIC;

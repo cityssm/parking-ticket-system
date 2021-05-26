@@ -26,3 +26,4 @@ export interface ReconciliationRecord extends pts.LicencePlate {
     isLicencePlateExpiryDateMatch: boolean;
 }
 export declare const getOwnershipReconciliationRecords: () => ReconciliationRecord[];
+export default getOwnershipReconciliationRecords;

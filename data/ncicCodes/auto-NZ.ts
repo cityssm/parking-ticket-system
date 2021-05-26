@@ -1,5 +1,6 @@
 /* eslint-disable quote-props */
 
+
 export const autoNCIC_NZ = {
   "NARD": "Mardi-Danese",
   "NASH": "Nash",
@@ -132,3 +133,6 @@ export const autoNCIC_NZ = {
   "ZUND": "Zundapp",
   "ZWIC": "Zwickau"
 };
+
+
+export default autoNCIC_NZ;

@@ -1,11 +1,13 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { canUpdateObject, getSplitWhereClauseFilter } from "../parkingDB";
+import { canUpdateObject, getSplitWhereClauseFilter } from "../parkingDB.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 export interface GetParkingTicketsQueryOptions {
@@ -21,7 +23,7 @@ export interface GetParkingTicketsQueryOptions {
 }
 
 
-const addCalculatedFields = (ticket: pts.ParkingTicket, reqSession: Express.Session) => {
+const addCalculatedFields = (ticket: pts.ParkingTicket, reqSession: expressSession.Session) => {
 
   ticket.recordType = "ticket";
 
@@ -96,7 +98,7 @@ const buildWhereClause = (queryOptions: GetParkingTicketsQueryOptions) => {
 };
 
 
-export const getParkingTickets = (reqSession: Express.Session, queryOptions: GetParkingTicketsQueryOptions) => {
+export const getParkingTickets = (reqSession: expressSession.Session, queryOptions: GetParkingTicketsQueryOptions) => {
 
   const db = sqlite(dbPath, {
     readonly: true
@@ -158,7 +160,7 @@ export const getParkingTickets = (reqSession: Express.Session, queryOptions: Get
 
 export const getParkingTicketsByLicencePlate =
   (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string,
-    reqSession: Express.Session) => {
+    reqSession: expressSession.Session) => {
 
     const db = sqlite(dbPath, {
       readonly: true
@@ -194,3 +196,6 @@ export const getParkingTicketsByLicencePlate =
 
     return rows;
   };
+
+
+export default getParkingTickets;
