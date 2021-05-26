@@ -1,27 +1,13 @@
-import * as log from "fancy-log";
+import config from "../data/config.js";
 
 import type * as configTypes from "../types/configTypes";
 import type * as recordTypes from "../types/recordTypes";
-
-/*
- * LOAD CONFIGURATION
- */
-
-let config = "";
-
-try {
-  config = require("../data/config");
-} catch (_e) {
-  log.warn("Using data/config-default.js");
-  config = require("../data/config-default");
-}
 
 
 /*
  * SET UP FALLBACK VALUES
  */
 
-// tslint:disable-next-line:no-any
 const configFallbackValues = new Map<string, any>();
 
 configFallbackValues.set("application.applicationName", "Parking Ticket System");
@@ -85,50 +71,6 @@ configFallbackValues.set("databaseCleanup.windowDays", 30);
  */
 
 
-type PropertyName =
-  "admin.defaultPassword" |
-
-  "application.applicationName" |
-  "application.logoURL" |
-  "application.httpPort" |
-  "application.https" |
-
-  "databaseCleanup.windowDays" |
-
-  "defaults.country" |
-  "defaults.province" |
-
-  "licencePlateCountryAliases" |
-  "licencePlateProvinceAliases" |
-  "licencePlateProvinces" |
-  "locationClasses" |
-
-  "parkingOffences.accountNumber.pattern" |
-
-  "parkingTickets.licencePlateExpiryDate.includeDay" |
-
-  "parkingTickets.ticketNumber.fieldLabel" |
-  "parkingTickets.ticketNumber.isUnique" |
-  "parkingTickets.ticketNumber.nextTicketNumberFn" |
-  "parkingTickets.ticketNumber.pattern" |
-
-  "parkingTicketStatuses" |
-
-  "session.cookieName" |
-  "session.doKeepAlive" |
-  "session.maxAgeMillis" |
-  "session.secret" |
-
-  "user.createUpdateWindowMillis" |
-  "user.defaultProperties" |
-
-  "application.feature_mtoExportImport" |
-  "mtoExportImport.authorizedUser" |
-
-  "application.task_nhtsa.runTask" |
-  "application.task_nhtsa.executeHour";
-
-
 export function getProperty(propertyName: "admin.defaultPassword"): string;
 
 export function getProperty(propertyName: "application.applicationName"): string;
@@ -173,7 +115,7 @@ export function getProperty(propertyName: "application.task_nhtsa.runTask"): boo
 export function getProperty(propertyName: "application.task_nhtsa.executeHour"): number;
 
 
-export function getProperty(propertyName: PropertyName) {
+export function getProperty(propertyName: string) {
 
   const propertyNameSplit = propertyName.split(".");
 

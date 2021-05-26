@@ -1,15 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLicencePlateLocationProperties = exports.getParkingTicketStatus = exports.keepAliveMillis = exports.getProperty = void 0;
-const log = require("fancy-log");
-let config = "";
-try {
-    config = require("../data/config");
-}
-catch (_e) {
-    log.warn("Using data/config-default.js");
-    config = require("../data/config-default");
-}
+import config from "../data/config.js";
 const configFallbackValues = new Map();
 configFallbackValues.set("application.applicationName", "Parking Ticket System");
 configFallbackValues.set("application.logoURL", "/images/noParking.svg");
@@ -49,7 +38,7 @@ configFallbackValues.set("licencePlateProvinceAliases", {});
 configFallbackValues.set("licencePlateProvinces", {});
 configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
-function getProperty(propertyName) {
+export function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");
     let currentObj = config;
     for (const propertyNamePiece of propertyNameSplit) {
@@ -62,13 +51,12 @@ function getProperty(propertyName) {
     }
     return currentObj;
 }
-exports.getProperty = getProperty;
-exports.keepAliveMillis = getProperty("session.doKeepAlive")
+export const keepAliveMillis = getProperty("session.doKeepAlive")
     ? Math.max(getProperty("session.maxAgeMillis") / 2, getProperty("session.maxAgeMillis") - (10 * 60 * 1000))
     : 0;
 const parkingTicketStatusMap = new Map();
 let parkingTicketStatusMapIsLoaded = false;
-exports.getParkingTicketStatus = (statusKey) => {
+export const getParkingTicketStatus = (statusKey) => {
     if (!parkingTicketStatusMapIsLoaded) {
         const parkingTicketStatusList = getProperty("parkingTicketStatuses");
         for (const parkingTicketStatusObj of parkingTicketStatusList) {
@@ -78,7 +66,7 @@ exports.getParkingTicketStatus = (statusKey) => {
     }
     return parkingTicketStatusMap.get(statusKey);
 };
-exports.getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
+export const getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
     const licencePlateProvinceDefault = {
         provinceShortName: originalLicencePlateProvince,
         color: "#000",

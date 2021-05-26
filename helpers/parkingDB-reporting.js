@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getReportRowsColumns = void 0;
-const sqlite = require("better-sqlite3");
-const configFns = require("../helpers/configFns");
-const databasePaths_1 = require("../data/databasePaths");
+import * as sqlite from "better-sqlite3";
+import * as configFns from "../helpers/configFns.js";
+import { parkingDB as dbPath } from "../data/databasePaths.js";
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis) => {
     return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== ""
         ? possibleRecordDeleteTimeMillis
@@ -200,7 +197,7 @@ reportDefinitions.set("cleanup-parkingLocations", {
         " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)"
 });
 const executeQuery = (sql, params) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const stmt = db.prepare(sql);
@@ -214,7 +211,7 @@ const executeQuery = (sql, params) => {
         columns
     };
 };
-exports.getReportRowsColumns = (reportName, reqQuery) => {
+export const getReportRowsColumns = (reportName, reqQuery) => {
     if (!reportDefinitions.has(reportName)) {
         return null;
     }

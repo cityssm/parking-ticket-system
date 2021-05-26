@@ -1,6 +1,7 @@
-import * as log from "fancy-log";
+import sqlite from "better-sqlite3";
 
-import * as sqlite from "better-sqlite3";
+import debug from "debug";
+const debugSQL = debug("parking-ticket-system:dbInit");
 
 
 export const initNHTSADB = () => {
@@ -13,7 +14,7 @@ export const initNHTSADB = () => {
 
   if (!row) {
 
-    log.warn("Creating nhtsa.db.");
+    debugSQL("Creating nhtsa.db.");
     doCreate = true;
 
     nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +

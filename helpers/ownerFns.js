@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFormattedOwnerAddress = void 0;
-exports.getFormattedOwnerAddress = (owner) => {
+export const getFormattedOwnerAddress = (owner) => {
     const fieldPrefix = ("ownerName1" in owner ? "" : "owner_");
     return owner[fieldPrefix + "ownerName1"] + "\n" +
         (owner[fieldPrefix + "ownerName2"] && owner[fieldPrefix + "ownerName2"] !== ""

@@ -1,14 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.initNHTSADB = void 0;
-const log = require("fancy-log");
-const sqlite = require("better-sqlite3");
-exports.initNHTSADB = () => {
+import sqlite from "better-sqlite3";
+import debug from "debug";
+const debugSQL = debug("parking-ticket-system:dbInit");
+export const initNHTSADB = () => {
     const nhtsaDB = sqlite("data/nhtsa.db");
     let doCreate = false;
     const row = nhtsaDB.prepare("select name from sqlite_master where type = 'table' and name = 'MakeModel'").get();
     if (!row) {
-        log.warn("Creating nhtsa.db.");
+        debugSQL("Creating nhtsa.db.");
         doCreate = true;
         nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +
             "searchString varchar(50) primary key not null," +

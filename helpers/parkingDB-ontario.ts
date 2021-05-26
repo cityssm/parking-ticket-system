@@ -1,10 +1,10 @@
 import * as sqlite from "better-sqlite3";
 
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+
+import { parkingDB as dbPath } from "../data/databasePaths.js";
 
 import type { ParkingTicket } from "../types/recordTypes";
-
-import { parkingDB as dbPath } from "../data/databasePaths";
 
 
 interface MTO_AvailableLicencePlate {

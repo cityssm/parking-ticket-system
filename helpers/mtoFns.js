@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportConvictionBatch = exports.exportLicencePlateBatch = exports.importLicencePlateOwnership = exports.parsePKRD = exports.sixDigitDateNumberToEightDigit = exports.twoDigitYearToFourDigit = void 0;
-const sqlite = require("better-sqlite3");
-const parkingDB_getConvictionBatch = require("./parkingDB/getConvictionBatch");
-const parkingDB_markConvictionBatchAsSent = require("./parkingDB/markConvictionBatchAsSent");
-const parkingDB_getLookupBatch = require("./parkingDB/getLookupBatch");
-const parkingDB_markLookupBatchAsSent = require("./parkingDB/markLookupBatchAsSent");
-const configFns = require("./configFns");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const databasePaths_1 = require("../data/databasePaths");
+import sqlite from "better-sqlite3";
+import parkingDB_getConvictionBatch from "./parkingDB/getConvictionBatch.js";
+import parkingDB_markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent.js";
+import parkingDB_getLookupBatch from "./parkingDB/getLookupBatch.js";
+import parkingDB_markLookupBatchAsSent from "./parkingDB/markLookupBatchAsSent.js";
+import * as configFns from "./configFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { parkingDB as dbPath } from "../data/databasePaths.js";
 let currentDate;
 let currentDateNumber;
 let currentDatePrefix;
@@ -20,7 +17,7 @@ const resetCurrentDate = () => {
     currentDatePrefix = currentYearPrefix * 10000;
 };
 resetCurrentDate();
-exports.twoDigitYearToFourDigit = (twoDigitYear) => {
+export const twoDigitYearToFourDigit = (twoDigitYear) => {
     const fourDigitYear = twoDigitYear + currentYearPrefix;
     if (fourDigitYear > currentDate.getFullYear() + 10) {
         return fourDigitYear - 100;
@@ -30,7 +27,7 @@ exports.twoDigitYearToFourDigit = (twoDigitYear) => {
     }
     return fourDigitYear;
 };
-exports.sixDigitDateNumberToEightDigit = (sixDigitDateNumber) => {
+export const sixDigitDateNumberToEightDigit = (sixDigitDateNumber) => {
     const eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
     if (eightDigitDateNumber > currentDateNumber) {
         return eightDigitDateNumber - 1000000;
@@ -50,19 +47,19 @@ const parsePKRA = (rowData) => {
         if (rawSentDate === "") {
             return false;
         }
-        record.sentDate = exports.sixDigitDateNumberToEightDigit(parseInt(rawSentDate, 10));
+        record.sentDate = sixDigitDateNumberToEightDigit(parseInt(rawSentDate, 10));
         const rawRecordDate = rowData.substring(29, 35).trim();
         if (rawRecordDate === "") {
             return false;
         }
-        record.recordDate = exports.sixDigitDateNumberToEightDigit(parseInt(rawRecordDate, 10));
+        record.recordDate = sixDigitDateNumberToEightDigit(parseInt(rawRecordDate, 10));
         return record;
     }
     catch (e) {
         return false;
     }
 };
-exports.parsePKRD = (rowData) => {
+export const parsePKRD = (rowData) => {
     if (!rowData.startsWith("PKRD")) {
         return false;
     }
@@ -87,7 +84,7 @@ exports.parsePKRD = (rowData) => {
             licencePlateExpiryDate: 0
         };
         record.licencePlateNumber = rowData.substring(4, 14).trim();
-        record.issueDate = exports.sixDigitDateNumberToEightDigit(parseInt(rowData.substring(14, 20), 10));
+        record.issueDate = sixDigitDateNumberToEightDigit(parseInt(rowData.substring(14, 20), 10));
         record.ticketNumber = rowData.substring(20, 28).trim();
         record.driverLicenceNumber = rowData.substring(32, 47).trim();
         record.ownerGenderKey = rowData.substring(53, 54);
@@ -108,11 +105,11 @@ exports.parsePKRD = (rowData) => {
         }
         record.ownerPostalCode = rowData.substring(144, 150).trim();
         record.vehicleNCIC = rowData.substring(150, 154).trim();
-        record.vehicleYear = exports.twoDigitYearToFourDigit(parseInt(rowData.substring(154, 156), 10));
+        record.vehicleYear = twoDigitYearToFourDigit(parseInt(rowData.substring(154, 156), 10));
         record.vehicleColor = rowData.substring(166, 169).trim();
         record.errorCode = rowData.substring(169, 175).trim();
         record.errorMessage = rowData.substring(175, 204).trim();
-        const expiryYear = exports.twoDigitYearToFourDigit(parseInt(rowData.substring(204, 206), 10));
+        const expiryYear = twoDigitYearToFourDigit(parseInt(rowData.substring(204, 206), 10));
         const expiryDate = new Date(expiryYear, (parseInt(rowData.substring(206, 208), 10) - 1) + 1, 1);
         expiryDate.setDate(expiryDate.getDate() - 1);
         record.licencePlateExpiryDate = dateTimeFns.dateToInteger(expiryDate);
@@ -126,7 +123,7 @@ exports.parsePKRD = (rowData) => {
         return false;
     }
 };
-exports.importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
+export const importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
     const ownershipDataRows = ownershipData.split("\n");
     if (ownershipDataRows.length === 0) {
         return {
@@ -142,7 +139,7 @@ exports.importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
             message: "An error occurred while trying to parse the first row of the file."
         };
     }
-    const db = sqlite(databasePaths_1.parkingDB);
+    const db = sqlite(dbPath);
     const batchRow = db.prepare("select sentDate from LicencePlateLookupBatches" +
         " where batchID = ?" +
         " and recordDelete_timeMillis is null" +
@@ -173,7 +170,7 @@ exports.importLicencePlateOwnership = (batchID, ownershipData, reqSession) => {
     let insertedRecordCount = 0;
     const rightNowMillis = Date.now();
     for (const ownershipDataRow of ownershipDataRows) {
-        const recordRow = exports.parsePKRD(ownershipDataRow);
+        const recordRow = parsePKRD(ownershipDataRow);
         if (recordRow) {
             rowCount += 1;
             if (recordRow.errorCode !== "") {
@@ -244,12 +241,12 @@ const exportBatch = (sentDate, batchEntries) => {
         recordCountPadded + newline;
     return output;
 };
-exports.exportLicencePlateBatch = (batchID, reqSession) => {
+export const exportLicencePlateBatch = (batchID, reqSession) => {
     parkingDB_markLookupBatchAsSent.markLookupBatchAsSent(batchID, reqSession);
     const batch = parkingDB_getLookupBatch.getLookupBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);
 };
-exports.exportConvictionBatch = (batchID, reqSession) => {
+export const exportConvictionBatch = (batchID, reqSession) => {
     parkingDB_markConvictionBatchAsSent.markConvictionBatchAsSent(batchID, reqSession);
     const batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);

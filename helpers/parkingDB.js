@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDistinctLicencePlateOwnerVehicleNCICs = exports.getSplitWhereClauseFilter = exports.getRecentParkingTicketVehicleMakeModelValues = exports.canUpdateObject = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const configFns = require("./configFns");
-const databasePaths_1 = require("../data/databasePaths");
-exports.canUpdateObject = (obj, reqSession) => {
+import sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import * as configFns from "./configFns.js";
+import { parkingDB as dbPath } from "../data/databasePaths.js";
+export const canUpdateObject = (obj, reqSession) => {
     const userProperties = reqSession.user.userProperties;
     let canUpdate = false;
     if (!reqSession) {
@@ -37,8 +34,8 @@ exports.canUpdateObject = (obj, reqSession) => {
     }
     return canUpdate;
 };
-exports.getRecentParkingTicketVehicleMakeModelValues = () => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getRecentParkingTicketVehicleMakeModelValues = () => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const sixMonthsAgo = new Date();
@@ -59,7 +56,7 @@ exports.getRecentParkingTicketVehicleMakeModelValues = () => {
     }
     return vehicleMakeModelList;
 };
-exports.getSplitWhereClauseFilter = (columnName, searchString) => {
+export const getSplitWhereClauseFilter = (columnName, searchString) => {
     let sqlWhereClause = "";
     const sqlParams = [];
     const ticketNumberPieces = searchString.toLowerCase().split(" ");
@@ -72,8 +69,8 @@ exports.getSplitWhereClauseFilter = (columnName, searchString) => {
         sqlParams
     };
 };
-exports.getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const rows = db.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +

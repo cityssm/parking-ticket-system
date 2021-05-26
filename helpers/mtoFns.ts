@@ -1,15 +1,15 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as parkingDB_getConvictionBatch from "./parkingDB/getConvictionBatch";
-import * as parkingDB_markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent";
+import parkingDB_getConvictionBatch from "./parkingDB/getConvictionBatch.js";
+import parkingDB_markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent.js";
 
-import * as parkingDB_getLookupBatch from "./parkingDB/getLookupBatch";
-import * as parkingDB_markLookupBatchAsSent from "./parkingDB/markLookupBatchAsSent";
+import parkingDB_getLookupBatch from "./parkingDB/getLookupBatch.js";
+import parkingDB_markLookupBatchAsSent from "./parkingDB/markLookupBatchAsSent.js";
 
 import * as configFns from "./configFns";
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import { parkingDB as dbPath } from "../data/databasePaths";
+import { parkingDB as dbPath } from "../data/databasePaths.js";
 
 
 let currentDate: Date;

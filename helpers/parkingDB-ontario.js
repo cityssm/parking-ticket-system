@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getParkingTicketsAvailableForMTOConvictionBatch = exports.getLicencePlatesAvailableForMTOLookupBatch = void 0;
-const sqlite = require("better-sqlite3");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const databasePaths_1 = require("../data/databasePaths");
-exports.getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysAgo) => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+import * as sqlite from "better-sqlite3";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { parkingDB as dbPath } from "../data/databasePaths.js";
+export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysAgo) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     let issueDateNumber = 1e8;
@@ -46,8 +43,8 @@ exports.getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysA
     }
     return plates;
 };
-exports.getParkingTicketsAvailableForMTOConvictionBatch = () => {
-    const db = sqlite(databasePaths_1.parkingDB, {
+export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const issueDate = new Date();
