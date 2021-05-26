@@ -2,3 +2,4 @@ export declare const tryResetPassword: (userName: string, oldPasswordPlain: stri
     success: boolean;
     message: string;
 };
+export default tryResetPassword;

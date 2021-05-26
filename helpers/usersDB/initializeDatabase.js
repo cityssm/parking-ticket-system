@@ -1,15 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeDatabase = void 0;
-const log = require("fancy-log");
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.initializeDatabase = () => {
-    const usersDB = sqlite(databasePaths_1.usersDB);
+import sqlite from "better-sqlite3";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
+import debug from "debug";
+const debugSQL = debug("parking-ticket-system:usersDB:initializeDatabase");
+export const initializeDatabase = () => {
+    const usersDB = sqlite(dbPath);
     let doCreate = false;
     const row = usersDB.prepare("select name from sqlite_master where type = 'table' and name = 'Users'").get();
     if (!row) {
-        log.warn("Creating users.db." +
+        debugSQL("Creating users.db." +
             " To get started creating users, set the 'admin.defaultPassword' property in your config.js file.");
         doCreate = true;
         usersDB.prepare("create table if not exists Users (" +
@@ -29,3 +27,4 @@ exports.initializeDatabase = () => {
     usersDB.close();
     return doCreate;
 };
+export default initializeDatabase;

@@ -1,9 +1,9 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as bcrypt from "bcrypt";
-import * as userFns from "../userFns";
+import bcrypt from "bcrypt";
+import * as userFns from "../userFns.js";
 
-import { usersDB as dbPath } from "../../data/databasePaths";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const tryResetPassword = (userName: string, oldPasswordPlain: string, newPasswordPlain: string) => {
@@ -51,3 +51,6 @@ export const tryResetPassword = (userName: string, oldPasswordPlain: string, new
     message: "Password updated successfully."
   };
 };
+
+
+export default tryResetPassword;

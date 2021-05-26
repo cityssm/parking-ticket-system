@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.tryResetPassword = void 0;
-const sqlite = require("better-sqlite3");
-const bcrypt = require("bcrypt");
-const userFns = require("../userFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.tryResetPassword = (userName, oldPasswordPlain, newPasswordPlain) => {
-    const db = sqlite(databasePaths_1.usersDB);
+import sqlite from "better-sqlite3";
+import bcrypt from "bcrypt";
+import * as userFns from "../userFns.js";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
+export const tryResetPassword = (userName, oldPasswordPlain, newPasswordPlain) => {
+    const db = sqlite(dbPath);
     const row = db.prepare("select passwordHash from Users" +
         " where userName = ?" +
         " and isActive = 1")
@@ -37,3 +34,4 @@ exports.tryResetPassword = (userName, oldPasswordPlain, newPasswordPlain) => {
         message: "Password updated successfully."
     };
 };
+export default tryResetPassword;

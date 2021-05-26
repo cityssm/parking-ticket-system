@@ -1,8 +1,8 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 import fetch from "node-fetch";
 
-import * as ncic from "../data/ncicCodes";
-import { trailerNCIC } from "../data/ncicCodes/trailer";
+import * as ncic from "../data/ncicCodes.js";
+import { trailerNCIC } from "../data/ncicCodes/trailer.js";
 
 import type { NHTSAMakeModel } from "../types/recordTypes";
 

@@ -3,3 +3,4 @@ export declare const createUser: (reqBody: {
     lastName: string;
     firstName: string;
 }) => string | false;
+export default createUser;

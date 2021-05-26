@@ -3,3 +3,4 @@ export declare const updateUser: (reqBody: {
     lastName: string;
     firstName: string;
 }) => number;
+export default updateUser;

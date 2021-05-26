@@ -1,6 +1,6 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { usersDB as dbPath } from "../../data/databasePaths";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const inactivateUser = (userName: string) => {
@@ -17,3 +17,6 @@ export const inactivateUser = (userName: string) => {
 
   return info.changes;
 };
+
+
+export default inactivateUser;

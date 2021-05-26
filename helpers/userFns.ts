@@ -1,10 +1,9 @@
 import type { Request, Response } from "express";
-import type * as pts from "../types/recordTypes";
 
 
 const getPermission = (req: Request, permissionName: string): boolean => {
 
-  const user = req.session ?.user as pts.User;
+  const user = req.session?.user;
 
   if (!user) {
     return false;

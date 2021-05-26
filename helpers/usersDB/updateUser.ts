@@ -1,6 +1,6 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { usersDB as dbPath } from "../../data/databasePaths";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const updateUser = (reqBody: {
@@ -26,3 +26,6 @@ export const updateUser = (reqBody: {
 
   return info.changes;
 };
+
+
+export default updateUser;

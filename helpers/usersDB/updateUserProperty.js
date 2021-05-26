@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserProperty = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.updateUserProperty = (reqBody) => {
-    const db = sqlite(databasePaths_1.usersDB);
+import sqlite from "better-sqlite3";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
+export const updateUserProperty = (reqBody) => {
+    const db = sqlite(dbPath);
     let info;
     if (reqBody.propertyValue === "") {
         info = db.prepare("delete from UserProperties" +
@@ -21,3 +18,4 @@ exports.updateUserProperty = (reqBody) => {
     db.close();
     return info.changes;
 };
+export default updateUserProperty;

@@ -1,10 +1,10 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as configFns from "../configFns";
+import * as configFns from "../configFns.js";
+
+import { usersDB as dbPath } from "../../data/databasePaths.js";
 
 import type { UserProperties } from "../../types/recordTypes";
-
-import { usersDB as dbPath } from "../../data/databasePaths";
 
 
 export const getUserProperties = (userName: string) => {
@@ -29,3 +29,6 @@ export const getUserProperties = (userName: string) => {
 
   return userProperties;
 };
+
+
+export default getUserProperties;

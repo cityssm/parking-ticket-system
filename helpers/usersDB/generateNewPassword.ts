@@ -1,11 +1,11 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 
-import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
-import * as userFns from "../userFns";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
+import * as userFns from "../userFns.js";
 
-import { usersDB as dbPath } from "../../data/databasePaths";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const generateNewPassword = (userName: string) => {
@@ -24,3 +24,6 @@ export const generateNewPassword = (userName: string) => {
 
   return newPasswordPlain;
 };
+
+
+export default generateNewPassword;

@@ -1,15 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateNewPassword = void 0;
-const sqlite = require("better-sqlite3");
-const bcrypt = require("bcrypt");
-const stringFns = require("@cityssm/expressjs-server-js/stringFns");
-const userFns = require("../userFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.generateNewPassword = (userName) => {
+import sqlite from "better-sqlite3";
+import bcrypt from "bcrypt";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
+import * as userFns from "../userFns.js";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
+export const generateNewPassword = (userName) => {
     const newPasswordPlain = stringFns.generatePassword();
     const hash = bcrypt.hashSync(userFns.getHashString(userName, newPasswordPlain), 10);
-    const db = sqlite(databasePaths_1.usersDB);
+    const db = sqlite(dbPath);
     db.prepare("update Users" +
         " set passwordHash = ?" +
         " where userName = ?")
@@ -17,3 +14,4 @@ exports.generateNewPassword = (userName) => {
     db.close();
     return newPasswordPlain;
 };
+export default generateNewPassword;

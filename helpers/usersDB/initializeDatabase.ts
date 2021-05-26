@@ -1,8 +1,9 @@
-import * as log from "fancy-log";
+import sqlite from "better-sqlite3";
 
-import * as sqlite from "better-sqlite3";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
 
-import { usersDB as dbPath } from "../../data/databasePaths";
+import debug from "debug";
+const debugSQL = debug("parking-ticket-system:usersDB:initializeDatabase");
 
 
 export const initializeDatabase = () => {
@@ -15,7 +16,7 @@ export const initializeDatabase = () => {
 
   if (!row) {
 
-    log.warn("Creating users.db." +
+    debugSQL("Creating users.db." +
       " To get started creating users, set the 'admin.defaultPassword' property in your config.js file.");
 
     doCreate = true;
@@ -39,5 +40,7 @@ export const initializeDatabase = () => {
   usersDB.close();
 
   return doCreate;
-
 };
+
+
+export default initializeDatabase;

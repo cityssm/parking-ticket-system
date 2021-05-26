@@ -3,3 +3,4 @@ export declare const updateUserProperty: (reqBody: {
     propertyName: string;
     propertyValue: string;
 }) => number;
+export default updateUserProperty;

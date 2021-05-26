@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserProperties = void 0;
-const sqlite = require("better-sqlite3");
-const configFns = require("../configFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getUserProperties = (userName) => {
-    const db = sqlite(databasePaths_1.usersDB, {
+import sqlite from "better-sqlite3";
+import * as configFns from "../configFns.js";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
+export const getUserProperties = (userName) => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const userProperties = Object.assign({}, configFns.getProperty("user.defaultProperties"));
@@ -19,3 +16,4 @@ exports.getUserProperties = (userName) => {
     db.close();
     return userProperties;
 };
+export default getUserProperties;

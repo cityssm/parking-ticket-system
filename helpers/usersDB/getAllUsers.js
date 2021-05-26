@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllUsers = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getAllUsers = () => {
-    const db = sqlite(databasePaths_1.usersDB, {
+import sqlite from "better-sqlite3";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
+export const getAllUsers = () => {
+    const db = sqlite(dbPath, {
         readonly: true
     });
     const rows = db.prepare("select userName, firstName, lastName" +
@@ -15,3 +12,4 @@ exports.getAllUsers = () => {
     db.close();
     return rows;
 };
+export default getAllUsers;

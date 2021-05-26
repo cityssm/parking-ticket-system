@@ -1,11 +1,11 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 
-import * as configFns from "../configFns";
-import type { User, UserProperties } from "../../types/recordTypes";
+import * as configFns from "../configFns.js";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
 
-import { usersDB as dbPath } from "../../data/databasePaths";
+import type { User, UserProperties } from "../../types/recordTypes.js";
 
 
 export const getUser = (userNameSubmitted: string, passwordPlain: string): User => {
@@ -112,3 +112,6 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
     userProperties
   };
 };
+
+
+export default getUser;

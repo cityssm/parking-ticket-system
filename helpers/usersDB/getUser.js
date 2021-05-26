@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = void 0;
-const sqlite = require("better-sqlite3");
-const bcrypt = require("bcrypt");
-const configFns = require("../configFns");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.getUser = (userNameSubmitted, passwordPlain) => {
-    const db = sqlite(databasePaths_1.usersDB);
+import sqlite from "better-sqlite3";
+import bcrypt from "bcrypt";
+import * as configFns from "../configFns.js";
+import { usersDB as dbPath } from "../../data/databasePaths.js";
+export const getUser = (userNameSubmitted, passwordPlain) => {
+    const db = sqlite(dbPath);
     const row = db.prepare("select userName, passwordHash, isActive" +
         " from Users" +
         " where userName = ?")
@@ -70,3 +67,4 @@ exports.getUser = (userNameSubmitted, passwordPlain) => {
         userProperties
     };
 };
+export default getUser;

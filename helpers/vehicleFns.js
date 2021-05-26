@@ -1,19 +1,7 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isNCICExclusivelyTrailer = exports.getMakeFromNCIC = exports.getModelsByMake = exports.getModelsByMakeFromCache = void 0;
-const sqlite = require("better-sqlite3");
-const node_fetch_1 = require("node-fetch");
-const ncic = require("../data/ncicCodes");
-const trailer_1 = require("../data/ncicCodes/trailer");
+import sqlite from "better-sqlite3";
+import fetch from "node-fetch";
+import * as ncic from "../data/ncicCodes.js";
+import { trailerNCIC } from "../data/ncicCodes/trailer.js";
 const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
 const dbPath = "data/nhtsa.db";
@@ -25,14 +13,14 @@ const getModelsByMakeFromDB = (makeSearchString, db) => {
         " order by makeName, modelName")
         .all(makeSearchString);
 };
-exports.getModelsByMakeFromCache = (makeSearchStringOriginal) => {
+export const getModelsByMakeFromCache = (makeSearchStringOriginal) => {
     const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
     const db = sqlite(dbPath);
     const makeModelResults = getModelsByMakeFromDB(makeSearchString, db);
     db.close();
     return makeModelResults;
 };
-exports.getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
+export const getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
     const makeSearchString = makeSearchStringOriginal.trim().toLowerCase();
     const db = sqlite(dbPath);
     const queryCloseCallbackFn = () => {
@@ -62,8 +50,8 @@ exports.getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
             .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis);
     }
     if (useAPI) {
-        node_fetch_1.default(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
-            .then((response) => __awaiter(void 0, void 0, void 0, function* () { return yield response.json(); }))
+        fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
+            .then(async (response) => await response.json())
             .then((data) => {
             db.prepare("update MakeModelSearchHistory" +
                 " set resultCount = ?" +
@@ -94,11 +82,11 @@ exports.getModelsByMake = (makeSearchStringOriginal, callbackFn) => {
         queryCloseCallbackFn();
     }
 };
-exports.getMakeFromNCIC = (vehicleNCIC) => {
+export const getMakeFromNCIC = (vehicleNCIC) => {
     return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
 };
-exports.isNCICExclusivelyTrailer = (vehicleNCIC) => {
-    if (trailer_1.trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
+export const isNCICExclusivelyTrailer = (vehicleNCIC) => {
+    if (trailerNCIC.hasOwnProperty(vehicleNCIC) && !ncic.vehicleNCIC.hasOwnProperty(vehicleNCIC)) {
         return true;
     }
     return false;
