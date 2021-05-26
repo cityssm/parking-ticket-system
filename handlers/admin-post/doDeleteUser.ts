@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
 
-import * as usersDB_inactivateUser from "../../helpers/usersDB/inactivateUser";
+import inactivateUser from "../../helpers/usersDB/inactivateUser.js";
 
-import { forbiddenJSON } from "../../helpers/userFns";
+import { forbiddenJSON } from "../../helpers/userFns.js";
 
 
 export const handler: RequestHandler = (req, res) => {
@@ -16,7 +16,10 @@ export const handler: RequestHandler = (req, res) => {
 
   }
 
-  const success = usersDB_inactivateUser.inactivateUser(userNameToDelete);
+  const success = inactivateUser(userNameToDelete);
 
   return res.json({ success });
 };
+
+
+export default handler;

@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getParkingLocations from "../../helpers/parkingDB/getParkingLocations";
-import * as parkingDB_getParkingBylaws from "../../helpers/parkingDB/getParkingBylaws";
-import * as parkingDB_getParkingOffences from "../../helpers/parkingDB/getParkingOffences";
+import parkingDB_getParkingLocations from "../../helpers/parkingDB/getParkingLocations.js";
+import parkingDB_getParkingBylaws from "../../helpers/parkingDB/getParkingBylaws.js";
+import parkingDB_getParkingOffences from "../../helpers/parkingDB/getParkingOffences.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
@@ -18,3 +18,6 @@ export const handler: RequestHandler = (_req, res) => {
     offences
   });
 };
+
+
+export default handler;

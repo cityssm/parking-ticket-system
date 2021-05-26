@@ -1,11 +1,11 @@
 import type { RequestHandler } from "express";
 
-import * as usersDB_createUser from "../../helpers/usersDB/createUser";
+import createUser from "../../helpers/usersDB/createUser.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const newPassword = usersDB_createUser.createUser(req.body);
+  const newPassword = createUser(req.body);
 
   if (!newPassword) {
 
@@ -22,3 +22,6 @@ export const handler: RequestHandler = (req, res) => {
     });
   }
 };
+
+
+export default handler;

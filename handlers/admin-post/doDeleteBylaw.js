@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getParkingBylaws = require("../../helpers/parkingDB/getParkingBylaws");
-const parkingDB_deleteParkingBylaw = require("../../helpers/parkingDB/deleteParkingBylaw");
-exports.handler = (req, res) => {
-    const results = parkingDB_deleteParkingBylaw.deleteParkingBylaw(req.body.bylawNumber);
+import { getParkingBylawsWithOffenceStats } from "../../helpers/parkingDB/getParkingBylaws.js";
+import deleteParkingBylaw from "../../helpers/parkingDB/deleteParkingBylaw.js";
+export const handler = (req, res) => {
+    const results = deleteParkingBylaw(req.body.bylawNumber);
     if (results.success) {
-        results.bylaws = parkingDB_getParkingBylaws.getParkingBylawsWithOffenceStats();
+        results.bylaws = getParkingBylawsWithOffenceStats();
     }
     return res.json(results);
 };

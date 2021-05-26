@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getParkingBylaws from "../../helpers/parkingDB/getParkingBylaws";
+import parkingDB_getParkingBylaws from "../../helpers/parkingDB/getParkingBylaws.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
@@ -12,3 +12,6 @@ export const handler: RequestHandler = (_req, res) => {
     bylaws
   });
 };
+
+
+export default handler;

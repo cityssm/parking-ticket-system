@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getParkingLocations from "../../helpers/parkingDB/getParkingLocations";
+import parkingDB_getParkingLocations from "../../helpers/parkingDB/getParkingLocations.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
@@ -12,3 +12,6 @@ export const handler: RequestHandler = (_req, res) => {
     locations
   });
 };
+
+
+export default handler;

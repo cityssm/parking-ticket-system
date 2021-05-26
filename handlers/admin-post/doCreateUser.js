@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const usersDB_createUser = require("../../helpers/usersDB/createUser");
-exports.handler = (req, res) => {
-    const newPassword = usersDB_createUser.createUser(req.body);
+import createUser from "../../helpers/usersDB/createUser.js";
+export const handler = (req, res) => {
+    const newPassword = createUser(req.body);
     if (!newPassword) {
         res.json({
             success: false,
@@ -17,3 +14,4 @@ exports.handler = (req, res) => {
         });
     }
 };
+export default handler;

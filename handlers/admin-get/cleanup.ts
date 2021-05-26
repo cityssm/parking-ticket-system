@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getDatabaseCleanupCounts from "../../helpers/parkingDB/getDatabaseCleanupCounts";
+import parkingDB_getDatabaseCleanupCounts from "../../helpers/parkingDB/getDatabaseCleanupCounts.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
@@ -12,3 +12,6 @@ export const handler: RequestHandler = (_req, res) => {
     counts
   });
 };
+
+
+export default handler;

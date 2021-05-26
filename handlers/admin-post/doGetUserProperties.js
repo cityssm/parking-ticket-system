@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const usersDB_getUserProperties = require("../../helpers/usersDB/getUserProperties");
-exports.handler = (req, res) => {
-    const userProperties = usersDB_getUserProperties.getUserProperties(req.body.userName);
+import getUserProperties from "../../helpers/usersDB/getUserProperties.js";
+export const handler = (req, res) => {
+    const userProperties = getUserProperties(req.body.userName);
     return res.json(userProperties);
 };
+export default handler;

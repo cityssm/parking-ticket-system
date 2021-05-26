@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_getParkingLocations = require("../../helpers/parkingDB/getParkingLocations");
-const parkingDB_addParkingLocation = require("../../helpers/parkingDB/addParkingLocation");
-exports.handler = (req, res) => {
-    const results = parkingDB_addParkingLocation.addParkingLocation(req.body);
+import getParkingLocations from "../../helpers/parkingDB/getParkingLocations.js";
+import addParkingLocation from "../../helpers/parkingDB/addParkingLocation.js";
+export const handler = (req, res) => {
+    const results = addParkingLocation(req.body);
     if (results.success) {
-        results.locations = parkingDB_getParkingLocations.getParkingLocations();
+        results.locations = getParkingLocations();
     }
     return res.json(results);
 };
+export default handler;

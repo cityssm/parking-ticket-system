@@ -1,40 +1,38 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const configFns = require("../../helpers/configFns");
-const parkingDB_cleanupParkingTicketsTable = require("../../helpers/parkingDB/cleanupParkingTicketsTable");
-const parkingDB_cleanupParkingTicketRemarksTable = require("../../helpers/parkingDB/cleanupParkingTicketRemarksTable");
-const parkingDB_cleanupParkingTicketStatusLog = require("../../helpers/parkingDB/cleanupParkingTicketStatusLog");
-const parkingDB_cleanupLicencePlateOwnersTable = require("../../helpers/parkingDB/cleanupLicencePlateOwnersTable");
-const parkingDB_cleanupParkingBylawsTable = require("../../helpers/parkingDB/cleanupParkingBylawsTable");
-const parkingDB_cleanupParkingLocationsTable = require("../../helpers/parkingDB/cleanupParkingLocationsTable");
-const parkingDB_cleanupParkingOffencesTable = require("../../helpers/parkingDB/cleanupParkingOffencesTable");
-exports.handler = (req, res) => {
+import * as configFns from "../../helpers/configFns.js";
+import cleanupParkingTicketsTable from "../../helpers/parkingDB/cleanupParkingTicketsTable.js";
+import cleanupParkingTicketRemarksTable from "../../helpers/parkingDB/cleanupParkingTicketRemarksTable.js";
+import cleanupParkingTicketStatusLog from "../../helpers/parkingDB/cleanupParkingTicketStatusLog.js";
+import cleanupLicencePlateOwnersTable from "../../helpers/parkingDB/cleanupLicencePlateOwnersTable.js";
+import cleanupParkingBylawsTable from "../../helpers/parkingDB/cleanupParkingBylawsTable.js";
+import cleanupParkingLocationsTable from "../../helpers/parkingDB/cleanupParkingLocationsTable.js";
+import cleanupParkingOffencesTable from "../../helpers/parkingDB/cleanupParkingOffencesTable.js";
+export const handler = (req, res) => {
     const table = req.body.table;
     const recordDelete_timeMillis = Math.min(parseInt(req.body.recordDelete_timeMillis, 10), Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
     let success = false;
     switch (table) {
         case "parkingTickets":
-            success = parkingDB_cleanupParkingTicketsTable.cleanupParkingTicketsTable(recordDelete_timeMillis);
+            success = cleanupParkingTicketsTable(recordDelete_timeMillis);
             break;
         case "parkingTicketRemarks":
-            success = parkingDB_cleanupParkingTicketRemarksTable.cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
+            success = cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
             break;
         case "parkingTicketStatusLog":
-            success = parkingDB_cleanupParkingTicketStatusLog.cleanupParkingTicketStatusLog(recordDelete_timeMillis);
+            success = cleanupParkingTicketStatusLog(recordDelete_timeMillis);
             break;
         case "licencePlateOwners":
-            success = parkingDB_cleanupLicencePlateOwnersTable.cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
+            success = cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
             break;
         case "parkingOffences":
-            success = parkingDB_cleanupParkingOffencesTable.cleanupParkingOffencesTable();
+            success = cleanupParkingOffencesTable();
             break;
         case "parkingLocations":
-            success = parkingDB_cleanupParkingLocationsTable.cleanupParkingLocationsTable();
+            success = cleanupParkingLocationsTable();
             break;
         case "parkingBylaws":
-            success = parkingDB_cleanupParkingBylawsTable.cleanupParkingBylawsTable();
+            success = cleanupParkingBylawsTable();
             break;
     }
     return res.json({ success });
 };
+export default handler;

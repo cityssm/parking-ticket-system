@@ -1,16 +1,16 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_getParkingBylaws from "../../helpers/parkingDB/getParkingBylaws";
-import * as parkingDB_addParkingBylaw from "../../helpers/parkingDB/addParkingBylaw";
+import { getParkingBylawsWithOffenceStats } from "../../helpers/parkingDB/getParkingBylaws.js";
+import addParkingBylaw from "../../helpers/parkingDB/addParkingBylaw.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const results = parkingDB_addParkingBylaw.addParkingBylaw(req.body);
+  const results = addParkingBylaw(req.body);
 
   if (results.success) {
 
-    results.bylaws = parkingDB_getParkingBylaws.getParkingBylawsWithOffenceStats();
+    results.bylaws = getParkingBylawsWithOffenceStats();
   }
 
   return res.json(results);
