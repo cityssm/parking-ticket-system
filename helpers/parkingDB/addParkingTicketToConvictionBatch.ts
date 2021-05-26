@@ -1,20 +1,22 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { createParkingTicketStatusWithDB } from "./createParkingTicketStatus";
+import { createParkingTicketStatusWithDB } from "./createParkingTicketStatus.js";
 
-import { isParkingTicketConvictedWithDB } from "./isParkingTicketConvicted";
-import { isParkingTicketInConvictionBatchWithDB } from "./isParkingTicketInConvictionBatch";
-import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable";
-import { canParkingTicketBeAddedToConvictionBatch } from "./canParkingTicketBeAddedToConvictionBatch";
+import { isParkingTicketConvictedWithDB } from "./isParkingTicketConvicted.js";
+import { isParkingTicketInConvictionBatchWithDB } from "./isParkingTicketInConvictionBatch.js";
+import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable.js";
+import canParkingTicketBeAddedToConvictionBatch from "./canParkingTicketBeAddedToConvictionBatch.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 const createStatus =
   (db: sqlite.Database,
     batchID: number, ticketID: number,
     statusKey: "convicted" | "convictionBatch",
-    reqSession: Express.Session) => {
+    reqSession: expressSession.Session) => {
 
     createParkingTicketStatusWithDB(db, {
       recordType: "status",
@@ -27,21 +29,21 @@ const createStatus =
   };
 
 const createConvictedStatus =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
 
     createStatus(db, batchID, ticketID, "convicted", reqSession);
   };
 
 
 const createConvictionBatchStatus =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
 
     createStatus(db, batchID, ticketID, "convictionBatch", reqSession);
   };
 
 
 const convictIfNotConvicted =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
 
     const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(db, ticketID);
 
@@ -56,7 +58,7 @@ const convictIfNotConvicted =
 
 
 const addParkingTicketToConvictionBatchAfterBatchCheck =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: Express.Session) => {
+  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
 
     // Ensure ticket has not been resolved
 
@@ -105,7 +107,7 @@ const addParkingTicketToConvictionBatchAfterBatchCheck =
 export const addParkingTicketToConvictionBatch = (
   batchID: number,
   ticketID: number,
-  reqSession: Express.Session
+  reqSession: expressSession.Session
 ) => {
 
   const db = sqlite(dbPath);
@@ -132,7 +134,7 @@ export const addParkingTicketToConvictionBatch = (
 export const addAllParkingTicketsToConvictionBatch = (
   batchID: number,
   ticketIDs: number[],
-  reqSession: Express.Session
+  reqSession: expressSession.Session
 ) => {
 
   const db = sqlite(dbPath);
@@ -171,3 +173,6 @@ export const addAllParkingTicketsToConvictionBatch = (
     successCount
   };
 };
+
+
+export default addParkingTicketToConvictionBatch;

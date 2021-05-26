@@ -1,5 +1,2 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersDB = exports.parkingDB = void 0;
-exports.parkingDB = "data/parking.db";
-exports.usersDB = "data/users.db";
+export const parkingDB = "data/parking.db";
+export const usersDB = "data/users.db";

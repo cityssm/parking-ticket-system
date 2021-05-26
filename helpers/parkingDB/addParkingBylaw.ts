@@ -3,7 +3,7 @@ import * as sqlite from "better-sqlite3";
 import type { AddUpdateParkingBylawReturn } from "./getParkingBylaws";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const addParkingBylaw = (reqBody: pts.ParkingBylaw): AddUpdateParkingBylawReturn => {
@@ -64,3 +64,6 @@ export const addParkingBylaw = (reqBody: pts.ParkingBylaw): AddUpdateParkingByla
   };
 
 };
+
+
+export default addParkingBylaw;

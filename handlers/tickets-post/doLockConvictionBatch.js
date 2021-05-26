@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_lockConvictionBatch = require("../../helpers/parkingDB/lockConvictionBatch");
-exports.handler = (req, res) => {
+import lockConvictionBatch from "../../helpers/parkingDB/lockConvictionBatch.js";
+export const handler = (req, res) => {
     const batchID = req.body.batchID;
-    const result = parkingDB_lockConvictionBatch.lockConvictionBatch(batchID, req.session);
+    const result = lockConvictionBatch(batchID, req.session);
     return res.json(result);
 };
+export default handler;

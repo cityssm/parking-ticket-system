@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAllLicencePlatesToLookupBatch = exports.addLicencePlateToLookupBatch = void 0;
-const sqlite = require("better-sqlite3");
-const getLookupBatch_1 = require("./getLookupBatch");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.addLicencePlateToLookupBatch = (reqBody, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import * as sqlite from "better-sqlite3";
+import getLookupBatch from "./getLookupBatch.js";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const addLicencePlateToLookupBatch = (reqBody, reqSession) => {
+    const db = sqlite(dbPath);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
@@ -37,8 +34,8 @@ exports.addLicencePlateToLookupBatch = (reqBody, reqSession) => {
         };
     }
 };
-exports.addAllLicencePlatesToLookupBatch = (reqBody, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+export const addAllLicencePlatesToLookupBatch = (reqBody, reqSession) => {
+    const db = sqlite(dbPath);
     const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
@@ -66,7 +63,7 @@ exports.addAllLicencePlatesToLookupBatch = (reqBody, reqSession) => {
     if (changeCount > 0) {
         return {
             success: true,
-            batch: getLookupBatch_1.getLookupBatch(reqBody.batchID)
+            batch: getLookupBatch(reqBody.batchID)
         };
     }
     else {
@@ -76,3 +73,4 @@ exports.addAllLicencePlatesToLookupBatch = (reqBody, reqSession) => {
         };
     }
 };
+export default addLicencePlateToLookupBatch;

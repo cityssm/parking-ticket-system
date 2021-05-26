@@ -1,15 +1,15 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_ontario from "../../helpers/parkingDB-ontario";
+import * as parkingDB_ontario from "../../helpers/parkingDB-ontario.js";
 
-import * as parkingDB_getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch";
+import getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch.js";
 
 
 export const handler: RequestHandler = (_req, res) => {
 
   const tickets = parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch();
 
-  const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1);
+  const batch = getConvictionBatch(-1);
 
   res.render("mto-ticketConvict", {
     headTitle: "Convict Parking Tickets",
@@ -17,3 +17,6 @@ export const handler: RequestHandler = (_req, res) => {
     batch
   });
 };
+
+
+export default handler;

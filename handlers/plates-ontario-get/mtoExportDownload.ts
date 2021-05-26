@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as mtoFns from "../../helpers/mtoFns";
+import * as mtoFns from "../../helpers/mtoFns.js";
 
 
 export const handler: RequestHandler = (req, res) => {
@@ -15,3 +15,6 @@ export const handler: RequestHandler = (req, res) => {
 
   res.send(output);
 };
+
+
+export default handler;

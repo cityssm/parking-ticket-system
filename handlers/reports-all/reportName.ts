@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
 
-import { rawToCSV } from "@cityssm/expressjs-server-js/stringFns";
+import { rawToCSV } from "@cityssm/expressjs-server-js/stringFns.js";
 
-import * as parkingDB_reporting from "../../helpers/parkingDB-reporting";
+import * as parkingDB_reporting from "../../helpers/parkingDB-reporting.js";
 
 
 export const handler: RequestHandler = (req, res) => {
@@ -22,3 +22,6 @@ export const handler: RequestHandler = (req, res) => {
   res.setHeader("Content-Type", "text/csv");
   res.send(csv);
 };
+
+
+export default handler;

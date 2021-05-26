@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.addParkingBylaw = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.addParkingBylaw = (reqBody) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import * as sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const addParkingBylaw = (reqBody) => {
+    const db = sqlite(dbPath);
     const bylawRecord = db.prepare("select bylawDescription, isActive" +
         " from ParkingBylaws" +
         " where bylawNumber = ?")
@@ -39,3 +36,4 @@ exports.addParkingBylaw = (reqBody) => {
         success: (info.changes > 0)
     };
 };
+export default addParkingBylaw;

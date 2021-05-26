@@ -1,11 +1,13 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import type { LookupBatchReturn } from "./getLookupBatch";
+import type { LookupBatchReturn } from "./getLookupBatch.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
-export const clearLookupBatch = (batchID: number, reqSession: Express.Session): LookupBatchReturn => {
+export const clearLookupBatch = (batchID: number, reqSession: expressSession.Session): LookupBatchReturn => {
 
   const db = sqlite(dbPath);
 
@@ -42,3 +44,6 @@ export const clearLookupBatch = (batchID: number, reqSession: Express.Session): 
     success: true
   };
 };
+
+
+export default clearLookupBatch;

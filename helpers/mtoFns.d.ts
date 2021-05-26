@@ -1,3 +1,4 @@
+import type * as expressSession from "express-session";
 export declare const twoDigitYearToFourDigit: (twoDigitYear: number) => number;
 export declare const sixDigitDateNumberToEightDigit: (sixDigitDateNumber: number) => number;
 export declare const parsePKRD: (rowData: string) => false | {
@@ -19,7 +20,7 @@ export declare const parsePKRD: (rowData: string) => false | {
     errorMessage: string;
     licencePlateExpiryDate: number;
 };
-export declare const importLicencePlateOwnership: (batchID: number, ownershipData: string, reqSession: any) => {
+export declare const importLicencePlateOwnership: (batchID: number, ownershipData: string, reqSession: expressSession.Session) => {
     success: boolean;
     message: string;
     rowCount?: undefined;
@@ -36,5 +37,5 @@ export declare const importLicencePlateOwnership: (batchID: number, ownershipDat
     insertedRecordCount: number;
     message?: undefined;
 };
-export declare const exportLicencePlateBatch: (batchID: number, reqSession: any) => string;
-export declare const exportConvictionBatch: (batchID: number, reqSession: any) => string;
+export declare const exportLicencePlateBatch: (batchID: number, reqSession: expressSession.Session) => string;
+export declare const exportConvictionBatch: (batchID: number, reqSession: expressSession.Session) => string;

@@ -1,9 +1,11 @@
 import * as sqlite from "better-sqlite3";
 
-import { getLookupBatch } from "./getLookupBatch";
+import getLookupBatch from "./getLookupBatch.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 interface AddLicencePlateToLookupBatchReturn {
@@ -14,7 +16,7 @@ interface AddLicencePlateToLookupBatchReturn {
 
 
 export const addLicencePlateToLookupBatch =
-  (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session): AddLicencePlateToLookupBatchReturn => {
+  (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: expressSession.Session): AddLicencePlateToLookupBatchReturn => {
 
     const db = sqlite(dbPath);
 
@@ -77,7 +79,7 @@ interface AddAllLicencePlatesToLookupBatchBody {
 
 
 export const addAllLicencePlatesToLookupBatch =
-  (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: Express.Session) => {
+  (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: expressSession.Session) => {
 
     const db = sqlite(dbPath);
 
@@ -139,3 +141,6 @@ export const addAllLicencePlatesToLookupBatch =
     }
 
   };
+
+
+export default addLicencePlateToLookupBatch;

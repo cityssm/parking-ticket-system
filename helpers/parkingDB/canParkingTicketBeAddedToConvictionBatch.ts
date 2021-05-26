@@ -17,3 +17,6 @@ export const canParkingTicketBeAddedToConvictionBatch = (db: sqlite.Database, ti
 
   return true;
 };
+
+
+export default canParkingTicketBeAddedToConvictionBatch;

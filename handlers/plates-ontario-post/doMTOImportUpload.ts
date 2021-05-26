@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as mtoFns from "../../helpers/mtoFns";
+import * as mtoFns from "../../helpers/mtoFns.js";
 
 import * as multer from "multer";
 const storage = multer.memoryStorage();
@@ -20,3 +20,6 @@ export const handler: RequestHandler = (req, res) => {
 
   return res.json(results);
 };
+
+
+export default handler;

@@ -1,11 +1,14 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_createLookupBatch from "../../helpers/parkingDB/createLookupBatch";
+import createLookupBatch from "../../helpers/parkingDB/createLookupBatch.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
-  const createBatchResponse = parkingDB_createLookupBatch.createLookupBatch(req.session);
+  const createBatchResponse = createLookupBatch(req.session);
 
   return res.json(createBatchResponse);
 };
+
+
+export default handler;

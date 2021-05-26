@@ -1,15 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_ontario = require("../../helpers/parkingDB-ontario");
-const parkingDB_clearConvictionBatch = require("../../helpers/parkingDB/clearConvictionBatch");
-const parkingDB_getConvictionBatch = require("../../helpers/parkingDB/getConvictionBatch");
-exports.handler = (req, res) => {
+import * as parkingDB_ontario from "../../helpers/parkingDB-ontario.js";
+import clearConvictionBatch from "../../helpers/parkingDB/clearConvictionBatch.js";
+import getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch.js";
+export const handler = (req, res) => {
     const batchID = req.body.batchID;
-    const result = parkingDB_clearConvictionBatch.clearConvictionBatch(batchID, req.session);
+    const result = clearConvictionBatch(batchID, req.session);
     if (result.success) {
-        result.batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
+        result.batch = getConvictionBatch(batchID);
         result.tickets = parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch();
     }
     return res.json(result);
 };
+export default handler;

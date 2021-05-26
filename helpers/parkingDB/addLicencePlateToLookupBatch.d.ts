@@ -1,21 +1,18 @@
-/// <reference types="express-serve-static-core" />
-/// <reference types="compression" />
-/// <reference types="express-session" />
-/// <reference types="multer" />
 import type * as pts from "../../types/recordTypes";
+import type * as expressSession from "express-session";
 interface AddLicencePlateToLookupBatchReturn {
     success: boolean;
     message?: string;
     batch?: pts.LicencePlateLookupBatch;
 }
-export declare const addLicencePlateToLookupBatch: (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: Express.Session) => AddLicencePlateToLookupBatchReturn;
+export declare const addLicencePlateToLookupBatch: (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: expressSession.Session) => AddLicencePlateToLookupBatchReturn;
 interface AddAllLicencePlatesToLookupBatchBody {
     batchID: number;
     licencePlateCountry: string;
     licencePlateProvince: string;
     licencePlateNumbers: Array<[string, number]>;
 }
-export declare const addAllLicencePlatesToLookupBatch: (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: Express.Session) => {
+export declare const addAllLicencePlatesToLookupBatch: (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: expressSession.Session) => {
     success: boolean;
     message: string;
     batch?: undefined;
@@ -24,4 +21,4 @@ export declare const addAllLicencePlatesToLookupBatch: (reqBody: AddAllLicencePl
     batch: pts.LicencePlateLookupBatch;
     message?: undefined;
 };
-export {};
+export default addLicencePlateToLookupBatch;

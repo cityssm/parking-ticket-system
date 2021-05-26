@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const parkingDB_createConvictionBatch = require("../../helpers/parkingDB/createConvictionBatch");
-exports.handler = (req, res) => {
-    const batchResult = parkingDB_createConvictionBatch.createConvictionBatch(req.session);
+import createConvictionBatch from "../../helpers/parkingDB/createConvictionBatch.js";
+export const handler = (req, res) => {
+    const batchResult = createConvictionBatch(req.session);
     return res.json(batchResult);
 };
+export default handler;

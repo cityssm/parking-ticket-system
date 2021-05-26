@@ -1,9 +1,9 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
+import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParkingOffenceReturn => {
@@ -105,3 +105,6 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
     success: (info.changes > 0)
   };
 };
+
+
+export default addParkingOffence;

@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
 
-import * as parkingDB_ontario from "../../helpers/parkingDB-ontario";
+import * as parkingDB_ontario from "../../helpers/parkingDB-ontario.js";
 
-import * as parkingDB_removeParkingTicketFromConvictionBatch from "../../helpers/parkingDB/removeParkingTicketFromConvictionBatch";
+import removeParkingTicketFromConvictionBatch from "../../helpers/parkingDB/removeParkingTicketFromConvictionBatch.js";
 
 import type * as pts from "../../types/recordTypes";
 
@@ -16,7 +16,7 @@ export const handler: RequestHandler = (req, res) => {
     success: boolean;
     message?: string;
     tickets?: pts.ParkingTicket[];
-  } = parkingDB_removeParkingTicketFromConvictionBatch.removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
+  } = removeParkingTicketFromConvictionBatch(batchID, ticketID, req.session);
 
   if (result.success) {
     result.tickets = parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch();
@@ -24,3 +24,6 @@ export const handler: RequestHandler = (req, res) => {
 
   return res.json(result);
 };
+
+
+export default handler;

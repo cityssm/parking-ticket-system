@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.canParkingTicketBeAddedToConvictionBatch = void 0;
-exports.canParkingTicketBeAddedToConvictionBatch = (db, ticketID) => {
+export const canParkingTicketBeAddedToConvictionBatch = (db, ticketID) => {
     const check = db
         .prepare("select resolvedDate from ParkingTickets" +
         " where ticketID = ?" +
@@ -12,3 +9,4 @@ exports.canParkingTicketBeAddedToConvictionBatch = (db, ticketID) => {
     }
     return true;
 };
+export default canParkingTicketBeAddedToConvictionBatch;

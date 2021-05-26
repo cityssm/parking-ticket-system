@@ -7,3 +7,4 @@ export const handler = (req, res) => {
     }
     return res.json(results);
 };
+export default handler;

@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.acknowledgeLookupErrorLogEntry = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.acknowledgeLookupErrorLogEntry = (batchID, logIndex, reqSession) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const acknowledgeLookupErrorLogEntry = (batchID, logIndex, reqSession) => {
+    const db = sqlite(dbPath);
     const info = db.prepare("update LicencePlateLookupErrorLog" +
         " set isAcknowledged = 1," +
         " recordUpdate_userName = ?," +
@@ -17,3 +14,4 @@ exports.acknowledgeLookupErrorLogEntry = (batchID, logIndex, reqSession) => {
     db.close();
     return info.changes > 0;
 };
+export default acknowledgeLookupErrorLogEntry;

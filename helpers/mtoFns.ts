@@ -1,15 +1,17 @@
 import sqlite from "better-sqlite3";
 
-import parkingDB_getConvictionBatch from "./parkingDB/getConvictionBatch.js";
-import parkingDB_markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent.js";
+import getConvictionBatch from "./parkingDB/getConvictionBatch.js";
+import markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent.js";
 
-import parkingDB_getLookupBatch from "./parkingDB/getLookupBatch.js";
-import parkingDB_markLookupBatchAsSent from "./parkingDB/markLookupBatchAsSent.js";
+import getLookupBatch from "./parkingDB/getLookupBatch.js";
+import markLookupBatchAsSent from "./parkingDB/markLookupBatchAsSent.js";
 
-import * as configFns from "./configFns";
+import * as configFns from "./configFns.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
 import { parkingDB as dbPath } from "../data/databasePaths.js";
+
+import type * as expressSession from "express-session";
 
 
 let currentDate: Date;
@@ -231,7 +233,7 @@ export const parsePKRD = (rowData: string) => {
 };
 
 
-export const importLicencePlateOwnership = (batchID: number, ownershipData: string, reqSession: Express.Session) => {
+export const importLicencePlateOwnership = (batchID: number, ownershipData: string, reqSession: expressSession.Session) => {
 
   // Split the file into rows
 
@@ -459,21 +461,21 @@ const exportBatch = (sentDate: number, batchEntries: Array<{
 };
 
 
-export const exportLicencePlateBatch = (batchID: number, reqSession: Express.Session) => {
+export const exportLicencePlateBatch = (batchID: number, reqSession: expressSession.Session) => {
 
-  parkingDB_markLookupBatchAsSent.markLookupBatchAsSent(batchID, reqSession);
+  markLookupBatchAsSent(batchID, reqSession);
 
-  const batch = parkingDB_getLookupBatch.getLookupBatch(batchID);
+  const batch = getLookupBatch(batchID);
 
   return exportBatch(batch.sentDate, batch.batchEntries);
 };
 
 
-export const exportConvictionBatch = (batchID: number, reqSession: Express.Session) => {
+export const exportConvictionBatch = (batchID: number, reqSession: expressSession.Session) => {
 
-  parkingDB_markConvictionBatchAsSent.markConvictionBatchAsSent(batchID, reqSession);
+  markConvictionBatchAsSent(batchID, reqSession);
 
-  const batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
+  const batch = getConvictionBatch(batchID);
 
   return exportBatch(batch.sentDate, batch.batchEntries);
 };

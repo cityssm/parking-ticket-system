@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.addParkingOffence = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.addParkingOffence = (reqBody) => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const addParkingOffence = (reqBody) => {
+    const db = sqlite(dbPath);
     const existingOffenceRecord = db.prepare("select isActive" +
         " from ParkingOffences" +
         " where bylawNumber = ?" +
@@ -67,3 +64,4 @@ exports.addParkingOffence = (reqBody) => {
         success: (info.changes > 0)
     };
 };
+export default addParkingOffence;

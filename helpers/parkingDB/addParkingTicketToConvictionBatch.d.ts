@@ -1,15 +1,12 @@
-/// <reference types="express-serve-static-core" />
-/// <reference types="compression" />
-/// <reference types="express-session" />
-/// <reference types="multer" />
-export declare const addParkingTicketToConvictionBatch: (batchID: number, ticketID: number, reqSession: Express.Session) => {
+import type * as expressSession from "express-session";
+export declare const addParkingTicketToConvictionBatch: (batchID: number, ticketID: number, reqSession: expressSession.Session) => {
     success: boolean;
     message: string;
 } | {
     success: boolean;
     message?: undefined;
 };
-export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ticketIDs: number[], reqSession: Express.Session) => {
+export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ticketIDs: number[], reqSession: expressSession.Session) => {
     success: boolean;
     successCount: number;
     message: string;
@@ -18,3 +15,4 @@ export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ti
     successCount: number;
     message?: undefined;
 };
+export default addParkingTicketToConvictionBatch;

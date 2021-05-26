@@ -1,9 +1,9 @@
 import sqlite from "better-sqlite3";
-import parkingDB_getConvictionBatch from "./parkingDB/getConvictionBatch.js";
-import parkingDB_markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent.js";
-import parkingDB_getLookupBatch from "./parkingDB/getLookupBatch.js";
-import parkingDB_markLookupBatchAsSent from "./parkingDB/markLookupBatchAsSent.js";
-import * as configFns from "./configFns";
+import getConvictionBatch from "./parkingDB/getConvictionBatch.js";
+import markConvictionBatchAsSent from "./parkingDB/markConvictionBatchAsSent.js";
+import getLookupBatch from "./parkingDB/getLookupBatch.js";
+import markLookupBatchAsSent from "./parkingDB/markLookupBatchAsSent.js";
+import * as configFns from "./configFns.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import { parkingDB as dbPath } from "../data/databasePaths.js";
 let currentDate;
@@ -242,12 +242,12 @@ const exportBatch = (sentDate, batchEntries) => {
     return output;
 };
 export const exportLicencePlateBatch = (batchID, reqSession) => {
-    parkingDB_markLookupBatchAsSent.markLookupBatchAsSent(batchID, reqSession);
-    const batch = parkingDB_getLookupBatch.getLookupBatch(batchID);
+    markLookupBatchAsSent(batchID, reqSession);
+    const batch = getLookupBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);
 };
 export const exportConvictionBatch = (batchID, reqSession) => {
-    parkingDB_markConvictionBatchAsSent.markConvictionBatchAsSent(batchID, reqSession);
-    const batch = parkingDB_getConvictionBatch.getConvictionBatch(batchID);
+    markConvictionBatchAsSent(batchID, reqSession);
+    const batch = getConvictionBatch(batchID);
     return exportBatch(batch.sentDate, batch.batchEntries);
 };

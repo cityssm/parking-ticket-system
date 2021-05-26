@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanupParkingLocationsTable = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.cleanupParkingLocationsTable = () => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const cleanupParkingLocationsTable = () => {
+    const db = sqlite(dbPath);
     const recordsToDelete = db.prepare("select locationKey from ParkingLocations l" +
         " where isActive = 0" +
         " and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)" +
@@ -19,3 +16,4 @@ exports.cleanupParkingLocationsTable = () => {
     db.close();
     return true;
 };
+export default cleanupParkingLocationsTable;

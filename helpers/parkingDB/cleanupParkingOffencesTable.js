@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanupParkingOffencesTable = void 0;
-const sqlite = require("better-sqlite3");
-const databasePaths_1 = require("../../data/databasePaths");
-exports.cleanupParkingOffencesTable = () => {
-    const db = sqlite(databasePaths_1.parkingDB);
+import sqlite from "better-sqlite3";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
+export const cleanupParkingOffencesTable = () => {
+    const db = sqlite(dbPath);
     const recordsToDelete = db.prepare("select o.bylawNumber, o.locationKey" +
         " from ParkingOffences o" +
         " where isActive = 0" +
@@ -21,3 +18,4 @@ exports.cleanupParkingOffencesTable = () => {
     db.close();
     return true;
 };
+export default cleanupParkingOffencesTable;

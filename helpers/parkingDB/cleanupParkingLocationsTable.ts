@@ -1,6 +1,6 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths";
+import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
 
 export const cleanupParkingLocationsTable = () => {
@@ -24,5 +24,7 @@ export const cleanupParkingLocationsTable = () => {
   db.close();
 
   return true;
-
 };
+
+
+export default cleanupParkingLocationsTable;
