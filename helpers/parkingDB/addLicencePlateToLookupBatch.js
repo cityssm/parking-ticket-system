@@ -1,4 +1,4 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 import getLookupBatch from "./getLookupBatch.js";
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
 export const addLicencePlateToLookupBatch = (reqBody, reqSession) => {

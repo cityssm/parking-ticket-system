@@ -1,4 +1,4 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
 export const cleanupParkingTicketRemarksTable = (recordDelete_timeMillis) => {
     const db = sqlite(dbPath);

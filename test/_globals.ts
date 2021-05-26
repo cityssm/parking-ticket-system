@@ -1,15 +1,21 @@
 import type { Request } from "express";
+import type { Session } from "express-session";
 
 
-export const fakeViewOnlySession = {
+export const userName = "__testUser";
+
+
+export const fakeViewOnlySession: Session = {
   id: "",
   cookie: null,
   destroy: null,
   regenerate: null,
   reload: null,
+  resetMaxAge: null,
   save: null,
   touch: null,
   user: {
+    userName: userName,
     userProperties: {
       canCreate: false,
       canUpdate: false,
@@ -20,15 +26,17 @@ export const fakeViewOnlySession = {
 };
 
 
-export const fakeAdminSession = {
+export const fakeAdminSession: Session = {
   id: "",
   cookie: null,
   destroy: null,
   regenerate: null,
   reload: null,
+  resetMaxAge: null,
   save: null,
   touch: null,
   user: {
+    userName: userName,
     userProperties: {
       canCreate: true,
       canUpdate: true,
@@ -55,6 +63,7 @@ export const fakeRequest: Request = {
   cookies: null,
   complete: null,
   connection: null,
+  csrfToken: null,
   destroy: null,
   destroyed: null,
   emit: null,
@@ -93,6 +102,7 @@ export const fakeRequest: Request = {
   push: null,
   query: null,
   range: null,
+  rateLimit: null,
   rawHeaders: null,
   rawListeners: null,
   rawTrailers: null,
@@ -106,6 +116,8 @@ export const fakeRequest: Request = {
   resume: null,
   route: null,
   secure: null,
+  session: null,
+  sessionID: null,
   setEncoding: null,
   setMaxListeners: null,
   setTimeout: null,
@@ -133,6 +145,3 @@ export const fakeAdminRequest =
   Object.assign({}, fakeRequest, {
     session: fakeAdminSession
   });
-
-
-export const userName = "__testUser";

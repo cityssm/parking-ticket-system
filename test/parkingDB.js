@@ -1,79 +1,77 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const assert = require("assert");
-const _globals_1 = require("./_globals");
-const initializeDatabase_1 = require("../helpers/parkingDB/initializeDatabase");
-const parkingDB_getParkingTickets = require("../helpers/parkingDB/getParkingTickets");
-const parkingDB_getParkingTicket = require("../helpers/parkingDB/getParkingTicket");
-const parkingDB_getParkingTicketID = require("../helpers/parkingDB/getParkingTicketID");
-const parkingDB_getParkingTicketRemarks = require("../helpers/parkingDB/getParkingTicketRemarks");
-const parkingDB_getParkingTicketStatuses = require("../helpers/parkingDB/getParkingTicketStatuses");
-const parkingDB_getLicencePlateOwner = require("../helpers/parkingDB/getLicencePlateOwner");
-const parkingDB_getLicencePlates = require("../helpers/parkingDB/getLicencePlates");
-const parkingDB_getConvictionBatch = require("../helpers/parkingDB/getConvictionBatch");
-const parkingDB_getLastTenConvictionBatches = require("../helpers/parkingDB/getLastTenConvictionBatches");
-const parkingDB_isConvictionBatchUpdatable = require("../helpers/parkingDB/isConvictionBatchUpdatable");
-const parkingDB_isParkingTicketConvicted = require("../helpers/parkingDB/isParkingTicketConvicted");
-const parkingDB_isParkingTicketInConvictionBatch = require("../helpers/parkingDB/isParkingTicketInConvictionBatch");
-const parkingDB_getUnreceivedLookupBatches = require("../helpers/parkingDB/getUnreceivedLookupBatches");
-const parkingDB_getLookupBatch = require("../helpers/parkingDB/getLookupBatch");
-const parkingDB_getUnacknowledgedLookupErrorLog = require("../helpers/parkingDB/getUnacknowledgedLookupErrorLog");
-const parkingDB_getOwnershipReconciliationRecords = require("../helpers/parkingDB/getOwnershipReconciliationRecords");
-const parkingDB_getParkingOffences = require("../helpers/parkingDB/getParkingOffences");
-const parkingDB_getParkingBylaws = require("../helpers/parkingDB/getParkingBylaws");
-const parkingDB_getParkingLocations = require("../helpers/parkingDB/getParkingLocations");
-const parkingDB_getDatabaseCleanupCounts = require("../helpers/parkingDB/getDatabaseCleanupCounts");
-const parkingDB_cleanupParkingTicketsTable = require("../helpers/parkingDB/cleanupParkingTicketsTable");
-const parkingDB_cleanupParkingTicketStatusLog = require("../helpers/parkingDB/cleanupParkingTicketStatusLog");
-const parkingDB_cleanupParkingTicketRemarksTable = require("../helpers/parkingDB/cleanupParkingTicketRemarksTable");
-const parkingDB_cleanupLicencePlateOwnersTable = require("../helpers/parkingDB/cleanupLicencePlateOwnersTable");
-const parkingDB_ontario = require("../helpers/parkingDB-ontario");
-const parkingDB_reporting = require("../helpers/parkingDB-reporting");
+import * as assert from "assert";
+import { fakeViewOnlySession } from "./_globals.js";
+import { initializeDatabase } from "../helpers/parkingDB/initializeDatabase.js";
+import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets.js";
+import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket.js";
+import * as parkingDB_getParkingTicketID from "../helpers/parkingDB/getParkingTicketID.js";
+import * as parkingDB_getParkingTicketRemarks from "../helpers/parkingDB/getParkingTicketRemarks.js";
+import * as parkingDB_getParkingTicketStatuses from "../helpers/parkingDB/getParkingTicketStatuses.js";
+import * as parkingDB_getLicencePlateOwner from "../helpers/parkingDB/getLicencePlateOwner.js";
+import * as parkingDB_getLicencePlates from "../helpers/parkingDB/getLicencePlates.js";
+import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch.js";
+import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/getLastTenConvictionBatches.js";
+import * as parkingDB_isConvictionBatchUpdatable from "../helpers/parkingDB/isConvictionBatchUpdatable.js";
+import * as parkingDB_isParkingTicketConvicted from "../helpers/parkingDB/isParkingTicketConvicted.js";
+import * as parkingDB_isParkingTicketInConvictionBatch from "../helpers/parkingDB/isParkingTicketInConvictionBatch.js";
+import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches.js";
+import * as parkingDB_getLookupBatch from "../helpers/parkingDB/getLookupBatch.js";
+import * as parkingDB_getUnacknowledgedLookupErrorLog from "../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
+import * as parkingDB_getOwnershipReconciliationRecords from "../helpers/parkingDB/getOwnershipReconciliationRecords.js";
+import * as parkingDB_getParkingOffences from "../helpers/parkingDB/getParkingOffences.js";
+import * as parkingDB_getParkingBylaws from "../helpers/parkingDB/getParkingBylaws.js";
+import * as parkingDB_getParkingLocations from "../helpers/parkingDB/getParkingLocations.js";
+import * as parkingDB_getDatabaseCleanupCounts from "../helpers/parkingDB/getDatabaseCleanupCounts.js";
+import * as parkingDB_cleanupParkingTicketsTable from "../helpers/parkingDB/cleanupParkingTicketsTable.js";
+import * as parkingDB_cleanupParkingTicketStatusLog from "../helpers/parkingDB/cleanupParkingTicketStatusLog.js";
+import * as parkingDB_cleanupParkingTicketRemarksTable from "../helpers/parkingDB/cleanupParkingTicketRemarksTable.js";
+import * as parkingDB_cleanupLicencePlateOwnersTable from "../helpers/parkingDB/cleanupLicencePlateOwnersTable.js";
+import * as parkingDB_ontario from "../helpers/parkingDB-ontario.js";
+import * as parkingDB_reporting from "../helpers/parkingDB-reporting.js";
 describe("helpers/parkingDB", () => {
     before(() => {
-        initializeDatabase_1.initializeDatabase();
+        initializeDatabase();
     });
     describe("parking ticket queries", () => {
         describe("getParkingTickets()", () => {
             it("should execute with no filters", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
             });
             it("should execute with ticketNumber filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, ticketNumber: "TEST_TKT" }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, ticketNumber: "TEST_TKT" }));
             });
             it("should execute with licencePlateNumber filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateNumber: "TEST PLATE" }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, licencePlateNumber: "TEST PLATE" }));
             });
             it("should execute with licencePlateNumberEqual filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateNumber: "TEST PLATE" }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, licencePlateNumber: "TEST PLATE" }));
             });
             it("should execute with licencePlateProvince filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateProvince: "ON" }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, licencePlateProvince: "ON" }));
             });
             it("should execute with licencePlateCountry filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, licencePlateCountry: "CA" }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, licencePlateCountry: "CA" }));
             });
             it("should execute with location filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, location: "street" }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, location: "street" }));
             });
             it("should execute with isResolved=true filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, isResolved: true }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, isResolved: true }));
             });
             it("should execute with isResolved=false filter", () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0, isResolved: false }));
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0, isResolved: false }));
             });
         });
         it("should execute getParkingTicket(-1)", () => {
-            assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, _globals_1.fakeViewOnlySession), null);
+            assert.equal(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), null);
         });
         it("should execute getParkingTicketID()", () => {
             assert.equal(parkingDB_getParkingTicketID.getParkingTicketID("~~FAKE TICKET NUMBER~~"), null);
         });
         it("should execute getParkingTicketRemarks(-1)", () => {
-            assert.equal(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, _globals_1.fakeViewOnlySession).length, 0);
+            assert.equal(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, fakeViewOnlySession).length, 0);
         });
         it("should execute getParkingTicketStatuses(-1)", () => {
-            assert.equal(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, _globals_1.fakeViewOnlySession).length, 0);
+            assert.equal(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, fakeViewOnlySession).length, 0);
         });
     });
     describe("licence plate queries", () => {

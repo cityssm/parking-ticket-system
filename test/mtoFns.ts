@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import * as mtoFns from "../helpers/mtoFns";
+import * as mtoFns from "../helpers/mtoFns.js";
 
 
 describe("helpers/mtoFns", () => {

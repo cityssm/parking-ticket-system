@@ -1,8 +1,8 @@
 import * as assert from "assert";
 
-import { fakeRequest, fakeViewOnlyRequest, fakeAdminRequest } from "./_globals";
+import { fakeRequest, fakeViewOnlyRequest, fakeAdminRequest } from "./_globals.js";
 
-import * as userFns from "../helpers/userFns";
+import * as userFns from "../helpers/userFns.js";
 
 
 describe("helpers/userFns", () => {

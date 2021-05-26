@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import * as ownerFns from "../helpers/ownerFns";
+import * as ownerFns from "../helpers/ownerFns.js";
 
 import type { LicencePlateOwner } from "../types/recordTypes";
 import type { ReconciliationRecord } from "../helpers/parkingDB/getOwnershipReconciliationRecords";

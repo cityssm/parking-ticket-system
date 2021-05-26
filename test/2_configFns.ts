@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import * as configFns from "../helpers/configFns";
+import * as configFns from "../helpers/configFns.js";
 
 
 describe("helpers/configFns", () => {

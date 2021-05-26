@@ -1,47 +1,47 @@
 import * as assert from "assert";
 
-import { fakeViewOnlySession } from "./_globals";
+import { fakeViewOnlySession } from "./_globals.js";
 
-import { initializeDatabase } from "../helpers/parkingDB/initializeDatabase";
+import { initializeDatabase } from "../helpers/parkingDB/initializeDatabase.js";
 
 // Parking tickets
-import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets";
-import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket";
-import * as parkingDB_getParkingTicketID from "../helpers/parkingDB/getParkingTicketID";
-import * as parkingDB_getParkingTicketRemarks from "../helpers/parkingDB/getParkingTicketRemarks";
-import * as parkingDB_getParkingTicketStatuses from "../helpers/parkingDB/getParkingTicketStatuses";
+import * as parkingDB_getParkingTickets from "../helpers/parkingDB/getParkingTickets.js";
+import * as parkingDB_getParkingTicket from "../helpers/parkingDB/getParkingTicket.js";
+import * as parkingDB_getParkingTicketID from "../helpers/parkingDB/getParkingTicketID.js";
+import * as parkingDB_getParkingTicketRemarks from "../helpers/parkingDB/getParkingTicketRemarks.js";
+import * as parkingDB_getParkingTicketStatuses from "../helpers/parkingDB/getParkingTicketStatuses.js";
 
 // Licence Plates
-import * as parkingDB_getLicencePlateOwner from "../helpers/parkingDB/getLicencePlateOwner";
-import * as parkingDB_getLicencePlates from "../helpers/parkingDB/getLicencePlates";
+import * as parkingDB_getLicencePlateOwner from "../helpers/parkingDB/getLicencePlateOwner.js";
+import * as parkingDB_getLicencePlates from "../helpers/parkingDB/getLicencePlates.js";
 
 // Conviction batches
-import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch";
-import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/getLastTenConvictionBatches";
-import * as parkingDB_isConvictionBatchUpdatable from "../helpers/parkingDB/isConvictionBatchUpdatable";
-import * as parkingDB_isParkingTicketConvicted from "../helpers/parkingDB/isParkingTicketConvicted";
-import * as parkingDB_isParkingTicketInConvictionBatch from "../helpers/parkingDB/isParkingTicketInConvictionBatch";
+import * as parkingDB_getConvictionBatch from "../helpers/parkingDB/getConvictionBatch.js";
+import * as parkingDB_getLastTenConvictionBatches from "../helpers/parkingDB/getLastTenConvictionBatches.js";
+import * as parkingDB_isConvictionBatchUpdatable from "../helpers/parkingDB/isConvictionBatchUpdatable.js";
+import * as parkingDB_isParkingTicketConvicted from "../helpers/parkingDB/isParkingTicketConvicted.js";
+import * as parkingDB_isParkingTicketInConvictionBatch from "../helpers/parkingDB/isParkingTicketInConvictionBatch.js";
 
 // Lookup batches
-import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches";
-import * as parkingDB_getLookupBatch from "../helpers/parkingDB/getLookupBatch";
-import * as parkingDB_getUnacknowledgedLookupErrorLog from "../helpers/parkingDB/getUnacknowledgedLookupErrorLog";
-import * as parkingDB_getOwnershipReconciliationRecords from "../helpers/parkingDB/getOwnershipReconciliationRecords";
+import * as parkingDB_getUnreceivedLookupBatches from "../helpers/parkingDB/getUnreceivedLookupBatches.js";
+import * as parkingDB_getLookupBatch from "../helpers/parkingDB/getLookupBatch.js";
+import * as parkingDB_getUnacknowledgedLookupErrorLog from "../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
+import * as parkingDB_getOwnershipReconciliationRecords from "../helpers/parkingDB/getOwnershipReconciliationRecords.js";
 
 // Reference
-import * as parkingDB_getParkingOffences from "../helpers/parkingDB/getParkingOffences";
-import * as parkingDB_getParkingBylaws from "../helpers/parkingDB/getParkingBylaws";
-import * as parkingDB_getParkingLocations from "../helpers/parkingDB/getParkingLocations";
+import * as parkingDB_getParkingOffences from "../helpers/parkingDB/getParkingOffences.js";
+import * as parkingDB_getParkingBylaws from "../helpers/parkingDB/getParkingBylaws.js";
+import * as parkingDB_getParkingLocations from "../helpers/parkingDB/getParkingLocations.js";
 
 // Cleanup
-import * as parkingDB_getDatabaseCleanupCounts from "../helpers/parkingDB/getDatabaseCleanupCounts";
-import * as parkingDB_cleanupParkingTicketsTable from "../helpers/parkingDB/cleanupParkingTicketsTable";
-import * as parkingDB_cleanupParkingTicketStatusLog from "../helpers/parkingDB/cleanupParkingTicketStatusLog";
-import * as parkingDB_cleanupParkingTicketRemarksTable from "../helpers/parkingDB/cleanupParkingTicketRemarksTable";
-import * as parkingDB_cleanupLicencePlateOwnersTable from "../helpers/parkingDB/cleanupLicencePlateOwnersTable";
+import * as parkingDB_getDatabaseCleanupCounts from "../helpers/parkingDB/getDatabaseCleanupCounts.js";
+import * as parkingDB_cleanupParkingTicketsTable from "../helpers/parkingDB/cleanupParkingTicketsTable.js";
+import * as parkingDB_cleanupParkingTicketStatusLog from "../helpers/parkingDB/cleanupParkingTicketStatusLog.js";
+import * as parkingDB_cleanupParkingTicketRemarksTable from "../helpers/parkingDB/cleanupParkingTicketRemarksTable.js";
+import * as parkingDB_cleanupLicencePlateOwnersTable from "../helpers/parkingDB/cleanupLicencePlateOwnersTable.js";
 
-import * as parkingDB_ontario from "../helpers/parkingDB-ontario";
-import * as parkingDB_reporting from "../helpers/parkingDB-reporting";
+import * as parkingDB_ontario from "../helpers/parkingDB-ontario.js";
+import * as parkingDB_reporting from "../helpers/parkingDB-reporting.js";
 
 
 describe("helpers/parkingDB", () => {

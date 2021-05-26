@@ -1,4 +1,4 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
 import getLookupBatch from "./getLookupBatch.js";
 import type * as pts from "../../types/recordTypes";

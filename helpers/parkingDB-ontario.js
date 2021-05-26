@@ -1,4 +1,4 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import { parkingDB as dbPath } from "../data/databasePaths.js";
 export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID, issueDaysAgo) => {

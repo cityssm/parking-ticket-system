@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const assert = require("assert");
-const vehicleFns = require("../helpers/vehicleFns");
+import * as assert from "assert";
+import * as vehicleFns from "../helpers/vehicleFns.js";
 describe("helpers/vehicleFns", () => {
     describe("#getMakeFromNCIC", () => {
         it("should convert \"CHEV\" to \"Chevrolet\"", () => {

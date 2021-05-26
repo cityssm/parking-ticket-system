@@ -1,20 +1,20 @@
 import * as assert from "assert";
 
-import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 
-import { userName } from "./_globals";
+import { userName } from "./_globals.js";
 
-import { initializeDatabase } from "../helpers/usersDB/initializeDatabase";
+import { initializeDatabase } from "../helpers/usersDB/initializeDatabase.js";
 
-import * as usersDB_getUser from "../helpers/usersDB/getUser";
-import * as usersDB_createUser from "../helpers/usersDB/createUser";
-import * as usersDB_generateNewPassword from "../helpers/usersDB/generateNewPassword";
-import * as usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword";
-import * as usersDB_getAllUsers from "../helpers/usersDB/getAllUsers";
-import * as usersDB_updateUser from "../helpers/usersDB/updateUser";
-import * as usersDB_updateUserProperty from "../helpers/usersDB/updateUserProperty";
-import * as usersDB_getUserProperties from "../helpers/usersDB/getUserProperties";
-import * as usersDB_inactivateUser from "../helpers/usersDB/inactivateUser";
+import * as usersDB_getUser from "../helpers/usersDB/getUser.js";
+import * as usersDB_createUser from "../helpers/usersDB/createUser.js";
+import * as usersDB_generateNewPassword from "../helpers/usersDB/generateNewPassword.js";
+import * as usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword.js";
+import * as usersDB_getAllUsers from "../helpers/usersDB/getAllUsers.js";
+import * as usersDB_updateUser from "../helpers/usersDB/updateUser.js";
+import * as usersDB_updateUserProperty from "../helpers/usersDB/updateUserProperty.js";
+import * as usersDB_getUserProperties from "../helpers/usersDB/getUserProperties.js";
+import * as usersDB_inactivateUser from "../helpers/usersDB/inactivateUser.js";
 
 
 describe("helpers/usersDB", () => {

@@ -3,18 +3,18 @@ import * as assert from "assert";
 import * as puppeteer from "puppeteer";
 
 import * as http from "http";
-import * as app from "../app";
+import app from "../app.js";
 
-import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets";
+import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets.js";
 
-import { getAllUsers } from "../helpers/usersDB/getAllUsers";
-import { createUser } from "../helpers/usersDB/createUser";
-import { inactivateUser } from "../helpers/usersDB/inactivateUser";
-import { updateUserProperty } from "../helpers/usersDB/updateUserProperty";
+import { getAllUsers } from "../helpers/usersDB/getAllUsers.js";
+import { createUser } from "../helpers/usersDB/createUser.js";
+import { inactivateUser } from "../helpers/usersDB/inactivateUser.js";
+import { updateUserProperty } from "../helpers/usersDB/updateUserProperty.js";
 
-import { getModelsByMakeFromCache } from "../helpers/vehicleFns";
+import { getModelsByMakeFromCache } from "../helpers/vehicleFns.js";
 
-import { fakeViewOnlySession, userName } from "./_globals";
+import { fakeViewOnlySession, userName } from "./_globals.js";
 
 
 describe("parking-ticket-system", () => {

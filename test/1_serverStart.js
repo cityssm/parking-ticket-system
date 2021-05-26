@@ -1,25 +1,14 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const assert = require("assert");
-const puppeteer = require("puppeteer");
-const http = require("http");
-const app = require("../app");
-const getParkingTickets_1 = require("../helpers/parkingDB/getParkingTickets");
-const getAllUsers_1 = require("../helpers/usersDB/getAllUsers");
-const createUser_1 = require("../helpers/usersDB/createUser");
-const inactivateUser_1 = require("../helpers/usersDB/inactivateUser");
-const updateUserProperty_1 = require("../helpers/usersDB/updateUserProperty");
-const vehicleFns_1 = require("../helpers/vehicleFns");
-const _globals_1 = require("./_globals");
+import * as assert from "assert";
+import * as puppeteer from "puppeteer";
+import * as http from "http";
+import app from "../app.js";
+import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets.js";
+import { getAllUsers } from "../helpers/usersDB/getAllUsers.js";
+import { createUser } from "../helpers/usersDB/createUser.js";
+import { inactivateUser } from "../helpers/usersDB/inactivateUser.js";
+import { updateUserProperty } from "../helpers/usersDB/updateUserProperty.js";
+import { getModelsByMakeFromCache } from "../helpers/vehicleFns.js";
+import { fakeViewOnlySession, userName } from "./_globals.js";
 describe("parking-ticket-system", () => {
     const httpServer = http.createServer(app);
     const portNumber = 54333;
@@ -30,35 +19,35 @@ describe("parking-ticket-system", () => {
         httpServer.on("listening", () => {
             serverStarted = true;
         });
-        inactivateUser_1.inactivateUser(_globals_1.userName);
-        password = createUser_1.createUser({
-            userName: _globals_1.userName,
+        inactivateUser(userName);
+        password = createUser({
+            userName,
             firstName: "Test",
             lastName: "User"
         });
-        updateUserProperty_1.updateUserProperty({
-            userName: _globals_1.userName,
+        updateUserProperty({
+            userName,
             propertyName: "isOperator",
             propertyValue: "false"
         });
-        updateUserProperty_1.updateUserProperty({
-            userName: _globals_1.userName,
+        updateUserProperty({
+            userName,
             propertyName: "isAdmin",
             propertyValue: "false"
         });
-        updateUserProperty_1.updateUserProperty({
-            userName: _globals_1.userName,
+        updateUserProperty({
+            userName,
             propertyName: "canUpdate",
             propertyValue: "false"
         });
-        updateUserProperty_1.updateUserProperty({
-            userName: _globals_1.userName,
+        updateUserProperty({
+            userName,
             propertyName: "canCreate",
             propertyValue: "false"
         });
     });
     after(() => {
-        inactivateUser_1.inactivateUser(_globals_1.userName);
+        inactivateUser(userName);
         try {
             httpServer.close();
         }
@@ -70,25 +59,25 @@ describe("parking-ticket-system", () => {
     });
     describe("databases", () => {
         it("should create data/parking.db (or ensure it exists)", () => {
-            assert.ok(getParkingTickets_1.getParkingTickets(_globals_1.fakeViewOnlySession, { limit: 1, offset: 0 }));
+            assert.ok(getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
         });
         it("should create data/users.db (or ensure it exists)", () => {
-            assert.ok(getAllUsers_1.getAllUsers());
+            assert.ok(getAllUsers());
         });
         it("should create data/nhtsa.db (or ensure it exists)", () => {
-            assert.ok(vehicleFns_1.getModelsByMakeFromCache(""));
+            assert.ok(getModelsByMakeFromCache(""));
         });
     });
     const appURL = "http://localhost:" + portNumber.toString();
     describe("simple page tests", () => {
         const docsURL = appURL + "/docs";
         it("should load docs page - " + docsURL, (done) => {
-            (() => __awaiter(void 0, void 0, void 0, function* () {
-                const browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
-                yield page.goto(docsURL);
-                yield browser.close();
-            }))()
+            (async () => {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(docsURL);
+                await browser.close();
+            })()
                 .finally(() => {
                 done();
             });
@@ -112,27 +101,27 @@ describe("parking-ticket-system", () => {
         for (const pageName of Object.keys(pageTests)) {
             it("should login, navigate to " + pageName + ", and log out", (done) => {
                 const pageURLs = pageTests[pageName];
-                (() => __awaiter(void 0, void 0, void 0, function* () {
-                    const browser = yield puppeteer.launch();
-                    const page = yield browser.newPage();
-                    yield page.goto(appURL);
-                    yield page.focus("#login--userName");
-                    yield page.type("#login--userName", _globals_1.userName);
-                    yield page.focus("#login--password");
-                    yield page.type("#login--password", password);
-                    const loginFormEle = yield page.$("#form--login");
-                    yield loginFormEle.evaluate((formEle) => {
+                (async () => {
+                    const browser = await puppeteer.launch();
+                    const page = await browser.newPage();
+                    await page.goto(appURL);
+                    await page.focus("#login--userName");
+                    await page.type("#login--userName", userName);
+                    await page.focus("#login--password");
+                    await page.type("#login--password", password);
+                    const loginFormEle = await page.$("#form--login");
+                    await loginFormEle.evaluate((formEle) => {
                         formEle.submit();
                     });
-                    yield page.waitForNavigation();
-                    yield page.goto(appURL + pageURLs.goto);
+                    await page.waitForNavigation();
+                    await page.goto(appURL + pageURLs.goto);
                     if (pageURLs.waitFor) {
-                        yield page.waitForResponse(appURL + pageURLs.waitFor);
+                        await page.waitForResponse(appURL + pageURLs.waitFor);
                     }
-                    yield page.goto(appURL + "/logout");
-                    yield browser.close();
+                    await page.goto(appURL + "/logout");
+                    await browser.close();
                     assert.ok(true);
-                }))()
+                })()
                     .finally(() => {
                     done();
                 });
@@ -142,11 +131,11 @@ describe("parking-ticket-system", () => {
     describe("error page tests", () => {
         it("should return a 404 not found error", (done) => {
             let browser;
-            (() => __awaiter(void 0, void 0, void 0, function* () {
-                browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
+            (async () => {
+                browser = await puppeteer.launch();
+                const page = await browser.newPage();
                 let status = 0;
-                yield page.goto(appURL + "/page-not-found")
+                await page.goto(appURL + "/page-not-found")
                     .then((res) => {
                     status = res.status();
                 })
@@ -157,7 +146,7 @@ describe("parking-ticket-system", () => {
                     assert.equal(status, 404);
                     done();
                 });
-            }))()
+            })()
                 .catch(() => {
                 assert.fail();
             })
@@ -167,11 +156,11 @@ describe("parking-ticket-system", () => {
         });
         it("should return a 400 bad request error on missing docs", (done) => {
             let browser;
-            (() => __awaiter(void 0, void 0, void 0, function* () {
-                browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
+            (async () => {
+                browser = await puppeteer.launch();
+                const page = await browser.newPage();
                 let status = 0;
-                yield page.goto(appURL + "/docs/missing-doc.md")
+                await page.goto(appURL + "/docs/missing-doc.md")
                     .then((res) => {
                     status = res.status();
                 })
@@ -182,7 +171,7 @@ describe("parking-ticket-system", () => {
                     assert.equal(status, 400);
                     done();
                 });
-            }))()
+            })()
                 .catch(() => {
                 assert.fail();
             })
@@ -191,35 +180,35 @@ describe("parking-ticket-system", () => {
             });
         });
         it("should redirect to login if not logged in", (done) => {
-            (() => __awaiter(void 0, void 0, void 0, function* () {
-                const browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
-                yield page.goto(appURL + "/plates");
+            (async () => {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(appURL + "/plates");
                 assert.ok(page.url().includes("/login"));
-                yield browser.close();
-            }))()
+                await browser.close();
+            })()
                 .finally(() => {
                 done();
             });
         });
         it("should redirect to login if incorrect user name/password", (done) => {
             let isLoginPage = false;
-            const p = (() => __awaiter(void 0, void 0, void 0, function* () {
-                const browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
-                yield page.goto(appURL + "/login");
-                yield page.focus("#login--userName");
-                yield page.type("#login--userName", _globals_1.userName);
-                yield page.focus("#login--password");
-                yield page.type("#login--password", password + "-incorrect");
-                const loginFormEle = yield page.$("#form--login");
-                yield loginFormEle.evaluate((formEle) => {
+            const p = (async () => {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(appURL + "/login");
+                await page.focus("#login--userName");
+                await page.type("#login--userName", userName);
+                await page.focus("#login--password");
+                await page.type("#login--password", password + "-incorrect");
+                const loginFormEle = await page.$("#form--login");
+                await loginFormEle.evaluate((formEle) => {
                     formEle.submit();
                 });
-                yield page.waitForNavigation();
+                await page.waitForNavigation();
                 isLoginPage = page.url().includes("/login");
-                yield browser.close();
-            }))();
+                await browser.close();
+            })();
             p.catch(() => {
             })
                 .finally(() => {
@@ -229,23 +218,23 @@ describe("parking-ticket-system", () => {
         });
         it("should redirect to dashboard if insufficient user permissions", (done) => {
             let isDashboardPage = false;
-            const p = (() => __awaiter(void 0, void 0, void 0, function* () {
-                const browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
-                yield page.goto(appURL + "/login");
-                yield page.focus("#login--userName");
-                yield page.type("#login--userName", _globals_1.userName);
-                yield page.focus("#login--password");
-                yield page.type("#login--password", password);
-                const loginFormEle = yield page.$("#form--login");
-                yield loginFormEle.evaluate((formEle) => {
+            const p = (async () => {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(appURL + "/login");
+                await page.focus("#login--userName");
+                await page.type("#login--userName", userName);
+                await page.focus("#login--password");
+                await page.type("#login--password", password);
+                const loginFormEle = await page.$("#form--login");
+                await loginFormEle.evaluate((formEle) => {
                     formEle.submit();
                 });
-                yield page.waitForNavigation();
-                yield page.goto(appURL + "/admin/userManagement");
+                await page.waitForNavigation();
+                await page.goto(appURL + "/admin/userManagement");
                 isDashboardPage = page.url().includes("/dashboard");
-                yield browser.close();
-            }))();
+                await browser.close();
+            })();
             p.catch(() => {
             })
                 .finally(() => {
@@ -256,68 +245,68 @@ describe("parking-ticket-system", () => {
     });
     describe("admin page tests", () => {
         before(() => {
-            updateUserProperty_1.updateUserProperty({
-                userName: _globals_1.userName,
+            updateUserProperty({
+                userName,
                 propertyName: "isAdmin",
                 propertyValue: "true"
             });
-            updateUserProperty_1.updateUserProperty({
-                userName: _globals_1.userName,
+            updateUserProperty({
+                userName,
                 propertyName: "canUpdate",
                 propertyValue: "true"
             });
-            updateUserProperty_1.updateUserProperty({
-                userName: _globals_1.userName,
+            updateUserProperty({
+                userName,
                 propertyName: "canCreate",
                 propertyValue: "true"
             });
         });
         after(() => {
-            updateUserProperty_1.updateUserProperty({
-                userName: _globals_1.userName,
+            updateUserProperty({
+                userName,
                 propertyName: "isOperator",
                 propertyValue: "false"
             });
-            updateUserProperty_1.updateUserProperty({
-                userName: _globals_1.userName,
+            updateUserProperty({
+                userName,
                 propertyName: "isAdmin",
                 propertyValue: "false"
             });
-            updateUserProperty_1.updateUserProperty({
-                userName: _globals_1.userName,
+            updateUserProperty({
+                userName,
                 propertyName: "canUpdate",
                 propertyValue: "false"
             });
-            updateUserProperty_1.updateUserProperty({
-                userName: _globals_1.userName,
+            updateUserProperty({
+                userName,
                 propertyName: "canCreate",
                 propertyValue: "false"
             });
         });
         it("should open all admin pages", (done) => {
-            (() => __awaiter(void 0, void 0, void 0, function* () {
-                const browser = yield puppeteer.launch();
-                const page = yield browser.newPage();
-                yield page.goto(appURL);
-                yield page.focus("#login--userName");
-                yield page.type("#login--userName", _globals_1.userName);
-                yield page.focus("#login--password");
-                yield page.type("#login--password", password);
-                const loginFormEle = yield page.$("#form--login");
-                yield loginFormEle.evaluate((formEle) => {
+            (async () => {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(appURL);
+                await page.focus("#login--userName");
+                await page.type("#login--userName", userName);
+                await page.focus("#login--password");
+                await page.type("#login--password", password);
+                const loginFormEle = await page.$("#form--login");
+                await loginFormEle.evaluate((formEle) => {
                     formEle.submit();
                 });
-                yield page.waitForNavigation();
-                yield page.goto(appURL + "/tickets/new");
-                yield page.goto(appURL + "/admin/userManagement");
-                yield page.goto(appURL + "/admin/cleanup");
-                yield page.goto(appURL + "/admin/offences");
-                yield page.goto(appURL + "/admin/locations");
-                yield page.goto(appURL + "/admin/bylaws");
-                yield page.goto(appURL + "/logout");
-                yield browser.close();
+                await page.waitForNavigation();
+                await page.goto(appURL + "/tickets/new");
+                await page.goto(appURL + "/admin/userManagement");
+                await page.goto(appURL + "/admin/cleanup");
+                await page.goto(appURL + "/admin/offences");
+                await page.goto(appURL + "/admin/locations");
+                await page.goto(appURL + "/admin/bylaws");
+                await page.goto(appURL + "/logout");
+                await browser.close();
                 assert.ok(true);
-            }))()
+            })()
                 .finally(() => {
                 done();
             });

@@ -1,4 +1,4 @@
-import * as sqlite from "better-sqlite3";
+import sqlite from "better-sqlite3";
 
 import * as configFns from "../helpers/configFns.js";
 

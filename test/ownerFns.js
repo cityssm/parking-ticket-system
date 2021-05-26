@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const assert = require("assert");
-const ownerFns = require("../helpers/ownerFns");
+import * as assert from "assert";
+import * as ownerFns from "../helpers/ownerFns.js";
 describe("helpers/ownerFns", () => {
     describe("#getFormattedOwnerAddress()", () => {
         it("should format a LicencePlateOwner object", () => {

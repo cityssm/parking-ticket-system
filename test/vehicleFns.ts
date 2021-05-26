@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import * as vehicleFns from "../helpers/vehicleFns";
+import * as vehicleFns from "../helpers/vehicleFns.js";
 
 
 describe("helpers/vehicleFns", () => {

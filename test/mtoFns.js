@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const assert = require("assert");
-const mtoFns = require("../helpers/mtoFns");
+import * as assert from "assert";
+import * as mtoFns from "../helpers/mtoFns.js";
 describe("helpers/mtoFns", () => {
     const currentDate = new Date();
     describe("#twoDigitYearToFourDigit()", () => {
