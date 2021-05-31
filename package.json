@@ -26,7 +26,7 @@
   "dependencies": {
     "@cityssm/bulma-webapp-js": "^1.1.3",
     "@cityssm/expressjs-server-js": "^2.0.1",
-    "@fontsource/inter": "^4.3.0",
+    "@fontsource/inter": "^4.4.2",
     "@fontsource/pt-mono": "^4.3.0",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "bcrypt": "^5.0.1",
