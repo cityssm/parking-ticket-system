@@ -65,7 +65,7 @@
     "@types/html-pdf": "^2.2.0",
     "@types/http-errors": "^1.8.0",
     "@types/marked": "^2.0.3",
-    "@types/mocha": "^8.2.2",
+    "@types/mocha": "^9.0.0",
     "@types/multer": "^1.4.6",
     "@types/node-fetch": "^2.5.10",
     "@types/puppeteer": "^5.4.3",
