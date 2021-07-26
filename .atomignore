@@ -2,7 +2,6 @@
 *.d.ts
 app.js
 gulpfile.js
-public/javascripts/*.js
 public/stylesheets/*.css
 routes/*.js
 tasks/*.js

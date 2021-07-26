@@ -1,6 +1,6 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "../../types/publicTypes";
-import type * as configTypes from "../../types/configTypes";
+import type { ptsGlobal } from "../types/publicTypes";
+import type * as configTypes from "../types/configTypes";
 
 
 declare const cityssm: cityssmGlobal;
@@ -9,19 +9,21 @@ const pts: ptsGlobal = {};
 
 // CONFIG DEFAULTS
 
+interface DefaultConfigProperties {
+  locationClasses?: configTypes.ConfigLocationClass[];
+  ticketNumber_fieldLabel?: string;
+  parkingTicketStatuses?: configTypes.ConfigParkingTicketStatus[];
+  licencePlateCountryAliases?: { [countryShortName: string]: string };
+  licencePlateProvinceAliases?: {
+    [countryName: string]: { [provinceShortName: string]: string };
+  };
+  licencePlateProvinces?: {
+    [countryName: string]: configTypes.ConfigLicencePlateCountry;
+  };
+}
+
 (() => {
-  let defaultConfigProperties: {
-    locationClasses?: configTypes.ConfigLocationClass[];
-    ticketNumber_fieldLabel?: string;
-    parkingTicketStatuses?: configTypes.ConfigParkingTicketStatus[];
-    licencePlateCountryAliases?: { [countryShortName: string]: string };
-    licencePlateProvinceAliases?: {
-      [countryName: string]: { [provinceShortName: string]: string };
-    };
-    licencePlateProvinces?: {
-      [countryName: string]: configTypes.ConfigLicencePlateCountry;
-    };
-  } = {};
+  let defaultConfigProperties: DefaultConfigProperties = {};
   let defaultConfigPropertiesIsLoaded = false;
 
   const loadConfigPropertiesFromStorage = () => {
@@ -36,7 +38,7 @@ const pts: ptsGlobal = {};
 
         return true;
       }
-    } catch (e) {
+    } catch {
       defaultConfigProperties = {};
       defaultConfigPropertiesIsLoaded = true;
     }
@@ -44,21 +46,21 @@ const pts: ptsGlobal = {};
     return false;
   };
 
-  pts.loadDefaultConfigProperties = (callbackFn: () => void) => {
+  pts.loadDefaultConfigProperties = (callbackFunction: () => void) => {
     if (defaultConfigPropertiesIsLoaded) {
-      callbackFn();
+      callbackFunction();
       return;
     }
 
     if (loadConfigPropertiesFromStorage()) {
-      callbackFn();
+      callbackFunction();
       return;
     }
 
     cityssm.postJSON(
       "/dashboard/doGetDefaultConfigProperties",
       {},
-      (defaultConfigPropertiesResult) => {
+      (defaultConfigPropertiesResult: DefaultConfigProperties) => {
         defaultConfigProperties = defaultConfigPropertiesResult;
         defaultConfigPropertiesIsLoaded = true;
 
@@ -67,38 +69,37 @@ const pts: ptsGlobal = {};
             "defaultConfigProperties",
             JSON.stringify(defaultConfigProperties)
           );
-        } catch (_e) {
+        } catch {
           // Ignore
         }
 
-        callbackFn();
+        callbackFunction();
       }
     );
   };
 
-  // tslint:disable-next-line:no-any
   pts.getDefaultConfigProperty = (
     propertyName,
-    propertyValueCallbackFn: (propertyValue: any) => void
+    propertyValueCallbackFunction: (propertyValue: unknown) => void
   ) => {
     // Check memory
 
     if (defaultConfigPropertiesIsLoaded) {
-      propertyValueCallbackFn(defaultConfigProperties[propertyName]);
+      propertyValueCallbackFunction(defaultConfigProperties[propertyName]);
       return;
     }
 
     // Check local storage
 
     if (loadConfigPropertiesFromStorage()) {
-      propertyValueCallbackFn(defaultConfigProperties[propertyName]);
+      propertyValueCallbackFunction(defaultConfigProperties[propertyName]);
       return;
     }
 
     // Populate local storage
 
     pts.loadDefaultConfigProperties(() => {
-      propertyValueCallbackFn(defaultConfigProperties[propertyName]);
+      propertyValueCallbackFunction(defaultConfigProperties[propertyName]);
     });
   };
 
@@ -112,11 +113,7 @@ const pts: ptsGlobal = {};
       originalLicencePlateCountry.toUpperCase()
       ] || originalLicencePlateCountry;
 
-    if (
-      defaultConfigProperties.licencePlateProvinces.hasOwnProperty(
-        licencePlateCountryAlias
-      )
-    ) {
+    if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinces, licencePlateCountryAlias)) {
       return defaultConfigProperties.licencePlateProvinces[
         licencePlateCountryAlias
       ];
@@ -154,11 +151,7 @@ const pts: ptsGlobal = {};
 
     let licencePlateProvinceAlias = originalLicencePlateProvince;
 
-    if (
-      defaultConfigProperties.licencePlateProvinceAliases.hasOwnProperty(
-        licencePlateCountryAlias
-      )
-    ) {
+    if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinceAliases, licencePlateCountryAlias)) {
       const provinceAliases =
         defaultConfigProperties.licencePlateProvinceAliases[
         licencePlateCountryAlias
@@ -173,11 +166,7 @@ const pts: ptsGlobal = {};
 
     let licencePlateProvince = licencePlateProvinceDefault;
 
-    if (
-      defaultConfigProperties.licencePlateProvinces.hasOwnProperty(
-        licencePlateCountryAlias
-      )
-    ) {
+    if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinces, licencePlateCountryAlias)) {
       licencePlateProvince =
         defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias]
           .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
@@ -209,8 +198,8 @@ const pts: ptsGlobal = {};
     }
 
     if (!ticketStatusKeyToObjectIsLoaded) {
-      for (const ticketStatusObj of defaultConfigProperties.parkingTicketStatuses) {
-        ticketStatusKeyToObject.set(ticketStatusObj.statusKey, ticketStatusObj);
+      for (const ticketStatusObject of defaultConfigProperties.parkingTicketStatuses) {
+        ticketStatusKeyToObject.set(ticketStatusObject.statusKey, ticketStatusObject);
       }
 
       ticketStatusKeyToObjectIsLoaded = true;
@@ -236,8 +225,8 @@ const pts: ptsGlobal = {};
     }
 
     if (!locationClassKeyToObjectIsLoaded) {
-      for (const locationClassObj of defaultConfigProperties.locationClasses) {
-        locationClassKeyToObject.set(locationClassObj.locationClassKey, locationClassObj);
+      for (const locationClassObject of defaultConfigProperties.locationClasses) {
+        locationClassKeyToObject.set(locationClassObject.locationClassKey, locationClassObject);
       }
 
       locationClassKeyToObjectIsLoaded = true;
@@ -251,84 +240,79 @@ const pts: ptsGlobal = {};
 
 // TABS
 
-pts.initializeTabs = (tabsListEle, callbackFns) => {
-  if (!tabsListEle) {
+pts.initializeTabs = (tabsListElement, callbackFunctions) => {
+  if (!tabsListElement) {
     return;
   }
 
   const isPanelOrMenuListTabs =
-    tabsListEle.classList.contains("panel-tabs") ||
-    tabsListEle.classList.contains("menu-list");
+    tabsListElement.classList.contains("panel-tabs") ||
+    tabsListElement.classList.contains("menu-list");
 
-  const listItemEles = tabsListEle.getElementsByTagName(
+  const listItemElements = tabsListElement.querySelectorAll(
     isPanelOrMenuListTabs ? "a" : "li"
   );
-  const tabLinkEles = isPanelOrMenuListTabs
-    ? listItemEles
-    : tabsListEle.getElementsByTagName("a");
 
-  const tabClickFn = (clickEvent: Event) => {
+  const tabLinkElements = isPanelOrMenuListTabs
+    ? listItemElements
+    : tabsListElement.querySelectorAll("a");
+
+  const tabClickFunction = (clickEvent: Event) => {
     clickEvent.preventDefault();
 
-    const tabLinkEle = clickEvent.currentTarget as HTMLAnchorElement;
-    const tabContentEle = document.getElementById(
-      tabLinkEle.getAttribute("href").substring(1)
-    );
+    const selectedTabLinkElement = clickEvent.currentTarget as HTMLAnchorElement;
+    const selectedTabContentElement = document.querySelector(selectedTabLinkElement.getAttribute("href")) as HTMLElement;
 
-    for (let index = 0; index < listItemEles.length; index += 1) {
-      listItemEles[index].classList.remove("is-active");
-      tabLinkEles[index].setAttribute("aria-selected", "false");
+    for (const [index, listItemElement] of listItemElements.entries()) {
+      listItemElement.classList.remove("is-active");
+      tabLinkElements[index].setAttribute("aria-selected", "false");
     }
 
-    // Add is-active to the selected tab
+    // Add .is-active to the selected tab
     (isPanelOrMenuListTabs
-      ? tabLinkEle
-      : tabLinkEle.parentElement
+      ? selectedTabLinkElement
+      : selectedTabLinkElement.parentElement
     ).classList.add("is-active");
-    tabLinkEle.setAttribute("aria-selected", "true");
+    selectedTabLinkElement.setAttribute("aria-selected", "true");
 
-    const tabContentEles = tabContentEle.parentElement.getElementsByClassName(
-      "tab-content"
-    );
+    const tabContentElements = selectedTabContentElement.parentElement.querySelectorAll(".tab-content");
 
-    for (const tabContentEle of tabContentEles) {
-      tabContentEle.classList.remove("is-active");
+    for (const tabContentElement_ of tabContentElements) {
+      tabContentElement_.classList.remove("is-active");
     }
 
-    tabContentEle.classList.add("is-active");
+    selectedTabContentElement.classList.add("is-active");
 
-    if (callbackFns ?.onshown) {
-      callbackFns.onshown(tabContentEle);
+    if (callbackFunctions ?.onshown) {
+      callbackFunctions.onshown(selectedTabContentElement);
     }
   };
 
-  for (const listItemEle of listItemEles) {
+  for (const listItemElement of listItemElements) {
     (isPanelOrMenuListTabs
-      ? listItemEle
-      : listItemEle.getElementsByTagName("a")[0]
-    ).addEventListener("click", tabClickFn);
+      ? listItemElement
+      : listItemElement.querySelector("a")
+    ).addEventListener("click", tabClickFunction);
   }
 };
 
 // TOGGLE CONTAINERS
 
 (() => {
-  const toggleHiddenFn = (clickEvent: Event) => {
+  const toggleHiddenFunction = (clickEvent: Event) => {
     clickEvent.preventDefault();
 
     const href = (clickEvent.currentTarget as HTMLAnchorElement).href;
-    const divID = href.substring(href.indexOf("#") + 1);
+    const divID = href.slice(Math.max(0, href.indexOf("#") + 1));
 
-    document.getElementById(divID).classList.toggle("is-hidden");
+    document.querySelector("#" + divID).classList.toggle("is-hidden");
   };
 
-  pts.initializeToggleHiddenLinks = (searchContainerEle) => {
-    const linkEles = searchContainerEle.getElementsByClassName(
-      "is-toggle-hidden-link"
-    );
+  pts.initializeToggleHiddenLinks = (searchContainerElement) => {
+    const linkElements = searchContainerElement.querySelectorAll(".is-toggle-hidden-link");
 
-    for (const linkEle of linkEles) {
-      linkEle.addEventListener("click", toggleHiddenFn);
+    for (const linkElement of linkElements) {
+      linkElement.addEventListener("click", toggleHiddenFunction);
     }
   };
 })();

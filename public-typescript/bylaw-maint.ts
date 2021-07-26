@@ -1,5 +1,7 @@
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ParkingBylaw } from "../../types/recordTypes";
+import type { ParkingBylaw } from "../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 
@@ -12,8 +14,8 @@ interface UpdateBylawResponseJSON {
 
 (() => {
 
-  const bylawFilterEle = document.getElementById("bylawFilter--bylaw") as HTMLInputElement;
-  const bylawResultsEle = document.getElementById("bylawResults");
+  const bylawFilterElement = document.querySelector("#bylawFilter--bylaw") as HTMLInputElement;
+  const bylawResultsElement = document.querySelector("#bylawResults") as HTMLElement;
 
   let bylawList = exports.bylaws as ParkingBylaw[];
   delete exports.bylaws;
@@ -23,12 +25,12 @@ interface UpdateBylawResponseJSON {
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
+    const listIndex = Number.parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
-    let updateOffencesCloseModalFn: () => void;
+    let updateOffencesCloseModalFunction: () => void;
 
-    const updateFn = (formEvent: Event) => {
+    const updateFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
@@ -36,9 +38,9 @@ interface UpdateBylawResponseJSON {
         (responseJSON: UpdateBylawResponseJSON) => {
 
           if (responseJSON.success) {
-            updateOffencesCloseModalFn();
+            updateOffencesCloseModalFunction();
             bylawList = responseJSON.bylaws;
-            renderBylawListFn();
+            renderBylawListFunction();
           }
         });
     };
@@ -46,38 +48,38 @@ interface UpdateBylawResponseJSON {
     cityssm.openHtmlModal("bylaw-updateOffences", {
       onshow(): void {
 
-        (document.getElementById("updateOffences--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
-        (document.getElementById("updateOffences--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
+        (document.querySelector("#updateOffences--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
+        (document.querySelector("#updateOffences--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
 
-        (document.getElementById("updateOffences--offenceAmount") as HTMLInputElement).value =
+        (document.querySelector("#updateOffences--offenceAmount") as HTMLInputElement).value =
           bylaw.offenceAmountMin.toFixed(2);
 
-        (document.getElementById("updateOffences--discountDays") as HTMLInputElement).value =
+        (document.querySelector("#updateOffences--discountDays") as HTMLInputElement).value =
           bylaw.discountDaysMin.toString();
 
-        (document.getElementById("updateOffences--discountOffenceAmount") as HTMLInputElement).value =
+        (document.querySelector("#updateOffences--discountOffenceAmount") as HTMLInputElement).value =
           bylaw.discountOffenceAmountMin.toFixed(2);
 
       },
-      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
+      onshown(modalElement: HTMLElement, closeModalFunction: () => void): void {
 
-        updateOffencesCloseModalFn = closeModalFn;
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", updateFn);
+        updateOffencesCloseModalFunction = closeModalFunction;
+        modalElement.querySelector("form").addEventListener("submit", updateFunction);
       }
     });
   };
 
 
-  const openEditBylawModalFn = (clickEvent: Event) => {
+  const openEditBylawModalFunction = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const listIndex = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
+    const listIndex = Number.parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
     const bylaw = bylawList[listIndex];
 
-    let editBylawCloseModalFn: () => void;
+    let editBylawCloseModalFunction: () => void;
 
-    const deleteFn = () => {
+    const deleteFunction = () => {
 
       cityssm.postJSON("/admin/doDeleteBylaw", {
         bylawNumber: bylaw.bylawNumber
@@ -85,14 +87,14 @@ interface UpdateBylawResponseJSON {
 
         if (responseJSON.success) {
 
-          editBylawCloseModalFn();
+          editBylawCloseModalFunction();
           bylawList = responseJSON.bylaws;
-          renderBylawListFn();
+          renderBylawListFunction();
         }
       });
     };
 
-    const confirmDeleteFn = (deleteClickEvent: Event) => {
+    const confirmDeleteFunction = (deleteClickEvent: Event) => {
 
       deleteClickEvent.preventDefault();
 
@@ -101,12 +103,12 @@ interface UpdateBylawResponseJSON {
         "Are you sure you want to remove by-law \"" + bylaw.bylawNumber + "\" from the list of available options?",
         "Yes, Remove By-Law",
         "danger",
-        deleteFn
+        deleteFunction
       );
 
     };
 
-    const editFn = (formEvent: Event) => {
+    const editFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
@@ -114,9 +116,9 @@ interface UpdateBylawResponseJSON {
 
         if (responseJSON.success) {
 
-          editBylawCloseModalFn();
+          editBylawCloseModalFunction();
           bylawList = responseJSON.bylaws;
-          renderBylawListFn();
+          renderBylawListFunction();
 
         }
 
@@ -127,33 +129,33 @@ interface UpdateBylawResponseJSON {
     cityssm.openHtmlModal("bylaw-edit", {
       onshow(): void {
 
-        (document.getElementById("editBylaw--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
-        (document.getElementById("editBylaw--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
+        (document.querySelector("#editBylaw--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
+        (document.querySelector("#editBylaw--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
 
       },
-      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
+      onshown(modalElement, closeModalFunction): void {
 
-        editBylawCloseModalFn = closeModalFn;
+        editBylawCloseModalFunction = closeModalFunction;
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", editFn);
+        modalElement.querySelector("form").addEventListener("submit", editFunction);
 
-        modalEle.getElementsByClassName("is-delete-button")[0].addEventListener("click", confirmDeleteFn);
+        modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
 
       }
     });
   };
 
 
-  const renderBylawListFn = () => {
+  const renderBylawListFunction = () => {
 
     let displayCount = 0;
 
-    const bylawFilterSplit = bylawFilterEle.value.trim().toLowerCase()
+    const bylawFilterSplit = bylawFilterElement.value.trim().toLowerCase()
       .split(" ");
 
-    const tbodyEle = document.createElement("tbody");
+    const tbodyElement = document.createElement("tbody");
 
-    bylawList.forEach((bylaw, bylawIndex) => {
+    for (const [bylawIndex, bylaw] of bylawList.entries()) {
 
       let showRecord = true;
 
@@ -171,12 +173,12 @@ interface UpdateBylawResponseJSON {
       }
 
       if (!showRecord) {
-        return;
+        continue;
       }
 
       displayCount += 1;
 
-      const trEle = document.createElement("tr");
+      const trElement = document.createElement("tr");
 
       let offenceAmountRange = "";
       let hasOffences = false;
@@ -200,7 +202,7 @@ interface UpdateBylawResponseJSON {
           "</a>";
       }
 
-      trEle.innerHTML =
+      trElement.innerHTML =
         "<td>" +
         "<a data-index=\"" + bylawIndex.toString() + "\" href=\"#\">" +
         cityssm.escapeHTML(bylaw.bylawNumber) +
@@ -210,22 +212,21 @@ interface UpdateBylawResponseJSON {
         "<td class=\"has-text-right\">" + bylaw.offenceCount.toString() + "</td>" +
         "<td class=\"has-text-right\">" + offenceAmountRange + "</td>";
 
-      trEle.getElementsByTagName("a")[0].addEventListener("click", openEditBylawModalFn);
+      trElement.querySelectorAll("a")[0].addEventListener("click", openEditBylawModalFunction);
 
       if (hasOffences) {
-        trEle.getElementsByTagName("a")[1].addEventListener("click", openUpdateOffencesModal);
+        trElement.querySelectorAll("a")[1].addEventListener("click", openUpdateOffencesModal);
 
       }
 
-      tbodyEle.appendChild(trEle);
+      tbodyElement.append(trElement);
+    }
 
-    });
-
-    cityssm.clearElement(bylawResultsEle);
+    cityssm.clearElement(bylawResultsElement);
 
     if (displayCount === 0) {
 
-      bylawResultsEle.innerHTML = "<div class=\"message is-info\">" +
+      bylawResultsElement.innerHTML = "<div class=\"message is-info\">" +
         "<div class=\"message-body\">There are no by-laws that meet your search criteria.</div>" +
         "</div>";
 
@@ -233,7 +234,7 @@ interface UpdateBylawResponseJSON {
 
     }
 
-    bylawResultsEle.innerHTML = "<table class=\"table is-striped is-hoverable is-fullwidth\">" +
+    bylawResultsElement.innerHTML = "<table class=\"table is-striped is-hoverable is-fullwidth\">" +
       "<thead><tr>" +
       "<th>By-Law Number</th>" +
       "<th class=\"has-border-right-width-2\">Description</th>" +
@@ -242,27 +243,27 @@ interface UpdateBylawResponseJSON {
       "</tr></thead>" +
       "</table>";
 
-    bylawResultsEle.getElementsByTagName("table")[0].appendChild(tbodyEle);
+    bylawResultsElement.querySelector("table").append(tbodyElement);
   };
 
 
   // Initialize filters
 
 
-  bylawFilterEle.addEventListener("keyup", renderBylawListFn);
-  renderBylawListFn();
+  bylawFilterElement.addEventListener("keyup", renderBylawListFunction);
+  renderBylawListFunction();
 
 
   // Initialize add button
 
 
-  document.getElementById("is-add-bylaw-button").addEventListener("click", (clickEvent) => {
+  document.querySelector("#is-add-bylaw-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addBylawCloseModalFn: () => void;
+    let addBylawCloseModalFunction: () => void;
 
-    const addFn = (formEvent: Event) => {
+    const addFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
@@ -270,7 +271,7 @@ interface UpdateBylawResponseJSON {
 
         if (responseJSON.success) {
 
-          addBylawCloseModalFn();
+          addBylawCloseModalFunction();
 
           if (responseJSON.message) {
 
@@ -284,7 +285,7 @@ interface UpdateBylawResponseJSON {
           }
 
           bylawList = responseJSON.bylaws;
-          renderBylawListFn();
+          renderBylawListFunction();
 
         } else {
 
@@ -294,22 +295,16 @@ interface UpdateBylawResponseJSON {
             "OK",
             "danger"
           );
-
         }
-
       });
-
     };
 
     cityssm.openHtmlModal("bylaw-add", {
 
-      onshown(modalEle: HTMLElement, closeModalFn: () => void): void {
-        addBylawCloseModalFn = closeModalFn;
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", addFn);
+      onshown(modalElement, closeModalFunction): void {
+        addBylawCloseModalFunction = closeModalFunction;
+        modalElement.querySelector("form").addEventListener("submit", addFunction);
       }
-
     });
-
   });
-
 })();

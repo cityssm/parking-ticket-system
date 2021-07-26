@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2020",
     "module": "ES2020",
     "moduleResolution": "Node",
     "isolatedModules": false,
@@ -9,7 +9,8 @@
     "removeComments": true,
     "allowUnreachableCode": false,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "compileOnSave": true,
   "buildOnSave": true,
@@ -28,5 +29,8 @@
     "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
     "placeOpenBraceOnNewLineForFunctions": false,
     "placeOpenBraceOnNewLineForControlBlocks": false
-  }
+  },
+  "exclude": [
+    "public-typescript/*"
+  ]
 }

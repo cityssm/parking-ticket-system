@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
 declare const cityssm: cityssmGlobal;
 
@@ -7,16 +9,16 @@ declare const cityssm: cityssmGlobal;
   const recordDelete_timeMillis: number = exports.recordDelete_timeMillis;
   delete exports.recordDelete_timeMillis;
 
-  const purgeTableFn = (clickEvent: Event) => {
+  const purgeTableFunction = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    const buttonEle = clickEvent.currentTarget as HTMLButtonElement;
-    buttonEle.setAttribute("disabled", "disabled");
+    const buttonElement = clickEvent.currentTarget as HTMLButtonElement;
+    buttonElement.setAttribute("disabled", "disabled");
 
-    const table = buttonEle.getAttribute("data-table");
+    const table = buttonElement.getAttribute("data-table");
 
-    const purgeFn = () => {
+    const purgeFunction = () => {
 
       cityssm.postJSON("/admin/doCleanupTable", {
         table,
@@ -31,10 +33,10 @@ declare const cityssm: cityssmGlobal;
               "OK",
               "success");
 
-            buttonEle.closest("td").innerHTML = "<span class=\"has-text-grey\">Records Purged</span>";
+            buttonElement.closest("td").innerHTML = "<span class=\"has-text-grey\">Records Purged</span>";
 
           } else {
-            buttonEle.removeAttribute("disabled");
+            buttonElement.removeAttribute("disabled");
           }
         });
     };
@@ -43,12 +45,12 @@ declare const cityssm: cityssmGlobal;
       "Are you sure you want to purge the deleted records in this table? This cannot be undone.",
       "Yes, Delete the Records",
       "warning",
-      purgeFn);
+      purgeFunction);
   };
 
-  const purgeButtonEles = document.getElementsByClassName("is-purge-button") as HTMLCollectionOf<HTMLButtonElement>;
+  const purgeButtonElements = document.querySelectorAll(".is-purge-button") as NodeListOf<HTMLButtonElement>;
 
-  for (const purgeButtonEle of purgeButtonEles) {
-    purgeButtonEle.addEventListener("click", purgeTableFn);
+  for (const purgeButtonElement of purgeButtonElements) {
+    purgeButtonElement.addEventListener("click", purgeTableFunction);
   }
 })();

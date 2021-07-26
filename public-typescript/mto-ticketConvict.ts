@@ -1,5 +1,5 @@
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ParkingTicket, ParkingTicketConvictionBatch } from "../../types/recordTypes";
+import type { ParkingTicket, ParkingTicketConvictionBatch } from "../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
 

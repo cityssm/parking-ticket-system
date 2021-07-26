@@ -1,35 +1,44 @@
+/* eslint-disable node/no-unpublished-import */
+
 import gulp from "gulp";
+import changed from "gulp-changed";
 import minify from "gulp-minify";
 
 /*
  * Minify public/javascripts
  */
 
-const publicJavascriptsMinFn = () => {
+const publicJavascriptsDestination = "public/javascripts";
 
-  return gulp.src("public/javascripts/!(*.min).js", { allowEmpty: true })
+const publicJavascriptsMinFunction = () => {
+
+  return gulp.src("public-typescript/*.js", { allowEmpty: true })
+    .pipe(changed(publicJavascriptsDestination, {
+      extension: ".min.js"
+    }))
     .pipe(minify({ noSource: true, ext: { min: ".min.js" } }))
-    .pipe(gulp.dest("public/javascripts"));
+    .pipe(gulp.dest(publicJavascriptsDestination));
 };
 
 
-gulp.task("public-javascript-min", publicJavascriptsMinFn);
+
+gulp.task("public-javascript-min", publicJavascriptsMinFunction);
 
 /*
  * Watch
  */
 
-const watchFn = () => {
-  gulp.watch("public/javascripts/!(*.min).js", publicJavascriptsMinFn);
+const watchFunction = () => {
+  gulp.watch("public-typescript/*.js", publicJavascriptsMinFunction);
 };
 
-gulp.task("watch", watchFn);
+gulp.task("watch", watchFunction);
 
 /*
  * Initialize default
  */
 
 gulp.task("default", () => {
-  publicJavascriptsMinFn();
-  watchFn();
+  publicJavascriptsMinFunction();
+  watchFunction();
 });
