@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
 import type { ptsGlobal } from "../types/publicTypes";
 import type * as recordTypes from "../types/recordTypes";
@@ -8,43 +10,42 @@ declare const pts: ptsGlobal;
 
 (() => {
 
-  const ticketID = (document.getElementById("ticket--ticketID") as HTMLInputElement).value;
+  const ticketID = (document.querySelector("#ticket--ticketID") as HTMLInputElement).value;
   const isCreate = (ticketID === "");
 
   /*
    * Form Management
    */
 
-  const formMessageEle = document.getElementById("container--form-message");
+  const formMessageElement = document.querySelector("#container--form-message");
 
   // let hasUnsavedChanges = false;
 
-  const setUnsavedChangesFn = () => {
+  const setUnsavedChangesFunction = () => {
 
     cityssm.enableNavBlocker();
 
     // hasUnsavedChanges = true;
 
-    formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+    formMessageElement.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
       "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
       " <span>Unsaved Changes</span>" +
       "</div>";
-
   };
 
-  const inputEles = document.querySelectorAll(".input, .select, .textarea");
+  const inputElements = document.querySelectorAll(".input, .select, .textarea");
 
-  for (const inputEle of inputEles) {
-    inputEle.addEventListener("change", setUnsavedChangesFn);
+  for (const inputElement of inputElements) {
+    inputElement.addEventListener("change", setUnsavedChangesFunction);
   }
 
-  document.getElementById("form--ticket").addEventListener("submit", (formEvent) => {
+  document.querySelector("#form--ticket").addEventListener("submit", (formEvent) => {
 
     formEvent.preventDefault();
 
-    const ticketNumber = (document.getElementById("ticket--ticketNumber") as HTMLInputElement).value;
+    const ticketNumber = (document.querySelector("#ticket--ticketNumber") as HTMLInputElement).value;
 
-    formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+    formMessageElement.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
       "<span>Saving ticket... </span>" +
       " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
       "</div>";
@@ -59,14 +60,14 @@ declare const pts: ptsGlobal;
           cityssm.disableNavBlocker();
           // hasUnsavedChanges = false;
 
-          formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
+          formMessageElement.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
             "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
             " <span>Saved Successfully</span>" +
             "</div>";
 
         } else {
 
-          setUnsavedChangesFn();
+          setUnsavedChangesFunction();
           cityssm.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
 
         }
@@ -76,14 +77,14 @@ declare const pts: ptsGlobal;
           cityssm.openHtmlModal("ticket-createSuccess", {
             onshow(): void {
 
-              document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
+              document.querySelector("#createSuccess--ticketNumber").textContent = ticketNumber;
 
-              document.getElementById("createSuccess--editTicketButton").setAttribute(
+              document.querySelector("#createSuccess--editTicketButton").setAttribute(
                 "href",
                 "/tickets/" + responseJSON.ticketID.toString() + "/edit"
               );
 
-              document.getElementById("createSuccess--newTicketButton").setAttribute(
+              document.querySelector("#createSuccess--newTicketButton").setAttribute(
                 "href",
                 "/tickets/new/" + responseJSON.nextTicketNumber
               );
@@ -99,7 +100,7 @@ declare const pts: ptsGlobal;
 
   if (!isCreate) {
 
-    document.getElementById("is-delete-ticket-button").addEventListener("click", (clickEvent) => {
+    document.querySelector("#is-delete-ticket-button").addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 
@@ -132,40 +133,39 @@ declare const pts: ptsGlobal;
 
   pts.getDefaultConfigProperty("locationClasses", () => {
 
-    let locationLookupCloseModalFn: () => void;
+    let locationLookupCloseModalFunction: () => void;
 
     let locationList = [];
 
-    const clearLocationFn = (clickEvent: Event) => {
+    const clearLocationFunction = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
-      (document.getElementById("ticket--locationKey") as HTMLInputElement).value = "";
-      (document.getElementById("ticket--locationName") as HTMLInputElement).value = "";
+      (document.querySelector("#ticket--locationKey") as HTMLInputElement).value = "";
+      (document.querySelector("#ticket--locationName") as HTMLInputElement).value = "";
 
-      locationLookupCloseModalFn();
+      locationLookupCloseModalFunction();
+
+      locationList = [];
+    };
+
+    const setLocationFunction = (clickEvent: Event) => {
+
+      clickEvent.preventDefault();
+
+      const locationObject =
+        locationList[Number.parseInt((clickEvent.currentTarget as HTMLAnchorElement).dataset.index, 10)];
+
+      (document.querySelector("#ticket--locationKey") as HTMLInputElement).value = locationObject.locationKey;
+      (document.querySelector("#ticket--locationName") as HTMLInputElement).value = locationObject.locationName;
+
+      locationLookupCloseModalFunction();
 
       locationList = [];
 
     };
 
-    const setLocationFn = (clickEvent: Event) => {
-
-      clickEvent.preventDefault();
-
-      const locationObj =
-        locationList[parseInt((clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-index"), 10)];
-
-      (document.getElementById("ticket--locationKey") as HTMLInputElement).value = locationObj.locationKey;
-      (document.getElementById("ticket--locationName") as HTMLInputElement).value = locationObj.locationName;
-
-      locationLookupCloseModalFn();
-
-      locationList = [];
-
-    };
-
-    const populateLocationsFn = () => {
+    const populateLocationsFunction = () => {
 
       cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListRes: recordTypes.ParkingLocation[]) => {
 
@@ -182,7 +182,7 @@ declare const pts: ptsGlobal;
           linkEle.className = "panel-block is-block";
           linkEle.setAttribute("data-index", index.toString());
           linkEle.setAttribute("href", "#");
-          linkEle.addEventListener("click", setLocationFn);
+          linkEle.addEventListener("click", setLocationFunction);
           linkEle.innerHTML =
             "<div class=\"level\">" +
             "<div class=\"level-left\">" + cityssm.escapeHTML(locationObj.locationName) + "</div>" +
@@ -202,28 +202,28 @@ declare const pts: ptsGlobal;
       });
     };
 
-    const openLocationLookupModalFn = (clickEvent: Event) => {
+    const openLocationLookupModalFunction = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
       cityssm.openHtmlModal("ticket-setLocation", {
-        onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
+        onshown(_modalElement, closeModalFunction) {
 
-          locationLookupCloseModalFn = closeModalFn;
-          populateLocationsFn();
+          locationLookupCloseModalFunction = closeModalFunction;
+          populateLocationsFunction();
 
-          document.getElementById("is-clear-location-button").addEventListener("click", clearLocationFn);
+          document.querySelector("#is-clear-location-button").addEventListener("click", clearLocationFunction);
 
         },
         onremoved(): void {
-          document.getElementById("is-location-lookup-button").focus();
+          (document.querySelector("#is-location-lookup-button") as HTMLButtonElement).focus();
         }
       });
 
     };
 
-    document.getElementById("is-location-lookup-button").addEventListener("click", openLocationLookupModalFn);
-    document.getElementById("ticket--locationName").addEventListener("dblclick", openLocationLookupModalFn);
+    document.querySelector("#is-location-lookup-button").addEventListener("click", openLocationLookupModalFunction);
+    document.querySelector("#ticket--locationName").addEventListener("dblclick", openLocationLookupModalFunction);
   });
 
   /*
@@ -232,7 +232,7 @@ declare const pts: ptsGlobal;
 
   {
 
-    let bylawLookupCloseModalFn: () => void;
+    let bylawLookupCloseModalFunction: () => void;
     let offenceList: recordTypes.ParkingOffence[] = [];
     let listItemEles: HTMLAnchorElement[] = [];
 
@@ -276,7 +276,7 @@ declare const pts: ptsGlobal;
 
       (document.getElementById("ticket--parkingOffence") as HTMLTextAreaElement).value = "";
 
-      bylawLookupCloseModalFn();
+      bylawLookupCloseModalFunction();
 
       offenceList = [];
     };
@@ -324,7 +324,7 @@ declare const pts: ptsGlobal;
 
       (document.getElementById("ticket--parkingOffence") as HTMLTextAreaElement).value = offenceObj.bylawDescription;
 
-      bylawLookupCloseModalFn();
+      bylawLookupCloseModalFunction();
 
       offenceList = [];
 
@@ -409,7 +409,7 @@ declare const pts: ptsGlobal;
       cityssm.openHtmlModal("ticket-setBylawOffence", {
         onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
 
-          bylawLookupCloseModalFn = closeModalFn;
+          bylawLookupCloseModalFunction = closeModalFn;
           populateBylawsFn();
 
           const searchStringEle = document.getElementById("bylawLookup--searchStr") as HTMLInputElement;

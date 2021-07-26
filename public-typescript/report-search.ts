@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import type { ptsGlobal } from "../types/publicTypes";
 declare const pts: ptsGlobal;
 

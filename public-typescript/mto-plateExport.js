@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const canUpdate = document.getElementsByTagName("main")[0].getAttribute("data-can-update") === "true";
+    const canUpdate = document.querySelector("main").getAttribute("data-can-update") === "true";
     let batchID = -1;
     let batchIsLocked = true;
     let batchIsSent = false;
-    const availableIssueDaysAgoEle = document.getElementById("available--issueDaysAgo");
-    const availablePlatesContainerEle = document.getElementById("is-available-plates-container");
-    const licencePlateNumberFilterEle = document.getElementById("available--licencePlateNumber");
+    const availableIssueDaysAgoElement = document.querySelector("#available--issueDaysAgo");
+    const availablePlatesContainerElement = document.querySelector("#is-available-plates-container");
+    const licencePlateNumberFilterElement = document.querySelector("#available--licencePlateNumber");
     let availablePlatesList = [];
     let batchEntriesList = [];
-    const clickFn_addLicencePlateToBatch = (clickEvent) => {
+    const clickFunction_addLicencePlateToBatch = (clickEvent) => {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
-        buttonEle.setAttribute("disabled", "disabled");
-        const recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
+        const buttonElement = clickEvent.currentTarget;
+        buttonElement.setAttribute("disabled", "disabled");
+        const recordIndex = Number.parseInt(buttonElement.getAttribute("data-index"), 10);
         const plateRecord = availablePlatesList[recordIndex];
-        const plateContainerEle = buttonEle.closest(".is-plate-container");
+        const plateContainerElement = buttonElement.closest(".is-plate-container");
         cityssm.postJSON("/plates/doAddLicencePlateToLookupBatch", {
             batchID,
             licencePlateCountry: "CA",
@@ -25,22 +25,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ticketID: plateRecord.ticketIDMin
         }, (responseJSON) => {
             if (responseJSON.success) {
-                plateContainerEle.remove();
-                availablePlatesList[recordIndex] = null;
-                fn_populateBatchView(responseJSON.batch);
+                plateContainerElement.remove();
+                availablePlatesList[recordIndex] = undefined;
+                function_populateBatchView(responseJSON.batch);
             }
             else {
-                buttonEle.removeAttribute("disabled");
+                buttonElement.removeAttribute("disabled");
             }
         });
     };
-    const clickFn_removeLicencePlateFromBatch = (clickEvent) => {
+    const clickFunction_removeLicencePlateFromBatch = (clickEvent) => {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
-        buttonEle.setAttribute("disabled", "disabled");
-        const recordIndex = parseInt(buttonEle.getAttribute("data-index"), 10);
+        const buttonElement = clickEvent.currentTarget;
+        buttonElement.setAttribute("disabled", "disabled");
+        const recordIndex = Number.parseInt(buttonElement.getAttribute("data-index"), 10);
         const batchEntry = batchEntriesList[recordIndex];
-        const entryContainerEle = buttonEle.closest(".is-entry-container");
+        const entryContainerElement = buttonElement.closest(".is-entry-container");
         cityssm.postJSON("/plates/doRemoveLicencePlateFromLookupBatch", {
             batchID,
             licencePlateCountry: "CA",
@@ -48,57 +48,51 @@ Object.defineProperty(exports, "__esModule", { value: true });
             licencePlateNumber: batchEntry.licencePlateNumber
         }, (responseJSON) => {
             if (responseJSON.success) {
-                entryContainerEle.remove();
-                fn_refreshAvailablePlates();
+                entryContainerElement.remove();
+                function_refreshAvailablePlates();
             }
             else {
-                buttonEle.removeAttribute("disabled");
+                buttonElement.removeAttribute("disabled");
             }
         });
     };
-    const clickFn_clearBatch = (clickEvent) => {
+    const clickFunction_clearBatch = (clickEvent) => {
         clickEvent.preventDefault();
-        const clearFn = () => {
+        const clearFunction = () => {
             cityssm.postJSON("/plates/doClearLookupBatch", {
                 batchID
             }, (responseJSON) => {
                 if (responseJSON.success) {
-                    fn_populateBatchView(responseJSON.batch);
-                    fn_refreshAvailablePlates();
+                    function_populateBatchView(responseJSON.batch);
+                    function_refreshAvailablePlates();
                 }
             });
         };
-        cityssm.confirmModal("Clear Batch?", "Are you sure you want to remove all licence plates from the batch?", "Yes, Clear the Batch", "warning", clearFn);
+        cityssm.confirmModal("Clear Batch?", "Are you sure you want to remove all licence plates from the batch?", "Yes, Clear the Batch", "warning", clearFunction);
     };
-    const clickFn_downloadBatch = (clickEvent) => {
+    const clickFunction_downloadBatch = (clickEvent) => {
         clickEvent.preventDefault();
-        const downloadFn = () => {
+        const downloadFunction = () => {
             window.open("/plates-ontario/mtoExport/" + batchID.toString());
             batchIsSent = true;
         };
         if (batchIsSent) {
-            downloadFn();
+            downloadFunction();
             return;
         }
         cityssm.confirmModal("Download Batch?", "<strong>You are about to download this batch for the first time.</strong><br />" +
-            "The date of this download will be tracked as part of the batch record.", "OK, Download the File", "warning", downloadFn);
+            "The date of this download will be tracked as part of the batch record.", "OK, Download the File", "warning", downloadFunction);
     };
-    const reduceFn_ticketNumbers = (soFar, ticketNumber) => {
-        return soFar + "<a class=\"tag has-tooltip-bottom\" data-tooltip=\"View Ticket (Opens in New Window)\"" +
-            " href=\"/tickets/byTicketNumber/" + encodeURIComponent(ticketNumber) + "\" target=\"_blank\">" +
-            cityssm.escapeHTML(ticketNumber) +
-            "</a> ";
-    };
-    const fn_populateAvailablePlatesView = () => {
-        cityssm.clearElement(availablePlatesContainerEle);
-        const resultsPanelEle = document.createElement("div");
-        resultsPanelEle.className = "panel";
-        const filterStringSplit = licencePlateNumberFilterEle.value.toLowerCase().trim()
+    const function_populateAvailablePlatesView = () => {
+        cityssm.clearElement(availablePlatesContainerElement);
+        const resultsPanelElement = document.createElement("div");
+        resultsPanelElement.className = "panel";
+        const filterStringSplit = licencePlateNumberFilterElement.value.toLowerCase().trim()
             .split(" ");
         const includedLicencePlates = [];
-        availablePlatesList.forEach((plateRecord, recordIndex) => {
+        for (const [recordIndex, plateRecord] of availablePlatesList.entries()) {
             if (!plateRecord) {
-                return;
+                continue;
             }
             let displayRecord = true;
             const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
@@ -109,15 +103,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             }
             if (!displayRecord) {
-                return;
+                continue;
             }
             includedLicencePlates.push([
                 plateRecord.licencePlateNumber,
                 plateRecord.ticketIDMin
             ]);
-            const resultEle = document.createElement("div");
-            resultEle.className = "panel-block is-block is-plate-container";
-            resultEle.innerHTML = "<div class=\"level is-marginless\">" +
+            const resultElement = document.createElement("div");
+            resultElement.className = "panel-block is-block is-plate-container";
+            resultElement.innerHTML = "<div class=\"level is-marginless\">" +
                 ("<div class=\"level-left\">" +
                     "<div class=\"licence-plate\">" +
                     "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(plateRecord.licencePlateNumber) + "</div>" +
@@ -133,7 +127,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>" +
                 "<div class=\"level\">" +
                 "<div class=\"level-left\"><div class=\"tags\">" +
-                plateRecord.ticketNumbers.reduce(reduceFn_ticketNumbers, "") +
+                plateRecord.ticketNumbers.reduce((soFar, ticketNumber) => {
+                    return soFar + "<a class=\"tag has-tooltip-bottom\" data-tooltip=\"View Ticket (Opens in New Window)\"" +
+                        " href=\"/tickets/byTicketNumber/" + encodeURIComponent(ticketNumber) + "\" target=\"_blank\">" +
+                        cityssm.escapeHTML(ticketNumber) +
+                        "</a> ";
+                }, "") +
                 "</div></div>" +
                 "<div class=\"level-right is-size-7\">" +
                 plateRecord.issueDateMinString +
@@ -142,22 +141,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     : " to " + plateRecord.issueDateMaxString) +
                 "</div>" +
                 "</div>";
-            resultEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_addLicencePlateToBatch);
-            resultsPanelEle.appendChild(resultEle);
-        });
+            resultElement.querySelector("button").addEventListener("click", clickFunction_addLicencePlateToBatch);
+            resultsPanelElement.append(resultElement);
+        }
         if (includedLicencePlates.length > 0) {
-            const addAllButtonEle = document.createElement("button");
-            addAllButtonEle.className = "button is-fullwidth mb-3";
-            addAllButtonEle.innerHTML =
+            const addAllButtonElement = document.createElement("button");
+            addAllButtonElement.className = "button is-fullwidth mb-3";
+            addAllButtonElement.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     ("<span>" +
                         "Add " + includedLicencePlates.length.toString() +
                         " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
                         "</span>");
-            addAllButtonEle.addEventListener("click", () => {
+            addAllButtonElement.addEventListener("click", () => {
                 cityssm.openHtmlModal("loading", {
-                    onshown(_modalEle, closeModalFn) {
-                        document.getElementById("is-loading-modal-message").innerText =
+                    onshown(_modalElement, closeModalFunction) {
+                        document.querySelector("#is-loading-modal-message").textContent =
                             "Adding " + includedLicencePlates.length.toString() +
                                 " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
                         cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
@@ -166,66 +165,66 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             licencePlateProvince: "ON",
                             licencePlateNumbers: includedLicencePlates
                         }, (resultJSON) => {
-                            closeModalFn();
+                            closeModalFunction();
                             if (resultJSON.success) {
-                                fn_populateBatchView(resultJSON.batch);
-                                fn_refreshAvailablePlates();
+                                function_populateBatchView(resultJSON.batch);
+                                function_refreshAvailablePlates();
                             }
                         });
                     }
                 });
             });
-            availablePlatesContainerEle.appendChild(addAllButtonEle);
-            availablePlatesContainerEle.appendChild(resultsPanelEle);
+            availablePlatesContainerElement.append(addAllButtonElement);
+            availablePlatesContainerElement.append(resultsPanelElement);
         }
         else {
-            availablePlatesContainerEle.innerHTML = "<div class=\"message is-info\">" +
+            availablePlatesContainerElement.innerHTML = "<div class=\"message is-info\">" +
                 "<div class=\"message-body\">There are no licence plates that meet your search criteria.</div>" +
                 "</div>";
         }
     };
-    const fn_refreshAvailablePlates = () => {
+    const function_refreshAvailablePlates = () => {
         if (batchIsLocked) {
-            availablePlatesContainerEle.innerHTML = "<div class=\"message is-info\">" +
+            availablePlatesContainerElement.innerHTML = "<div class=\"message is-info\">" +
                 "<div class=\"message-body\">Licence Plates cannot be added to a locked batch.</div>" +
                 "</div>";
             return;
         }
-        availablePlatesContainerEle.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
+        availablePlatesContainerElement.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
             "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
             "<em>Loading licence plates..." +
             "</p>";
         cityssm.postJSON("/plates-ontario/doGetPlatesAvailableForMTOLookup", {
             batchID,
-            issueDaysAgo: availableIssueDaysAgoEle.value
+            issueDaysAgo: availableIssueDaysAgoElement.value
         }, (resultPlatesList) => {
             availablePlatesList = resultPlatesList;
-            fn_populateAvailablePlatesView();
+            function_populateAvailablePlatesView();
         });
     };
-    document.getElementById("is-more-available-filters-toggle").addEventListener("click", (clickEvent) => {
+    document.querySelector("#is-more-available-filters-toggle").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
-        document.getElementById("is-more-available-filters").classList.toggle("is-hidden");
+        document.querySelector("#is-more-available-filters").classList.toggle("is-hidden");
     });
-    licencePlateNumberFilterEle.addEventListener("keyup", fn_populateAvailablePlatesView);
-    availableIssueDaysAgoEle.addEventListener("change", fn_refreshAvailablePlates);
-    const lockBatchButtonEle = document.getElementById("is-lock-batch-button");
-    const batchEntriesContainerEle = document.getElementById("is-batch-entries-container");
-    const fn_populateBatchView = (batch) => {
+    licencePlateNumberFilterElement.addEventListener("keyup", function_populateAvailablePlatesView);
+    availableIssueDaysAgoElement.addEventListener("change", function_refreshAvailablePlates);
+    const lockBatchButtonElement = document.querySelector("#is-lock-batch-button");
+    const batchEntriesContainerElement = document.querySelector("#is-batch-entries-container");
+    const function_populateBatchView = (batch) => {
         batchID = batch.batchID;
         batchEntriesList = batch.batchEntries;
         batchIsLocked = !(batch.lockDate === null);
         batchIsSent = !(batch.sentDate === null);
         if (canUpdate) {
             if (batchIsLocked) {
-                lockBatchButtonEle.setAttribute("disabled", "disabled");
+                lockBatchButtonElement.setAttribute("disabled", "disabled");
             }
             else {
-                lockBatchButtonEle.removeAttribute("disabled");
+                lockBatchButtonElement.removeAttribute("disabled");
             }
         }
-        document.getElementById("batchSelector--batchID").innerText = "Batch #" + batch.batchID.toString();
-        document.getElementById("batchSelector--batchDetails").innerHTML =
+        document.querySelector("#batchSelector--batchID").textContent = "Batch #" + batch.batchID.toString();
+        document.querySelector("#batchSelector--batchDetails").innerHTML =
             "<span class=\"icon is-small\"><i class=\"fas fa-calendar\" aria-hidden=\"true\"></i></span>" +
                 "<span>" + batch.batchDateString + "</span> " +
                 (batchIsLocked
@@ -234,20 +233,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         " <span>" + batch.lockDateString + "</span>" +
                         "</span>"
                     : "");
-        cityssm.clearElement(batchEntriesContainerEle);
+        cityssm.clearElement(batchEntriesContainerElement);
         if (batchEntriesList.length === 0) {
-            batchEntriesContainerEle.innerHTML = "<div class=\"message is-info\">" +
+            batchEntriesContainerElement.innerHTML = "<div class=\"message is-info\">" +
                 "<p class=\"message-body\">There are no licence plates included in the batch.</p>" +
                 "</div>";
             return;
         }
-        cityssm.clearElement(batchEntriesContainerEle);
-        const panelEle = document.createElement("div");
-        panelEle.className = "panel";
-        batchEntriesList.forEach((batchEntry, index) => {
-            const panelBlockEle = document.createElement("div");
-            panelBlockEle.className = "panel-block is-block is-entry-container";
-            panelBlockEle.innerHTML = "<div class=\"level\">" +
+        cityssm.clearElement(batchEntriesContainerElement);
+        const panelElement = document.createElement("div");
+        panelElement.className = "panel";
+        for (const [index, batchEntry] of batchEntriesList.entries()) {
+            const panelBlockElement = document.createElement("div");
+            panelBlockElement.className = "panel-block is-block is-entry-container";
+            panelBlockElement.innerHTML = "<div class=\"level\">" +
                 ("<div class=\"level-left\">" +
                     "<div class=\"licence-plate\">" +
                     "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</div>" +
@@ -263,69 +262,69 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "</div>") +
                 "</div>";
             if (!batchIsLocked) {
-                panelBlockEle.getElementsByTagName("button")[0].addEventListener("click", clickFn_removeLicencePlateFromBatch);
+                panelBlockElement.querySelector("button").addEventListener("click", clickFunction_removeLicencePlateFromBatch);
             }
-            panelEle.appendChild(panelBlockEle);
-        });
+            panelElement.append(panelBlockElement);
+        }
         if (batchIsLocked) {
-            const downloadFileButtonEle = document.createElement("button");
-            downloadFileButtonEle.className = "button is-fullwidth mb-3";
-            downloadFileButtonEle.innerHTML =
+            const downloadFileButtonElement = document.createElement("button");
+            downloadFileButtonElement.className = "button is-fullwidth mb-3";
+            downloadFileButtonElement.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
                     "<span>Download File for MTO</span>";
-            downloadFileButtonEle.addEventListener("click", clickFn_downloadBatch);
-            batchEntriesContainerEle.appendChild(downloadFileButtonEle);
-            batchEntriesContainerEle.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\"" +
+            downloadFileButtonElement.addEventListener("click", clickFunction_downloadBatch);
+            batchEntriesContainerElement.append(downloadFileButtonElement);
+            batchEntriesContainerElement.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\"" +
                 " target=\"_blank\" rel=\"noreferrer\">" +
                 "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
                 "<span>MTO ARIS Login</span>" +
                 "</a>");
         }
         else {
-            const clearAllButtonEle = document.createElement("button");
-            clearAllButtonEle.className = "button is-fullwidth mb-3";
-            clearAllButtonEle.innerHTML =
+            const clearAllButtonElement = document.createElement("button");
+            clearAllButtonElement.className = "button is-fullwidth mb-3";
+            clearAllButtonElement.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
                     "<span>Clear Batch</span>";
-            clearAllButtonEle.addEventListener("click", clickFn_clearBatch);
-            batchEntriesContainerEle.appendChild(clearAllButtonEle);
+            clearAllButtonElement.addEventListener("click", clickFunction_clearBatch);
+            batchEntriesContainerElement.append(clearAllButtonElement);
         }
-        batchEntriesContainerEle.appendChild(panelEle);
+        batchEntriesContainerElement.append(panelElement);
     };
-    const fn_refreshBatch = () => {
+    const function_refreshBatch = () => {
         cityssm.postJSON("/plates/doGetLookupBatch", {
             batchID
         }, (batch) => {
-            fn_populateBatchView(batch);
-            fn_refreshAvailablePlates();
+            function_populateBatchView(batch);
+            function_refreshAvailablePlates();
         });
     };
-    const clickFn_openSelectBatchModal = (clickEvent) => {
+    const clickFunction_openSelectBatchModal = (clickEvent) => {
         clickEvent.preventDefault();
-        let selectBatchCloseModalFn;
-        let resultsContainerEle;
-        const clickFn_selectBatch = (batchClickEvent) => {
+        let selectBatchCloseModalFunction;
+        let resultsContainerElement;
+        const clickFunction_selectBatch = (batchClickEvent) => {
             batchClickEvent.preventDefault();
-            batchID = parseInt(batchClickEvent.currentTarget.getAttribute("data-batch-id"), 10);
-            selectBatchCloseModalFn();
-            fn_refreshBatch();
+            batchID = Number.parseInt(batchClickEvent.currentTarget.getAttribute("data-batch-id"), 10);
+            selectBatchCloseModalFunction();
+            function_refreshBatch();
         };
-        const fn_loadBatches = () => {
+        const function_loadBatches = () => {
             cityssm.postJSON("/plates/doGetUnreceivedLicencePlateLookupBatches", {}, (batchList) => {
                 if (batchList.length === 0) {
-                    resultsContainerEle.innerHTML = "<div class=\"message is-info\">" +
+                    resultsContainerElement.innerHTML = "<div class=\"message is-info\">" +
                         "<p class=\"message-body\">There are no unsent batches available.</p>" +
                         "</div>";
                     return;
                 }
-                const listEle = document.createElement("div");
-                listEle.className = "panel";
+                const listElement = document.createElement("div");
+                listElement.className = "panel";
                 for (const batch of batchList) {
-                    const linkEle = document.createElement("a");
-                    linkEle.className = "panel-block is-block";
-                    linkEle.setAttribute("href", "#");
-                    linkEle.setAttribute("data-batch-id", batch.batchID.toString());
-                    linkEle.innerHTML = "<div class=\"columns\">" +
+                    const linkElement = document.createElement("a");
+                    linkElement.className = "panel-block is-block";
+                    linkElement.setAttribute("href", "#");
+                    linkElement.dataset.batchId = batch.batchID.toString();
+                    linkElement.innerHTML = "<div class=\"columns\">" +
                         "<div class=\"column is-narrow\">#" + batch.batchID.toString() + "</div>" +
                         "<div class=\"column has-text-right\">" +
                         batch.batchDateString + "<br />" +
@@ -345,62 +344,62 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             "</div>") +
                         "</div>" +
                         "</div>";
-                    linkEle.addEventListener("click", clickFn_selectBatch);
-                    listEle.appendChild(linkEle);
+                    linkElement.addEventListener("click", clickFunction_selectBatch);
+                    listElement.append(linkElement);
                 }
-                cityssm.clearElement(resultsContainerEle);
-                resultsContainerEle.appendChild(listEle);
+                cityssm.clearElement(resultsContainerElement);
+                resultsContainerElement.append(listElement);
             });
         };
         cityssm.openHtmlModal("mto-selectBatch", {
-            onshow(modalEle) {
-                resultsContainerEle = modalEle.getElementsByClassName("is-results-container")[0];
-                fn_loadBatches();
+            onshow(modalElement) {
+                resultsContainerElement = modalElement.querySelector(".is-results-container");
+                function_loadBatches();
                 if (canUpdate) {
-                    const createBatchButtonEle = modalEle.getElementsByClassName("is-create-batch-button")[0];
-                    createBatchButtonEle.classList.remove("is-hidden");
-                    createBatchButtonEle.addEventListener("click", () => {
-                        selectBatchCloseModalFn();
-                        const createFn = () => {
+                    const createBatchButtonElement = modalElement.querySelector(".is-create-batch-button");
+                    createBatchButtonElement.classList.remove("is-hidden");
+                    createBatchButtonElement.addEventListener("click", () => {
+                        selectBatchCloseModalFunction();
+                        const createFunction = () => {
                             cityssm.postJSON("/plates/doCreateLookupBatch", {}, (responseJSON) => {
                                 if (responseJSON.success) {
-                                    fn_populateBatchView(responseJSON.batch);
-                                    fn_refreshAvailablePlates();
+                                    function_populateBatchView(responseJSON.batch);
+                                    function_refreshAvailablePlates();
                                 }
                             });
                         };
-                        cityssm.confirmModal("Create a New Batch?", "Are you sure you want to create a new licence plate lookup batch?", "Yes, Create a Batch", "info", createFn);
+                        cityssm.confirmModal("Create a New Batch?", "Are you sure you want to create a new licence plate lookup batch?", "Yes, Create a Batch", "info", createFunction);
                     });
                 }
             },
-            onshown(_modalEle, closeModalFn) {
-                selectBatchCloseModalFn = closeModalFn;
+            onshown(_modalElement, closeModalFunction) {
+                selectBatchCloseModalFunction = closeModalFunction;
             }
         });
     };
-    document.getElementById("is-select-batch-button").addEventListener("click", clickFn_openSelectBatchModal);
+    document.querySelector("#is-select-batch-button").addEventListener("click", clickFunction_openSelectBatchModal);
     if (canUpdate) {
-        lockBatchButtonEle.addEventListener("click", () => {
+        lockBatchButtonElement.addEventListener("click", () => {
             if (batchIsLocked) {
                 return;
             }
-            const lockFn = () => {
+            const lockFunction = () => {
                 cityssm.postJSON("/plates/doLockLookupBatch", {
                     batchID
                 }, (responseJSON) => {
                     if (responseJSON.success) {
-                        fn_populateBatchView(responseJSON.batch);
+                        function_populateBatchView(responseJSON.batch);
                     }
                 });
             };
             cityssm.confirmModal("Lock Batch?", "<strong>Are you sure you want to lock the batch?</strong><br />" +
                 "Once the batch is locked, no licence plates can be added or deleted from the batch." +
-                " All tickets related to the licence plates in the batch will be updated with a \"Pending Lookup\" status.", "Yes, Lock the Batch", "info", lockFn);
+                " All tickets related to the licence plates in the batch will be updated with a \"Pending Lookup\" status.", "Yes, Lock the Batch", "info", lockFunction);
         });
     }
     if (exports.plateExportBatch) {
-        fn_populateBatchView(exports.plateExportBatch);
+        function_populateBatchView(exports.plateExportBatch);
         delete exports.plateExportBatch;
-        fn_refreshAvailablePlates();
+        function_refreshAvailablePlates();
     }
 })();

@@ -1,52 +1,52 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const ticketID = document.getElementById("ticket--ticketID").value;
+    const ticketID = document.querySelector("#ticket--ticketID").value;
     const isCreate = (ticketID === "");
-    const formMessageEle = document.getElementById("container--form-message");
-    const setUnsavedChangesFn = () => {
+    const formMessageElement = document.querySelector("#container--form-message");
+    const setUnsavedChangesFunction = () => {
         cityssm.enableNavBlocker();
-        formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+        formMessageElement.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
             "<span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span>" +
             " <span>Unsaved Changes</span>" +
             "</div>";
     };
-    const inputEles = document.querySelectorAll(".input, .select, .textarea");
-    for (const inputEle of inputEles) {
-        inputEle.addEventListener("change", setUnsavedChangesFn);
+    const inputElements = document.querySelectorAll(".input, .select, .textarea");
+    for (const inputElement of inputElements) {
+        inputElement.addEventListener("change", setUnsavedChangesFunction);
     }
-    document.getElementById("form--ticket").addEventListener("submit", (formEvent) => {
+    document.querySelector("#form--ticket").addEventListener("submit", (formEvent) => {
         formEvent.preventDefault();
-        const ticketNumber = document.getElementById("ticket--ticketNumber").value;
-        formMessageEle.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
+        const ticketNumber = document.querySelector("#ticket--ticketNumber").value;
+        formMessageElement.innerHTML = "<span class=\"tag is-light is-info is-medium\">" +
             "<span>Saving ticket... </span>" +
             " <span class=\"icon\"><i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i></span>" +
             "</div>";
         cityssm.postJSON((isCreate ? "/tickets/doCreateTicket" : "/tickets/doUpdateTicket"), formEvent.currentTarget, (responseJSON) => {
             if (responseJSON.success) {
                 cityssm.disableNavBlocker();
-                formMessageEle.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
+                formMessageElement.innerHTML = "<span class=\"tag is-light is-success is-medium\">" +
                     "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
                     " <span>Saved Successfully</span>" +
                     "</div>";
             }
             else {
-                setUnsavedChangesFn();
+                setUnsavedChangesFunction();
                 cityssm.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
             }
             if (responseJSON.success && isCreate) {
                 cityssm.openHtmlModal("ticket-createSuccess", {
                     onshow() {
-                        document.getElementById("createSuccess--ticketNumber").innerText = ticketNumber;
-                        document.getElementById("createSuccess--editTicketButton").setAttribute("href", "/tickets/" + responseJSON.ticketID.toString() + "/edit");
-                        document.getElementById("createSuccess--newTicketButton").setAttribute("href", "/tickets/new/" + responseJSON.nextTicketNumber);
+                        document.querySelector("#createSuccess--ticketNumber").textContent = ticketNumber;
+                        document.querySelector("#createSuccess--editTicketButton").setAttribute("href", "/tickets/" + responseJSON.ticketID.toString() + "/edit");
+                        document.querySelector("#createSuccess--newTicketButton").setAttribute("href", "/tickets/new/" + responseJSON.nextTicketNumber);
                     }
                 });
             }
         });
     });
     if (!isCreate) {
-        document.getElementById("is-delete-ticket-button").addEventListener("click", (clickEvent) => {
+        document.querySelector("#is-delete-ticket-button").addEventListener("click", (clickEvent) => {
             clickEvent.preventDefault();
             cityssm.confirmModal("Delete Ticket?", "Are you sure you want to delete this ticket record?", "Yes, Delete Ticket", "danger", () => {
                 cityssm.postJSON("/tickets/doDeleteTicket", {
@@ -60,24 +60,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     pts.getDefaultConfigProperty("locationClasses", () => {
-        let locationLookupCloseModalFn;
+        let locationLookupCloseModalFunction;
         let locationList = [];
-        const clearLocationFn = (clickEvent) => {
+        const clearLocationFunction = (clickEvent) => {
             clickEvent.preventDefault();
-            document.getElementById("ticket--locationKey").value = "";
-            document.getElementById("ticket--locationName").value = "";
-            locationLookupCloseModalFn();
+            document.querySelector("#ticket--locationKey").value = "";
+            document.querySelector("#ticket--locationName").value = "";
+            locationLookupCloseModalFunction();
             locationList = [];
         };
-        const setLocationFn = (clickEvent) => {
+        const setLocationFunction = (clickEvent) => {
             clickEvent.preventDefault();
-            const locationObj = locationList[parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10)];
-            document.getElementById("ticket--locationKey").value = locationObj.locationKey;
-            document.getElementById("ticket--locationName").value = locationObj.locationName;
-            locationLookupCloseModalFn();
+            const locationObject = locationList[Number.parseInt(clickEvent.currentTarget.dataset.index, 10)];
+            document.querySelector("#ticket--locationKey").value = locationObject.locationKey;
+            document.querySelector("#ticket--locationName").value = locationObject.locationName;
+            locationLookupCloseModalFunction();
             locationList = [];
         };
-        const populateLocationsFn = () => {
+        const populateLocationsFunction = () => {
             cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListRes) => {
                 locationList = locationListRes;
                 const listEle = document.createElement("div");
@@ -88,7 +88,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     linkEle.className = "panel-block is-block";
                     linkEle.setAttribute("data-index", index.toString());
                     linkEle.setAttribute("href", "#");
-                    linkEle.addEventListener("click", setLocationFn);
+                    linkEle.addEventListener("click", setLocationFunction);
                     linkEle.innerHTML =
                         "<div class=\"level\">" +
                             "<div class=\"level-left\">" + cityssm.escapeHTML(locationObj.locationName) + "</div>" +
@@ -105,24 +105,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 containerEle.insertAdjacentElement("beforeend", listEle);
             });
         };
-        const openLocationLookupModalFn = (clickEvent) => {
+        const openLocationLookupModalFunction = (clickEvent) => {
             clickEvent.preventDefault();
             cityssm.openHtmlModal("ticket-setLocation", {
-                onshown(_modalEle, closeModalFn) {
-                    locationLookupCloseModalFn = closeModalFn;
-                    populateLocationsFn();
-                    document.getElementById("is-clear-location-button").addEventListener("click", clearLocationFn);
+                onshown(_modalElement, closeModalFunction) {
+                    locationLookupCloseModalFunction = closeModalFunction;
+                    populateLocationsFunction();
+                    document.querySelector("#is-clear-location-button").addEventListener("click", clearLocationFunction);
                 },
                 onremoved() {
-                    document.getElementById("is-location-lookup-button").focus();
+                    document.querySelector("#is-location-lookup-button").focus();
                 }
             });
         };
-        document.getElementById("is-location-lookup-button").addEventListener("click", openLocationLookupModalFn);
-        document.getElementById("ticket--locationName").addEventListener("dblclick", openLocationLookupModalFn);
+        document.querySelector("#is-location-lookup-button").addEventListener("click", openLocationLookupModalFunction);
+        document.querySelector("#ticket--locationName").addEventListener("dblclick", openLocationLookupModalFunction);
     });
     {
-        let bylawLookupCloseModalFn;
+        let bylawLookupCloseModalFunction;
         let offenceList = [];
         let listItemEles = [];
         const clearBylawOffenceFn = (clickEvent) => {
@@ -147,7 +147,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 .removeAttribute("disabled");
             discountDaysEle.value = "";
             document.getElementById("ticket--parkingOffence").value = "";
-            bylawLookupCloseModalFn();
+            bylawLookupCloseModalFunction();
             offenceList = [];
         };
         const setBylawOffenceFn = (clickEvent) => {
@@ -173,7 +173,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 .removeAttribute("disabled");
             discountDaysEle.value = offenceObj.discountDays.toString();
             document.getElementById("ticket--parkingOffence").value = offenceObj.bylawDescription;
-            bylawLookupCloseModalFn();
+            bylawLookupCloseModalFunction();
             offenceList = [];
         };
         const populateBylawsFn = () => {
@@ -234,7 +234,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             cityssm.openHtmlModal("ticket-setBylawOffence", {
                 onshown(_modalEle, closeModalFn) {
-                    bylawLookupCloseModalFn = closeModalFn;
+                    bylawLookupCloseModalFunction = closeModalFn;
                     populateBylawsFn();
                     const searchStringEle = document.getElementById("bylawLookup--searchStr");
                     searchStringEle.focus();
