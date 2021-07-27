@@ -1,22 +1,22 @@
 import type { RequestHandler } from "express";
 
-import createUser from "../../helpers/usersDB/createUser.js";
+import { createUser } from "../../helpers/usersDB/createUser.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const newPassword = createUser(req.body);
+  const newPassword = createUser(request.body);
 
   if (!newPassword) {
 
-    res.json({
+    response.json({
       success: false,
       message: "New Account Not Created"
     });
 
   } else {
 
-    res.json({
+    response.json({
       success: true,
       newPassword
     });

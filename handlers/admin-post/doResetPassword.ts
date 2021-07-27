@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import generateNewPassword from "../../helpers/usersDB/generateNewPassword.js";
+import { generateNewPassword } from "../../helpers/usersDB/generateNewPassword.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const newPassword = generateNewPassword(req.body.userName);
+  const newPassword = generateNewPassword(request.body.userName);
 
-  return res.json({
+  return response.json({
     success: true,
     newPassword
   });

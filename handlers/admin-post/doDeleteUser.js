@@ -1,11 +1,11 @@
-import inactivateUser from "../../helpers/usersDB/inactivateUser.js";
+import { inactivateUser } from "../../helpers/usersDB/inactivateUser.js";
 import { forbiddenJSON } from "../../helpers/functions.user.js";
-export const handler = (req, res) => {
-    const userNameToDelete = req.body.userName;
-    if (userNameToDelete === req.session.user.userName) {
-        return forbiddenJSON(res);
+export const handler = (request, response) => {
+    const userNameToDelete = request.body.userName;
+    if (userNameToDelete === request.session.user.userName) {
+        return forbiddenJSON(response);
     }
     const success = inactivateUser(userNameToDelete);
-    return res.json({ success });
+    return response.json({ success });
 };
 export default handler;

@@ -1,14 +1,14 @@
-import createUser from "../../helpers/usersDB/createUser.js";
-export const handler = (req, res) => {
-    const newPassword = createUser(req.body);
+import { createUser } from "../../helpers/usersDB/createUser.js";
+export const handler = (request, response) => {
+    const newPassword = createUser(request.body);
     if (!newPassword) {
-        res.json({
+        response.json({
             success: false,
             message: "New Account Not Created"
         });
     }
     else {
-        res.json({
+        response.json({
             success: true,
             newPassword
         });

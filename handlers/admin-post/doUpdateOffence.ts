@@ -1,18 +1,18 @@
 import type { RequestHandler } from "express";
 
-import getParkingOffences from "../../helpers/parkingDB/getParkingOffences.js";
-import updateParkingOffence from "../../helpers/parkingDB/updateParkingOffence.js";
+import { getParkingOffences } from "../../helpers/parkingDB/getParkingOffences.js";
+import { updateParkingOffence } from "../../helpers/parkingDB/updateParkingOffence.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const results = updateParkingOffence(req.body);
+  const results = updateParkingOffence(request.body);
 
   if (results.success) {
     results.offences = getParkingOffences();
   }
 
-  return res.json(results);
+  return response.json(results);
 };
 
 

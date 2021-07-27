@@ -1,10 +1,10 @@
-import getParkingLocations from "../../helpers/parkingDB/getParkingLocations.js";
-import addParkingLocation from "../../helpers/parkingDB/addParkingLocation.js";
-export const handler = (req, res) => {
-    const results = addParkingLocation(req.body);
+import { getParkingLocations } from "../../helpers/parkingDB/getParkingLocations.js";
+import { addParkingLocation } from "../../helpers/parkingDB/addParkingLocation.js";
+export const handler = (request, response) => {
+    const results = addParkingLocation(request.body);
     if (results.success) {
         results.locations = getParkingLocations();
     }
-    return res.json(results);
+    return response.json(results);
 };
 export default handler;

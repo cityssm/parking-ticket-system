@@ -1,10 +1,10 @@
-import getParkingOffences from "../../helpers/parkingDB/getParkingOffences.js";
-import updateParkingOffence from "../../helpers/parkingDB/updateParkingOffence.js";
-export const handler = (req, res) => {
-    const results = updateParkingOffence(req.body);
+import { getParkingOffences } from "../../helpers/parkingDB/getParkingOffences.js";
+import { updateParkingOffence } from "../../helpers/parkingDB/updateParkingOffence.js";
+export const handler = (request, response) => {
+    const results = updateParkingOffence(request.body);
     if (results.success) {
         results.offences = getParkingOffences();
     }
-    return res.json(results);
+    return response.json(results);
 };
 export default handler;

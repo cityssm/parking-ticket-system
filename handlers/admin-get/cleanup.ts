@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import getDatabaseCleanupCounts from "../../helpers/parkingDB/getDatabaseCleanupCounts.js";
+import { getDatabaseCleanupCounts } from "../../helpers/parkingDB/getDatabaseCleanupCounts.js";
 
 
-export const handler: RequestHandler = (_req, res) => {
+export const handler: RequestHandler = (_request, response) => {
 
   const counts = getDatabaseCleanupCounts();
 
-  return res.render("admin-cleanup", {
+  return response.render("admin-cleanup", {
     headTitle: "Database Cleanup",
     counts
   });

@@ -1,24 +1,24 @@
 import type { RequestHandler } from "express";
 
-import inactivateUser from "../../helpers/usersDB/inactivateUser.js";
+import { inactivateUser } from "../../helpers/usersDB/inactivateUser.js";
 
 import { forbiddenJSON } from "../../helpers/functions.user.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const userNameToDelete = req.body.userName;
+  const userNameToDelete = request.body.userName;
 
-  if (userNameToDelete === req.session.user.userName) {
+  if (userNameToDelete === request.session.user.userName) {
 
     // You can't delete yourself!
-    return forbiddenJSON(res);
+    return forbiddenJSON(response);
 
   }
 
   const success = inactivateUser(userNameToDelete);
 
-  return res.json({ success });
+  return response.json({ success });
 };
 
 

@@ -1,7 +1,7 @@
 import { getParkingBylawsWithOffenceStats } from "../../helpers/parkingDB/getParkingBylaws.js";
-export const handler = (_req, res) => {
+export const handler = (_request, response) => {
     const bylaws = getParkingBylawsWithOffenceStats();
-    return res.render("bylaw-maint", {
+    return response.render("bylaw-maint", {
         headTitle: "By-Law Maintenance",
         bylaws
     });

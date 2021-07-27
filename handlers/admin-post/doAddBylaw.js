@@ -1,10 +1,10 @@
 import { getParkingBylawsWithOffenceStats } from "../../helpers/parkingDB/getParkingBylaws.js";
-import addParkingBylaw from "../../helpers/parkingDB/addParkingBylaw.js";
-export const handler = (req, res) => {
-    const results = addParkingBylaw(req.body);
+import { addParkingBylaw } from "../../helpers/parkingDB/addParkingBylaw.js";
+export const handler = (request, response) => {
+    const results = addParkingBylaw(request.body);
     if (results.success) {
         results.bylaws = getParkingBylawsWithOffenceStats();
     }
-    return res.json(results);
+    return response.json(results);
 };
 export default handler;

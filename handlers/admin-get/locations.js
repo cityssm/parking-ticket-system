@@ -1,7 +1,7 @@
-import getParkingLocations from "../../helpers/parkingDB/getParkingLocations.js";
-export const handler = (_req, res) => {
+import { getParkingLocations } from "../../helpers/parkingDB/getParkingLocations.js";
+export const handler = (_request, response) => {
     const locations = getParkingLocations();
-    return res.render("location-maint", {
+    return response.render("location-maint", {
         headTitle: "Parking Location Maintenance",
         locations
     });

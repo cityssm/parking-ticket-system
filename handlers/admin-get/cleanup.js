@@ -1,7 +1,7 @@
-import getDatabaseCleanupCounts from "../../helpers/parkingDB/getDatabaseCleanupCounts.js";
-export const handler = (_req, res) => {
+import { getDatabaseCleanupCounts } from "../../helpers/parkingDB/getDatabaseCleanupCounts.js";
+export const handler = (_request, response) => {
     const counts = getDatabaseCleanupCounts();
-    return res.render("admin-cleanup", {
+    return response.render("admin-cleanup", {
         headTitle: "Database Cleanup",
         counts
     });

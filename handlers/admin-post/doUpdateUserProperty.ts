@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import updateUserProperty from "../../helpers/usersDB/updateUserProperty.js";
+import { updateUserProperty } from "../../helpers/usersDB/updateUserProperty.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const changeCount = updateUserProperty(req.body);
+  const changeCount = updateUserProperty(request.body);
 
-  res.json({
+  response.json({
     success: (changeCount === 1)
   });
 };

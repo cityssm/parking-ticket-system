@@ -1,7 +1,7 @@
-import generateNewPassword from "../../helpers/usersDB/generateNewPassword.js";
-export const handler = (req, res) => {
-    const newPassword = generateNewPassword(req.body.userName);
-    return res.json({
+import { generateNewPassword } from "../../helpers/usersDB/generateNewPassword.js";
+export const handler = (request, response) => {
+    const newPassword = generateNewPassword(request.body.userName);
+    return response.json({
         success: true,
         newPassword
     });

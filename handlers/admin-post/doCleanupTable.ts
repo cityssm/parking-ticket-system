@@ -2,25 +2,25 @@ import type { RequestHandler } from "express";
 
 import * as configFunctions from "../../helpers/functions.config.js";
 
-import cleanupParkingTicketsTable from "../../helpers/parkingDB/cleanupParkingTicketsTable.js";
-import cleanupParkingTicketRemarksTable from "../../helpers/parkingDB/cleanupParkingTicketRemarksTable.js";
-import cleanupParkingTicketStatusLog from "../../helpers/parkingDB/cleanupParkingTicketStatusLog.js";
+import { cleanupParkingTicketsTable } from "../../helpers/parkingDB/cleanupParkingTicketsTable.js";
+import { cleanupParkingTicketRemarksTable } from "../../helpers/parkingDB/cleanupParkingTicketRemarksTable.js";
+import { cleanupParkingTicketStatusLog } from "../../helpers/parkingDB/cleanupParkingTicketStatusLog.js";
 
-import cleanupLicencePlateOwnersTable from "../../helpers/parkingDB/cleanupLicencePlateOwnersTable.js";
+import { cleanupLicencePlateOwnersTable } from "../../helpers/parkingDB/cleanupLicencePlateOwnersTable.js";
 
-import cleanupParkingBylawsTable from "../../helpers/parkingDB/cleanupParkingBylawsTable.js";
-import cleanupParkingLocationsTable from "../../helpers/parkingDB/cleanupParkingLocationsTable.js";
-import cleanupParkingOffencesTable from "../../helpers/parkingDB/cleanupParkingOffencesTable.js";
+import { cleanupParkingBylawsTable } from "../../helpers/parkingDB/cleanupParkingBylawsTable.js";
+import { cleanupParkingLocationsTable } from "../../helpers/parkingDB/cleanupParkingLocationsTable.js";
+import { cleanupParkingOffencesTable } from "../../helpers/parkingDB/cleanupParkingOffencesTable.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const table = req.body.table;
+  const table = request.body.table;
 
   const recordDelete_timeMillis =
     Math.min(
-      parseInt(req.body.recordDelete_timeMillis, 10),
-      Date.now() - (configFunctions.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
+      Number.parseInt(request.body.recordDelete_timeMillis, 10),
+      Date.now() - (configFunctions.getProperty("databaseCleanup.windowDays") * 86_400 * 1000));
 
   let success = false;
 
@@ -62,7 +62,7 @@ export const handler: RequestHandler = (req, res) => {
       break;
   }
 
-  return res.json({ success });
+  return response.json({ success });
 };
 
 

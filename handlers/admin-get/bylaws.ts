@@ -3,11 +3,11 @@ import type { RequestHandler } from "express";
 import { getParkingBylawsWithOffenceStats } from "../../helpers/parkingDB/getParkingBylaws.js";
 
 
-export const handler: RequestHandler = (_req, res) => {
+export const handler: RequestHandler = (_request, response) => {
 
   const bylaws = getParkingBylawsWithOffenceStats();
 
-  return res.render("bylaw-maint", {
+  return response.render("bylaw-maint", {
     headTitle: "By-Law Maintenance",
     bylaws
   });

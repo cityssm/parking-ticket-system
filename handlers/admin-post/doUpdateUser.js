@@ -1,7 +1,7 @@
-import updateUser from "../../helpers/usersDB/updateUser.js";
-export const handler = (req, res) => {
-    const changeCount = updateUser(req.body);
-    res.json({
+import { updateUser } from "../../helpers/usersDB/updateUser.js";
+export const handler = (request, response) => {
+    const changeCount = updateUser(request.body);
+    response.json({
         success: (changeCount === 1)
     });
 };

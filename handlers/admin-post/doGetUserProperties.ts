@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import getUserProperties from "../../helpers/usersDB/getUserProperties.js";
+import { getUserProperties } from "../../helpers/usersDB/getUserProperties.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const userProperties = getUserProperties(req.body.userName);
+  const userProperties = getUserProperties(request.body.userName);
 
-  return res.json(userProperties);
+  return response.json(userProperties);
 };
 
 
