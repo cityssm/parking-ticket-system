@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
 import type * as recordTypes from "../types/recordTypes";
 
@@ -6,26 +8,26 @@ declare const cityssm: cityssmGlobal;
 
 (() => {
 
-  const ticketID = (document.getElementById("ticket--ticketID") as HTMLInputElement).value;
+  const ticketID = (document.querySelector("#ticket--ticketID") as HTMLInputElement).value;
 
-  const remarkPanelEle = document.getElementById("is-remark-panel");
+  const remarkPanelElement = document.querySelector("#is-remark-panel") as HTMLElement;
 
   let remarkList: recordTypes.ParkingTicketRemark[] = exports.ticketRemarks;
   delete exports.ticketRemarks;
 
 
-  const clearRemarkPanelFn = () => {
+  const clearRemarkPanelFunction = () => {
 
-    const panelBlockEles = remarkPanelEle.getElementsByClassName("panel-block");
+    const panelBlockElements = remarkPanelElement.querySelectorAll(".panel-block");
 
-    while (panelBlockEles.length > 0) {
-      panelBlockEles[0].remove();
+    for (const panelBlockElement of panelBlockElements) {
+      panelBlockElement.remove();
     }
   };
 
-  const confirmDeleteRemarkFn = (clickEvent: Event) => {
+  const confirmDeleteRemarkFunction = (clickEvent: Event) => {
 
-    const remarkIndex = (clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-remark-index");
+    const remarkIndex = (clickEvent.currentTarget as HTMLAnchorElement).dataset.remarkIndex;
 
     cityssm.confirmModal(
       "Delete Remark?",
@@ -41,7 +43,7 @@ declare const cityssm: cityssmGlobal;
           (resultJSON: { success: boolean }) => {
 
             if (resultJSON.success) {
-              getRemarksFn();
+              getRemarksFunction();
             }
           }
         );
@@ -49,17 +51,17 @@ declare const cityssm: cityssmGlobal;
     );
   };
 
-  const openEditRemarkModalFn = (clickEvent: Event) => {
+  const openEditRemarkModalFunction = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    let editRemarkCloseModalFn: () => void;
+    let editRemarkCloseModalFunction: () => void;
 
-    const index = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
+    const index = Number.parseInt((clickEvent.currentTarget as HTMLButtonElement).dataset.index, 10);
 
-    const remarkObj = remarkList[index];
+    const remarkObject = remarkList[index];
 
-    const submitFn = (formEvent: Event) => {
+    const submitFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
@@ -68,8 +70,8 @@ declare const cityssm: cityssmGlobal;
 
           if (responseJSON.success) {
 
-            editRemarkCloseModalFn();
-            getRemarksFn();
+            editRemarkCloseModalFunction();
+            getRemarksFunction();
 
           }
         });
@@ -77,30 +79,30 @@ declare const cityssm: cityssmGlobal;
 
     cityssm.openHtmlModal("ticket-editRemark", {
 
-      onshow(modalEle: HTMLElement): void {
+      onshow(modalElement) {
 
-        (document.getElementById("editRemark--ticketID") as HTMLInputElement).value = ticketID;
-        (document.getElementById("editRemark--remarkIndex") as HTMLInputElement).value = remarkObj.remarkIndex.toString();
-        (document.getElementById("editRemark--remark") as HTMLInputElement).value = remarkObj.remark;
-        (document.getElementById("editRemark--remarkDateString") as HTMLInputElement).value = remarkObj.remarkDateString;
-        (document.getElementById("editRemark--remarkTimeString") as HTMLInputElement).value = remarkObj.remarkTimeString;
+        (document.querySelector("#editRemark--ticketID") as HTMLInputElement).value = ticketID;
+        (document.querySelector("#editRemark--remarkIndex") as HTMLInputElement).value = remarkObject.remarkIndex.toString();
+        (document.querySelector("#editRemark--remark") as HTMLInputElement).value = remarkObject.remark;
+        (document.querySelector("#editRemark--remarkDateString") as HTMLInputElement).value = remarkObject.remarkDateString;
+        (document.querySelector("#editRemark--remarkTimeString") as HTMLInputElement).value = remarkObject.remarkTimeString;
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+        modalElement.querySelector("form").addEventListener("submit", submitFunction);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
-        editRemarkCloseModalFn = closeModalFn;
+      onshown(_modalElement, closeModalFunction) {
+        editRemarkCloseModalFunction = closeModalFunction;
       }
     });
   };
 
-  const populateRemarksPanelFn = () => {
+  const populateRemarksPanelFunction = () => {
 
-    clearRemarkPanelFn();
+    clearRemarkPanelFunction();
 
     if (remarkList.length === 0) {
 
-      remarkPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
+      remarkPanelElement.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
         "<div class=\"message is-info\">" +
         "<p class=\"message-body\">" +
         "There are no remarks associated with this ticket." +
@@ -112,27 +114,27 @@ declare const cityssm: cityssmGlobal;
 
     }
 
-    remarkList.forEach((remarkObj, index) => {
+    for (const [index, remarkObject] of remarkList.entries()) {
 
-      const panelBlockEle = document.createElement("div");
-      panelBlockEle.className = "panel-block is-block";
+      const panelBlockElement = document.createElement("div");
+      panelBlockElement.className = "panel-block is-block";
 
-      panelBlockEle.innerHTML = "<div class=\"columns\">" +
+      panelBlockElement.innerHTML = "<div class=\"columns\">" +
         ("<div class=\"column\">" +
 
           "<p class=\"has-newline-chars\">" +
-          cityssm.escapeHTML(remarkObj.remark) +
+          cityssm.escapeHTML(remarkObject.remark) +
           "</p>" +
           "<p class=\"is-size-7\">" +
-          (remarkObj.recordCreate_timeMillis === remarkObj.recordUpdate_timeMillis
+          (remarkObject.recordCreate_timeMillis === remarkObject.recordUpdate_timeMillis
             ? ""
             : "<i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i> ") +
-          remarkObj.recordUpdate_userName + " - " +
-          remarkObj.remarkDateString + " " + remarkObj.remarkTimeString +
+          remarkObject.recordUpdate_userName + " - " +
+          remarkObject.remarkDateString + " " + remarkObject.remarkTimeString +
           "</p>" +
           "</div>") +
 
-        (remarkObj.canUpdate
+        (remarkObject.canUpdate
           ? "<div class=\"column is-narrow\">" +
           "<div class=\"buttons is-right has-addons\">" +
           ("<button class=\"button is-small is-edit-remark-button\"" +
@@ -142,7 +144,7 @@ declare const cityssm: cityssmGlobal;
             "</button>") +
           ("<button class=\"button is-small has-text-danger is-delete-remark-button\"" +
             " data-tooltip=\"Delete Remark\"" +
-            " data-remark-index=\"" + remarkObj.remarkIndex.toString() + "\" type=\"button\">" +
+            " data-remark-index=\"" + remarkObject.remarkIndex.toString() + "\" type=\"button\">" +
             "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
             "<span class=\"sr-only\">Delete</span>" +
             "</button>") +
@@ -151,27 +153,25 @@ declare const cityssm: cityssmGlobal;
           : "") +
         "</div>";
 
-      if (remarkObj.canUpdate) {
+      if (remarkObject.canUpdate) {
 
-        panelBlockEle.getElementsByClassName("is-edit-remark-button")[0]
-          .addEventListener("click", openEditRemarkModalFn);
+        panelBlockElement.querySelector(".is-edit-remark-button")
+          .addEventListener("click", openEditRemarkModalFunction);
 
-        panelBlockEle.getElementsByClassName("is-delete-remark-button")[0]
-          .addEventListener("click", confirmDeleteRemarkFn);
+        panelBlockElement.querySelector(".is-delete-remark-button")
+          .addEventListener("click", confirmDeleteRemarkFunction);
 
       }
 
-      remarkPanelEle.appendChild(panelBlockEle);
-
-    });
-
+      remarkPanelElement.append(panelBlockElement);
+    }
   };
 
-  const getRemarksFn = () => {
+  const getRemarksFunction = () => {
 
-    clearRemarkPanelFn();
+    clearRemarkPanelFunction();
 
-    remarkPanelEle.insertAdjacentHTML(
+    remarkPanelElement.insertAdjacentHTML(
       "beforeend",
       "<div class=\"panel-block is-block\">" +
       "<p class=\"has-text-centered has-text-grey-lighter\">" +
@@ -184,20 +184,20 @@ declare const cityssm: cityssmGlobal;
     cityssm.postJSON("/tickets/doGetRemarks", {
       ticketID
     },
-      (responseRemarkList) => {
+      (responseRemarkList: recordTypes.ParkingTicketRemark[]) => {
 
         remarkList = responseRemarkList;
-        populateRemarksPanelFn();
+        populateRemarksPanelFunction();
       });
   };
 
-  document.getElementById("is-add-remark-button").addEventListener("click", (clickEvent) => {
+  document.querySelector("#is-add-remark-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addRemarkCloseModalFn: () => void;
+    let addRemarkCloseModalFunction: () => void;
 
-    const submitFn = (formEvent: Event) => {
+    const submitFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
@@ -206,26 +206,25 @@ declare const cityssm: cityssmGlobal;
 
           if (responseJSON.success) {
 
-            addRemarkCloseModalFn();
-            getRemarksFn();
+            addRemarkCloseModalFunction();
+            getRemarksFunction();
           }
         });
     };
 
     cityssm.openHtmlModal("ticket-addRemark", {
 
-      onshow(modalEle: HTMLElement): void {
+      onshow(modalElement) {
 
-        (document.getElementById("addRemark--ticketID") as HTMLInputElement).value = ticketID;
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+        (document.querySelector("#addRemark--ticketID") as HTMLInputElement).value = ticketID;
+        modalElement.querySelector("form").addEventListener("submit", submitFunction);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
-        addRemarkCloseModalFn = closeModalFn;
+      onshown(_modalElement, closeModalFunction) {
+        addRemarkCloseModalFunction = closeModalFunction;
       }
     });
   });
 
-  populateRemarksPanelFn();
-
+  populateRemarksPanelFunction();
 })();

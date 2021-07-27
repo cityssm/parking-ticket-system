@@ -10,6 +10,7 @@ environment:
 stack: "node 14"
 
 install:
+  - sh: npm install -g npm@7
   # Output useful info for debugging.
   - node --version
   - npm --version

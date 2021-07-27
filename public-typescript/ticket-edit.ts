@@ -69,13 +69,12 @@ declare const pts: ptsGlobal;
 
           setUnsavedChangesFunction();
           cityssm.alertModal("Ticket Not Saved", responseJSON.message, "OK", "danger");
-
         }
 
         if (responseJSON.success && isCreate) {
 
           cityssm.openHtmlModal("ticket-createSuccess", {
-            onshow(): void {
+            onshow() {
 
               document.querySelector("#createSuccess--ticketNumber").textContent = ticketNumber;
 
@@ -88,13 +87,11 @@ declare const pts: ptsGlobal;
                 "href",
                 "/tickets/new/" + responseJSON.nextTicketNumber
               );
-
             }
           });
         }
       }
     );
-
   });
 
 
@@ -162,43 +159,42 @@ declare const pts: ptsGlobal;
       locationLookupCloseModalFunction();
 
       locationList = [];
-
     };
 
     const populateLocationsFunction = () => {
 
-      cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListRes: recordTypes.ParkingLocation[]) => {
+      cityssm.postJSON("/offences/doGetAllLocations", {}, (locationListResponse: recordTypes.ParkingLocation[]) => {
 
-        locationList = locationListRes;
+        locationList = locationListResponse;
 
-        const listEle = document.createElement("div");
-        listEle.className = "panel mb-4";
+        const listElement = document.createElement("div");
+        listElement.className = "panel mb-4";
 
-        locationList.forEach((locationObj, index) => {
+        for (const [index, locationObject] of locationList.entries()) {
 
-          const locationClassObj = pts.getLocationClass(locationObj.locationClassKey);
+          const locationClassObject = pts.getLocationClass(locationObject.locationClassKey);
 
-          const linkEle = document.createElement("a");
-          linkEle.className = "panel-block is-block";
-          linkEle.setAttribute("data-index", index.toString());
-          linkEle.setAttribute("href", "#");
-          linkEle.addEventListener("click", setLocationFunction);
-          linkEle.innerHTML =
+          const linkElement = document.createElement("a");
+          linkElement.className = "panel-block is-block";
+          linkElement.dataset.index = index.toString();
+          linkElement.setAttribute("href", "#");
+          linkElement.addEventListener("click", setLocationFunction);
+          linkElement.innerHTML =
             "<div class=\"level\">" +
-            "<div class=\"level-left\">" + cityssm.escapeHTML(locationObj.locationName) + "</div>" +
-            (locationClassObj
+            "<div class=\"level-left\">" + cityssm.escapeHTML(locationObject.locationName) + "</div>" +
+            (locationClassObject
               ? "<div class=\"level-right\">" +
-              "<span class=\"tag is-primary\">" + cityssm.escapeHTML(locationClassObj.locationClass) + "</span>" +
+              "<span class=\"tag is-primary\">" + cityssm.escapeHTML(locationClassObject.locationClass) + "</span>" +
               "</div>"
               : "") +
             "</div>";
 
-          listEle.insertAdjacentElement("beforeend", linkEle);
-        });
+          listElement.append(linkElement);
+        }
 
-        const containerEle = document.getElementById("container--parkingLocations");
-        cityssm.clearElement(containerEle);
-        containerEle.insertAdjacentElement("beforeend", listEle);
+        const containerElement = document.querySelector("#container--parkingLocations") as HTMLElement;
+        cityssm.clearElement(containerElement);
+        containerElement.append(listElement);
       });
     };
 
@@ -234,95 +230,92 @@ declare const pts: ptsGlobal;
 
     let bylawLookupCloseModalFunction: () => void;
     let offenceList: recordTypes.ParkingOffence[] = [];
-    let listItemEles: HTMLAnchorElement[] = [];
+    let listItemElements: HTMLAnchorElement[] = [];
 
-    const clearBylawOffenceFn = (clickEvent: Event) => {
+    const clearBylawOffenceFunction = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
-      (document.getElementById("ticket--bylawNumber") as HTMLInputElement).value = "";
+      (document.querySelector("#ticket--bylawNumber") as HTMLInputElement).value = "";
 
       // Offence Amount
 
-      const offenceAmountEle = document.getElementById("ticket--offenceAmount") as HTMLInputElement;
+      const offenceAmountElement = document.querySelector("#ticket--offenceAmount") as HTMLInputElement;
 
-      offenceAmountEle.classList.add("is-readonly");
-      offenceAmountEle.setAttribute("readonly", "readonly");
-      offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+      offenceAmountElement.classList.add("is-readonly");
+      offenceAmountElement.setAttribute("readonly", "readonly");
+      offenceAmountElement.closest(".field").querySelector(".is-unlock-field-button")
         .removeAttribute("disabled");
-      offenceAmountEle.value = "";
+      offenceAmountElement.value = "";
 
       // Discount Offence Amount
 
-      const discountOffenceAmountEle = document.getElementById("ticket--discountOffenceAmount") as HTMLInputElement;
+      const discountOffenceAmountElement = document.querySelector("#ticket--discountOffenceAmount") as HTMLInputElement;
 
-      discountOffenceAmountEle.classList.add("is-readonly");
-      discountOffenceAmountEle.setAttribute("readonly", "readonly");
-      discountOffenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+      discountOffenceAmountElement.classList.add("is-readonly");
+      discountOffenceAmountElement.setAttribute("readonly", "readonly");
+      discountOffenceAmountElement.closest(".field").querySelector(".is-unlock-field-button")
         .removeAttribute("disabled");
-      discountOffenceAmountEle.value = "";
+      discountOffenceAmountElement.value = "";
 
       // Discount Days
 
-      const discountDaysEle = document.getElementById("ticket--discountDays") as HTMLInputElement;
+      const discountDaysElement = document.querySelector("#ticket--discountDays") as HTMLInputElement;
 
-      discountDaysEle.classList.add("is-readonly");
-      discountDaysEle.setAttribute("readonly", "readonly");
-      discountDaysEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
+      discountDaysElement.classList.add("is-readonly");
+      discountDaysElement.setAttribute("readonly", "readonly");
+      discountDaysElement.closest(".field").querySelector(".is-unlock-field-button")
         .removeAttribute("disabled");
-      discountDaysEle.value = "";
+      discountDaysElement.value = "";
 
       // Offence Description
 
-      (document.getElementById("ticket--parkingOffence") as HTMLTextAreaElement).value = "";
+      (document.querySelector("#ticket--parkingOffence") as HTMLTextAreaElement).value = "";
 
       bylawLookupCloseModalFunction();
 
       offenceList = [];
     };
 
-    const setBylawOffenceFn = (clickEvent: Event) => {
+    const setBylawOffenceFunction = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
-      const offenceObj =
-        offenceList[parseInt((clickEvent.currentTarget as HTMLInputElement).getAttribute("data-index"), 10)];
+      const offenceObject =
+        offenceList[Number.parseInt((clickEvent.currentTarget as HTMLInputElement).getAttribute("data-index"), 10)];
 
-      (document.getElementById("ticket--bylawNumber") as HTMLInputElement).value = offenceObj.bylawNumber;
+      (document.querySelector("#ticket--bylawNumber") as HTMLInputElement).value = offenceObject.bylawNumber;
 
       // Offence Amount
 
-      const offenceAmountEle = document.getElementById("ticket--offenceAmount") as HTMLInputElement;
+      const offenceAmountElement = document.querySelector("#ticket--offenceAmount") as HTMLInputElement;
 
-      offenceAmountEle.classList.add("is-readonly");
-      offenceAmountEle.setAttribute("readonly", "readonly");
-      offenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
-        .removeAttribute("disabled");
-      offenceAmountEle.value = offenceObj.offenceAmount.toFixed(2);
+      offenceAmountElement.classList.add("is-readonly");
+      offenceAmountElement.setAttribute("readonly", "readonly");
+      offenceAmountElement.closest(".field").querySelector(".is-unlock-field-button").removeAttribute("disabled");
+      offenceAmountElement.value = offenceObject.offenceAmount.toFixed(2);
 
       // Discount Offence Amount
 
-      const discountOffenceAmountEle = document.getElementById("ticket--discountOffenceAmount") as HTMLInputElement;
+      const discountOffenceAmountElement = document.querySelector("#ticket--discountOffenceAmount") as HTMLInputElement;
 
-      discountOffenceAmountEle.classList.add("is-readonly");
-      discountOffenceAmountEle.setAttribute("readonly", "readonly");
-      discountOffenceAmountEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
-        .removeAttribute("disabled");
-      discountOffenceAmountEle.value = offenceObj.discountOffenceAmount.toFixed(2);
+      discountOffenceAmountElement.classList.add("is-readonly");
+      discountOffenceAmountElement.setAttribute("readonly", "readonly");
+      discountOffenceAmountElement.closest(".field").querySelector(".is-unlock-field-button").removeAttribute("disabled");
+      discountOffenceAmountElement.value = offenceObject.discountOffenceAmount.toFixed(2);
 
       // Discount Days
 
-      const discountDaysEle = document.getElementById("ticket--discountDays") as HTMLInputElement;
+      const discountDaysElement = document.querySelector("#ticket--discountDays") as HTMLInputElement;
 
-      discountDaysEle.classList.add("is-readonly");
-      discountDaysEle.setAttribute("readonly", "readonly");
-      discountDaysEle.closest(".field").getElementsByClassName("is-unlock-field-button")[0]
-        .removeAttribute("disabled");
-      discountDaysEle.value = offenceObj.discountDays.toString();
+      discountDaysElement.classList.add("is-readonly");
+      discountDaysElement.setAttribute("readonly", "readonly");
+      discountDaysElement.closest(".field").querySelector(".is-unlock-field-button").removeAttribute("disabled");
+      discountDaysElement.value = offenceObject.discountDays.toString();
 
       // Offence Description
 
-      (document.getElementById("ticket--parkingOffence") as HTMLTextAreaElement).value = offenceObj.bylawDescription;
+      (document.querySelector("#ticket--parkingOffence") as HTMLTextAreaElement).value = offenceObject.bylawDescription;
 
       bylawLookupCloseModalFunction();
 
@@ -330,57 +323,57 @@ declare const pts: ptsGlobal;
 
     };
 
-    const populateBylawsFn = () => {
+    const populateBylawsFunction = () => {
 
-      const locationKey = (document.getElementById("ticket--locationKey") as HTMLInputElement).value;
+      const locationKey = (document.querySelector("#ticket--locationKey") as HTMLInputElement).value;
       // const locationName = document.getElementById("ticket--locationName").value;
 
       cityssm.postJSON("/offences/doGetOffencesByLocation", {
         locationKey
       },
-        (offenceListRes: recordTypes.ParkingOffence[]) => {
+        (offenceListResponse: recordTypes.ParkingOffence[]) => {
 
-          offenceList = offenceListRes;
-          listItemEles = [];
+          offenceList = offenceListResponse;
+          listItemElements = [];
 
-          const listEle = document.createElement("div");
-          listEle.className = "panel mb-4";
+          const listElement = document.createElement("div");
+          listElement.className = "panel mb-4";
 
-          offenceList.forEach((offenceObj, index) => {
+          for (const [index, offenceObject] of offenceList.entries()) {
 
-            const linkEle = document.createElement("a");
-            linkEle.className = "panel-block is-block";
-            linkEle.setAttribute("data-index", index.toString());
-            linkEle.setAttribute("href", "#");
-            linkEle.addEventListener("click", setBylawOffenceFn);
-            linkEle.innerHTML =
+            const linkElement = document.createElement("a");
+            linkElement.className = "panel-block is-block";
+            linkElement.dataset.index = index.toString();
+            linkElement.setAttribute("href", "#");
+            linkElement.addEventListener("click", setBylawOffenceFunction);
+            linkElement.innerHTML =
               "<div class=\"columns\">" +
               ("<div class=\"column\">" +
                 "<span class=\"has-text-weight-semibold\">" +
-                cityssm.escapeHTML(offenceObj.bylawNumber) +
+                cityssm.escapeHTML(offenceObject.bylawNumber) +
                 "</span><br />" +
-                "<small>" + cityssm.escapeHTML(offenceObj.bylawDescription) + "</small>" +
+                "<small>" + cityssm.escapeHTML(offenceObject.bylawDescription) + "</small>" +
                 "</div>") +
               ("<div class=\"column is-narrow has-text-weight-semibold\">" +
-                "$" + offenceObj.offenceAmount.toFixed(2) +
+                "$" + offenceObject.offenceAmount.toFixed(2) +
                 "</div>") +
               "</div>";
 
-            listEle.insertAdjacentElement("beforeend", linkEle);
-            listItemEles.push(linkEle);
-          });
+            listElement.append(linkElement);
+            listItemElements.push(linkElement);
+          }
 
-          const containerEle = document.getElementById("container--bylawNumbers");
-          cityssm.clearElement(containerEle);
-          containerEle.appendChild(listEle);
+          const containerElement = document.querySelector("#container--bylawNumbers") as HTMLElement;
+          cityssm.clearElement(containerElement);
+          containerElement.append(listElement);
         });
     };
 
-    const filterBylawsFn = (keyupEvent: Event) => {
+    const filterBylawsFunction = (keyupEvent: Event) => {
 
       const searchStringSplit = (keyupEvent.currentTarget as HTMLInputElement).value.trim().toLowerCase().split(" ");
 
-      offenceList.forEach((offenceRecord, recordIndex) => {
+      for (const [recordIndex, offenceRecord] of offenceList.entries()) {
 
         let displayRecord = true;
 
@@ -395,40 +388,40 @@ declare const pts: ptsGlobal;
         }
 
         if (displayRecord) {
-          listItemEles[recordIndex].classList.remove("is-hidden");
+          listItemElements[recordIndex].classList.remove("is-hidden");
         } else {
-          listItemEles[recordIndex].classList.add("is-hidden");
+          listItemElements[recordIndex].classList.add("is-hidden");
         }
-      });
+      }
     };
 
-    const openBylawLookupModalFn = (clickEvent: Event) => {
+    const openBylawLookupModalFunction = (clickEvent: Event) => {
 
       clickEvent.preventDefault();
 
       cityssm.openHtmlModal("ticket-setBylawOffence", {
-        onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
+        onshown(_modalElement, closeModalFunction) {
 
-          bylawLookupCloseModalFunction = closeModalFn;
-          populateBylawsFn();
+          bylawLookupCloseModalFunction = closeModalFunction;
+          populateBylawsFunction();
 
-          const searchStringEle = document.getElementById("bylawLookup--searchStr") as HTMLInputElement;
+          const searchStringElement = document.querySelector("#bylawLookup--searchStr") as HTMLInputElement;
 
-          searchStringEle.focus();
-          searchStringEle.addEventListener("keyup", filterBylawsFn);
+          searchStringElement.focus();
+          searchStringElement.addEventListener("keyup", filterBylawsFunction);
 
-          document.getElementById("is-clear-bylaw-button").addEventListener("click", clearBylawOffenceFn);
+          document.querySelector("#is-clear-bylaw-button").addEventListener("click", clearBylawOffenceFunction);
 
         },
-        onremoved(): void {
-          document.getElementById("is-bylaw-lookup-button").focus();
+        onremoved() {
+          (document.querySelector("#is-bylaw-lookup-button") as HTMLButtonElement).focus();
         }
       });
 
     };
 
-    document.getElementById("is-bylaw-lookup-button").addEventListener("click", openBylawLookupModalFn);
-    document.getElementById("ticket--bylawNumber").addEventListener("dblclick", openBylawLookupModalFn);
+    document.querySelector("#is-bylaw-lookup-button").addEventListener("click", openBylawLookupModalFunction);
+    document.querySelector("#ticket--bylawNumber").addEventListener("dblclick", openBylawLookupModalFunction);
   }
 
   /*
@@ -436,22 +429,22 @@ declare const pts: ptsGlobal;
    */
 
   {
-    const licencePlateIsMissingCheckboxEle =
-      document.getElementById("ticket--licencePlateIsMissing") as HTMLInputElement;
+    const licencePlateIsMissingCheckboxElement =
+      document.querySelector("#ticket--licencePlateIsMissing") as HTMLInputElement;
 
-    licencePlateIsMissingCheckboxEle.addEventListener("change", () => {
+    licencePlateIsMissingCheckboxElement.addEventListener("change", () => {
 
-      if (licencePlateIsMissingCheckboxEle.checked) {
+      if (licencePlateIsMissingCheckboxElement.checked) {
 
-        document.getElementById("ticket--licencePlateCountry").removeAttribute("required");
-        document.getElementById("ticket--licencePlateProvince").removeAttribute("required");
-        document.getElementById("ticket--licencePlateNumber").removeAttribute("required");
+        document.querySelector("#ticket--licencePlateCountry").removeAttribute("required");
+        document.querySelector("#ticket--licencePlateProvince").removeAttribute("required");
+        document.querySelector("#ticket--licencePlateNumber").removeAttribute("required");
 
       } else {
 
-        document.getElementById("ticket--licencePlateCountry").setAttribute("required", "required");
-        document.getElementById("ticket--licencePlateProvince").setAttribute("required", "required");
-        document.getElementById("ticket--licencePlateNumber").setAttribute("required", "required");
+        document.querySelector("#ticket--licencePlateCountry").setAttribute("required", "required");
+        document.querySelector("#ticket--licencePlateProvince").setAttribute("required", "required");
+        document.querySelector("#ticket--licencePlateNumber").setAttribute("required", "required");
       }
     });
   }
@@ -460,12 +453,12 @@ declare const pts: ptsGlobal;
    * Licence Plate Province Datalist
    */
 
-  const populateLicencePlateProvinceDatalistFn = () => {
+  const populateLicencePlateProvinceDatalistFunction = () => {
 
-    const datalistEle = document.getElementById("datalist--licencePlateProvince");
-    cityssm.clearElement(datalistEle);
+    const datalistElement = document.querySelector("#datalist--licencePlateProvince") as HTMLElement;
+    cityssm.clearElement(datalistElement);
 
-    const countryString = (document.getElementById("ticket--licencePlateCountry") as HTMLInputElement).value;
+    const countryString = (document.querySelector("#ticket--licencePlateCountry") as HTMLInputElement).value;
 
     const countryProperties = pts.getLicencePlateCountryProperties(countryString);
 
@@ -475,45 +468,44 @@ declare const pts: ptsGlobal;
 
       for (const province of provincesList) {
 
-        const optionEle = document.createElement("option");
-        optionEle.setAttribute("value", province.provinceShortName);
-        datalistEle.appendChild(optionEle);
+        const optionElement = document.createElement("option");
+        optionElement.setAttribute("value", province.provinceShortName);
+        datalistElement.append(optionElement);
       }
     }
   };
 
-  document.getElementById("ticket--licencePlateCountry")
-    .addEventListener("change", populateLicencePlateProvinceDatalistFn);
+  document.querySelector("#ticket--licencePlateCountry")
+    .addEventListener("change", populateLicencePlateProvinceDatalistFunction);
 
-  pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFn);
+  pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFunction);
 
 
   /*
    * Unlock Buttons
    */
 
-  const unlockFieldFn = (unlockBtnClickEvent: Event) => {
+  const unlockFieldFunction = (unlockButtonClickEvent: Event) => {
 
-    unlockBtnClickEvent.preventDefault();
+    unlockButtonClickEvent.preventDefault();
 
-    const unlockBtnEle = unlockBtnClickEvent.currentTarget as HTMLButtonElement;
+    const unlockButtonElement = unlockButtonClickEvent.currentTarget as HTMLButtonElement;
 
-    const inputTag = unlockBtnEle.getAttribute("data-unlock");
+    const inputTag = unlockButtonElement.getAttribute("data-unlock");
 
-    const readOnlyEle = unlockBtnEle.closest(".field").getElementsByTagName(inputTag)[0] as HTMLInputElement;
+    const readOnlyElement = unlockButtonElement.closest(".field").querySelector(inputTag) as HTMLInputElement;
 
-    readOnlyEle.removeAttribute("readonly");
-    readOnlyEle.classList.remove("is-readonly");
+    readOnlyElement.removeAttribute("readonly");
+    readOnlyElement.classList.remove("is-readonly");
 
-    readOnlyEle.focus();
+    readOnlyElement.focus();
 
-    unlockBtnEle.setAttribute("disabled", "disabled");
+    unlockButtonElement.setAttribute("disabled", "disabled");
   };
 
-  const unlockBtnEles = document.getElementsByClassName("is-unlock-field-button");
+  const unlockButtonElements = document.querySelectorAll(".is-unlock-field-button");
 
-  for (const unlockBtnEle of unlockBtnEles) {
-    unlockBtnEle.addEventListener("click", unlockFieldFn);
+  for (const unlockButtonElement of unlockButtonElements) {
+    unlockButtonElement.addEventListener("click", unlockFieldFunction);
   }
-
 })();

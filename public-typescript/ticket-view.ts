@@ -1,14 +1,16 @@
+/* eslint-disable unicorn/filename-case */
+
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
 declare const cityssm: cityssmGlobal;
 
 
 (() => {
 
-  const unresolveTicketButtonEle = document.getElementById("is-unresolve-ticket-button");
+  const unresolveTicketButtonElement = document.querySelector("#is-unresolve-ticket-button");
 
-  if (unresolveTicketButtonEle) {
+  if (unresolveTicketButtonElement) {
 
-    unresolveTicketButtonEle.addEventListener("click", (clickEvent) => {
+    unresolveTicketButtonElement.addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 
@@ -37,11 +39,11 @@ declare const cityssm: cityssmGlobal;
 
   }
 
-  const restoreTicketButtonEle = document.getElementById("is-restore-ticket-button");
+  const restoreTicketButtonElement = document.querySelector("#is-restore-ticket-button");
 
-  if (restoreTicketButtonEle) {
+  if (restoreTicketButtonElement) {
 
-    restoreTicketButtonEle.addEventListener("click", (clickEvent) => {
+    restoreTicketButtonElement.addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 

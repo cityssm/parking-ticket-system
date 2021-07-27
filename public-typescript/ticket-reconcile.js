@@ -1,48 +1,48 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    pts.initializeToggleHiddenLinks(document.getElementsByTagName("main")[0]);
-    const clickFn_acknowledgeError = (clickEvent) => {
+    pts.initializeToggleHiddenLinks(document.querySelector("main"));
+    const clickFunction_acknowledgeError = (clickEvent) => {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
-        buttonEle.setAttribute("disabled", "disabled");
-        const batchID = buttonEle.getAttribute("data-batch-id");
-        const logIndex = buttonEle.getAttribute("data-log-index");
+        const buttonElement = clickEvent.currentTarget;
+        buttonElement.setAttribute("disabled", "disabled");
+        const batchID = buttonElement.dataset.batchId;
+        const logIndex = buttonElement.dataset.logIndex;
         cityssm.postJSON("/tickets/doAcknowledgeLookupError", {
             batchID,
             logIndex
         }, (responseJSON) => {
             if (responseJSON.success) {
-                const tdEle = buttonEle.closest("td");
-                cityssm.clearElement(tdEle);
-                tdEle.innerHTML = "<span class=\"tag is-light is-warning\">" +
+                const tdElement = buttonElement.closest("td");
+                cityssm.clearElement(tdElement);
+                tdElement.innerHTML = "<span class=\"tag is-light is-warning\">" +
                     "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
                     "<span>Acknowledged</span>" +
                     "</span>";
             }
             else {
-                buttonEle.removeAttribute("disabled");
+                buttonElement.removeAttribute("disabled");
             }
         });
     };
-    const acknowledgeButtonEles = document.getElementsByClassName("is-acknowledge-error-button");
-    for (const acknowledgeButtonEle of acknowledgeButtonEles) {
-        acknowledgeButtonEle.addEventListener("click", clickFn_acknowledgeError);
+    const acknowledgeButtonElements = document.querySelectorAll(".is-acknowledge-error-button");
+    for (const acknowledgeButtonElement of acknowledgeButtonElements) {
+        acknowledgeButtonElement.addEventListener("click", clickFunction_acknowledgeError);
     }
-    const clickFn_clearStatus = (clickEvent) => {
+    const clickFunction_clearStatus = (clickEvent) => {
         clickEvent.preventDefault();
-        const anchorEle = clickEvent.currentTarget;
-        const optionsTdEle = anchorEle.closest("td");
-        const trEle = optionsTdEle.closest("tr");
-        const clearFn = () => {
+        const anchorElement = clickEvent.currentTarget;
+        const optionsTdElement = anchorElement.closest("td");
+        const trElement = optionsTdElement.closest("tr");
+        const clearFunction = () => {
             cityssm.postJSON("/tickets/doDeleteStatus", {
-                ticketID: trEle.getAttribute("data-ticket-id"),
-                statusIndex: anchorEle.getAttribute("data-status-index")
+                ticketID: trElement.getAttribute("data-ticket-id"),
+                statusIndex: anchorElement.getAttribute("data-status-index")
             }, (responseJSON) => {
                 if (responseJSON.success) {
-                    cityssm.clearElement(optionsTdEle);
-                    optionsTdEle.classList.remove("has-width-200");
-                    optionsTdEle.innerHTML = "<button class=\"button is-success is-ownership-match-button\" type=\"button\">" +
+                    cityssm.clearElement(optionsTdElement);
+                    optionsTdElement.classList.remove("has-width-200");
+                    optionsTdElement.innerHTML = "<button class=\"button is-success is-ownership-match-button\" type=\"button\">" +
                         "<span class=\"icon\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
                         "<span>Match</span>" +
                         "</button>" +
@@ -50,27 +50,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "<i class=\"fas fa-times\" aria-hidden=\"true\"></i>" +
                         "<span class=\"sr-only\">Error</span>" +
                         "</button>";
-                    optionsTdEle.getElementsByClassName("is-ownership-match-button")[0]
-                        .addEventListener("click", clickFn_markAsMatch);
-                    optionsTdEle.getElementsByClassName("is-ownership-error-button")[0]
-                        .addEventListener("click", clickFn_markAsError);
+                    optionsTdElement.querySelector(".is-ownership-match-button").addEventListener("click", clickFunction_markAsMatch);
+                    optionsTdElement.querySelector(".is-ownership-error-button").addEventListener("click", clickFunction_markAsError);
                 }
             });
         };
-        cityssm.confirmModal("Clear Status", "Are you sure you want to undo this status?", "Yes, Remove the Status", "warning", clearFn);
+        cityssm.confirmModal("Clear Status", "Are you sure you want to undo this status?", "Yes, Remove the Status", "warning", clearFunction);
     };
-    const clickFn_markAsMatch = (clickEvent) => {
+    const clickFunction_markAsMatch = (clickEvent) => {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
-        const optionsTdEle = buttonEle.closest("td");
-        const trEle = optionsTdEle.closest("tr");
-        const matchFn = () => {
-            buttonEle.setAttribute("disabled", "disabled");
-            const licencePlateCountry = trEle.getAttribute("data-licence-plate-country");
-            const licencePlateProvince = trEle.getAttribute("data-licence-plate-province");
-            const licencePlateNumber = trEle.getAttribute("data-licence-plate-number");
-            const ticketID = trEle.getAttribute("data-ticket-id");
-            const recordDate = trEle.getAttribute("data-record-date");
+        const buttonElement = clickEvent.currentTarget;
+        const optionsTdElement = buttonElement.closest("td");
+        const trElement = optionsTdElement.closest("tr");
+        const matchFunction = () => {
+            buttonElement.setAttribute("disabled", "disabled");
+            const licencePlateCountry = trElement.dataset.licencePlateCountry;
+            const licencePlateProvince = trElement.dataset.licencePlateProvince;
+            const licencePlateNumber = trElement.dataset.licencePlateNumber;
+            const ticketID = trElement.dataset.ticketId;
+            const recordDate = trElement.dataset.recordDate;
             cityssm.postJSON("/tickets/doReconcileAsMatch", {
                 licencePlateCountry,
                 licencePlateProvince,
@@ -79,8 +77,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 recordDate
             }, (responseJSON) => {
                 if (responseJSON.success) {
-                    cityssm.clearElement(optionsTdEle);
-                    optionsTdEle.innerHTML =
+                    cityssm.clearElement(optionsTdElement);
+                    optionsTdElement.innerHTML =
                         "<div class=\"tags has-addons\">" +
                             ("<span class=\"tag is-light is-success\">" +
                                 "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
@@ -92,23 +90,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             "<span class=\"sr-only\">Remove Match</span>" +
                             "</a>" +
                             "</div>";
-                    optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+                    optionsTdElement.querySelector("a").addEventListener("click", clickFunction_clearStatus);
                 }
                 else {
-                    buttonEle.removeAttribute("disabled");
+                    buttonElement.removeAttribute("disabled");
                     cityssm.alertModal("Record Not Updated", responseJSON.message, "OK", "danger");
                 }
             });
         };
-        if (trEle.hasAttribute("data-is-vehicle-make-match") &&
-            trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
-            matchFn();
+        if (trElement.hasAttribute("data-is-vehicle-make-match") &&
+            trElement.hasAttribute("data-is-licence-plate-expiry-date-match")) {
+            matchFunction();
         }
         else {
-            const ticketVehicle = trEle.getAttribute("data-ticket-vehicle");
-            const ticketExpiryDate = trEle.getAttribute("data-ticket-expiry-date");
-            const ownerVehicle = trEle.getAttribute("data-owner-vehicle");
-            const ownerExpiryDate = trEle.getAttribute("data-owner-expiry-date");
+            const ticketVehicle = trElement.dataset.ticketVehicle;
+            const ticketExpiryDate = trElement.dataset.ticketExpiryDate;
+            const ownerVehicle = trElement.dataset.ownerVehicle;
+            const ownerExpiryDate = trElement.dataset.ownerExpiryDate;
             cityssm.confirmModal("Confirm Match", ("<p class=\"has-text-centered\">" +
                 "Are you sure the details on the parking ticket match the details on the ownership record?" +
                 "</p>") +
@@ -127,21 +125,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<span class=\"is-size-4\">" + cityssm.escapeHTML(ownerVehicle) + "</span><br />" +
                     "<span class=\"is-size-5\">" + cityssm.escapeHTML(ownerExpiryDate) + "</span>" +
                     "</div>") +
-                "</div>", "Yes, Confirm Match", "warning", matchFn);
+                "</div>", "Yes, Confirm Match", "warning", matchFunction);
         }
     };
-    const clickFn_markAsError = (clickEvent) => {
+    const clickFunction_markAsError = (clickEvent) => {
         clickEvent.preventDefault();
-        const buttonEle = clickEvent.currentTarget;
-        const optionsTdEle = buttonEle.closest("td");
-        const trEle = optionsTdEle.closest("tr");
-        const errorFn = () => {
-            buttonEle.setAttribute("disabled", "disabled");
-            const licencePlateCountry = trEle.getAttribute("data-licence-plate-country");
-            const licencePlateProvince = trEle.getAttribute("data-licence-plate-province");
-            const licencePlateNumber = trEle.getAttribute("data-licence-plate-number");
-            const ticketID = trEle.getAttribute("data-ticket-id");
-            const recordDate = trEle.getAttribute("data-record-date");
+        const buttonElement = clickEvent.currentTarget;
+        const optionsTdElement = buttonElement.closest("td");
+        const trElement = optionsTdElement.closest("tr");
+        const errorFunction = () => {
+            buttonElement.setAttribute("disabled", "disabled");
+            const licencePlateCountry = trElement.dataset.licencePlateCountry;
+            const licencePlateProvince = trElement.dataset.licencePlateProvince;
+            const licencePlateNumber = trElement.dataset.licencePlateNumber;
+            const ticketID = trElement.dataset.ticketId;
+            const recordDate = trElement.dataset.recordDate;
             cityssm.postJSON("/tickets/doReconcileAsError", {
                 licencePlateCountry,
                 licencePlateProvince,
@@ -150,8 +148,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 recordDate
             }, (responseJSON) => {
                 if (responseJSON.success) {
-                    cityssm.clearElement(optionsTdEle);
-                    optionsTdEle.innerHTML =
+                    cityssm.clearElement(optionsTdElement);
+                    optionsTdElement.innerHTML =
                         "<div class=\"tags has-addons\">" +
                             ("<span class=\"tag is-light is-danger\">" +
                                 "<span class=\"icon is-small\"><i class=\"fas fa-times\" aria-hidden=\"true\"></i></span>" +
@@ -164,20 +162,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             "<span class=\"sr-only\">Remove Match</span>" +
                             "</a>" +
                             "</div>";
-                    optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+                    optionsTdElement.querySelector("a").addEventListener("click", clickFunction_clearStatus);
                 }
                 else {
-                    buttonEle.removeAttribute("disabled");
+                    buttonElement.removeAttribute("disabled");
                     cityssm.alertModal("Record Not Updated", responseJSON.message, "OK", "danger");
                 }
             });
         };
-        if (trEle.hasAttribute("data-is-vehicle-make-match") ||
-            trEle.hasAttribute("data-is-licence-plate-expiry-date-match")) {
-            const ticketVehicle = trEle.getAttribute("data-ticket-vehicle");
-            const ticketExpiryDate = trEle.getAttribute("data-ticket-expiry-date");
-            const ownerVehicle = trEle.getAttribute("data-owner-vehicle");
-            const ownerExpiryDate = trEle.getAttribute("data-owner-expiry-date");
+        if (trElement.hasAttribute("data-is-vehicle-make-match") ||
+            trElement.hasAttribute("data-is-licence-plate-expiry-date-match")) {
+            const ticketVehicle = trElement.getAttribute("data-ticket-vehicle");
+            const ticketExpiryDate = trElement.getAttribute("data-ticket-expiry-date");
+            const ownerVehicle = trElement.getAttribute("data-owner-vehicle");
+            const ownerExpiryDate = trElement.getAttribute("data-owner-expiry-date");
             cityssm.confirmModal("Confirm Error", ("<p class=\"has-text-centered\">" +
                 "Are you sure you want to mark an error between the details on the parking ticket" +
                 " and the details on the ownership record?" +
@@ -197,37 +195,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<span class=\"is-size-4\">" + cityssm.escapeHTML(ownerVehicle) + "</span><br />" +
                     "<span class=\"is-size-5\">" + cityssm.escapeHTML(ownerExpiryDate) + "</span>" +
                     "</div>") +
-                "</div>", "Yes, Confirm Error", "warning", errorFn);
+                "</div>", "Yes, Confirm Error", "warning", errorFunction);
         }
         else {
-            errorFn();
+            errorFunction();
         }
     };
-    const matchButtonEles = document.getElementsByClassName("is-ownership-match-button");
-    for (const matchButtonEle of matchButtonEles) {
-        matchButtonEle.addEventListener("click", clickFn_markAsMatch);
+    const matchButtonElements = document.querySelectorAll(".is-ownership-match-button");
+    for (const matchButtonElement of matchButtonElements) {
+        matchButtonElement.addEventListener("click", clickFunction_markAsMatch);
     }
-    const errorButtonEles = document.getElementsByClassName("is-ownership-error-button");
-    for (const errorButtonEle of errorButtonEles) {
-        errorButtonEle.addEventListener("click", clickFn_markAsError);
+    const errorButtonElements = document.querySelectorAll(".is-ownership-error-button");
+    for (const errorButtonElement of errorButtonElements) {
+        errorButtonElement.addEventListener("click", clickFunction_markAsError);
     }
-    const quickReconcilieButtonEle = document.getElementById("is-quick-reconcile-matches-button");
-    if (quickReconcilieButtonEle) {
-        quickReconcilieButtonEle.addEventListener("click", (clickEvent) => {
+    const quickReconcilieButtonElement = document.querySelector("#is-quick-reconcile-matches-button");
+    if (quickReconcilieButtonElement) {
+        quickReconcilieButtonElement.addEventListener("click", (clickEvent) => {
             clickEvent.preventDefault();
-            let loadingCloseModalFn;
-            const reconcileFn = () => {
+            let loadingCloseModalFunction;
+            const reconcileFunction = () => {
                 cityssm.postJSON("/tickets/doQuickReconcileMatches", {}, (responseJSON) => {
-                    loadingCloseModalFn();
+                    loadingCloseModalFunction();
                     if (responseJSON.success) {
                         cityssm.alertModal("Quick Reconcile Complete", (responseJSON.statusRecords.length === 1
                             ? "One record was successfully reconciled as a match."
                             : responseJSON.statusRecords.length.toString() + " records were successfully reconciled as matches."), "OK", "success");
                         for (const statusRecord of responseJSON.statusRecords) {
-                            const optionsTdEle = document.getElementById("is-options-cell--" + statusRecord.ticketID.toString());
-                            if (optionsTdEle) {
-                                cityssm.clearElement(optionsTdEle);
-                                optionsTdEle.innerHTML =
+                            const optionsTdElement = document.querySelector("#is-options-cell--" + statusRecord.ticketID.toString());
+                            if (optionsTdElement) {
+                                cityssm.clearElement(optionsTdElement);
+                                optionsTdElement.innerHTML =
                                     "<div class=\"tags has-addons\">" +
                                         ("<span class=\"tag is-light is-success\">" +
                                             "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
@@ -240,23 +238,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                         "<span class=\"sr-only\">Remove Match</span>" +
                                         "</a>" +
                                         "</div>";
-                                optionsTdEle.getElementsByTagName("a")[0].addEventListener("click", clickFn_clearStatus);
+                                optionsTdElement.querySelector("a").addEventListener("click", clickFunction_clearStatus);
                             }
                         }
                     }
                 });
             };
-            const loadingFn = () => {
+            const loadingFunction = () => {
                 cityssm.openHtmlModal("loading", {
-                    onshown(_modalEle, closeModalFn) {
-                        document.getElementById("is-loading-modal-message").innerText = "Reconciling matches...";
-                        loadingCloseModalFn = closeModalFn;
-                        reconcileFn();
+                    onshown(_modalElement, closeModalFunction) {
+                        document.querySelector("#is-loading-modal-message").textContent = "Reconciling matches...";
+                        loadingCloseModalFunction = closeModalFunction;
+                        reconcileFunction();
                     }
                 });
             };
             cityssm.confirmModal("Quick Reconcile Matches", "Are you sure you want to mark all parking tickets" +
-                " with matching vehicle makes and plate expiry dates as matched?", "Yes, Mark All Matches as Matched", "info", loadingFn);
+                " with matching vehicle makes and plate expiry dates as matched?", "Yes, Mark All Matches as Matched", "info", loadingFunction);
         });
     }
 })();

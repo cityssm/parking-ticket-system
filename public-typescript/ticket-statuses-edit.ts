@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
 import type { ptsGlobal } from "../types/publicTypes";
 import type * as configTypes from "../types/configTypes";
@@ -9,23 +11,23 @@ declare const pts: ptsGlobal;
 
 (() => {
 
-  const ticketID = (document.getElementById("ticket--ticketID") as HTMLInputElement).value;
+  const ticketID = (document.querySelector("#ticket--ticketID") as HTMLInputElement).value;
 
-  const statusPanelEle = document.getElementById("is-status-panel");
+  const statusPanelElement = document.querySelector("#is-status-panel") as HTMLElement;
 
   let statusList = exports.ticketStatusLog as recordTypes.ParkingTicketStatusLog[];
   delete exports.ticketStatusLog;
 
-  const clearStatusPanelFn = () => {
+  const clearStatusPanelFunction = () => {
 
-    const panelBlockEles = statusPanelEle.getElementsByClassName("panel-block");
+    const panelBlockElements = statusPanelElement.querySelectorAll(".panel-block");
 
-    while (panelBlockEles.length > 0) {
-      panelBlockEles[0].remove();
+    for (const panelBlockElement of panelBlockElements) {
+      panelBlockElement.remove();
     }
   };
 
-  const confirmResolveTicketFn = (clickEvent: Event) => {
+  const confirmResolveTicketFunction = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
@@ -53,9 +55,9 @@ declare const pts: ptsGlobal;
 
   };
 
-  const confirmDeleteStatusFn = (clickEvent: Event) => {
+  const confirmDeleteStatusFunction = (clickEvent: Event) => {
 
-    const statusIndex = (clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-status-index");
+    const statusIndex = (clickEvent.currentTarget as HTMLButtonElement).dataset.statusIndex;
 
     cityssm.confirmModal(
       "Delete Remark?",
@@ -71,7 +73,7 @@ declare const pts: ptsGlobal;
           (responseJSON: { success: boolean }) => {
 
             if (responseJSON.success) {
-              getStatusesFn();
+              getStatusesFunction();
             }
           });
       }
@@ -79,17 +81,17 @@ declare const pts: ptsGlobal;
 
   };
 
-  const openEditStatusModalFn = (clickEvent: Event) => {
+  const openEditStatusModalFunction = (clickEvent: Event) => {
 
     clickEvent.preventDefault();
 
-    let editStatusCloseModalFn: () => void;
+    let editStatusCloseModalFunction: () => void;
 
-    const index = parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
+    const index = Number.parseInt((clickEvent.currentTarget as HTMLButtonElement).dataset.index, 10);
 
-    const statusObj = statusList[index];
+    const statusObject = statusList[index];
 
-    const submitFn = (formEvent: Event) => {
+    const submitFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
@@ -97,98 +99,97 @@ declare const pts: ptsGlobal;
         (responseJSON: { success: boolean }) => {
 
           if (responseJSON.success) {
-            editStatusCloseModalFn();
-            getStatusesFn();
+            editStatusCloseModalFunction();
+            getStatusesFunction();
           }
         });
     };
 
-    const statusKeyChangeFn = (changeEvent: Event) => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const statusKeyChangeFunction = (changeEvent: Event) => {
 
-      const statusKeyObj = pts.getTicketStatus((changeEvent.currentTarget as HTMLSelectElement).value);
+      const statusKeyObject = pts.getTicketStatus((changeEvent.currentTarget as HTMLSelectElement).value);
 
-      const statusFieldEle = document.getElementById("editStatus--statusField") as HTMLInputElement;
-      statusFieldEle.value = "";
+      const statusFieldElement = document.querySelector("#editStatus--statusField") as HTMLInputElement;
+      statusFieldElement.value = "";
 
-      if (statusKeyObj?.statusField) {
+      if (statusKeyObject ?.statusField) {
 
-        const fieldEle = statusFieldEle.closest(".field");
-        fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
-        fieldEle.classList.remove("is-hidden");
+        const fieldElement = statusFieldElement.closest(".field");
+        fieldElement.querySelector("label").textContent = statusKeyObject.statusField.fieldLabel;
+        fieldElement.classList.remove("is-hidden");
 
       } else {
 
-        statusFieldEle.closest(".field").classList.add("is-hidden");
+        statusFieldElement.closest(".field").classList.add("is-hidden");
       }
 
-      const statusField2Ele = document.getElementById("editStatus--statusField2") as HTMLInputElement;
-      statusField2Ele.value = "";
+      const statusField2Element = document.querySelector("#editStatus--statusField2") as HTMLInputElement;
+      statusField2Element.value = "";
 
-      if (statusKeyObj?.statusField2) {
+      if (statusKeyObject ?.statusField2) {
 
-        const fieldEle = statusField2Ele.closest(".field");
-        fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
-        fieldEle.classList.remove("is-hidden");
+        const fieldElement = statusField2Element.closest(".field");
+        fieldElement.querySelector("label").textContent = statusKeyObject.statusField2.fieldLabel;
+        fieldElement.classList.remove("is-hidden");
 
       } else {
 
-        statusFieldEle.closest(".field").classList.add("is-hidden");
+        statusFieldElement.closest(".field").classList.add("is-hidden");
       }
     };
 
     cityssm.openHtmlModal("ticket-editStatus", {
 
-      onshow(modalEle: HTMLElement): void {
+      onshow(modalElement) {
 
-        (document.getElementById("editStatus--ticketID") as HTMLInputElement).value = ticketID;
+        (document.querySelector("#editStatus--ticketID") as HTMLInputElement).value = ticketID;
 
-        (document.getElementById("editStatus--statusIndex") as HTMLInputElement).value =
-          statusObj.statusIndex.toString();
+        (document.querySelector("#editStatus--statusIndex") as HTMLInputElement).value =
+          statusObject.statusIndex.toString();
 
-        (document.getElementById("editStatus--statusField") as HTMLInputElement).value = statusObj.statusField;
-        (document.getElementById("editStatus--statusField2") as HTMLInputElement).value = statusObj.statusField2;
-        (document.getElementById("editStatus--statusNote") as HTMLTextAreaElement).value = statusObj.statusNote;
+        (document.querySelector("#editStatus--statusField") as HTMLInputElement).value = statusObject.statusField;
+        (document.querySelector("#editStatus--statusField2") as HTMLInputElement).value = statusObject.statusField2;
+        (document.querySelector("#editStatus--statusNote") as HTMLTextAreaElement).value = statusObject.statusNote;
 
-        const statusDateEle = document.getElementById("editStatus--statusDateString") as HTMLInputElement;
-        statusDateEle.value = statusObj.statusDateString;
-        statusDateEle.setAttribute("max", cityssm.dateToString(new Date()));
+        const statusDateElement = document.querySelector("#editStatus--statusDateString") as HTMLInputElement;
+        statusDateElement.value = statusObject.statusDateString;
+        statusDateElement.setAttribute("max", cityssm.dateToString(new Date()));
 
-        (document.getElementById("editStatus--statusTimeString") as HTMLInputElement).value =
-          statusObj.statusTimeString;
+        (document.querySelector("#editStatus--statusTimeString") as HTMLInputElement).value =
+          statusObject.statusTimeString;
 
         pts.getDefaultConfigProperty("parkingTicketStatuses",
           (parkingTicketStatuses: configTypes.ConfigParkingTicketStatus[]) => {
 
             let statusKeyFound = false;
 
-            const statusKeyEle = document.getElementById("editStatus--statusKey") as HTMLSelectElement;
+            const statusKeyElement = document.querySelector("#editStatus--statusKey") as HTMLSelectElement;
 
-            for (const statusKeyObj of parkingTicketStatuses) {
+            for (const statusKeyObject of parkingTicketStatuses) {
 
-              if (statusKeyObj.isUserSettable || statusKeyObj.statusKey === statusObj.statusKey) {
+              if (statusKeyObject.isUserSettable || statusKeyObject.statusKey === statusObject.statusKey) {
 
-                statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusKeyObj.statusKey + "\">" +
-                  statusKeyObj.status +
+                statusKeyElement.insertAdjacentHTML("beforeend", "<option value=\"" + statusKeyObject.statusKey + "\">" +
+                  statusKeyObject.status +
                   "</option>");
 
-                if (statusKeyObj.statusKey === statusObj.statusKey) {
+                if (statusKeyObject.statusKey === statusObject.statusKey) {
 
                   statusKeyFound = true;
 
-                  if (statusKeyObj.statusField) {
+                  if (statusKeyObject.statusField) {
 
-                    const fieldEle = document.getElementById("editStatus--statusField").closest(".field");
-                    fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField.fieldLabel;
-                    fieldEle.classList.remove("is-hidden");
-
+                    const fieldElement = document.querySelector("#editStatus--statusField").closest(".field");
+                    fieldElement.querySelector("label").textContent = statusKeyObject.statusField.fieldLabel;
+                    fieldElement.classList.remove("is-hidden");
                   }
 
-                  if (statusKeyObj.statusField2) {
+                  if (statusKeyObject.statusField2) {
 
-                    const fieldEle = document.getElementById("editStatus--statusField2").closest(".field");
-                    fieldEle.getElementsByTagName("label")[0].innerText = statusKeyObj.statusField2.fieldLabel;
-                    fieldEle.classList.remove("is-hidden");
-
+                    const fieldElement = document.querySelector("#editStatus--statusField2").closest(".field");
+                    fieldElement.querySelector("label").textContent = statusKeyObject.statusField2.fieldLabel;
+                    fieldElement.classList.remove("is-hidden");
                   }
                 }
               }
@@ -196,34 +197,34 @@ declare const pts: ptsGlobal;
 
             if (!statusKeyFound) {
 
-              statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
-                statusObj.statusKey +
+              statusKeyElement.insertAdjacentHTML("beforeend", "<option value=\"" + statusObject.statusKey + "\">" +
+                statusObject.statusKey +
                 "</option>");
             }
 
-            statusKeyEle.value = statusObj.statusKey;
+            statusKeyElement.value = statusObject.statusKey;
 
-            statusKeyEle.addEventListener("change", statusKeyChangeFn);
+            statusKeyElement.addEventListener("change", statusKeyChangeFunction);
 
           });
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+        modalElement.querySelector("form").addEventListener("submit", submitFunction);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
-        editStatusCloseModalFn = closeModalFn;
+      onshown(_modalElement, closeModalFunction) {
+        editStatusCloseModalFunction = closeModalFunction;
       }
     });
 
   };
 
-  const populateStatusesPanelFn = () => {
+  const populateStatusesPanelFunction = () => {
 
-    clearStatusPanelFn();
+    clearStatusPanelFunction();
 
     if (statusList.length === 0) {
 
-      statusPanelEle.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
+      statusPanelElement.insertAdjacentHTML("beforeend", "<div class=\"panel-block is-block\">" +
         "<div class=\"message is-info\">" +
         "<p class=\"message-body\">" +
         "There are no statuses associated with this ticket." +
@@ -236,64 +237,64 @@ declare const pts: ptsGlobal;
 
     // Loop through statuses
 
-    for (const statusObj of statusList) {
+    for (const statusObject of statusList) {
 
-      const statusDefinitionObj = pts.getTicketStatus(statusObj.statusKey);
+      const statusDefinitionObject = pts.getTicketStatus(statusObject.statusKey);
 
-      const panelBlockEle = document.createElement("div");
-      panelBlockEle.className = "panel-block is-block";
+      const panelBlockElement = document.createElement("div");
+      panelBlockElement.className = "panel-block is-block";
 
-      panelBlockEle.innerHTML = "<div class=\"columns\">" +
+      panelBlockElement.innerHTML = "<div class=\"columns\">" +
         ("<div class=\"column\">" +
 
           ("<div class=\"level mb-1\">" +
             "<div class=\"level-left\">" +
-            "<strong>" + (statusDefinitionObj ? statusDefinitionObj.status : statusObj.statusKey) + "</strong>" +
+            "<strong>" + (statusDefinitionObject ? statusDefinitionObject.status : statusObject.statusKey) + "</strong>" +
             "</div>" +
-            "<div class=\"level-right\">" + statusObj.statusDateString + "</div>" +
+            "<div class=\"level-right\">" + statusObject.statusDateString + "</div>" +
             "</div>") +
 
-          (!statusObj.statusField || statusObj.statusField === ""
+          (!statusObject.statusField || statusObject.statusField === ""
             ? ""
             : "<p class=\"is-size-7\">" +
             "<strong>" +
-            (statusDefinitionObj?.statusField
-              ? statusDefinitionObj.statusField.fieldLabel
+            (statusDefinitionObject ?.statusField
+              ? statusDefinitionObject.statusField.fieldLabel
               : "") +
             ":</strong> " +
-            statusObj.statusField +
+            statusObject.statusField +
             "</p>") +
 
-          (!statusObj.statusField2 || statusObj.statusField2 === ""
+          (!statusObject.statusField2 || statusObject.statusField2 === ""
             ? ""
             : "<p class=\"is-size-7\">" +
             "<strong>" +
-            (statusDefinitionObj?.statusField2
-              ? statusDefinitionObj.statusField2.fieldLabel
+            (statusDefinitionObject ?.statusField2
+              ? statusDefinitionObject.statusField2.fieldLabel
               : "") +
             ":</strong> " +
-            statusObj.statusField2 +
+            statusObject.statusField2 +
             "</p>") +
 
-          "<p class=\"has-newline-chars is-size-7\">" + statusObj.statusNote + "</p>" +
+          "<p class=\"has-newline-chars is-size-7\">" + statusObject.statusNote + "</p>" +
 
           "</div>") +
 
         "</div>";
 
-      statusPanelEle.appendChild(panelBlockEle);
+      statusPanelElement.append(panelBlockElement);
     }
 
     // Initialize edit and delete buttons (if applicable)
 
-    const firstStatusObj = statusList[0];
+    const firstStatusObject = statusList[0];
 
-    if (firstStatusObj.canUpdate) {
+    if (firstStatusObject.canUpdate) {
 
-      const firstStatusColumnsEle =
-        statusPanelEle.getElementsByClassName("panel-block")[0].getElementsByClassName("columns")[0];
+      const firstStatusColumnsElement =
+        statusPanelElement.querySelector(".panel-block").querySelector(".columns");
 
-      firstStatusColumnsEle.insertAdjacentHTML("beforeend", "<div class=\"column is-narrow\">" +
+      firstStatusColumnsElement.insertAdjacentHTML("beforeend", "<div class=\"column is-narrow\">" +
         "<div class=\"buttons is-right has-addons\">" +
         ("<button class=\"button is-small is-edit-status-button\"" +
           " data-tooltip=\"Edit Status\" data-index=\"0\" type=\"button\">" +
@@ -301,31 +302,31 @@ declare const pts: ptsGlobal;
           " <span>Edit</span>" +
           "</button>") +
         ("<button class=\"button is-small has-text-danger is-delete-status-button\" data-tooltip=\"Delete Status\"" +
-          " data-status-index=\"" + firstStatusObj.statusIndex.toString() + "\" type=\"button\">" +
+          " data-status-index=\"" + firstStatusObject.statusIndex.toString() + "\" type=\"button\">" +
           "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
           "<span class=\"sr-only\">Delete</span>" +
           "</button>") +
         "</div>" +
         "</div>");
 
-      firstStatusColumnsEle.getElementsByClassName("is-edit-status-button")[0]
-        .addEventListener("click", openEditStatusModalFn);
+      firstStatusColumnsElement.querySelector(".is-edit-status-button")
+        .addEventListener("click", openEditStatusModalFunction);
 
-      firstStatusColumnsEle.getElementsByClassName("is-delete-status-button")[0]
-        .addEventListener("click", confirmDeleteStatusFn);
+      firstStatusColumnsElement.querySelector(".is-delete-status-button")
+        .addEventListener("click", confirmDeleteStatusFunction);
 
     }
 
     // Add finalize button
 
-    const firstStatusDefinitionObj = pts.getTicketStatus(firstStatusObj.statusKey);
+    const firstStatusDefinitionObject = pts.getTicketStatus(firstStatusObject.statusKey);
 
-    if (firstStatusDefinitionObj?.isFinalStatus) {
+    if (firstStatusDefinitionObject ?.isFinalStatus) {
 
-      const finalizePanelBlockEle = document.createElement("div");
-      finalizePanelBlockEle.className = "panel-block is-block";
+      const finalizePanelBlockElement = document.createElement("div");
+      finalizePanelBlockElement.className = "panel-block is-block";
 
-      finalizePanelBlockEle.innerHTML = "<div class=\"message is-info is-clearfix\">" +
+      finalizePanelBlockElement.innerHTML = "<div class=\"message is-info is-clearfix\">" +
         "<div class=\"message-body\">" +
 
         "<div class=\"columns\">" +
@@ -345,19 +346,17 @@ declare const pts: ptsGlobal;
         "</div>" +
         "</div>";
 
-      finalizePanelBlockEle.getElementsByTagName("button")[0].addEventListener("click", confirmResolveTicketFn);
+      finalizePanelBlockElement.querySelector("button").addEventListener("click", confirmResolveTicketFunction);
 
-      statusPanelEle.insertAdjacentElement("afterbegin", finalizePanelBlockEle);
-
+      statusPanelElement.prepend(finalizePanelBlockElement);
     }
-
   };
 
-  const getStatusesFn = () => {
+  const getStatusesFunction = () => {
 
-    clearStatusPanelFn();
+    clearStatusPanelFunction();
 
-    statusPanelEle.insertAdjacentHTML(
+    statusPanelElement.insertAdjacentHTML(
       "beforeend",
       "<div class=\"panel-block is-block\">" +
       "<p class=\"has-text-centered has-text-grey-lighter\">" +
@@ -370,33 +369,31 @@ declare const pts: ptsGlobal;
     cityssm.postJSON("/tickets/doGetStatuses", {
       ticketID
     },
-      (responseStatusList) => {
+      (responseStatusList: recordTypes.ParkingTicketStatusLog[]) => {
 
         statusList = responseStatusList;
-        populateStatusesPanelFn();
-
+        populateStatusesPanelFunction();
       });
-
   };
 
-  document.getElementById("is-add-status-button").addEventListener("click", (clickEvent) => {
+  document.querySelector("#is-add-status-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addStatusCloseModalFn: () => void;
+    let addStatusCloseModalFunction: () => void;
 
-    const submitFn = (formEvent: Event) => {
+    const submitFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      const resolveTicket = (document.getElementById("addStatus--resolveTicket") as HTMLInputElement).checked;
+      const resolveTicket = (document.querySelector("#addStatus--resolveTicket") as HTMLInputElement).checked;
 
       cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget,
         (responseJSON: { success: boolean }) => {
 
           if (responseJSON.success) {
 
-            addStatusCloseModalFn();
+            addStatusCloseModalFunction();
 
             if (resolveTicket) {
 
@@ -404,114 +401,111 @@ declare const pts: ptsGlobal;
 
             } else {
 
-              getStatusesFn();
+              getStatusesFunction();
             }
           }
         });
     };
 
-    const statusKeyChangeFn = (changeEvent: Event) => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const statusKeyChangeFunction = (changeEvent: Event) => {
 
-      const statusObj = pts.getTicketStatus((changeEvent.currentTarget as HTMLInputElement).value);
+      const statusObject = pts.getTicketStatus((changeEvent.currentTarget as HTMLInputElement).value);
 
-      const statusFieldEle = document.getElementById("addStatus--statusField") as HTMLInputElement;
-      statusFieldEle.value = "";
+      const statusFieldElement = document.querySelector("#addStatus--statusField") as HTMLInputElement;
+      statusFieldElement.value = "";
 
-      if (statusObj?.statusField) {
+      if (statusObject ?.statusField) {
 
-        const fieldEle = statusFieldEle.closest(".field");
-        fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField.fieldLabel;
-        fieldEle.classList.remove("is-hidden");
+        const fieldElement = statusFieldElement.closest(".field");
+        fieldElement.querySelector("label").textContent = statusObject.statusField.fieldLabel;
+        fieldElement.classList.remove("is-hidden");
 
       } else {
-
-        statusFieldEle.closest(".field").classList.add("is-hidden");
-
+        statusFieldElement.closest(".field").classList.add("is-hidden");
       }
 
-      const statusField2Ele = document.getElementById("addStatus--statusField2") as HTMLInputElement;
-      statusField2Ele.value = "";
+      const statusField2Element = document.querySelector("#addStatus--statusField2") as HTMLInputElement;
+      statusField2Element.value = "";
 
-      if (statusObj?.statusField2) {
+      if (statusObject ?.statusField2) {
 
-        const fieldEle = statusField2Ele.closest(".field");
-        fieldEle.getElementsByTagName("label")[0].innerText = statusObj.statusField2.fieldLabel;
-        fieldEle.classList.remove("is-hidden");
+        const fieldElement = statusField2Element.closest(".field");
+        fieldElement.querySelector("label").textContent = statusObject.statusField2.fieldLabel;
+        fieldElement.classList.remove("is-hidden");
 
       } else {
-        statusField2Ele.closest(".field").classList.add("is-hidden");
+        statusField2Element.closest(".field").classList.add("is-hidden");
       }
 
-      const resolveTicketEle = document.getElementById("addStatus--resolveTicket") as HTMLInputElement;
-      resolveTicketEle.checked = false;
+      const resolveTicketElement = document.querySelector("#addStatus--resolveTicket") as HTMLInputElement;
+      resolveTicketElement.checked = false;
 
-      if (statusObj?.isFinalStatus) {
+      if (statusObject ?.isFinalStatus) {
 
-        resolveTicketEle.closest(".field").classList.remove("is-hidden");
+        resolveTicketElement.closest(".field").classList.remove("is-hidden");
 
       } else {
-        resolveTicketEle.closest(".field").classList.add("is-hidden");
+        resolveTicketElement.closest(".field").classList.add("is-hidden");
       }
     };
 
     cityssm.openHtmlModal("ticket-addStatus", {
 
-      onshow(modalEle: HTMLElement): void {
+      onshow(modalElement) {
 
-        (document.getElementById("addStatus--ticketID") as HTMLInputElement).value = ticketID;
+        (document.querySelector("#addStatus--ticketID") as HTMLInputElement).value = ticketID;
 
         pts.getDefaultConfigProperty("parkingTicketStatuses",
           (parkingTicketStatuses: configTypes.ConfigParkingTicketStatus[]) => {
 
-            const statusKeyEle = document.getElementById("addStatus--statusKey");
+            const statusKeyElement = document.querySelector("#addStatus--statusKey");
 
-            for (const statusObj of parkingTicketStatuses) {
+            for (const statusObject of parkingTicketStatuses) {
 
-              if (statusObj.isUserSettable) {
-                statusKeyEle.insertAdjacentHTML("beforeend", "<option value=\"" + statusObj.statusKey + "\">" +
-                  statusObj.status +
+              if (statusObject.isUserSettable) {
+                statusKeyElement.insertAdjacentHTML("beforeend", "<option value=\"" + statusObject.statusKey + "\">" +
+                  statusObject.status +
                   "</option>");
               }
             }
 
-            statusKeyEle.addEventListener("change", statusKeyChangeFn);
+            statusKeyElement.addEventListener("change", statusKeyChangeFunction);
           });
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+        modalElement.querySelector("form").addEventListener("submit", submitFunction);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
-        addStatusCloseModalFn = closeModalFn;
+      onshown(_modalElement, closeModalFunction) {
+        addStatusCloseModalFunction = closeModalFunction;
       }
-
     });
-
   });
 
-  document.getElementById("is-add-paid-status-button").addEventListener("click", (clickEvent) => {
+  document.querySelector("#is-add-paid-status-button").addEventListener("click", (clickEvent) => {
 
     clickEvent.preventDefault();
 
-    let addPaidStatusCloseModalFn: () => void;
+    let addPaidStatusCloseModalFunction: () => void;
 
-    const submitFn = (formEvent: Event) => {
+    const submitFunction = (formEvent: Event) => {
 
       formEvent.preventDefault();
 
-      const resolveTicket = (document.getElementById("addPaidStatus--resolveTicket") as HTMLInputElement).checked;
+      const resolveTicket = (document.querySelector("#addPaidStatus--resolveTicket") as HTMLInputElement).checked;
 
       cityssm.postJSON("/tickets/doAddStatus", formEvent.currentTarget,
         (responseJSON: { success: boolean }) => {
 
           if (responseJSON.success) {
 
-            addPaidStatusCloseModalFn();
+            addPaidStatusCloseModalFunction();
 
             if (resolveTicket) {
               window.location.href = "/tickets/" + ticketID;
 
             } else {
-              getStatusesFn();
+              getStatusesFunction();
             }
           }
         });
@@ -519,22 +513,22 @@ declare const pts: ptsGlobal;
 
     cityssm.openHtmlModal("ticket-addStatusPaid", {
 
-      onshow(modalEle: HTMLElement): void {
+      onshow(modalElement) {
 
-        (document.getElementById("addPaidStatus--ticketID") as HTMLInputElement).value = ticketID;
+        (document.querySelector("#addPaidStatus--ticketID") as HTMLInputElement).value = ticketID;
 
         // Set amount
 
-        const statusFieldEle = document.getElementById("addPaidStatus--statusField") as HTMLInputElement;
+        const statusFieldElement = document.querySelector("#addPaidStatus--statusField") as HTMLInputElement;
 
-        const offenceAmount = (document.getElementById("ticket--offenceAmount") as HTMLInputElement).value;
+        const offenceAmount = (document.querySelector("#ticket--offenceAmount") as HTMLInputElement).value;
 
-        const issueDateString = (document.getElementById("ticket--issueDateString") as HTMLInputElement).value;
+        const issueDateString = (document.querySelector("#ticket--issueDateString") as HTMLInputElement).value;
 
-        const discountDays = (document.getElementById("ticket--discountDays") as HTMLInputElement).value;
+        const discountDays = (document.querySelector("#ticket--discountDays") as HTMLInputElement).value;
 
         if (issueDateString === "" || discountDays === "") {
-          statusFieldEle.value = offenceAmount;
+          statusFieldElement.value = offenceAmount;
 
         } else {
 
@@ -542,27 +536,22 @@ declare const pts: ptsGlobal;
 
           const dateDifference = cityssm.dateStringDifferenceInDays(issueDateString, currentDateString);
 
-          if (dateDifference <= parseInt(discountDays, 10)) {
-
-            statusFieldEle.value =
-              (document.getElementById("ticket--discountOffenceAmount") as HTMLInputElement).value;
-
-          } else {
-            statusFieldEle.value = offenceAmount;
-          }
+          statusFieldElement.value = dateDifference <= Number.parseInt(discountDays, 10)
+            ? (document.querySelector("#ticket--discountOffenceAmount") as HTMLInputElement).value
+            : offenceAmount;
         }
 
-        modalEle.getElementsByTagName("form")[0].addEventListener("submit", submitFn);
+        modalElement.querySelector("form").addEventListener("submit", submitFunction);
 
       },
-      onshown(_modalEle: HTMLElement, closeModalFn: () => void): void {
-        addPaidStatusCloseModalFn = closeModalFn;
+      onshown(_modalElement, closeModalFunction) {
+        addPaidStatusCloseModalFunction = closeModalFunction;
       }
 
     });
 
   });
 
-  pts.loadDefaultConfigProperties(populateStatusesPanelFn);
+  pts.loadDefaultConfigProperties(populateStatusesPanelFunction);
 
 })();
