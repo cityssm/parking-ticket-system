@@ -139,7 +139,7 @@
             <%
               for (let index = 0; index < records.length; index += 1) {
                 const record = records[index];
-                const locationProperties = configFns.getLicencePlateLocationProperties(record.licencePlateCountry, record.licencePlateProvince);
+                const locationProperties = configFunctions.getLicencePlateLocationProperties(record.licencePlateCountry, record.licencePlateProvince);
             %>
                 <tr
                   data-licence-plate-country="<%= record.licencePlateCountry %>"

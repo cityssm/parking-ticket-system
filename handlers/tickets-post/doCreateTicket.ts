@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as configFns from "../../helpers/configFns.js";
+import * as configFunctions from "../../helpers/functions.config.js";
 
 import createParkingTicket from "../../helpers/parkingDB/createParkingTicket.js";
 
@@ -11,7 +11,7 @@ export const handler: RequestHandler = (req, res) => {
 
   if (result.success) {
     const ticketNumber = req.body.ticketNumber;
-    result.nextTicketNumber = configFns.getProperty(
+    result.nextTicketNumber = configFunctions.getProperty(
       "parkingTickets.ticketNumber.nextTicketNumberFn"
     )(ticketNumber);
   }

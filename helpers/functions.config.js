@@ -21,14 +21,14 @@ configFallbackValues.set("user.defaultProperties", Object.freeze({
 configFallbackValues.set("defaults.country", "");
 configFallbackValues.set("defaults.province", "");
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
-configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\d\w -]{1,10}$/);
+configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\w -]{1,10}$/);
 configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);
-configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", (_currentTicketNumber) => {
+configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", () => {
     return "";
 });
 configFallbackValues.set("parkingTickets.licencePlateExpiryDate.includeDay", false);
 configFallbackValues.set("parkingTicketStatuses", []);
-configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\d\w -]{1,20}$/);
+configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\w -]{1,20}$/);
 configFallbackValues.set("locationClasses", []);
 configFallbackValues.set("licencePlateCountryAliases", Object.freeze({
     CA: "Canada",
@@ -40,16 +40,16 @@ configFallbackValues.set("mtoExportImport.authorizedUser", "");
 configFallbackValues.set("databaseCleanup.windowDays", 30);
 export function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split(".");
-    let currentObj = config;
+    let currentObject = config;
     for (const propertyNamePiece of propertyNameSplit) {
-        if (currentObj.hasOwnProperty(propertyNamePiece)) {
-            currentObj = currentObj[propertyNamePiece];
+        if (Object.prototype.hasOwnProperty.call(currentObject, propertyNamePiece)) {
+            currentObject = currentObject[propertyNamePiece];
         }
         else {
             return configFallbackValues.get(propertyName);
         }
     }
-    return currentObj;
+    return currentObject;
 }
 export const keepAliveMillis = getProperty("session.doKeepAlive")
     ? Math.max(getProperty("session.maxAgeMillis") / 2, getProperty("session.maxAgeMillis") - (10 * 60 * 1000))
@@ -59,8 +59,8 @@ let parkingTicketStatusMapIsLoaded = false;
 export const getParkingTicketStatus = (statusKey) => {
     if (!parkingTicketStatusMapIsLoaded) {
         const parkingTicketStatusList = getProperty("parkingTicketStatuses");
-        for (const parkingTicketStatusObj of parkingTicketStatusList) {
-            parkingTicketStatusMap.set(parkingTicketStatusObj.statusKey, parkingTicketStatusObj);
+        for (const parkingTicketStatusObject of parkingTicketStatusList) {
+            parkingTicketStatusMap.set(parkingTicketStatusObject.statusKey, parkingTicketStatusObject);
         }
         parkingTicketStatusMapIsLoaded = true;
     }
@@ -72,17 +72,17 @@ export const getLicencePlateLocationProperties = (originalLicencePlateCountry, o
         color: "#000",
         backgroundColor: "#fff"
     };
-    const licencePlateCountryAlias = getProperty("licencePlateCountryAliases").hasOwnProperty(originalLicencePlateCountry.toUpperCase())
+    const licencePlateCountryAlias = Object.prototype.hasOwnProperty.call(getProperty("licencePlateCountryAliases"), originalLicencePlateCountry.toUpperCase())
         ? getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()]
         : originalLicencePlateCountry;
     let licencePlateProvinceAlias = originalLicencePlateProvince;
-    if (getProperty("licencePlateProvinceAliases").hasOwnProperty(licencePlateCountryAlias)) {
+    if (Object.prototype.hasOwnProperty.call(getProperty("licencePlateProvinceAliases"), licencePlateCountryAlias)) {
         licencePlateProvinceAlias =
             getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
                 originalLicencePlateProvince;
     }
     let licencePlateProvince = licencePlateProvinceDefault;
-    if (getProperty("licencePlateProvinces").hasOwnProperty(licencePlateCountryAlias)) {
+    if (Object.prototype.hasOwnProperty.call(getProperty("licencePlateProvinces"), licencePlateCountryAlias)) {
         licencePlateProvince =
             getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
                 licencePlateProvinceDefault;

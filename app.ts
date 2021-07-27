@@ -10,6 +10,7 @@ import rateLimit from "express-rate-limit";
 import session from "express-session";
 import sqlite from "connect-sqlite3";
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
 import routerDocs from "./routes/docs.js";
 import routerLogin from "./routes/login.js";
 import routerDashboard from "./routes/dashboard.js";
@@ -22,15 +23,15 @@ import routerReports from "./routes/reports.js";
 import routePlatesOntario from "./routes/plates-ontario.js";
 import routeTicketsOntario from "./routes/tickets-ontario.js";
 
-import * as configFns from "./helpers/configFns.js";
+import * as configFunctions from "./helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns.js";
-import * as vehicleFns from "./helpers/vehicleFns.js";
+import * as vehicleFunctions from "./helpers/functions.vehicle.js";
 
 import * as usersDB_init from "./helpers/usersDB/initializeDatabase.js";
 import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase.js";
-import * as dbInit from "./helpers/dbInit.js";
+import { initNHTSADB } from "./helpers/initializeDatabase.js";
 
 import debug from "debug";
 const debugApp = debug("parking-ticket-system:app");
@@ -42,7 +43,7 @@ const debugApp = debug("parking-ticket-system:app");
 
 usersDB_init.initializeDatabase();
 parkingDB_init.initializeDatabase();
-dbInit.initNHTSADB();
+initNHTSADB();
 
 
 /*
@@ -60,8 +61,8 @@ app.set("view engine", "ejs");
 
 app.use(compression());
 
-app.use((req, _res, next) => {
-  debugApp(`${req.method} ${req.url}`);
+app.use((request, _response, next) => {
+  debugApp(`${request.method} ${request.url}`);
   next();
 });
 
@@ -117,7 +118,7 @@ app.use("/cityssm-bulma-webapp-js",
 const SQLiteStore = sqlite(session);
 
 
-const sessionCookieName: string = configFns.getProperty("session.cookieName");
+const sessionCookieName: string = configFunctions.getProperty("session.cookieName");
 
 
 // Initialize session
@@ -127,34 +128,34 @@ app.use(session({
     db: "sessions.db"
   }),
   name: sessionCookieName,
-  secret: configFns.getProperty("session.secret"),
+  secret: configFunctions.getProperty("session.secret"),
   resave: true,
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    maxAge: configFns.getProperty("session.maxAgeMillis"),
+    maxAge: configFunctions.getProperty("session.maxAgeMillis"),
     sameSite: "strict"
   }
 }));
 
 // Clear cookie if no corresponding session
-app.use((req, res, next) => {
+app.use((request, response, next) => {
 
-  if (req.cookies[sessionCookieName] && !req.session.user) {
-    res.clearCookie(sessionCookieName);
+  if (request.cookies[sessionCookieName] && !request.session.user) {
+    response.clearCookie(sessionCookieName);
   }
 
   next();
 });
 
 // Redirect logged in users
-const sessionChecker = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const sessionChecker = (request: express.Request, response: express.Response, next: express.NextFunction) => {
 
-  if (req.session.user && req.cookies[sessionCookieName]) {
+  if (request.session.user && request.cookies[sessionCookieName]) {
     return next();
   }
 
-  return res.redirect("/login?redirect=" + req.originalUrl);
+  return response.redirect("/login?redirect=" + request.originalUrl);
 };
 
 
@@ -164,25 +165,25 @@ const sessionChecker = (req: express.Request, res: express.Response, next: expre
 
 
 // Make the user and config objects available to the templates
-app.use((req, res, next) => {
+app.use((request, response, next) => {
 
-  res.locals.buildNumber = process.env.npm_package_version;
+  response.locals.buildNumber = process.env.npm_package_version;
 
-  res.locals.user = req.session.user;
-  res.locals.csrfToken = req.csrfToken();
+  response.locals.user = request.session.user;
+  response.locals.csrfToken = request.csrfToken();
 
-  res.locals.configFns = configFns;
-  res.locals.dateTimeFns = dateTimeFns;
-  res.locals.stringFns = stringFns;
-  res.locals.htmlFns = htmlFns;
-  res.locals.vehicleFns = vehicleFns;
+  response.locals.configFunctions = configFunctions;
+  response.locals.dateTimeFns = dateTimeFns;
+  response.locals.stringFns = stringFns;
+  response.locals.htmlFns = htmlFns;
+  response.locals.vehicleFunctions = vehicleFunctions;
 
   next();
 });
 
 
-app.get("/", sessionChecker, (_req, res) => {
-  res.redirect("/dashboard");
+app.get("/", sessionChecker, (_request, response) => {
+  response.redirect("/dashboard");
 });
 
 app.use("/docs", routerDocs);
@@ -193,7 +194,7 @@ app.use("/plates", sessionChecker, routerPlates);
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/reports", sessionChecker, routerReports);
 
-if (configFns.getProperty("application.feature_mtoExportImport")) {
+if (configFunctions.getProperty("application.feature_mtoExportImport")) {
 
   app.use("/plates-ontario", sessionChecker, routePlatesOntario);
   app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
@@ -201,43 +202,43 @@ if (configFns.getProperty("application.feature_mtoExportImport")) {
 
 app.use("/admin", sessionChecker, routerAdmin);
 
-app.all("/keepAlive", (_req, res) => {
-  res.json(true);
+app.all("/keepAlive", (_request, response) => {
+  response.json(true);
 });
 
 app.use("/login", routerLogin);
 
-app.get("/logout", (req, res) => {
+app.get("/logout", (request, response) => {
 
-  if (req.session.user && req.cookies[sessionCookieName]) {
+  if (request.session.user && request.cookies[sessionCookieName]) {
 
-    req.session.destroy(null);
-    req.session = null;
-    res.clearCookie(sessionCookieName);
-    res.redirect("/");
+    request.session.destroy(() => {
+      response.clearCookie(sessionCookieName);
+      response.redirect("/");
+    });
 
   } else {
 
-    res.redirect("/login");
+    response.redirect("/login");
   }
 });
 
 
 // Catch 404 and forward to error handler
-app.use((_req, _res, next) => {
+app.use((_request, _response, next) => {
   next(createError(404));
 });
 
 // Error handler
-app.use((err: createError.HttpError, req: express.Request, res: express.Response) => {
+app.use((error: createError.HttpError, request: express.Request, response: express.Response) => {
 
   // Set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+  response.locals.message = error.message;
+  response.locals.error = request.app.get("env") === "development" ? error : {};
 
   // Render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  response.status(error.status || 500);
+  response.render("error");
 });
 
 

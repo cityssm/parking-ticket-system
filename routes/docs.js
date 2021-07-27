@@ -3,7 +3,7 @@ import createError from "http-errors";
 import fs from "fs";
 import path from "path";
 import marked from "marked";
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 import sanitize from "sanitize-filename";
 export const router = Router();
 router.all("/", (_req, res) => {
@@ -17,7 +17,7 @@ router.all("/:mdFileName", (req, res, next) => {
             next(createError(400));
             return;
         }
-        const applicationName = configFns.getProperty("application.applicationName");
+        const applicationName = configFunctions.getProperty("application.applicationName");
         res.send(`<html>
       <head>
         <meta charset="utf-8" />

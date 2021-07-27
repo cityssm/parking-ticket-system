@@ -1,8 +1,8 @@
 import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import * as configFns from "../configFns.js";
-import * as vehicleFns from "../vehicleFns.js";
+import * as configFunctions from "../functions.config.js";
+import * as vehicleFunctions from "../functions.vehicle.js";
 import type * as pts from "../../types/recordTypes";
 
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
@@ -14,10 +14,10 @@ export const getLicencePlateOwnerWithDB =
     recordDateOrBefore: number) => {
 
     const licencePlateCountryAlias =
-      configFns.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
+      configFunctions.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
 
     const licencePlateProvinceAlias =
-      (configFns.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})
+      (configFunctions.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})
       [licencePlateProvince] || licencePlateProvince;
 
     const possibleOwners: pts.LicencePlateOwner[] = db.prepare("select * from LicencePlateOwners" +
@@ -30,11 +30,11 @@ export const getLicencePlateOwnerWithDB =
     for (const possibleOwnerObj of possibleOwners) {
 
       const ownerPlateCountryAlias =
-        configFns.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] ||
+        configFunctions.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] ||
         possibleOwnerObj.licencePlateCountry;
 
       const ownerPlateProvinceAlias =
-        (configFns.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})
+        (configFunctions.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})
         [possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
 
       if (licencePlateCountryAlias === ownerPlateCountryAlias &&
@@ -45,7 +45,7 @@ export const getLicencePlateOwnerWithDB =
         possibleOwnerObj.licencePlateExpiryDateString =
           dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
 
-        possibleOwnerObj.vehicleMake = vehicleFns.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
+        possibleOwnerObj.vehicleMake = vehicleFunctions.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
 
         return possibleOwnerObj;
       }

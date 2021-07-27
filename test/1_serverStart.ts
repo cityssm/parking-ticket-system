@@ -12,7 +12,7 @@ import { createUser } from "../helpers/usersDB/createUser.js";
 import { inactivateUser } from "../helpers/usersDB/inactivateUser.js";
 import { updateUserProperty } from "../helpers/usersDB/updateUserProperty.js";
 
-import { getModelsByMakeFromCache } from "../helpers/vehicleFns.js";
+import { getModelsByMakeFromCache } from "../helpers/functions.vehicle.js";
 
 import { fakeViewOnlySession, userName } from "./_globals.js";
 

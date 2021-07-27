@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import marked from "marked";
 
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 
 import sanitize from "sanitize-filename";
 
@@ -34,7 +34,7 @@ router.all("/:mdFileName", (req, res, next) => {
       return;
     }
 
-    const applicationName = configFns.getProperty("application.applicationName");
+    const applicationName = configFunctions.getProperty("application.applicationName");
 
     res.send(`<html>
       <head>

@@ -1,4 +1,4 @@
-import * as configFns from "../../helpers/configFns.js";
+import * as configFunctions from "../../helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as parkingDB from "../../helpers/parkingDB.js";
 export const handler = (req, res) => {
@@ -9,8 +9,8 @@ export const handler = (req, res) => {
         isCreate: true,
         ticket: {
             ticketNumber,
-            licencePlateCountry: configFns.getProperty("defaults.country"),
-            licencePlateProvince: configFns.getProperty("defaults.province")
+            licencePlateCountry: configFunctions.getProperty("defaults.country"),
+            licencePlateProvince: configFunctions.getProperty("defaults.province")
         },
         issueDateMaxString: dateTimeFns.dateToString(new Date()),
         vehicleMakeModelDatalist

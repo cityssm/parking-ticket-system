@@ -132,7 +132,7 @@
           </h2>
           <div class="panel-block is-block">
             <%
-              const licencePlateLocationObj = configFns.getLicencePlateLocationProperties(ticket.licencePlateCountry, ticket.licencePlateProvince);
+              const licencePlateLocationObj = configFunctions.getLicencePlateLocationProperties(ticket.licencePlateCountry, ticket.licencePlateProvince);
             %>
             <div class="columns">
               <div class="column is-narrow has-text-centered">
@@ -152,7 +152,7 @@
                   <span class="is-size-7">
                     Expires<br />
                     <%=
-                      (configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay") ?
+                      (configFunctions.getProperty("parkingTickets.licencePlateExpiryDate.includeDay") ?
                         ticket.licencePlateExpiryDateString :
                         ticket.licencePlateExpiryDateString.substring(0, ticket.licencePlateExpiryDateString.lastIndexOf("-")))
                     %>
@@ -305,7 +305,7 @@
           <%
             for (let index = 0; index < ticket.statusLog.length; index += 1) {
               const statusLogEntryObj = ticket.statusLog[index];
-              const statusObj = configFns.getParkingTicketStatus(statusLogEntryObj.statusKey) || {};
+              const statusObj = configFunctions.getParkingTicketStatus(statusLogEntryObj.statusKey) || {};
           %>
             <div class="panel-block is-block">
               <div class="level mb-1">

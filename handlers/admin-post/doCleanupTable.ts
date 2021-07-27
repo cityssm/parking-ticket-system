@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as configFns from "../../helpers/configFns.js";
+import * as configFunctions from "../../helpers/functions.config.js";
 
 import cleanupParkingTicketsTable from "../../helpers/parkingDB/cleanupParkingTicketsTable.js";
 import cleanupParkingTicketRemarksTable from "../../helpers/parkingDB/cleanupParkingTicketRemarksTable.js";
@@ -20,7 +20,7 @@ export const handler: RequestHandler = (req, res) => {
   const recordDelete_timeMillis =
     Math.min(
       parseInt(req.body.recordDelete_timeMillis, 10),
-      Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
+      Date.now() - (configFunctions.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
 
   let success = false;
 

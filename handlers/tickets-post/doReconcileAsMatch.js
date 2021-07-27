@@ -1,4 +1,4 @@
-import * as ownerFns from "../../helpers/ownerFns.js";
+import * as ownerFunctions from "../../helpers/functions.owner.js";
 import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
 import getLicencePlateOwner from "../../helpers/parkingDB/getLicencePlateOwner.js";
 export const handler = (req, res) => {
@@ -9,7 +9,7 @@ export const handler = (req, res) => {
             message: "Ownership record not found."
         });
     }
-    const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
+    const ownerAddress = ownerFunctions.getFormattedOwnerAddress(ownerRecord);
     const statusResponse = createParkingTicketStatus({
         recordType: "status",
         ticketID: parseInt(req.body.ticketID, 10),

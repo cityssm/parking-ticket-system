@@ -1,10 +1,10 @@
 import sqlite from "better-sqlite3";
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 import { parkingDB as dbPath } from "../data/databasePaths.js";
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis) => {
     return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== ""
         ? possibleRecordDeleteTimeMillis
-        : Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
+        : Date.now() - (configFunctions.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
 };
 const reportDefinitions = new Map();
 reportDefinitions.set("tickets-all", {

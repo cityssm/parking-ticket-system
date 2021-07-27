@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../functions.config.js";
 import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket.js";
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
 const hasDuplicateTicket = (db, ticketNumber, issueDate) => {
@@ -18,7 +18,7 @@ export const createParkingTicket = (reqBody, reqSession) => {
     const db = sqlite(dbPath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
-    if (configFns.getProperty("parkingTickets.ticketNumber.isUnique")) {
+    if (configFunctions.getProperty("parkingTickets.ticketNumber.isUnique")) {
         if (hasDuplicateTicket(db, reqBody.ticketNumber, issueDate)) {
             db.close();
             return {
@@ -28,7 +28,7 @@ export const createParkingTicket = (reqBody, reqSession) => {
         }
     }
     let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
-    if (!configFns.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
+    if (!configFunctions.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
         const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(reqBody);
         if (licencePlateExpiryDateReturn.success) {
             licencePlateExpiryDate = licencePlateExpiryDateReturn.licencePlateExpiryDate;

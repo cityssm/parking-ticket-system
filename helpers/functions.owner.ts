@@ -2,7 +2,7 @@ import type { LicencePlateOwner } from "../types/recordTypes";
 import type { ReconciliationRecord } from "./parkingDB/getOwnershipReconciliationRecords";
 
 
-export const getFormattedOwnerAddress = (owner: LicencePlateOwner | ReconciliationRecord) => {
+export const getFormattedOwnerAddress = (owner: LicencePlateOwner | ReconciliationRecord): string => {
 
   const fieldPrefix = ("ownerName1" in owner ? "" : "owner_");
 

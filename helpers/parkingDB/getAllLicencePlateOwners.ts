@@ -1,7 +1,7 @@
 import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import * as vehicleFns from "../vehicleFns.js";
+import * as vehicleFunctions from "../functions.vehicle.js";
 import type * as pts from "../../types/recordTypes";
 
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
@@ -28,7 +28,7 @@ export const getAllLicencePlateOwners =
 
     for (const owner of owners) {
       owner.recordDateString = dateTimeFns.dateIntegerToString(owner.recordDate);
-      owner.vehicleMake = vehicleFns.getMakeFromNCIC(owner.vehicleNCIC);
+      owner.vehicleMake = vehicleFunctions.getMakeFromNCIC(owner.vehicleNCIC);
     }
 
     return owners;

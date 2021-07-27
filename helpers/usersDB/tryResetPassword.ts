@@ -1,7 +1,7 @@
 import sqlite from "better-sqlite3";
 
 import bcrypt from "bcrypt";
-import * as userFns from "../userFns.js";
+import * as userFunctions from "../functions.user.js";
 
 import { usersDB as dbPath } from "../../data/databasePaths.js";
 
@@ -25,7 +25,7 @@ export const tryResetPassword = (userName: string, oldPasswordPlain: string, new
 
   }
 
-  const oldPasswordMatches = bcrypt.compareSync(userFns.getHashString(userName, oldPasswordPlain), row.passwordHash);
+  const oldPasswordMatches = bcrypt.compareSync(userFunctions.getHashString(userName, oldPasswordPlain), row.passwordHash);
 
   if (!oldPasswordMatches) {
 
@@ -37,7 +37,7 @@ export const tryResetPassword = (userName: string, oldPasswordPlain: string, new
 
   }
 
-  const newPasswordHash = bcrypt.hashSync(userFns.getHashString(userName, newPasswordPlain), 10);
+  const newPasswordHash = bcrypt.hashSync(userFunctions.getHashString(userName, newPasswordPlain), 10);
 
   db.prepare("update Users" +
     " set passwordHash = ?" +

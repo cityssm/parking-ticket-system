@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as ownerFns from "../../helpers/ownerFns.js";
+import * as ownerFunctions from "../../helpers/functions.owner.js";
 
 import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
 import getLicencePlateOwner from "../../helpers/parkingDB/getLicencePlateOwner.js";
@@ -23,7 +23,7 @@ export const handler: RequestHandler = (req, res) => {
     });
   }
 
-  const ownerAddress = ownerFns.getFormattedOwnerAddress(ownerRecord);
+  const ownerAddress = ownerFunctions.getFormattedOwnerAddress(ownerRecord);
 
   const statusResponse = createParkingTicketStatus(
     {

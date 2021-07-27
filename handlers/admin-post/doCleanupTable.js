@@ -1,4 +1,4 @@
-import * as configFns from "../../helpers/configFns.js";
+import * as configFunctions from "../../helpers/functions.config.js";
 import cleanupParkingTicketsTable from "../../helpers/parkingDB/cleanupParkingTicketsTable.js";
 import cleanupParkingTicketRemarksTable from "../../helpers/parkingDB/cleanupParkingTicketRemarksTable.js";
 import cleanupParkingTicketStatusLog from "../../helpers/parkingDB/cleanupParkingTicketStatusLog.js";
@@ -8,7 +8,7 @@ import cleanupParkingLocationsTable from "../../helpers/parkingDB/cleanupParking
 import cleanupParkingOffencesTable from "../../helpers/parkingDB/cleanupParkingOffencesTable.js";
 export const handler = (req, res) => {
     const table = req.body.table;
-    const recordDelete_timeMillis = Math.min(parseInt(req.body.recordDelete_timeMillis, 10), Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
+    const recordDelete_timeMillis = Math.min(parseInt(req.body.recordDelete_timeMillis, 10), Date.now() - (configFunctions.getProperty("databaseCleanup.windowDays") * 86400 * 1000));
     let success = false;
     switch (table) {
         case "parkingTickets":

@@ -1,6 +1,6 @@
 import * as assert from "assert";
-import * as ownerFns from "../helpers/ownerFns.js";
-describe("helpers/ownerFns", () => {
+import * as ownerFunctions from "../helpers/functions.owner.js";
+describe("helpers/ownerFunctions", () => {
     describe("#getFormattedOwnerAddress()", () => {
         it("should format a LicencePlateOwner object", () => {
             const owner = {
@@ -20,7 +20,7 @@ describe("helpers/ownerFns", () => {
                 licencePlateNumber: "SAMPLE",
                 licencePlateExpiryDate: 20211231
             };
-            assert.ok(ownerFns.getFormattedOwnerAddress(owner).endsWith(owner.ownerPostalCode));
+            assert.ok(ownerFunctions.getFormattedOwnerAddress(owner).endsWith(owner.ownerPostalCode));
         });
         it("should format a ReconciliationRecord object", () => {
             const rec = {
@@ -49,7 +49,7 @@ describe("helpers/ownerFns", () => {
                 isVehicleMakeMatch: true,
                 isLicencePlateExpiryDateMatch: true
             };
-            assert.ok(ownerFns.getFormattedOwnerAddress(rec).endsWith(rec.owner_ownerPostalCode));
+            assert.ok(ownerFunctions.getFormattedOwnerAddress(rec).endsWith(rec.owner_ownerPostalCode));
         });
     });
 });

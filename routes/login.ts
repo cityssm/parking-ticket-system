@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 import * as usersDB_getUser from "../helpers/usersDB/getUser.js";
 
 export const router = Router();
@@ -33,7 +33,7 @@ const getSafeRedirectURL = (possibleRedirectURL: string = "") => {
 router.route("/")
   .get((req, res) => {
 
-    const sessionCookieName = configFns.getProperty("session.cookieName");
+    const sessionCookieName = configFunctions.getProperty("session.cookieName");
 
     if (req.session.user && req.cookies[sessionCookieName]) {
 

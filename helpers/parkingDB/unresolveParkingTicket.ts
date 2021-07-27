@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../functions.config.js";
 
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
 
@@ -30,7 +30,7 @@ export const unresolveParkingTicket = (ticketID: number, reqSession: expressSess
       message: "The ticket has either been deleted, or is no longer marked as resolved."
     };
 
-  } else if (ticketObj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") < Date.now()) {
+  } else if (ticketObj.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") < Date.now()) {
 
     db.close();
 

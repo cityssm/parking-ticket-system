@@ -1,12 +1,12 @@
 import * as assert from "assert";
 
-import * as ownerFns from "../helpers/ownerFns.js";
+import * as ownerFunctions from "../helpers/functions.owner.js";
 
 import type { LicencePlateOwner } from "../types/recordTypes";
 import type { ReconciliationRecord } from "../helpers/parkingDB/getOwnershipReconciliationRecords";
 
 
-describe("helpers/ownerFns", () => {
+describe("helpers/ownerFunctions", () => {
 
   describe("#getFormattedOwnerAddress()", () => {
 
@@ -33,7 +33,7 @@ describe("helpers/ownerFns", () => {
         licencePlateExpiryDate: 20211231
       };
 
-      assert.ok(ownerFns.getFormattedOwnerAddress(owner).endsWith(owner.ownerPostalCode));
+      assert.ok(ownerFunctions.getFormattedOwnerAddress(owner).endsWith(owner.ownerPostalCode));
     });
 
     it("should format a ReconciliationRecord object", () => {
@@ -72,7 +72,7 @@ describe("helpers/ownerFns", () => {
         isLicencePlateExpiryDateMatch: true
       };
 
-      assert.ok(ownerFns.getFormattedOwnerAddress(rec).endsWith(rec.owner_ownerPostalCode));
+      assert.ok(ownerFunctions.getFormattedOwnerAddress(rec).endsWith(rec.owner_ownerPostalCode));
     });
   });
 });

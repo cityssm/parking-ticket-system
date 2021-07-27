@@ -1,9 +1,9 @@
 import * as assert from "assert";
 
-import * as mtoFns from "../helpers/mtoFns.js";
+import * as mtoFunctions from "../helpers/functions.mto.js";
 
 
-describe("helpers/mtoFns", () => {
+describe("helpers/mtoFunctions", () => {
 
   const currentDate = new Date();
 
@@ -13,7 +13,7 @@ describe("helpers/mtoFns", () => {
     const currentYearTwoDigits = currentYear % 100;
 
     it("(" + currentYearTwoDigits.toString() + ") => " + currentYear.toString(), () => {
-      assert.strictEqual(mtoFns.twoDigitYearToFourDigit(currentYearTwoDigits), currentYear);
+      assert.strictEqual(mtoFunctions.twoDigitYearToFourDigit(currentYearTwoDigits), currentYear);
     });
 
     // Two digit years more than 10 years in the future
@@ -23,14 +23,14 @@ describe("helpers/mtoFns", () => {
     const futureYearTwoDigits = futureYear % 100;
 
     it("should convert " + futureYearTwoDigits.toString() + " to " + futureYear.toString(), () => {
-      assert.strictEqual(mtoFns.twoDigitYearToFourDigit(futureYearTwoDigits), futureYear);
+      assert.strictEqual(mtoFunctions.twoDigitYearToFourDigit(futureYearTwoDigits), futureYear);
     });
 
     const pastYear = (currentYear + 15) - 100;
     const pastYearTwoDigits = pastYear % 100;
 
     it("should convert " + pastYearTwoDigits.toString() + " to " + pastYear.toString(), () => {
-      assert.strictEqual(mtoFns.twoDigitYearToFourDigit(pastYearTwoDigits), pastYear);
+      assert.strictEqual(mtoFunctions.twoDigitYearToFourDigit(pastYearTwoDigits), pastYear);
     });
 
   });
@@ -45,7 +45,7 @@ describe("helpers/mtoFns", () => {
     const currentDateSixDigits = parseInt(currentDateEightDigits.toString().slice(-6), 10);
 
     it("should convert " + currentDateSixDigits.toString() + " to " + currentDateEightDigits.toString(), () => {
-      assert.strictEqual(mtoFns.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
+      assert.strictEqual(mtoFunctions.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
     });
   });
 
@@ -55,7 +55,7 @@ describe("helpers/mtoFns", () => {
 
       const validString = "PKRDSAMPLE    200102TKT123      xxxxxxxxxxxxxxx700101MDOE,JOHN/DOE,JANE                                 1234 FAKE ST,SAULT STE MARIE            A1A1A1CHEV19130000  KMBLK                                   2101                         ";
 
-      const parsed = mtoFns.parsePKRD(validString);
+      const parsed = mtoFunctions.parsePKRD(validString);
 
       it("should have licencePlateNumber = \"SAMPLE\"", () => {
         if (parsed) {
@@ -85,7 +85,7 @@ describe("helpers/mtoFns", () => {
     describe("invalid PKRD string", () => {
 
       it("returns false", () => {
-        assert.strictEqual(mtoFns.parsePKRD(""), false);
+        assert.strictEqual(mtoFunctions.parsePKRD(""), false);
       });
     });
   });

@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import * as vehicleFns from "../vehicleFns.js";
+import * as vehicleFunctions from "../functions.vehicle.js";
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
 const addCalculatedFields = (record) => {
     record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
@@ -8,7 +8,7 @@ const addCalculatedFields = (record) => {
         dateTimeFns.dateIntegerToString(record.ticket_licencePlateExpiryDate);
     record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
     record.owner_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.owner_licencePlateExpiryDate);
-    record.owner_vehicleMake = vehicleFns.getMakeFromNCIC(record.owner_vehicleNCIC);
+    record.owner_vehicleMake = vehicleFunctions.getMakeFromNCIC(record.owner_vehicleNCIC);
     record.dateDifference =
         dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
     record.isVehicleMakeMatch =

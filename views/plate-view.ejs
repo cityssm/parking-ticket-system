@@ -169,7 +169,7 @@
                   <% } %>
                   <% if (ticketObj.latestStatus_statusKey) { %>
                     <%
-                      const ticketStatus = configFns.getParkingTicketStatus(ticketObj.latestStatus_statusKey);
+                      const ticketStatus = configFunctions.getParkingTicketStatus(ticketObj.latestStatus_statusKey);
                     %>
                     <br />
                     <span class="tag is-light is-primary"><%= (ticketStatus ? ticketStatus.status : ticketObj.latestStatus_statusKey) %></span>

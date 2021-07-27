@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import * as mtoFns from "../../helpers/mtoFns.js";
+import * as mtoFunctions from "../../helpers/functions.mto.js";
 
 import multer from "multer";
 const storage = multer.memoryStorage();
@@ -16,7 +16,7 @@ export const handler: RequestHandler = (req, res) => {
 
   const ownershipData = req.file.buffer.toString();
 
-  const results = mtoFns.importLicencePlateOwnership(batchID, ownershipData, req.session);
+  const results = mtoFunctions.importLicencePlateOwnership(batchID, ownershipData, req.session);
 
   return res.json(results);
 };

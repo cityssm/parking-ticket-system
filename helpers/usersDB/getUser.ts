@@ -2,7 +2,7 @@ import sqlite from "better-sqlite3";
 
 import bcrypt from "bcrypt";
 
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../functions.config.js";
 import { usersDB as dbPath } from "../../data/databasePaths.js";
 
 import type { User, UserProperties } from "../../types/recordTypes.js";
@@ -29,7 +29,7 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
 
     if (userNameSubmitted === "admin") {
 
-      const adminPasswordPlain = configFns.getProperty("admin.defaultPassword");
+      const adminPasswordPlain = configFunctions.getProperty("admin.defaultPassword");
 
       if (adminPasswordPlain === "") {
         return null;
@@ -37,7 +37,7 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
 
       if (adminPasswordPlain === passwordPlain) {
 
-        const userProperties: UserProperties = Object.assign({}, configFns.getProperty("user.defaultProperties"));
+        const userProperties: UserProperties = Object.assign({}, configFunctions.getProperty("user.defaultProperties"));
         userProperties.isAdmin = true;
         userProperties.isDefaultAdmin = true;
 
@@ -74,7 +74,7 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
   // Get user properties
 
   const userProperties: UserProperties =
-    Object.assign({}, configFns.getProperty("user.defaultProperties"));
+    Object.assign({}, configFunctions.getProperty("user.defaultProperties"));
 
   userProperties.isDefaultAdmin = false;
 

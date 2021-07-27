@@ -1,10 +1,10 @@
 import sqlite from "better-sqlite3";
 
 import debug from "debug";
-const debugSQL = debug("parking-ticket-system:dbInit");
+const debugSQL = debug("parking-ticket-system:initializeDatabase");
 
 
-export const initNHTSADB = () => {
+export const initNHTSADB = (): boolean => {
 
   const nhtsaDB = sqlite("data/nhtsa.db");
 

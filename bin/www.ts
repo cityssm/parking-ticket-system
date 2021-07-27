@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+/* eslint-disable no-process-exit, unicorn/no-process-exit */
 
-import app from "../app.js";
+import { app } from "../app.js";
 
 import http from "http";
 import https from "https";
@@ -8,7 +8,7 @@ import fs from "fs";
 
 import { fork } from "child_process";
 
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 
 import debug from "debug";
 const debugWWW = debug("parking-ticket-system:www");
@@ -62,7 +62,7 @@ const onListening = (server: http.Server | https.Server) => {
  */
 
 
-const httpPort = configFns.getProperty("application.httpPort");
+const httpPort = configFunctions.getProperty("application.httpPort");
 
 if (httpPort) {
 
@@ -82,7 +82,7 @@ if (httpPort) {
  * Initialize HTTPS
  */
 
-const httpsConfig = configFns.getProperty("application.https");
+const httpsConfig = configFunctions.getProperty("application.https");
 
 if (httpsConfig) {
 
@@ -107,6 +107,6 @@ if (httpsConfig) {
  * Initialize background task
  */
 
-if (configFns.getProperty("application.task_nhtsa.runTask")) {
+if (configFunctions.getProperty("application.task_nhtsa.runTask")) {
   fork("./tasks/nhtsaChildProcess");
 }

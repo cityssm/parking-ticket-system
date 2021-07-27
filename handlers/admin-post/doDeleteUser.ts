@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 
 import inactivateUser from "../../helpers/usersDB/inactivateUser.js";
 
-import { forbiddenJSON } from "../../helpers/userFns.js";
+import { forbiddenJSON } from "../../helpers/functions.user.js";
 
 
 export const handler: RequestHandler = (req, res) => {

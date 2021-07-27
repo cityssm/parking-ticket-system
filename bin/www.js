@@ -1,10 +1,9 @@
-#!/usr/bin/env node
-import app from "../app.js";
+import { app } from "../app.js";
 import http from "http";
 import https from "https";
 import fs from "fs";
 import { fork } from "child_process";
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 import debug from "debug";
 const debugWWW = debug("parking-ticket-system:www");
 const onError = (error) => {
@@ -35,7 +34,7 @@ const onListening = (server) => {
         : "port " + addr.port.toString();
     debugWWW("Listening on " + bind);
 };
-const httpPort = configFns.getProperty("application.httpPort");
+const httpPort = configFunctions.getProperty("application.httpPort");
 if (httpPort) {
     const httpServer = http.createServer(app);
     httpServer.listen(httpPort);
@@ -45,7 +44,7 @@ if (httpPort) {
     });
     debugWWW("HTTP listening on " + httpPort.toString());
 }
-const httpsConfig = configFns.getProperty("application.https");
+const httpsConfig = configFunctions.getProperty("application.https");
 if (httpsConfig) {
     const httpsServer = https.createServer({
         key: fs.readFileSync(httpsConfig.keyPath),
@@ -59,6 +58,6 @@ if (httpsConfig) {
     });
     debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
-if (configFns.getProperty("application.task_nhtsa.runTask")) {
+if (configFunctions.getProperty("application.task_nhtsa.runTask")) {
     fork("./tasks/nhtsaChildProcess");
 }

@@ -3,7 +3,7 @@ import sqlite from "better-sqlite3";
 import bcrypt from "bcrypt";
 
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
-import * as userFns from "../userFns.js";
+import * as userFunctions from "../functions.user.js";
 
 import { usersDB as dbPath } from "../../data/databasePaths.js";
 
@@ -15,7 +15,7 @@ export const createUser = (reqBody: {
 }) => {
 
   const newPasswordPlain = stringFns.generatePassword();
-  const hash = bcrypt.hashSync(userFns.getHashString(reqBody.userName, newPasswordPlain), 10);
+  const hash = bcrypt.hashSync(userFunctions.getHashString(reqBody.userName, newPasswordPlain), 10);
 
   const db = sqlite(dbPath);
 

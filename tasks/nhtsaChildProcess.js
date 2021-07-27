@@ -1,6 +1,6 @@
 import * as parkingDB from "../helpers/parkingDB.js";
-import * as vehicleFns from "../helpers/vehicleFns.js";
-import * as configFns from "../helpers/configFns.js";
+import * as vehicleFunctions from "../helpers/functions.vehicle.js";
+import * as configFunctions from "../helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import debug from "debug";
 const debugTask = debug("parking-ticket-system:task:nhtsaChildProcess");
@@ -12,9 +12,9 @@ const processNCIC = (index) => {
     const ncicRecord = vehicleNCICs[index];
     if (ncicRecord) {
         cutoffDate = ncicRecord.recordDateMax;
-        const vehicleMake = vehicleFns.getMakeFromNCIC(ncicRecord.vehicleNCIC);
+        const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
         debugTask("Processing " + vehicleMake);
-        vehicleFns.getModelsByMake(vehicleMake, () => {
+        vehicleFunctions.getModelsByMake(vehicleMake, () => {
             processNCIC(index + 1);
         });
     }
@@ -25,7 +25,7 @@ const processNCIC = (index) => {
 };
 export const scheduleRun = () => {
     const nextScheduleDate = new Date();
-    nextScheduleDate.setHours(configFns.getProperty("application.task_nhtsa.executeHour"));
+    nextScheduleDate.setHours(configFunctions.getProperty("application.task_nhtsa.executeHour"));
     nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
     debugTask("NHTSA task scheduled for " + nextScheduleDate.toString());
     setTimeout(() => {

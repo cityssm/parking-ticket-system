@@ -1,11 +1,11 @@
 import type { RequestHandler } from "express";
 
-import * as userFns from "../helpers/userFns.js";
+import * as userFunctions from "../helpers/functions.user.js";
 
 
 export const adminGetHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userIsAdmin(req)) {
+  if (userFunctions.userIsAdmin(req)) {
     return next();
   }
 
@@ -15,17 +15,17 @@ export const adminGetHandler: RequestHandler = (req, res, next) => {
 
 export const adminPostHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userIsAdmin(req)) {
+  if (userFunctions.userIsAdmin(req)) {
     return next();
   }
 
-  return res.json(userFns.forbiddenJSON);
+  return res.json(userFunctions.forbiddenJSON);
 };
 
 
 export const updateGetHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userCanUpdate(req)) {
+  if (userFunctions.userCanUpdate(req)) {
     return next();
   }
 
@@ -35,7 +35,7 @@ export const updateGetHandler: RequestHandler = (req, res, next) => {
 
 export const updateOrOperatorGetHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
+  if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
     return next();
   }
 
@@ -45,27 +45,27 @@ export const updateOrOperatorGetHandler: RequestHandler = (req, res, next) => {
 
 export const updatePostHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userCanUpdate(req)) {
+  if (userFunctions.userCanUpdate(req)) {
     return next();
   }
 
-  return res.json(userFns.forbiddenJSON);
+  return res.json(userFunctions.forbiddenJSON);
 };
 
 
 export const updateOrOperatorPostHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
+  if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
     return next();
   }
 
-  return res.json(userFns.forbiddenJSON);
+  return res.json(userFunctions.forbiddenJSON);
 };
 
 
 export const createGetHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userCanCreate(req)) {
+  if (userFunctions.userCanCreate(req)) {
     return next();
   }
 
@@ -75,9 +75,9 @@ export const createGetHandler: RequestHandler = (req, res, next) => {
 
 export const createPostHandler: RequestHandler = (req, res, next) => {
 
-  if (userFns.userCanCreate(req)) {
+  if (userFunctions.userCanCreate(req)) {
     return next();
   }
 
-  return res.json(userFns.forbiddenJSON);
+  return res.json(userFunctions.forbiddenJSON);
 };

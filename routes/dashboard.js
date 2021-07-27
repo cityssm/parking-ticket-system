@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 import usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword.js";
 export const router = Router();
 router.get("/", (_req, res) => {
@@ -16,12 +16,12 @@ router.post("/doChangePassword", (req, res) => {
 });
 router.all("/doGetDefaultConfigProperties", (_req, res) => {
     res.json({
-        locationClasses: configFns.getProperty("locationClasses"),
-        ticketNumber_fieldLabel: configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"),
-        parkingTicketStatuses: configFns.getProperty("parkingTicketStatuses"),
-        licencePlateCountryAliases: configFns.getProperty("licencePlateCountryAliases"),
-        licencePlateProvinceAliases: configFns.getProperty("licencePlateProvinceAliases"),
-        licencePlateProvinces: configFns.getProperty("licencePlateProvinces")
+        locationClasses: configFunctions.getProperty("locationClasses"),
+        ticketNumber_fieldLabel: configFunctions.getProperty("parkingTickets.ticketNumber.fieldLabel"),
+        parkingTicketStatuses: configFunctions.getProperty("parkingTicketStatuses"),
+        licencePlateCountryAliases: configFunctions.getProperty("licencePlateCountryAliases"),
+        licencePlateProvinceAliases: configFunctions.getProperty("licencePlateProvinceAliases"),
+        licencePlateProvinces: configFunctions.getProperty("licencePlateProvinces")
     });
 });
 export default router;

@@ -1,7 +1,7 @@
 import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import * as configFns from "./configFns.js";
+import * as configFunctions from "./functions.config.js";
 
 import { parkingDB as dbPath } from "../data/databasePaths.js";
 
@@ -33,7 +33,7 @@ export const canUpdateObject = (obj: recordTypes.Record, reqSession: expressSess
   } else if (userProperties.canCreate &&
     (obj.recordCreate_userName === reqSession.user.userName ||
       obj.recordUpdate_userName === reqSession.user.userName) &&
-    obj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+    obj.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     // Users with only create permission can update their own records within the time window
     canUpdate = true;
@@ -42,7 +42,7 @@ export const canUpdateObject = (obj: recordTypes.Record, reqSession: expressSess
 
   // If recently updated, send back permission
 
-  if (obj.recordUpdate_timeMillis + configFns.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+  if (obj.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     return canUpdate;
 

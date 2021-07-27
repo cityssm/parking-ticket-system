@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import * as mtoFns from "../../helpers/mtoFns.js";
+import * as mtoFunctions from "../../helpers/functions.mto.js";
 
 
 export const handler: RequestHandler = (req, res) => {
 
   const batchID = parseInt(req.params.batchID, 10);
 
-  const output = mtoFns.exportConvictionBatch(batchID, req.session);
+  const output = mtoFunctions.exportConvictionBatch(batchID, req.session);
 
   res.setHeader("Content-Disposition",
     "attachment; filename=convictBatch-" + batchID.toString() + ".txt");

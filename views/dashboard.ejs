@@ -4,7 +4,7 @@
   <div class="level">
     <div class="level-left has-flex-shrink-1">
       <h1 class="title is-1">
-        <%= configFns.getProperty("application.applicationName") %>
+        <%= configFunctions.getProperty("application.applicationName") %>
       </h1>
     </div>
     <% if (!user.userProperties.isDefaultAdmin) { %>
@@ -78,7 +78,7 @@
               </h2>
               <p>
                 Look up licence plate owners.
-                <% if (user.userProperties.canUpdate && configFns.getProperty("application.feature_mtoExportImport")) { %>
+                <% if (user.userProperties.canUpdate && configFunctions.getProperty("application.feature_mtoExportImport")) { %>
                   Manage exports to and imports from the MTO.
                 <% } %>
               </p>

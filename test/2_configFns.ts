@@ -1,17 +1,17 @@
 import * as assert from "assert";
 
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/functions.config.js";
 
 
-describe("helpers/configFns", () => {
+describe("helpers/configFunctions", () => {
 
   describe("#getProperty", () => {
     it("should include string value for property \"parkingTickets.ticketNumber.fieldLabel\"", () => {
-      assert.strictEqual(typeof configFns.getProperty("parkingTickets.ticketNumber.fieldLabel"), "string");
+      assert.strictEqual(typeof configFunctions.getProperty("parkingTickets.ticketNumber.fieldLabel"), "string");
     });
 
     it("should return a string from function property \"parkingTickets.ticketNumber.nextTicketNumberFn\"", () => {
-      assert.strictEqual(typeof configFns.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(""), "string");
+      assert.strictEqual(typeof configFunctions.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(""), "string");
     });
 
 
@@ -19,13 +19,13 @@ describe("helpers/configFns", () => {
 
   describe("#getParkingTicketStatus()", () => {
     it("should include a ticket status \"paid\"", () => {
-      assert.ok(configFns.getParkingTicketStatus("paid"));
+      assert.ok(configFunctions.getParkingTicketStatus("paid"));
     });
   });
 
   describe("#getLicencePlateLocationProperties()", () => {
     it("should include the location \"CA\", \"ON\"", () => {
-      assert.strictEqual(configFns.getLicencePlateLocationProperties("CA", "ON").licencePlateProvinceAlias, "Ontario");
+      assert.strictEqual(configFunctions.getLicencePlateLocationProperties("CA", "ON").licencePlateProvinceAlias, "Ontario");
     });
   });
 });

@@ -1,8 +1,8 @@
 import sqlite from "better-sqlite3";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../functions.config.js";
 import { parkingDB as dbPath } from "../../data/databasePaths.js";
 export const getDatabaseCleanupCounts = () => {
-    const recordDelete_timeMillisWindow = Date.now() - (configFns.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
+    const recordDelete_timeMillisWindow = Date.now() - (configFunctions.getProperty("databaseCleanup.windowDays") * 86400 * 1000);
     const db = sqlite(dbPath, {
         readonly: true
     });

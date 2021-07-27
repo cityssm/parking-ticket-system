@@ -1,19 +1,19 @@
 import * as assert from "assert";
-import * as vehicleFns from "../helpers/vehicleFns.js";
-describe("helpers/vehicleFns", () => {
+import * as vehicleFunctions from "../helpers/functions.vehicle.js";
+describe("helpers/vehicleFunctions", () => {
     describe("#getMakeFromNCIC", () => {
         it("should convert \"CHEV\" to \"Chevrolet\"", () => {
-            assert.strictEqual(vehicleFns.getMakeFromNCIC("CHEV"), "Chevrolet");
+            assert.strictEqual(vehicleFunctions.getMakeFromNCIC("CHEV"), "Chevrolet");
         });
     });
     describe("#getModelsByMakeFromCache", () => {
         it("should return results for \"Ford\"", () => {
-            assert.ok(vehicleFns.getModelsByMakeFromCache("Ford"));
+            assert.ok(vehicleFunctions.getModelsByMakeFromCache("Ford"));
         });
     });
     describe("#getModelsByMake", () => {
         it("should return results for \"Chevrolet\"", (done) => {
-            vehicleFns.getModelsByMake("Chevrolet", (makeModelResults) => {
+            vehicleFunctions.getModelsByMake("Chevrolet", (makeModelResults) => {
                 assert.notEqual(makeModelResults.length, 0);
                 done();
             });
@@ -21,10 +21,10 @@ describe("helpers/vehicleFns", () => {
     });
     describe("#isNCICExclusivelyTrailer", () => {
         it("should return true for \"USCA\" (U.S. Cargo Inc.)", () => {
-            assert.strictEqual(vehicleFns.isNCICExclusivelyTrailer("USCA"), true);
+            assert.strictEqual(vehicleFunctions.isNCICExclusivelyTrailer("USCA"), true);
         });
         it("should return false for \"BOMB\" (Bombardier)", () => {
-            assert.strictEqual(vehicleFns.isNCICExclusivelyTrailer("BOMB"), false);
+            assert.strictEqual(vehicleFunctions.isNCICExclusivelyTrailer("BOMB"), false);
         });
     });
 });

@@ -17,25 +17,25 @@ import routerPlates from "./routes/plates.js";
 import routerReports from "./routes/reports.js";
 import routePlatesOntario from "./routes/plates-ontario.js";
 import routeTicketsOntario from "./routes/tickets-ontario.js";
-import * as configFns from "./helpers/configFns.js";
+import * as configFunctions from "./helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns.js";
-import * as vehicleFns from "./helpers/vehicleFns.js";
+import * as vehicleFunctions from "./helpers/functions.vehicle.js";
 import * as usersDB_init from "./helpers/usersDB/initializeDatabase.js";
 import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase.js";
-import * as dbInit from "./helpers/dbInit.js";
+import { initNHTSADB } from "./helpers/initializeDatabase.js";
 import debug from "debug";
 const debugApp = debug("parking-ticket-system:app");
 usersDB_init.initializeDatabase();
 parkingDB_init.initializeDatabase();
-dbInit.initNHTSADB();
+initNHTSADB();
 export const app = express();
 app.set("views", path.join("views"));
 app.set("view engine", "ejs");
 app.use(compression());
-app.use((req, _res, next) => {
-    debugApp(`${req.method} ${req.url}`);
+app.use((request, _response, next) => {
+    debugApp(`${request.method} ${request.url}`);
     next();
 });
 app.use(express.json());
@@ -56,47 +56,47 @@ app.use("/fontsource-inter", express.static(path.join("node_modules", "@fontsour
 app.use("/fontsource-pt-mono", express.static(path.join("node_modules", "@fontsource", "pt-mono", "files")));
 app.use("/cityssm-bulma-webapp-js", express.static(path.join("node_modules", "@cityssm", "bulma-webapp-js")));
 const SQLiteStore = sqlite(session);
-const sessionCookieName = configFns.getProperty("session.cookieName");
+const sessionCookieName = configFunctions.getProperty("session.cookieName");
 app.use(session({
     store: new SQLiteStore({
         dir: "data",
         db: "sessions.db"
     }),
     name: sessionCookieName,
-    secret: configFns.getProperty("session.secret"),
+    secret: configFunctions.getProperty("session.secret"),
     resave: true,
     saveUninitialized: false,
     rolling: true,
     cookie: {
-        maxAge: configFns.getProperty("session.maxAgeMillis"),
+        maxAge: configFunctions.getProperty("session.maxAgeMillis"),
         sameSite: "strict"
     }
 }));
-app.use((req, res, next) => {
-    if (req.cookies[sessionCookieName] && !req.session.user) {
-        res.clearCookie(sessionCookieName);
+app.use((request, response, next) => {
+    if (request.cookies[sessionCookieName] && !request.session.user) {
+        response.clearCookie(sessionCookieName);
     }
     next();
 });
-const sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies[sessionCookieName]) {
+const sessionChecker = (request, response, next) => {
+    if (request.session.user && request.cookies[sessionCookieName]) {
         return next();
     }
-    return res.redirect("/login?redirect=" + req.originalUrl);
+    return response.redirect("/login?redirect=" + request.originalUrl);
 };
-app.use((req, res, next) => {
-    res.locals.buildNumber = process.env.npm_package_version;
-    res.locals.user = req.session.user;
-    res.locals.csrfToken = req.csrfToken();
-    res.locals.configFns = configFns;
-    res.locals.dateTimeFns = dateTimeFns;
-    res.locals.stringFns = stringFns;
-    res.locals.htmlFns = htmlFns;
-    res.locals.vehicleFns = vehicleFns;
+app.use((request, response, next) => {
+    response.locals.buildNumber = process.env.npm_package_version;
+    response.locals.user = request.session.user;
+    response.locals.csrfToken = request.csrfToken();
+    response.locals.configFunctions = configFunctions;
+    response.locals.dateTimeFns = dateTimeFns;
+    response.locals.stringFns = stringFns;
+    response.locals.htmlFns = htmlFns;
+    response.locals.vehicleFunctions = vehicleFunctions;
     next();
 });
-app.get("/", sessionChecker, (_req, res) => {
-    res.redirect("/dashboard");
+app.get("/", sessionChecker, (_request, response) => {
+    response.redirect("/dashboard");
 });
 app.use("/docs", routerDocs);
 app.use("/dashboard", sessionChecker, routerDashboard);
@@ -104,33 +104,33 @@ app.use("/tickets", sessionChecker, routerTickets);
 app.use("/plates", sessionChecker, routerPlates);
 app.use("/offences", sessionChecker, routerOffences);
 app.use("/reports", sessionChecker, routerReports);
-if (configFns.getProperty("application.feature_mtoExportImport")) {
+if (configFunctions.getProperty("application.feature_mtoExportImport")) {
     app.use("/plates-ontario", sessionChecker, routePlatesOntario);
     app.use("/tickets-ontario", sessionChecker, routeTicketsOntario);
 }
 app.use("/admin", sessionChecker, routerAdmin);
-app.all("/keepAlive", (_req, res) => {
-    res.json(true);
+app.all("/keepAlive", (_request, response) => {
+    response.json(true);
 });
 app.use("/login", routerLogin);
-app.get("/logout", (req, res) => {
-    if (req.session.user && req.cookies[sessionCookieName]) {
-        req.session.destroy(null);
-        req.session = null;
-        res.clearCookie(sessionCookieName);
-        res.redirect("/");
+app.get("/logout", (request, response) => {
+    if (request.session.user && request.cookies[sessionCookieName]) {
+        request.session.destroy(() => {
+            response.clearCookie(sessionCookieName);
+            response.redirect("/");
+        });
     }
     else {
-        res.redirect("/login");
+        response.redirect("/login");
     }
 });
-app.use((_req, _res, next) => {
+app.use((_request, _response, next) => {
     next(createError(404));
 });
-app.use((err, req, res) => {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get("env") === "development" ? err : {};
-    res.status(err.status || 500);
-    res.render("error");
+app.use((error, request, response) => {
+    response.locals.message = error.message;
+    response.locals.error = request.app.get("env") === "development" ? error : {};
+    response.status(error.status || 500);
+    response.render("error");
 });
 export default app;

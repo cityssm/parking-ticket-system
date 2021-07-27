@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 import bcrypt from "bcrypt";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../functions.config.js";
 import { usersDB as dbPath } from "../../data/databasePaths.js";
 export const getUser = (userNameSubmitted, passwordPlain) => {
     const db = sqlite(dbPath);
@@ -11,12 +11,12 @@ export const getUser = (userNameSubmitted, passwordPlain) => {
     if (!row) {
         db.close();
         if (userNameSubmitted === "admin") {
-            const adminPasswordPlain = configFns.getProperty("admin.defaultPassword");
+            const adminPasswordPlain = configFunctions.getProperty("admin.defaultPassword");
             if (adminPasswordPlain === "") {
                 return null;
             }
             if (adminPasswordPlain === passwordPlain) {
-                const userProperties = Object.assign({}, configFns.getProperty("user.defaultProperties"));
+                const userProperties = Object.assign({}, configFunctions.getProperty("user.defaultProperties"));
                 userProperties.isAdmin = true;
                 userProperties.isDefaultAdmin = true;
                 return {
@@ -40,7 +40,7 @@ export const getUser = (userNameSubmitted, passwordPlain) => {
         db.close();
         return null;
     }
-    const userProperties = Object.assign({}, configFns.getProperty("user.defaultProperties"));
+    const userProperties = Object.assign({}, configFunctions.getProperty("user.defaultProperties"));
     userProperties.isDefaultAdmin = false;
     const userPropertyRows = db.prepare("select propertyName, propertyValue" +
         " from UserProperties" +

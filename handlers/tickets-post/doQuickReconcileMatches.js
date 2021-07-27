@@ -1,4 +1,4 @@
-import * as ownerFns from "../../helpers/ownerFns.js";
+import * as ownerFunctions from "../../helpers/functions.owner.js";
 import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
 import getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
 export const handler = (req, res) => {
@@ -8,7 +8,7 @@ export const handler = (req, res) => {
         if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
             continue;
         }
-        const ownerAddress = ownerFns.getFormattedOwnerAddress(record);
+        const ownerAddress = ownerFunctions.getFormattedOwnerAddress(record);
         const statusResponse = createParkingTicketStatus({
             recordType: "status",
             ticketID: record.ticket_ticketID,

@@ -1,49 +1,49 @@
-import * as userFns from "../helpers/userFns.js";
+import * as userFunctions from "../helpers/functions.user.js";
 export const adminGetHandler = (req, res, next) => {
-    if (userFns.userIsAdmin(req)) {
+    if (userFunctions.userIsAdmin(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
 export const adminPostHandler = (req, res, next) => {
-    if (userFns.userIsAdmin(req)) {
+    if (userFunctions.userIsAdmin(req)) {
         return next();
     }
-    return res.json(userFns.forbiddenJSON);
+    return res.json(userFunctions.forbiddenJSON);
 };
 export const updateGetHandler = (req, res, next) => {
-    if (userFns.userCanUpdate(req)) {
+    if (userFunctions.userCanUpdate(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
 export const updateOrOperatorGetHandler = (req, res, next) => {
-    if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
+    if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
 export const updatePostHandler = (req, res, next) => {
-    if (userFns.userCanUpdate(req)) {
+    if (userFunctions.userCanUpdate(req)) {
         return next();
     }
-    return res.json(userFns.forbiddenJSON);
+    return res.json(userFunctions.forbiddenJSON);
 };
 export const updateOrOperatorPostHandler = (req, res, next) => {
-    if (userFns.userCanUpdate(req) || userFns.userIsOperator(req)) {
+    if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
         return next();
     }
-    return res.json(userFns.forbiddenJSON);
+    return res.json(userFunctions.forbiddenJSON);
 };
 export const createGetHandler = (req, res, next) => {
-    if (userFns.userCanCreate(req)) {
+    if (userFunctions.userCanCreate(req)) {
         return next();
     }
     return res.redirect("/dashboard");
 };
 export const createPostHandler = (req, res, next) => {
-    if (userFns.userCanCreate(req)) {
+    if (userFunctions.userCanCreate(req)) {
         return next();
     }
-    return res.json(userFns.forbiddenJSON);
+    return res.json(userFunctions.forbiddenJSON);
 };
