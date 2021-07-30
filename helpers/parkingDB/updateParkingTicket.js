@@ -1,11 +1,11 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as configFunctions from "../functions.config.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const getLicencePlateExpiryDateFromPieces = (reqBody) => {
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const getLicencePlateExpiryDateFromPieces = (requestBody) => {
     let licencePlateExpiryDate = 0;
-    const licencePlateExpiryYear = parseInt(reqBody.licencePlateExpiryYear, 10) || 0;
-    const licencePlateExpiryMonth = parseInt(reqBody.licencePlateExpiryMonth, 10) || 0;
+    const licencePlateExpiryYear = Number.parseInt(requestBody.licencePlateExpiryYear, 10) || 0;
+    const licencePlateExpiryMonth = Number.parseInt(requestBody.licencePlateExpiryMonth, 10) || 0;
     if (licencePlateExpiryYear === 0 && licencePlateExpiryMonth === 0) {
         licencePlateExpiryDate = 0;
     }
@@ -16,48 +16,48 @@ export const getLicencePlateExpiryDateFromPieces = (reqBody) => {
         };
     }
     else {
-        const dateObj = new Date(licencePlateExpiryYear, (licencePlateExpiryMonth - 1) + 1, (1 - 1), 0, 0, 0, 0);
-        licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObj);
+        const dateObject = new Date(licencePlateExpiryYear, (licencePlateExpiryMonth - 1) + 1, (1 - 1), 0, 0, 0, 0);
+        licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObject);
     }
     return {
         success: true,
         licencePlateExpiryDate
     };
 };
-export const updateParkingTicket = (reqBody, reqSession) => {
-    const db = sqlite(dbPath);
+export const updateParkingTicket = (requestBody, requestSession) => {
+    const database = sqlite(databasePath);
     const nowMillis = Date.now();
-    const issueDate = dateTimeFns.dateStringToInteger(reqBody.issueDateString);
+    const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
     if (configFunctions.getProperty("parkingTickets.ticketNumber.isUnique")) {
-        const duplicateTicket = db.prepare("select ticketID from ParkingTickets" +
+        const duplicateTicket = database.prepare("select ticketID from ParkingTickets" +
             " where recordDelete_timeMillis is null" +
             " and ticketNumber = ?" +
             " and ticketID != ?" +
             " and abs(issueDate - ?) <= 20000")
-            .get(reqBody.ticketNumber, reqBody.ticketID, issueDate);
+            .get(requestBody.ticketNumber, requestBody.ticketID, issueDate);
         if (duplicateTicket) {
-            db.close();
+            database.close();
             return {
                 success: false,
                 message: "A ticket with the same ticket number was seen in the last two years."
             };
         }
     }
-    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(reqBody.licencePlateExpiryDateString);
+    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(requestBody.licencePlateExpiryDateString);
     if (!configFunctions.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) {
-        const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(reqBody);
+        const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(requestBody);
         if (licencePlateExpiryDateReturn.success) {
             licencePlateExpiryDate = licencePlateExpiryDateReturn.licencePlateExpiryDate;
         }
         else {
-            db.close();
+            database.close();
             return {
                 success: false,
                 message: licencePlateExpiryDateReturn.message
             };
         }
     }
-    const info = db.prepare("update ParkingTickets" +
+    const info = database.prepare("update ParkingTickets" +
         " set ticketNumber = ?," +
         " issueDate = ?," +
         " issueTime = ?," +
@@ -81,18 +81,15 @@ export const updateParkingTicket = (reqBody, reqSession) => {
         " where ticketID = ?" +
         " and resolvedDate is null" +
         " and recordDelete_timeMillis is null")
-        .run(reqBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(reqBody.issueTimeString), reqBody.issuingOfficer, reqBody.locationKey, reqBody.locationDescription, reqBody.bylawNumber, reqBody.parkingOffence, reqBody.offenceAmount, reqBody.discountOffenceAmount, reqBody.discountDays, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, (reqBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, reqBody.vehicleMakeModel, reqBody.vehicleVIN, reqSession.user.userName, nowMillis, reqBody.ticketID);
-    db.close();
-    if (info.changes) {
-        return {
+        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, (requestBody.licencePlateIsMissing ? 1 : 0), licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, requestSession.user.userName, nowMillis, requestBody.ticketID);
+    database.close();
+    return info.changes > 0
+        ? {
             success: true
-        };
-    }
-    else {
-        return {
+        }
+        : {
             success: false,
             message: "An error occurred saving this ticket.  Please try again."
         };
-    }
 };
 export default updateParkingTicket;

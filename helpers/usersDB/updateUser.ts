@@ -1,30 +1,30 @@
 import sqlite from "better-sqlite3";
 
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const updateUser = (reqBody: {
+export const updateUser = (requestBody: {
   userName: string;
   lastName: string;
   firstName: string;
-}) => {
+}): boolean => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
-  const info = db.prepare("update Users" +
+  const info = database.prepare("update Users" +
     " set firstName = ?," +
     " lastName = ?" +
     " where userName = ?" +
     " and isActive = 1")
     .run(
-      reqBody.firstName,
-      reqBody.lastName,
-      reqBody.userName
+      requestBody.firstName,
+      requestBody.lastName,
+      requestBody.userName
     );
 
-  db.close();
+  database.close();
 
-  return info.changes;
+  return info.changes > 0;
 };
 
 

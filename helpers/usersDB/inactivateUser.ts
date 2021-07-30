@@ -1,21 +1,21 @@
 import sqlite from "better-sqlite3";
 
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const inactivateUser = (userName: string) => {
+export const inactivateUser = (userName: string): boolean => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
-  const info = db.prepare("update Users" +
+  const info = database.prepare("update Users" +
     " set isActive = 0" +
     " where userName = ?" +
     " and isActive = 1")
     .run(userName);
 
-  db.close();
+  database.close();
 
-  return info.changes;
+  return info.changes > 0;
 };
 
 

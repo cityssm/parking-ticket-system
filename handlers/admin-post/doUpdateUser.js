@@ -1,8 +1,8 @@
 import { updateUser } from "../../helpers/usersDB/updateUser.js";
 export const handler = (request, response) => {
-    const changeCount = updateUser(request.body);
+    const success = updateUser(request.body);
     response.json({
-        success: (changeCount === 1)
+        success
     });
 };
 export default handler;

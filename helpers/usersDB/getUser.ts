@@ -3,14 +3,14 @@ import sqlite from "better-sqlite3";
 import bcrypt from "bcrypt";
 
 import * as configFunctions from "../functions.config.js";
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 import type { User, UserProperties } from "../../types/recordTypes.js";
 
 
-export const getUser = (userNameSubmitted: string, passwordPlain: string): User => {
+export const getUser = async(userNameSubmitted: string, passwordPlain: string): Promise<User> => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Check if an active user exists
 
@@ -18,21 +18,21 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
     userName: string;
     passwordHash: string;
     isActive: boolean;
-  } = db.prepare("select userName, passwordHash, isActive" +
+  } = database.prepare("select userName, passwordHash, isActive" +
     " from Users" +
     " where userName = ?")
     .get(userNameSubmitted);
 
   if (!row) {
 
-    db.close();
+    database.close();
 
     if (userNameSubmitted === "admin") {
 
       const adminPasswordPlain = configFunctions.getProperty("admin.defaultPassword");
 
       if (adminPasswordPlain === "") {
-        return null;
+        return undefined;
       }
 
       if (adminPasswordPlain === passwordPlain) {
@@ -48,12 +48,12 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
       }
     }
 
-    return null;
+    return undefined;
 
   } else if (!row.isActive) {
 
-    db.close();
-    return null;
+    database.close();
+    return undefined;
   }
 
   // Check if the password matches
@@ -62,13 +62,13 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
 
   let passwordIsValid = false;
 
-  if (bcrypt.compareSync(databaseUserName + "::" + passwordPlain, row.passwordHash)) {
+  if (await bcrypt.compare(databaseUserName + "::" + passwordPlain, row.passwordHash)) {
     passwordIsValid = true;
   }
 
   if (!passwordIsValid) {
-    db.close();
-    return null;
+    database.close();
+    return undefined;
   }
 
   // Get user properties
@@ -78,7 +78,7 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
 
   userProperties.isDefaultAdmin = false;
 
-  const userPropertyRows = db.prepare("select propertyName, propertyValue" +
+  const userPropertyRows = database.prepare("select propertyName, propertyValue" +
     " from UserProperties" +
     " where userName = ?")
     .all(databaseUserName);
@@ -105,7 +105,7 @@ export const getUser = (userNameSubmitted: string, passwordPlain: string): User 
     }
   }
 
-  db.close();
+  database.close();
 
   return {
     userName: databaseUserName,

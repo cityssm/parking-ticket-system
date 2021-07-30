@@ -1,19 +1,19 @@
 import sqlite from "better-sqlite3";
 import bcrypt from "bcrypt";
 import * as configFunctions from "../functions.config.js";
-import { usersDB as dbPath } from "../../data/databasePaths.js";
-export const getUser = (userNameSubmitted, passwordPlain) => {
-    const db = sqlite(dbPath);
-    const row = db.prepare("select userName, passwordHash, isActive" +
+import { usersDB as databasePath } from "../../data/databasePaths.js";
+export const getUser = async (userNameSubmitted, passwordPlain) => {
+    const database = sqlite(databasePath);
+    const row = database.prepare("select userName, passwordHash, isActive" +
         " from Users" +
         " where userName = ?")
         .get(userNameSubmitted);
     if (!row) {
-        db.close();
+        database.close();
         if (userNameSubmitted === "admin") {
             const adminPasswordPlain = configFunctions.getProperty("admin.defaultPassword");
             if (adminPasswordPlain === "") {
-                return null;
+                return undefined;
             }
             if (adminPasswordPlain === passwordPlain) {
                 const userProperties = Object.assign({}, configFunctions.getProperty("user.defaultProperties"));
@@ -25,24 +25,24 @@ export const getUser = (userNameSubmitted, passwordPlain) => {
                 };
             }
         }
-        return null;
+        return undefined;
     }
     else if (!row.isActive) {
-        db.close();
-        return null;
+        database.close();
+        return undefined;
     }
     const databaseUserName = row.userName;
     let passwordIsValid = false;
-    if (bcrypt.compareSync(databaseUserName + "::" + passwordPlain, row.passwordHash)) {
+    if (await bcrypt.compare(databaseUserName + "::" + passwordPlain, row.passwordHash)) {
         passwordIsValid = true;
     }
     if (!passwordIsValid) {
-        db.close();
-        return null;
+        database.close();
+        return undefined;
     }
     const userProperties = Object.assign({}, configFunctions.getProperty("user.defaultProperties"));
     userProperties.isDefaultAdmin = false;
-    const userPropertyRows = db.prepare("select propertyName, propertyValue" +
+    const userPropertyRows = database.prepare("select propertyName, propertyValue" +
         " from UserProperties" +
         " where userName = ?")
         .all(databaseUserName);
@@ -61,7 +61,7 @@ export const getUser = (userNameSubmitted, passwordPlain) => {
                 break;
         }
     }
-    db.close();
+    database.close();
     return {
         userName: databaseUserName,
         userProperties

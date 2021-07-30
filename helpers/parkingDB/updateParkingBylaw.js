@@ -1,13 +1,13 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const updateParkingBylaw = (reqBody) => {
-    const db = sqlite(dbPath);
-    const info = db.prepare("update ParkingBylaws" +
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const updateParkingBylaw = (requestBody) => {
+    const database = sqlite(databasePath);
+    const info = database.prepare("update ParkingBylaws" +
         " set bylawDescription = ?" +
         " where bylawNumber = ?" +
         " and isActive = 1")
-        .run(reqBody.bylawDescription, reqBody.bylawNumber);
-    db.close();
+        .run(requestBody.bylawDescription, requestBody.bylawNumber);
+    database.close();
     return {
         success: (info.changes > 0)
     };

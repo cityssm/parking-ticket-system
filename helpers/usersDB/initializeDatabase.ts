@@ -1,14 +1,14 @@
 import sqlite from "better-sqlite3";
 
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 import debug from "debug";
 const debugSQL = debug("parking-ticket-system:usersDB:initializeDatabase");
 
 
-export const initializeDatabase = () => {
+export const initializeDatabase = (): boolean => {
 
-  const usersDB = sqlite(dbPath);
+  const usersDB = sqlite(databasePath);
 
   let doCreate = false;
 

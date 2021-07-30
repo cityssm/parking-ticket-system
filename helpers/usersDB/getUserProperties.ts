@@ -2,21 +2,21 @@ import sqlite from "better-sqlite3";
 
 import * as configFunctions from "../functions.config.js";
 
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 import type { UserProperties } from "../../types/recordTypes";
 
 
-export const getUserProperties = (userName: string) => {
+export const getUserProperties = (userName: string): UserProperties => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
   const userProperties: UserProperties =
     Object.assign({}, configFunctions.getProperty("user.defaultProperties"));
 
-  const userPropertyRows = db.prepare("select propertyName, propertyValue" +
+  const userPropertyRows = database.prepare("select propertyName, propertyValue" +
     " from UserProperties" +
     " where userName = ?")
     .all(userName);
@@ -25,7 +25,7 @@ export const getUserProperties = (userName: string) => {
     userProperties[userProperty.propertyName] = (userProperty.propertyValue === "true");
   }
 
-  db.close();
+  database.close();
 
   return userProperties;
 };

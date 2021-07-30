@@ -2,7 +2,7 @@ import sqlite from "better-sqlite3";
 
 import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
@@ -10,17 +10,17 @@ import type * as expressSession from "express-session";
 export const removeParkingTicketFromConvictionBatch = (
   batchID: number,
   ticketID: number,
-  reqSession: expressSession.Session
-) => {
+  requestSession: expressSession.Session
+): { success: boolean; message?: string; } => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
+  const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
 
   if (!batchIsAvailable) {
-    db.close();
+    database.close();
 
     return {
       success: false,
@@ -32,7 +32,7 @@ export const removeParkingTicketFromConvictionBatch = (
 
   const rightNowMillis = Date.now();
 
-  const info = db
+  const info = database
     .prepare(
       "update ParkingTicketStatusLog" +
       " set recordDelete_userName = ?," +
@@ -43,13 +43,13 @@ export const removeParkingTicketFromConvictionBatch = (
       " and statusField = ?"
     )
     .run(
-      reqSession.user.userName,
+      requestSession.user.userName,
       rightNowMillis,
       ticketID,
       batchID.toString()
     );
 
-  db.close();
+  database.close();
 
   return {
     success: info.changes > 0

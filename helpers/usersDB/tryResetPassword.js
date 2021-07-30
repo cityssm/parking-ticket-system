@@ -1,34 +1,34 @@
 import sqlite from "better-sqlite3";
 import bcrypt from "bcrypt";
 import * as userFunctions from "../functions.user.js";
-import { usersDB as dbPath } from "../../data/databasePaths.js";
-export const tryResetPassword = (userName, oldPasswordPlain, newPasswordPlain) => {
-    const db = sqlite(dbPath);
-    const row = db.prepare("select passwordHash from Users" +
+import { usersDB as databasePath } from "../../data/databasePaths.js";
+export const tryResetPassword = async (userName, oldPasswordPlain, newPasswordPlain) => {
+    const database = sqlite(databasePath);
+    const row = database.prepare("select passwordHash from Users" +
         " where userName = ?" +
         " and isActive = 1")
         .get(userName);
     if (!row) {
-        db.close();
+        database.close();
         return {
             success: false,
             message: "User record not found."
         };
     }
-    const oldPasswordMatches = bcrypt.compareSync(userFunctions.getHashString(userName, oldPasswordPlain), row.passwordHash);
+    const oldPasswordMatches = await bcrypt.compare(userFunctions.getHashString(userName, oldPasswordPlain), row.passwordHash);
     if (!oldPasswordMatches) {
-        db.close();
+        database.close();
         return {
             success: false,
             message: "Old password does not match."
         };
     }
-    const newPasswordHash = bcrypt.hashSync(userFunctions.getHashString(userName, newPasswordPlain), 10);
-    db.prepare("update Users" +
+    const newPasswordHash = await bcrypt.hash(userFunctions.getHashString(userName, newPasswordPlain), 10);
+    database.prepare("update Users" +
         " set passwordHash = ?" +
         " where userName = ?")
         .run(newPasswordHash, userName);
-    db.close();
+    database.close();
     return {
         success: true,
         message: "Password updated successfully."

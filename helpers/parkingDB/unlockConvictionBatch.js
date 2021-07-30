@@ -1,9 +1,9 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const unlockConvictionBatch = (batchID, reqSession) => {
-    const db = sqlite(dbPath);
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const unlockConvictionBatch = (batchID, requestSession) => {
+    const database = sqlite(databasePath);
     const rightNowMillis = Date.now();
-    const info = db
+    const info = database
         .prepare("update ParkingTicketConvictionBatches" +
         " set lockDate = null," +
         " recordUpdate_userName = ?," +
@@ -12,8 +12,8 @@ export const unlockConvictionBatch = (batchID, reqSession) => {
         " and batchID = ?" +
         " and lockDate is not null" +
         " and sentDate is null")
-        .run(reqSession.user.userName, rightNowMillis, batchID);
-    db.close();
+        .run(requestSession.user.userName, rightNowMillis, batchID);
+    database.close();
     return info.changes > 0;
 };
 export default unlockConvictionBatch;

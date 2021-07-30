@@ -5,57 +5,56 @@ import bcrypt from "bcrypt";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as userFunctions from "../functions.user.js";
 
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const createUser = (reqBody: {
+export const createUser = async(requestBody: {
   userName: string;
   lastName: string;
   firstName: string;
-}) => {
+}): Promise<string | boolean> => {
 
   const newPasswordPlain = stringFns.generatePassword();
-  const hash = bcrypt.hashSync(userFunctions.getHashString(reqBody.userName, newPasswordPlain), 10);
+  const hash = await bcrypt.hash(userFunctions.getHashString(requestBody.userName, newPasswordPlain), 10);
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   const row: {
     isActive: boolean;
-  } = db.prepare("select isActive" +
+  } = database.prepare("select isActive" +
     " from Users" +
     " where userName = ?")
-    .get(reqBody.userName);
+    .get(requestBody.userName);
 
   if (row) {
 
     if (row.isActive) {
-      db.close();
+      database.close();
       return false;
     }
 
-    db.prepare("update Users" +
+    database.prepare("update Users" +
       " set firstName = ?," +
       " lastName = ?," +
       " passwordHash = ?," +
       " isActive = 1" +
       " where userName = ?")
-      .run(reqBody.firstName, reqBody.lastName, hash, reqBody.userName);
+      .run(requestBody.firstName, requestBody.lastName, hash, requestBody.userName);
 
-    db.prepare("delete from UserProperties" +
+    database.prepare("delete from UserProperties" +
       " where userName = ?")
-      .run(reqBody.userName);
+      .run(requestBody.userName);
 
   } else {
 
-    db.prepare("insert into Users" +
+    database.prepare("insert into Users" +
       " (userName, firstName, lastName, isActive, passwordHash)" +
       " values (?, ?, ?, 1, ?)")
-      .run(reqBody.userName, reqBody.firstName, reqBody.lastName, hash);
+      .run(requestBody.userName, requestBody.firstName, requestBody.lastName, hash);
 
   }
 
   return newPasswordPlain;
-
 };
 
 

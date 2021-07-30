@@ -5,22 +5,22 @@ import bcrypt from "bcrypt";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as userFunctions from "../functions.user.js";
 
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const generateNewPassword = (userName: string) => {
+export const generateNewPassword = async(userName: string): Promise<string> => {
 
   const newPasswordPlain: string = stringFns.generatePassword();
-  const hash = bcrypt.hashSync(userFunctions.getHashString(userName, newPasswordPlain), 10);
+  const hash = await bcrypt.hash(userFunctions.getHashString(userName, newPasswordPlain), 10);
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
-  db.prepare("update Users" +
+  database.prepare("update Users" +
     " set passwordHash = ?" +
     " where userName = ?")
     .run(hash, userName);
 
-  db.close();
+  database.close();
 
   return newPasswordPlain;
 };

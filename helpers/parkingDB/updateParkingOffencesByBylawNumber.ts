@@ -1,38 +1,37 @@
 import sqlite from "better-sqlite3";
 
-import type { AddUpdateParkingBylawReturn } from "./getParkingBylaws";
+import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const updateParkingOffencesByBylawNumber = (reqBody: {
+export const updateParkingOffencesByBylawNumber = (requestBody: {
   bylawNumber: string;
   offenceAmount: string;
   discountDays: string;
   discountOffenceAmount: string;
-}): AddUpdateParkingBylawReturn => {
+}): AddUpdateParkingOffenceReturn => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Do update
 
-  const info = db.prepare("update ParkingOffences" +
+  const info = database.prepare("update ParkingOffences" +
     " set offenceAmount = ?," +
     " discountOffenceAmount = ?," +
     " discountDays = ?" +
     " where bylawNumber = ?" +
     " and isActive = 1")
-    .run(reqBody.offenceAmount,
-      reqBody.discountOffenceAmount,
-      reqBody.discountDays,
-      reqBody.bylawNumber);
+    .run(requestBody.offenceAmount,
+      requestBody.discountOffenceAmount,
+      requestBody.discountDays,
+      requestBody.bylawNumber);
 
-  db.close();
+  database.close();
 
   return {
     success: (info.changes > 0)
   };
-
 };
 
 

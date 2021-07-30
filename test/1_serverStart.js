@@ -69,25 +69,11 @@ describe("parking-ticket-system", () => {
         });
     });
     const appURL = "http://localhost:" + portNumber.toString();
-    describe("simple page tests", () => {
-        const docsURL = appURL + "/docs";
-        it("should load docs page - " + docsURL, (done) => {
-            (async () => {
-                const browser = await puppeteer.launch();
-                const page = await browser.newPage();
-                await page.goto(docsURL);
-                await browser.close();
-            })()
-                .finally(() => {
-                done();
-            });
-        });
-    });
     describe("transaction page tests", () => {
         const pageTests = {
             reports: {
                 goto: "/reports",
-                waitFor: null
+                waitFor: undefined
             },
             tickets: {
                 goto: "/tickets",
@@ -144,31 +130,6 @@ describe("parking-ticket-system", () => {
                 })
                     .finally(() => {
                     assert.strictEqual(status, 404);
-                    done();
-                });
-            })()
-                .catch(() => {
-                assert.fail();
-            })
-                .finally(() => {
-                void browser.close();
-            });
-        });
-        it("should return a 400 bad request error on missing docs", (done) => {
-            let browser;
-            (async () => {
-                browser = await puppeteer.launch();
-                const page = await browser.newPage();
-                let status = 0;
-                await page.goto(appURL + "/docs/missing-doc.md")
-                    .then((res) => {
-                    status = res.status();
-                })
-                    .catch(() => {
-                    assert.fail();
-                })
-                    .finally(() => {
-                    assert.strictEqual(status, 400);
                     done();
                 });
             })()

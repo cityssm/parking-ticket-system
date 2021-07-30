@@ -2,44 +2,43 @@ import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
-export const resolveParkingTicketWithDB = (db: sqlite.Database, ticketID: number, reqSession: expressSession.Session) => {
+export const resolveParkingTicketWithDB =
+  (database: sqlite.Database, ticketID: number, requestSession: expressSession.Session): { success: boolean; } => {
 
-  const rightNow = new Date();
+    const rightNow = new Date();
 
-  const info = db.prepare("update ParkingTickets" +
-    " set resolvedDate = ?," +
-    " recordUpdate_userName = ?," +
-    " recordUpdate_timeMillis = ?" +
-    " where ticketID = ?" +
-    " and resolvedDate is null" +
-    " and recordDelete_timeMillis is null")
-    .run(dateTimeFns.dateToInteger(rightNow),
-      reqSession.user.userName,
-      rightNow.getTime(),
-      ticketID);
+    const info = database.prepare("update ParkingTickets" +
+      " set resolvedDate = ?," +
+      " recordUpdate_userName = ?," +
+      " recordUpdate_timeMillis = ?" +
+      " where ticketID = ?" +
+      " and resolvedDate is null" +
+      " and recordDelete_timeMillis is null")
+      .run(dateTimeFns.dateToInteger(rightNow),
+        requestSession.user.userName,
+        rightNow.getTime(),
+        ticketID);
 
-  return {
-    success: (info.changes > 0)
+    return {
+      success: (info.changes > 0)
+    };
   };
-};
 
 
-export const resolveParkingTicket = (ticketID: number, reqSession: expressSession.Session) => {
+export const resolveParkingTicket = (ticketID: number, requestSession: expressSession.Session): { success: boolean; } => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
-  const success = resolveParkingTicketWithDB(db, ticketID, reqSession);
+  const success = resolveParkingTicketWithDB(database, ticketID, requestSession);
 
-  db.close();
+  database.close();
 
-  return {
-    success
-  };
+  return success;
 };
 
 

@@ -7,7 +7,6 @@ import csurf from "csurf";
 import rateLimit from "express-rate-limit";
 import session from "express-session";
 import sqlite from "connect-sqlite3";
-import routerDocs from "./routes/docs.js";
 import routerLogin from "./routes/login.js";
 import routerDashboard from "./routes/dashboard.js";
 import routerAdmin from "./routes/admin.js";
@@ -50,7 +49,6 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 app.use(express.static(path.join("public")));
-app.use("/docs/images", express.static(path.join("docs", "images")));
 app.use("/fa", express.static(path.join("node_modules", "@fortawesome", "fontawesome-free")));
 app.use("/fontsource-inter", express.static(path.join("node_modules", "@fontsource", "inter", "files")));
 app.use("/fontsource-pt-mono", express.static(path.join("node_modules", "@fontsource", "pt-mono", "files")));
@@ -98,7 +96,6 @@ app.use((request, response, next) => {
 app.get("/", sessionChecker, (_request, response) => {
     response.redirect("/dashboard");
 });
-app.use("/docs", routerDocs);
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);
 app.use("/plates", sessionChecker, routerPlates);

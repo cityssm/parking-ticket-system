@@ -1,9 +1,9 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const updateParkingTicketRemark = (reqBody, reqSession) => {
-    const db = sqlite(dbPath);
-    const info = db.prepare("update ParkingTicketRemarks" +
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const updateParkingTicketRemark = (requestBody, requestSession) => {
+    const database = sqlite(databasePath);
+    const info = database.prepare("update ParkingTicketRemarks" +
         " set remarkDate = ?," +
         " remarkTime = ?," +
         " remark = ?," +
@@ -12,8 +12,8 @@ export const updateParkingTicketRemark = (reqBody, reqSession) => {
         " where ticketID = ?" +
         " and remarkIndex = ?" +
         " and recordDelete_timeMillis is null")
-        .run(dateTimeFns.dateStringToInteger(reqBody.remarkDateString), dateTimeFns.timeStringToInteger(reqBody.remarkTimeString), reqBody.remark, reqSession.user.userName, Date.now(), reqBody.ticketID, reqBody.remarkIndex);
-    db.close();
+        .run(dateTimeFns.dateStringToInteger(requestBody.remarkDateString), dateTimeFns.timeStringToInteger(requestBody.remarkTimeString), requestBody.remark, requestSession.user.userName, Date.now(), requestBody.ticketID, requestBody.remarkIndex);
+    database.close();
     return {
         success: (info.changes > 0)
     };

@@ -1,6 +1,6 @@
-export declare const createUser: (reqBody: {
+export declare const createUser: (requestBody: {
     userName: string;
     lastName: string;
     firstName: string;
-}) => string | false;
+}) => Promise<string | boolean>;
 export default createUser;

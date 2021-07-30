@@ -1,44 +1,36 @@
 import sqlite from "better-sqlite3";
 
-import { usersDB as dbPath } from "../../data/databasePaths.js";
+import { usersDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const updateUserProperty = (reqBody: {
+export const updateUserProperty = (requestBody: {
   userName: string;
   propertyName: string;
   propertyValue: string;
-}) => {
+}): boolean => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
-  let info: sqlite.RunResult;
-
-  if (reqBody.propertyValue === "") {
-
-    info = db.prepare("delete from UserProperties" +
+  const info = requestBody.propertyValue === ""
+    ? database.prepare("delete from UserProperties" +
       " where userName = ?" +
       " and propertyName = ?")
       .run(
-        reqBody.userName,
-        reqBody.propertyName
-      );
-
-  } else {
-
-    info = db.prepare("replace into UserProperties" +
+        requestBody.userName,
+        requestBody.propertyName
+      )
+    : database.prepare("replace into UserProperties" +
       " (userName, propertyName, propertyValue)" +
       " values (?, ?, ?)")
       .run(
-        reqBody.userName,
-        reqBody.propertyName,
-        reqBody.propertyValue
+        requestBody.userName,
+        requestBody.propertyName,
+        requestBody.propertyValue
       );
 
-  }
+  database.close();
 
-  db.close();
-
-  return info.changes;
+  return info.changes > 0;
 };
 
 

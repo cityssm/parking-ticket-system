@@ -2,37 +2,37 @@ import { Router } from "express";
 
 import * as configFunctions from "../helpers/functions.config.js";
 
-import usersDB_tryResetPassword from "../helpers/usersDB/tryResetPassword.js";
+import { tryResetPassword } from "../helpers/usersDB/tryResetPassword.js";
 
 
 export const router = Router();
 
 
-router.get("/", (_req, res) => {
+router.get("/", (_request, response) => {
 
-  res.render("dashboard", {
+  response.render("dashboard", {
     headTitle: "Dashboard"
   });
 
 });
 
 
-router.post("/doChangePassword", (req, res) => {
+router.post("/doChangePassword", async (request, response) => {
 
-  const userName = req.session.user.userName;
-  const oldPassword = req.body.oldPassword;
-  const newPassword = req.body.newPassword;
+  const userName = request.session.user.userName;
+  const oldPassword = request.body.oldPassword;
+  const newPassword = request.body.newPassword;
 
-  const result = usersDB_tryResetPassword.tryResetPassword(userName, oldPassword, newPassword);
+  const result = await tryResetPassword(userName, oldPassword, newPassword);
 
-  res.json(result);
+  response.json(result);
 
 });
 
 
-router.all("/doGetDefaultConfigProperties", (_req, res) => {
+router.all("/doGetDefaultConfigProperties", (_request, response) => {
 
-  res.json({
+  response.json({
     locationClasses: configFunctions.getProperty("locationClasses"),
     ticketNumber_fieldLabel: configFunctions.getProperty("parkingTickets.ticketNumber.fieldLabel"),
     parkingTicketStatuses: configFunctions.getProperty("parkingTicketStatuses"),

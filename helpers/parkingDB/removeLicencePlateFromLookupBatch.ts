@@ -2,31 +2,31 @@ import sqlite from "better-sqlite3";
 
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
 export const removeLicencePlateFromLookupBatch =
-  (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: expressSession.Session) => {
+  (requestBody: pts.LicencePlateLookupBatchEntry, requestSession: expressSession.Session): { success: boolean; message?: string; } => {
 
-    const db = sqlite(dbPath);
+    const database = sqlite(databasePath);
 
     // Ensure batch is not locked
 
-    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+    const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
       " set recordUpdate_userName = ?," +
       " recordUpdate_timeMillis = ?" +
       " where batchID = ?" +
       " and recordDelete_timeMillis is null" +
       " and lockDate is null")
-      .run(reqSession.user.userName,
+      .run(requestSession.user.userName,
         Date.now(),
-        reqBody.batchID).changes;
+        requestBody.batchID).changes;
 
     if (canUpdateBatch === 0) {
 
-      db.close();
+      database.close();
 
       return {
         success: false,
@@ -35,30 +35,24 @@ export const removeLicencePlateFromLookupBatch =
 
     }
 
-    const info = db.prepare("delete from LicencePlateLookupBatchEntries" +
+    const info = database.prepare("delete from LicencePlateLookupBatchEntries" +
       " where batchID = ?" +
       " and licencePlateCountry = ?" +
       " and licencePlateProvince = ?" +
       " and licencePlateNumber = ?")
-      .run(reqBody.batchID,
-        reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber);
+      .run(requestBody.batchID,
+        requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber);
 
-    db.close();
+    database.close();
 
-    if (info.changes > 0) {
-
-      return {
+    return info.changes > 0
+      ? {
         success: true
-      };
-
-    } else {
-
-      return {
+      }
+      : {
         success: false,
         message: "Licence plate not removed from the batch."
       };
-
-    }
 
   };
 

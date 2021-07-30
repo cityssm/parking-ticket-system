@@ -11,7 +11,6 @@ import session from "express-session";
 import sqlite from "connect-sqlite3";
 
 // eslint-disable-next-line unicorn/prevent-abbreviations
-import routerDocs from "./routes/docs.js";
 import routerLogin from "./routes/login.js";
 import routerDashboard from "./routes/dashboard.js";
 import routerAdmin from "./routes/admin.js";
@@ -94,9 +93,6 @@ app.use(limiter);
 
 
 app.use(express.static(path.join("public")));
-
-app.use("/docs/images",
-  express.static(path.join("docs", "images")));
 
 app.use("/fa",
   express.static(path.join("node_modules", "@fortawesome", "fontawesome-free")));
@@ -185,8 +181,6 @@ app.use((request, response, next) => {
 app.get("/", sessionChecker, (_request, response) => {
   response.redirect("/dashboard");
 });
-
-app.use("/docs", routerDocs);
 
 app.use("/dashboard", sessionChecker, routerDashboard);
 app.use("/tickets", sessionChecker, routerTickets);

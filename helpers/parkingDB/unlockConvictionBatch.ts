@@ -1,19 +1,20 @@
 import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
 export const unlockConvictionBatch = (
   batchID: number,
-  reqSession: expressSession.Session
-) => {
-  const db = sqlite(dbPath);
+  requestSession: expressSession.Session
+): boolean => {
+
+  const database = sqlite(databasePath);
 
   const rightNowMillis = Date.now();
 
-  const info = db
+  const info = database
     .prepare(
       "update ParkingTicketConvictionBatches" +
       " set lockDate = null," +
@@ -24,9 +25,9 @@ export const unlockConvictionBatch = (
       " and lockDate is not null" +
       " and sentDate is null"
     )
-    .run(reqSession.user.userName, rightNowMillis, batchID);
+    .run(requestSession.user.userName, rightNowMillis, batchID);
 
-  db.close();
+  database.close();
 
   return info.changes > 0;
 };

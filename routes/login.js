@@ -22,31 +22,31 @@ const getSafeRedirectURL = (possibleRedirectURL = "") => {
     return "/dashboard";
 };
 router.route("/")
-    .get((req, res) => {
+    .get((request, response) => {
     const sessionCookieName = configFunctions.getProperty("session.cookieName");
-    if (req.session.user && req.cookies[sessionCookieName]) {
-        const redirectURL = getSafeRedirectURL((req.query.redirect || ""));
-        res.redirect(redirectURL);
+    if (request.session.user && request.cookies[sessionCookieName]) {
+        const redirectURL = getSafeRedirectURL((request.query.redirect || ""));
+        response.redirect(redirectURL);
     }
     else {
-        res.render("login", {
+        response.render("login", {
             userName: "",
             message: "",
-            redirect: req.query.redirect
+            redirect: request.query.redirect
         });
     }
 })
-    .post((req, res) => {
-    const userName = req.body.userName;
-    const passwordPlain = req.body.password;
-    const redirectURL = getSafeRedirectURL(req.body.redirect);
-    const userObj = usersDB_getUser.getUser(userName, passwordPlain);
-    if (userObj) {
-        req.session.user = userObj;
-        res.redirect(req.body.redirect);
+    .post(async (request, response) => {
+    const userName = request.body.userName;
+    const passwordPlain = request.body.password;
+    const redirectURL = getSafeRedirectURL(request.body.redirect);
+    const userObject = await usersDB_getUser.getUser(userName, passwordPlain);
+    if (userObject) {
+        request.session.user = userObject;
+        response.redirect(request.body.redirect);
     }
     else {
-        res.render("login", {
+        response.render("login", {
             userName,
             message: "Login Failed",
             redirect: redirectURL

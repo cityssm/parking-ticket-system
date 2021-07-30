@@ -1,6 +1,6 @@
-export declare const updateUserProperty: (reqBody: {
+export declare const updateUserProperty: (requestBody: {
     userName: string;
     propertyName: string;
     propertyValue: string;
-}) => number;
+}) => boolean;
 export default updateUserProperty;

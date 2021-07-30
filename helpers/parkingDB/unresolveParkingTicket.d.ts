@@ -1,9 +1,6 @@
 import type * as expressSession from "express-session";
-export declare const unresolveParkingTicket: (ticketID: number, reqSession: expressSession.Session) => {
+export declare const unresolveParkingTicket: (ticketID: number, requestSession: expressSession.Session) => {
     success: boolean;
-    message: string;
-} | {
-    success: boolean;
-    message?: undefined;
+    message?: string;
 };
 export default unresolveParkingTicket;

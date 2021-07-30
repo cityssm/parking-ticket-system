@@ -1,19 +1,12 @@
 import type * as pts from "../../types/recordTypes";
 import type * as expressSession from "express-session";
-export declare const getLicencePlateExpiryDateFromPieces: (reqBody: pts.ParkingTicket) => {
+export declare const getLicencePlateExpiryDateFromPieces: (requestBody: pts.ParkingTicket) => {
     success: boolean;
-    message: string;
-    licencePlateExpiryDate?: undefined;
-} | {
-    success: boolean;
-    licencePlateExpiryDate: number;
-    message?: undefined;
+    message?: string;
+    licencePlateExpiryDate?: number;
 };
-export declare const updateParkingTicket: (reqBody: pts.ParkingTicket, reqSession: expressSession.Session) => {
+export declare const updateParkingTicket: (requestBody: pts.ParkingTicket, requestSession: expressSession.Session) => {
     success: boolean;
-    message: string;
-} | {
-    success: boolean;
-    message?: undefined;
+    message?: string;
 };
 export default updateParkingTicket;
