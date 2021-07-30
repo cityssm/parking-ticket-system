@@ -9,18 +9,18 @@ import { getLicencePlateOwnerWithDB } from "./getLicencePlateOwner.js";
 import { getParkingTicketRemarksWithDB } from "./getParkingTicketRemarks.js";
 import { getParkingTicketStatusesWithDB } from "./getParkingTicketStatuses.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
-export const getParkingTicket = (ticketID: number, reqSession: expressSession.Session) => {
+export const getParkingTicket = (ticketID: number, requestSession: expressSession.Session): pts.ParkingTicket => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const ticket: pts.ParkingTicket = db.prepare("select t.*," +
+  const ticket: pts.ParkingTicket = database.prepare("select t.*," +
     " l.locationName," +
     " s.statusKey as ownerLookup_statusKey," +
     " s.statusField as ownerLookup_statusField" +
@@ -37,8 +37,8 @@ export const getParkingTicket = (ticketID: number, reqSession: expressSession.Se
     .get(ticketID);
 
   if (!ticket) {
-    db.close();
-    return null;
+    database.close();
+    return undefined;
   }
 
   ticket.recordType = "ticket";
@@ -48,28 +48,28 @@ export const getParkingTicket = (ticketID: number, reqSession: expressSession.Se
   ticket.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(ticket.licencePlateExpiryDate);
 
   if (ticket.licencePlateExpiryDateString !== "") {
-    ticket.licencePlateExpiryYear = parseInt(ticket.licencePlateExpiryDateString.substring(0, 4), 10);
-    ticket.licencePlateExpiryMonth = parseInt(ticket.licencePlateExpiryDateString.substring(5, 7), 10);
+    ticket.licencePlateExpiryYear = Number.parseInt(ticket.licencePlateExpiryDateString.slice(0, 4), 10);
+    ticket.licencePlateExpiryMonth = Number.parseInt(ticket.licencePlateExpiryDateString.slice(5, 7), 10);
   }
 
   ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
-  ticket.canUpdate = canUpdateObject(ticket, reqSession);
+  ticket.canUpdate = canUpdateObject(ticket, requestSession);
 
   // Owner
 
   if (ticket.ownerLookup_statusKey === "ownerLookupMatch") {
-    ticket.licencePlateOwner = getLicencePlateOwnerWithDB(db,
+    ticket.licencePlateOwner = getLicencePlateOwnerWithDB(database,
       ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber,
-      parseInt(ticket.ownerLookup_statusField, 10));
+      Number.parseInt(ticket.ownerLookup_statusField, 10));
   }
 
   // Location
 
-  ticket.location = getParkingLocationWithDB(db, ticket.locationKey);
+  ticket.location = getParkingLocationWithDB(database, ticket.locationKey);
 
   // Status Log
 
-  ticket.statusLog = getParkingTicketStatusesWithDB(db, ticketID, reqSession);
+  ticket.statusLog = getParkingTicketStatusesWithDB(database, ticketID, requestSession);
 
   if (!ticket.canUpdate) {
     for (const status of ticket.statusLog) {
@@ -79,7 +79,7 @@ export const getParkingTicket = (ticketID: number, reqSession: expressSession.Se
 
   // Remarks
 
-  ticket.remarks = getParkingTicketRemarksWithDB(db, ticketID, reqSession);
+  ticket.remarks = getParkingTicketRemarksWithDB(database, ticketID, requestSession);
 
   if (!ticket.canUpdate) {
     for (const remark of ticket.remarks) {
@@ -87,7 +87,7 @@ export const getParkingTicket = (ticketID: number, reqSession: expressSession.Se
     }
   }
 
-  db.close();
+  database.close();
 
   return ticket;
 };

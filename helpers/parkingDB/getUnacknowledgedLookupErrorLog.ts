@@ -3,7 +3,7 @@ import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
 interface LookupErrorLogEntry extends pts.LicencePlate {
@@ -22,19 +22,19 @@ interface LookupErrorLogEntry extends pts.LicencePlate {
 
 
 export const getUnacknowledgedLookupErrorLog =
-  (batchID_or_negOne: number, logIndex_or_negOne: number) => {
+  (batchID_or_negOne: number, logIndex_or_negOne: number): LookupErrorLogEntry[] => {
 
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
       readonly: true
     });
 
-    let params = [];
+    let parameters = [];
 
     if (batchID_or_negOne !== -1 && logIndex_or_negOne !== -1) {
-      params = [batchID_or_negOne, logIndex_or_negOne];
+      parameters = [batchID_or_negOne, logIndex_or_negOne];
     }
 
-    const logEntries: LookupErrorLogEntry[] = db.prepare("select l.batchID, l.logIndex," +
+    const logEntries: LookupErrorLogEntry[] = database.prepare("select l.batchID, l.logIndex," +
       " l.licencePlateCountry, l.licencePlateProvince, l.licencePlateNumber, l.recordDate," +
       " l.errorCode, l.errorMessage," +
       " e.ticketID, t.ticketNumber, t.issueDate, t.vehicleMakeModel" +
@@ -56,11 +56,11 @@ export const getUnacknowledgedLookupErrorLog =
         " and t.resolvedDate is null") +
       " where l.recordDelete_timeMillis is null" +
       " and l.isAcknowledged = 0" +
-      (params.length > 0 ? " and l.batchID = ? and l.logIndex = ?" : "")
+      (parameters.length > 0 ? " and l.batchID = ? and l.logIndex = ?" : "")
     )
-      .all(params);
+      .all(parameters);
 
-    db.close();
+    database.close();
 
     for (const logEntry of logEntries) {
       logEntry.recordDateString = dateTimeFns.dateIntegerToString(logEntry.recordDate);

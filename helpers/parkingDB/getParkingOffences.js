@@ -1,10 +1,10 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const getParkingOffences = () => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    const rows = db.prepare("select o.bylawNumber, o.locationKey, o.parkingOffence," +
+    const rows = database.prepare("select o.bylawNumber, o.locationKey, o.parkingOffence," +
         " o.offenceAmount, o.discountOffenceAmount, o.discountDays, o.accountNumber" +
         " from ParkingOffences o" +
         " left join ParkingLocations l on o.locationKey = l.locationKey" +
@@ -12,14 +12,14 @@ export const getParkingOffences = () => {
         " and o.bylawNumber in (select b.bylawNumber from ParkingBylaws b where b.isActive = 1)" +
         " order by o.bylawNumber, l.locationName")
         .all();
-    db.close();
+    database.close();
     return rows;
 };
 export const getParkingOffencesByLocationKey = (locationKey) => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    const rows = db.prepare("select o.bylawNumber, b.bylawDescription," +
+    const rows = database.prepare("select o.bylawNumber, b.bylawDescription," +
         " o.parkingOffence, o.offenceAmount, o.discountOffenceAmount, o.discountDays" +
         " from ParkingOffences o" +
         " left join ParkingBylaws b on o.bylawNumber = b.bylawNumber" +
@@ -27,7 +27,7 @@ export const getParkingOffencesByLocationKey = (locationKey) => {
         " and o.locationKey = ?" +
         " order by b.orderNumber, b.bylawNumber")
         .all(locationKey);
-    db.close();
+    database.close();
     return rows;
 };
 export default getParkingOffences;

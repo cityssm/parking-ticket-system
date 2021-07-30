@@ -2,7 +2,7 @@ import sqlite from "better-sqlite3";
 
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
 export interface AddUpdateParkingBylawReturn {
@@ -12,31 +12,31 @@ export interface AddUpdateParkingBylawReturn {
 }
 
 
-export const getParkingBylaws = () => {
+export const getParkingBylaws = (): pts.ParkingBylaw[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const rows: pts.ParkingBylaw[] = db.prepare("select bylawNumber, bylawDescription" +
+  const rows: pts.ParkingBylaw[] = database.prepare("select bylawNumber, bylawDescription" +
     " from ParkingBylaws" +
     " where isActive = 1" +
     " order by orderNumber, bylawNumber")
     .all();
 
-  db.close();
+  database.close();
 
   return rows;
 };
 
 
-export const getParkingBylawsWithOffenceStats = () => {
+export const getParkingBylawsWithOffenceStats = (): pts.ParkingBylaw[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const rows: pts.ParkingBylaw[] = db.prepare("select b.bylawNumber, b.bylawDescription," +
+  const rows: pts.ParkingBylaw[] = database.prepare("select b.bylawNumber, b.bylawDescription," +
     " count(o.locationKey) as offenceCount," +
     " min(o.offenceAmount) as offenceAmountMin," +
     " max(o.offenceAmount) as offenceAmountMax," +
@@ -51,7 +51,7 @@ export const getParkingBylawsWithOffenceStats = () => {
     " order by b.orderNumber, b.bylawNumber")
     .all();
 
-  db.close();
+  database.close();
 
   return rows;
 };

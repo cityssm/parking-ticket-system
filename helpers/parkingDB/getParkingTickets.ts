@@ -5,7 +5,7 @@ import type * as pts from "../../types/recordTypes";
 
 import { canUpdateObject, getSplitWhereClauseFilter } from "../parkingDB.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
@@ -23,7 +23,7 @@ export interface GetParkingTicketsQueryOptions {
 }
 
 
-const addCalculatedFields = (ticket: pts.ParkingTicket, reqSession: expressSession.Session) => {
+const addCalculatedFields = (ticket: pts.ParkingTicket, requestSession: expressSession.Session) => {
 
   ticket.recordType = "ticket";
 
@@ -32,52 +32,50 @@ const addCalculatedFields = (ticket: pts.ParkingTicket, reqSession: expressSessi
 
   ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
 
-  ticket.canUpdate = canUpdateObject(ticket, reqSession);
+  ticket.canUpdate = canUpdateObject(ticket, requestSession);
 };
 
 
 const buildWhereClause = (queryOptions: GetParkingTicketsQueryOptions) => {
 
-  const sqlParams = [];
+  const sqlParameters: Array<number | string> = [];
 
   let sqlWhereClause = " where t.recordDelete_timeMillis is null";
 
-  if (queryOptions.hasOwnProperty("isResolved")) {
+  if (Object.prototype.hasOwnProperty.call(queryOptions, "isResolved")) {
 
-    if (queryOptions.isResolved) {
-      sqlWhereClause += " and t.resolvedDate is not null";
-    } else {
-      sqlWhereClause += " and t.resolvedDate is null";
-    }
+    sqlWhereClause += queryOptions.isResolved
+      ? " and t.resolvedDate is not null"
+      : " and t.resolvedDate is null";
   }
 
   if (queryOptions.ticketNumber && queryOptions.ticketNumber !== "") {
 
     const filter = getSplitWhereClauseFilter("t.ticketNumber", queryOptions.ticketNumber);
     sqlWhereClause += filter.sqlWhereClause;
-    sqlParams.push.apply(sqlParams, filter.sqlParams);
+    sqlParameters.push(...filter.sqlParams);
   }
 
   if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
 
     const filter = getSplitWhereClauseFilter("t.licencePlateNumber", queryOptions.licencePlateNumber);
     sqlWhereClause += filter.sqlWhereClause;
-    sqlParams.push.apply(sqlParams, filter.sqlParams);
+    sqlParameters.push(...filter.sqlParams);
   }
 
   if (queryOptions.licencePlateNumberEqual && queryOptions.licencePlateNumberEqual !== "") {
     sqlWhereClause += " and t.licencePlateNumber = ?";
-    sqlParams.push(queryOptions.licencePlateNumberEqual);
+    sqlParameters.push(queryOptions.licencePlateNumberEqual);
   }
 
   if (queryOptions.licencePlateProvince && queryOptions.licencePlateProvince !== "") {
     sqlWhereClause += " and t.licencePlateProvince = ?";
-    sqlParams.push(queryOptions.licencePlateProvince);
+    sqlParameters.push(queryOptions.licencePlateProvince);
   }
 
   if (queryOptions.licencePlateCountry && queryOptions.licencePlateCountry !== "") {
     sqlWhereClause += " and t.licencePlateCountry = ?";
-    sqlParams.push(queryOptions.licencePlateCountry);
+    sqlParameters.push(queryOptions.licencePlateCountry);
   }
 
   if (queryOptions.location && queryOptions.location !== "") {
@@ -86,21 +84,28 @@ const buildWhereClause = (queryOptions: GetParkingTicketsQueryOptions) => {
 
     for (const locationPiece of locationPieces) {
       sqlWhereClause += " and (instr(lower(t.locationDescription), ?) or instr(lower(l.locationName), ?))";
-      sqlParams.push(locationPiece);
-      sqlParams.push(locationPiece);
+      sqlParameters.push(locationPiece, locationPiece);
     }
   }
 
   return {
     sqlWhereClause,
-    sqlParams
+    sqlParams: sqlParameters
   };
 };
 
 
-export const getParkingTickets = (reqSession: expressSession.Session, queryOptions: GetParkingTicketsQueryOptions) => {
+interface GetParkingTicketsReturn {
+  count: number;
+  limit: number;
+  offset: number;
+  tickets: pts.ParkingTicket[];
+}
 
-  const db = sqlite(dbPath, {
+
+export const getParkingTickets = (requestSession: expressSession.Session, queryOptions: GetParkingTicketsQueryOptions): GetParkingTicketsReturn => {
+
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
@@ -110,7 +115,7 @@ export const getParkingTickets = (reqSession: expressSession.Session, queryOptio
 
   // get the count
 
-  const count = db.prepare("select ifnull(count(*), 0) as cnt" +
+  const count = database.prepare("select ifnull(count(*), 0) as cnt" +
     " from ParkingTickets t" +
     " left join ParkingLocations l on t.locationKey = l.locationKey" +
     sqlWhereClause.sqlWhereClause)
@@ -119,7 +124,7 @@ export const getParkingTickets = (reqSession: expressSession.Session, queryOptio
 
   // do query
 
-  const rows: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
+  const rows: pts.ParkingTicket[] = database.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
     " t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing," +
     " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
     " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
@@ -143,11 +148,11 @@ export const getParkingTickets = (reqSession: expressSession.Session, queryOptio
     " offset " + queryOptions.offset.toString())
     .all(sqlWhereClause.sqlParams);
 
-  db.close();
+  database.close();
 
-  rows.forEach((ticket) => {
-    addCalculatedFields(ticket, reqSession);
-  });
+  for (const ticket of rows) {
+    addCalculatedFields(ticket, requestSession);
+  }
 
   return {
     count,
@@ -160,9 +165,9 @@ export const getParkingTickets = (reqSession: expressSession.Session, queryOptio
 
 export const getParkingTicketsByLicencePlate =
   (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string,
-    reqSession: expressSession.Session) => {
+    requestSession: expressSession.Session): pts.ParkingTicket[] => {
 
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
       readonly: true
     });
 
@@ -172,7 +177,7 @@ export const getParkingTicketsByLicencePlate =
       licencePlateNumberEqual: licencePlateNumber
     });
 
-    const rows: pts.ParkingTicket[] = db.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
+    const rows: pts.ParkingTicket[] = database.prepare("select t.ticketID, t.ticketNumber, t.issueDate," +
       " t.vehicleMakeModel," +
       " t.locationKey, l.locationName, l.locationClassKey, t.locationDescription," +
       " t.parkingOffence, t.offenceAmount, t.resolvedDate," +
@@ -188,11 +193,11 @@ export const getParkingTicketsByLicencePlate =
       " order by t.issueDate desc, t.ticketNumber desc")
       .all(sqlWhereClause.sqlParams);
 
-    db.close();
+    database.close();
 
-    rows.forEach((ticket) => {
-      addCalculatedFields(ticket, reqSession);
-    });
+    for (const ticket of rows) {
+      addCalculatedFields(ticket, requestSession);
+    }
 
     return rows;
   };

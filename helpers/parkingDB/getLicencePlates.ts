@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import { getSplitWhereClauseFilter } from "../parkingDB.js";
 
@@ -15,16 +15,23 @@ export interface GetLicencePlatesQueryOptions {
   offset: number;
 }
 
+interface GetLicencePlatesReturn {
+  count: number;
+  limit: number;
+  offset: number;
+  licencePlates: pts.LicencePlate[];
+}
 
-export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => {
 
-  const db = sqlite(dbPath, {
+export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions): GetLicencePlatesReturn => {
+
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
   // build where clause
 
-  let sqlParams = [];
+  const sqlParameters = [];
 
   let sqlInnerWhereClause = " where recordDelete_timeMillis is null";
 
@@ -32,33 +39,27 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
 
     const filter = getSplitWhereClauseFilter("licencePlateNumber", queryOptions.licencePlateNumber);
     sqlInnerWhereClause += filter.sqlWhereClause;
-    sqlParams.push.apply(sqlParams, filter.sqlParams);
+    sqlParameters.push(...filter.sqlParams);
   }
 
-  sqlParams = sqlParams.concat(sqlParams);
+  sqlParameters.push(...sqlParameters);
 
   // build having clause
 
   let sqlHavingClause = " having 1 = 1";
 
-  if (queryOptions.hasOwnProperty("hasOwnerRecord")) {
+  if (Object.prototype.hasOwnProperty.call(queryOptions, "hasOwnerRecord")) {
 
-    if (queryOptions.hasOwnerRecord) {
-      sqlHavingClause += " and hasOwnerRecord = 1";
-    } else {
-      sqlHavingClause += " and hasOwnerRecord = 0";
-    }
-
+    sqlHavingClause += queryOptions.hasOwnerRecord
+      ? " and hasOwnerRecord = 1"
+      : " and hasOwnerRecord = 0";
   }
 
-  if (queryOptions.hasOwnProperty("hasUnresolvedTickets")) {
+  if (Object.prototype.hasOwnProperty.call(queryOptions, "hasUnresolvedTickets")) {
 
-    if (queryOptions.hasUnresolvedTickets) {
-      sqlHavingClause += " and unresolvedTicketCount > 0";
-    } else {
-      sqlHavingClause += " and unresolvedTicketCount = 0";
-    }
-
+    sqlHavingClause += queryOptions.hasUnresolvedTickets
+      ? " and unresolvedTicketCount > 0"
+      : " and unresolvedTicketCount = 0";
   }
 
   // get the count
@@ -85,20 +86,20 @@ export const getLicencePlates = (queryOptions: GetLicencePlatesQueryOptions) => 
     " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
     sqlHavingClause;
 
-  const count: number = db.prepare("select ifnull(count(*), 0) as cnt" +
+  const count: number = database.prepare("select ifnull(count(*), 0) as cnt" +
     " from (" + innerSql + ")")
-    .get(sqlParams)
+    .get(sqlParameters)
     .cnt;
 
   // do query
 
-  const rows: pts.LicencePlate[] = db.prepare(innerSql +
+  const rows: pts.LicencePlate[] = database.prepare(innerSql +
     " order by licencePlateNumber, licencePlateProvince, licencePlateCountry" +
     " limit " + queryOptions.limit.toString() +
     " offset " + queryOptions.offset.toString())
-    .all(sqlParams);
+    .all(sqlParameters);
 
-  db.close();
+  database.close();
 
   return {
     count,

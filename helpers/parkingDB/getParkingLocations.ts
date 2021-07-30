@@ -2,7 +2,7 @@ import sqlite from "better-sqlite3";
 
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
 export interface AddUpdateParkingLocationReturn {
@@ -12,19 +12,19 @@ export interface AddUpdateParkingLocationReturn {
 }
 
 
-export const getParkingLocations = () => {
+export const getParkingLocations = (): pts.ParkingLocation[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const rows: pts.ParkingLocation[] = db.prepare("select locationKey, locationName, locationClassKey" +
+  const rows: pts.ParkingLocation[] = database.prepare("select locationKey, locationName, locationClassKey" +
     " from ParkingLocations" +
     " where isActive = 1" +
     " order by orderNumber, locationName")
     .all();
 
-  db.close();
+  database.close();
 
   return rows;
 };

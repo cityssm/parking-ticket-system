@@ -1,27 +1,12 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as vehicleFunctions from "../functions.vehicle.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-const addCalculatedFields = (record) => {
-    record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
-    record.ticket_licencePlateExpiryDateString =
-        dateTimeFns.dateIntegerToString(record.ticket_licencePlateExpiryDate);
-    record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
-    record.owner_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.owner_licencePlateExpiryDate);
-    record.owner_vehicleMake = vehicleFunctions.getMakeFromNCIC(record.owner_vehicleNCIC);
-    record.dateDifference =
-        dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
-    record.isVehicleMakeMatch =
-        (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
-            (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
-    record.isLicencePlateExpiryDateMatch =
-        (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate);
-};
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const getOwnershipReconciliationRecords = () => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    const records = db.prepare("select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
+    const records = database.prepare("select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber," +
         " t.ticketID as ticket_ticketID," +
         " t.ticketNumber as ticket_ticketNumber," +
         " t.issueDate as ticket_issueDate," +
@@ -62,8 +47,22 @@ export const getOwnershipReconciliationRecords = () => {
             " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
             " and s.recordDelete_timeMillis is null)"))
         .all();
-    db.close();
-    records.forEach(addCalculatedFields);
+    database.close();
+    for (const record of records) {
+        record.ticket_issueDateString = dateTimeFns.dateIntegerToString(record.ticket_issueDate);
+        record.ticket_licencePlateExpiryDateString =
+            dateTimeFns.dateIntegerToString(record.ticket_licencePlateExpiryDate);
+        record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
+        record.owner_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.owner_licencePlateExpiryDate);
+        record.owner_vehicleMake = vehicleFunctions.getMakeFromNCIC(record.owner_vehicleNCIC);
+        record.dateDifference =
+            dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
+        record.isVehicleMakeMatch =
+            (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleMake.toLowerCase()) ||
+                (record.ticket_vehicleMakeModel.toLowerCase() === record.owner_vehicleNCIC.toLowerCase());
+        record.isLicencePlateExpiryDateMatch =
+            (record.ticket_licencePlateExpiryDate === record.owner_licencePlateExpiryDate);
+    }
     return records;
 };
 export default getOwnershipReconciliationRecords;

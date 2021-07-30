@@ -5,68 +5,66 @@ import * as configFunctions from "../functions.config.js";
 import * as vehicleFunctions from "../functions.vehicle.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
 export const getLicencePlateOwnerWithDB =
-  (db: sqlite.Database,
+  (database: sqlite.Database,
     licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string,
-    recordDateOrBefore: number) => {
+    recordDateOrBefore: number): pts.LicencePlateOwner => {
 
     const licencePlateCountryAlias =
       configFunctions.getProperty("licencePlateCountryAliases")[licencePlateCountry] || licencePlateCountry;
 
     const licencePlateProvinceAlias =
-      (configFunctions.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})
-      [licencePlateProvince] || licencePlateProvince;
+      (configFunctions.getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias] || {})[licencePlateProvince] || licencePlateProvince;
 
-    const possibleOwners: pts.LicencePlateOwner[] = db.prepare("select * from LicencePlateOwners" +
+    const possibleOwners: pts.LicencePlateOwner[] = database.prepare("select * from LicencePlateOwners" +
       " where recordDelete_timeMillis is null" +
       " and licencePlateNumber = ?" +
       " and recordDate >= ?" +
       " order by recordDate")
       .all(licencePlateNumber, recordDateOrBefore);
 
-    for (const possibleOwnerObj of possibleOwners) {
+    for (const possibleOwnerObject of possibleOwners) {
 
       const ownerPlateCountryAlias =
-        configFunctions.getProperty("licencePlateCountryAliases")[possibleOwnerObj.licencePlateCountry] ||
-        possibleOwnerObj.licencePlateCountry;
+        configFunctions.getProperty("licencePlateCountryAliases")[possibleOwnerObject.licencePlateCountry] ||
+        possibleOwnerObject.licencePlateCountry;
 
       const ownerPlateProvinceAlias =
-        (configFunctions.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})
-        [possibleOwnerObj.licencePlateProvince] || possibleOwnerObj.licencePlateProvince;
+        (configFunctions.getProperty("licencePlateProvinceAliases")[ownerPlateCountryAlias] || {})[possibleOwnerObject.licencePlateProvince] || possibleOwnerObject.licencePlateProvince;
 
       if (licencePlateCountryAlias === ownerPlateCountryAlias &&
         licencePlateProvinceAlias === ownerPlateProvinceAlias) {
 
-        possibleOwnerObj.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObj.recordDate);
+        possibleOwnerObject.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObject.recordDate);
 
-        possibleOwnerObj.licencePlateExpiryDateString =
-          dateTimeFns.dateIntegerToString(possibleOwnerObj.licencePlateExpiryDate);
+        possibleOwnerObject.licencePlateExpiryDateString =
+          dateTimeFns.dateIntegerToString(possibleOwnerObject.licencePlateExpiryDate);
 
-        possibleOwnerObj.vehicleMake = vehicleFunctions.getMakeFromNCIC(possibleOwnerObj.vehicleNCIC);
+        possibleOwnerObject.vehicleMake = vehicleFunctions.getMakeFromNCIC(possibleOwnerObject.vehicleNCIC);
 
-        return possibleOwnerObj;
+        return possibleOwnerObject;
       }
     }
 
-    return null;
+    return undefined;
   };
 
 
 export const getLicencePlateOwner =
   (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string,
-    recordDateOrBefore: number) => {
+    recordDateOrBefore: number): pts.LicencePlateOwner => {
 
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
       readonly: true
     });
 
     const ownerRecord =
-      getLicencePlateOwnerWithDB(db, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
+      getLicencePlateOwnerWithDB(database, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore);
 
-    db.close();
+    database.close();
 
     return ownerRecord;
 

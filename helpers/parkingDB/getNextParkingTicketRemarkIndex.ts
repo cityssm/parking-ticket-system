@@ -1,9 +1,9 @@
 import type * as sqlite from "better-sqlite3";
 
 
-export const getNextParkingTicketRemarkIndex = (db: sqlite.Database, ticketID: number) => {
+export const getNextParkingTicketRemarkIndex = (database: sqlite.Database, ticketID: number): number => {
 
-  const remarkIndexNew = (db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
+  const remarkIndexNew = (database.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
     " from ParkingTicketRemarks" +
     " where ticketID = ?")
     .get(ticketID)

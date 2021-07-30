@@ -1,11 +1,11 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const getUnreceivedLookupBatches = (includeUnlocked) => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    const batches = db.prepare("select b.batchID, b.batchDate, b.lockDate, b.sentDate, count(e.batchID) as batchEntryCount" +
+    const batches = database.prepare("select b.batchID, b.batchDate, b.lockDate, b.sentDate, count(e.batchID) as batchEntryCount" +
         " from LicencePlateLookupBatches b" +
         " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
         " where b.recordDelete_timeMillis is null" +
@@ -14,7 +14,7 @@ export const getUnreceivedLookupBatches = (includeUnlocked) => {
         " group by b.batchID, b.batchDate, b.lockDate, b.sentDate" +
         " order by b.batchID desc")
         .all();
-    db.close();
+    database.close();
     for (const batch of batches) {
         batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
         batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);

@@ -3,15 +3,16 @@ import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const getLastTenConvictionBatches = () => {
-  const db = sqlite(dbPath, {
+export const getLastTenConvictionBatches = (): pts.ParkingTicketConvictionBatch[] => {
+
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const batches: pts.ParkingTicketConvictionBatch[] = db
+  const batches: pts.ParkingTicketConvictionBatch[] = database
     .prepare(
       "select batchID, batchDate, lockDate, sentDate," +
       " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
@@ -22,7 +23,7 @@ export const getLastTenConvictionBatches = () => {
     )
     .all();
 
-  db.close();
+  database.close();
 
   for (const batch of batches) {
     batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);

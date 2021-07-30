@@ -1,34 +1,28 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 import { getSplitWhereClauseFilter } from "../parkingDB.js";
 export const getLicencePlates = (queryOptions) => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    let sqlParams = [];
+    const sqlParameters = [];
     let sqlInnerWhereClause = " where recordDelete_timeMillis is null";
     if (queryOptions.licencePlateNumber && queryOptions.licencePlateNumber !== "") {
         const filter = getSplitWhereClauseFilter("licencePlateNumber", queryOptions.licencePlateNumber);
         sqlInnerWhereClause += filter.sqlWhereClause;
-        sqlParams.push.apply(sqlParams, filter.sqlParams);
+        sqlParameters.push(...filter.sqlParams);
     }
-    sqlParams = sqlParams.concat(sqlParams);
+    sqlParameters.push(...sqlParameters);
     let sqlHavingClause = " having 1 = 1";
-    if (queryOptions.hasOwnProperty("hasOwnerRecord")) {
-        if (queryOptions.hasOwnerRecord) {
-            sqlHavingClause += " and hasOwnerRecord = 1";
-        }
-        else {
-            sqlHavingClause += " and hasOwnerRecord = 0";
-        }
+    if (Object.prototype.hasOwnProperty.call(queryOptions, "hasOwnerRecord")) {
+        sqlHavingClause += queryOptions.hasOwnerRecord
+            ? " and hasOwnerRecord = 1"
+            : " and hasOwnerRecord = 0";
     }
-    if (queryOptions.hasOwnProperty("hasUnresolvedTickets")) {
-        if (queryOptions.hasUnresolvedTickets) {
-            sqlHavingClause += " and unresolvedTicketCount > 0";
-        }
-        else {
-            sqlHavingClause += " and unresolvedTicketCount = 0";
-        }
+    if (Object.prototype.hasOwnProperty.call(queryOptions, "hasUnresolvedTickets")) {
+        sqlHavingClause += queryOptions.hasUnresolvedTickets
+            ? " and unresolvedTicketCount > 0"
+            : " and unresolvedTicketCount = 0";
     }
     const innerSql = "select licencePlateCountry, licencePlateProvince, licencePlateNumber," +
         " sum(unresolvedTicketCountInternal) as unresolvedTicketCount," +
@@ -47,16 +41,16 @@ export const getLicencePlates = (queryOptions) => {
         ")" +
         " group by licencePlateCountry, licencePlateProvince, licencePlateNumber" +
         sqlHavingClause;
-    const count = db.prepare("select ifnull(count(*), 0) as cnt" +
+    const count = database.prepare("select ifnull(count(*), 0) as cnt" +
         " from (" + innerSql + ")")
-        .get(sqlParams)
+        .get(sqlParameters)
         .cnt;
-    const rows = db.prepare(innerSql +
+    const rows = database.prepare(innerSql +
         " order by licencePlateNumber, licencePlateProvince, licencePlateCountry" +
         " limit " + queryOptions.limit.toString() +
         " offset " + queryOptions.offset.toString())
-        .all(sqlParams);
-    db.close();
+        .all(sqlParameters);
+    database.close();
     return {
         count,
         limit: queryOptions.limit,

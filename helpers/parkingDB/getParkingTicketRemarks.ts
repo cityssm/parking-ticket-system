@@ -5,41 +5,42 @@ import type * as pts from "../../types/recordTypes";
 
 import { canUpdateObject } from "../parkingDB.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
-export const getParkingTicketRemarksWithDB = (db: sqlite.Database, ticketID: number, reqSession: expressSession.Session) => {
+export const getParkingTicketRemarksWithDB =
+   (database: sqlite.Database, ticketID: number, requestSession: expressSession.Session): pts.ParkingTicketRemark[] => {
 
-  const remarkRows: pts.ParkingTicketRemark[] =
-    db.prepare("select * from ParkingTicketRemarks" +
-      " where recordDelete_timeMillis is null" +
-      " and ticketID = ?" +
-      " order by remarkDate desc, remarkTime desc, remarkIndex desc")
-      .all(ticketID);
+    const remarkRows: pts.ParkingTicketRemark[] =
+      database.prepare("select * from ParkingTicketRemarks" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?" +
+        " order by remarkDate desc, remarkTime desc, remarkIndex desc")
+        .all(ticketID);
 
-  for (const remark of remarkRows) {
+    for (const remark of remarkRows) {
 
-    remark.recordType = "remark";
+      remark.recordType = "remark";
 
-    remark.remarkDateString = dateTimeFns.dateIntegerToString(remark.remarkDate);
-    remark.remarkTimeString = dateTimeFns.timeIntegerToString(remark.remarkTime);
+      remark.remarkDateString = dateTimeFns.dateIntegerToString(remark.remarkDate);
+      remark.remarkTimeString = dateTimeFns.timeIntegerToString(remark.remarkTime);
 
-    remark.canUpdate = canUpdateObject(remark, reqSession);
-  }
+      remark.canUpdate = canUpdateObject(remark, requestSession);
+    }
 
-  return remarkRows;
-};
+    return remarkRows;
+  };
 
 
-export const getParkingTicketRemarks = (ticketID: number, reqSession: expressSession.Session) => {
+export const getParkingTicketRemarks = (ticketID: number, requestSession: expressSession.Session): pts.ParkingTicketRemark[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const remarkRows = getParkingTicketRemarksWithDB(db, ticketID, reqSession);
+  const remarkRows = getParkingTicketRemarksWithDB(database, ticketID, requestSession);
 
   return remarkRows;
 };

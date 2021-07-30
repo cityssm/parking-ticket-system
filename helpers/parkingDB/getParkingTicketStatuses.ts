@@ -5,46 +5,48 @@ import type * as pts from "../../types/recordTypes";
 
 import { canUpdateObject } from "../parkingDB.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
-export const getParkingTicketStatusesWithDB = (db: sqlite.Database, ticketID: number, reqSession: expressSession.Session) => {
+export const getParkingTicketStatusesWithDB =
+  (database: sqlite.Database, ticketID: number, requestSession: expressSession.Session): pts.ParkingTicketStatusLog[] => {
 
-  const statusRows: pts.ParkingTicketStatusLog[] =
-    db.prepare("select * from ParkingTicketStatusLog" +
-      " where recordDelete_timeMillis is null" +
-      " and ticketID = ?" +
-      " order by statusDate desc, statusTime desc, statusIndex desc")
-      .all(ticketID);
+    const statusRows: pts.ParkingTicketStatusLog[] =
+      database.prepare("select * from ParkingTicketStatusLog" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?" +
+        " order by statusDate desc, statusTime desc, statusIndex desc")
+        .all(ticketID);
 
-  for (const status of statusRows) {
+    for (const status of statusRows) {
 
-    status.recordType = "status";
+      status.recordType = "status";
 
-    status.statusDateString = dateTimeFns.dateIntegerToString(status.statusDate);
-    status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime);
+      status.statusDateString = dateTimeFns.dateIntegerToString(status.statusDate);
+      status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime);
 
-    status.canUpdate = canUpdateObject(status, reqSession);
-  }
+      status.canUpdate = canUpdateObject(status, requestSession);
+    }
 
-  return statusRows;
-};
+    return statusRows;
+  };
 
 
-export const getParkingTicketStatuses = (ticketID: number, reqSession: expressSession.Session) => {
+export const getParkingTicketStatuses =
+  (ticketID: number, requestSession: expressSession.Session): pts.ParkingTicketStatusLog[] => {
 
-  const db = sqlite(dbPath, {
-    readonly: true
-  });
+    const database = sqlite(databasePath, {
+      readonly: true
+    });
 
-  const statusRows = getParkingTicketStatusesWithDB(db, ticketID, reqSession);
+    const statusRows = getParkingTicketStatusesWithDB(database, ticketID, requestSession);
 
-  db.close();
+    database.close();
 
-  return statusRows;
-};
+    return statusRows;
+  };
 
 
 export default getParkingTicketStatuses;

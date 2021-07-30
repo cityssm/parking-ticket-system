@@ -11,11 +11,12 @@ export interface GetParkingTicketsQueryOptions {
     limit?: number;
     offset?: number;
 }
-export declare const getParkingTickets: (reqSession: expressSession.Session, queryOptions: GetParkingTicketsQueryOptions) => {
-    count: any;
+interface GetParkingTicketsReturn {
+    count: number;
     limit: number;
     offset: number;
     tickets: pts.ParkingTicket[];
-};
-export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, reqSession: expressSession.Session) => pts.ParkingTicket[];
+}
+export declare const getParkingTickets: (requestSession: expressSession.Session, queryOptions: GetParkingTicketsQueryOptions) => GetParkingTicketsReturn;
+export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, requestSession: expressSession.Session) => pts.ParkingTicket[];
 export default getParkingTickets;

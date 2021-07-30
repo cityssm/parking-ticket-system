@@ -1,15 +1,15 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const getUnacknowledgedLookupErrorLog = (batchID_or_negOne, logIndex_or_negOne) => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    let params = [];
+    let parameters = [];
     if (batchID_or_negOne !== -1 && logIndex_or_negOne !== -1) {
-        params = [batchID_or_negOne, logIndex_or_negOne];
+        parameters = [batchID_or_negOne, logIndex_or_negOne];
     }
-    const logEntries = db.prepare("select l.batchID, l.logIndex," +
+    const logEntries = database.prepare("select l.batchID, l.logIndex," +
         " l.licencePlateCountry, l.licencePlateProvince, l.licencePlateNumber, l.recordDate," +
         " l.errorCode, l.errorMessage," +
         " e.ticketID, t.ticketNumber, t.issueDate, t.vehicleMakeModel" +
@@ -31,9 +31,9 @@ export const getUnacknowledgedLookupErrorLog = (batchID_or_negOne, logIndex_or_n
             " and t.resolvedDate is null") +
         " where l.recordDelete_timeMillis is null" +
         " and l.isAcknowledged = 0" +
-        (params.length > 0 ? " and l.batchID = ? and l.logIndex = ?" : ""))
-        .all(params);
-    db.close();
+        (parameters.length > 0 ? " and l.batchID = ? and l.logIndex = ?" : ""))
+        .all(parameters);
+    database.close();
     for (const logEntry of logEntries) {
         logEntry.recordDateString = dateTimeFns.dateIntegerToString(logEntry.recordDate);
         logEntry.issueDateString = dateTimeFns.dateIntegerToString(logEntry.issueDate);

@@ -1,5 +1,5 @@
-export const getNextParkingTicketRemarkIndex = (db, ticketID) => {
-    const remarkIndexNew = db.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
+export const getNextParkingTicketRemarkIndex = (database, ticketID) => {
+    const remarkIndexNew = database.prepare("select ifnull(max(remarkIndex), 0) as remarkIndexMax" +
         " from ParkingTicketRemarks" +
         " where ticketID = ?")
         .get(ticketID)

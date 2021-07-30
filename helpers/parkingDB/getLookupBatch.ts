@@ -3,7 +3,7 @@ import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
 export interface LookupBatchReturn {
@@ -13,9 +13,9 @@ export interface LookupBatchReturn {
 }
 
 
-export const getLookupBatch = (batchID_or_negOne: number) => {
+export const getLookupBatch = (batchID_or_negOne: number): pts.LicencePlateLookupBatch => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
@@ -24,26 +24,19 @@ export const getLookupBatch = (batchID_or_negOne: number) => {
     " from LicencePlateLookupBatches" +
     " where recordDelete_timeMillis is null";
 
-  let batch: pts.LicencePlateLookupBatch;
-
-  if (batchID_or_negOne === -1) {
-
-    batch = db.prepare(baseBatchSQL +
+  const batch: pts.LicencePlateLookupBatch = batchID_or_negOne === -1
+    ? database.prepare(baseBatchSQL +
       " and lockDate is null" +
       " order by batchID desc" +
       " limit 1")
-      .get();
-
-  } else {
-
-    batch = db.prepare(baseBatchSQL +
+      .get()
+    : database.prepare(baseBatchSQL +
       " and batchID = ?")
       .get(batchID_or_negOne);
-  }
 
   if (!batch) {
-    db.close();
-    return null;
+    database.close();
+    return undefined;
   }
 
   batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
@@ -51,7 +44,7 @@ export const getLookupBatch = (batchID_or_negOne: number) => {
   batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
   batch.receivedDateString = dateTimeFns.dateIntegerToString(batch.receivedDate);
 
-  batch.batchEntries = db.prepare("select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
+  batch.batchEntries = database.prepare("select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
     " e.ticketID, t.ticketNumber, t.issueDate" +
     " from LicencePlateLookupBatchEntries e" +
     " left join ParkingTickets t on e.ticketID = t.ticketID" +
@@ -59,7 +52,7 @@ export const getLookupBatch = (batchID_or_negOne: number) => {
     " order by e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber")
     .all(batch.batchID);
 
-  db.close();
+  database.close();
 
   return batch;
 };

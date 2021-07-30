@@ -6,10 +6,11 @@ export interface GetLicencePlatesQueryOptions {
     limit: number;
     offset: number;
 }
-export declare const getLicencePlates: (queryOptions: GetLicencePlatesQueryOptions) => {
+interface GetLicencePlatesReturn {
     count: number;
     limit: number;
     offset: number;
     licencePlates: pts.LicencePlate[];
-};
+}
+export declare const getLicencePlates: (queryOptions: GetLicencePlatesQueryOptions) => GetLicencePlatesReturn;
 export default getLicencePlates;

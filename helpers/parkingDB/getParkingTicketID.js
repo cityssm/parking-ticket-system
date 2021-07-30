@@ -1,20 +1,20 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const getParkingTicketID = (ticketNumber) => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    const ticketRow = db.prepare("select ticketID" +
+    const ticketRow = database.prepare("select ticketID" +
         " from ParkingTickets" +
         " where ticketNumber = ?" +
         " and recordDelete_timeMillis is null" +
         " order by ticketID desc" +
         " limit 1")
         .get(ticketNumber);
-    db.close();
+    database.close();
     if (ticketRow) {
         return ticketRow.ticketID;
     }
-    return null;
+    return undefined;
 };
 export default getParkingTicketID;

@@ -4,17 +4,17 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as vehicleFunctions from "../functions.vehicle.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
 export const getAllLicencePlateOwners =
-  (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) => {
+  (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string): pts.LicencePlateOwner[] => {
 
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
       readonly: true
     });
 
-    const owners: pts.LicencePlateOwner[] = db.prepare("select recordDate, vehicleNCIC, vehicleYear, vehicleColor," +
+    const owners: pts.LicencePlateOwner[] = database.prepare("select recordDate, vehicleNCIC, vehicleYear, vehicleColor," +
       " ownerName1, ownerName2, ownerAddress, ownerCity, ownerProvince, ownerPostalCode" +
       " from LicencePlateOwners" +
       " where recordDelete_timeMillis is null" +
@@ -24,7 +24,7 @@ export const getAllLicencePlateOwners =
       " order by recordDate desc")
       .all(licencePlateCountry, licencePlateProvince, licencePlateNumber);
 
-    db.close();
+    database.close();
 
     for (const owner of owners) {
       owner.recordDateString = dateTimeFns.dateIntegerToString(owner.recordDate);

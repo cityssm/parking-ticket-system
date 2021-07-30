@@ -1,11 +1,12 @@
-export declare const getDatabaseCleanupCounts: () => {
+interface GetDatabaseCleanupCountsReturn {
     recordDelete_timeMillis: number;
-    parkingTickets: any;
-    parkingTicketStatusLog: any;
-    parkingTicketRemarks: any;
-    licencePlateOwners: any;
-    parkingLocations: any;
-    parkingBylaws: any;
-    parkingOffences: any;
-};
+    parkingTickets: number;
+    parkingTicketStatusLog: number;
+    parkingTicketRemarks: number;
+    licencePlateOwners: number;
+    parkingLocations: number;
+    parkingBylaws: number;
+    parkingOffences: number;
+}
+export declare const getDatabaseCleanupCounts: () => GetDatabaseCleanupCountsReturn;
 export default getDatabaseCleanupCounts;

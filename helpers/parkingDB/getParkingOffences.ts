@@ -2,7 +2,7 @@ import sqlite from "better-sqlite3";
 
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
 export interface AddUpdateParkingOffenceReturn {
@@ -12,13 +12,13 @@ export interface AddUpdateParkingOffenceReturn {
 }
 
 
-export const getParkingOffences = () => {
+export const getParkingOffences = (): pts.ParkingOffence[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const rows: pts.ParkingOffence[] = db.prepare(
+  const rows: pts.ParkingOffence[] = database.prepare(
     "select o.bylawNumber, o.locationKey, o.parkingOffence," +
     " o.offenceAmount, o.discountOffenceAmount, o.discountDays, o.accountNumber" +
     " from ParkingOffences o" +
@@ -28,19 +28,19 @@ export const getParkingOffences = () => {
     " order by o.bylawNumber, l.locationName")
     .all();
 
-  db.close();
+  database.close();
 
   return rows;
 };
 
 
-export const getParkingOffencesByLocationKey = (locationKey: string) => {
+export const getParkingOffencesByLocationKey = (locationKey: string): pts.ParkingOffence[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const rows: pts.ParkingOffence[] = db.prepare("select o.bylawNumber, b.bylawDescription," +
+  const rows: pts.ParkingOffence[] = database.prepare("select o.bylawNumber, b.bylawDescription," +
     " o.parkingOffence, o.offenceAmount, o.discountOffenceAmount, o.discountDays" +
     " from ParkingOffences o" +
     " left join ParkingBylaws b on o.bylawNumber = b.bylawNumber" +
@@ -49,7 +49,7 @@ export const getParkingOffencesByLocationKey = (locationKey: string) => {
     " order by b.orderNumber, b.bylawNumber")
     .all(locationKey);
 
-  db.close();
+  database.close();
 
   return rows;
 };
