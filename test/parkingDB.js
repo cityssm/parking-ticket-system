@@ -112,7 +112,7 @@ describe("helpers/parkingDB", () => {
         });
         it("should execute getLookupBatch()", () => {
             const batch = parkingDB_getLookupBatch.getLookupBatch(-1);
-            assert.ok(batch === undefined || batch.lockDate === undefined);
+            assert.ok(!batch || !batch.lockDate);
         });
         it("should execute getOwnershipReconciliationRecords()", () => {
             assert.ok(parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords());

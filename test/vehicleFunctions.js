@@ -12,11 +12,9 @@ describe("helpers/vehicleFunctions", () => {
         });
     });
     describe("#getModelsByMake", () => {
-        it("should return results for \"Chevrolet\"", (done) => {
-            vehicleFunctions.getModelsByMake("Chevrolet", (makeModelResults) => {
-                assert.notEqual(makeModelResults.length, 0);
-                done();
-            });
+        it("should return results for \"Chevrolet\"", async () => {
+            const makeModelResults = await vehicleFunctions.getModelsByMake("Chevrolet");
+            assert.notEqual(makeModelResults.length, 0);
         });
     });
     describe("#isNCICExclusivelyTrailer", () => {

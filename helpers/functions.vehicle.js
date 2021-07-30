@@ -1,8 +1,9 @@
 import sqlite from "better-sqlite3";
-import fetch from "node-fetch";
+import nhtsa from "@shaggytools/nhtsa-api-wrapper";
 import * as ncic from "../data/ncicCodes.js";
 import { trailerNCIC } from "../data/ncicCodes/trailer.js";
-const nhtsaApiURL = "https://vpic.nhtsa.dot.gov/api/vehicles/";
+const { GetModelsForMake } = nhtsa;
+const nhtsaGetModelsForMake = new GetModelsForMake();
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
 const databasePath = "data/nhtsa.db";
 const getModelsByMakeFromDB = (makeSearchString, database) => {
@@ -50,8 +51,7 @@ export const getModelsByMake = async (makeSearchStringOriginal) => {
             .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis);
     }
     if (useAPI) {
-        const data = await fetch(nhtsaApiURL + "getmodelsformake/" + encodeURIComponent(makeSearchString) + "?format=json")
-            .then(async (response) => await response.json());
+        const data = await nhtsaGetModelsForMake.GetModelsForMake(makeSearchString);
         database.prepare("update MakeModelSearchHistory" +
             " set resultCount = ?" +
             "where searchString = ?")

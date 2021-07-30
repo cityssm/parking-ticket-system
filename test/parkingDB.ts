@@ -169,7 +169,7 @@ describe("helpers/parkingDB", () => {
 
       const batch = parkingDB_getLookupBatch.getLookupBatch(-1);
 
-      assert.ok(batch === undefined || batch.lockDate === undefined);
+      assert.ok(!batch || !batch.lockDate);
     });
 
     it("should execute getOwnershipReconciliationRecords()", () => {
