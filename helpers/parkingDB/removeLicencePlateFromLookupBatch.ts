@@ -8,7 +8,7 @@ import type * as expressSession from "express-session";
 
 
 export const removeLicencePlateFromLookupBatch =
-  (requestBody: pts.LicencePlateLookupBatchEntry, requestSession: expressSession.Session): { success: boolean; message?: string; } => {
+  (requestBody: pts.LicencePlateLookupBatchEntry, requestSession: expressSession.Session): { success: boolean; message?: string } => {
 
     const database = sqlite(databasePath);
 

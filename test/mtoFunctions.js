@@ -23,7 +23,7 @@ describe("helpers/mtoFunctions", () => {
         const currentDateEightDigits = (currentDate.getFullYear() * 10000) +
             ((currentDate.getMonth() + 1) * 100) +
             currentDate.getDate();
-        const currentDateSixDigits = parseInt(currentDateEightDigits.toString().slice(-6), 10);
+        const currentDateSixDigits = Number.parseInt(currentDateEightDigits.toString().slice(-6), 10);
         it("should convert " + currentDateSixDigits.toString() + " to " + currentDateEightDigits.toString(), () => {
             assert.strictEqual(mtoFunctions.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
         });

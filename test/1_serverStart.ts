@@ -3,7 +3,7 @@ import * as assert from "assert";
 import puppeteer from "puppeteer";
 
 import * as http from "http";
-import app from "../app.js";
+import { app } from "../app.js";
 
 import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets.js";
 
@@ -26,7 +26,7 @@ describe("parking-ticket-system", () => {
 
   let password = "";
 
-  before(() => {
+  before(async() => {
 
     httpServer.listen(portNumber);
 
@@ -37,7 +37,7 @@ describe("parking-ticket-system", () => {
     // ensure the test user is not active
     inactivateUser(userName);
 
-    password = createUser({
+    password = await createUser({
       userName,
       firstName: "Test",
       lastName: "User"
@@ -74,7 +74,7 @@ describe("parking-ticket-system", () => {
 
     try {
       httpServer.close();
-    } catch (_e) {
+    } catch {
       // ignore
     }
   });
@@ -142,9 +142,9 @@ describe("parking-ticket-system", () => {
           await page.focus("#login--password");
           await page.type("#login--password", password);
 
-          const loginFormEle = await page.$("#form--login");
-          await loginFormEle.evaluate((formEle: HTMLFormElement) => {
-            formEle.submit();
+          const loginFormElement = await page.$("#form--login");
+          await loginFormElement.evaluate((formElement: HTMLFormElement) => {
+            formElement.submit();
           });
 
           await page.waitForNavigation();

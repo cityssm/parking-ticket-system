@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import puppeteer from "puppeteer";
 import * as http from "http";
-import app from "../app.js";
+import { app } from "../app.js";
 import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets.js";
 import { getAllUsers } from "../helpers/usersDB/getAllUsers.js";
 import { createUser } from "../helpers/usersDB/createUser.js";
@@ -14,13 +14,13 @@ describe("parking-ticket-system", () => {
     const portNumber = 54333;
     let serverStarted = false;
     let password = "";
-    before(() => {
+    before(async () => {
         httpServer.listen(portNumber);
         httpServer.on("listening", () => {
             serverStarted = true;
         });
         inactivateUser(userName);
-        password = createUser({
+        password = await createUser({
             userName,
             firstName: "Test",
             lastName: "User"
@@ -51,7 +51,7 @@ describe("parking-ticket-system", () => {
         try {
             httpServer.close();
         }
-        catch (_e) {
+        catch {
         }
     });
     it("should start server starts on port " + portNumber.toString(), () => {
@@ -95,9 +95,9 @@ describe("parking-ticket-system", () => {
                     await page.type("#login--userName", userName);
                     await page.focus("#login--password");
                     await page.type("#login--password", password);
-                    const loginFormEle = await page.$("#form--login");
-                    await loginFormEle.evaluate((formEle) => {
-                        formEle.submit();
+                    const loginFormElement = await page.$("#form--login");
+                    await loginFormElement.evaluate((formElement) => {
+                        formElement.submit();
                     });
                     await page.waitForNavigation();
                     await page.goto(appURL + pageURLs.goto);

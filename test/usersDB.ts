@@ -21,11 +21,11 @@ describe("helpers/usersDB", () => {
 
   let password: string;
 
-  before(() => {
+  before(async () => {
     initializeDatabase();
     usersDB_inactivateUser.inactivateUser(userName);
 
-    password = usersDB_createUser.createUser({
+    password = await usersDB_createUser.createUser({
       userName,
       firstName: "Test",
       lastName: "User"
@@ -60,12 +60,12 @@ describe("helpers/usersDB", () => {
     usersDB_inactivateUser.inactivateUser(userName);
   });
 
-  it("should execute getUser() successfully", () => {
-    assert.equal(usersDB_getUser.getUser(userName, password).userName, userName);
+  it("should execute getUser() successfully", async () => {
+    assert.equal((await usersDB_getUser.getUser(userName, password)).userName, userName);
   });
 
-  it("should execute getUser() unsuccessfully", () => {
-    assert.equal(usersDB_getUser.getUser(userName, password + "_"), null);
+  it("should execute getUser() unsuccessfully", async () => {
+    assert.equal(await usersDB_getUser.getUser(userName, password + "_"), undefined);
   });
 
   it("should execute getAllUsers()", () => {
@@ -77,7 +77,7 @@ describe("helpers/usersDB", () => {
       userName,
       firstName: "Test",
       lastName: "Rename"
-    }) > 0);
+    }));
   });
 
   it("getUserProperties().canCreate => true", () => {
@@ -88,27 +88,27 @@ describe("helpers/usersDB", () => {
     assert.equal(usersDB_getUserProperties.getUserProperties(userName).isAdmin, false);
   });
 
-  it("should execute tryResetPassword() successfully", () => {
+  it("should execute tryResetPassword() successfully", async () => {
     const oldPassword = password;
     password = stringFns.generatePassword();
 
-    const results = usersDB_tryResetPassword.tryResetPassword(userName, oldPassword, password);
+    const results = await usersDB_tryResetPassword.tryResetPassword(userName, oldPassword, password);
 
     assert.equal(results.success, true);
   });
 
-  it("should execute tryResetPassword() unsuccessfully", () => {
+  it("should execute tryResetPassword() unsuccessfully", async () => {
 
     const newPassword = stringFns.generatePassword();
 
-    const results = usersDB_tryResetPassword.tryResetPassword(userName, password + "_", newPassword);
+    const results = await usersDB_tryResetPassword.tryResetPassword(userName, password + "_", newPassword);
 
     assert.equal(results.success, false);
   });
 
-  it("should execute generateNewPassword()", () => {
+  it("should execute generateNewPassword()", async () => {
     const oldPassword = password;
-    password = usersDB_generateNewPassword.generateNewPassword(userName);
+    password = await usersDB_generateNewPassword.generateNewPassword(userName);
     assert.notEqual(password, oldPassword);
   });
 

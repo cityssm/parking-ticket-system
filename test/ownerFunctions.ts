@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/numeric-separators-style */
+
 import * as assert from "assert";
 
 import * as ownerFunctions from "../helpers/functions.owner.js";

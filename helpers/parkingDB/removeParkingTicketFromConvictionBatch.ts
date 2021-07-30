@@ -11,7 +11,7 @@ export const removeParkingTicketFromConvictionBatch = (
   batchID: number,
   ticketID: number,
   requestSession: expressSession.Session
-): { success: boolean; message?: string; } => {
+): { success: boolean; message?: string } => {
 
   const database = sqlite(databasePath);
 
