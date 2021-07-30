@@ -1,9 +1,9 @@
 import type * as sqlite from "better-sqlite3";
 
 
-export const canParkingTicketBeAddedToConvictionBatch = (db: sqlite.Database, ticketID: number) => {
+export const canParkingTicketBeAddedToConvictionBatch = (database: sqlite.Database, ticketID: number): boolean => {
 
-  const check = db
+  const check = database
     .prepare(
       "select resolvedDate from ParkingTickets" +
       " where ticketID = ?" +

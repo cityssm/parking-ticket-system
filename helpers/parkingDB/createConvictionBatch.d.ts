@@ -1,17 +1,7 @@
-/// <reference types="integer" />
 import type * as expressSession from "express-session";
-export declare const createConvictionBatch: (reqSession: expressSession.Session) => {
+import type * as recordTypes from "../../types/recordTypes";
+export declare const createConvictionBatch: (requestSession: expressSession.Session) => {
     success: boolean;
-    batch: {
-        batchID: import("integer").IntLike;
-        batchDate: number;
-        batchDateString: string;
-        lockDate: any;
-        lockDateString: string;
-        batchEntries: any[];
-    };
-} | {
-    success: boolean;
-    batch?: undefined;
+    batch?: recordTypes.LicencePlateLookupBatch;
 };
 export default createConvictionBatch;

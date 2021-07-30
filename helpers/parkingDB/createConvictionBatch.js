@@ -1,30 +1,29 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const createConvictionBatch = (reqSession) => {
-    const db = sqlite(dbPath);
+import { intLikeToNumber } from "../functions.database.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const createConvictionBatch = (requestSession) => {
+    const database = sqlite(databasePath);
     const rightNow = new Date();
-    const info = db
+    const info = database
         .prepare("insert into ParkingTicketConvictionBatches" +
         " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
         " values (?, ?, ?, ?, ?)")
-        .run(dateTimeFns.dateToInteger(rightNow), reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime());
-    db.close();
-    if (info.changes > 0) {
-        return {
+        .run(dateTimeFns.dateToInteger(rightNow), requestSession.user.userName, rightNow.getTime(), requestSession.user.userName, rightNow.getTime());
+    database.close();
+    return info.changes > 0
+        ? {
             success: true,
             batch: {
-                batchID: info.lastInsertRowid,
+                recordType: "batch",
+                batchID: intLikeToNumber(info.lastInsertRowid),
                 batchDate: dateTimeFns.dateToInteger(rightNow),
                 batchDateString: dateTimeFns.dateToString(rightNow),
-                lockDate: null,
+                lockDate: undefined,
                 lockDateString: "",
                 batchEntries: []
             }
-        };
-    }
-    else {
-        return { success: false };
-    }
+        }
+        : { success: false };
 };
 export default createConvictionBatch;

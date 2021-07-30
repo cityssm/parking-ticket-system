@@ -1,5 +1,5 @@
 export interface Record {
-    recordType: "ticket" | "remark" | "status" | "owner";
+    recordType: "ticket" | "remark" | "status" | "owner" | "batch";
     recordCreate_userName?: string;
     recordCreate_timeMillis?: number;
     recordUpdate_userName?: string;
@@ -119,28 +119,30 @@ export interface LicencePlateOwner extends Record, LicencePlate {
     driverLicenceNumber: string;
 }
 export interface LicencePlateLookupBatch extends Record {
+    recordType: "batch";
     batchID: number;
     batchDate: number;
     batchDateString: string;
-    lockDate: number;
-    lockDateString: string;
-    sentDate: number;
-    sentDateString: string;
-    receivedDate: number;
-    receivedDateString: string;
+    lockDate?: number;
+    lockDateString?: string;
+    sentDate?: number;
+    sentDateString?: string;
+    receivedDate?: number;
+    receivedDateString?: string;
     batchEntries: LicencePlateLookupBatchEntry[];
 }
 export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {
     batchID: number;
 }
 export interface ParkingTicketConvictionBatch extends Record {
+    recordType: "batch";
     batchID: number;
     batchDate: number;
     batchDateString: string;
     lockDate: number;
     lockDateString: string;
-    sentDate: number;
-    sentDateString: string;
+    sentDate?: number;
+    sentDateString?: string;
     batchEntries?: ParkingTicketStatusLog[];
 }
 export interface NHTSAMakeModel {

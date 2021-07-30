@@ -3,45 +3,52 @@ import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type * as pts from "../../types/recordTypes";
 
-import getNextParkingTicketStatusIndex from "./getNextParkingTicketStatusIndex.js";
+import { getNextParkingTicketStatusIndex } from "./getNextParkingTicketStatusIndex.js";
 import { resolveParkingTicketWithDB } from "./resolveParkingTicket.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
+interface CreateParkingTicketStatusReturn {
+  success: boolean;
+  statusIndex?: number;
+}
+
+
 export const createParkingTicketStatusWithDB =
-  (db: sqlite.Database, reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: expressSession.Session, resolveTicket: boolean) => {
+  (database: sqlite.Database,
+    requestBodyOrObject: pts.ParkingTicketStatusLog, requestSession: expressSession.Session, resolveTicket: boolean): CreateParkingTicketStatusReturn => {
 
     // Get new status index
 
-    const statusIndexNew = getNextParkingTicketStatusIndex(db, reqBodyOrObj.ticketID);
+    const statusIndexNew = getNextParkingTicketStatusIndex(database, requestBodyOrObject.ticketID);
 
     // Create the record
 
     const rightNow = new Date();
 
-    const info = db.prepare("insert into ParkingTicketStatusLog" +
+    const info = database.prepare("insert into ParkingTicketStatusLog" +
       " (ticketID, statusIndex, statusDate, statusTime, statusKey," +
       " statusField, statusField2, statusNote," +
       " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
       " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-      .run(reqBodyOrObj.ticketID,
+      .run(requestBodyOrObject.ticketID,
         statusIndexNew,
         dateTimeFns.dateToInteger(rightNow),
         dateTimeFns.dateToTimeInteger(rightNow),
-        reqBodyOrObj.statusKey,
-        reqBodyOrObj.statusField,
-        reqBodyOrObj.statusField2,
-        reqBodyOrObj.statusNote,
-        reqSession.user.userName,
+        requestBodyOrObject.statusKey,
+        requestBodyOrObject.statusField,
+        requestBodyOrObject.statusField2,
+        requestBodyOrObject.statusNote,
+        requestSession.user.userName,
         rightNow.getTime(),
-        reqSession.user.userName,
+        requestSession.user.userName,
         rightNow.getTime());
 
     if (info.changes > 0 && resolveTicket) {
-      resolveParkingTicketWithDB(db, reqBodyOrObj.ticketID, reqSession);
+      resolveParkingTicketWithDB(database, requestBodyOrObject.ticketID, requestSession);
     }
 
     return {
@@ -52,13 +59,13 @@ export const createParkingTicketStatusWithDB =
 
 
 export const createParkingTicketStatus =
-  (reqBodyOrObj: pts.ParkingTicketStatusLog, reqSession: expressSession.Session, resolveTicket: boolean) => {
+  (requestBodyOrObject: pts.ParkingTicketStatusLog, requestSession: expressSession.Session, resolveTicket: boolean): CreateParkingTicketStatusReturn => {
 
-    const db = sqlite(dbPath);
+    const database = sqlite(databasePath);
 
-    const result = createParkingTicketStatusWithDB(db, reqBodyOrObj, reqSession, resolveTicket);
+    const result = createParkingTicketStatusWithDB(database, requestBodyOrObject, requestSession, resolveTicket);
 
-    db.close();
+    database.close();
 
     return result;
   };

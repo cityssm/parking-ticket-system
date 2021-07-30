@@ -2,43 +2,42 @@ import sqlite from "better-sqlite3";
 
 import type { LookupBatchReturn } from "./getLookupBatch.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
-export const clearLookupBatch = (batchID: number, reqSession: expressSession.Session): LookupBatchReturn => {
+export const clearLookupBatch = (batchID: number, requestSession: expressSession.Session): LookupBatchReturn => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Ensure batch is not locked
 
-  const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+  const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
     " set recordUpdate_userName = ?," +
     " recordUpdate_timeMillis = ?" +
     " where batchID = ?" +
     " and recordDelete_timeMillis is null" +
     " and lockDate is null")
-    .run(reqSession.user.userName,
+    .run(requestSession.user.userName,
       Date.now(),
       batchID).changes;
 
   if (canUpdateBatch === 0) {
 
-    db.close();
+    database.close();
 
     return {
       success: false,
       message: "Batch cannot be updated."
     };
-
   }
 
-  db.prepare("delete from LicencePlateLookupBatchEntries" +
+  database.prepare("delete from LicencePlateLookupBatchEntries" +
     " where batchID = ?")
     .run(batchID);
 
-  db.close();
+  database.close();
 
   return {
     success: true

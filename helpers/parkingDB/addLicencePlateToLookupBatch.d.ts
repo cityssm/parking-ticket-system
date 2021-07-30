@@ -5,20 +5,12 @@ interface AddLicencePlateToLookupBatchReturn {
     message?: string;
     batch?: pts.LicencePlateLookupBatch;
 }
-export declare const addLicencePlateToLookupBatch: (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: expressSession.Session) => AddLicencePlateToLookupBatchReturn;
+export declare const addLicencePlateToLookupBatch: (requestBody: pts.LicencePlateLookupBatchEntry, requestSession: expressSession.Session) => AddLicencePlateToLookupBatchReturn;
 interface AddAllLicencePlatesToLookupBatchBody {
     batchID: number;
     licencePlateCountry: string;
     licencePlateProvince: string;
     licencePlateNumbers: Array<[string, number]>;
 }
-export declare const addAllLicencePlatesToLookupBatch: (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: expressSession.Session) => {
-    success: boolean;
-    message: string;
-    batch?: undefined;
-} | {
-    success: boolean;
-    batch: pts.LicencePlateLookupBatch;
-    message?: undefined;
-};
+export declare const addAllLicencePlatesToLookupBatch: (requestBody: AddAllLicencePlatesToLookupBatchBody, requestSession: expressSession.Session) => AddLicencePlateToLookupBatchReturn;
 export default addLicencePlateToLookupBatch;

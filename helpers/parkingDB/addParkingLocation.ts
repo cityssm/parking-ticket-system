@@ -3,28 +3,28 @@ import sqlite from "better-sqlite3";
 import type { AddUpdateParkingLocationReturn } from "./getParkingLocations";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const addParkingLocation = (reqBody: pts.ParkingLocation): AddUpdateParkingLocationReturn => {
+export const addParkingLocation = (requestBody: pts.ParkingLocation): AddUpdateParkingLocationReturn => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Check if key is already used
 
-  const locationRecord: pts.ParkingLocation = db.prepare("select locationName, isActive" +
+  const locationRecord: pts.ParkingLocation = database.prepare("select locationName, isActive" +
     " from ParkingLocations" +
     " where locationKey = ?")
-    .get(reqBody.locationKey);
+    .get(requestBody.locationKey);
 
   if (locationRecord) {
 
-    db.close();
+    database.close();
 
     return {
       success: false,
       message:
-        "The location key \"" + reqBody.locationKey + "\"" +
+        "The location key \"" + requestBody.locationKey + "\"" +
         " is already associated with the " +
         (locationRecord.isActive ? "" : "inactive ") +
         " record \"" + locationRecord.locationName + "\"."
@@ -33,17 +33,16 @@ export const addParkingLocation = (reqBody: pts.ParkingLocation): AddUpdateParki
 
   // Do insert
 
-  const info = db.prepare("insert into ParkingLocations (" +
+  const info = database.prepare("insert into ParkingLocations (" +
     "locationKey, locationName, locationClassKey, orderNumber, isActive)" +
     " values (?, ?, ?, 0, 1)")
-    .run(reqBody.locationKey, reqBody.locationName, reqBody.locationClassKey);
+    .run(requestBody.locationKey, requestBody.locationName, requestBody.locationClassKey);
 
-  db.close();
+  database.close();
 
   return {
     success: (info.changes > 0)
   };
-
 };
 
 

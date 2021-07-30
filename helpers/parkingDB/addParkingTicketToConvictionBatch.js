@@ -3,42 +3,42 @@ import { createParkingTicketStatusWithDB } from "./createParkingTicketStatus.js"
 import { isParkingTicketConvictedWithDB } from "./isParkingTicketConvicted.js";
 import { isParkingTicketInConvictionBatchWithDB } from "./isParkingTicketInConvictionBatch.js";
 import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable.js";
-import canParkingTicketBeAddedToConvictionBatch from "./canParkingTicketBeAddedToConvictionBatch.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-const createStatus = (db, batchID, ticketID, statusKey, reqSession) => {
-    createParkingTicketStatusWithDB(db, {
+import { canParkingTicketBeAddedToConvictionBatch } from "./canParkingTicketBeAddedToConvictionBatch.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+const createStatus = (database, batchID, ticketID, statusKey, requestSession) => {
+    createParkingTicketStatusWithDB(database, {
         recordType: "status",
         ticketID,
         statusKey,
         statusField: batchID.toString(),
         statusField2: "",
         statusNote: ""
-    }, reqSession, false);
+    }, requestSession, false);
 };
-const createConvictedStatus = (db, batchID, ticketID, reqSession) => {
-    createStatus(db, batchID, ticketID, "convicted", reqSession);
+const createConvictedStatus = (database, batchID, ticketID, requestSession) => {
+    createStatus(database, batchID, ticketID, "convicted", requestSession);
 };
-const createConvictionBatchStatus = (db, batchID, ticketID, reqSession) => {
-    createStatus(db, batchID, ticketID, "convictionBatch", reqSession);
+const createConvictionBatchStatus = (database, batchID, ticketID, requestSession) => {
+    createStatus(database, batchID, ticketID, "convictionBatch", requestSession);
 };
-const convictIfNotConvicted = (db, batchID, ticketID, reqSession) => {
-    const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(db, ticketID);
+const convictIfNotConvicted = (database, batchID, ticketID, requestSession) => {
+    const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(database, ticketID);
     if (!parkingTicketIsConvicted) {
-        createConvictedStatus(db, batchID, ticketID, reqSession);
+        createConvictedStatus(database, batchID, ticketID, requestSession);
     }
 };
-const addParkingTicketToConvictionBatchAfterBatchCheck = (db, batchID, ticketID, reqSession) => {
-    const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(db, ticketID);
+const addParkingTicketToConvictionBatchAfterBatchCheck = (database, batchID, ticketID, requestSession) => {
+    const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(database, ticketID);
     if (!ticketIsAvailable) {
         return {
             success: false,
             message: "The ticket cannot be added to the batch."
         };
     }
-    convictIfNotConvicted(db, batchID, ticketID, reqSession);
-    const parkingTicketInBatch = isParkingTicketInConvictionBatchWithDB(db, ticketID);
+    convictIfNotConvicted(database, batchID, ticketID, requestSession);
+    const parkingTicketInBatch = isParkingTicketInConvictionBatchWithDB(database, ticketID);
     if (!parkingTicketInBatch.inBatch) {
-        createConvictionBatchStatus(db, batchID, ticketID, reqSession);
+        createConvictionBatchStatus(database, batchID, ticketID, requestSession);
     }
     else {
         return {
@@ -52,24 +52,24 @@ const addParkingTicketToConvictionBatchAfterBatchCheck = (db, batchID, ticketID,
         success: true
     };
 };
-export const addParkingTicketToConvictionBatch = (batchID, ticketID, reqSession) => {
-    const db = sqlite(dbPath);
-    const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
+export const addParkingTicketToConvictionBatch = (batchID, ticketID, requestSession) => {
+    const database = sqlite(databasePath);
+    const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
     if (!batchIsAvailable) {
-        db.close();
+        database.close();
         return {
             success: false,
             message: "The batch cannot be updated."
         };
     }
-    const result = addParkingTicketToConvictionBatchAfterBatchCheck(db, batchID, ticketID, reqSession);
+    const result = addParkingTicketToConvictionBatchAfterBatchCheck(database, batchID, ticketID, requestSession);
     return result;
 };
-export const addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, reqSession) => {
-    const db = sqlite(dbPath);
-    const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
+export const addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, requestSession) => {
+    const database = sqlite(databasePath);
+    const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
     if (!batchIsAvailable) {
-        db.close();
+        database.close();
         return {
             success: false,
             successCount: 0,
@@ -78,12 +78,12 @@ export const addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, reqSes
     }
     let successCount = 0;
     for (const ticketID of ticketIDs) {
-        const result = addParkingTicketToConvictionBatchAfterBatchCheck(db, batchID, ticketID, reqSession);
+        const result = addParkingTicketToConvictionBatchAfterBatchCheck(database, batchID, ticketID, requestSession);
         if (result.success) {
             successCount += 1;
         }
     }
-    db.close();
+    database.close();
     return {
         success: true,
         successCount

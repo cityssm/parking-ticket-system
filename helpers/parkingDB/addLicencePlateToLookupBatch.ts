@@ -1,9 +1,9 @@
 import sqlite from "better-sqlite3";
 
-import getLookupBatch from "./getLookupBatch.js";
+import { getLookupBatch } from "./getLookupBatch.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
@@ -16,25 +16,25 @@ interface AddLicencePlateToLookupBatchReturn {
 
 
 export const addLicencePlateToLookupBatch =
-  (reqBody: pts.LicencePlateLookupBatchEntry, reqSession: expressSession.Session): AddLicencePlateToLookupBatchReturn => {
+  (requestBody: pts.LicencePlateLookupBatchEntry, requestSession: expressSession.Session): AddLicencePlateToLookupBatchReturn => {
 
-    const db = sqlite(dbPath);
+    const database = sqlite(databasePath);
 
     // Ensure batch is not locked
 
-    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+    const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
       " set recordUpdate_userName = ?," +
       " recordUpdate_timeMillis = ?" +
       " where batchID = ?" +
       " and recordDelete_timeMillis is null" +
       " and lockDate is null")
-      .run(reqSession.user.userName,
+      .run(requestSession.user.userName,
         Date.now(),
-        reqBody.batchID).changes;
+        requestBody.batchID).changes;
 
     if (canUpdateBatch === 0) {
 
-      db.close();
+      database.close();
 
       return {
         success: false,
@@ -43,29 +43,23 @@ export const addLicencePlateToLookupBatch =
 
     }
 
-    const info = db.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
+    const info = database.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
       " (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)" +
       " values (?, ?, ?, ?, ?)")
-      .run(reqBody.batchID,
-        reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber,
-        reqBody.ticketID);
+      .run(requestBody.batchID,
+        requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber,
+        requestBody.ticketID);
 
-    db.close();
+    database.close();
 
-    if (info.changes > 0) {
-
-      return {
+    return info.changes > 0
+      ? {
         success: true
-      };
-
-    } else {
-
-      return {
+      }
+      : {
         success: false,
         message: "Licence plate not added to the batch.  It may be already part of the batch."
       };
-
-    }
 
   };
 
@@ -79,67 +73,59 @@ interface AddAllLicencePlatesToLookupBatchBody {
 
 
 export const addAllLicencePlatesToLookupBatch =
-  (reqBody: AddAllLicencePlatesToLookupBatchBody, reqSession: expressSession.Session) => {
+  (requestBody: AddAllLicencePlatesToLookupBatchBody, requestSession: expressSession.Session): AddLicencePlateToLookupBatchReturn => {
 
-    const db = sqlite(dbPath);
+    const database = sqlite(databasePath);
 
     // Ensure batch is not locked
 
-    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+    const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
       " set recordUpdate_userName = ?," +
       " recordUpdate_timeMillis = ?" +
       " where batchID = ?" +
       " and recordDelete_timeMillis is null" +
       " and lockDate is null")
-      .run(reqSession.user.userName,
+      .run(requestSession.user.userName,
         Date.now(),
-        reqBody.batchID).changes;
+        requestBody.batchID).changes;
 
     if (canUpdateBatch === 0) {
 
-      db.close();
+      database.close();
 
       return {
         success: false,
         message: "Batch cannot be updated."
       };
-
     }
 
-    const insertStmt = db.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
+    const insertStmt = database.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
       " (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)" +
       " values (?, ?, ?, ?, ?)");
 
     let changeCount = 0;
 
-    for (const licencePlateNumberRecord of reqBody.licencePlateNumbers) {
+    for (const licencePlateNumberRecord of requestBody.licencePlateNumbers) {
 
       const info = insertStmt
-        .run(reqBody.batchID,
-          reqBody.licencePlateCountry, reqBody.licencePlateProvince, licencePlateNumberRecord[0],
+        .run(requestBody.batchID,
+          requestBody.licencePlateCountry, requestBody.licencePlateProvince, licencePlateNumberRecord[0],
           licencePlateNumberRecord[1]);
 
       changeCount += info.changes;
     }
 
-    db.close();
+    database.close();
 
-    if (changeCount > 0) {
-
-      return {
+    return changeCount > 0
+      ? {
         success: true,
-        batch: getLookupBatch(reqBody.batchID)
-      };
-
-    } else {
-
-      return {
+        batch: getLookupBatch(requestBody.batchID)
+      }
+      : {
         success: false,
         message: "Licence plate not added to the batch.  It may be already part of the batch."
       };
-
-    }
-
   };
 
 

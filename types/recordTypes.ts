@@ -1,5 +1,5 @@
 export interface Record {
-  recordType: "ticket" | "remark" | "status" | "owner";
+  recordType: "ticket" | "remark" | "status" | "owner" | "batch";
 
   recordCreate_userName?: string;
   recordCreate_timeMillis?: number;
@@ -175,19 +175,21 @@ export interface LicencePlateOwner extends Record, LicencePlate {
 
 export interface LicencePlateLookupBatch extends Record {
 
+  recordType: "batch",
+
   batchID: number;
 
   batchDate: number;
   batchDateString: string;
 
-  lockDate: number;
-  lockDateString: string;
+  lockDate?: number;
+  lockDateString?: string;
 
-  sentDate: number;
-  sentDateString: string;
+  sentDate?: number;
+  sentDateString?: string;
 
-  receivedDate: number;
-  receivedDateString: string;
+  receivedDate?: number;
+  receivedDateString?: string;
 
   batchEntries: LicencePlateLookupBatchEntry[];
 }
@@ -199,6 +201,8 @@ export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicke
 
 export interface ParkingTicketConvictionBatch extends Record {
 
+  recordType: "batch",
+
   batchID: number;
 
   batchDate: number;
@@ -207,8 +211,8 @@ export interface ParkingTicketConvictionBatch extends Record {
   lockDate: number;
   lockDateString: string;
 
-  sentDate: number;
-  sentDateString: string;
+  sentDate?: number;
+  sentDateString?: string;
 
   batchEntries?: ParkingTicketStatusLog[];
 }
@@ -246,4 +250,4 @@ declare module "express-session" {
   interface Session {
     user: User;
   }
-};
+}

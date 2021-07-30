@@ -1,18 +1,11 @@
 import type * as expressSession from "express-session";
-export declare const addParkingTicketToConvictionBatch: (batchID: number, ticketID: number, reqSession: expressSession.Session) => {
+export declare const addParkingTicketToConvictionBatch: (batchID: number, ticketID: number, requestSession: expressSession.Session) => {
     success: boolean;
-    message: string;
-} | {
-    success: boolean;
-    message?: undefined;
+    message?: string;
 };
-export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ticketIDs: number[], reqSession: expressSession.Session) => {
+export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ticketIDs: number[], requestSession: expressSession.Session) => {
     success: boolean;
     successCount: number;
-    message: string;
-} | {
-    success: boolean;
-    successCount: number;
-    message?: undefined;
+    message?: string;
 };
 export default addParkingTicketToConvictionBatch;

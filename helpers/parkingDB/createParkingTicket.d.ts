@@ -1,15 +1,10 @@
-/// <reference types="integer" />
 import type * as pts from "../../types/recordTypes";
 import type * as expressSession from "express-session";
-export declare const createParkingTicket: (reqBody: pts.ParkingTicket, reqSession: expressSession.Session) => {
+interface CreateParkingTicketReturn {
     success: boolean;
-    message: string;
-    ticketID?: undefined;
-    nextTicketNumber?: undefined;
-} | {
-    success: boolean;
-    ticketID: import("integer").IntLike;
-    nextTicketNumber: string;
-    message?: undefined;
-};
+    message?: string;
+    ticketID?: number;
+    nextTicketNumber?: string;
+}
+export declare const createParkingTicket: (requestBody: pts.ParkingTicket, requestSession: expressSession.Session) => CreateParkingTicketReturn;
 export default createParkingTicket;

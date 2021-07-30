@@ -1,37 +1,37 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const addParkingBylaw = (reqBody) => {
-    const db = sqlite(dbPath);
-    const bylawRecord = db.prepare("select bylawDescription, isActive" +
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const addParkingBylaw = (requestBody) => {
+    const database = sqlite(databasePath);
+    const bylawRecord = database.prepare("select bylawDescription, isActive" +
         " from ParkingBylaws" +
         " where bylawNumber = ?")
-        .get(reqBody.bylawNumber);
+        .get(requestBody.bylawNumber);
     if (bylawRecord) {
         if (bylawRecord.isActive) {
-            db.close();
+            database.close();
             return {
                 success: false,
-                message: "By-law number \"" + reqBody.bylawNumber + "\"" +
+                message: "By-law number \"" + requestBody.bylawNumber + "\"" +
                     " is already associated with the " +
                     " record \"" + bylawRecord.bylawDescription + "\"."
             };
         }
-        const info = db.prepare("update ParkingBylaws" +
+        const info = database.prepare("update ParkingBylaws" +
             " set isActive = 1" +
             " where bylawNumber = ?")
-            .run(reqBody.bylawNumber);
-        db.close();
+            .run(requestBody.bylawNumber);
+        database.close();
         return {
             success: (info.changes > 0),
-            message: "By-law number \"" + reqBody.bylawNumber + "\" is associated with a previously removed record." +
+            message: "By-law number \"" + requestBody.bylawNumber + "\" is associated with a previously removed record." +
                 " That record has been restored with the original description."
         };
     }
-    const info = db.prepare("insert into ParkingBylaws (" +
+    const info = database.prepare("insert into ParkingBylaws (" +
         "bylawNumber, bylawDescription, orderNumber, isActive)" +
         " values (?, ?, 0, 1)")
-        .run(reqBody.bylawNumber, reqBody.bylawDescription);
-    db.close();
+        .run(requestBody.bylawNumber, requestBody.bylawDescription);
+    database.close();
     return {
         success: (info.changes > 0)
     };

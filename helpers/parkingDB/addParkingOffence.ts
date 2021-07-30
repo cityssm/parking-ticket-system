@@ -3,26 +3,26 @@ import sqlite from "better-sqlite3";
 import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences.js";
 import type * as pts from "../../types/recordTypes";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParkingOffenceReturn => {
+export const addParkingOffence = (requestBody: pts.ParkingOffence): AddUpdateParkingOffenceReturn => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Check if offence already exists
 
-  const existingOffenceRecord: pts.ParkingOffence = db.prepare("select isActive" +
+  const existingOffenceRecord: pts.ParkingOffence = database.prepare("select isActive" +
     " from ParkingOffences" +
     " where bylawNumber = ?" +
     " and locationKey = ?")
-    .get(reqBody.bylawNumber, reqBody.locationKey);
+    .get(requestBody.bylawNumber, requestBody.locationKey);
 
   if (existingOffenceRecord) {
 
     if (existingOffenceRecord.isActive) {
 
-      db.close();
+      database.close();
 
       return {
         success: false,
@@ -31,13 +31,13 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
 
     } else {
 
-      const info = db.prepare("update ParkingOffences" +
+      const info = database.prepare("update ParkingOffences" +
         " set isActive = 1" +
         " where bylawNumber = ?" +
         " and locationKey = ?")
-        .run(reqBody.bylawNumber, reqBody.locationKey);
+        .run(requestBody.bylawNumber, requestBody.locationKey);
 
-      db.close();
+      database.close();
 
       return {
         success: (info.changes > 0),
@@ -55,19 +55,19 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
   let discountOffenceAmount = 0;
   let discountDays = 0;
 
-  if (reqBody.hasOwnProperty("offenceAmount")) {
+  if (Object.prototype.hasOwnProperty.call(requestBody, "offenceAmount")) {
 
-    offenceAmount = reqBody.offenceAmount;
+    offenceAmount = requestBody.offenceAmount;
 
-    discountOffenceAmount = reqBody.hasOwnProperty("discountOffenceAmount")
-      ? reqBody.discountOffenceAmount
-      : reqBody.offenceAmount;
+    discountOffenceAmount = Object.prototype.hasOwnProperty.call(requestBody, "discountOffenceAmount")
+      ? requestBody.discountOffenceAmount
+      : requestBody.offenceAmount;
 
-    discountDays = reqBody.discountDays || 0;
+    discountDays = requestBody.discountDays || 0;
 
   } else {
 
-    const offenceAmountRecord: pts.ParkingOffence = db.prepare(
+    const offenceAmountRecord: pts.ParkingOffence = database.prepare(
       "select offenceAmount, discountOffenceAmount, discountDays" +
       " from ParkingOffences" +
       " where bylawNumber = ?" +
@@ -75,7 +75,7 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
       " group by offenceAmount, discountOffenceAmount, discountDays" +
       " order by count(locationKey) desc, offenceAmount desc, discountOffenceAmount desc" +
       " limit 1")
-      .get(reqBody.bylawNumber);
+      .get(requestBody.bylawNumber);
 
     if (offenceAmountRecord) {
       offenceAmount = offenceAmountRecord.offenceAmount;
@@ -86,20 +86,20 @@ export const addParkingOffence = (reqBody: pts.ParkingOffence): AddUpdateParking
 
   // Insert record
 
-  const info = db.prepare("insert into ParkingOffences" +
+  const info = database.prepare("insert into ParkingOffences" +
     " (bylawNumber, locationKey, parkingOffence," +
     " offenceAmount, discountOffenceAmount, discountDays," +
     " accountNumber, isActive)" +
     " values (?, ?, ?, ?, ?, ?, ?, 1)")
-    .run(reqBody.bylawNumber,
-      reqBody.locationKey,
-      reqBody.parkingOffence || "",
+    .run(requestBody.bylawNumber,
+      requestBody.locationKey,
+      requestBody.parkingOffence || "",
       offenceAmount,
       discountOffenceAmount,
       discountDays,
-      reqBody.accountNumber || "");
+      requestBody.accountNumber || "");
 
-  db.close();
+  database.close();
 
   return {
     success: (info.changes > 0)

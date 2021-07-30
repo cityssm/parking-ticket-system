@@ -5,64 +5,64 @@ import { createParkingTicketStatusWithDB } from "./createParkingTicketStatus.js"
 import { isParkingTicketConvictedWithDB } from "./isParkingTicketConvicted.js";
 import { isParkingTicketInConvictionBatchWithDB } from "./isParkingTicketInConvictionBatch.js";
 import { isConvictionBatchUpdatableWithDB } from "./isConvictionBatchUpdatable.js";
-import canParkingTicketBeAddedToConvictionBatch from "./canParkingTicketBeAddedToConvictionBatch.js";
+import { canParkingTicketBeAddedToConvictionBatch } from "./canParkingTicketBeAddedToConvictionBatch.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
 const createStatus =
-  (db: sqlite.Database,
+  (database: sqlite.Database,
     batchID: number, ticketID: number,
     statusKey: "convicted" | "convictionBatch",
-    reqSession: expressSession.Session) => {
+    requestSession: expressSession.Session) => {
 
-    createParkingTicketStatusWithDB(db, {
+    createParkingTicketStatusWithDB(database, {
       recordType: "status",
       ticketID,
       statusKey,
       statusField: batchID.toString(),
       statusField2: "",
       statusNote: ""
-    }, reqSession, false);
+    }, requestSession, false);
   };
 
 const createConvictedStatus =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
+  (database: sqlite.Database, batchID: number, ticketID: number, requestSession: expressSession.Session) => {
 
-    createStatus(db, batchID, ticketID, "convicted", reqSession);
+    createStatus(database, batchID, ticketID, "convicted", requestSession);
   };
 
 
 const createConvictionBatchStatus =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
+  (database: sqlite.Database, batchID: number, ticketID: number, requestSession: expressSession.Session) => {
 
-    createStatus(db, batchID, ticketID, "convictionBatch", reqSession);
+    createStatus(database, batchID, ticketID, "convictionBatch", requestSession);
   };
 
 
 const convictIfNotConvicted =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
+  (database: sqlite.Database, batchID: number, ticketID: number, requestSession: expressSession.Session) => {
 
-    const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(db, ticketID);
+    const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(database, ticketID);
 
     if (!parkingTicketIsConvicted) {
 
-      createConvictedStatus(db,
+      createConvictedStatus(database,
         batchID,
         ticketID,
-        reqSession);
+        requestSession);
     }
   };
 
 
 const addParkingTicketToConvictionBatchAfterBatchCheck =
-  (db: sqlite.Database, batchID: number, ticketID: number, reqSession: expressSession.Session) => {
+  (database: sqlite.Database, batchID: number, ticketID: number, requestSession: expressSession.Session) => {
 
     // Ensure ticket has not been resolved
 
-    const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(db, ticketID);
+    const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(database, ticketID);
 
     if (!ticketIsAvailable) {
       return {
@@ -73,19 +73,19 @@ const addParkingTicketToConvictionBatchAfterBatchCheck =
 
     // Convict ticket
 
-    convictIfNotConvicted(db, batchID, ticketID, reqSession);
+    convictIfNotConvicted(database, batchID, ticketID, requestSession);
 
     // Check if the ticket is part of another conviction batch
 
-    const parkingTicketInBatch = isParkingTicketInConvictionBatchWithDB(db, ticketID);
+    const parkingTicketInBatch = isParkingTicketInConvictionBatchWithDB(database, ticketID);
 
     if (!parkingTicketInBatch.inBatch) {
       // No record, add to batch now
 
-      createConvictionBatchStatus(db,
+      createConvictionBatchStatus(database,
         batchID,
         ticketID,
-        reqSession);
+        requestSession);
 
     } else {
 
@@ -107,17 +107,17 @@ const addParkingTicketToConvictionBatchAfterBatchCheck =
 export const addParkingTicketToConvictionBatch = (
   batchID: number,
   ticketID: number,
-  reqSession: expressSession.Session
-) => {
+  requestSession: expressSession.Session
+): { success: boolean; message?: string; } => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
+  const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
 
   if (!batchIsAvailable) {
-    db.close();
+    database.close();
 
     return {
       success: false,
@@ -125,7 +125,7 @@ export const addParkingTicketToConvictionBatch = (
     };
   }
 
-  const result = addParkingTicketToConvictionBatchAfterBatchCheck(db, batchID, ticketID, reqSession);
+  const result = addParkingTicketToConvictionBatchAfterBatchCheck(database, batchID, ticketID, requestSession);
 
   return result;
 };
@@ -134,17 +134,17 @@ export const addParkingTicketToConvictionBatch = (
 export const addAllParkingTicketsToConvictionBatch = (
   batchID: number,
   ticketIDs: number[],
-  reqSession: expressSession.Session
-) => {
+  requestSession: expressSession.Session
+): { success: boolean; successCount: number; message?: string; } => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatableWithDB(db, batchID);
+  const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
 
   if (!batchIsAvailable) {
-    db.close();
+    database.close();
 
     return {
       success: false,
@@ -159,14 +159,14 @@ export const addAllParkingTicketsToConvictionBatch = (
 
   for (const ticketID of ticketIDs) {
 
-    const result = addParkingTicketToConvictionBatchAfterBatchCheck(db, batchID, ticketID, reqSession);
+    const result = addParkingTicketToConvictionBatchAfterBatchCheck(database, batchID, ticketID, requestSession);
 
     if (result.success) {
       successCount += 1;
     }
   }
 
-  db.close();
+  database.close();
 
   return {
     success: true,

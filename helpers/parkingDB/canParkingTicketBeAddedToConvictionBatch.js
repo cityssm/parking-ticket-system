@@ -1,5 +1,5 @@
-export const canParkingTicketBeAddedToConvictionBatch = (db, ticketID) => {
-    const check = db
+export const canParkingTicketBeAddedToConvictionBatch = (database, ticketID) => {
+    const check = database
         .prepare("select resolvedDate from ParkingTickets" +
         " where ticketID = ?" +
         " and recordDelete_timeMillis is null")

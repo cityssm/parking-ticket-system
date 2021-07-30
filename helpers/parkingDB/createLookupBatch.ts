@@ -1,49 +1,49 @@
 import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import { intLikeToNumber } from "../functions.database.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
+import type * as recordTypes from "../../types/recordTypes";
 
 
-export const createLookupBatch = (reqSession: expressSession.Session) => {
+export const createLookupBatch =
+  (requestSession: expressSession.Session): { success: boolean; batch?: recordTypes.LicencePlateLookupBatch; } => {
 
-  const db = sqlite(dbPath);
+    const database = sqlite(databasePath);
 
-  const rightNow = new Date();
+    const rightNow = new Date();
 
-  const info = db.prepare("insert into LicencePlateLookupBatches" +
-    " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-    " values (?, ?, ?, ?, ?)")
-    .run(
-      dateTimeFns.dateToInteger(rightNow),
-      reqSession.user.userName,
-      rightNow.getTime(),
-      reqSession.user.userName,
-      rightNow.getTime()
-    );
+    const info = database.prepare("insert into LicencePlateLookupBatches" +
+      " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+      " values (?, ?, ?, ?, ?)")
+      .run(
+        dateTimeFns.dateToInteger(rightNow),
+        requestSession.user.userName,
+        rightNow.getTime(),
+        requestSession.user.userName,
+        rightNow.getTime()
+      );
 
-  db.close();
+    database.close();
 
-  if (info.changes > 0) {
-
-    return {
-      success: true,
-      batch: {
-        batchID: info.lastInsertRowid,
-        batchDate: dateTimeFns.dateToInteger(rightNow),
-        batchDateString: dateTimeFns.dateToString(rightNow),
-        lockDate: null,
-        lockDateString: "",
-        batchEntries: []
+    return info.changes > 0
+      ? {
+        success: true,
+        batch: {
+          recordType: "batch",
+          batchID: intLikeToNumber(info.lastInsertRowid),
+          batchDate: dateTimeFns.dateToInteger(rightNow),
+          batchDateString: dateTimeFns.dateToString(rightNow),
+          lockDate: undefined,
+          lockDateString: "",
+          batchEntries: []
+        }
       }
-    };
-
-  } else {
-    return { success: false };
-  }
-};
+      : { success: false };
+  };
 
 
 export default createLookupBatch;

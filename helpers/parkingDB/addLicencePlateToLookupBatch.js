@@ -1,76 +1,70 @@
 import sqlite from "better-sqlite3";
-import getLookupBatch from "./getLookupBatch.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const addLicencePlateToLookupBatch = (reqBody, reqSession) => {
-    const db = sqlite(dbPath);
-    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+import { getLookupBatch } from "./getLookupBatch.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const addLicencePlateToLookupBatch = (requestBody, requestSession) => {
+    const database = sqlite(databasePath);
+    const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
         " where batchID = ?" +
         " and recordDelete_timeMillis is null" +
         " and lockDate is null")
-        .run(reqSession.user.userName, Date.now(), reqBody.batchID).changes;
+        .run(requestSession.user.userName, Date.now(), requestBody.batchID).changes;
     if (canUpdateBatch === 0) {
-        db.close();
+        database.close();
         return {
             success: false,
             message: "Batch cannot be updated."
         };
     }
-    const info = db.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
+    const info = database.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
         " (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)" +
         " values (?, ?, ?, ?, ?)")
-        .run(reqBody.batchID, reqBody.licencePlateCountry, reqBody.licencePlateProvince, reqBody.licencePlateNumber, reqBody.ticketID);
-    db.close();
-    if (info.changes > 0) {
-        return {
+        .run(requestBody.batchID, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.ticketID);
+    database.close();
+    return info.changes > 0
+        ? {
             success: true
-        };
-    }
-    else {
-        return {
+        }
+        : {
             success: false,
             message: "Licence plate not added to the batch.  It may be already part of the batch."
         };
-    }
 };
-export const addAllLicencePlatesToLookupBatch = (reqBody, reqSession) => {
-    const db = sqlite(dbPath);
-    const canUpdateBatch = db.prepare("update LicencePlateLookupBatches" +
+export const addAllLicencePlatesToLookupBatch = (requestBody, requestSession) => {
+    const database = sqlite(databasePath);
+    const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
         " where batchID = ?" +
         " and recordDelete_timeMillis is null" +
         " and lockDate is null")
-        .run(reqSession.user.userName, Date.now(), reqBody.batchID).changes;
+        .run(requestSession.user.userName, Date.now(), requestBody.batchID).changes;
     if (canUpdateBatch === 0) {
-        db.close();
+        database.close();
         return {
             success: false,
             message: "Batch cannot be updated."
         };
     }
-    const insertStmt = db.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
+    const insertStmt = database.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
         " (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)" +
         " values (?, ?, ?, ?, ?)");
     let changeCount = 0;
-    for (const licencePlateNumberRecord of reqBody.licencePlateNumbers) {
+    for (const licencePlateNumberRecord of requestBody.licencePlateNumbers) {
         const info = insertStmt
-            .run(reqBody.batchID, reqBody.licencePlateCountry, reqBody.licencePlateProvince, licencePlateNumberRecord[0], licencePlateNumberRecord[1]);
+            .run(requestBody.batchID, requestBody.licencePlateCountry, requestBody.licencePlateProvince, licencePlateNumberRecord[0], licencePlateNumberRecord[1]);
         changeCount += info.changes;
     }
-    db.close();
-    if (changeCount > 0) {
-        return {
+    database.close();
+    return changeCount > 0
+        ? {
             success: true,
-            batch: getLookupBatch(reqBody.batchID)
-        };
-    }
-    else {
-        return {
+            batch: getLookupBatch(requestBody.batchID)
+        }
+        : {
             success: false,
             message: "Licence plate not added to the batch.  It may be already part of the batch."
         };
-    }
 };
 export default addLicencePlateToLookupBatch;

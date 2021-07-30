@@ -1,8 +1,8 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const cleanupParkingTicketsTable = (recordDelete_timeMillis) => {
-    const db = sqlite(dbPath);
-    const recordsToDelete = db.prepare("select ticketID from ParkingTickets t" +
+    const database = sqlite(databasePath);
+    const recordsToDelete = database.prepare("select ticketID from ParkingTickets t" +
         " where t.recordDelete_timeMillis is not null" +
         " and t.recordDelete_timeMillis < ?" +
         (" and not exists (" +
@@ -10,17 +10,17 @@ export const cleanupParkingTicketsTable = (recordDelete_timeMillis) => {
             " where t.ticketID = b.ticketID)"))
         .all(recordDelete_timeMillis);
     for (const recordToDelete of recordsToDelete) {
-        db.prepare("delete from ParkingTicketRemarks" +
+        database.prepare("delete from ParkingTicketRemarks" +
             " where ticketID = ?")
             .run(recordToDelete.ticketID);
-        db.prepare("delete from ParkingTicketStatusLog" +
+        database.prepare("delete from ParkingTicketStatusLog" +
             " where ticketID = ?")
             .run(recordToDelete.ticketID);
-        db.prepare("delete from ParkingTickets" +
+        database.prepare("delete from ParkingTickets" +
             " where ticketID = ?")
             .run(recordToDelete.ticketID);
     }
-    db.close();
+    database.close();
     return true;
 };
 export default cleanupParkingTicketsTable;

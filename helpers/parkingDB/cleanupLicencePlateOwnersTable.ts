@@ -1,18 +1,18 @@
 import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const cleanupLicencePlateOwnersTable = (recordDelete_timeMillis: number) => {
+export const cleanupLicencePlateOwnersTable = (recordDelete_timeMillis: number): boolean => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
-  db.prepare("delete from LicencePlateOwners" +
+  database.prepare("delete from LicencePlateOwners" +
     " where recordDelete_timeMillis is not null" +
     " and recordDelete_timeMillis < ?")
     .run(recordDelete_timeMillis);
 
-  db.close();
+  database.close();
 
   return true;
 };

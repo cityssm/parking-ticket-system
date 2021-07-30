@@ -15,7 +15,7 @@ install:
   - node --version
   - npm --version
   # install modules
-  - sh: npm install
+  - sh: npm ci
   - sh: npm install -g mocha c8
 
 before_test:

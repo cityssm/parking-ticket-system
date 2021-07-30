@@ -1,13 +1,13 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const deleteParkingLocation = (locationKey) => {
-    const db = sqlite(dbPath);
-    const info = db.prepare("update ParkingLocations" +
+    const database = sqlite(databasePath);
+    const info = database.prepare("update ParkingLocations" +
         " set isActive = 0" +
         " where locationKey = ?" +
         " and isActive = 1")
         .run(locationKey);
-    db.close();
+    database.close();
     return {
         success: (info.changes > 0)
     };
