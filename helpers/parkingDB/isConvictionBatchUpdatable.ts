@@ -1,11 +1,11 @@
 import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const isConvictionBatchUpdatableWithDB = (db: sqlite.Database, batchID: number) => {
+export const isConvictionBatchUpdatableWithDB = (database: sqlite.Database, batchID: number): boolean => {
 
-  const check = db
+  const check = database
     .prepare(
       "select lockDate from ParkingTicketConvictionBatches" +
       " where recordDelete_timeMillis is null" +
@@ -21,15 +21,15 @@ export const isConvictionBatchUpdatableWithDB = (db: sqlite.Database, batchID: n
 };
 
 
-export const isConvictionBatchUpdatable = (ticketID: number) => {
+export const isConvictionBatchUpdatable = (ticketID: number): boolean => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const result = isConvictionBatchUpdatableWithDB(db, ticketID);
+  const result = isConvictionBatchUpdatableWithDB(database, ticketID);
 
-  db.close();
+  database.close();
 
   return result;
 };

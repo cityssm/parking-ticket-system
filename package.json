@@ -10,8 +10,8 @@
     "preinstall": "npx npm-force-resolutions",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "dev": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* nodemon ./bin/www",
-    "test": "mocha --timeout 30000",
-    "coverage": "c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 30000"
+    "test": "mocha --timeout 60000",
+    "coverage": "c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 60000"
   },
   "repository": {
     "type": "git",

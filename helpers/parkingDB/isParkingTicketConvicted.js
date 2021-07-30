@@ -1,7 +1,7 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const isParkingTicketConvictedWithDB = (db, ticketID) => {
-    const convictedStatusCheck = db
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const isParkingTicketConvictedWithDB = (database, ticketID) => {
+    const convictedStatusCheck = database
         .prepare("select statusIndex from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +
         " and ticketID = ?" +
@@ -13,11 +13,11 @@ export const isParkingTicketConvictedWithDB = (db, ticketID) => {
     return false;
 };
 export const isParkingTicketConvicted = (ticketID) => {
-    const db = sqlite(dbPath, {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    const result = isParkingTicketConvictedWithDB(db, ticketID);
-    db.close();
+    const result = isParkingTicketConvictedWithDB(database, ticketID);
+    database.close();
     return result;
 };
 export default isParkingTicketConvicted;

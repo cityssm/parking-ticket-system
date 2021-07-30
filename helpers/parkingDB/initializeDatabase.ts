@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import debug from "debug";
 const debugSQL = debug("parking-ticket-system:parkingDB:initializeDatabase");
@@ -255,9 +255,9 @@ const createLicencePlateLookupErrorLog = (parkingDB: sqlite.Database) => {
 };
 
 
-export const initializeDatabase = () => {
+export const initializeDatabase = (): boolean => {
 
-  const parkingDB = sqlite(dbPath);
+  const parkingDB = sqlite(databasePath);
 
   let doCreate = false;
 

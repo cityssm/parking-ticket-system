@@ -1,19 +1,19 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
-export const lockLookupBatch = (batchID, reqSession) => {
-    const db = sqlite(dbPath);
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
+export const lockLookupBatch = (batchID, requestSession) => {
+    const database = sqlite(databasePath);
     const rightNow = new Date();
-    const info = db.prepare("update LicencePlateLookupBatches" +
+    const info = database.prepare("update LicencePlateLookupBatches" +
         " set lockDate = ?," +
         " recordUpdate_userName = ?," +
         " recordUpdate_timeMillis = ?" +
         " where batchID = ?" +
         " and recordDelete_timeMillis is null" +
         " and lockDate is null")
-        .run(dateTimeFns.dateToInteger(rightNow), reqSession.user.userName, rightNow.getTime(), batchID);
+        .run(dateTimeFns.dateToInteger(rightNow), requestSession.user.userName, rightNow.getTime(), batchID);
     if (info.changes > 0) {
-        db.prepare("insert into ParkingTicketStatusLog" +
+        database.prepare("insert into ParkingTicketStatusLog" +
             " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
             " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
             " select t.ticketID," +
@@ -41,9 +41,9 @@ export const lockLookupBatch = (batchID, reqSession) => {
                 " and s.recordDelete_timeMillis is null then 1") +
             " else 0" +
             " end) = 0")
-            .run(dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), reqSession.user.userName, rightNow.getTime(), reqSession.user.userName, rightNow.getTime(), batchID);
+            .run(dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), requestSession.user.userName, rightNow.getTime(), requestSession.user.userName, rightNow.getTime(), batchID);
     }
-    db.close();
+    database.close();
     return {
         success: (info.changes > 0)
     };

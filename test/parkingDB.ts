@@ -94,11 +94,11 @@ describe("helpers/parkingDB", () => {
 
 
     it("should execute getParkingTicket(-1)", () => {
-      assert.strictEqual(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), null);
+      assert.strictEqual(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), undefined);
     });
 
     it("should execute getParkingTicketID()", () => {
-      assert.strictEqual(parkingDB_getParkingTicketID.getParkingTicketID("~~FAKE TICKET NUMBER~~"), null);
+      assert.strictEqual(parkingDB_getParkingTicketID.getParkingTicketID("~~FAKE TICKET NUMBER~~"), undefined);
     });
 
     it("should execute getParkingTicketRemarks(-1)", () => {
@@ -120,7 +120,7 @@ describe("helpers/parkingDB", () => {
     });
 
     it("should execute getLicencePlateOwner()", () => {
-      assert.strictEqual(parkingDB_getLicencePlateOwner.getLicencePlateOwner("CA", "ON", "~~FAKE PLATE NUMBER~~", 0), null);
+      assert.strictEqual(parkingDB_getLicencePlateOwner.getLicencePlateOwner("CA", "ON", "~~FAKE PLATE NUMBER~~", 0), undefined);
     });
   });
 
@@ -134,7 +134,7 @@ describe("helpers/parkingDB", () => {
 
       const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1);
 
-      assert.ok(batch === null || batch.lockDate === null);
+      assert.ok(batch === undefined || batch.lockDate === undefined);
     });
 
     it("should execute parkingDB_isConvictionBatchUpdatable()", () => {
@@ -169,7 +169,7 @@ describe("helpers/parkingDB", () => {
 
       const batch = parkingDB_getLookupBatch.getLookupBatch(-1);
 
-      assert.ok(batch === null || batch.lockDate === null);
+      assert.ok(batch === undefined || batch.lockDate === undefined);
     });
 
     it("should execute getOwnershipReconciliationRecords()", () => {
@@ -244,8 +244,8 @@ describe("helpers/parkingDB", () => {
 
     describe("#getReportRowsColumns()", () => {
 
-      it("should return null for an invalid report", () => {
-        assert.strictEqual(parkingDB_reporting.getReportRowsColumns("invalid-report-name", {}), null);
+      it("should return undefined for an invalid report", () => {
+        assert.strictEqual(parkingDB_reporting.getReportRowsColumns("invalid-report-name", {}), undefined);
       });
 
       it("should return data for a valid report", () => {

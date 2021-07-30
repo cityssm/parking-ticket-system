@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 import * as configFunctions from "../helpers/functions.config.js";
-import { parkingDB as dbPath } from "../data/databasePaths.js";
+import { parkingDB as databasePath } from "../data/databasePaths.js";
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis) => {
     return possibleRecordDeleteTimeMillis && possibleRecordDeleteTimeMillis !== ""
         ? possibleRecordDeleteTimeMillis
@@ -34,7 +34,7 @@ reportDefinitions.set("statuses-byTicketID", {
     sql: "select * from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is null" +
         " and ticketID = ?",
-    getParams: (reqQuery) => [reqQuery.ticketID]
+    getParams: (requestQuery) => [requestQuery.ticketID]
 });
 reportDefinitions.set("remarks-all", {
     sql: "select * from ParkingTicketRemarks"
@@ -43,7 +43,7 @@ reportDefinitions.set("remarks-byTicketID", {
     sql: "select * from ParkingTicketRemarks" +
         " where recordDelete_timeMillis is null" +
         " and ticketID = ?",
-    getParams: (reqQuery) => [reqQuery.ticketID]
+    getParams: (requestQuery) => [requestQuery.ticketID]
 });
 reportDefinitions.set("owners-all", {
     sql: "select * from LicencePlateOwners"
@@ -150,32 +150,32 @@ reportDefinitions.set("cleanup-parkingTickets", {
         (" and not exists (" +
             "select 1 from LicencePlateLookupBatchEntries b" +
             " where t.ticketID = b.ticketID)"),
-    getParams: (reqQuery) => [
-        getCleanupRecordDeleteTimeMillis(reqQuery.recordDelete_timeMillis)
+    getParams: (requestQuery) => [
+        getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set("cleanup-parkingTicketStatusLog", {
     sql: "select * from ParkingTicketStatusLog" +
         " where recordDelete_timeMillis is not null" +
         " and recordDelete_timeMillis < ?",
-    getParams: (reqQuery) => [
-        getCleanupRecordDeleteTimeMillis(reqQuery.recordDelete_timeMillis)
+    getParams: (requestQuery) => [
+        getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set("cleanup-parkingTicketRemarks", {
     sql: "select * from ParkingTicketRemarks" +
         " where recordDelete_timeMillis is not null" +
         " and recordDelete_timeMillis < ?",
-    getParams: (reqQuery) => [
-        getCleanupRecordDeleteTimeMillis(reqQuery.recordDelete_timeMillis)
+    getParams: (requestQuery) => [
+        getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set("cleanup-licencePlateOwners", {
     sql: "select * from LicencePlateOwners" +
         " where recordDelete_timeMillis is not null" +
         " and recordDelete_timeMillis < ?",
-    getParams: (reqQuery) => [
-        getCleanupRecordDeleteTimeMillis(reqQuery.recordDelete_timeMillis)
+    getParams: (requestQuery) => [
+        getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set("cleanup-parkingOffences", {
@@ -196,28 +196,28 @@ reportDefinitions.set("cleanup-parkingLocations", {
         " and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)" +
         " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)"
 });
-const executeQuery = (sql, params) => {
-    const db = sqlite(dbPath, {
+const executeQuery = (sql, parameters) => {
+    const database = sqlite(databasePath, {
         readonly: true
     });
-    const stmt = db.prepare(sql);
+    const stmt = database.prepare(sql);
     stmt.raw(true);
-    const rows = stmt.all(params);
+    const rows = stmt.all(parameters);
     const columns = stmt.columns();
     stmt.raw(false);
-    db.close();
+    database.close();
     return {
         rows,
         columns
     };
 };
-export const getReportRowsColumns = (reportName, reqQuery) => {
+export const getReportRowsColumns = (reportName, requestQuery) => {
     if (!reportDefinitions.has(reportName)) {
-        return null;
+        return undefined;
     }
     const reportDefinition = reportDefinitions.get(reportName);
-    const params = reportDefinition.hasOwnProperty("getParams")
-        ? reportDefinition.getParams(reqQuery)
+    const parameters = Object.prototype.hasOwnProperty.call(reportDefinition, "getParams")
+        ? reportDefinition.getParams(requestQuery)
         : [];
-    return executeQuery(reportDefinition.sql, params);
+    return executeQuery(reportDefinition.sql, parameters);
 };

@@ -2,22 +2,29 @@ import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
+interface LockConvictionBatchReturn {
+  success: boolean;
+  lockDate: number;
+  lockDateString: string;
+}
+
+
 export const lockConvictionBatch = (
   batchID: number,
-  reqSession: expressSession.Session
-) => {
-  const db = sqlite(dbPath);
+  requestSession: expressSession.Session
+): LockConvictionBatchReturn => {
+  const database = sqlite(databasePath);
 
   const rightNow = new Date();
 
   const lockDate = dateTimeFns.dateToInteger(rightNow);
 
-  const info = db
+  const info = database
     .prepare(
       "update ParkingTicketConvictionBatches" +
       " set lockDate = ?," +
@@ -27,9 +34,9 @@ export const lockConvictionBatch = (
       " and batchID = ?" +
       " and lockDate is null"
     )
-    .run(lockDate, reqSession.user.userName, rightNow.getTime(), batchID);
+    .run(lockDate, requestSession.user.userName, rightNow.getTime(), batchID);
 
-  db.close();
+  database.close();
 
   return {
     success: info.changes > 0,

@@ -20,7 +20,7 @@ import { fakeViewOnlySession, userName } from "./_globals.js";
 describe("parking-ticket-system", () => {
 
   const httpServer = http.createServer(app);
-  const portNumber = 54333;
+  const portNumber = 54_333;
 
   let serverStarted = false;
 

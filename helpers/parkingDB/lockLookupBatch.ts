@@ -3,18 +3,18 @@ import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import type { LookupBatchReturn } from "./getLookupBatch";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
-export const lockLookupBatch = (batchID: number, reqSession: expressSession.Session): LookupBatchReturn => {
+export const lockLookupBatch = (batchID: number, requestSession: expressSession.Session): LookupBatchReturn => {
 
-  const db = sqlite(dbPath);
+  const database = sqlite(databasePath);
 
   const rightNow = new Date();
 
-  const info = db.prepare("update LicencePlateLookupBatches" +
+  const info = database.prepare("update LicencePlateLookupBatches" +
     " set lockDate = ?," +
     " recordUpdate_userName = ?," +
     " recordUpdate_timeMillis = ?" +
@@ -23,13 +23,13 @@ export const lockLookupBatch = (batchID: number, reqSession: expressSession.Sess
     " and lockDate is null")
     .run(
       dateTimeFns.dateToInteger(rightNow),
-      reqSession.user.userName,
+      requestSession.user.userName,
       rightNow.getTime(),
       batchID);
 
   if (info.changes > 0) {
 
-    db.prepare("insert into ParkingTicketStatusLog" +
+    database.prepare("insert into ParkingTicketStatusLog" +
       " (ticketID, statusIndex, statusDate, statusTime, statusKey, statusField, statusNote," +
       " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
 
@@ -60,15 +60,15 @@ export const lockLookupBatch = (batchID: number, reqSession: expressSession.Sess
       " end) = 0")
       .run(dateTimeFns.dateToInteger(rightNow),
         dateTimeFns.dateToTimeInteger(rightNow),
-        reqSession.user.userName,
+        requestSession.user.userName,
         rightNow.getTime(),
-        reqSession.user.userName,
+        requestSession.user.userName,
         rightNow.getTime(),
         batchID);
 
   }
 
-  db.close();
+  database.close();
 
   return {
     success: (info.changes > 0)

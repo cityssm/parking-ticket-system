@@ -1,41 +1,47 @@
 import sqlite from "better-sqlite3";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 
-export const isParkingTicketInConvictionBatchWithDB = (db: sqlite.Database, ticketID: number) => {
+interface IsParkingTicketConvictedReturn {
+  inBatch: boolean;
+  batchIDString?: string;
+}
 
-  const batchStatusCheck = db
-    .prepare(
-      "select statusField from ParkingTicketStatusLog" +
-      " where recordDelete_timeMillis is null" +
-      " and ticketID = ?" +
-      " and statusKey = 'convictionBatch'"
-    )
-    .get(ticketID);
+export const isParkingTicketInConvictionBatchWithDB =
+  (database: sqlite.Database, ticketID: number): IsParkingTicketConvictedReturn => {
 
-  if (batchStatusCheck) {
+    const batchStatusCheck = database
+      .prepare(
+        "select statusField from ParkingTicketStatusLog" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?" +
+        " and statusKey = 'convictionBatch'"
+      )
+      .get(ticketID);
+
+    if (batchStatusCheck) {
+      return {
+        inBatch: true,
+        batchIDString: batchStatusCheck.statusField as string
+      };
+    }
+
     return {
-      inBatch: true,
-      batchIDString: batchStatusCheck.statusField as string
+      inBatch: false
     };
-  }
-
-  return {
-    inBatch: false
   };
-};
 
 
-export const isParkingTicketInConvictionBatch = (ticketID: number) => {
+export const isParkingTicketInConvictionBatch = (ticketID: number): IsParkingTicketConvictedReturn => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const result = isParkingTicketInConvictionBatchWithDB(db, ticketID);
+  const result = isParkingTicketInConvictionBatchWithDB(database, ticketID);
 
-  db.close();
+  database.close();
 
   return result;
 };

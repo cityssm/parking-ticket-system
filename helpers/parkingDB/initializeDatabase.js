@@ -1,5 +1,5 @@
 import sqlite from "better-sqlite3";
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 import debug from "debug";
 const debugSQL = debug("parking-ticket-system:parkingDB:initializeDatabase");
 const createParkingLocations = (parkingDB) => {
@@ -202,7 +202,7 @@ const createLicencePlateLookupErrorLog = (parkingDB) => {
         .run();
 };
 export const initializeDatabase = () => {
-    const parkingDB = sqlite(dbPath);
+    const parkingDB = sqlite(databasePath);
     let doCreate = false;
     const row = parkingDB
         .prepare("select name from sqlite_master where type = 'table' and name = 'ParkingTickets'")

@@ -2,20 +2,21 @@ import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import { parkingDB as dbPath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
 import type * as expressSession from "express-session";
 
 
 export const markConvictionBatchAsSent = (
   batchID: number,
-  reqSession: expressSession.Session
-) => {
-  const db = sqlite(dbPath);
+  requestSession: expressSession.Session
+): boolean => {
+
+  const database = sqlite(databasePath);
 
   const rightNow = new Date();
 
-  const info = db
+  const info = database
     .prepare(
       "update ParkingTicketConvictionBatches" +
       " set sentDate = ?," +
@@ -28,12 +29,12 @@ export const markConvictionBatchAsSent = (
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),
-      reqSession.user.userName,
+      requestSession.user.userName,
       rightNow.getTime(),
       batchID
     );
 
-  db.prepare(
+  database.prepare(
     "update ParkingTickets" +
     " set resolvedDate = ?," +
     " recordUpdate_userName = ?," +
@@ -47,12 +48,12 @@ export const markConvictionBatchAsSent = (
       ")")
   ).run(
     dateTimeFns.dateToInteger(rightNow),
-    reqSession.user.userName,
+    requestSession.user.userName,
     rightNow.getTime(),
     batchID.toString()
   );
 
-  db.close();
+  database.close();
 
   return info.changes > 0;
 };
