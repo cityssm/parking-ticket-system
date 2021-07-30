@@ -1,10 +1,10 @@
-import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
-import acknowledgeLookupErrorLogEntry from "../../helpers/parkingDB/acknowledgeLookupErrorLogEntry.js";
-import getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
-export const handler = (req, res) => {
-    const logEntries = getUnacknowledgedLookupErrorLog(req.body.batchID, req.body.logIndex);
+import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import { acknowledgeLookupErrorLogEntry } from "../../helpers/parkingDB/acknowledgeLookupErrorLogEntry.js";
+import { getUnacknowledgedLookupErrorLog } from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
+export const handler = (request, response) => {
+    const logEntries = getUnacknowledgedLookupErrorLog(request.body.batchID, request.body.logIndex);
     if (logEntries.length === 0) {
-        return res.json({
+        return response.json({
             success: false,
             message: "Log entry not found.  It may have already been acknowledged."
         });
@@ -15,15 +15,15 @@ export const handler = (req, res) => {
         statusKey: "ownerLookupError",
         statusField: "",
         statusNote: logEntries[0].errorMessage + " (" + logEntries[0].errorCode + ")"
-    }, req.session, false);
+    }, request.session, false);
     if (!statusResponse.success) {
-        return res.json({
+        return response.json({
             success: false,
             message: "Unable to update the status on the parking ticket.  It may have been resolved."
         });
     }
-    const success = acknowledgeLookupErrorLogEntry(req.body.batchID, req.body.logIndex, req.session);
-    return res.json({
+    const success = acknowledgeLookupErrorLogEntry(request.body.batchID, request.body.logIndex, request.session);
+    return response.json({
         success
     });
 };

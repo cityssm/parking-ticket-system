@@ -3,81 +3,81 @@ import type { RequestHandler } from "express";
 import * as userFunctions from "../helpers/functions.user.js";
 
 
-export const adminGetHandler: RequestHandler = (req, res, next) => {
+export const adminGetHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userIsAdmin(req)) {
+  if (userFunctions.userIsAdmin(request)) {
     return next();
   }
 
-  return res.redirect("/dashboard");
+  return response.redirect("/dashboard");
 };
 
 
-export const adminPostHandler: RequestHandler = (req, res, next) => {
+export const adminPostHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userIsAdmin(req)) {
+  if (userFunctions.userIsAdmin(request)) {
     return next();
   }
 
-  return res.json(userFunctions.forbiddenJSON);
+  return response.json(userFunctions.forbiddenJSON);
 };
 
 
-export const updateGetHandler: RequestHandler = (req, res, next) => {
+export const updateGetHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userCanUpdate(req)) {
+  if (userFunctions.userCanUpdate(request)) {
     return next();
   }
 
-  return res.redirect("/dashboard");
+  return response.redirect("/dashboard");
 };
 
 
-export const updateOrOperatorGetHandler: RequestHandler = (req, res, next) => {
+export const updateOrOperatorGetHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
+  if (userFunctions.userCanUpdate(request) || userFunctions.userIsOperator(request)) {
     return next();
   }
 
-  return res.redirect("/dashboard");
+  return response.redirect("/dashboard");
 };
 
 
-export const updatePostHandler: RequestHandler = (req, res, next) => {
+export const updatePostHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userCanUpdate(req)) {
+  if (userFunctions.userCanUpdate(request)) {
     return next();
   }
 
-  return res.json(userFunctions.forbiddenJSON);
+  return response.json(userFunctions.forbiddenJSON);
 };
 
 
-export const updateOrOperatorPostHandler: RequestHandler = (req, res, next) => {
+export const updateOrOperatorPostHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
+  if (userFunctions.userCanUpdate(request) || userFunctions.userIsOperator(request)) {
     return next();
   }
 
-  return res.json(userFunctions.forbiddenJSON);
+  return response.json(userFunctions.forbiddenJSON);
 };
 
 
-export const createGetHandler: RequestHandler = (req, res, next) => {
+export const createGetHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userCanCreate(req)) {
+  if (userFunctions.userCanCreate(request)) {
     return next();
   }
 
-  return res.redirect("/dashboard");
+  return response.redirect("/dashboard");
 };
 
 
-export const createPostHandler: RequestHandler = (req, res, next) => {
+export const createPostHandler: RequestHandler = (request, response, next) => {
 
-  if (userFunctions.userCanCreate(req)) {
+  if (userFunctions.userCanCreate(request)) {
     return next();
   }
 
-  return res.json(userFunctions.forbiddenJSON);
+  return response.json(userFunctions.forbiddenJSON);
 };

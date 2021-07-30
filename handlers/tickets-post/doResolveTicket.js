@@ -1,6 +1,6 @@
-import resolveParkingTicket from "../../helpers/parkingDB/resolveParkingTicket.js";
-export const handler = (req, res) => {
-    const result = resolveParkingTicket(req.body.ticketID, req.session);
-    return res.json(result);
+import { resolveParkingTicket } from "../../helpers/parkingDB/resolveParkingTicket.js";
+export const handler = (request, response) => {
+    const result = resolveParkingTicket(request.body.ticketID, request.session);
+    return response.json(result);
 };
 export default handler;

@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import updateParkingTicket from "../../helpers/parkingDB/updateParkingTicket.js";
+import { updateParkingTicket } from "../../helpers/parkingDB/updateParkingTicket.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const result = updateParkingTicket(req.body, req.session);
+  const result = updateParkingTicket(request.body, request.session);
 
-  return res.json(result);
+  return response.json(result);
 };
 
 

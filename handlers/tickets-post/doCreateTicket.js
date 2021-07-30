@@ -1,11 +1,11 @@
 import * as configFunctions from "../../helpers/functions.config.js";
-import createParkingTicket from "../../helpers/parkingDB/createParkingTicket.js";
-export const handler = (req, res) => {
-    const result = createParkingTicket(req.body, req.session);
+import { createParkingTicket } from "../../helpers/parkingDB/createParkingTicket.js";
+export const handler = (request, response) => {
+    const result = createParkingTicket(request.body, request.session);
     if (result.success) {
-        const ticketNumber = req.body.ticketNumber;
+        const ticketNumber = request.body.ticketNumber;
         result.nextTicketNumber = configFunctions.getProperty("parkingTickets.ticketNumber.nextTicketNumberFn")(ticketNumber);
     }
-    return res.json(result);
+    return response.json(result);
 };
 export default handler;

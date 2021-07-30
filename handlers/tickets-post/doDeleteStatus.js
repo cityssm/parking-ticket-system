@@ -1,6 +1,6 @@
-import deleteParkingTicketStatus from "../../helpers/parkingDB/deleteParkingTicketStatus.js";
-export const handler = (req, res) => {
-    const result = deleteParkingTicketStatus(req.body.ticketID, req.body.statusIndex, req.session);
-    return res.json(result);
+import { deleteParkingTicketStatus } from "../../helpers/parkingDB/deleteParkingTicketStatus.js";
+export const handler = (request, response) => {
+    const result = deleteParkingTicketStatus(request.body.ticketID, request.body.statusIndex, request.session);
+    return response.json(result);
 };
 export default handler;

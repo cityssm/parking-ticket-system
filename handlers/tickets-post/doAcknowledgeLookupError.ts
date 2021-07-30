@@ -1,22 +1,22 @@
 import type { RequestHandler } from "express";
 
-import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
-import acknowledgeLookupErrorLogEntry from "../../helpers/parkingDB/acknowledgeLookupErrorLogEntry.js";
-import getUnacknowledgedLookupErrorLog from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
+import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import { acknowledgeLookupErrorLogEntry } from "../../helpers/parkingDB/acknowledgeLookupErrorLogEntry.js";
+import { getUnacknowledgedLookupErrorLog } from "../../helpers/parkingDB/getUnacknowledgedLookupErrorLog.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
   // Get log entry
 
   const logEntries = getUnacknowledgedLookupErrorLog(
-    req.body.batchID,
-    req.body.logIndex
+    request.body.batchID,
+    request.body.logIndex
   );
 
   if (logEntries.length === 0) {
 
-    return res.json({
+    return response.json({
       success: false,
       message: "Log entry not found.  It may have already been acknowledged."
     });
@@ -33,13 +33,13 @@ export const handler: RequestHandler = (req, res) => {
       statusNote:
         logEntries[0].errorMessage + " (" + logEntries[0].errorCode + ")"
     },
-    req.session,
+    request.session,
     false
   );
 
   if (!statusResponse.success) {
 
-    return res.json({
+    return response.json({
       success: false,
       message:
         "Unable to update the status on the parking ticket.  It may have been resolved."
@@ -49,12 +49,12 @@ export const handler: RequestHandler = (req, res) => {
   // Mark log entry as acknowledged
 
   const success = acknowledgeLookupErrorLogEntry(
-    req.body.batchID,
-    req.body.logIndex,
-    req.session
+    request.body.batchID,
+    request.body.logIndex,
+    request.session
   );
 
-  return res.json({
+  return response.json({
     success
   });
 };

@@ -2,21 +2,21 @@ import type { RequestHandler } from "express";
 
 import * as configFunctions from "../../helpers/functions.config.js";
 
-import createParkingTicket from "../../helpers/parkingDB/createParkingTicket.js";
+import { createParkingTicket } from "../../helpers/parkingDB/createParkingTicket.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const result = createParkingTicket(req.body, req.session);
+  const result = createParkingTicket(request.body, request.session);
 
   if (result.success) {
-    const ticketNumber = req.body.ticketNumber;
+    const ticketNumber = request.body.ticketNumber;
     result.nextTicketNumber = configFunctions.getProperty(
       "parkingTickets.ticketNumber.nextTicketNumberFn"
     )(ticketNumber);
   }
 
-  return res.json(result);
+  return response.json(result);
 };
 
 

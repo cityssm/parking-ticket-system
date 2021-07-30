@@ -1,3 +1,5 @@
+/* eslint-disable no-redeclare */
+
 // eslint-disable-next-line node/no-unpublished-import
 import config from "../data/config.js";
 

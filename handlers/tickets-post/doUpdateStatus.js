@@ -1,6 +1,6 @@
-import updateParkingTicketStatus from "../../helpers/parkingDB/updateParkingTicketStatus.js";
-export const handler = (req, res) => {
-    const result = updateParkingTicketStatus(req.body, req.session);
-    return res.json(result);
+import { updateParkingTicketStatus } from "../../helpers/parkingDB/updateParkingTicketStatus.js";
+export const handler = (request, response) => {
+    const result = updateParkingTicketStatus(request.body, request.session);
+    return response.json(result);
 };
 export default handler;

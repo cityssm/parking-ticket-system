@@ -1,17 +1,17 @@
 import type { RequestHandler } from "express";
 
-import deleteParkingTicketStatus from "../../helpers/parkingDB/deleteParkingTicketStatus.js";
+import { deleteParkingTicketStatus } from "../../helpers/parkingDB/deleteParkingTicketStatus.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
   const result = deleteParkingTicketStatus(
-    req.body.ticketID,
-    req.body.statusIndex,
-    req.session
+    request.body.ticketID,
+    request.body.statusIndex,
+    request.session
   );
 
-  return res.json(result);
+  return response.json(result);
 };
 
 

@@ -1,8 +1,11 @@
-import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
+import type { ParkingBylaw } from "../../types/recordTypes";
 export declare const updateParkingOffencesByBylawNumber: (requestBody: {
     bylawNumber: string;
     offenceAmount: string;
     discountDays: string;
     discountOffenceAmount: string;
-}) => AddUpdateParkingOffenceReturn;
+}) => {
+    success: boolean;
+    bylaws?: ParkingBylaw[];
+};
 export default updateParkingOffencesByBylawNumber;

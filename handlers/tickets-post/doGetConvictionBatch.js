@@ -1,6 +1,6 @@
-import getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch.js";
-export const handler = (req, res) => {
-    const batch = getConvictionBatch(req.body.batchID);
-    return res.json(batch);
+import { getConvictionBatch } from "../../helpers/parkingDB/getConvictionBatch.js";
+export const handler = (request, response) => {
+    const batch = getConvictionBatch(request.body.batchID);
+    return response.json(batch);
 };
 export default handler;

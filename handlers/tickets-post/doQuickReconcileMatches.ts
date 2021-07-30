@@ -2,11 +2,11 @@ import type { RequestHandler } from "express";
 
 import * as ownerFunctions from "../../helpers/functions.owner.js";
 
-import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
-import getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
+import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import { getOwnershipReconciliationRecords } from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
   const records = getOwnershipReconciliationRecords();
 
@@ -27,7 +27,7 @@ export const handler: RequestHandler = (req, res) => {
         statusField: record.owner_recordDateString,
         statusNote: ownerAddress
       },
-      req.session,
+      request.session,
       false
     );
 
@@ -39,7 +39,7 @@ export const handler: RequestHandler = (req, res) => {
     }
   }
 
-  return res.json({
+  return response.json({
     success: true,
     statusRecords
   });

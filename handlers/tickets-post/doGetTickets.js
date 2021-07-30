@@ -1,15 +1,15 @@
 import * as parkingDB_getParkingTickets from "../../helpers/parkingDB/getParkingTickets.js";
-export const handler = (req, res) => {
+export const handler = (request, response) => {
     const queryOptions = {
-        limit: parseInt(req.body.limit, 10),
-        offset: parseInt(req.body.offset, 10),
-        ticketNumber: req.body.ticketNumber,
-        licencePlateNumber: req.body.licencePlateNumber,
-        location: req.body.location
+        limit: Number.parseInt(request.body.limit, 10),
+        offset: Number.parseInt(request.body.offset, 10),
+        ticketNumber: request.body.ticketNumber,
+        licencePlateNumber: request.body.licencePlateNumber,
+        location: request.body.location
     };
-    if (req.body.isResolved !== "") {
-        queryOptions.isResolved = req.body.isResolved === "1";
+    if (request.body.isResolved !== "") {
+        queryOptions.isResolved = request.body.isResolved === "1";
     }
-    res.json(parkingDB_getParkingTickets.getParkingTickets(req.session, queryOptions));
+    response.json(parkingDB_getParkingTickets.getParkingTickets(request.session, queryOptions));
 };
 export default handler;

@@ -1,7 +1,7 @@
 import * as ownerFunctions from "../../helpers/functions.owner.js";
-import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
-import getOwnershipReconciliationRecords from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
-export const handler = (req, res) => {
+import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import { getOwnershipReconciliationRecords } from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
+export const handler = (request, response) => {
     const records = getOwnershipReconciliationRecords();
     const statusRecords = [];
     for (const record of records) {
@@ -15,7 +15,7 @@ export const handler = (req, res) => {
             statusKey: "ownerLookupMatch",
             statusField: record.owner_recordDateString,
             statusNote: ownerAddress
-        }, req.session, false);
+        }, request.session, false);
         if (statusResponse.success) {
             statusRecords.push({
                 ticketID: record.ticket_ticketID,
@@ -23,7 +23,7 @@ export const handler = (req, res) => {
             });
         }
     }
-    return res.json({
+    return response.json({
         success: true,
         statusRecords
     });

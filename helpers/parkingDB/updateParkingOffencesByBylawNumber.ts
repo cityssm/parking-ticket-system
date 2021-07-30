@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 
-import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
+import type { ParkingBylaw } from "../../types/recordTypes";
 
 import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
@@ -10,7 +10,7 @@ export const updateParkingOffencesByBylawNumber = (requestBody: {
   offenceAmount: string;
   discountDays: string;
   discountOffenceAmount: string;
-}): AddUpdateParkingOffenceReturn => {
+}):  { success: boolean; bylaws?: ParkingBylaw[] } => {
 
   const database = sqlite(databasePath);
 

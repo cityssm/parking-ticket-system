@@ -1,17 +1,17 @@
 import type { RequestHandler } from "express";
 
-import createParkingTicketStatus from "../../helpers/parkingDB/createParkingTicketStatus.js";
+import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
   const result = createParkingTicketStatus(
-    req.body,
-    req.session,
-    req.body.resolveTicket === "1"
+    request.body,
+    request.session,
+    request.body.resolveTicket === "1"
   );
 
-  return res.json(result);
+  return response.json(result);
 };
 
 

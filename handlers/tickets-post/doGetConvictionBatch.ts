@@ -1,15 +1,15 @@
 import type { RequestHandler } from "express";
 
-import getConvictionBatch from "../../helpers/parkingDB/getConvictionBatch.js";
+import { getConvictionBatch } from "../../helpers/parkingDB/getConvictionBatch.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
   const batch = getConvictionBatch(
-    req.body.batchID
+    request.body.batchID
   );
 
-  return res.json(batch);
+  return response.json(batch);
 };
 
 

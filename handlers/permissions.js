@@ -1,49 +1,49 @@
 import * as userFunctions from "../helpers/functions.user.js";
-export const adminGetHandler = (req, res, next) => {
-    if (userFunctions.userIsAdmin(req)) {
+export const adminGetHandler = (request, response, next) => {
+    if (userFunctions.userIsAdmin(request)) {
         return next();
     }
-    return res.redirect("/dashboard");
+    return response.redirect("/dashboard");
 };
-export const adminPostHandler = (req, res, next) => {
-    if (userFunctions.userIsAdmin(req)) {
+export const adminPostHandler = (request, response, next) => {
+    if (userFunctions.userIsAdmin(request)) {
         return next();
     }
-    return res.json(userFunctions.forbiddenJSON);
+    return response.json(userFunctions.forbiddenJSON);
 };
-export const updateGetHandler = (req, res, next) => {
-    if (userFunctions.userCanUpdate(req)) {
+export const updateGetHandler = (request, response, next) => {
+    if (userFunctions.userCanUpdate(request)) {
         return next();
     }
-    return res.redirect("/dashboard");
+    return response.redirect("/dashboard");
 };
-export const updateOrOperatorGetHandler = (req, res, next) => {
-    if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
+export const updateOrOperatorGetHandler = (request, response, next) => {
+    if (userFunctions.userCanUpdate(request) || userFunctions.userIsOperator(request)) {
         return next();
     }
-    return res.redirect("/dashboard");
+    return response.redirect("/dashboard");
 };
-export const updatePostHandler = (req, res, next) => {
-    if (userFunctions.userCanUpdate(req)) {
+export const updatePostHandler = (request, response, next) => {
+    if (userFunctions.userCanUpdate(request)) {
         return next();
     }
-    return res.json(userFunctions.forbiddenJSON);
+    return response.json(userFunctions.forbiddenJSON);
 };
-export const updateOrOperatorPostHandler = (req, res, next) => {
-    if (userFunctions.userCanUpdate(req) || userFunctions.userIsOperator(req)) {
+export const updateOrOperatorPostHandler = (request, response, next) => {
+    if (userFunctions.userCanUpdate(request) || userFunctions.userIsOperator(request)) {
         return next();
     }
-    return res.json(userFunctions.forbiddenJSON);
+    return response.json(userFunctions.forbiddenJSON);
 };
-export const createGetHandler = (req, res, next) => {
-    if (userFunctions.userCanCreate(req)) {
+export const createGetHandler = (request, response, next) => {
+    if (userFunctions.userCanCreate(request)) {
         return next();
     }
-    return res.redirect("/dashboard");
+    return response.redirect("/dashboard");
 };
-export const createPostHandler = (req, res, next) => {
-    if (userFunctions.userCanCreate(req)) {
+export const createPostHandler = (request, response, next) => {
+    if (userFunctions.userCanCreate(request)) {
         return next();
     }
-    return res.json(userFunctions.forbiddenJSON);
+    return response.json(userFunctions.forbiddenJSON);
 };

@@ -1,5 +1,5 @@
-import getParkingTicketStatuses from "../../helpers/parkingDB/getParkingTicketStatuses.js";
-export const handler = (req, res) => {
-    return res.json(getParkingTicketStatuses(req.body.ticketID, req.session));
+import { getParkingTicketStatuses } from "../../helpers/parkingDB/getParkingTicketStatuses.js";
+export const handler = (request, response) => {
+    return response.json(getParkingTicketStatuses(request.body.ticketID, request.session));
 };
 export default handler;

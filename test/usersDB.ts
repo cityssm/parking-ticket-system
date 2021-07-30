@@ -21,7 +21,7 @@ describe("helpers/usersDB", () => {
 
   let password: string;
 
-  before(async () => {
+  before(async() => {
     initializeDatabase();
     usersDB_inactivateUser.inactivateUser(userName);
 
