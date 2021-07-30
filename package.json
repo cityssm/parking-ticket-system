@@ -48,7 +48,7 @@
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
-    "@cityssm/bulma-webapp-css": "^0.7.0",
+    "@cityssm/bulma-webapp-css": "^0.9.2",
     "@types/bcrypt": "^5.0.0",
     "@types/better-sqlite3": "^5.4.3",
     "@types/compression": "^1.7.1",
