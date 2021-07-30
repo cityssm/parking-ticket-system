@@ -1,7 +1,7 @@
-import getUnreceivedLookupBatches from "../../helpers/parkingDB/getUnreceivedLookupBatches.js";
-export const handler = (_req, res) => {
+import { getUnreceivedLookupBatches } from "../../helpers/parkingDB/getUnreceivedLookupBatches.js";
+export const handler = (_request, response) => {
     const unreceivedBatches = getUnreceivedLookupBatches(false);
-    res.render("mto-plateImport", {
+    response.render("mto-plateImport", {
         headTitle: "MTO Licence Plate Ownership Import",
         batches: unreceivedBatches
     });

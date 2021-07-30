@@ -1,10 +1,10 @@
 import * as configFunctions from "../../helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import * as parkingDB from "../../helpers/parkingDB.js";
-export const handler = (req, res) => {
-    const ticketNumber = req.params.ticketNumber;
-    const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
-    return res.render("ticket-edit", {
+import { getRecentParkingTicketVehicleMakeModelValues } from "../../helpers/parkingDB.js";
+export const handler = (request, response) => {
+    const ticketNumber = request.params.ticketNumber;
+    const vehicleMakeModelDatalist = getRecentParkingTicketVehicleMakeModelValues();
+    return response.render("ticket-edit", {
         headTitle: "New Ticket",
         isCreate: true,
         ticket: {

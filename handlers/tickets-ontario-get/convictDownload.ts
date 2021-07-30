@@ -3,17 +3,17 @@ import type { RequestHandler } from "express";
 import * as mtoFunctions from "../../helpers/functions.mto.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const batchID = parseInt(req.params.batchID, 10);
+  const batchID = Number.parseInt(request.params.batchID, 10);
 
-  const output = mtoFunctions.exportConvictionBatch(batchID, req.session);
+  const output = mtoFunctions.exportConvictionBatch(batchID, request.session);
 
-  res.setHeader("Content-Disposition",
+  response.setHeader("Content-Disposition",
     "attachment; filename=convictBatch-" + batchID.toString() + ".txt");
-  res.setHeader("Content-Type", "text/plain");
+  response.setHeader("Content-Type", "text/plain");
 
-  res.send(output);
+  response.send(output);
 };
 
 

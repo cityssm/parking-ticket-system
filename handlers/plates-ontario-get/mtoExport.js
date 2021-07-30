@@ -1,7 +1,7 @@
-import getLookupBatch from "../../helpers/parkingDB/getLookupBatch.js";
-export const handler = (_req, res) => {
+import { getLookupBatch } from "../../helpers/parkingDB/getLookupBatch.js";
+export const handler = (_request, response) => {
     const latestUnlockedBatch = getLookupBatch(-1);
-    res.render("mto-plateExport", {
+    response.render("mto-plateExport", {
         headTitle: "MTO Licence Plate Export",
         batch: latestUnlockedBatch
     });

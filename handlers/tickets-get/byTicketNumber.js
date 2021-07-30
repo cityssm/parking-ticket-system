@@ -1,12 +1,12 @@
-import getParkingTicketID from "../../helpers/parkingDB/getParkingTicketID.js";
-export const handler = (req, res) => {
-    const ticketNumber = req.params.ticketNumber;
+import { getParkingTicketID } from "../../helpers/parkingDB/getParkingTicketID.js";
+export const handler = (request, response) => {
+    const ticketNumber = request.params.ticketNumber;
     const ticketID = getParkingTicketID(ticketNumber);
     if (ticketID) {
-        res.redirect("/tickets/" + ticketID.toString());
+        response.redirect("/tickets/" + ticketID.toString());
     }
     else {
-        res.redirect("/tickets/?error=ticketNotFound");
+        response.redirect("/tickets/?error=ticketNotFound");
     }
 };
 export default handler;

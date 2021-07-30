@@ -1,6 +1,6 @@
 import * as vehicleFunctions from "../../helpers/functions.vehicle.js";
-export const handler = (req, res) => {
-    const makeModelList = vehicleFunctions.getModelsByMakeFromCache(req.body.vehicleMake);
-    res.json(makeModelList);
+export const handler = (request, response) => {
+    const makeModelList = vehicleFunctions.getModelsByMakeFromCache(request.body.vehicleMake);
+    response.json(makeModelList);
 };
 export default handler;

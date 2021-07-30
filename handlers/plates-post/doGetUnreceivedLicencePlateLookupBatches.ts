@@ -1,12 +1,12 @@
 import type { RequestHandler } from "express";
 
-import getUnreceivedLookupBatches from "../../helpers/parkingDB/getUnreceivedLookupBatches.js";
+import { getUnreceivedLookupBatches } from "../../helpers/parkingDB/getUnreceivedLookupBatches.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const batches = getUnreceivedLookupBatches(req.session.user.userProperties.canUpdate);
-  return res.json(batches);
+  const batches = getUnreceivedLookupBatches(request.session.user.userProperties.canUpdate);
+  return response.json(batches);
 };
 
 

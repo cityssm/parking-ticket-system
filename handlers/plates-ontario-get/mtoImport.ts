@@ -1,13 +1,13 @@
 import type { RequestHandler } from "express";
 
-import getUnreceivedLookupBatches from "../../helpers/parkingDB/getUnreceivedLookupBatches.js";
+import { getUnreceivedLookupBatches } from "../../helpers/parkingDB/getUnreceivedLookupBatches.js";
 
 
-export const handler: RequestHandler = (_req, res) => {
+export const handler: RequestHandler = (_request, response) => {
 
   const unreceivedBatches = getUnreceivedLookupBatches(false);
 
-  res.render("mto-plateImport", {
+  response.render("mto-plateImport", {
     headTitle: "MTO Licence Plate Ownership Import",
     batches: unreceivedBatches
   });

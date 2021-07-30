@@ -1,24 +1,24 @@
 import type { RequestHandler } from "express";
 
-import getAllLicencePlateOwners from "../../helpers/parkingDB/getAllLicencePlateOwners.js";
+import { getAllLicencePlateOwners } from "../../helpers/parkingDB/getAllLicencePlateOwners.js";
 import { getParkingTicketsByLicencePlate } from "../../helpers/parkingDB/getParkingTickets.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  let licencePlateCountry = req.params.licencePlateCountry;
+  let licencePlateCountry = request.params.licencePlateCountry;
 
   if (licencePlateCountry === "_") {
     licencePlateCountry = "";
   }
 
-  let licencePlateProvince = req.params.licencePlateProvince;
+  let licencePlateProvince = request.params.licencePlateProvince;
 
   if (licencePlateProvince === "_") {
     licencePlateProvince = "";
   }
 
-  let licencePlateNumber = req.params.licencePlateNumber;
+  let licencePlateNumber = request.params.licencePlateNumber;
 
   if (licencePlateNumber === "_") {
     licencePlateNumber = "";
@@ -28,9 +28,9 @@ export const handler: RequestHandler = (req, res) => {
 
   const tickets =
     getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber,
-      req.session);
+      request.session);
 
-  res.render("plate-view", {
+  response.render("plate-view", {
     headTitle: "Licence Plate " + licencePlateNumber,
 
     licencePlateNumber,

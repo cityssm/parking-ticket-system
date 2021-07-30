@@ -10,15 +10,15 @@ const upload = multer({ storage });
 export const uploadHandler = upload.single("importFile");
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const batchID = req.body.batchID;
+  const batchID = request.body.batchID;
 
-  const ownershipData = req.file.buffer.toString();
+  const ownershipData = request.file.buffer.toString();
 
-  const results = mtoFunctions.importLicencePlateOwnership(batchID, ownershipData, req.session);
+  const results = mtoFunctions.importLicencePlateOwnership(batchID, ownershipData, request.session);
 
-  return res.json(results);
+  return response.json(results);
 };
 
 

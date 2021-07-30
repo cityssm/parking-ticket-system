@@ -1,20 +1,20 @@
 import type { RequestHandler } from "express";
 
-import getLookupBatch from "../../helpers/parkingDB/getLookupBatch.js";
-import clearLookupBatch from "../../helpers/parkingDB/clearLookupBatch.js";
+import { getLookupBatch } from "../../helpers/parkingDB/getLookupBatch.js";
+import { clearLookupBatch } from "../../helpers/parkingDB/clearLookupBatch.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const batchID = parseInt(req.body.batchID, 10);
+  const batchID = Number.parseInt(request.body.batchID, 10);
 
-  const result = clearLookupBatch(batchID, req.session);
+  const result = clearLookupBatch(batchID, request.session);
 
   if (result.success) {
     result.batch = getLookupBatch(batchID);
   }
 
-  return res.json(result);
+  return response.json(result);
 };
 
 

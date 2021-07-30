@@ -1,15 +1,15 @@
 import { rawToCSV } from "@cityssm/expressjs-server-js/stringFns.js";
 import * as parkingDB_reporting from "../../helpers/parkingDB-reporting.js";
-export const handler = (req, res) => {
-    const reportName = req.params.reportName;
-    const rowsColumnsObj = parkingDB_reporting.getReportRowsColumns(reportName, req.query);
-    if (!rowsColumnsObj) {
-        res.redirect("/reports/?error=reportNotAvailable");
+export const handler = (request, response) => {
+    const reportName = request.params.reportName;
+    const rowsColumnsObject = parkingDB_reporting.getReportRowsColumns(reportName, request.query);
+    if (!rowsColumnsObject) {
+        response.redirect("/reports/?error=reportNotAvailable");
         return;
     }
-    const csv = rawToCSV(rowsColumnsObj);
-    res.setHeader("Content-Disposition", "attachment; filename=" + reportName + "-" + Date.now().toString() + ".csv");
-    res.setHeader("Content-Type", "text/csv");
-    res.send(csv);
+    const csv = rawToCSV(rowsColumnsObject);
+    response.setHeader("Content-Disposition", "attachment; filename=" + reportName + "-" + Date.now().toString() + ".csv");
+    response.setHeader("Content-Type", "text/csv");
+    response.send(csv);
 };
 export default handler;

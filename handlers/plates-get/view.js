@@ -1,21 +1,21 @@
-import getAllLicencePlateOwners from "../../helpers/parkingDB/getAllLicencePlateOwners.js";
+import { getAllLicencePlateOwners } from "../../helpers/parkingDB/getAllLicencePlateOwners.js";
 import { getParkingTicketsByLicencePlate } from "../../helpers/parkingDB/getParkingTickets.js";
-export const handler = (req, res) => {
-    let licencePlateCountry = req.params.licencePlateCountry;
+export const handler = (request, response) => {
+    let licencePlateCountry = request.params.licencePlateCountry;
     if (licencePlateCountry === "_") {
         licencePlateCountry = "";
     }
-    let licencePlateProvince = req.params.licencePlateProvince;
+    let licencePlateProvince = request.params.licencePlateProvince;
     if (licencePlateProvince === "_") {
         licencePlateProvince = "";
     }
-    let licencePlateNumber = req.params.licencePlateNumber;
+    let licencePlateNumber = request.params.licencePlateNumber;
     if (licencePlateNumber === "_") {
         licencePlateNumber = "";
     }
     const owners = getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
-    const tickets = getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, req.session);
-    res.render("plate-view", {
+    const tickets = getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, request.session);
+    response.render("plate-view", {
         headTitle: "Licence Plate " + licencePlateNumber,
         licencePlateNumber,
         licencePlateProvince,

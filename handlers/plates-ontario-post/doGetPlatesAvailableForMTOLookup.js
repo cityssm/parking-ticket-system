@@ -1,8 +1,8 @@
-import * as parkingDB_ontario from "../../helpers/parkingDB-ontario.js";
-export const handler = (req, res) => {
-    const batchID = parseInt(req.body.batchID, 10);
-    const issueDaysAgo = parseInt(req.body.issueDaysAgo, 10);
-    const availablePlates = parkingDB_ontario.getLicencePlatesAvailableForMTOLookupBatch(batchID, issueDaysAgo);
-    return res.json(availablePlates);
+import { getLicencePlatesAvailableForMTOLookupBatch } from "../../helpers/parkingDB-ontario.js";
+export const handler = (request, response) => {
+    const batchID = Number.parseInt(request.body.batchID, 10);
+    const issueDaysAgo = Number.parseInt(request.body.issueDaysAgo, 10);
+    const availablePlates = getLicencePlatesAvailableForMTOLookupBatch(batchID, issueDaysAgo);
+    return response.json(availablePlates);
 };
 export default handler;

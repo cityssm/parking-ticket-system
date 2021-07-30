@@ -3,16 +3,16 @@ import type { RequestHandler } from "express";
 import * as configFunctions from "../../helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import * as parkingDB from "../../helpers/parkingDB.js";
+import { getRecentParkingTicketVehicleMakeModelValues } from "../../helpers/parkingDB.js";
 
 
-export const handler: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (request, response) => {
 
-  const ticketNumber = req.params.ticketNumber;
+  const ticketNumber = request.params.ticketNumber;
 
-  const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();
+  const vehicleMakeModelDatalist = getRecentParkingTicketVehicleMakeModelValues();
 
-  return res.render("ticket-edit", {
+  return response.render("ticket-edit", {
     headTitle: "New Ticket",
     isCreate: true,
     ticket: {

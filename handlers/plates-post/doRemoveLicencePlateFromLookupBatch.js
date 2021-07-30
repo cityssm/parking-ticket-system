@@ -1,6 +1,6 @@
-import removeLicencePlateFromLookupBatch from "../../helpers/parkingDB/removeLicencePlateFromLookupBatch.js";
-export const handler = (req, res) => {
-    const result = removeLicencePlateFromLookupBatch(req.body, req.session);
-    return res.json(result);
+import { removeLicencePlateFromLookupBatch } from "../../helpers/parkingDB/removeLicencePlateFromLookupBatch.js";
+export const handler = (request, response) => {
+    const result = removeLicencePlateFromLookupBatch(request.body, request.session);
+    return response.json(result);
 };
 export default handler;
