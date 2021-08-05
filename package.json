@@ -28,7 +28,7 @@
     "@cityssm/expressjs-server-js": "^2.2.0",
     "@fontsource/inter": "^4.5.0",
     "@fontsource/pt-mono": "^4.5.0",
-    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "@shaggytools/nhtsa-api-wrapper": "^2.0.2",
     "bcrypt": "^5.0.1",
     "better-sqlite3": "^7.4.3",
