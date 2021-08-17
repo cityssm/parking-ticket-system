@@ -52,7 +52,7 @@
     "@cityssm/bulma-webapp-css": "^0.9.2",
     "@cityssm/simple-fa5-checkbox": "^0.2.1",
     "@types/bcrypt": "^5.0.0",
-    "@types/better-sqlite3": "^5.4.3",
+    "@types/better-sqlite3": "^7.4.0",
     "@types/compression": "^1.7.1",
     "@types/cookie-parser": "^1.4.2",
     "@types/csurf": "^1.11.2",
