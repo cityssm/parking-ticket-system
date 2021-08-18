@@ -3,25 +3,25 @@ import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as configFunctions from "./functions.config.js";
 
-import { parkingDB as dbPath } from "../data/databasePaths.js";
+import { parkingDB as databasePath } from "../data/databasePaths.js";
 
 import type * as recordTypes from "../types/recordTypes";
 import type * as expressSession from "express-session";
 
 
-export const canUpdateObject = (obj: recordTypes.Record, reqSession: expressSession.Session) => {
+export const canUpdateObject = (object: recordTypes.Record, requestSession: expressSession.Session): boolean => {
 
-  const userProperties: recordTypes.UserProperties = reqSession.user.userProperties;
+  const userProperties: recordTypes.UserProperties = requestSession.user.userProperties;
 
   // check user permissions
 
   let canUpdate = false;
 
-  if (!reqSession) {
+  if (!requestSession) {
 
     canUpdate = false;
 
-  } else if (obj.recordDelete_timeMillis) {
+  } else if (object.recordDelete_timeMillis) {
 
     // Deleted records cannot be updated
     canUpdate = false;
@@ -31,9 +31,9 @@ export const canUpdateObject = (obj: recordTypes.Record, reqSession: expressSess
     canUpdate = true;
 
   } else if (userProperties.canCreate &&
-    (obj.recordCreate_userName === reqSession.user.userName ||
-      obj.recordUpdate_userName === reqSession.user.userName) &&
-    obj.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+    (object.recordCreate_userName === requestSession.user.userName ||
+      object.recordUpdate_userName === requestSession.user.userName) &&
+    object.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     // Users with only create permission can update their own records within the time window
     canUpdate = true;
@@ -42,7 +42,7 @@ export const canUpdateObject = (obj: recordTypes.Record, reqSession: expressSess
 
   // If recently updated, send back permission
 
-  if (obj.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
+  if (object.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
 
     return canUpdate;
 
@@ -50,11 +50,11 @@ export const canUpdateObject = (obj: recordTypes.Record, reqSession: expressSess
 
   if (canUpdate) {
 
-    switch (obj.recordType) {
+    switch (object.recordType) {
 
       case "ticket":
 
-        if ((obj as recordTypes.ParkingTicket).resolvedDate) {
+        if ((object as recordTypes.ParkingTicket).resolvedDate) {
           canUpdate = false;
         }
         break;
@@ -66,9 +66,9 @@ export const canUpdateObject = (obj: recordTypes.Record, reqSession: expressSess
 };
 
 
-export const getRecentParkingTicketVehicleMakeModelValues = () => {
+export const getRecentParkingTicketVehicleMakeModelValues = (): string[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
@@ -77,7 +77,7 @@ export const getRecentParkingTicketVehicleMakeModelValues = () => {
 
   const issueDate = dateTimeFns.dateToInteger(sixMonthsAgo);
 
-  const rows = db.prepare("select vehicleMakeModel" +
+  const rows = database.prepare("select vehicleMakeModel" +
     " from ParkingTickets" +
     " where recordDelete_timeMillis is null" +
     " and issueDate > ?" +
@@ -86,9 +86,9 @@ export const getRecentParkingTicketVehicleMakeModelValues = () => {
     " order by vehicleMakeModel")
     .all(issueDate);
 
-  db.close();
+  database.close();
 
-  const vehicleMakeModelList = [];
+  const vehicleMakeModelList: string[] = [];
 
   for (const row of rows) {
     vehicleMakeModelList.push(row.vehicleMakeModel);
@@ -98,47 +98,51 @@ export const getRecentParkingTicketVehicleMakeModelValues = () => {
 
 };
 
+interface GetSplitWhereClauseFilterReturn {
+  sqlWhereClause: string;
+  sqlParams: string[];
+}
 
-export const getSplitWhereClauseFilter = (columnName: string, searchString: string) => {
+export const getSplitWhereClauseFilter = (columnName: string, searchString: string): GetSplitWhereClauseFilterReturn => {
 
   let sqlWhereClause = "";
-  const sqlParams = [];
+  const sqlParameters: string[] = [];
 
   const ticketNumberPieces = searchString.toLowerCase().split(" ");
 
   for (const ticketNumberPiece of ticketNumberPieces) {
     sqlWhereClause += " and instr(lower(" + columnName + "), ?)";
-    sqlParams.push(ticketNumberPiece);
+    sqlParameters.push(ticketNumberPiece);
   }
 
   return {
     sqlWhereClause,
-    sqlParams
+    sqlParams: sqlParameters
   };
 };
 
 
 // Licence Plates
 
+interface GetDistinctLicencePlateOwnerVehicleNCICsReturn {
+  vehicleNCIC: string;
+  recordDateMax: number;
+}
 
-export const getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate: number) => {
+export const getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate: number): GetDistinctLicencePlateOwnerVehicleNCICsReturn[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const rows: Array<{
-    vehicleNCIC: string;
-    recordDateMax: number;
-  }> = db.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +
+  const rows: GetDistinctLicencePlateOwnerVehicleNCICsReturn[] = database.prepare("select vehicleNCIC, max(recordDate) as recordDateMax" +
     " from LicencePlateOwners" +
     " where recordDate >= ?" +
     " group by vehicleNCIC" +
     " order by recordDateMax desc")
     .all(cutoffDate);
 
-  db.close();
+  database.close();
 
   return rows;
-
 };

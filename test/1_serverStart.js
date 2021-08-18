@@ -122,8 +122,8 @@ describe("parking-ticket-system", () => {
                 const page = await browser.newPage();
                 let status = 0;
                 await page.goto(appURL + "/page-not-found")
-                    .then((res) => {
-                    status = res.status();
+                    .then((response) => {
+                    status = response.status();
                 })
                     .catch(() => {
                     assert.fail();

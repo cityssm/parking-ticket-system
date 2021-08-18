@@ -1,5 +1,6 @@
 import * as assert from "assert";
 
+// eslint-disable-next-line node/no-unpublished-import
 import puppeteer from "puppeteer";
 
 import * as http from "http";
@@ -186,8 +187,8 @@ describe("parking-ticket-system", () => {
         let status = 0;
 
         await page.goto(appURL + "/page-not-found")
-          .then((res) => {
-            status = res.status();
+          .then((response) => {
+            status = response.status();
           })
           .catch(() => {
             assert.fail();
