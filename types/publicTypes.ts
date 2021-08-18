@@ -2,9 +2,9 @@ import type * as configTypes from "./configTypes";
 
 export interface ptsGlobal {
 
-  loadDefaultConfigProperties?: (callbackFn: () => void) => void;
+  loadDefaultConfigProperties?: (callbackFunction: () => void) => void;
 
-  getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFn: (propertyValue: any) => void) => void;
+  getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFunction: (propertyValue: unknown) => void) => void;
 
   getLicencePlateCountryProperties?: (originalLicencePlateCountry: string) => {
     provinces?: Array<{ provinceShortName: string }>;
@@ -24,9 +24,9 @@ export interface ptsGlobal {
 
   getLocationClass?: (locationClassKey: string) => configTypes.ConfigLocationClass;
 
-  initializeTabs?: (tabsListEle: HTMLElement, callbackFns?: {
-    onshown?: (tabContentEle: HTMLElement) => void;
+  initializeTabs?: (tabsListElement: HTMLElement, callbackFunctions?: {
+    onshown?: (tabContentElement: HTMLElement) => void;
   }) => void;
 
-  initializeToggleHiddenLinks?: (containerEle: HTMLElement) => void;
+  initializeToggleHiddenLinks?: (containerElement: HTMLElement) => void;
 }

@@ -8,11 +8,11 @@ import handler_reportName from "../handlers/reports-all/reportName.js";
 export const router = Router();
 
 
-router.get("/", (_req, res) => {
+router.get("/", (_request, response) => {
 
   const rightNow = new Date();
 
-  res.render("report-search", {
+  response.render("report-search", {
     headTitle: "Reports",
     todayDateString: dateTimeFns.dateToString(rightNow)
   });

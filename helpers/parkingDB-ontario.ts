@@ -2,7 +2,7 @@ import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import { parkingDB as dbPath } from "../data/databasePaths.js";
+import { parkingDB as databasePath } from "../data/databasePaths.js";
 
 import type { ParkingTicket } from "../types/recordTypes";
 
@@ -20,9 +20,9 @@ interface MTO_AvailableLicencePlate {
 }
 
 
-export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: number, issueDaysAgo: number) => {
+export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: number, issueDaysAgo: number): MTO_AvailableLicencePlate[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
@@ -34,7 +34,7 @@ export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: numbe
     issueDateNumber = dateTimeFns.dateToInteger(issueDate);
   }
 
-  const plates: MTO_AvailableLicencePlate[] = db.prepare("select t.licencePlateNumber," +
+  const plates: MTO_AvailableLicencePlate[] = database.prepare("select t.licencePlateNumber," +
     " min(t.ticketID) as ticketIDMin," +
     " count(t.ticketID) as ticketCount," +
     " group_concat(t.ticketNumber, ':') as ticketNumbersConcat," +
@@ -58,7 +58,7 @@ export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: numbe
     " order by t.licencePlateNumber")
     .all(currentBatchID, issueDateNumber);
 
-  db.close();
+  database.close();
 
   for (const plateRecord of plates) {
 
@@ -73,9 +73,9 @@ export const getLicencePlatesAvailableForMTOLookupBatch = (currentBatchID: numbe
 };
 
 
-export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
+export const getParkingTicketsAvailableForMTOConvictionBatch = (): ParkingTicket[] => {
 
-  const db = sqlite(dbPath, {
+  const database = sqlite(databasePath, {
     readonly: true
   });
 
@@ -83,7 +83,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
   issueDate.setDate(issueDate.getDate() - 60);
   const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
 
-  const parkingTickets: ParkingTicket[] = db.prepare(
+  const parkingTickets: ParkingTicket[] = database.prepare(
     "select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber," +
     " o.ownerName1 as licencePlateOwner_ownerName1" +
     " from ParkingTickets t" +
@@ -131,7 +131,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
     " order by ticketNumber")
     .all(issueDateNumber);
 
-  db.close();
+  database.close();
 
   for (const ticket of parkingTickets) {
     ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);

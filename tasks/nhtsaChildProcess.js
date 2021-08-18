@@ -8,30 +8,29 @@ const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
 let vehicleNCICs = [];
-const processNCIC = (index) => {
+const processNCIC = async (index) => {
     const ncicRecord = vehicleNCICs[index];
     if (ncicRecord) {
         cutoffDate = ncicRecord.recordDateMax;
         const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
         debugTask("Processing " + vehicleMake);
-        vehicleFunctions.getModelsByMake(vehicleMake, () => {
-            processNCIC(index + 1);
-        });
+        await vehicleFunctions.getModelsByMake(vehicleMake);
+        processNCIC(index + 1);
     }
     else {
         vehicleNCICs = [];
         scheduleRun();
     }
 };
-export const scheduleRun = () => {
+export const scheduleRun = async () => {
     const nextScheduleDate = new Date();
     nextScheduleDate.setHours(configFunctions.getProperty("application.task_nhtsa.executeHour"));
     nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
     debugTask("NHTSA task scheduled for " + nextScheduleDate.toString());
-    setTimeout(() => {
+    setTimeout(async () => {
         debugTask("NHTSA task starting");
         vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
-        processNCIC(0);
+        await processNCIC(0);
     }, nextScheduleDate.getTime() - Date.now());
 };
 scheduleRun();

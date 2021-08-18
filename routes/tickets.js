@@ -31,8 +31,8 @@ import handler_doAddTicketToConvictionBatch from "../handlers/tickets-post/doAdd
 import handler_doLockConvictionBatch from "../handlers/tickets-post/doLockConvictionBatch.js";
 import handler_doUnlockConvictionBatch from "../handlers/tickets-post/doUnlockConvictionBatch.js";
 export const router = Router();
-router.get("/", (_req, res) => {
-    res.render("ticket-search", {
+router.get("/", (_request, response) => {
+    response.render("ticket-search", {
         headTitle: "Parking Tickets"
     });
 });

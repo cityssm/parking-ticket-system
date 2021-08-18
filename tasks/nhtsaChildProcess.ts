@@ -16,7 +16,7 @@ let cutoffDate = dateTimeFns.dateToInteger(initDate);
 let vehicleNCICs = [];
 
 
-const processNCIC = (index: number) => {
+const processNCIC = async (index: number) => {
 
   const ncicRecord = vehicleNCICs[index];
 
@@ -28,9 +28,9 @@ const processNCIC = (index: number) => {
 
     debugTask("Processing " + vehicleMake);
 
-    vehicleFunctions.getModelsByMake(vehicleMake, () => {
-      processNCIC(index + 1);
-    });
+    await vehicleFunctions.getModelsByMake(vehicleMake);
+
+    processNCIC(index + 1);
 
   } else {
     vehicleNCICs = [];
@@ -39,7 +39,7 @@ const processNCIC = (index: number) => {
 };
 
 
-export const scheduleRun = () => {
+export const scheduleRun = async (): Promise<void> => {
 
   const nextScheduleDate = new Date();
 
@@ -48,12 +48,12 @@ export const scheduleRun = () => {
 
   debugTask("NHTSA task scheduled for " + nextScheduleDate.toString());
 
-  setTimeout(() => {
+  setTimeout(async() => {
 
     debugTask("NHTSA task starting");
 
     vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
-    processNCIC(0);
+    await processNCIC(0);
 
   }, nextScheduleDate.getTime() - Date.now());
 

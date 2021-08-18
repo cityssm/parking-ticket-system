@@ -51,8 +51,8 @@ export const router = Router();
  * Ticket Search
  */
 
-router.get("/", (_req, res) => {
-  res.render("ticket-search", {
+router.get("/", (_request, response) => {
+  response.render("ticket-search", {
     headTitle: "Parking Tickets"
   });
 });

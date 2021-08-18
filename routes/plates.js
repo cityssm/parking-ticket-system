@@ -12,8 +12,8 @@ import handler_doLockLookupBatch from "../handlers/plates-post/doLockLookupBatch
 import handler_doGetModelsByMake from "../handlers/plates-post/doGetModelsByMake.js";
 import handler_view from "../handlers/plates-get/view.js";
 export const router = Router();
-router.get("/", (_req, res) => {
-    res.render("plate-search", {
+router.get("/", (_request, response) => {
+    response.render("plate-search", {
         headTitle: "Licence Plates"
     });
 });

@@ -1,5 +1,4 @@
 *.db-journal
-*.d.ts
 app.js
 gulpfile.js
 public/stylesheets/*.css
