@@ -94,6 +94,7 @@
   },
   "resolutions": {
     "glob-parent": "6.0.1",
+    "tar": "6.1.10",
     "yargs-parser": "5.0.0-security.0"
   },
   "private": true
