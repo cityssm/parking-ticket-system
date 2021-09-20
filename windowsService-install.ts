@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import { Service } from "node-windows";
 import * as path from "path";
 

@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import * as assert from "assert";
 
 // eslint-disable-next-line node/no-unpublished-import

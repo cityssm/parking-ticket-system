@@ -6,6 +6,6 @@ const svc = new Service({
 });
 svc.on("uninstall", function () {
     console.log("Uninstall complete.");
-    console.log("The service exists: ", svc.exists);
+    console.log("The service exists:", svc.exists);
 });
 svc.uninstall();

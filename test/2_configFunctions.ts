@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import * as assert from "assert";
 
 import * as configFunctions from "../helpers/functions.config.js";
