@@ -242,9 +242,9 @@ describe("parking-ticket-system", () => {
         await page.focus("#login--password");
         await page.type("#login--password", password + "-incorrect");
 
-        const loginFormEle = await page.$("#form--login");
-        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
-          formEle.submit();
+        const loginFormElement = await page.$("#form--login");
+        await loginFormElement.evaluate((formElement: HTMLFormElement) => {
+          formElement.submit();
         });
 
         await page.waitForNavigation();

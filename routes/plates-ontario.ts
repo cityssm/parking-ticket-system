@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import { Router } from "express";
 
 import * as permissionHandlers from "../handlers/permissions.js";

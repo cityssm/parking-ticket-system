@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/filename-case */
 
 import { Service } from "node-windows";
-import * as path from "path";
+import path from "path";
 
 // Create a new service object
 const svc = new Service({

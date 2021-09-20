@@ -1,5 +1,5 @@
 import { Service } from "node-windows";
-import * as path from "path";
+import path from "path";
 const svc = new Service({
     name: "Parking Ticket System",
     script: path.join("bin", "www.js")

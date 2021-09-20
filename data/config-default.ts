@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import type * as pts from "../types/configTypes";
 import * as base from "../data/config-base.js";
 
