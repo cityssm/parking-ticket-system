@@ -1,7 +1,10 @@
 import type { Request, Response } from "express";
 
 
-const getPermission = (request: Request, permissionName: string): boolean => {
+type PermissionName = "isAdmin" | "canUpdate" | "canCreate" | "isOperator";
+
+
+const getPermission = (request: Request, permissionName: PermissionName) : boolean => {
 
   const user = request.session?.user;
 

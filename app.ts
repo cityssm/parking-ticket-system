@@ -97,7 +97,7 @@ app.use(express.static(path.join("public")));
 app.use("/fa",
   express.static(path.join("node_modules", "@fortawesome", "fontawesome-free")));
 
-app.use("/fontsource-inter",
+app.use("/stylesheets/files",
   express.static(path.join("node_modules", "@fontsource", "inter", "files")));
 
 app.use("/fontsource-pt-mono",

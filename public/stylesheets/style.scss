@@ -1,6 +1,16 @@
 $family-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
 @import '@cityssm/bulma-webapp-css/cityssm';
+// @import '@fontsource/inter/latin-100';
+// @import '@fontsource/inter/latin-200';
+@import '@fontsource/inter/latin-300';
+@import '@fontsource/inter/latin-400';
+@import '@fontsource/inter/latin-500';
+@import '@fontsource/inter/latin-600';
+@import '@fontsource/inter/latin-700';
+@import '@fontsource/inter/latin-800';
+@import '@fontsource/inter/latin-900';
+
 
 // FONT - PT MONO
 // Used for licence plate numbers
@@ -14,108 +24,7 @@ $family-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
     local('PTMono-Regular'),
     url('/fontsource-pt-mono/pt-mono-latin-400-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
     url('/fontsource-pt-mono/pt-mono-latin-400-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-    
-  font-display: swap;
-}
 
-// FONT - INTER
-
-/* inter-latin-100-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100;
-  src:
-    url('/fontsource-inter/inter-latin-100-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-100-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-200-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 200;
-  src:
-    url('/fontsource-inter/inter-latin-200-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-200-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-300-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 300;
-  src:
-    url('/fontsource-inter/inter-latin-300-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-300-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-400-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  src:
-    url('/fontsource-inter/inter-latin-400-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-400-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-500-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  src:
-    url('/fontsource-inter/inter-latin-500-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-500-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-600-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  src:
-    url('/fontsource-inter/inter-latin-600-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-600-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-700-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 700;
-  src:
-    url('/fontsource-inter/inter-latin-700-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-700-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-800-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 800;
-  src:
-    url('/fontsource-inter/inter-latin-800-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-800-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  font-display: swap;
-}
-
-/* inter-latin-900-normal */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 900;
-  src:
-    url('/fontsource-inter/inter-latin-900-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-inter/inter-latin-900-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 

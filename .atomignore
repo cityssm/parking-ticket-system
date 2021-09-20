@@ -1,7 +1,6 @@
 *.db-journal
 app.js
 gulpfile.js
-public/stylesheets/*.css
 routes/*.js
 tasks/*.js
 
