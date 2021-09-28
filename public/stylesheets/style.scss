@@ -97,3 +97,21 @@ html {
     min-height: 100vh;
   }
 }
+
+/*
+ * Print
+ */
+
+.container.is-page {
+  width: 8.5in;
+  padding: 10px 20px 20px;
+  margin: 20px auto;
+  background-color: $white;
+  border: 1px solid $black;
+
+  @media print {
+    width: 100%;
+    padding: 0;
+    border: 0;
+  }
+}

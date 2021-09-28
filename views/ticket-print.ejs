@@ -1,0 +1,263 @@
+<%- include('_header-print'); -%>
+
+<h1 class="title is-1">
+  Ticket <%= ticket.ticketNumber %>
+</h1>
+
+<% if (ticket.resolvedDate) { %>
+  <p class="has-text-weight-bold">This ticket was resolved <%= ticket.resolvedDateString %>.</p>
+<% } %>
+
+<div class="columns is-mobile">
+  <div class="column">
+    <p>
+      <strong>Issue Date/Time</strong><br />
+      <%= ticket.issueDateString + " " + ticket.issueTimeString %>
+    </p>
+  </div>
+  <div class="column">
+    <p>
+      <strong>Issuing Officer</strong><br />
+      <% if (!ticket.issuingOfficer || ticket.issuingOfficer === "") { %>
+        <span class="has-text-grey">(Not Recorded)</span>
+      <% } else { %>
+        <%= ticket.issuingOfficer %>
+      <% } %>
+    </p>
+  </div>
+  <div class="column is-5">
+    <p>
+      <strong>Location</strong><br />
+      <% if ((!ticket.locationDescription || ticket.locationDescription === "") && !ticket.locationName) { %>
+        <span class="has-text-grey">(Not Recorded)</span>
+      <% } else { %>
+        <% if (ticket.locationName) { %>
+          <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+          <%= ticket.locationName %><br />
+        <% } %>
+        <%= ticket.locationDescription %>
+      <% } %>
+    </p>
+  </div>
+</div>
+<div class="columns is-mobile">
+  <div class="column is-7">
+    <p>
+      <strong>Parking Offence</strong><br />
+      <% if (!ticket.parkingOffence || ticket.parkingOffence === "") { %>
+        <span class="has-text-grey">(Not Recorded)</span>
+      <% } else { %>
+        <%= ticket.parkingOffence %>
+      <% } %>
+    </p>
+  </div>
+  <div class="column">
+    <p>
+      <strong>
+        Related
+        <span class="is-nowrap">By-Law</span>
+      </strong><br />
+      <% if (!ticket.bylawNumber || ticket.bylawNumber === "") { %>
+        <span class="has-text-grey">(Not Recorded)</span>
+        <% } else { %>
+        <%= ticket.bylawNumber %>
+      <% } %>
+    </p>
+  </div>
+</div>
+<div class="columns is-mobile">
+  <div class="column is-7">
+    <p>
+      <strong>Offence Amount</strong><br />
+      <% if (!ticket.offenceAmount) { %>
+        <span class="has-text-grey">(Not Recorded)</span>
+      <% } else { %>
+        $<%= ticket.offenceAmount.toFixed(2) %>
+      <% } %>
+    </p>
+  </div>
+  <div class="column">
+    <p>
+      <strong>Discount Offence Amount</strong><br />
+      <% if (!ticket.discountOffenceAmount) { %>
+        <span class="has-text-grey">(Not Recorded)</span>
+      <% } else { %>
+        $<%= ticket.discountOffenceAmount.toFixed(2) %>
+        for
+        <%= ticket.discountDays %> days
+      <% } %>
+    </p>
+  </div>
+</div>
+
+<section>
+  <h2 class="title is-3">
+    Vehicle Details
+  </h2>
+
+  <%
+    const licencePlateLocationObj = configFunctions.getLicencePlateLocationProperties(ticket.licencePlateCountry, ticket.licencePlateProvince);
+  %>
+  <div class="columns">
+    <div class="column is-narrow has-text-centered">
+      <div class="licence-plate" style="--color:#000;--backgroundColor:#fff">
+        <div class="licence-plate-province"><%= licencePlateLocationObj.licencePlateProvinceAlias %></div>
+        <div class="licence-plate-number">
+          <% if (ticket.licencePlateNumber === "") { %>
+            <i class="fas fa-question-circle has-opacity-2" aria-hidden="true"></i>
+          <% } else { %>
+            <%=  ticket.licencePlateNumber %>
+          <% } %>
+        </div>
+      </div><br />
+      <% if (ticket.licencePlateExpiryDateString === "") { %>
+        <span class="is-size-7 has-text-grey">(No Expiry Date)</span>
+      <% } else { %>
+        <span class="is-size-7">
+          Expires<br />
+          <%=
+            (configFunctions.getProperty("parkingTickets.licencePlateExpiryDate.includeDay") ?
+              ticket.licencePlateExpiryDateString :
+              ticket.licencePlateExpiryDateString.substring(0, ticket.licencePlateExpiryDateString.lastIndexOf("-")))
+          %>
+        </span>
+      <% } %>
+    </div>
+    <div class="column">
+      <p class="mb-1">
+        <strong>Vehicle Make/Model from Ticket</strong><br />
+        <% if (!ticket.vehicleMakeModel || ticket.vehicleMakeModel === "") { %>
+          <span class="has-text-grey">(Not Recorded)</span>
+        <% } else { %>
+          <%= ticket.vehicleMakeModel %>
+        <% } %>
+      </p>
+      <p>
+        <strong>Vehicle VIN</strong><br />
+        <% if (!ticket.vehicleVIN || ticket.vehicleVIN === "") { %>
+          <span class="has-text-grey">(Not Recorded)</span>
+        <% } else { %>
+          <%= ticket.vehicleVIN %>
+        <% } %>
+      </p>
+    </div>
+    <div class="column is-5">
+      <%
+        if (ticket.licencePlateOwner) {
+      %>
+        <p>
+          <strong>
+            Ownership Information
+          </strong><br />
+          <% if (ticket.licencePlateOwner.recordDate) { %>
+            <span class="has-text-grey">Recorded <%= ticket.licencePlateOwner.recordDateString %></span>
+          <% } else { %>
+            No Record Date
+          <% } %><br />
+          <span>
+            <i class="fas fa-fw fa-user" aria-hidden="true"></i>
+            <%= ticket.licencePlateOwner.ownerName1 %>
+          </span><br />
+          <% if (ticket.licencePlateOwner.ownerName2) { %>
+            <span>
+              <i class="fas fa-fw fa-user" aria-hidden="true"></i> <%= ticket.licencePlateOwner.ownerName2 %>
+            </span><br />
+          <% } %>
+          <% if (ticket.licencePlateOwner.vehicleNCIC) { %>
+            <span>
+              <i class="fas fa-fw fa-car-side" aria-hidden="true"></i>
+              <%= ticket.licencePlateOwner.vehicleMake %>
+              <% if (ticket.licencePlateOwner.vehicleNCIC !== ticket.licencePlateOwner.vehicleMake) { %>
+                (<%= ticket.licencePlateOwner.vehicleNCIC %>)
+              <% } %>
+            </span>
+          <% } %>
+        </p>
+      <%
+        } else {
+      %>
+        <p class="has-text-weight-bold">
+          Ownership information is not available for this licence plate.
+        </p>
+      <%
+        }
+      %>
+    </div>
+  </div>
+</section>
+
+<section class="mt-4">
+  <h2 class="title is-3">
+    Status
+  </h2>
+
+  <%
+    for (let index = 0; index < ticket.statusLog.length; index += 1) {
+  %>
+    <% if (index !== 0) { %>
+      <hr class="my-2" />
+    <% } %>
+    <%
+      const statusLogEntryObj = ticket.statusLog[index];
+      const statusObj = configFunctions.getParkingTicketStatus(statusLogEntryObj.statusKey) || {};
+    %>
+    <div class="mb-2">
+      <div class="level mb-1">
+        <div class="level-left">
+          <strong><%= statusObj.status || statusLogEntryObj.statusKey %></strong>
+        </div>
+        <div class="level-right">
+          <%= statusLogEntryObj.statusDateString %>
+        </div>
+      </div>
+      <% if (statusLogEntryObj.statusField && statusLogEntryObj.statusField !== "") { %>
+        <div class="is-size-7">
+          <strong><%= (statusObj.statusField && statusObj.statusField.fieldLabel ? statusObj.statusField.fieldLabel + ":" : "") %></strong>
+          <%= statusLogEntryObj.statusField %>
+        </div>
+      <% } %>
+      <% if (statusLogEntryObj.statusField2 && statusLogEntryObj.statusField2 !== "") { %>
+        <div class="is-size-7">
+          <strong><%= (statusObj.statusField2 && statusObj.statusField2.fieldLabel ? statusObj.statusField2.fieldLabel + ":" : "") %></strong>
+          <%= statusLogEntryObj.statusField2 %>
+        </div>
+      <% } %>
+      <div class="has-newline-chars is-size-7"><%= statusLogEntryObj.statusNote %></div>
+    </div>
+  <%
+    }
+  %>
+</section>
+
+<section class="mt-4">
+  <h2 class="title is-3">
+    Remarks
+  </h2>
+
+  <% if (ticket.remarks.length === 0) { %>
+    <p>
+      There are no remarks recorded for this ticket.
+    </p>
+  <% } else { %>
+    <%
+      for (let index = 0; index < ticket.remarks.length; index += 1) {
+    %>
+    <% if (index !== 0) { %>
+      <hr class="my-2" />
+    <% } %>
+    <% const remarkObj = ticket.remarks[index]; %>
+      <div>
+        <p class="has-newline-chars"><%= remarkObj.remark %></p>
+        <p class="is-size-7">
+          <%= remarkObj.recordUpdate_userName %>
+          -
+          <%= remarkObj.remarkDateString %>
+          <%= remarkObj.remarkTimeString %>
+      </div>
+    <%
+      }
+    %>
+  <% } %>
+</section>
+
+<%- include('_footer-print'); -%>

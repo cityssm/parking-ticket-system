@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as permissionHanders from "../handlers/permissions.js";
 import handler_new from "../handlers/tickets-get/new.js";
 import handler_view from "../handlers/tickets-get/view.js";
+import handler_print from "../handlers/tickets-get/print.js";
 import handler_edit from "../handlers/tickets-get/edit.js";
 import handler_byTicketNumber from "../handlers/tickets-get/byTicketNumber.js";
 import handler_doGetTickets from "../handlers/tickets-post/doGetTickets.js";
@@ -64,6 +65,7 @@ router.post("/doAddStatus", permissionHanders.createPostHandler, handler_doAddSt
 router.post("/doUpdateStatus", permissionHanders.createPostHandler, handler_doUpdateStatus);
 router.post("/doDeleteStatus", permissionHanders.createPostHandler, handler_doDeleteStatus);
 router.get("/:ticketID", handler_view);
+router.get("/:ticketID/print", handler_print);
 router.get("/byTicketNumber/:ticketNumber", handler_byTicketNumber);
 router.get("/:ticketID/edit", permissionHanders.createGetHandler, handler_edit);
 export default router;

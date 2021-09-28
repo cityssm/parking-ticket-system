@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="has-background-dark m-0 p-0" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>
+    <%= headTitle %>: <%= configFunctions.getProperty("application.applicationName") %>
+  </title>
+
+  <link rel="icon" href="/images/favicon.png" />
+
+  <link rel="stylesheet" href="/stylesheets/style.min.css" />
+  <link rel="stylesheet" href="/fa/css/all.min.css" />
+</head>
+
+<body class="m-0 p-0" style="min-height:100vh;">
+  <div class="fixed-container is-fixed-bottom-right mx-4 my-4 has-text-right is-hidden-print">
+    <button class="button is-circle is-primary has-tooltip-left" data-tooltip="Print" type="button" onclick="window.print()" autofocus>
+      <i class="fas fa-print" aria-hidden="true"></i>
+      <span class="sr-only">Print</span>
+    </button>
+  </div>
+  <main class="container is-page">
