@@ -84,7 +84,7 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-unicorn": "^36.0.0",
+    "eslint-plugin-unicorn": "^40.0.0",
     "github-markdown-css": "^4.0.0",
     "gulp": "^4.0.2",
     "gulp-changed": "^4.0.3",
