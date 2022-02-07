@@ -1,6 +1,5 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import { intLikeToNumber } from "../functions.database.js";
 import { parkingDB as databasePath } from "../../data/databasePaths.js";
 export const createConvictionBatch = (requestSession) => {
     const database = sqlite(databasePath);
@@ -16,7 +15,7 @@ export const createConvictionBatch = (requestSession) => {
             success: true,
             batch: {
                 recordType: "batch",
-                batchID: intLikeToNumber(info.lastInsertRowid),
+                batchID: info.lastInsertRowid,
                 batchDate: dateTimeFns.dateToInteger(rightNow),
                 batchDateString: dateTimeFns.dateToString(rightNow),
                 lockDate: undefined,

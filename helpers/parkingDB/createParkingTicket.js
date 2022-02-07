@@ -1,7 +1,6 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as configFunctions from "../functions.config.js";
-import { intLikeToNumber } from "../functions.database.js";
 import { getLicencePlateExpiryDateFromPieces } from "./updateParkingTicket.js";
 import { parkingDB as databasePath } from "../../data/databasePaths.js";
 const hasDuplicateTicket = (database, ticketNumber, issueDate) => {
@@ -53,7 +52,7 @@ export const createParkingTicket = (requestBody, requestSession) => {
     database.close();
     return {
         success: true,
-        ticketID: intLikeToNumber(info.lastInsertRowid),
+        ticketID: info.lastInsertRowid,
         nextTicketNumber: undefined
     };
 };

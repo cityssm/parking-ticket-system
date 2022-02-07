@@ -2,7 +2,6 @@ import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as configFunctions from "../functions.config.js";
-import { intLikeToNumber } from "../functions.database.js";
 
 import type * as pts from "../../types/recordTypes";
 
@@ -113,7 +112,7 @@ export const createParkingTicket =
 
     return {
       success: true,
-      ticketID: intLikeToNumber(info.lastInsertRowid),
+      ticketID: (info.lastInsertRowid as number),
       nextTicketNumber: undefined // populated in handler
     };
   };

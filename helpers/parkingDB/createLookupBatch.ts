@@ -1,7 +1,6 @@
 import sqlite from "better-sqlite3";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import { intLikeToNumber } from "../functions.database.js";
 
 import { parkingDB as databasePath } from "../../data/databasePaths.js";
 
@@ -34,7 +33,7 @@ export const createLookupBatch =
         success: true,
         batch: {
           recordType: "batch",
-          batchID: intLikeToNumber(info.lastInsertRowid),
+          batchID: (info.lastInsertRowid as number),
           batchDate: dateTimeFns.dateToInteger(rightNow),
           batchDateString: dateTimeFns.dateToString(rightNow),
           lockDate: undefined,
