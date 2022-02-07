@@ -20,7 +20,7 @@ Although the system is quite niche, it's being released in an open source enviro
 in hopes to pool developer resources from other Ontario municipalities
 looking to move away from older, legacy systems.
 
-[Documentation So Far](/docs)
+[Documentation So Far](https://cityssm.github.io/parking-ticket-system/docs)
 
 ## This project is incomplete and under active development
 
