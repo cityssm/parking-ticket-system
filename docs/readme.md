@@ -1,3 +1,5 @@
+[Home](https://cityssm.github.io/parking-ticket-system/)
+
 # Parking Ticket System Documentation
 
 **Thank you for taking the time to read the documentation.**
