@@ -2,15 +2,6 @@ import { Router } from "express";
 
 import { adminGetHandler, adminPostHandler } from "../handlers/permissions.js";
 
-import handler_userManagement from "../handlers/admin-get/userManagement.js";
-
-import handler_doCreateUser from "../handlers/admin-post/doCreateUser.js";
-import handler_doUpdateUser from "../handlers/admin-post/doUpdateUser.js";
-import handler_doGetUserProperties from "../handlers/admin-post/doGetUserProperties.js";
-import handler_doUpdateUserProperty from "../handlers/admin-post/doUpdateUserProperty.js";
-import handler_doResetPassword from "../handlers/admin-post/doResetPassword.js";
-import handler_doDeleteUser from "../handlers/admin-post/doDeleteUser.js";
-
 import handler_cleanup from "../handlers/admin-get/cleanup.js";
 import handler_doCleanupTable from "../handlers/admin-post/doCleanupTable.js";
 
@@ -32,38 +23,6 @@ import handler_doDeleteBylaw from "../handlers/admin-post/doDeleteBylaw.js";
 
 
 export const router = Router();
-
-
-// User Management
-
-
-router.get("/userManagement",
-  adminGetHandler,
-  handler_userManagement);
-
-router.post("/doCreateUser",
-  adminPostHandler,
-  handler_doCreateUser);
-
-router.post("/doUpdateUser",
-  adminPostHandler,
-  handler_doUpdateUser);
-
-router.post("/doUpdateUserProperty",
-  adminPostHandler,
-  handler_doUpdateUserProperty);
-
-router.post("/doResetPassword",
-  adminPostHandler,
-  handler_doResetPassword);
-
-router.post("/doGetUserProperties",
-  adminPostHandler,
-  handler_doGetUserProperties);
-
-router.post("/doDeleteUser",
-  adminPostHandler,
-  handler_doDeleteUser);
 
 
 // Database Cleanup

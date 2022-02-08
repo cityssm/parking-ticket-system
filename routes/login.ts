@@ -1,7 +1,14 @@
 import { Router } from "express";
 
 import * as configFunctions from "../helpers/functions.config.js";
-import * as usersDB_getUser from "../helpers/usersDB/getUser.js";
+
+import * as authenticationFunctions from "../helpers/functions.authentication.js";
+
+import Debug from "debug";
+const debug = Debug("parking-ticket-system:login");
+
+import type * as recordTypes from "../types/recordTypes";
+
 
 export const router = Router();
 
@@ -17,7 +24,6 @@ const getSafeRedirectURL = (possibleRedirectURL = "") => {
     case "/plates-ontario/mtoExport":
     case "/plates-ontario/mtoImport":
     case "/reports":
-    case "/admin/userManagement":
     case "/admin/cleanup":
     case "/admin/offences":
     case "/admin/locations":
@@ -59,13 +65,64 @@ router.route("/")
 
     const redirectURL = getSafeRedirectURL(request.body.redirect);
 
-    const userObject = await usersDB_getUser.getUser(userName, passwordPlain);
+    let isAuthenticated = false;
 
-    if (userObject) {
+    if (userName.charAt(0) === "*" && userName === passwordPlain) {
+
+      isAuthenticated = configFunctions.getProperty("users.testing").includes(userName);
+
+      if (isAuthenticated) {
+        debug("Authenticated testing user: " + userName);
+      }
+    } else {
+
+      isAuthenticated = await authenticationFunctions.authenticate(userName, passwordPlain);
+    }
+
+    let userObject: recordTypes.User;
+
+    if (isAuthenticated) {
+
+      const userNameLowerCase = userName.toLowerCase();
+
+      const canLogin = configFunctions.getProperty("users.canLogin")
+        .some((currentUserName) => {
+          return userNameLowerCase === currentUserName.toLowerCase();
+        });
+
+      if (canLogin) {
+
+        const canUpdate = configFunctions.getProperty("users.canUpdate")
+          .some((currentUserName) => {
+            return userNameLowerCase === currentUserName.toLowerCase();
+          });
+
+        const isAdmin = configFunctions.getProperty("users.isAdmin")
+          .some((currentUserName) => {
+            return userNameLowerCase === currentUserName.toLowerCase();
+          });
+
+        const isOperator = configFunctions.getProperty("users.isOperator")
+          .some((currentUserName) => {
+            return userNameLowerCase === currentUserName.toLowerCase();
+          });
+
+        userObject = {
+          userName: userNameLowerCase,
+          userProperties: {
+            canUpdate,
+            isAdmin,
+            isOperator
+          }
+        };
+      }
+    }
+
+    if (isAuthenticated && userObject) {
 
       request.session.user = userObject;
 
-      response.redirect(request.body.redirect);
+      response.redirect(redirectURL);
 
     } else {
 

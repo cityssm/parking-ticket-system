@@ -118,27 +118,27 @@ router.post("/doUnlockConvictionBatch",
  */
 
 router.get(["/new", "/new/:ticketNumber"],
-  permissionHanders.createGetHandler,
+  permissionHanders.updateGetHandler,
   handler_new);
 
 router.post("/doCreateTicket",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doCreateTicket);
 
 router.post("/doUpdateTicket",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doUpdateTicket);
 
 router.post("/doDeleteTicket",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doDeleteTicket);
 
 router.post("/doResolveTicket",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doResolveTicket);
 
 router.post("/doUnresolveTicket",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doUnresolveTicket);
 
 router.post("/doRestoreTicket",
@@ -153,15 +153,15 @@ router.post("/doGetRemarks",
   handler_doGetRemarks);
 
 router.post("/doAddRemark",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doAddRemark);
 
 router.post("/doUpdateRemark",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doUpdateRemark);
 
 router.post("/doDeleteRemark",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doDeleteRemark);
 
 /*
@@ -172,15 +172,15 @@ router.post("/doGetStatuses",
   handler_doGetStatuses);
 
 router.post("/doAddStatus",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doAddStatus);
 
 router.post("/doUpdateStatus",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doUpdateStatus);
 
 router.post("/doDeleteStatus",
-  permissionHanders.createPostHandler,
+  permissionHanders.updatePostHandler,
   handler_doDeleteStatus);
 
 /*
@@ -201,7 +201,7 @@ router.get("/byTicketNumber/:ticketNumber",
  */
 
 router.get("/:ticketID/edit",
-  permissionHanders.createGetHandler,
+  permissionHanders.updateGetHandler,
   handler_edit);
 
 

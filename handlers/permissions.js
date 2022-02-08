@@ -35,15 +35,3 @@ export const updateOrOperatorPostHandler = (request, response, next) => {
     }
     return response.json(userFunctions.forbiddenJSON);
 };
-export const createGetHandler = (request, response, next) => {
-    if (userFunctions.userCanCreate(request)) {
-        return next();
-    }
-    return response.redirect("/dashboard");
-};
-export const createPostHandler = (request, response, next) => {
-    if (userFunctions.userCanCreate(request)) {
-        return next();
-    }
-    return response.json(userFunctions.forbiddenJSON);
-};

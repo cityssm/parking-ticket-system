@@ -1,6 +1,5 @@
 import sqlite from "better-sqlite3";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import * as configFunctions from "./functions.config.js";
 import { parkingDB as databasePath } from "../data/databasePaths.js";
 export const canUpdateObject = (object, requestSession) => {
     const userProperties = requestSession.user.userProperties;
@@ -13,15 +12,6 @@ export const canUpdateObject = (object, requestSession) => {
     }
     else if (userProperties.canUpdate) {
         canUpdate = true;
-    }
-    else if (userProperties.canCreate &&
-        (object.recordCreate_userName === requestSession.user.userName ||
-            object.recordUpdate_userName === requestSession.user.userName) &&
-        object.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
-        canUpdate = true;
-    }
-    if (object.recordUpdate_timeMillis + configFunctions.getProperty("user.createUpdateWindowMillis") > Date.now()) {
-        return canUpdate;
     }
     if (canUpdate) {
         switch (object.recordType) {

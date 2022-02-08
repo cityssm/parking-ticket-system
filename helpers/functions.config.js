@@ -3,6 +3,7 @@ const configFallbackValues = new Map();
 configFallbackValues.set("application.applicationName", "Parking Ticket System");
 configFallbackValues.set("application.logoURL", "/images/noParking.svg");
 configFallbackValues.set("application.httpPort", 4000);
+configFallbackValues.set("application.userDomain", "");
 configFallbackValues.set("application.feature_mtoExportImport", false);
 configFallbackValues.set("application.task_nhtsa.runTask", false);
 configFallbackValues.set("application.task_nhtsa.executeHour", 2);
@@ -10,14 +11,11 @@ configFallbackValues.set("session.cookieName", "parking-ticket-system-user-sid")
 configFallbackValues.set("session.secret", "cityssm/parking-ticket-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
-configFallbackValues.set("admin.defaultPassword", "");
-configFallbackValues.set("user.createUpdateWindowMillis", 60 * 60 * 1000);
-configFallbackValues.set("user.defaultProperties", Object.freeze({
-    canCreate: false,
-    canUpdate: false,
-    isAdmin: false,
-    isOperator: false
-}));
+configFallbackValues.set("users.testing", []);
+configFallbackValues.set("users.canLogin", []);
+configFallbackValues.set("users.canUpdate", []);
+configFallbackValues.set("users.isAdmin", []);
+configFallbackValues.set("users.isOperator", []);
 configFallbackValues.set("defaults.country", "");
 configFallbackValues.set("defaults.province", "");
 configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");

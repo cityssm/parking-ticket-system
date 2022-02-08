@@ -29,13 +29,14 @@
             <form id="form--login" method="post" action="/login">
               <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
               <input name="redirect" type="hidden" value="<%= redirect %>" />
-              <div class="field">
-                <label class="sr-only" for="login--userName">User Name</label>
-                <div class="control has-icons-left">
-                  <input class="input" id="login--userName" name="userName" type="text" placeholder="User Name" value="<%= userName %>" autofocus required />
-                  <span class="icon is-small is-left">
-                    <i class="fas fa-user" aria-hidden="true"></i>
+              <div class="field has-addons">
+                <div class="control">
+                  <span class="button is-static">
+                    <%= configFunctions.getProperty("application.userDomain") %>\
                   </span>
+                </div>
+                <div class="control">
+                  <input class="input" id="login--userName" name="userName" type="text" placeholder="User Name" value="<%= userName %>" aria-label="User Name" autofocus required />
                 </div>
               </div>
               <div class="field">
@@ -70,7 +71,7 @@
             <hr />
             <div class="has-text-right is-size-7">
               Build <%= buildNumber %><br />
-              <a class="has-text-grey-dark" href="https://cityssm.github.io/parking-ticket-system/" target="_blank" rel="nofollow noreferrer">
+              <a class="has-text-grey-dark" href="https://cityssm.github.io/parking-ticket-system/docs" target="_blank" rel="nofollow noreferrer">
                 <i class="fas fa-question-circle" aria-hidden="true"></i>
                 Help
               </a>

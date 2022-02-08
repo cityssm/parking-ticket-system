@@ -3,8 +3,6 @@
 import { app } from "../app.js";
 
 import http from "http";
-import https from "https";
-import fs from "fs";
 
 import { fork } from "child_process";
 
@@ -45,7 +43,7 @@ const onError = (error: Error) => {
 };
 
 
-const onListening = (server: http.Server | https.Server) => {
+const onListening = (server: http.Server) => {
 
   const addr = server.address();
 
@@ -76,31 +74,6 @@ if (httpPort) {
   });
 
   debugWWW("HTTP listening on " + httpPort.toString());
-}
-
-/**
- * Initialize HTTPS
- */
-
-const httpsConfig = configFunctions.getProperty("application.https");
-
-if (httpsConfig) {
-
-  const httpsServer = https.createServer({
-    key: fs.readFileSync(httpsConfig.keyPath),
-    cert: fs.readFileSync(httpsConfig.certPath),
-    passphrase: httpsConfig.passphrase
-  }, app);
-
-  httpsServer.listen(httpsConfig.port);
-
-  httpsServer.on("error", onError);
-
-  httpsServer.on("listening", () => {
-    onListening(httpsServer);
-  });
-
-  debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
 
 /**

@@ -1,7 +1,5 @@
-/* eslint-disable unicorn/filename-case */
-
 import type * as pts from "../types/configTypes";
-import * as base from "../data/config-base.js";
+import * as base from "../data/configBase.js";
 
 export const config: pts.Config = {};
 
@@ -13,8 +11,6 @@ config.application = {
     executeHour: 1
   }
 };
-
-config.session = {};
 
 config.defaults = {
   country: "CA",

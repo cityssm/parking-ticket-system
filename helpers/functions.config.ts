@@ -1,10 +1,7 @@
-/* eslint-disable no-redeclare */
-
 // eslint-disable-next-line node/no-unpublished-import
 import config from "../data/config.js";
 
 import type * as configTypes from "../types/configTypes";
-import type * as recordTypes from "../types/recordTypes";
 
 
 /*
@@ -16,6 +13,7 @@ const configFallbackValues = new Map<string, unknown>();
 configFallbackValues.set("application.applicationName", "Parking Ticket System");
 configFallbackValues.set("application.logoURL", "/images/noParking.svg");
 configFallbackValues.set("application.httpPort", 4000);
+configFallbackValues.set("application.userDomain", "");
 
 configFallbackValues.set("application.feature_mtoExportImport", false);
 
@@ -27,15 +25,11 @@ configFallbackValues.set("session.secret", "cityssm/parking-ticket-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
 
-configFallbackValues.set("admin.defaultPassword", "");
-
-configFallbackValues.set("user.createUpdateWindowMillis", 60 * 60 * 1000);
-configFallbackValues.set("user.defaultProperties", Object.freeze({
-  canCreate: false,
-  canUpdate: false,
-  isAdmin: false,
-  isOperator: false
-}));
+configFallbackValues.set("users.testing", []);
+configFallbackValues.set("users.canLogin", []);
+configFallbackValues.set("users.canUpdate", []);
+configFallbackValues.set("users.isAdmin", []);
+configFallbackValues.set("users.isOperator", []);
 
 configFallbackValues.set("defaults.country", "");
 configFallbackValues.set("defaults.province", "");
@@ -74,13 +68,12 @@ configFallbackValues.set("databaseCleanup.windowDays", 30);
  */
 
 
-export function getProperty(propertyName: "admin.defaultPassword"): string;
+export function getProperty(propertyName: "activeDirectory"): configTypes.ConfigActiveDirectory;
 
 export function getProperty(propertyName: "application.applicationName"): string;
 export function getProperty(propertyName: "application.logoURL"): string;
 export function getProperty(propertyName: "application.httpPort"): number;
-
-export function getProperty(propertyName: "application.https"): configTypes.ConfigHttpsConfig | null;
+export function getProperty(propertyName: "application.userDomain"): string;
 
 export function getProperty(propertyName: "databaseCleanup.windowDays"): number;
 
@@ -108,8 +101,11 @@ export function getProperty(propertyName: "session.doKeepAlive"): boolean;
 export function getProperty(propertyName: "session.maxAgeMillis"): number;
 export function getProperty(propertyName: "session.secret"): string;
 
-export function getProperty(propertyName: "user.createUpdateWindowMillis"): number;
-export function getProperty(propertyName: "user.defaultProperties"): recordTypes.UserProperties;
+export function getProperty(propertyName: "users.testing"): string[];
+export function getProperty(propertyName: "users.canLogin"): string[];
+export function getProperty(propertyName: "users.canUpdate"): string[];
+export function getProperty(propertyName: "users.isAdmin"): string[];
+export function getProperty(propertyName: "users.isOperator"): string[];
 
 export function getProperty(propertyName: "application.feature_mtoExportImport"): boolean;
 export function getProperty(propertyName: "mtoExportImport.authorizedUser"): string;

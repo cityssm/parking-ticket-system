@@ -5,5 +5,3 @@ export declare const updateGetHandler: RequestHandler;
 export declare const updateOrOperatorGetHandler: RequestHandler;
 export declare const updatePostHandler: RequestHandler;
 export declare const updateOrOperatorPostHandler: RequestHandler;
-export declare const createGetHandler: RequestHandler;
-export declare const createPostHandler: RequestHandler;

@@ -61,23 +61,3 @@ export const updateOrOperatorPostHandler: RequestHandler = (request, response, n
 
   return response.json(userFunctions.forbiddenJSON);
 };
-
-
-export const createGetHandler: RequestHandler = (request, response, next) => {
-
-  if (userFunctions.userCanCreate(request)) {
-    return next();
-  }
-
-  return response.redirect("/dashboard");
-};
-
-
-export const createPostHandler: RequestHandler = (request, response, next) => {
-
-  if (userFunctions.userCanCreate(request)) {
-    return next();
-  }
-
-  return response.json(userFunctions.forbiddenJSON);
-};

@@ -11,14 +11,8 @@ export const userIsAdmin = (request) => {
 export const userCanUpdate = (request) => {
     return getPermission(request, "canUpdate");
 };
-export const userCanCreate = (request) => {
-    return getPermission(request, "canCreate");
-};
 export const userIsOperator = (request) => {
     return getPermission(request, "isOperator");
-};
-export const getHashString = (userName, passwordPlain) => {
-    return userName + "::" + passwordPlain;
 };
 export const forbiddenJSON = (response) => {
     return response

@@ -28,7 +28,6 @@ import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns.js";
 import * as vehicleFunctions from "./helpers/functions.vehicle.js";
 
-import * as usersDB_init from "./helpers/usersDB/initializeDatabase.js";
 import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase.js";
 import { initNHTSADB } from "./helpers/initializeDatabase.js";
 
@@ -40,7 +39,6 @@ const debugApp = debug("parking-ticket-system:app");
  * INITALIZE THE DATABASES
  */
 
-usersDB_init.initializeDatabase();
 parkingDB_init.initializeDatabase();
 initNHTSADB();
 
@@ -105,6 +103,9 @@ app.use("/fontsource-pt-mono",
 
 app.use("/cityssm-bulma-webapp-js",
   express.static(path.join("node_modules", "@cityssm", "bulma-webapp-js")));
+
+app.use("/bulma-js",
+  express.static(path.join("node_modules", "@cityssm", "bulma-js", "dist")));
 
 
 /*

@@ -1,7 +1,8 @@
 /// <reference types="qs" />
 import type { Request } from "express";
 import type { Session } from "express-session";
-export declare const userName = "__testUser";
+export declare const testUser = "*testView";
+export declare const testAdmin = "*testAdmin";
 export declare const fakeViewOnlySession: Session;
 export declare const fakeAdminSession: Session;
 export declare const fakeRequest: Request;

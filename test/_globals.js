@@ -1,4 +1,6 @@
-export const userName = "__testUser";
+import * as configFunctions from "../helpers/functions.config.js";
+export const testUser = "*testView";
+export const testAdmin = "*testAdmin";
 export const fakeViewOnlySession = {
     id: "",
     cookie: undefined,
@@ -9,9 +11,8 @@ export const fakeViewOnlySession = {
     save: undefined,
     touch: undefined,
     user: {
-        userName: userName,
+        userName: configFunctions.getProperty("users.testing")[0],
         userProperties: {
-            canCreate: false,
             canUpdate: false,
             isAdmin: false,
             isOperator: false
@@ -28,9 +29,8 @@ export const fakeAdminSession = {
     save: undefined,
     touch: undefined,
     user: {
-        userName: userName,
+        userName: configFunctions.getProperty("users.testing")[0],
         userProperties: {
-            canCreate: true,
             canUpdate: true,
             isAdmin: true,
             isOperator: true

@@ -21,12 +21,10 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns.js";
 import * as vehicleFunctions from "./helpers/functions.vehicle.js";
-import * as usersDB_init from "./helpers/usersDB/initializeDatabase.js";
 import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase.js";
 import { initNHTSADB } from "./helpers/initializeDatabase.js";
 import debug from "debug";
 const debugApp = debug("parking-ticket-system:app");
-usersDB_init.initializeDatabase();
 parkingDB_init.initializeDatabase();
 initNHTSADB();
 export const app = express();
@@ -53,6 +51,7 @@ app.use("/fa", express.static(path.join("node_modules", "@fortawesome", "fontawe
 app.use("/stylesheets/files", express.static(path.join("node_modules", "@fontsource", "inter", "files")));
 app.use("/fontsource-pt-mono", express.static(path.join("node_modules", "@fontsource", "pt-mono", "files")));
 app.use("/cityssm-bulma-webapp-js", express.static(path.join("node_modules", "@cityssm", "bulma-webapp-js")));
+app.use("/bulma-js", express.static(path.join("node_modules", "@cityssm", "bulma-js", "dist")));
 const SQLiteStore = sqlite(session);
 const sessionCookieName = configFunctions.getProperty("session.cookieName");
 app.use(session({

@@ -1,4 +1,4 @@
-import * as base from "../data/config-base.js";
+import * as base from "../data/configBase.js";
 export const config = {};
 config.application = {
     feature_mtoExportImport: true,
@@ -7,7 +7,6 @@ config.application = {
         executeHour: 1
     }
 };
-config.session = {};
 config.defaults = {
     country: "CA",
     province: "ON"

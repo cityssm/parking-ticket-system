@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 
 
-type PermissionName = "isAdmin" | "canUpdate" | "canCreate" | "isOperator";
+type PermissionName = "isAdmin" | "canUpdate" | "isOperator";
 
 
 const getPermission = (request: Request, permissionName: PermissionName) : boolean => {
@@ -26,18 +26,8 @@ export const userCanUpdate = (request: Request): boolean => {
 };
 
 
-export const userCanCreate = (request: Request): boolean => {
-  return getPermission(request, "canCreate");
-};
-
-
 export const userIsOperator = (request: Request): boolean => {
   return getPermission(request, "isOperator");
-};
-
-
-export const getHashString = (userName: string, passwordPlain: string): string => {
-  return userName + "::" + passwordPlain;
 };
 
 

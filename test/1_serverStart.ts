@@ -10,14 +10,9 @@ import { app } from "../app.js";
 
 import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets.js";
 
-import { getAllUsers } from "../helpers/usersDB/getAllUsers.js";
-import { createUser } from "../helpers/usersDB/createUser.js";
-import { inactivateUser } from "../helpers/usersDB/inactivateUser.js";
-import { updateUserProperty } from "../helpers/usersDB/updateUserProperty.js";
-
 import { getModelsByMakeFromCache } from "../helpers/functions.vehicle.js";
 
-import { fakeViewOnlySession, userName } from "./_globals.js";
+import { fakeViewOnlySession, testUser, testAdmin } from "./_globals.js";
 
 
 describe("parking-ticket-system", () => {
@@ -27,8 +22,6 @@ describe("parking-ticket-system", () => {
 
   let serverStarted = false;
 
-  let password = "";
-
   before(async() => {
 
     httpServer.listen(portNumber);
@@ -37,43 +30,9 @@ describe("parking-ticket-system", () => {
       serverStarted = true;
     });
 
-    // ensure the test user is not active
-    inactivateUser(userName);
-
-    password = await createUser({
-      userName,
-      firstName: "Test",
-      lastName: "User"
-    }) as string;
-
-    updateUserProperty({
-      userName,
-      propertyName: "isOperator",
-      propertyValue: "false"
-    });
-
-    updateUserProperty({
-      userName,
-      propertyName: "isAdmin",
-      propertyValue: "false"
-    });
-
-    updateUserProperty({
-      userName,
-      propertyName: "canUpdate",
-      propertyValue: "false"
-    });
-
-    updateUserProperty({
-      userName,
-      propertyName: "canCreate",
-      propertyValue: "false"
-    });
   });
 
   after(() => {
-
-    inactivateUser(userName);
 
     try {
       httpServer.close();
@@ -90,10 +49,6 @@ describe("parking-ticket-system", () => {
 
     it("should create data/parking.db (or ensure it exists)", () => {
       assert.ok(getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
-    });
-
-    it("should create data/users.db (or ensure it exists)", () => {
-      assert.ok(getAllUsers());
     });
 
     it("should create data/nhtsa.db (or ensure it exists)", () => {
@@ -140,10 +95,10 @@ describe("parking-ticket-system", () => {
           await page.goto(appURL);
 
           await page.focus("#login--userName");
-          await page.type("#login--userName", userName);
+          await page.type("#login--userName", testUser);
 
           await page.focus("#login--password");
-          await page.type("#login--password", password);
+          await page.type("#login--password", testUser);
 
           const loginFormElement = await page.$("#form--login");
           await loginFormElement.evaluate((formElement: HTMLFormElement) => {
@@ -237,10 +192,10 @@ describe("parking-ticket-system", () => {
         await page.goto(appURL + "/login");
 
         await page.focus("#login--userName");
-        await page.type("#login--userName", userName);
+        await page.type("#login--userName", testUser);
 
         await page.focus("#login--password");
-        await page.type("#login--password", password + "-incorrect");
+        await page.type("#login--password", testUser + "-incorrect");
 
         const loginFormElement = await page.$("#form--login");
         await loginFormElement.evaluate((formElement: HTMLFormElement) => {
@@ -275,19 +230,19 @@ describe("parking-ticket-system", () => {
         await page.goto(appURL + "/login");
 
         await page.focus("#login--userName");
-        await page.type("#login--userName", userName);
+        await page.type("#login--userName", testUser);
 
         await page.focus("#login--password");
-        await page.type("#login--password", password);
+        await page.type("#login--password", testUser);
 
-        const loginFormEle = await page.$("#form--login");
-        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
-          formEle.submit();
+        const loginFormElement = await page.$("#form--login");
+        await loginFormElement.evaluate((formElement: HTMLFormElement) => {
+          formElement.submit();
         });
 
         await page.waitForNavigation();
 
-        await page.goto(appURL + "/admin/userManagement");
+        await page.goto(appURL + "/admin/cleanup");
 
         isDashboardPage = page.url().includes("/dashboard");
 
@@ -307,54 +262,6 @@ describe("parking-ticket-system", () => {
 
   describe("admin page tests", () => {
 
-    before(() => {
-
-      updateUserProperty({
-        userName,
-        propertyName: "isAdmin",
-        propertyValue: "true"
-      });
-
-      updateUserProperty({
-        userName,
-        propertyName: "canUpdate",
-        propertyValue: "true"
-      });
-
-      updateUserProperty({
-        userName,
-        propertyName: "canCreate",
-        propertyValue: "true"
-      });
-    });
-
-    after(() => {
-
-      updateUserProperty({
-        userName,
-        propertyName: "isOperator",
-        propertyValue: "false"
-      });
-
-      updateUserProperty({
-        userName,
-        propertyName: "isAdmin",
-        propertyValue: "false"
-      });
-
-      updateUserProperty({
-        userName,
-        propertyName: "canUpdate",
-        propertyValue: "false"
-      });
-
-      updateUserProperty({
-        userName,
-        propertyName: "canCreate",
-        propertyValue: "false"
-      });
-    });
-
     it("should open all admin pages", (done) => {
 
       (async () => {
@@ -366,14 +273,14 @@ describe("parking-ticket-system", () => {
         await page.goto(appURL);
 
         await page.focus("#login--userName");
-        await page.type("#login--userName", userName);
+        await page.type("#login--userName", testAdmin);
 
         await page.focus("#login--password");
-        await page.type("#login--password", password);
+        await page.type("#login--password", testAdmin);
 
-        const loginFormEle = await page.$("#form--login");
-        await loginFormEle.evaluate((formEle: HTMLFormElement) => {
-          formEle.submit();
+        const loginFormElement = await page.$("#form--login");
+        await loginFormElement.evaluate((formElement: HTMLFormElement) => {
+          formElement.submit();
         });
 
         await page.waitForNavigation();
@@ -381,7 +288,6 @@ describe("parking-ticket-system", () => {
         // Navigate to the admin pages
 
         await page.goto(appURL + "/tickets/new");
-        await page.goto(appURL + "/admin/userManagement");
         await page.goto(appURL + "/admin/cleanup");
         await page.goto(appURL + "/admin/offences");
         await page.goto(appURL + "/admin/locations");

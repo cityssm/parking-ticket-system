@@ -1,8 +1,11 @@
 import type { Request } from "express";
 import type { Session } from "express-session";
 
+import * as configFunctions from "../helpers/functions.config.js";
 
-export const userName = "__testUser";
+
+export const testUser = "*testView";
+export const testAdmin = "*testAdmin";
 
 
 export const fakeViewOnlySession: Session = {
@@ -15,9 +18,8 @@ export const fakeViewOnlySession: Session = {
   save: undefined,
   touch: undefined,
   user: {
-    userName: userName,
+    userName: configFunctions.getProperty("users.testing")[0],
     userProperties: {
-      canCreate: false,
       canUpdate: false,
       isAdmin: false,
       isOperator: false
@@ -36,9 +38,8 @@ export const fakeAdminSession: Session = {
   save: undefined,
   touch: undefined,
   user: {
-    userName: userName,
+    userName: configFunctions.getProperty("users.testing")[0],
     userProperties: {
-      canCreate: true,
       canUpdate: true,
       isAdmin: true,
       isOperator: true

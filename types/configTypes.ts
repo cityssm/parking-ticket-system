@@ -1,7 +1,19 @@
 export interface Config {
   application?: ConfigApplicationConfig;
   session?: ConfigSessionConfig;
-  admin?: ConfigAdminDefaults;
+  reverseProxy?: {
+    disableCompression: boolean;
+    disableEtag: boolean;
+    urlPrefix: string;
+  };
+  activeDirectory?: ConfigActiveDirectory;
+  users?: {
+    testing?: string[];
+    canLogin?: string[];
+    canUpdate?: string[];
+    isAdmin?: string[];
+    isOperator?: string[];
+  };
   defaults?: ConfigDefaultsConfig;
   parkingTickets?: ConfigParkingTickets;
   parkingTicketStatuses?: ConfigParkingTicketStatus[];
@@ -20,7 +32,7 @@ interface ConfigApplicationConfig {
   applicationName?: string;
   logoURL?: string;
   httpPort?: number;
-  https?: ConfigHttpsConfig;
+  userDomain?: string;
 
   feature_mtoExportImport?: boolean;
 
@@ -32,12 +44,6 @@ export interface ConfigApplicationTask {
   executeHour: number;
 }
 
-export interface ConfigHttpsConfig {
-  port: number;
-  keyPath: string;
-  certPath: string;
-  passphrase?: string;
-}
 
 interface ConfigSessionConfig {
   cookieName?: string;
@@ -46,8 +52,11 @@ interface ConfigSessionConfig {
   doKeepAlive?: boolean;
 }
 
-interface ConfigAdminDefaults {
-  defaultPassword?: string;
+export interface ConfigActiveDirectory {
+  url: string;
+  baseDN: string;
+  username: string;
+  password: string;
 }
 
 interface ConfigDefaultsConfig {

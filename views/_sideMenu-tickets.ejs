@@ -12,7 +12,7 @@
           <span>Parking Ticket Search</span>
         </a>
       </li>
-      <% if (user.userProperties.canCreate) { %>
+      <% if (user.userProperties.canUpdate) { %>
         <li>
           <a class="<%= (headTitle === "New Ticket" ? "is-active" : "") %>" href="/tickets/new">
             <span class="icon">

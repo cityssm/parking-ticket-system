@@ -3,51 +3,19 @@ import puppeteer from "puppeteer";
 import * as http from "http";
 import { app } from "../app.js";
 import { getParkingTickets } from "../helpers/parkingDB/getParkingTickets.js";
-import { getAllUsers } from "../helpers/usersDB/getAllUsers.js";
-import { createUser } from "../helpers/usersDB/createUser.js";
-import { inactivateUser } from "../helpers/usersDB/inactivateUser.js";
-import { updateUserProperty } from "../helpers/usersDB/updateUserProperty.js";
 import { getModelsByMakeFromCache } from "../helpers/functions.vehicle.js";
-import { fakeViewOnlySession, userName } from "./_globals.js";
+import { fakeViewOnlySession, testUser, testAdmin } from "./_globals.js";
 describe("parking-ticket-system", () => {
     const httpServer = http.createServer(app);
     const portNumber = 54333;
     let serverStarted = false;
-    let password = "";
     before(async () => {
         httpServer.listen(portNumber);
         httpServer.on("listening", () => {
             serverStarted = true;
         });
-        inactivateUser(userName);
-        password = await createUser({
-            userName,
-            firstName: "Test",
-            lastName: "User"
-        });
-        updateUserProperty({
-            userName,
-            propertyName: "isOperator",
-            propertyValue: "false"
-        });
-        updateUserProperty({
-            userName,
-            propertyName: "isAdmin",
-            propertyValue: "false"
-        });
-        updateUserProperty({
-            userName,
-            propertyName: "canUpdate",
-            propertyValue: "false"
-        });
-        updateUserProperty({
-            userName,
-            propertyName: "canCreate",
-            propertyValue: "false"
-        });
     });
     after(() => {
-        inactivateUser(userName);
         try {
             httpServer.close();
         }
@@ -60,9 +28,6 @@ describe("parking-ticket-system", () => {
     describe("databases", () => {
         it("should create data/parking.db (or ensure it exists)", () => {
             assert.ok(getParkingTickets(fakeViewOnlySession, { limit: 1, offset: 0 }));
-        });
-        it("should create data/users.db (or ensure it exists)", () => {
-            assert.ok(getAllUsers());
         });
         it("should create data/nhtsa.db (or ensure it exists)", () => {
             assert.ok(getModelsByMakeFromCache(""));
@@ -92,9 +57,9 @@ describe("parking-ticket-system", () => {
                     const page = await browser.newPage();
                     await page.goto(appURL);
                     await page.focus("#login--userName");
-                    await page.type("#login--userName", userName);
+                    await page.type("#login--userName", testUser);
                     await page.focus("#login--password");
-                    await page.type("#login--password", password);
+                    await page.type("#login--password", testUser);
                     const loginFormElement = await page.$("#form--login");
                     await loginFormElement.evaluate((formElement) => {
                         formElement.submit();
@@ -159,9 +124,9 @@ describe("parking-ticket-system", () => {
                 const page = await browser.newPage();
                 await page.goto(appURL + "/login");
                 await page.focus("#login--userName");
-                await page.type("#login--userName", userName);
+                await page.type("#login--userName", testUser);
                 await page.focus("#login--password");
-                await page.type("#login--password", password + "-incorrect");
+                await page.type("#login--password", testUser + "-incorrect");
                 const loginFormElement = await page.$("#form--login");
                 await loginFormElement.evaluate((formElement) => {
                     formElement.submit();
@@ -184,15 +149,15 @@ describe("parking-ticket-system", () => {
                 const page = await browser.newPage();
                 await page.goto(appURL + "/login");
                 await page.focus("#login--userName");
-                await page.type("#login--userName", userName);
+                await page.type("#login--userName", testUser);
                 await page.focus("#login--password");
-                await page.type("#login--password", password);
-                const loginFormEle = await page.$("#form--login");
-                await loginFormEle.evaluate((formEle) => {
-                    formEle.submit();
+                await page.type("#login--password", testUser);
+                const loginFormElement = await page.$("#form--login");
+                await loginFormElement.evaluate((formElement) => {
+                    formElement.submit();
                 });
                 await page.waitForNavigation();
-                await page.goto(appURL + "/admin/userManagement");
+                await page.goto(appURL + "/admin/cleanup");
                 isDashboardPage = page.url().includes("/dashboard");
                 await browser.close();
             })();
@@ -205,61 +170,21 @@ describe("parking-ticket-system", () => {
         });
     });
     describe("admin page tests", () => {
-        before(() => {
-            updateUserProperty({
-                userName,
-                propertyName: "isAdmin",
-                propertyValue: "true"
-            });
-            updateUserProperty({
-                userName,
-                propertyName: "canUpdate",
-                propertyValue: "true"
-            });
-            updateUserProperty({
-                userName,
-                propertyName: "canCreate",
-                propertyValue: "true"
-            });
-        });
-        after(() => {
-            updateUserProperty({
-                userName,
-                propertyName: "isOperator",
-                propertyValue: "false"
-            });
-            updateUserProperty({
-                userName,
-                propertyName: "isAdmin",
-                propertyValue: "false"
-            });
-            updateUserProperty({
-                userName,
-                propertyName: "canUpdate",
-                propertyValue: "false"
-            });
-            updateUserProperty({
-                userName,
-                propertyName: "canCreate",
-                propertyValue: "false"
-            });
-        });
         it("should open all admin pages", (done) => {
             (async () => {
                 const browser = await puppeteer.launch();
                 const page = await browser.newPage();
                 await page.goto(appURL);
                 await page.focus("#login--userName");
-                await page.type("#login--userName", userName);
+                await page.type("#login--userName", testAdmin);
                 await page.focus("#login--password");
-                await page.type("#login--password", password);
-                const loginFormEle = await page.$("#form--login");
-                await loginFormEle.evaluate((formEle) => {
-                    formEle.submit();
+                await page.type("#login--password", testAdmin);
+                const loginFormElement = await page.$("#form--login");
+                await loginFormElement.evaluate((formElement) => {
+                    formElement.submit();
                 });
                 await page.waitForNavigation();
                 await page.goto(appURL + "/tickets/new");
-                await page.goto(appURL + "/admin/userManagement");
                 await page.goto(appURL + "/admin/cleanup");
                 await page.goto(appURL + "/admin/offences");
                 await page.goto(appURL + "/admin/locations");
