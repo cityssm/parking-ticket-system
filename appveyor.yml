@@ -16,7 +16,7 @@ install:
   - npm --version
   # install modules
   - sh: npm ci
-  - sh: npm install -g mocha c8
+  - sh: npm install -g mocha c8 cypress
 
 before_test:
   # Download codeclimate test report
