@@ -24,8 +24,8 @@ before_test:
   - sh: chmod +x ./codeclimate-test-reporter
 
 test_script:
-  - cp ./data/configOntario.js ./data/config.js
-  - c8 --reporter=lcov mocha --timeout 45000
+  - cp ./data/configAppveyor.js ./data/config.js
+  - c8 --reporter=lcov mocha --timeout 60000
 
 after_test:
   # Send test result to codeclimate

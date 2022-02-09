@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
-    "moduleResolution": "Node",
+    "target": "ES5",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "isolatedModules": false,
     "declaration": true,
     "noImplicitAny": false,
     "removeComments": true,
     "allowUnreachableCode": false,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowJs": true,
+    "types": ["cypress"]
   },
   "compileOnSave": true,
   "buildOnSave": true,
@@ -29,9 +29,5 @@
     "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
     "placeOpenBraceOnNewLineForFunctions": false,
     "placeOpenBraceOnNewLineForControlBlocks": false
-  },
-  "exclude": [
-    "cypress/*",
-    "public-typescript/*"
-  ]
+  }
 }

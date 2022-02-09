@@ -47,7 +47,6 @@ initNHTSADB();
  * INITIALIZE APP
  */
 
-
 export const app = express();
 
 

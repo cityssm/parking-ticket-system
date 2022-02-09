@@ -1,5 +1,6 @@
 import * as configFunctions from "../helpers/functions.config.js";
-export const testUser = "*testView";
+export const testView = "*testView";
+export const testUpdate = "*testUpdate";
 export const testAdmin = "*testAdmin";
 export const fakeViewOnlySession = {
     id: "",

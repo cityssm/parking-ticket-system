@@ -1,5 +1,7 @@
 .nyc_output/
 coverage/
+cypress/screenshots
+cypress/videos
 node_modules/
 
 app.min.js
