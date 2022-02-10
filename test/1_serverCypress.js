@@ -24,9 +24,12 @@ describe("parking-ticket-system", () => {
     });
     describe("Cypress tests", () => {
         it("should run Cypress tests", (done) => {
-            const childProcess = exec("cypress run", (_error, stdout, stderr) => {
-                console.log(stdout);
-                console.error(stderr);
+            const childProcess = exec("cypress run");
+            childProcess.stdout.on("data", (data) => {
+                console.log(data);
+            });
+            childProcess.stderr.on("data", (data) => {
+                console.error(data);
             });
             childProcess.on("exit", (code) => {
                 assert.ok(code === 0);
