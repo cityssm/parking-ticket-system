@@ -25,7 +25,7 @@ interface UpdateBylawResponseJSON {
 
     clickEvent.preventDefault();
 
-    const listIndex = Number.parseInt((clickEvent.currentTarget as HTMLButtonElement).getAttribute("data-index"), 10);
+    const listIndex = Number.parseInt((clickEvent.currentTarget as HTMLButtonElement).dataset.index, 10);
     const bylaw = bylawList[listIndex];
 
     let updateOffencesCloseModalFunction: () => void;

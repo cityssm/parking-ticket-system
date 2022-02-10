@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     delete exports.bylaws;
     const openUpdateOffencesModal = (clickEvent) => {
         clickEvent.preventDefault();
-        const listIndex = Number.parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
+        const listIndex = Number.parseInt(clickEvent.currentTarget.dataset.index, 10);
         const bylaw = bylawList[listIndex];
         let updateOffencesCloseModalFunction;
         const updateFunction = (formEvent) => {
