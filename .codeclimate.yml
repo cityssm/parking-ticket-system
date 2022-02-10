@@ -9,3 +9,6 @@ checks:
   method-lines:
     config:
       threshold: 200
+exclude_patterns:
+- "cypress/"  
+- "test/"
