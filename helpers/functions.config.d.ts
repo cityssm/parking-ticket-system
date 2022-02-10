@@ -4,6 +4,7 @@ export declare function getProperty(propertyName: "application.applicationName")
 export declare function getProperty(propertyName: "application.logoURL"): string;
 export declare function getProperty(propertyName: "application.httpPort"): number;
 export declare function getProperty(propertyName: "application.userDomain"): string;
+export declare function getProperty(propertyName: "application.useTestDatabases"): boolean;
 export declare function getProperty(propertyName: "databaseCleanup.windowDays"): number;
 export declare function getProperty(propertyName: "defaults.country"): string;
 export declare function getProperty(propertyName: "defaults.province"): string;

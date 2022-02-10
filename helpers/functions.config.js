@@ -4,6 +4,7 @@ configFallbackValues.set("application.applicationName", "Parking Ticket System")
 configFallbackValues.set("application.logoURL", "/images/noParking.svg");
 configFallbackValues.set("application.httpPort", 4000);
 configFallbackValues.set("application.userDomain", "");
+configFallbackValues.set("application.useTestDatabases", false);
 configFallbackValues.set("application.feature_mtoExportImport", false);
 configFallbackValues.set("application.task_nhtsa.runTask", false);
 configFallbackValues.set("application.task_nhtsa.executeHour", 2);

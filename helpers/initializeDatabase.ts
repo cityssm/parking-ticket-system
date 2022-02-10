@@ -1,12 +1,14 @@
 import sqlite from "better-sqlite3";
 
+import { nhtsaDB as nhtsaDatabasePath } from "../data/databasePaths.js";
+
 import debug from "debug";
 const debugSQL = debug("parking-ticket-system:initializeDatabase");
 
 
 export const initNHTSADB = (): boolean => {
 
-  const nhtsaDB = sqlite("data/nhtsa.db");
+  const nhtsaDB = sqlite(nhtsaDatabasePath);
 
   let doCreate = false;
 
@@ -14,7 +16,7 @@ export const initNHTSADB = (): boolean => {
 
   if (!row) {
 
-    debugSQL("Creating nhtsa.db.");
+    debugSQL("Creating " + nhtsaDatabasePath);
     doCreate = true;
 
     nhtsaDB.prepare("create table if not exists MakeModelSearchHistory (" +

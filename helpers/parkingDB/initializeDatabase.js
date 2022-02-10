@@ -208,7 +208,7 @@ export const initializeDatabase = () => {
         .prepare("select name from sqlite_master where type = 'table' and name = 'ParkingTickets'")
         .get();
     if (!row) {
-        debugSQL("Creating parking.db");
+        debugSQL("Creating " + databasePath);
         doCreate = true;
         createParkingLocations(parkingDB);
         createParkingBylaws(parkingDB);

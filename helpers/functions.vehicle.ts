@@ -2,6 +2,8 @@ import sqlite from "better-sqlite3";
 
 import nhtsa from "@shaggytools/nhtsa-api-wrapper";
 
+import { nhtsaDB as databasePath } from "../data/databasePaths.js";
+
 import * as ncic from "../data/ncicCodes.js";
 import { trailerNCIC } from "../data/ncicCodes/trailer.js";
 
@@ -17,11 +19,6 @@ const nhtsaGetModelsForMake = new GetModelsForMake();
 
 const nhtsaSearchExpiryDurationMillis = 14 * 86_400 * 1000;
 
-/*
- * API Cache
- */
-
-const databasePath = "data/nhtsa.db";
 
 /*
  * More Data

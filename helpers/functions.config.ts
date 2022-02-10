@@ -14,6 +14,7 @@ configFallbackValues.set("application.applicationName", "Parking Ticket System")
 configFallbackValues.set("application.logoURL", "/images/noParking.svg");
 configFallbackValues.set("application.httpPort", 4000);
 configFallbackValues.set("application.userDomain", "");
+configFallbackValues.set("application.useTestDatabases", false);
 
 configFallbackValues.set("application.feature_mtoExportImport", false);
 
@@ -74,6 +75,7 @@ export function getProperty(propertyName: "application.applicationName"): string
 export function getProperty(propertyName: "application.logoURL"): string;
 export function getProperty(propertyName: "application.httpPort"): number;
 export function getProperty(propertyName: "application.userDomain"): string;
+export function getProperty(propertyName: "application.useTestDatabases"): boolean;
 
 export function getProperty(propertyName: "databaseCleanup.windowDays"): number;
 

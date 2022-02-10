@@ -1,11 +1,11 @@
 import sqlite from "better-sqlite3";
 import nhtsa from "@shaggytools/nhtsa-api-wrapper";
+import { nhtsaDB as databasePath } from "../data/databasePaths.js";
 import * as ncic from "../data/ncicCodes.js";
 import { trailerNCIC } from "../data/ncicCodes/trailer.js";
 const { GetModelsForMake } = nhtsa;
 const nhtsaGetModelsForMake = new GetModelsForMake();
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
-const databasePath = "data/nhtsa.db";
 const getModelsByMakeFromDB = (makeSearchString, database) => {
     return database.prepare("select makeID, makeName, modelID, modelName" +
         " from MakeModel" +

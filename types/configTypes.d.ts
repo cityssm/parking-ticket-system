@@ -41,6 +41,7 @@ interface ConfigApplicationConfig {
     logoURL?: string;
     httpPort?: number;
     userDomain?: string;
+    useTestDatabases?: boolean;
     feature_mtoExportImport?: boolean;
     task_nhtsa?: ConfigApplicationTask;
 }

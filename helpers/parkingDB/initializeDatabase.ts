@@ -267,7 +267,7 @@ export const initializeDatabase = (): boolean => {
 
   if (!row) {
 
-    debugSQL("Creating parking.db");
+    debugSQL("Creating " + databasePath);
     doCreate = true;
 
     /*
