@@ -1,10 +1,25 @@
-import { testView } from "../../test/_globals.js";
-import { logout, login } from "../support/index.js";
+import { testView } from "../../../test/_globals.js";
+import { logout, login } from "../../support/index.js";
 describe("Read Only User", function () {
     before(logout);
     after(logout);
     it("Logs In Successfully", function () {
         login(testView);
+    });
+    describe("Dashboard", function () {
+        before(function () {
+            cy.visit("/dashboard");
+        });
+        it("Has no links to new ticket", function () {
+            cy.get("a[href*='/new']")
+                .should(Cypress._.noop)
+                .should("have.length", 0);
+        });
+        it("Has no links to admin areas", function () {
+            cy.get("a[href*='/admin']")
+                .should(Cypress._.noop)
+                .should("have.length", 0);
+        });
     });
     describe("Ticket Search", function () {
         before(function () {

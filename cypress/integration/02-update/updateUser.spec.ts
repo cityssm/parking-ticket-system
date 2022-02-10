@@ -1,6 +1,6 @@
-import { testUpdate } from "../../test/_globals.js";
+import { testUpdate } from "../../../test/_globals.js";
 
-import { logout, login } from "../support/index.js";
+import { logout, login } from "../../support/index.js";
 
 describe("Update User", () => {
 

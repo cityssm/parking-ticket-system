@@ -1,4 +1,4 @@
-import { logout } from "../support/index.js";
+import { logout } from "../../support/index.js";
 
 
 describe("Login Page", () => {

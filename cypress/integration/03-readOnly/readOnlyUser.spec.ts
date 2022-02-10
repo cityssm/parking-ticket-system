@@ -1,6 +1,6 @@
-import { testView } from "../../test/_globals.js";
+import { testView } from "../../../test/_globals.js";
 
-import { logout, login } from "../support/index.js";
+import { logout, login } from "../../support/index.js";
 
 
 describe("Read Only User", () => {
@@ -11,6 +11,24 @@ describe("Read Only User", () => {
 
   it("Logs In Successfully", () => {
     login(testView);
+  });
+
+  describe("Dashboard", () => {
+    before(() => {
+      cy.visit("/dashboard");
+    });
+
+    it("Has no links to new ticket", () => {
+      cy.get("a[href*='/new']")
+        .should(Cypress._.noop)
+        .should("have.length", 0);
+    });
+
+    it("Has no links to admin areas", () => {
+      cy.get("a[href*='/admin']")
+        .should(Cypress._.noop)
+        .should("have.length", 0);
+    });
   });
 
   describe("Ticket Search", () => {
