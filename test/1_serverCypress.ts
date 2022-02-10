@@ -16,7 +16,7 @@ describe("parking-ticket-system", () => {
 
   let serverStarted = false;
 
-  before(async() => {
+  before(async () => {
 
     httpServer.listen(portNumber);
 
@@ -43,7 +43,13 @@ describe("parking-ticket-system", () => {
 
     it("should run Cypress tests", (done) => {
 
-      const childProcess = exec("cypress run");
+      let cypresssCommand = "cypress run";
+
+      if (process.env.CYPRESS_RECORD_KEY && process.env.CYPRESS_RECORD_KEY !== "") {
+        cypresssCommand += " --record";
+      }
+
+      const childProcess = exec(cypresssCommand);
 
       childProcess.stdout.on("data", (data) => {
         console.log(data);
