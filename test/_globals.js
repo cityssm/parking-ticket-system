@@ -2,6 +2,7 @@ import * as configFunctions from "../helpers/functions.config.js";
 export const testView = "*testView";
 export const testUpdate = "*testUpdate";
 export const testAdmin = "*testAdmin";
+export const portNumber = 4000;
 export const fakeViewOnlySession = {
     id: "",
     cookie: undefined,
