@@ -262,7 +262,7 @@ interface UpdateOffenceResponseJSON {
             displayCount += 1;
 
             const linkElement = document.createElement("a");
-            linkElement.className = "panel-block";
+            linkElement.className = "panel-block is-block";
             linkElement.dataset.bylawNumber = bylaw.bylawNumber;
             linkElement.dataset.locationKey = locationKeyFilter;
 
@@ -288,7 +288,7 @@ interface UpdateOffenceResponseJSON {
             displayCount += 1;
 
             const linkElement = document.createElement("a");
-            linkElement.className = "panel-block";
+            linkElement.className = "panel-block is-block";
             linkElement.dataset.bylawNumber = bylawNumberFilter;
             linkElement.dataset.locationKey = location.locationKey;
 

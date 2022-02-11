@@ -150,7 +150,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         }
                         displayCount += 1;
                         const linkElement = document.createElement("a");
-                        linkElement.className = "panel-block";
+                        linkElement.className = "panel-block is-block";
                         linkElement.dataset.bylawNumber = bylaw.bylawNumber;
                         linkElement.dataset.locationKey = locationKeyFilter;
                         linkElement.innerHTML = cityssm.escapeHTML(bylaw.bylawNumber) + "<br />" +
@@ -167,7 +167,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         }
                         displayCount += 1;
                         const linkElement = document.createElement("a");
-                        linkElement.className = "panel-block";
+                        linkElement.className = "panel-block is-block";
                         linkElement.dataset.bylawNumber = bylawNumberFilter;
                         linkElement.dataset.locationKey = location.locationKey;
                         linkElement.innerHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
