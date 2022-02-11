@@ -7,11 +7,11 @@ describe("Admin - Parking By-Laws", function () {
         login(testAdmin);
     });
     after(logout);
-    it("Loads page", function () {
+    beforeEach("Loads page", function () {
         cy.visit("/admin/bylaws");
         cy.location("pathname").should("equal", "/admin/bylaws");
     });
-    it("Adds three new by-laws", function () {
+    it("Adds ten new by-laws", function () {
         var _loop_1 = function (index) {
             cy.get("button[data-cy='add-bylaw']").click();
             cy.get(".modal").should("be.visible");
@@ -28,7 +28,7 @@ describe("Admin - Parking By-Laws", function () {
                 cy.get("[data-cy='results'] a").contains(bylawNumber);
             });
         };
-        for (var index = 0; index < 3; index += 1) {
+        for (var index = 0; index < 10; index += 1) {
             _loop_1(index);
         }
     });

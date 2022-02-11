@@ -3,7 +3,6 @@
 import { testAdmin } from "../../../test/_globals.js";
 
 import { logout, login } from "../../support/index.js";
-// import { randomString } from "../../support/utilities.js";
 
 
 describe("Admin - Database Cleanup", () => {
@@ -15,8 +14,27 @@ describe("Admin - Database Cleanup", () => {
 
   after(logout);
 
-  it("Loads page", () => {
+  beforeEach("Loads page", () => {
     cy.visit("/admin/cleanup");
     cy.location("pathname").should("equal", "/admin/cleanup");
+  });
+
+  it("Purges all tables", () => {
+
+    cy.get("button[data-cy='purge']")
+      .each(($buttonElement) => {
+        cy.wrap($buttonElement).click();
+
+        cy.get(".modal button")
+          .contains("Yes")
+          .click();
+
+        cy.get(".modal button")
+          .contains("OK")
+          .click();
+      });
+
+    cy.get("button[data-cy='purge']")
+      .should("not.exist");
   });
 });

@@ -13,16 +13,16 @@ describe("Admin - Locations", () => {
     login(testAdmin)
   });
 
-  //after(logout);
+  after(logout);
 
-  it("Loads page", () => {
+  beforeEach("Loads page", () => {
     cy.visit("/admin/locations");
     cy.location("pathname").should("equal", "/admin/locations");
   });
 
-  it("Adds three new locations", () => {
+  it("Adds ten new locations", () => {
 
-    for (let index = 0; index < 3; index += 1) {
+    for (let index = 0; index < 10; index += 1) {
 
       cy.get("button[data-cy='add-location']").click();
 

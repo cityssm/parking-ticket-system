@@ -6,11 +6,12 @@ describe("Admin - Locations", function () {
         logout();
         login(testAdmin);
     });
-    it("Loads page", function () {
+    after(logout);
+    beforeEach("Loads page", function () {
         cy.visit("/admin/locations");
         cy.location("pathname").should("equal", "/admin/locations");
     });
-    it("Adds three new locations", function () {
+    it("Adds ten new locations", function () {
         var _loop_1 = function (index) {
             cy.get("button[data-cy='add-location']").click();
             cy.get(".modal").should("be.visible");
@@ -29,7 +30,7 @@ describe("Admin - Locations", function () {
                 cy.get("[data-cy='results'] a").contains(locationName);
             });
         };
-        for (var index = 0; index < 3; index += 1) {
+        for (var index = 0; index < 10; index += 1) {
             _loop_1(index);
         }
     });

@@ -15,14 +15,14 @@ describe("Admin - Parking By-Laws", () => {
 
   after(logout);
 
-  it("Loads page", () => {
+  beforeEach("Loads page", () => {
     cy.visit("/admin/bylaws");
     cy.location("pathname").should("equal", "/admin/bylaws");
   });
 
-  it("Adds three new by-laws", () => {
+  it("Adds ten new by-laws", () => {
 
-    for (let index = 0; index < 3; index += 1) {
+    for (let index = 0; index < 10; index += 1) {
 
       cy.get("button[data-cy='add-bylaw']").click();
 
