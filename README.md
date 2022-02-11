@@ -4,6 +4,7 @@
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/cityssm/parking-ticket-system)](https://codeclimate.com/github/cityssm/parking-ticket-system/maintainability)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/cityssm/parking-ticket-system)](https://codeclimate.com/github/cityssm/parking-ticket-system/test_coverage)
 [![AppVeyor](https://img.shields.io/appveyor/build/dangowans/parking-ticket-system)](https://ci.appveyor.com/project/dangowans/parking-ticket-system)
+[![Cypress](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/8da27w/master&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/8da27w/runs)
 [![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/cityssm/parking-ticket-system)](https://app.snyk.io/org/cityssm/project/27487d43-f7ec-45e2-8cbe-9e03e7e0c7d3)
 
 ![Parking Ticket Search](docs/images/ticket-search.png)
