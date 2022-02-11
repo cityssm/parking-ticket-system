@@ -32,7 +32,7 @@
     "@cityssm/expressjs-server-js": "^2.3.1",
     "@fontsource/inter": "^4.5.3",
     "@fontsource/pt-mono": "^4.5.1",
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "^6.0.0",
     "@shaggytools/nhtsa-api-wrapper": "^2.0.3",
     "activedirectory2": "^2.1.0",
     "better-sqlite3": "^7.5.0",
