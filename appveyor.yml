@@ -27,7 +27,7 @@ before_test:
 
 test_script:
   - cp ./data/configAppveyor.js ./data/config.js
-  - c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 360000
+  - c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 30000
 
 after_test:
   # Send test result to codeclimate

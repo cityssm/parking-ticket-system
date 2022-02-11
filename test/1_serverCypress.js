@@ -39,6 +39,6 @@ describe("parking-ticket-system", () => {
                 assert.ok(code === 0);
                 done();
             });
-        });
+        }).timeout(30 * 60 * 60 * 1000);
     });
 });

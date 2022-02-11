@@ -13,8 +13,8 @@
     "dev:test": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* TEST_DATABASES=true nodemon ./bin/www",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "test": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* TEST_DATABASES=true mocha --timeout 120000",
-    "coverage": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* TEST_DATABASES=true c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 120000"
+    "test": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* TEST_DATABASES=true mocha --timeout 30000",
+    "coverage": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* TEST_DATABASES=true c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 30000"
   },
   "repository": {
     "type": "git",
