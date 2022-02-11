@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import csurf from "csurf";
 import rateLimit from "express-rate-limit";
 import session from "express-session";
-import sqlite from "connect-sqlite3";
+import FileStore from "session-file-store";
 import routerLogin from "./routes/login.js";
 import routerDashboard from "./routes/dashboard.js";
 import routerAdmin from "./routes/admin.js";
@@ -52,12 +52,13 @@ app.use("/stylesheets/files", express.static(path.join("node_modules", "@fontsou
 app.use("/fontsource-pt-mono", express.static(path.join("node_modules", "@fontsource", "pt-mono", "files")));
 app.use("/cityssm-bulma-webapp-js", express.static(path.join("node_modules", "@cityssm", "bulma-webapp-js")));
 app.use("/bulma-js", express.static(path.join("node_modules", "@cityssm", "bulma-js", "dist")));
-const SQLiteStore = sqlite(session);
 const sessionCookieName = configFunctions.getProperty("session.cookieName");
+const FileStoreSession = FileStore(session);
 app.use(session({
-    store: new SQLiteStore({
-        dir: "data",
-        db: "sessions.db"
+    store: new FileStoreSession({
+        path: "./data/sessions",
+        logFn: debug("parking-ticket-system:session"),
+        retries: 10
     }),
     name: sessionCookieName,
     secret: configFunctions.getProperty("session.secret"),

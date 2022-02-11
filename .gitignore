@@ -2,6 +2,7 @@
 coverage/
 cypress/screenshots
 cypress/videos
+data/sessions/
 node_modules/
 
 app.min.js

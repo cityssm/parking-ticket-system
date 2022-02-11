@@ -8,9 +8,8 @@ import csurf from "csurf";
 import rateLimit from "express-rate-limit";
 
 import session from "express-session";
-import sqlite from "connect-sqlite3";
+import FileStore from "session-file-store";
 
-// eslint-disable-next-line unicorn/prevent-abbreviations
 import routerLogin from "./routes/login.js";
 import routerDashboard from "./routes/dashboard.js";
 import routerAdmin from "./routes/admin.js";
@@ -111,17 +110,17 @@ app.use("/bulma-js",
  * SESSION MANAGEMENT
  */
 
-const SQLiteStore = sqlite(session);
-
 
 const sessionCookieName: string = configFunctions.getProperty("session.cookieName");
 
+const FileStoreSession = FileStore(session);
 
 // Initialize session
 app.use(session({
-  store: new SQLiteStore({
-    dir: "data",
-    db: "sessions.db"
+  store: new FileStoreSession({
+    path: "./data/sessions",
+    logFn: debug("parking-ticket-system:session"),
+    retries: 10
   }),
   name: sessionCookieName,
   secret: configFunctions.getProperty("session.secret"),
