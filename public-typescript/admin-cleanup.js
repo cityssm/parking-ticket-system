@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         buttonElement.setAttribute("disabled", "disabled");
-        const table = buttonElement.getAttribute("data-table");
+        const table = buttonElement.dataset.table;
         const purgeFunction = () => {
             cityssm.postJSON("/admin/doCleanupTable", {
                 table,
@@ -22,7 +22,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        cityssm.confirmModal("Purge Table?", "Are you sure you want to purge the deleted records in this table? This cannot be undone.", "Yes, Delete the Records", "warning", purgeFunction);
+        bulmaJS.confirm({
+            title: "Purge Table?",
+            message: "Are you sure you want to purge the deleted records in this table? This cannot be undone.",
+            contextualColorName: "warning",
+            okButton: {
+                text: "Yes, Delete the Records",
+                callbackFunction: purgeFunction
+            },
+            cancelButton: {
+                callbackFunction: () => {
+                    buttonElement.removeAttribute("disabled");
+                }
+            }
+        });
     };
     const purgeButtonElements = document.querySelectorAll(".is-purge-button");
     for (const purgeButtonElement of purgeButtonElements) {

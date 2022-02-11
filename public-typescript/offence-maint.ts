@@ -1,10 +1,12 @@
 /* eslint-disable unicorn/filename-case, unicorn/prefer-module */
 
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
+import type { BulmaJS } from "@cityssm/bulma-js/types";
 import type { ptsGlobal } from "../types/publicTypes";
 import type * as recordTypes from "../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
+declare const bulmaJS: BulmaJS;
 declare const pts: ptsGlobal;
 
 interface UpdateOffenceResponseJSON {
@@ -466,50 +468,50 @@ interface UpdateOffenceResponseJSON {
       const bylaw = bylawMap.get(bylawNumberFilter);
       const location = locationMap.get(locationKeyFilter);
 
-      cityssm.confirmModal(
-        "Create Offence?",
-        "<p class=\"has-text-centered\">Are you sure you want to create the offence record below?</p>" +
-        "<div class=\"columns my-4\">" +
-        ("<div class=\"column has-text-centered\">" +
-          cityssm.escapeHTML(location.locationName) + "<br />" +
-          "<span class=\"is-size-7\">" +
-          cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
-          "</span>" +
-          "</div>") +
-        ("<div class=\"column has-text-centered\">" +
-          cityssm.escapeHTML(bylaw.bylawNumber) + "<br />" +
-          "<span class=\"is-size-7\">" +
-          cityssm.escapeHTML(bylaw.bylawDescription) +
-          "</span>" +
-          "</div>") +
-        "</div>",
-        "Yes, Create Offence",
-        "info",
-        () => {
+      bulmaJS.confirm({
+        title: "Create Offence?",
+        message: "<p class=\"has-text-centered\">Are you sure you want to create the offence record below?</p>" +
+          "<div class=\"columns my-4\">" +
+          ("<div class=\"column has-text-centered\">" +
+            cityssm.escapeHTML(location.locationName) + "<br />" +
+            "<span class=\"is-size-7\">" +
+            cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
+            "</span>" +
+            "</div>") +
+          ("<div class=\"column has-text-centered\">" +
+            cityssm.escapeHTML(bylaw.bylawNumber) + "<br />" +
+            "<span class=\"is-size-7\">" +
+            cityssm.escapeHTML(bylaw.bylawDescription) +
+            "</span>" +
+            "</div>") +
+          "</div>",
+        messageIsHtml: true,
+        contextualColorName: "info",
+        okButton: {
+          text: "Yes, Create Offence",
+          callbackFunction: () => {
+            addOffenceFunction(bylawNumberFilter, locationKeyFilter, true, (responseJSON) => {
 
-          addOffenceFunction(bylawNumberFilter, locationKeyFilter, true, (responseJSON) => {
+              if (!responseJSON.success) {
 
-            if (!responseJSON.success) {
+                bulmaJS.alert({
+                  title: "Offence Not Added",
+                  message: responseJSON.message,
+                  contextualColorName: "danger"
+                });
 
-              cityssm.alertModal(
-                "Offence Not Added",
-                responseJSON.message,
-                "OK",
-                "danger"
-              );
+              } else if (responseJSON.message) {
 
-            } else if (responseJSON.message) {
-
-              cityssm.alertModal(
-                "Offence Added Successfully",
-                responseJSON.message,
-                "OK",
-                "warning"
-              );
-            }
-          });
+                bulmaJS.alert({
+                  title: "Offence Added Successfully",
+                  message: responseJSON.message,
+                  contextualColorName: "warning"
+                });
+              }
+            });
+          }
         }
-      );
+      });
 
     } else if (locationKeyFilterIsSet || bylawNumberFilterIsSet) {
 
@@ -517,12 +519,11 @@ interface UpdateOffenceResponseJSON {
 
     } else {
 
-      cityssm.alertModal(
-        "How to Create a New Offence",
-        "To add an offence, use the main filters to select either a location, a by-law, or both.",
-        "OK",
-        "info"
-      );
+      bulmaJS.alert({
+        title: "How to Create a New Offence",
+        message: "To add an offence, use the main filters to select either a location, a by-law, or both.",
+        contextualColorName: "warning"
+      });
     }
   });
 

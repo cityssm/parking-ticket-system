@@ -20,9 +20,8 @@
     </h1>
 
     <div class="fixed-container is-fixed-bottom-right mr-4 mb-4 has-text-right is-hidden-print">
-      <button class="button is-circle is-primary has-tooltip-left" id="is-add-offence-button" data-tooltip="Create a New Offence" type="button">
+      <button class="button is-circle is-primary has-tooltip-left" id="is-add-offence-button" data-cy="add-offence" data-tooltip="Create a New Offence" type="button" aria-label="Create a New Offence">
         <i class="fas fa-plus" aria-hidden="true"></i>
-        <span class="sr-only">Create a New Offence</span>
       </button>
     </div>
 
@@ -32,19 +31,19 @@
           <label class="label" for="offenceFilter--location">Location</label>
           <div class="field has-addons">
             <div class="control is-expanded has-icons-left">
-              <input class="input is-readonly" id="offenceFilter--location" type="text" placeholder="(All Locations)" readonly />
+              <input class="input is-readonly" id="offenceFilter--location" name="location" type="text" placeholder="(All Locations)" readonly />
               <span class="icon is-left">
                 <i class="fas fa-filter" aria-hidden="true"></i>
               </span>
             </div>
             <div class="control">
-              <button class="button" id="is-select-location-filter-button" type="button">
+              <button class="button" id="is-select-location-filter-button" data-cy="select-location" type="button">
                 <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
                 <span>Select</span>
               </button>
             </div>
             <div class="control">
-              <button class="button" id="is-clear-location-filter-button" type="button">
+              <button class="button" id="is-clear-location-filter-button" data-cy="clear-location" type="button">
                 <i class="fas fa-times" aria-hidden="true"></i>
                 <span class="sr-only">Clear</span>
               </button>
@@ -56,19 +55,19 @@
           <label class="label" for="offenceFilter--bylaw">By-Law</label>
           <div class="field has-addons">
             <div class="control is-expanded has-icons-left">
-              <input class="input is-readonly" id="offenceFilter--bylaw" type="text" placeholder="(All By-Laws)" readonly />
+              <input class="input is-readonly" id="offenceFilter--bylaw" name="bylaw" type="text" placeholder="(All By-Laws)" readonly />
               <span class="icon is-left">
                 <i class="fas fa-filter" aria-hidden="true"></i>
               </span>
             </div>
             <div class="control">
-              <button class="button" id="is-select-bylaw-filter-button" type="button">
+              <button class="button" id="is-select-bylaw-filter-button" data-cy="select-bylaw" type="button">
                 <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
                 <span>Select</span>
               </button>
             </div>
             <div class="control">
-              <button class="button" id="is-clear-bylaw-filter-button" type="button">
+              <button class="button" id="is-clear-bylaw-filter-button" data-cy="clear-bylaw" type="button">
                 <i class="fas fa-times" aria-hidden="true"></i>
                 <span class="sr-only">Clear</span>
               </button>
@@ -90,7 +89,7 @@
       </div>
     </div>
 
-    <div class="mt-4" id="offenceResults"></div>
+    <div class="mt-4" id="offenceResults" data-cy="results"></div>
   </div>
 </div>
 
