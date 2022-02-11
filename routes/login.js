@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as configFunctions from "../helpers/functions.config.js";
 import * as authenticationFunctions from "../helpers/functions.authentication.js";
+import { useTestDatabases } from "../data/databasePaths.js";
 import Debug from "debug";
 const debug = Debug("parking-ticket-system:login");
 export const router = Router();
@@ -33,7 +34,8 @@ router.route("/")
         response.render("login", {
             userName: "",
             message: "",
-            redirect: request.query.redirect
+            redirect: request.query.redirect,
+            useTestDatabases
         });
     }
 })
