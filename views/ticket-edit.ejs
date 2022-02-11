@@ -106,11 +106,10 @@
               <input id="ticket--locationKey" name="locationKey" type="hidden" value="<%= ticket.locationKey %>" />
               <div class="field has-addons">
                 <div class="control is-expanded">
-                  <input class="input is-readonly" id="ticket--locationName" type="text" value="<%= (ticket.location || {}).locationName %>" readonly />
+                  <input class="input is-readonly" id="ticket--locationName" name="locationName" type="text" value="<%= (ticket.location || {}).locationName %>" readonly />
                 </div>
                 <div class="control">
-                  <button class="button" id="is-location-lookup-button" data-tooltip="Lookup Location" type="button">
-                    <span class="sr-only">Lookup Location</span>
+                  <button class="button" id="is-location-lookup-button" data-cy="select-location" data-tooltip="Lookup Location" type="button" aria-label="Lookup Location">
                     <i class="fas fa-fw fa-search" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -132,8 +131,7 @@
                   <input class="input is-readonly" id="ticket--bylawNumber" name="bylawNumber" type="text" value="<%= ticket.bylawNumber %>" maxlength="20" readonly required />
                 </div>
                 <div class="control">
-                  <button class="button" id="is-bylaw-lookup-button" data-tooltip="Lookup By-Law" type="button">
-                    <span class="sr-only">Lookup By-Law</span>
+                  <button class="button" id="is-bylaw-lookup-button" data-cy="select-bylaw" data-tooltip="Lookup By-Law" type="button" aria-label="Lookup By-Law">
                     <i class="fas fa-fw fa-search" aria-hidden="true"></i>
                   </button>
                 </div>

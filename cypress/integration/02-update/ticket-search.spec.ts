@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+
 import { testUpdate } from "../../../test/_globals.js";
 
 import { logout, login } from "../../support/index.js";
