@@ -20,14 +20,12 @@ describe("Read Only User", () => {
 
     it("Has no links to new ticket", () => {
       cy.get("a[href*='/new']")
-        .should(Cypress._.noop)
-        .should("have.length", 0);
+        .should("not.exist");
     });
 
     it("Has no links to admin areas", () => {
       cy.get("a[href*='/admin']")
-        .should(Cypress._.noop)
-        .should("have.length", 0);
+        .should("not.exist");
     });
   });
 
@@ -42,8 +40,7 @@ describe("Read Only User", () => {
 
     it("Has no links to new ticket", () => {
       cy.get("a[href*='/new']")
-        .should(Cypress._.noop)
-        .should("have.length", 0);
+        .should("not.exist");
     });
   });
 

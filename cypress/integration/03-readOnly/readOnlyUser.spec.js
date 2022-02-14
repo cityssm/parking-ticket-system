@@ -12,13 +12,11 @@ describe("Read Only User", function () {
         });
         it("Has no links to new ticket", function () {
             cy.get("a[href*='/new']")
-                .should(Cypress._.noop)
-                .should("have.length", 0);
+                .should("not.exist");
         });
         it("Has no links to admin areas", function () {
             cy.get("a[href*='/admin']")
-                .should(Cypress._.noop)
-                .should("have.length", 0);
+                .should("not.exist");
         });
     });
     describe("Ticket Search", function () {
@@ -30,8 +28,7 @@ describe("Read Only User", function () {
         });
         it("Has no links to new ticket", function () {
             cy.get("a[href*='/new']")
-                .should(Cypress._.noop)
-                .should("have.length", 0);
+                .should("not.exist");
         });
     });
     describe("Create a Ticket", function () {
