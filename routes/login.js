@@ -44,10 +44,12 @@ router.route("/")
     const passwordPlain = request.body.password;
     const redirectURL = getSafeRedirectURL(request.body.redirect);
     let isAuthenticated = false;
-    if (userName.charAt(0) === "*" && userName === passwordPlain) {
-        isAuthenticated = configFunctions.getProperty("users.testing").includes(userName);
-        if (isAuthenticated) {
-            debug("Authenticated testing user: " + userName);
+    if (userName.charAt(0) === "*") {
+        if (useTestDatabases && userName === passwordPlain) {
+            isAuthenticated = configFunctions.getProperty("users.testing").includes(userName);
+            if (isAuthenticated) {
+                debug("Authenticated testing user: " + userName);
+            }
         }
     }
     else {

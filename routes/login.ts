@@ -70,13 +70,17 @@ router.route("/")
 
     let isAuthenticated = false;
 
-    if (userName.charAt(0) === "*" && userName === passwordPlain) {
+    if (userName.charAt(0) === "*") {
 
-      isAuthenticated = configFunctions.getProperty("users.testing").includes(userName);
+      if (useTestDatabases && userName === passwordPlain) {
 
-      if (isAuthenticated) {
-        debug("Authenticated testing user: " + userName);
+        isAuthenticated = configFunctions.getProperty("users.testing").includes(userName);
+
+        if (isAuthenticated) {
+          debug("Authenticated testing user: " + userName);
+        }
       }
+
     } else {
 
       isAuthenticated = await authenticationFunctions.authenticate(userName, passwordPlain);
