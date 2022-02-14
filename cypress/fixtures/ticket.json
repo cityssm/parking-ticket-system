@@ -1,7 +1,11 @@
 {
-  "ticketNumber": "PS12345",
+  "ticketNumberPrefix": "PS",
   "issueDateString": "2021-02-03",
   "issueTimeString": "04:56",
   "issuingOfficer": "Test Officer",
-  "locationDecsription": "Test Location Description"
+  "locationDescription": "Test Location Description",
+  "licencePlateNumber": "TEST 123",
+  "licencePlateExpiryMonth": "12",
+  "vehicleMakeModel": "GMC",
+  "vehicleVIN": "TESTTESTTESTTESTTEST"
 }

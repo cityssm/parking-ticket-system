@@ -2,6 +2,8 @@
 
 import { testUpdate } from "../../../test/_globals.js";
 
+import * as configFunctions from "../../../helpers/functions.config.js";
+
 import { logout, login } from "../../support/index.js";
 
 describe("Create a New Ticket", () => {
@@ -11,7 +13,7 @@ describe("Create a New Ticket", () => {
     login(testUpdate)
   });
 
-  // after(logout);
+  after(logout);
 
   it("Loads page", () => {
     cy.visit("/tickets/new");
@@ -21,11 +23,15 @@ describe("Create a New Ticket", () => {
   it("Populates the basic \"Parking Ticket Details\"", () => {
 
     cy.fixture("ticket.json").then((ticketJSON) => {
-      cy.get("input[name='ticketNumber']").clear().type(ticketJSON.ticketNumber);
+
+      const ticketNumber = ticketJSON.ticketNumberPrefix +
+        ("0000" + Cypress._.random(1, 99_999).toString()).slice(-5);
+
+      cy.get("input[name='ticketNumber']").clear().type(ticketNumber);
       cy.get("input[name='issueDateString']").clear().type(ticketJSON.issueDateString);
       cy.get("input[name='issueTimeString']").clear().type(ticketJSON.issueTimeString);
       cy.get("input[name='issuingOfficer']").clear().type(ticketJSON.issuingOfficer);
-      cy.get("textarea[name='locationDescription']").clear().type(ticketJSON.locationDecsription);
+      cy.get("textarea[name='locationDescription']").clear().type(ticketJSON.locationDescription);
     });
 
   });
@@ -71,4 +77,70 @@ describe("Create a New Ticket", () => {
     cy.get("input[name='discountOffenceAmount']").should("not.have.value", "");
     cy.get("input[name='discountDays']").should("not.have.value", "");
   });
+
+  it("Prepopulates the \"Licence Plate Country\" field", () => {
+
+    const expectedLicencePlateCountry = configFunctions.getProperty("defaults.country");
+
+    cy.get("input[name='licencePlateCountry']")
+      .should("contain.value", expectedLicencePlateCountry);
+  });
+
+  it("Prepopulates the \"Licence Plate Province\" field", () => {
+
+    const expectedLicencePlateProvince = configFunctions.getProperty("defaults.province");
+
+    cy.get("input[name='licencePlateProvince']")
+      .should("contain.value", expectedLicencePlateProvince);
+  });
+
+  it("Populates the basic \"Vehicle Details\"", () => {
+
+    cy.fixture("ticket.json").then((ticketJSON) => {
+      cy.get("input[name='licencePlateNumber']").clear().type(ticketJSON.licencePlateNumber);
+      cy.get("input[name='licencePlateExpiryYear']").clear().type((new Date().getFullYear() + 1).toString());
+      cy.get("select[name='licencePlateExpiryMonth']").select(ticketJSON.licencePlateExpiryMonth);
+      cy.get("input[name='vehicleMakeModel']").clear().type(ticketJSON.vehicleMakeModel);
+      cy.get("input[name='vehicleVIN']").clear().type(ticketJSON.vehicleVIN);
+    });
+  });
+
+  it("Disable required fields when the licence plate is unavailable", () => {
+
+    cy.get("input[name='licencePlateIsMissing']").check({ force: true });
+
+    cy.get("input[name='licencePlateCountry']")
+      .should("not.have.attr", "required");
+
+    cy.get("input[name='licencePlateProvince']")
+      .should("not.have.attr", "required");
+
+    cy.get("input[name='licencePlateNumber']")
+      .should("not.have.attr", "required");
+  });
+
+  it("Enforce required fields when the licence plate is available", () => {
+
+    cy.get("input[name='licencePlateIsMissing']").uncheck({ force: true });
+
+    cy.get("input[name='licencePlateCountry']")
+      .should("have.attr", "required");
+
+    cy.get("input[name='licencePlateProvince']")
+      .should("have.attr", "required");
+
+    cy.get("input[name='licencePlateNumber']")
+      .should("have.attr", "required");
+  });
+
+  it("Submits the form, creates a record", () => {
+
+    cy.get("button[type='submit']")
+      .should("contain.text", "Create New Ticket")
+      .click();
+
+    cy.get(".modal")
+      .should("be.visible")
+      .should("contain", "success");
+  })
 });
