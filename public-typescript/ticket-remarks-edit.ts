@@ -138,11 +138,13 @@ declare const cityssm: cityssmGlobal;
           ? "<div class=\"column is-narrow\">" +
           "<div class=\"buttons is-right has-addons\">" +
           ("<button class=\"button is-small is-edit-remark-button\"" +
+            " data-cy=\"edit-remark\"" +
             " data-tooltip=\"Edit Remark\" data-index=\"" + index.toString() + "\" type=\"button\">" +
             "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
             " <span>Edit</span>" +
             "</button>") +
           ("<button class=\"button is-small has-text-danger is-delete-remark-button\"" +
+            " data-cy=\"delete-remark\"" +
             " data-tooltip=\"Delete Remark\"" +
             " data-remark-index=\"" + remarkObject.remarkIndex.toString() + "\" type=\"button\">" +
             "<i class=\"fas fa-trash\" aria-hidden=\"true\"></i>" +
