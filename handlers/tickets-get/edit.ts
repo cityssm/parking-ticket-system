@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import {getParkingTicket} from "../../helpers/parkingDB/getParkingTicket.js";
+import { getParkingTicket } from "../../helpers/parkingDB/getParkingTicket.js";
 import * as parkingDB from "../../helpers/parkingDB.js";
 
 
