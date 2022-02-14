@@ -7,5 +7,9 @@
   "licencePlateNumber": "TEST 123",
   "licencePlateExpiryMonth": "12",
   "vehicleMakeModel": "GMC",
-  "vehicleVIN": "TESTTESTTESTTESTTEST"
+  "vehicleVIN": "TESTTESTTESTTESTTEST",
+
+  "statusPaid_statusField": "10",
+  "statusPaid_statusField2": "123456",
+  "statusPaid_statusNote": "Paid and Resolved"
 }
