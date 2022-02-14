@@ -18,7 +18,7 @@ describe("Ticket Search - Update User", () => {
     cy.location("pathname").should("equal", "/tickets");
   });
 
-  it("Have link to new ticket", () => {
+  it("Has link to new ticket", () => {
     cy.get("a[href*='/new']")
       .should("exist");
   });
