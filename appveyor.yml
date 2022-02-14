@@ -36,5 +36,9 @@ after_test:
   # Send test result to Codacy
   - sh: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./coverage/lcov.info
 
+artifacts:
+  - path: cypress\videos\**\*.mp4
+    name: Cypress Videos
+
 # Don't actually build.
 build: off
