@@ -12,7 +12,9 @@ environment:
 stack: "node 14"
 
 cache:
-  - node_modules                        # local npm modules
+  - node_modules      # local npm modules
+  - ~/.cache          # Cypress
+  - ~/.npm            # NPM
 
 install:
   - sh: npm install -g npm@7
