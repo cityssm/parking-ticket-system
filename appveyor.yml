@@ -13,8 +13,8 @@ stack: "node 14"
 
 cache:
   - node_modules      # local npm modules
-  - ~/.cache          # Cypress
-  - ~/.npm            # NPM
+  - $HOME/.cache      # Cypress
+  - $HOME/.npm        # NPM
 
 install:
   - sh: npm install -g npm@7
