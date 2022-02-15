@@ -17,8 +17,8 @@ export const canUpdateObject = (object, requestSession) => {
     if (canUpdate) {
         switch (object.recordType) {
             case "ticket":
-                if (object.resolvedDate
-                    && Date.now() - object.recordUpdate_timeMillis <= configFunctions.getProperty("parkingTickets.updateWindowMillis")) {
+                if (object.resolvedDate &&
+                    Date.now() - object.recordUpdate_timeMillis >= configFunctions.getProperty("parkingTickets.updateWindowMillis")) {
                     canUpdate = false;
                 }
                 break;
