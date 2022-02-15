@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import {getParkingTicket} from "../../helpers/parkingDB/getParkingTicket.js";
+import { getParkingTicket } from "../../helpers/parkingDB/getParkingTicket.js";
 
 
 export const handler: RequestHandler = (request, response) => {
