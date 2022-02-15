@@ -11,6 +11,10 @@ environment:
 
 stack: "node 14"
 
+cache:
+  - node_modules                        # local npm modules
+  - '%APPDATA%\npm-cache'               # npm cache
+
 install:
   - sh: npm install -g npm@7
   # Output useful info for debugging.
