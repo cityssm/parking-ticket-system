@@ -13,12 +13,18 @@ describe("Ticket Edit - Update User", function () {
         logout();
         login(testUpdate);
     });
+    after(logout);
     it("Loads edit page for an unresolved ticket", function () {
+        cy.intercept("POST", "/tickets/doGetTickets").as("results");
         cy.visit("/tickets");
+        cy.wait("@results");
+        cy.get("select[name='isResolved']")
+            .select("1")
+            .select("0");
+        cy.wait("@results");
         cy.get("[data-cy='results']")
-            .contains("unresolved", { matchCase: false })
-            .parents("tr")
             .find("a")
+            .first()
             .click();
         cy.get("a[href$='/edit']").click();
         cy.location("pathname")
