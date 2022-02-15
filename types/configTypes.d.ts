@@ -79,6 +79,7 @@ interface ConfigParkingTickets {
     licencePlateExpiryDate: {
         includeDay?: boolean;
     };
+    updateWindowMillis?: number;
 }
 export interface ConfigParkingTicketStatus {
     statusKey: string;

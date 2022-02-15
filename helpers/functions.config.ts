@@ -41,6 +41,7 @@ configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);
 configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", () => {
   return "";
 });
+configFallbackValues.set("parkingTickets.updateWindowMillis", 3 * 86_400 * 1000);
 
 configFallbackValues.set("parkingTickets.licencePlateExpiryDate.includeDay", false);
 
@@ -95,6 +96,7 @@ export function getProperty(propertyName: "parkingTickets.ticketNumber.fieldLabe
 export function getProperty(propertyName: "parkingTickets.ticketNumber.isUnique"): boolean;
 export function getProperty(propertyName: "parkingTickets.ticketNumber.nextTicketNumberFn"): (currentTicketNumber: string) => string;
 export function getProperty(propertyName: "parkingTickets.ticketNumber.pattern"): RegExp;
+export function getProperty(propertyName: "parkingTickets.updateWindowMillis"): number;
 
 export function getProperty(propertyName: "parkingTicketStatuses"): configTypes.ConfigParkingTicketStatus[];
 

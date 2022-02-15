@@ -25,6 +25,7 @@ configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);
 configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", () => {
     return "";
 });
+configFallbackValues.set("parkingTickets.updateWindowMillis", 3 * 86400 * 1000);
 configFallbackValues.set("parkingTickets.licencePlateExpiryDate.includeDay", false);
 configFallbackValues.set("parkingTicketStatuses", []);
 configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\w -]{1,20}$/);

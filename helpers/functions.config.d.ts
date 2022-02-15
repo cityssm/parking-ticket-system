@@ -26,6 +26,7 @@ export declare function getProperty(propertyName: "parkingTickets.ticketNumber.f
 export declare function getProperty(propertyName: "parkingTickets.ticketNumber.isUnique"): boolean;
 export declare function getProperty(propertyName: "parkingTickets.ticketNumber.nextTicketNumberFn"): (currentTicketNumber: string) => string;
 export declare function getProperty(propertyName: "parkingTickets.ticketNumber.pattern"): RegExp;
+export declare function getProperty(propertyName: "parkingTickets.updateWindowMillis"): number;
 export declare function getProperty(propertyName: "parkingTicketStatuses"): configTypes.ConfigParkingTicketStatus[];
 export declare function getProperty(propertyName: "session.cookieName"): string;
 export declare function getProperty(propertyName: "session.doKeepAlive"): boolean;
