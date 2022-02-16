@@ -20,6 +20,11 @@ describe("Create a New Ticket", () => {
     cy.location("pathname").should("equal", "/tickets/new");
   });
 
+  it("Has no detectable accessibility issues", () => {
+    cy.injectAxe();
+    cy.checkA11y();
+  });
+
   it("Populates the basic \"Parking Ticket Details\"", () => {
 
     cy.fixture("ticket.json").then((ticketJSON) => {

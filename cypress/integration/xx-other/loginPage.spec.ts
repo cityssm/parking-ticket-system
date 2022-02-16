@@ -5,6 +5,11 @@ describe("Login Page", () => {
 
   before(logout);
 
+  it("Has no detectable accessibility issues", () => {
+    cy.injectAxe();
+    cy.checkA11y();
+  });
+
   it("Contains a login form", () => {
     cy.get("form").should("have.length", 1);
   });

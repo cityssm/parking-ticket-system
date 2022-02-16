@@ -10,8 +10,13 @@ describe("Admin - Database Cleanup", function () {
         cy.visit("/admin/cleanup");
         cy.location("pathname").should("equal", "/admin/cleanup");
     });
+    it("Has no detectable accessibility issues before purging", function () {
+        cy.injectAxe();
+        cy.checkA11y();
+    });
     it("Purges all tables", function () {
         cy.get("button[data-cy='purge']")
+            .should(Cypress._.noop)
             .each(function ($buttonElement) {
             cy.wrap($buttonElement).click();
             cy.get(".modal button")
@@ -23,5 +28,9 @@ describe("Admin - Database Cleanup", function () {
         });
         cy.get("button[data-cy='purge']")
             .should("not.exist");
+    });
+    it("Has no detectable accessibility issues after purging", function () {
+        cy.injectAxe();
+        cy.checkA11y();
     });
 });

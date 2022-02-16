@@ -10,6 +10,10 @@ describe("Read Only User", function () {
         before(function () {
             cy.visit("/dashboard");
         });
+        it("Has no detectable accessibility issues", function () {
+            cy.injectAxe();
+            cy.checkA11y();
+        });
         it("Has no links to new ticket", function () {
             cy.get("a[href*='/new']")
                 .should("not.exist");
@@ -51,6 +55,10 @@ describe("Read Only User", function () {
         });
         it("Loads page", function () {
             cy.location("pathname").should("equal", "/reports");
+        });
+        it("Has no detectable accessibility issues", function () {
+            cy.injectAxe();
+            cy.checkA11y();
         });
     });
     describe("Admin - Database Cleanup", function () {

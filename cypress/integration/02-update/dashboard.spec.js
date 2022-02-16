@@ -10,6 +10,10 @@ describe("Dashboard - Update User", function () {
         cy.visit("/dashboard");
         cy.location("pathname").should("equal", "/dashboard");
     });
+    it("Has no detectable accessibility issues", function () {
+        cy.injectAxe();
+        cy.checkA11y();
+    });
     it("Sets the data-can-update attribute to true", function () {
         cy.get("main")
             .invoke("attr", "data-can-update")

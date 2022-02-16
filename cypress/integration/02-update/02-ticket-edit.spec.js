@@ -43,6 +43,10 @@ describe("Ticket Edit - Update User", function () {
             .should("contain", "/tickets/")
             .should("contain", "/edit");
     });
+    it("Has no detectable accessibility issues", function () {
+        cy.injectAxe();
+        cy.checkA11y();
+    });
     it("Can save ticket as loaded", function () {
         saveTicket();
     });

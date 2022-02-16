@@ -1,3 +1,6 @@
+import "cypress-axe";
+
+
 Cypress.Cookies.defaults({
   preserve: ["_csrf", "parking-ticket-system-user-sid"]
 });

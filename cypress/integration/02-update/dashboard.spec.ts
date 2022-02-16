@@ -16,6 +16,11 @@ describe("Dashboard - Update User", () => {
     cy.location("pathname").should("equal", "/dashboard");
   });
 
+  it("Has no detectable accessibility issues", () => {
+    cy.injectAxe();
+    cy.checkA11y();
+  });
+
   it("Sets the data-can-update attribute to true", () => {
     cy.get("main")
       .invoke("attr", "data-can-update")

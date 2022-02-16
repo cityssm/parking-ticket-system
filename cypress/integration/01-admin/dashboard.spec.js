@@ -27,4 +27,8 @@ describe("Dashboard - Admin User", function () {
     it("Has a link to Parking By-Law Maintenance", function () {
         cy.get("a[href*='/admin/bylaws']").should("exist");
     });
+    it("Has no detectable accessibility issues", function () {
+        cy.injectAxe();
+        cy.checkA11y();
+    });
 });

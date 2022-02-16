@@ -66,6 +66,11 @@ describe("Ticket Edit - Update User", () => {
       .should("contain", "/edit");
   });
 
+  it("Has no detectable accessibility issues", () => {
+    cy.injectAxe();
+    cy.checkA11y();
+  });
+
   it("Can save ticket as loaded", () => {
     saveTicket();
   });

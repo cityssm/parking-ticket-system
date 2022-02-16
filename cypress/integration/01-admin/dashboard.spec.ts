@@ -37,4 +37,9 @@ describe("Dashboard - Admin User", () => {
   it("Has a link to Parking By-Law Maintenance", () => {
     cy.get("a[href*='/admin/bylaws']").should("exist");
   });
+
+  it("Has no detectable accessibility issues", () => {
+    cy.injectAxe();
+    cy.checkA11y();
+  });
 });

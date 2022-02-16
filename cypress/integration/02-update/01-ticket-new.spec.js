@@ -11,6 +11,10 @@ describe("Create a New Ticket", function () {
         cy.visit("/tickets/new");
         cy.location("pathname").should("equal", "/tickets/new");
     });
+    it("Has no detectable accessibility issues", function () {
+        cy.injectAxe();
+        cy.checkA11y();
+    });
     it("Populates the basic \"Parking Ticket Details\"", function () {
         cy.fixture("ticket.json").then(function (ticketJSON) {
             var ticketNumber = ticketJSON.ticketNumberPrefix +

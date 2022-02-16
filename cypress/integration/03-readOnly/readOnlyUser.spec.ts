@@ -18,6 +18,11 @@ describe("Read Only User", () => {
       cy.visit("/dashboard");
     });
 
+    it("Has no detectable accessibility issues", () => {
+      cy.injectAxe();
+      cy.checkA11y();
+    });
+
     it("Has no links to new ticket", () => {
       cy.get("a[href*='/new']")
         .should("not.exist");
@@ -68,6 +73,11 @@ describe("Read Only User", () => {
 
     it("Loads page", () => {
       cy.location("pathname").should("equal", "/reports");
+    });
+
+    it("Has no detectable accessibility issues", () => {
+      cy.injectAxe();
+      cy.checkA11y();
     });
   });
 

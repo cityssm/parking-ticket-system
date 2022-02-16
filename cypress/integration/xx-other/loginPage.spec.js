@@ -1,6 +1,10 @@
 import { logout } from "../../support/index.js";
 describe("Login Page", function () {
     before(logout);
+    it("Has no detectable accessibility issues", function () {
+        cy.injectAxe();
+        cy.checkA11y();
+    });
     it("Contains a login form", function () {
         cy.get("form").should("have.length", 1);
     });
