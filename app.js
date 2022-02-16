@@ -16,6 +16,7 @@ import routerPlates from "./routes/plates.js";
 import routerReports from "./routes/reports.js";
 import routePlatesOntario from "./routes/plates-ontario.js";
 import routeTicketsOntario from "./routes/tickets-ontario.js";
+import { useTestDatabases } from "./data/databasePaths.js";
 import * as configFunctions from "./helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
@@ -41,11 +42,13 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(csurf({ cookie: true }));
-const limiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 500
-});
-app.use(limiter);
+if (!useTestDatabases) {
+    const limiter = rateLimit({
+        windowMs: 60 * 1000,
+        max: 500
+    });
+    app.use(limiter);
+}
 app.use(express.static(path.join("public")));
 app.use("/fa", express.static(path.join("node_modules", "@fortawesome", "fontawesome-free")));
 app.use("/stylesheets/files", express.static(path.join("node_modules", "@fontsource", "inter", "files")));

@@ -21,6 +21,7 @@ import routerReports from "./routes/reports.js";
 import routePlatesOntario from "./routes/plates-ontario.js";
 import routeTicketsOntario from "./routes/tickets-ontario.js";
 
+import { useTestDatabases } from "./data/databasePaths.js";
 import * as configFunctions from "./helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
@@ -75,12 +76,14 @@ app.use(csurf({ cookie: true }));
  * Rate Limiter
  */
 
-const limiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 500
-});
+if (!useTestDatabases) {
+  const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 500
+  });
 
-app.use(limiter);
+  app.use(limiter);
+}
 
 
 /*
