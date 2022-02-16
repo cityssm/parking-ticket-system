@@ -206,7 +206,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "<strong>This ticket is able to be marked as resolved.</strong>" +
                 "</div>" +
                 "<div class=\"column is-narrow has-text-right align-self-flex-end\">" +
-                "<button class=\"button is-info\" type=\"button\">" +
+                "<button class=\"button is-info\" data-cy=\"resolve\" type=\"button\">" +
                 "<span class=\"icon is-small\"><i class=\"fas fa-check\" aria-hidden=\"true\"></i></span>" +
                 "<span>Resolve Ticket</span>" +
                 "</button>" +
