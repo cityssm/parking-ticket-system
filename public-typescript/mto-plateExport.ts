@@ -20,7 +20,7 @@ interface AvailableLicencePlate {
 
 (() => {
 
-  const canUpdate = document.querySelector("main").getAttribute("data-can-update") === "true";
+  const canUpdate = document.querySelector("main").dataset.canUpdate === "true";
 
   let batchID = -1;
   let batchIsLocked = true;
@@ -46,7 +46,7 @@ interface AvailableLicencePlate {
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement;
     buttonElement.setAttribute("disabled", "disabled");
 
-    const recordIndex = Number.parseInt(buttonElement.getAttribute("data-index"), 10);
+    const recordIndex = Number.parseInt(buttonElement.dataset.index, 10);
 
     const plateRecord = availablePlatesList[recordIndex];
 
@@ -86,7 +86,7 @@ interface AvailableLicencePlate {
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement;
     buttonElement.setAttribute("disabled", "disabled");
 
-    const recordIndex = Number.parseInt(buttonElement.getAttribute("data-index"), 10);
+    const recordIndex = Number.parseInt(buttonElement.dataset.index, 10);
 
     const batchEntry = batchEntriesList[recordIndex];
 
@@ -216,6 +216,7 @@ interface AvailableLicencePlate {
           "</div>") +
         ("<div class=\"level-right\">" +
           "<button class=\"button is-small\" data-index=\"" + recordIndex.toString() + "\"" +
+          " data-cy=\"add-plate\"" +
           " data-tooltip=\"Add to Batch\" type=\"button\">" +
           "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
           "<span>Add</span>" +
@@ -251,6 +252,7 @@ interface AvailableLicencePlate {
 
       const addAllButtonElement = document.createElement("button");
       addAllButtonElement.className = "button is-fullwidth mb-3";
+      addAllButtonElement.dataset.cy = "add-plates";
 
       addAllButtonElement.innerHTML =
         "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
@@ -352,8 +354,8 @@ interface AvailableLicencePlate {
     batchID = batch.batchID;
     batchEntriesList = batch.batchEntries;
 
-    batchIsLocked = !(batch.lockDate === null);
-    batchIsSent = !(batch.sentDate === null);
+    batchIsLocked = batch.lockDateString !== "";
+    batchIsSent = batch.sentDateString !== "";
 
     if (canUpdate) {
       if (batchIsLocked) {
@@ -406,7 +408,7 @@ interface AvailableLicencePlate {
         (batchIsLocked
           ? ""
           : "<div class=\"level-right\">" +
-          "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" type=\"button\">" +
+          "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" data-cy=\"remove-plate\" type=\"button\">" +
           "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
           "<span>Remove</span>" +
           "</button>" +
@@ -445,6 +447,7 @@ interface AvailableLicencePlate {
 
       const clearAllButtonElement = document.createElement("button");
       clearAllButtonElement.className = "button is-fullwidth mb-3";
+      clearAllButtonElement.dataset.cy = "clear-batch";
       clearAllButtonElement.innerHTML =
         "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
         "<span>Clear Batch</span>";
@@ -482,7 +485,7 @@ interface AvailableLicencePlate {
 
       batchClickEvent.preventDefault();
 
-      batchID = Number.parseInt((batchClickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-batch-id"), 10);
+      batchID = Number.parseInt((batchClickEvent.currentTarget as HTMLAnchorElement).dataset.batchId, 10);
 
       selectBatchCloseModalFunction();
       function_refreshBatch();

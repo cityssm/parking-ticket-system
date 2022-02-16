@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const canUpdate = document.querySelector("main").getAttribute("data-can-update") === "true";
+    const canUpdate = document.querySelector("main").dataset.canUpdate === "true";
     let batchID = -1;
     let batchIsLocked = true;
     let batchIsSent = false;
@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         buttonElement.setAttribute("disabled", "disabled");
-        const recordIndex = Number.parseInt(buttonElement.getAttribute("data-index"), 10);
+        const recordIndex = Number.parseInt(buttonElement.dataset.index, 10);
         const plateRecord = availablePlatesList[recordIndex];
         const plateContainerElement = buttonElement.closest(".is-plate-container");
         cityssm.postJSON("/plates/doAddLicencePlateToLookupBatch", {
@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         buttonElement.setAttribute("disabled", "disabled");
-        const recordIndex = Number.parseInt(buttonElement.getAttribute("data-index"), 10);
+        const recordIndex = Number.parseInt(buttonElement.dataset.index, 10);
         const batchEntry = batchEntriesList[recordIndex];
         const entryContainerElement = buttonElement.closest(".is-entry-container");
         cityssm.postJSON("/plates/doRemoveLicencePlateFromLookupBatch", {
@@ -119,6 +119,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "</div>") +
                 ("<div class=\"level-right\">" +
                     "<button class=\"button is-small\" data-index=\"" + recordIndex.toString() + "\"" +
+                    " data-cy=\"add-plate\"" +
                     " data-tooltip=\"Add to Batch\" type=\"button\">" +
                     "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     "<span>Add</span>" +
@@ -147,6 +148,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         if (includedLicencePlates.length > 0) {
             const addAllButtonElement = document.createElement("button");
             addAllButtonElement.className = "button is-fullwidth mb-3";
+            addAllButtonElement.dataset.cy = "add-plates";
             addAllButtonElement.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     ("<span>" +
@@ -213,8 +215,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const function_populateBatchView = (batch) => {
         batchID = batch.batchID;
         batchEntriesList = batch.batchEntries;
-        batchIsLocked = !(batch.lockDate === null);
-        batchIsSent = !(batch.sentDate === null);
+        batchIsLocked = batch.lockDateString !== "";
+        batchIsSent = batch.sentDateString !== "";
         if (canUpdate) {
             if (batchIsLocked) {
                 lockBatchButtonElement.setAttribute("disabled", "disabled");
@@ -255,7 +257,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 (batchIsLocked
                     ? ""
                     : "<div class=\"level-right\">" +
-                        "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" type=\"button\">" +
+                        "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" data-cy=\"remove-plate\" type=\"button\">" +
                         "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
                         "<span>Remove</span>" +
                         "</button>" +
@@ -283,6 +285,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         else {
             const clearAllButtonElement = document.createElement("button");
             clearAllButtonElement.className = "button is-fullwidth mb-3";
+            clearAllButtonElement.dataset.cy = "clear-batch";
             clearAllButtonElement.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-broom\" aria-hidden=\"true\"></i></span>" +
                     "<span>Clear Batch</span>";
@@ -305,7 +308,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let resultsContainerElement;
         const clickFunction_selectBatch = (batchClickEvent) => {
             batchClickEvent.preventDefault();
-            batchID = Number.parseInt(batchClickEvent.currentTarget.getAttribute("data-batch-id"), 10);
+            batchID = Number.parseInt(batchClickEvent.currentTarget.dataset.batchId, 10);
             selectBatchCloseModalFunction();
             function_refreshBatch();
         };
