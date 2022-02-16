@@ -8,6 +8,18 @@ var saveTicket = function () {
         .should("contain.text", "Saved Successfully")
         .should("exist");
 };
+var unresolveTicket = function () {
+    cy.get("button")
+        .contains("Remove Resolved Status", { matchCase: false })
+        .click();
+    cy.get(".modal")
+        .should("be.visible")
+        .find("button")
+        .contains("Yes")
+        .click();
+    cy.get("a[href$='/edit']")
+        .should("exist");
+};
 describe("Ticket Edit - Update User", function () {
     before(function () {
         logout();
@@ -19,7 +31,7 @@ describe("Ticket Edit - Update User", function () {
         cy.visit("/tickets");
         cy.wait("@results");
         cy.get("select[name='isResolved']")
-            .select("1")
+            .select("")
             .select("0");
         cy.wait("@results");
         cy.get("[data-cy='results']")
@@ -96,7 +108,7 @@ describe("Ticket Edit - Update User", function () {
             cy.get("button[data-cy='add-status-paid']").click();
             cy.get(".modal")
                 .should("be.visible");
-            cy.fixture("ticket.json", function (ticketJSON) {
+            cy.fixture("ticket.json").then(function (ticketJSON) {
                 cy.get(".modal input[name='statusField']")
                     .clear()
                     .type(ticketJSON.statusPaid_statusField);
@@ -113,5 +125,64 @@ describe("Ticket Edit - Update User", function () {
             cy.get(".modal")
                 .should("not.exist");
         });
+    });
+});
+describe("Ticket View - Update User", function () {
+    before(function () {
+        logout();
+        login(testUpdate);
+    });
+    after(logout);
+    it("Unresolves a resolved ticket", function () {
+        cy.intercept("POST", "/tickets/doGetTickets").as("results");
+        cy.visit("/tickets");
+        cy.wait("@results");
+        cy.get("select[name='isResolved']")
+            .select("")
+            .select("1");
+        cy.wait("@results");
+        cy.get("[data-cy='results']")
+            .find("a")
+            .first()
+            .click();
+        unresolveTicket();
+    });
+});
+describe("Ticket Edit - Update User", function () {
+    before(function () {
+        logout();
+        login(testUpdate);
+    });
+    it("Loads edit page for a paid, unresolved ticket", function () {
+        cy.intercept("POST", "/tickets/doGetTickets").as("results");
+        cy.visit("/tickets");
+        cy.wait("@results");
+        cy.get("select[name='isResolved']")
+            .select("")
+            .select("0");
+        cy.wait("@results");
+        cy.get("[data-cy='results']")
+            .contains("tr", "Paid")
+            .first()
+            .find("a")
+            .click();
+        cy.get("a[href$='/edit']").click();
+        cy.location("pathname")
+            .should("contain", "/tickets/")
+            .should("contain", "/edit");
+    });
+    it("Resolves the ticket", function () {
+        cy.get("button[data-cy='resolve']")
+            .click();
+        cy.get(".modal")
+            .should("be.visible")
+            .find("button")
+            .contains("Yes")
+            .click();
+        cy.location("pathname")
+            .should("not.contain", "/edit");
+    });
+    it("Unresolves the ticket again", function () {
+        unresolveTicket();
     });
 });
