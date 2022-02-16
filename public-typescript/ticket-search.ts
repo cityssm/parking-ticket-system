@@ -198,7 +198,7 @@ declare const pts: ptsGlobal;
 
     cityssm.clearElement(searchResultsElement);
 
-    searchResultsElement.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
+    searchResultsElement.innerHTML = "<p class=\"has-text-centered has-text-grey-light\">" +
       "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
       "<em>Loading tickets..." +
       "</p>";

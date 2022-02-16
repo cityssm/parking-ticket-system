@@ -17,7 +17,7 @@
 <body>
   <div class="columns is-vcentered is-centered has-min-page-height is-marginless">
     <div class="column is-half-widescreen is-two-thirds-desktop is-three-quarters-tablet">
-      <div class="box m-4">
+      <main class="box m-4">
         <div class="columns">
           <div class="column has-text-centered">
             <img src="<%= configFunctions.getProperty("application.logoURL") %>" alt="" style="max-height:250px" />
@@ -40,9 +40,8 @@
                 </div>
               </div>
               <div class="field">
-                <label class="sr-only" for="login--password">Password</label>
                 <div class="control has-icons-left">
-                  <input class="input" id="login--password" name="password" type="password" placeholder="Password" required />
+                  <input class="input" id="login--password" name="password" type="password" placeholder="Password" aria-label="Password" required />
                   <span class="icon is-small is-left">
                     <i class="fas fa-key" aria-hidden="true"></i>
                   </span>
@@ -88,7 +87,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   </div>
 
