@@ -18,11 +18,6 @@ describe("Ticket Search - Update User", () => {
     cy.location("pathname").should("equal", "/tickets");
   });
 
-  it("Has no detectable accessibility issues", () => {
-    cy.injectAxe();
-    cy.checkA11y();
-  });
-
   it("Has link to new ticket", () => {
     cy.get("a[href*='/new']")
       .should("exist");

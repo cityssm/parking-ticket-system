@@ -10,10 +10,6 @@ describe("Ticket Search - Update User", function () {
         cy.visit("/tickets");
         cy.location("pathname").should("equal", "/tickets");
     });
-    it("Has no detectable accessibility issues", function () {
-        cy.injectAxe();
-        cy.checkA11y();
-    });
     it("Has link to new ticket", function () {
         cy.get("a[href*='/new']")
             .should("exist");
