@@ -27,9 +27,17 @@ describe("Create a New Ticket", () => {
       const ticketNumber = ticketJSON.ticketNumberPrefix +
         ("0000" + Cypress._.random(1, 99_999).toString()).slice(-5);
 
+      const issueDate = new Date(Date.now() - (ticketJSON.issueDateOffsetDays * 86_400 * 1000));
+
       cy.get("input[name='ticketNumber']").clear().type(ticketNumber);
-      cy.get("input[name='issueDateString']").clear().type(ticketJSON.issueDateString);
+
+      // eslint-disable-next-line promise/no-nesting
+      cy.get("input[name='issueDateString']").clear().then(($element) => {
+        ($element.get(0) as HTMLInputElement).valueAsDate = issueDate;
+      });
+
       cy.get("input[name='issueTimeString']").clear().type(ticketJSON.issueTimeString);
+
       cy.get("input[name='issuingOfficer']").clear().type(ticketJSON.issuingOfficer);
       cy.get("textarea[name='locationDescription']").clear().type(ticketJSON.locationDescription);
     });

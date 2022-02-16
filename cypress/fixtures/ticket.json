@@ -1,6 +1,6 @@
 {
   "ticketNumberPrefix": "PS",
-  "issueDateString": "2021-02-03",
+  "issueDateOffsetDays": 15,
   "issueTimeString": "04:56",
   "issuingOfficer": "Test Officer",
   "locationDescription": "Test Location Description",
