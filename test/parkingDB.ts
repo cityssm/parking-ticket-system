@@ -41,6 +41,7 @@ import * as parkingDB_cleanupParkingTicketRemarksTable from "../helpers/parkingD
 import * as parkingDB_cleanupLicencePlateOwnersTable from "../helpers/parkingDB/cleanupLicencePlateOwnersTable.js";
 
 import * as parkingDB_ontario from "../helpers/parkingDB-ontario.js";
+import * as parkingDBOntario_getParkingTicketsAvailableForMTOLookup from "../helpers/parkingDB-ontario/getParkingTicketsAvailableForMTOLookup.js";
 import * as parkingDB_reporting from "../helpers/parkingDB-reporting.js";
 
 
@@ -232,7 +233,7 @@ describe("helpers/parkingDB", () => {
   describe("-ontario", () => {
 
     it("should execute getLicencePlatesAvailableForMTOLookupBatch()", () => {
-      assert.ok(parkingDB_ontario.getLicencePlatesAvailableForMTOLookupBatch(-1, -1));
+      assert.ok(parkingDBOntario_getParkingTicketsAvailableForMTOLookup.getParkingTicketsAvailableForMTOLookup(-1, -1));
     });
 
     it("should execute getParkingTicketsAvailableForMTOConvictionBatch()", () => {
