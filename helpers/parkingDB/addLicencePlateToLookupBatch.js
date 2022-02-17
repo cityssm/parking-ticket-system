@@ -31,7 +31,7 @@ export const addLicencePlateToLookupBatch = (requestBody, requestSession) => {
             message: "Licence plate not added to the batch.  It may be already part of the batch."
         };
 };
-export const addAllLicencePlatesToLookupBatch = (requestBody, requestSession) => {
+export const addAllParkingTicketsToLookupBatch = (requestBody, requestSession) => {
     const database = sqlite(databasePath);
     const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
         " set recordUpdate_userName = ?," +
@@ -49,22 +49,17 @@ export const addAllLicencePlatesToLookupBatch = (requestBody, requestSession) =>
     }
     const insertStmt = database.prepare("insert or ignore into LicencePlateLookupBatchEntries" +
         " (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)" +
-        " values (?, ?, ?, ?, ?)");
-    let changeCount = 0;
-    for (const licencePlateNumberRecord of requestBody.licencePlateNumbers) {
-        const info = insertStmt
-            .run(requestBody.batchID, requestBody.licencePlateCountry, requestBody.licencePlateProvince, licencePlateNumberRecord[0], licencePlateNumberRecord[1]);
-        changeCount += info.changes;
+        " select ? as batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID" +
+        " from ParkingTickets" +
+        " where recordDelete_timeMillis is null" +
+        " and ticketID = ?");
+    for (const ticketID of requestBody.ticketIDs) {
+        insertStmt.run(requestBody.batchID, ticketID);
     }
     database.close();
-    return changeCount > 0
-        ? {
-            success: true,
-            batch: getLookupBatch(requestBody.batchID)
-        }
-        : {
-            success: false,
-            message: "Licence plate not added to the batch.  It may be already part of the batch."
-        };
+    return {
+        success: true,
+        batch: getLookupBatch(requestBody.batchID)
+    };
 };
 export default addLicencePlateToLookupBatch;

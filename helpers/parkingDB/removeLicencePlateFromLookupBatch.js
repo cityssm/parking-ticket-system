@@ -18,10 +18,11 @@ export const removeLicencePlateFromLookupBatch = (requestBody, requestSession) =
     }
     const info = database.prepare("delete from LicencePlateLookupBatchEntries" +
         " where batchID = ?" +
+        " and ticketID = ?" +
         " and licencePlateCountry = ?" +
         " and licencePlateProvince = ?" +
         " and licencePlateNumber = ?")
-        .run(requestBody.batchID, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber);
+        .run(requestBody.batchID, requestBody.ticketID, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber);
     database.close();
     return info.changes > 0
         ? {

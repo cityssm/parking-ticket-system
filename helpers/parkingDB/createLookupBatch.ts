@@ -8,18 +8,25 @@ import type * as expressSession from "express-session";
 import type * as recordTypes from "../../types/recordTypes";
 
 
+interface CreateLookupBatchForm {
+  mto_includeLabels?: "1" | "0";
+}
+
 export const createLookupBatch =
-  (requestSession: expressSession.Session): { success: boolean; batch?: recordTypes.LicencePlateLookupBatch; } => {
+  (requestBody: CreateLookupBatchForm, requestSession: expressSession.Session): { success: boolean; batch?: recordTypes.LicencePlateLookupBatch; } => {
 
     const database = sqlite(databasePath);
 
     const rightNow = new Date();
 
     const info = database.prepare("insert into LicencePlateLookupBatches" +
-      " (batchDate, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
-      " values (?, ?, ?, ?, ?)")
+      " (batchDate, mto_includeLabels, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)" +
+      " values (?, ?, ?, ?, ?, ?)")
       .run(
         dateTimeFns.dateToInteger(rightNow),
+        (requestBody.mto_includeLabels && requestBody.mto_includeLabels === "1"
+          ? 1
+          : 0),
         requestSession.user.userName,
         rightNow.getTime(),
         requestSession.user.userName,

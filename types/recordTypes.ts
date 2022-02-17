@@ -191,6 +191,8 @@ export interface LicencePlateLookupBatch extends Record {
   receivedDate?: number;
   receivedDateString?: string;
 
+  mto_includeLabels?: boolean;
+
   batchEntries: LicencePlateLookupBatchEntry[];
 }
 

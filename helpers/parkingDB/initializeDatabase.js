@@ -116,6 +116,7 @@ const createLicencePlateLookupBatches = (parkingDB) => {
         " lockDate integer," +
         " sentDate integer," +
         " receivedDate integer," +
+        " mto_includeLabels bit not null default 0," +
         " recordCreate_userName varchar(30) not null," +
         " recordCreate_timeMillis integer not null," +
         " recordUpdate_userName varchar(30) not null," +
@@ -127,11 +128,11 @@ const createLicencePlateLookupBatches = (parkingDB) => {
 const createLicencePlateLookupBatchEntries = (parkingDB) => {
     parkingDB.prepare("create table if not exists LicencePlateLookupBatchEntries (" +
         "batchID integer not null," +
+        " ticketID integer," +
         " licencePlateCountry varchar(2) not null," +
         " licencePlateProvince varchar(5) not null," +
         " licencePlateNumber varchar(15) not null," +
-        " ticketID integer," +
-        " primary key (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber)," +
+        " primary key (batchID, ticketID, licencePlateCountry, licencePlateProvince, licencePlateNumber)," +
         " foreign key (batchID) references LicencePlateLookupBatches (batchID)," +
         " foreign key (ticketID) references ParkingTickets (ticketID)" +
         ") without rowid").run();

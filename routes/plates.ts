@@ -7,7 +7,7 @@ import handler_doGetUnreceivedLicencePlateLookupBatches from "../handlers/plates
 import handler_doGetLookupBatch from "../handlers/plates-post/doGetLookupBatch.js";
 import handler_doCreateLookupBatch from "../handlers/plates-post/doCreateLookupBatch.js";
 import handler_doAddLicencePlateToLookupBatch from "../handlers/plates-post/doAddLicencePlateToLookupBatch.js";
-import handler_doAddAllLicencePlatesToLookupBatch from "../handlers/plates-post/doAddAllLicencePlatesToLookupBatch.js";
+import handler_doAddAllParkingTicketsToLookupBatch from "../handlers/plates-post/doAddAllParkingTicketsToLookupBatch.js";
 import handler_doRemoveLicencePlateFromLookupBatch from "../handlers/plates-post/doRemoveLicencePlateFromLookupBatch.js";
 import handler_doClearLookupBatch from "../handlers/plates-post/doClearLookupBatch.js";
 import handler_doLockLookupBatch from "../handlers/plates-post/doLockLookupBatch.js";
@@ -49,9 +49,9 @@ router.post("/doAddLicencePlateToLookupBatch",
   permissionHandlers.updatePostHandler,
   handler_doAddLicencePlateToLookupBatch);
 
-router.post("/doAddAllLicencePlatesToLookupBatch",
+router.post("/doAddAllParkingTicketsToLookupBatch",
   permissionHandlers.updatePostHandler,
-  handler_doAddAllLicencePlatesToLookupBatch);
+  handler_doAddAllParkingTicketsToLookupBatch);
 
 router.post("/doRemoveLicencePlateFromLookupBatch",
   permissionHandlers.updatePostHandler,

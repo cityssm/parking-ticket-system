@@ -6,11 +6,9 @@ interface AddLicencePlateToLookupBatchReturn {
     batch?: pts.LicencePlateLookupBatch;
 }
 export declare const addLicencePlateToLookupBatch: (requestBody: pts.LicencePlateLookupBatchEntry, requestSession: expressSession.Session) => AddLicencePlateToLookupBatchReturn;
-interface AddAllLicencePlatesToLookupBatchBody {
+interface AddAllParkingTicketsToLookupBatchBody {
     batchID: number;
-    licencePlateCountry: string;
-    licencePlateProvince: string;
-    licencePlateNumbers: Array<[string, number]>;
+    ticketIDs: string[];
 }
-export declare const addAllLicencePlatesToLookupBatch: (requestBody: AddAllLicencePlatesToLookupBatchBody, requestSession: expressSession.Session) => AddLicencePlateToLookupBatchReturn;
+export declare const addAllParkingTicketsToLookupBatch: (requestBody: AddAllParkingTicketsToLookupBatchBody, requestSession: expressSession.Session) => AddLicencePlateToLookupBatchReturn;
 export default addLicencePlateToLookupBatch;

@@ -129,6 +129,7 @@ export interface LicencePlateLookupBatch extends Record {
     sentDateString?: string;
     receivedDate?: number;
     receivedDateString?: string;
+    mto_includeLabels?: boolean;
     batchEntries: LicencePlateLookupBatchEntry[];
 }
 export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {

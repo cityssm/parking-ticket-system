@@ -13,13 +13,14 @@ export const getUnreceivedLookupBatches = (includeUnlocked: boolean): pts.Licenc
   });
 
   const batches: pts.LicencePlateLookupBatch[] = database.prepare(
-    "select b.batchID, b.batchDate, b.lockDate, b.sentDate, count(e.batchID) as batchEntryCount" +
+    "select b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels," +
+    " count(e.batchID) as batchEntryCount" +
     " from LicencePlateLookupBatches b" +
     " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
     " where b.recordDelete_timeMillis is null" +
     " and b.receivedDate is null" +
     (includeUnlocked ? "" : " and b.lockDate is not null") +
-    " group by b.batchID, b.batchDate, b.lockDate, b.sentDate" +
+    " group by b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels" +
     " order by b.batchID desc")
     .all();
 

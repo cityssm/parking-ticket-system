@@ -6,7 +6,7 @@ import * as permissionHandlers from "../handlers/permissions.js";
 
 import handler_mtoExport from "../handlers/plates-ontario-get/mtoExport.js";
 import handler_mtoExportDownload from "../handlers/plates-ontario-get/mtoExportDownload.js";
-import handler_doGetPlatesAvailableForMTOLookup from "../handlers/plates-ontario-post/doGetPlatesAvailableForMTOLookup.js";
+import handler_doGetTicketsAvailableForMTOLookup from "../handlers/plates-ontario-post/doGetTicketsAvailableForMTOLookup.js";
 
 import handler_mtoImport from "../handlers/plates-ontario-get/mtoImport.js";
 import * as handler_doMTOImportUpload from "../handlers/plates-ontario-post/doMTOImportUpload.js";
@@ -19,9 +19,9 @@ router.get("/mtoExport",
   permissionHandlers.updateOrOperatorGetHandler,
   handler_mtoExport);
 
-router.post("/doGetPlatesAvailableForMTOLookup",
+router.post("/doGetParkingTicketsAvailableForMTOLookup",
   permissionHandlers.updatePostHandler,
-  handler_doGetPlatesAvailableForMTOLookup);
+  handler_doGetTicketsAvailableForMTOLookup);
 
 router.get("/mtoExport/:batchID",
   permissionHandlers.updateOrOperatorGetHandler,

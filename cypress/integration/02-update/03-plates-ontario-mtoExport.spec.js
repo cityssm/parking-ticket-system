@@ -14,12 +14,12 @@ var clearCurrentBatch = function () {
         }
     });
 };
-var addAllPlatesToBatch = function () {
-    cy.intercept("POST", "/plates/doAddAllLicencePlatesToLookupBatch").as("add");
-    cy.get("button[data-cy='add-plates']")
+var addAllTicketsToBatch = function () {
+    cy.intercept("POST", "/plates/doAddAllParkingTicketsToLookupBatch").as("add");
+    cy.get("button[data-cy='add-tickets']")
         .click();
     cy.wait("@add");
-    cy.get("button[data-cy='add-plates']")
+    cy.get("button[data-cy='add-tickets']")
         .should("not.exist");
 };
 describe("MTO Licence Plate Export", function () {
@@ -44,27 +44,29 @@ describe("MTO Licence Plate Export", function () {
         cy.get(".modal")
             .should("be.visible")
             .find("button")
-            .contains("Yes")
+            .contains("Regular")
             .click();
+        cy.get(".modal")
+            .should("not.exist");
     });
-    it("Adds all plates to the batch", function () {
-        addAllPlatesToBatch();
+    it("Adds all tickets to the batch", function () {
+        addAllTicketsToBatch();
     });
     it("Clears the batch", function () {
         clearCurrentBatch();
     });
-    it("Adds plates individually", function () {
-        cy.get("button[data-cy='add-plate']").each(function ($button) {
+    it("Adds tickets individually", function () {
+        cy.get("button[data-cy='add-ticket']").each(function ($button) {
             cy.wrap($button).click();
         });
     });
-    it("Removes plates individually", function () {
-        cy.get("button[data-cy='remove-plate']").each(function ($button) {
+    it("Removes tickets individually", function () {
+        cy.get("button[data-cy='remove-ticket']").each(function ($button) {
             cy.wrap($button).click();
         });
     });
-    it("Adds all plates to the batch again", function () {
-        addAllPlatesToBatch();
+    it("Adds all tickets to the batch again", function () {
+        addAllTicketsToBatch();
     });
     it("Locks the batch", function () {
         cy.get("button[data-cy='lock-batch']")

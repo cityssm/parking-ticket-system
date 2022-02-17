@@ -24,6 +24,8 @@ export const login = (userName: string) => {
 
   cy.get("form").submit();
 
+  cy.location("pathname").should("not.contain", "/login");
+
   // Logged in pages have a navbar
   cy.get(".navbar").should("have.length", 1);
 };

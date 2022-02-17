@@ -4,29 +4,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const canUpdate = document.querySelector("main").dataset.canUpdate === "true";
     let batchID = -1;
     let batchIsLocked = true;
+    let batchIncludesLabels = false;
     let batchIsSent = false;
     const availableIssueDaysAgoElement = document.querySelector("#available--issueDaysAgo");
-    const availablePlatesContainerElement = document.querySelector("#is-available-plates-container");
+    const availableTicketsContainerElement = document.querySelector("#is-available-tickets-container");
     const licencePlateNumberFilterElement = document.querySelector("#available--licencePlateNumber");
-    let availablePlatesList = [];
+    let availableTicketsList = [];
     let batchEntriesList = [];
-    const clickFunction_addLicencePlateToBatch = (clickEvent) => {
+    const clickFunction_addParkingTicketToBatch = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         buttonElement.setAttribute("disabled", "disabled");
         const recordIndex = Number.parseInt(buttonElement.dataset.index, 10);
-        const plateRecord = availablePlatesList[recordIndex];
-        const plateContainerElement = buttonElement.closest(".is-plate-container");
+        const ticketRecord = availableTicketsList[recordIndex];
+        const ticketContainerElement = buttonElement.closest(".is-ticket-container");
         cityssm.postJSON("/plates/doAddLicencePlateToLookupBatch", {
             batchID,
             licencePlateCountry: "CA",
             licencePlateProvince: "ON",
-            licencePlateNumber: plateRecord.licencePlateNumber,
-            ticketID: plateRecord.ticketIDMin
+            licencePlateNumber: ticketRecord.licencePlateNumber,
+            ticketID: ticketRecord.ticketID
         }, (responseJSON) => {
             if (responseJSON.success) {
-                plateContainerElement.remove();
-                availablePlatesList[recordIndex] = undefined;
+                ticketContainerElement.remove();
+                availableTicketsList[recordIndex] = undefined;
                 function_populateBatchView(responseJSON.batch);
             }
             else {
@@ -34,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     };
-    const clickFunction_removeLicencePlateFromBatch = (clickEvent) => {
+    const clickFunction_removeParkingTicketFromBatch = (clickEvent) => {
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         buttonElement.setAttribute("disabled", "disabled");
@@ -43,13 +44,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const entryContainerElement = buttonElement.closest(".is-entry-container");
         cityssm.postJSON("/plates/doRemoveLicencePlateFromLookupBatch", {
             batchID,
+            ticketID: batchEntry.ticketID,
             licencePlateCountry: "CA",
             licencePlateProvince: "ON",
             licencePlateNumber: batchEntry.licencePlateNumber
         }, (responseJSON) => {
             if (responseJSON.success) {
                 entryContainerElement.remove();
-                function_refreshAvailablePlates();
+                function_refreshAvailableTickets();
             }
             else {
                 buttonElement.removeAttribute("disabled");
@@ -64,7 +66,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }, (responseJSON) => {
                 if (responseJSON.success) {
                     function_populateBatchView(responseJSON.batch);
-                    function_refreshAvailablePlates();
+                    function_refreshAvailableTickets();
                 }
             });
         };
@@ -83,19 +85,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.confirmModal("Download Batch?", "<strong>You are about to download this batch for the first time.</strong><br />" +
             "The date of this download will be tracked as part of the batch record.", "OK, Download the File", "warning", downloadFunction);
     };
-    const function_populateAvailablePlatesView = () => {
-        cityssm.clearElement(availablePlatesContainerElement);
+    const function_populateAvailableTicketsView = () => {
+        cityssm.clearElement(availableTicketsContainerElement);
         const resultsPanelElement = document.createElement("div");
         resultsPanelElement.className = "panel";
         const filterStringSplit = licencePlateNumberFilterElement.value.toLowerCase().trim()
             .split(" ");
-        const includedLicencePlates = [];
-        for (const [recordIndex, plateRecord] of availablePlatesList.entries()) {
-            if (!plateRecord) {
+        const includedTicketIDs = [];
+        for (const [recordIndex, ticketRecord] of availableTicketsList.entries()) {
+            if (!ticketRecord) {
                 continue;
             }
             let displayRecord = true;
-            const licencePlateNumberLowerCase = plateRecord.licencePlateNumber.toLowerCase();
+            const licencePlateNumberLowerCase = ticketRecord.licencePlateNumber.toLowerCase();
             for (const searchStringPiece of filterStringSplit) {
                 if (!licencePlateNumberLowerCase.includes(searchStringPiece)) {
                     displayRecord = false;
@@ -105,21 +107,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
             if (!displayRecord) {
                 continue;
             }
-            includedLicencePlates.push([
-                plateRecord.licencePlateNumber,
-                plateRecord.ticketIDMin
-            ]);
+            includedTicketIDs.push(ticketRecord.ticketID);
             const resultElement = document.createElement("div");
-            resultElement.className = "panel-block is-block is-plate-container";
+            resultElement.className = "panel-block is-block is-ticket-container";
             resultElement.innerHTML = "<div class=\"level is-marginless\">" +
                 ("<div class=\"level-left\">" +
                     "<div class=\"licence-plate\">" +
-                    "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(plateRecord.licencePlateNumber) + "</div>" +
+                    "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(ticketRecord.licencePlateNumber) + "</div>" +
                     "</div>" +
                     "</div>") +
                 ("<div class=\"level-right\">" +
                     "<button class=\"button is-small\" data-index=\"" + recordIndex.toString() + "\"" +
-                    " data-cy=\"add-plate\"" +
+                    " data-cy=\"add-ticket\"" +
                     " data-tooltip=\"Add to Batch\" type=\"button\">" +
                     "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     "<span>Add</span>" +
@@ -128,88 +127,81 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</div>" +
                 "<div class=\"level\">" +
                 "<div class=\"level-left\"><div class=\"tags\">" +
-                plateRecord.ticketNumbers.reduce((soFar, ticketNumber) => {
-                    return soFar + "<a class=\"tag has-tooltip-bottom\" data-tooltip=\"View Ticket (Opens in New Window)\"" +
-                        " href=\"/tickets/byTicketNumber/" + encodeURIComponent(ticketNumber) + "\" target=\"_blank\">" +
-                        cityssm.escapeHTML(ticketNumber) +
-                        "</a> ";
-                }, "") +
+                "<a class=\"tag has-tooltip-bottom\" data-tooltip=\"View Ticket (Opens in New Window)\"" +
+                " href=\"/tickets/" + encodeURIComponent(ticketRecord.ticketID) + "\" target=\"_blank\">" +
+                cityssm.escapeHTML(ticketRecord.ticketNumber) +
+                "</a>" +
                 "</div></div>" +
                 "<div class=\"level-right is-size-7\">" +
-                plateRecord.issueDateMinString +
-                (plateRecord.issueDateMin === plateRecord.issueDateMax
-                    ? ""
-                    : " to " + plateRecord.issueDateMaxString) +
+                ticketRecord.issueDateString +
                 "</div>" +
                 "</div>";
-            resultElement.querySelector("button").addEventListener("click", clickFunction_addLicencePlateToBatch);
+            resultElement.querySelector("button").addEventListener("click", clickFunction_addParkingTicketToBatch);
             resultsPanelElement.append(resultElement);
         }
-        if (includedLicencePlates.length > 0) {
+        if (includedTicketIDs.length > 0) {
             const addAllButtonElement = document.createElement("button");
             addAllButtonElement.className = "button is-fullwidth mb-3";
-            addAllButtonElement.dataset.cy = "add-plates";
+            addAllButtonElement.dataset.cy = "add-tickets";
             addAllButtonElement.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-plus\" aria-hidden=\"true\"></i></span>" +
                     ("<span>" +
-                        "Add " + includedLicencePlates.length.toString() +
-                        " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") +
+                        "Add " + includedTicketIDs.length.toString() +
+                        " Parking Ticket" + (includedTicketIDs.length === 1 ? "" : "s") +
                         "</span>");
             addAllButtonElement.addEventListener("click", () => {
                 cityssm.openHtmlModal("loading", {
                     onshown(_modalElement, closeModalFunction) {
                         document.querySelector("#is-loading-modal-message").textContent =
-                            "Adding " + includedLicencePlates.length.toString() +
-                                " Licence Plate" + (includedLicencePlates.length === 1 ? "" : "s") + "...";
-                        cityssm.postJSON("/plates/doAddAllLicencePlatesToLookupBatch", {
+                            "Adding " + includedTicketIDs.length.toString() +
+                                " Parking Ticket" + (includedTicketIDs.length === 1 ? "" : "s") + "...";
+                        cityssm.postJSON("/plates/doAddAllParkingTicketsToLookupBatch", {
                             batchID,
-                            licencePlateCountry: "CA",
-                            licencePlateProvince: "ON",
-                            licencePlateNumbers: includedLicencePlates
+                            ticketIDs: includedTicketIDs
                         }, (resultJSON) => {
                             closeModalFunction();
                             if (resultJSON.success) {
                                 function_populateBatchView(resultJSON.batch);
-                                function_refreshAvailablePlates();
+                                function_refreshAvailableTickets();
                             }
                         });
                     }
                 });
             });
-            availablePlatesContainerElement.append(addAllButtonElement);
-            availablePlatesContainerElement.append(resultsPanelElement);
+            availableTicketsContainerElement.append(addAllButtonElement);
+            availableTicketsContainerElement.append(resultsPanelElement);
         }
         else {
-            availablePlatesContainerElement.innerHTML = "<div class=\"message is-info\">" +
-                "<div class=\"message-body\">There are no licence plates that meet your search criteria.</div>" +
+            availableTicketsContainerElement.innerHTML = "<div class=\"message is-info\">" +
+                "<div class=\"message-body\">There are no parking tickets that meet your search criteria.</div>" +
                 "</div>";
         }
     };
-    const function_refreshAvailablePlates = () => {
+    const function_refreshAvailableTickets = () => {
         if (batchIsLocked) {
-            availablePlatesContainerElement.innerHTML = "<div class=\"message is-info\">" +
-                "<div class=\"message-body\">Licence Plates cannot be added to a locked batch.</div>" +
+            availableTicketsContainerElement.innerHTML = "<div class=\"message is-info\">" +
+                "<div class=\"message-body\">Parking Tickets cannot be added to a locked batch.</div>" +
                 "</div>";
             return;
         }
-        availablePlatesContainerElement.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
+        availableTicketsContainerElement.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
             "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
-            "<em>Loading licence plates..." +
+            "<em>Loading parking tickets..." +
             "</p>";
-        cityssm.postJSON("/plates-ontario/doGetPlatesAvailableForMTOLookup", {
+        cityssm.postJSON("/plates-ontario/doGetParkingTicketsAvailableForMTOLookup", {
             batchID,
             issueDaysAgo: availableIssueDaysAgoElement.value
-        }, (resultPlatesList) => {
-            availablePlatesList = resultPlatesList;
-            function_populateAvailablePlatesView();
+        }, (responseJSON) => {
+            availableTicketsList = responseJSON.tickets;
+            function_populateAvailableTicketsView();
         });
     };
     document.querySelector("#is-more-available-filters-toggle").addEventListener("click", (clickEvent) => {
         clickEvent.preventDefault();
         document.querySelector("#is-more-available-filters").classList.toggle("is-hidden");
     });
-    licencePlateNumberFilterElement.addEventListener("keyup", function_populateAvailablePlatesView);
-    availableIssueDaysAgoElement.addEventListener("change", function_refreshAvailablePlates);
+    licencePlateNumberFilterElement.addEventListener("keyup", function_populateAvailableTicketsView);
+    availableIssueDaysAgoElement.addEventListener("change", function_refreshAvailableTickets);
     const lockBatchButtonElement = document.querySelector("#is-lock-batch-button");
     const batchEntriesContainerElement = document.querySelector("#is-batch-entries-container");
     const function_populateBatchView = (batch) => {
@@ -238,7 +230,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.clearElement(batchEntriesContainerElement);
         if (batchEntriesList.length === 0) {
             batchEntriesContainerElement.innerHTML = "<div class=\"message is-info\">" +
-                "<p class=\"message-body\">There are no licence plates included in the batch.</p>" +
+                "<p class=\"message-body\">There are no parking tickets included in the batch.</p>" +
                 "</div>";
             return;
         }
@@ -248,7 +240,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         for (const [index, batchEntry] of batchEntriesList.entries()) {
             const panelBlockElement = document.createElement("div");
             panelBlockElement.className = "panel-block is-block is-entry-container";
-            panelBlockElement.innerHTML = "<div class=\"level\">" +
+            panelBlockElement.innerHTML = "<div class=\"level mb-0\">" +
                 ("<div class=\"level-left\">" +
                     "<div class=\"licence-plate\">" +
                     "<div class=\"licence-plate-number\">" + cityssm.escapeHTML(batchEntry.licencePlateNumber) + "</div>" +
@@ -257,14 +249,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 (batchIsLocked
                     ? ""
                     : "<div class=\"level-right\">" +
-                        "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" data-cy=\"remove-plate\" type=\"button\">" +
+                        "<button class=\"button is-small\" data-index=\"" + index.toString() + "\" data-cy=\"remove-ticket\" type=\"button\">" +
                         "<span class=\"icon is-small\"><i class=\"fas fa-minus\" aria-hidden=\"true\"></i></span>" +
                         "<span>Remove</span>" +
                         "</button>" +
                         "</div>") +
-                "</div>";
+                "</div>" +
+                "<a class=\"tag has-tooltip-bottom\" data-tooltip=\"View Ticket (Opens in New Window)\"" +
+                " href=\"/tickets/" + encodeURIComponent(batchEntry.ticketID) + "\" target=\"_blank\">" +
+                cityssm.escapeHTML(batchEntry.ticketNumber) +
+                "</a>";
             if (!batchIsLocked) {
-                panelBlockElement.querySelector("button").addEventListener("click", clickFunction_removeLicencePlateFromBatch);
+                panelBlockElement.querySelector("button").addEventListener("click", clickFunction_removeParkingTicketFromBatch);
             }
             panelElement.append(panelBlockElement);
         }
@@ -299,7 +295,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
             batchID
         }, (batch) => {
             function_populateBatchView(batch);
-            function_refreshAvailablePlates();
+            function_refreshAvailableTickets();
+        });
+    };
+    const openCreateBatchModal = () => {
+        let createCloseModal;
+        const createFunction = (clickEvent) => {
+            clickEvent.preventDefault();
+            const mto_includeLabels = clickEvent.currentTarget.dataset.includeLabels;
+            cityssm.postJSON("/plates/doCreateLookupBatch", {
+                mto_includeLabels
+            }, (responseJSON) => {
+                if (responseJSON.success) {
+                    createCloseModal();
+                    function_populateBatchView(responseJSON.batch);
+                    function_refreshAvailableTickets();
+                }
+            });
+        };
+        cityssm.openHtmlModal("mto-createBatch", {
+            onshow: (modalElement) => {
+                const createBatchButtonElements = modalElement.querySelectorAll(".is-create-batch-button");
+                for (const createBatchButtonElement of createBatchButtonElements) {
+                    createBatchButtonElement.addEventListener("click", createFunction);
+                }
+            },
+            onshown: (_modalElement, closeModalFunction) => {
+                createCloseModal = closeModalFunction;
+            }
         });
     };
     const clickFunction_openSelectBatchModal = (clickEvent) => {
@@ -363,15 +386,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     createBatchButtonElement.classList.remove("is-hidden");
                     createBatchButtonElement.addEventListener("click", () => {
                         selectBatchCloseModalFunction();
-                        const createFunction = () => {
-                            cityssm.postJSON("/plates/doCreateLookupBatch", {}, (responseJSON) => {
-                                if (responseJSON.success) {
-                                    function_populateBatchView(responseJSON.batch);
-                                    function_refreshAvailablePlates();
-                                }
-                            });
-                        };
-                        cityssm.confirmModal("Create a New Batch?", "Are you sure you want to create a new licence plate lookup batch?", "Yes, Create a Batch", "info", createFunction);
+                        openCreateBatchModal();
                     });
                 }
             },
@@ -403,6 +418,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     if (exports.plateExportBatch) {
         function_populateBatchView(exports.plateExportBatch);
         delete exports.plateExportBatch;
-        function_refreshAvailablePlates();
+        function_refreshAvailableTickets();
     }
 })();

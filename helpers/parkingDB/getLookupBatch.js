@@ -5,7 +5,7 @@ export const getLookupBatch = (batchID_or_negOne) => {
     const database = sqlite(databasePath, {
         readonly: true
     });
-    const baseBatchSQL = "select batchID, batchDate, lockDate, sentDate, receivedDate," +
+    const baseBatchSQL = "select batchID, batchDate, lockDate, sentDate, receivedDate, mto_includeLabels," +
         " recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis" +
         " from LicencePlateLookupBatches" +
         " where recordDelete_timeMillis is null";
