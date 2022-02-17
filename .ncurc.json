@@ -1,6 +1,7 @@
 {
   "reject": [
     "@fortawesome/fontawesome-free",
-    "eslint"
+    "eslint",
+    "eslint-plugin-unicorn"
   ]
 }
