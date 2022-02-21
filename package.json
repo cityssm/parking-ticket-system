@@ -43,7 +43,7 @@
     "debug": "^4.3.3",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
-    "express-rate-limit": "^6.2.1",
+    "express-rate-limit": "^6.3.0",
     "express-session": "^1.17.2",
     "http-errors": "^2.0.0",
     "multer": "^1.4.4",
