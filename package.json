@@ -55,7 +55,7 @@
     "@cityssm/bulma-webapp-css": "^0.10.0",
     "@cityssm/simple-fa5-checkbox": "^0.2.1",
     "@types/activedirectory2": "^1.2.3",
-    "@types/better-sqlite3": "^7.4.2",
+    "@types/better-sqlite3": "^7.4.3",
     "@types/compression": "^1.7.2",
     "@types/cookie-parser": "^1.4.2",
     "@types/csurf": "^1.11.2",
