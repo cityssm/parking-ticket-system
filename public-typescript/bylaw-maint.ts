@@ -1,9 +1,11 @@
 /* eslint-disable unicorn/filename-case, unicorn/prefer-module */
 
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
+import type { BulmaJS } from "@cityssm/bulma-js/types";
 import type { ParkingBylaw } from "../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
+declare const bulmaJS: BulmaJS;
 
 interface UpdateBylawResponseJSON {
   success: boolean;
@@ -46,7 +48,7 @@ interface UpdateBylawResponseJSON {
     };
 
     cityssm.openHtmlModal("bylaw-updateOffences", {
-      onshow(): void {
+      onshow() {
 
         (document.querySelector("#updateOffences--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
         (document.querySelector("#updateOffences--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
@@ -61,10 +63,13 @@ interface UpdateBylawResponseJSON {
           bylaw.discountOffenceAmountMin.toFixed(2);
 
       },
-      onshown(modalElement: HTMLElement, closeModalFunction: () => void): void {
-
+      onshown(modalElement: HTMLElement, closeModalFunction: () => void) {
+        bulmaJS.toggleHtmlClipped();
         updateOffencesCloseModalFunction = closeModalFunction;
         modalElement.querySelector("form").addEventListener("submit", updateFunction);
+      },
+      onhidden() {
+        bulmaJS.toggleHtmlClipped();
       }
     });
   };
@@ -123,24 +128,27 @@ interface UpdateBylawResponseJSON {
         }
 
       });
-
     };
 
     cityssm.openHtmlModal("bylaw-edit", {
-      onshow(): void {
+      onshow() {
 
         (document.querySelector("#editBylaw--bylawNumber") as HTMLInputElement).value = bylaw.bylawNumber;
         (document.querySelector("#editBylaw--bylawDescription") as HTMLInputElement).value = bylaw.bylawDescription;
 
       },
-      onshown(modalElement, closeModalFunction): void {
+      onshown(modalElement, closeModalFunction) {
+
+        bulmaJS.toggleHtmlClipped();
 
         editBylawCloseModalFunction = closeModalFunction;
 
         modalElement.querySelector("form").addEventListener("submit", editFunction);
 
         modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
-
+      },
+      onhidden() {
+        bulmaJS.toggleHtmlClipped();
       }
     });
   };

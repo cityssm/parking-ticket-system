@@ -81,9 +81,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 accountNumberElement.setAttribute("pattern", offenceAccountNumberPatternString);
             },
             onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 editOffenceModalCloseFunction = closeModalFunction;
                 document.querySelector("#form--offenceEdit").addEventListener("submit", submitFunction);
                 modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
+            },
+            onhidden() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     };

@@ -51,9 +51,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.querySelector("#editLocation--locationName").value = location.locationName;
             },
             onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 editLocationCloseModalFunction = closeModalFunction;
                 document.querySelector("#form--editLocation").addEventListener("submit", editFunction);
                 modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
+            },
+            onhidden() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     };

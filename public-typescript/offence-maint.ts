@@ -86,7 +86,6 @@ interface UpdateOffenceResponseJSON {
           loadOffenceMapFunction(responseJSON.offences);
           editOffenceModalCloseFunction();
           renderOffencesFunction();
-
         }
       });
     };
@@ -102,7 +101,6 @@ interface UpdateOffenceResponseJSON {
         "warning",
         deleteFunction
       );
-
     };
 
     const submitFunction = (formEvent: Event) => {
@@ -154,11 +152,16 @@ interface UpdateOffenceResponseJSON {
       },
       onshown(modalElement, closeModalFunction) {
 
+        bulmaJS.toggleHtmlClipped();
+
         editOffenceModalCloseFunction = closeModalFunction;
 
         document.querySelector("#form--offenceEdit").addEventListener("submit", submitFunction);
 
         modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
+      },
+      onhidden() {
+        bulmaJS.toggleHtmlClipped();
       }
     });
   };

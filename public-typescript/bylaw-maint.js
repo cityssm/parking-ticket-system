@@ -32,8 +32,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     bylaw.discountOffenceAmountMin.toFixed(2);
             },
             onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 updateOffencesCloseModalFunction = closeModalFunction;
                 modalElement.querySelector("form").addEventListener("submit", updateFunction);
+            },
+            onhidden() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     };
@@ -73,9 +77,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.querySelector("#editBylaw--bylawDescription").value = bylaw.bylawDescription;
             },
             onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 editBylawCloseModalFunction = closeModalFunction;
                 modalElement.querySelector("form").addEventListener("submit", editFunction);
                 modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
+            },
+            onhidden() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     };

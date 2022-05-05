@@ -1,11 +1,13 @@
 /* eslint-disable unicorn/filename-case, unicorn/prefer-module */
 
 import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
+import type { BulmaJS } from "@cityssm/bulma-js/types";
 import type { ptsGlobal } from "../types/publicTypes";
 import type * as configTypes from "../types/configTypes";
 import type * as recordTypes from "../types/recordTypes";
 
 declare const cityssm: cityssmGlobal;
+declare const bulmaJS: BulmaJS;
 declare const pts: ptsGlobal;
 
 interface UpdateLocationResponseJSON {
@@ -107,12 +109,17 @@ interface UpdateLocationResponseJSON {
       },
       onshown(modalElement, closeModalFunction) {
 
+        bulmaJS.toggleHtmlClipped();
+
         editLocationCloseModalFunction = closeModalFunction;
 
         document.querySelector("#form--editLocation").addEventListener("submit", editFunction);
 
         modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
 
+      },
+      onhidden() {
+        bulmaJS.toggleHtmlClipped();
       }
     });
 
