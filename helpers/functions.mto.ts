@@ -420,7 +420,7 @@ export const importLicencePlateOwnership = (batchID: number, ownershipData: stri
 };
 
 
-const exportBatch = (sentDate: number, batchEntries: Array<{
+const exportBatch = (sentDate: number, includeLabels: boolean, batchEntries: Array<{
   ticketID?: number;
   ticketNumber?: string;
   issueDate?: number;
@@ -479,7 +479,7 @@ const exportBatch = (sentDate: number, batchEntries: Array<{
     sentDate.toString().slice(-6) +
     recordCountPadded +
     "Y" +
-    "N" + newline +
+    (includeLabels ? "Y" : "N") + newline +
     output;
 
   /*
@@ -502,7 +502,7 @@ export const exportLicencePlateBatch = (batchID: number, requestSession: express
 
   const batch = getLookupBatch(batchID);
 
-  return exportBatch(batch.sentDate, batch.batchEntries);
+  return exportBatch(batch.sentDate, batch.mto_includeLabels, batch.batchEntries);
 };
 
 

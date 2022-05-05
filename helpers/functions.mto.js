@@ -213,7 +213,7 @@ export const importLicencePlateOwnership = (batchID, ownershipData, requestSessi
         insertedRecordCount
     };
 };
-const exportBatch = (sentDate, batchEntries) => {
+const exportBatch = (sentDate, includeLabels, batchEntries) => {
     const newline = "\n";
     let output = "";
     let recordCount = 0;
@@ -235,7 +235,7 @@ const exportBatch = (sentDate, batchEntries) => {
         sentDate.toString().slice(-6) +
         recordCountPadded +
         "Y" +
-        "N" + newline +
+        (includeLabels ? "Y" : "N") + newline +
         output;
     output += "PKTZ" +
         recordCountPadded + newline;
@@ -244,7 +244,7 @@ const exportBatch = (sentDate, batchEntries) => {
 export const exportLicencePlateBatch = (batchID, requestSession) => {
     markLookupBatchAsSent(batchID, requestSession);
     const batch = getLookupBatch(batchID);
-    return exportBatch(batch.sentDate, batch.batchEntries);
+    return exportBatch(batch.sentDate, batch.mto_includeLabels, batch.batchEntries);
 };
 export const exportConvictionBatch = (batchID, requestSession) => {
     markConvictionBatchAsSent(batchID, requestSession);
