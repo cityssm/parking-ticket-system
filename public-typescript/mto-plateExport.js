@@ -209,6 +209,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         batchEntriesList = batch.batchEntries;
         batchIsLocked = batch.lockDateString !== "";
         batchIsSent = batch.sentDateString !== "";
+        batchIncludesLabels = batch.mto_includeLabels;
         if (canUpdate) {
             if (batchIsLocked) {
                 lockBatchButtonElement.setAttribute("disabled", "disabled");
@@ -217,16 +218,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 lockBatchButtonElement.removeAttribute("disabled");
             }
         }
-        document.querySelector("#batchSelector--batchID").textContent = "Batch #" + batch.batchID.toString();
-        document.querySelector("#batchSelector--batchDetails").innerHTML =
-            "<span class=\"icon is-small\"><i class=\"fas fa-calendar\" aria-hidden=\"true\"></i></span>" +
-                "<span>" + batch.batchDateString + "</span> " +
+        document.querySelector("#batchSelector--batchID").innerHTML =
+            "Batch #" + batch.batchID.toString() + "<br />" +
+                (batchIncludesLabels
+                    ? "<span class=\"tag is-light\">" +
+                        "<span class=\"icon is-small\"><i class=\"fas fa-tag\" aria-hidden=\"true\"></i></span>" +
+                        " <span>Include Labels</span>" +
+                        "</span>"
+                    : "") +
+                " " +
                 (batchIsLocked
                     ? "<span class=\"tag is-light\">" +
                         "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +
                         " <span>" + batch.lockDateString + "</span>" +
                         "</span>"
                     : "");
+        document.querySelector("#batchSelector--batchDetails").innerHTML =
+            "<span class=\"icon is-small\"><i class=\"fas fa-calendar\" aria-hidden=\"true\"></i></span>" +
+                "<span>" + batch.batchDateString + "</span>";
         cityssm.clearElement(batchEntriesContainerElement);
         if (batchEntriesList.length === 0) {
             batchEntriesContainerElement.innerHTML = "<div class=\"message is-info\">" +
@@ -355,6 +364,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         "<div class=\"column has-text-right\">" +
                         batch.batchDateString + "<br />" +
                         ("<div class=\"tags justify-flex-end\">" +
+                            (batch.mto_includeLabels
+                                ? "<span class=\"tag\">" +
+                                    "<span class=\"icon is-small\"><i class=\"fas fa-tag\" aria-hidden=\"true\"></i></span>" +
+                                    "<span>Includes Labels</span>" +
+                                    "</span>"
+                                : "") +
                             (batch.lockDate
                                 ? "<span class=\"tag\">" +
                                     "<span class=\"icon is-small\"><i class=\"fas fa-lock\" aria-hidden=\"true\"></i></span>" +

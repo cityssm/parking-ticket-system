@@ -88,7 +88,9 @@
             </div>
           </div>
           <div class="level">
-            <div class="level-left" id="batchSelector--batchID">(No Batch Selected)</div>
+            <div class="level-left">
+              <div id="batchSelector--batchID">(No Batch Selected)</div>
+            </div>
             <% if (user.userProperties.canUpdate) { %>
               <div class="level-right">
                 <button class="button is-primary" id="is-lock-batch-button" data-cy="lock-batch" type="button" disabled>
