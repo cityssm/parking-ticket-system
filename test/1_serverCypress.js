@@ -24,7 +24,7 @@ describe("parking-ticket-system", () => {
     });
     describe("Cypress tests", () => {
         it("should run Cypress tests", (done) => {
-            let cypresssCommand = "cypress run";
+            let cypresssCommand = "cypress run --browser chrome";
             if (process.env.CYPRESS_RECORD_KEY && process.env.CYPRESS_RECORD_KEY !== "") {
                 cypresssCommand += " --record";
             }

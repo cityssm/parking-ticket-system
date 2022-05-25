@@ -1,0 +1,36 @@
+name: Coverage Testing
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+jobs:
+  Coverage:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - uses: browser-actions/setup-chrome@latest
+      - name: Install Application
+        run: |
+          npm ci
+          npm install -g mocha c8 cypress
+      - name: Copy Test Config
+        run: cp ./data/configTesting.js ./data/config.js
+      - name: Run Coverage Testing
+        run: c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 10000 --exit
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: Code Climate
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./codeclimate-test-reporter
+          chmod +x codeclimate-test-reporter
+          ./codeclimate-test-reporter before-build
+          ./codeclimate-test-reporter after-build -t lcov --exit-code $?
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - name: Codacy
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./coverage/lcov.info
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}

@@ -3,7 +3,7 @@
 [![Codacy Badge](https://img.shields.io/codacy/grade/3428568fcab54a1285b8e139e4fd9f41)](https://www.codacy.com/gh/cityssm/parking-ticket-system)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/cityssm/parking-ticket-system)](https://codeclimate.com/github/cityssm/parking-ticket-system/maintainability)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/cityssm/parking-ticket-system)](https://codeclimate.com/github/cityssm/parking-ticket-system/test_coverage)
-[![AppVeyor](https://img.shields.io/appveyor/build/dangowans/parking-ticket-system)](https://ci.appveyor.com/project/dangowans/parking-ticket-system)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cityssm/parking-ticket-system/Coverage%20Testing)](https://github.com/cityssm/parking-ticket-system/actions/workflows/coverage.yml)
 [![Cypress](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/8da27w/master&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/8da27w/runs)
 [![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/cityssm/parking-ticket-system)](https://app.snyk.io/org/cityssm/project/27487d43-f7ec-45e2-8cbe-9e03e7e0c7d3)
 
