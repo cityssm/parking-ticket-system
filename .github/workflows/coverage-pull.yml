@@ -13,7 +13,7 @@ jobs:
       - name: Install Application
         run: |
           npm ci
-          npm install -g mocha c8 cypress@9
+          npm install -g mocha c8 cypress@10
       - name: Copy Test Config
         run: cp ./data/configTesting.js ./data/config.js
       - name: Run Coverage Testing
