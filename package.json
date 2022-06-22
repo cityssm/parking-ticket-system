@@ -7,7 +7,6 @@
     "node": "^14.13.1 || >=16.0.0"
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "dev:live": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* nodemon ./bin/www",
     "dev:test": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* TEST_DATABASES=true nodemon ./bin/www",
@@ -92,10 +91,6 @@
     "gulp-changed": "^4.0.3",
     "gulp-minify": "^3.1.0",
     "nodemon": "^2.0.16"
-  },
-  "resolutions": {
-    "glob-parent": "6.0.1",
-    "tar": "6.1.10"
   },
   "private": true
 }
