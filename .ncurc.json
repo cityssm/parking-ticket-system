@@ -1,6 +1,5 @@
 {
   "reject": [
-    "@fortawesome/fontawesome-free",
-    "cypress"
+    "@fortawesome/fontawesome-free"
   ]
 }

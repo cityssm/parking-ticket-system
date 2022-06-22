@@ -1,6 +1,0 @@
-{
-  "baseUrl": "http://localhost:4000",
-  "pluginsFile": false,
-  "ignoreTestFiles": ["*.d.ts", "*.js"],
-  "projectId": "8da27w"
-}
