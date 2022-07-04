@@ -254,7 +254,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const downloadBatchFunction = (clickEvent) => {
         clickEvent.preventDefault();
         const downloadFunction = () => {
-            window.open("/tickets-ontario/convict/" + currentBatch.batchID.toString());
+            window.open("/tickets/convict/" + currentBatch.batchID.toString() + "/print");
         };
         if (!currentBatch.sentDate) {
             cityssm.confirmModal("Download Batch", "<strong>You are about to download the batch for the first time.</strong><br />" +
@@ -366,14 +366,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             downloadButtonElement.className = "button is-fullwidth mb-3";
             downloadButtonElement.innerHTML =
                 "<span class=\"icon is-small\"><i class=\"fas fa-download\" aria-hidden=\"true\"></i></span>" +
-                    "<span>Download File for MTO</span>";
+                    "<span>Download Report for Provincial Offences</span>";
             downloadButtonElement.addEventListener("click", downloadBatchFunction);
             tableElement.before(downloadButtonElement);
-            tableElement.insertAdjacentHTML("beforebegin", "<a class=\"button is-fullwidth mb-3\"" +
-                " href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\" target=\"_blank\" rel=\"noreferrer\">" +
-                "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
-                "<span>MTO ARIS Login</span>" +
-                "</a>");
         }
     };
     const confirmCreateBatchFunction = () => {

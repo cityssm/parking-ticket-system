@@ -1,0 +1,55 @@
+<%- include('_header-print'); -%>
+
+<h1 class="title is-1">
+  Batch #<%= batch.batchID %>
+</h1>
+
+<div class="columns is-mobile">
+  <div class="column">
+    <p>
+      <strong>Batch Date</strong><br />
+      <%= batch.batchDateString %>
+    </p>
+  </div>
+  <div class="column">
+    <p>
+      <strong>Lock Date</strong><br />
+      <%= batch.lockDateString %>
+    </p>
+  </div>
+  <div class="column is-5">
+    <p>
+      <strong>Report Date</strong><br />
+      <%= batch.sentDateString %>
+    </p>
+  </div>
+</div>
+
+<table class="table is-fullwidth">
+  <thead>
+    <tr>
+      <th>Ticket</th>
+      <th>Licence Plate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for (const batchEntry of batch.batchEntries) { %>
+      <tr>
+        <td>
+          <%= batchEntry.ticketNumber %><br />
+          <span class="is-size-7">
+            <%= batchEntry.issueDateString %>
+          </span>
+        </td>
+        <td>
+          <%= batchEntry.licencePlateNumber %><br />
+          <span class="is-size-7">
+            <%= batchEntry.licencePlateProvince + ", " + batchEntry.licencePlateCountry %>
+          </span>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<%- include('_footer-print'); -%>
