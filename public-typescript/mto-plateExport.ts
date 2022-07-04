@@ -441,7 +441,7 @@ interface AvailableLicencePlate {
 
       batchEntriesContainerElement.insertAdjacentHTML(
         "beforeend",
-        "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\"" +
+        "<a class=\"button is-fullwidth mb-3\" href=\"https://www.aris.mto.gov.on.ca/edtW/login/login.jsp\"" +
         " target=\"_blank\" rel=\"noreferrer\">" +
         "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
         "<span>MTO ARIS Login</span>" +

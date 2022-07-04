@@ -281,7 +281,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     "<span>Download File for MTO</span>";
             downloadFileButtonElement.addEventListener("click", clickFunction_downloadBatch);
             batchEntriesContainerElement.append(downloadFileButtonElement);
-            batchEntriesContainerElement.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth mb-3\" href=\"https://www.apps.rus.mto.gov.on.ca/edtW/login/login.jsp\"" +
+            batchEntriesContainerElement.insertAdjacentHTML("beforeend", "<a class=\"button is-fullwidth mb-3\" href=\"https://www.aris.mto.gov.on.ca/edtW/login/login.jsp\"" +
                 " target=\"_blank\" rel=\"noreferrer\">" +
                 "<span class=\"icon is-small\"><i class=\"fas fa-building\" aria-hidden=\"true\"></i></span>" +
                 "<span>MTO ARIS Login</span>" +
