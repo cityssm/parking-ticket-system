@@ -1,12 +1,13 @@
 {
   "name": "parking-ticket-system",
-  "version": "0.4.0-dev",
+  "version": "1.0.0-beta",
   "type": "module",
   "exports": "./app.js",
   "engines": {
     "node": "^14.13.1 || >=16.0.0"
   },
   "scripts": {
+    "build": "npx genversion --es6 --semi version.js",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "dev:live": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* nodemon ./bin/www",
     "dev:test": "cross-env NODE_ENV=dev DEBUG=parking-ticket-system:* TEST_DATABASES=true nodemon ./bin/www",

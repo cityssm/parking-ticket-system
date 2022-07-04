@@ -27,6 +27,7 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as htmlFns from "@cityssm/expressjs-server-js/htmlFns.js";
 import * as vehicleFunctions from "./helpers/functions.vehicle.js";
+import { version } from "./version.js";
 
 import * as parkingDB_init from "./helpers/parkingDB/initializeDatabase.js";
 import { initNHTSADB } from "./helpers/initializeDatabase.js";
@@ -165,7 +166,7 @@ const sessionChecker = (request: express.Request, response: express.Response, ne
 // Make the user and config objects available to the templates
 app.use((request, response, next) => {
 
-  response.locals.buildNumber = process.env.npm_package_version;
+  response.locals.buildNumber = version;
 
   response.locals.user = request.session.user;
   response.locals.csrfToken = request.csrfToken();
