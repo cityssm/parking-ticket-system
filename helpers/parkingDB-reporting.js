@@ -90,17 +90,6 @@ reportDefinitions.set("owners-reconcile", {
             " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
             " and s.recordDelete_timeMillis is null)")
 });
-reportDefinitions.set("lookupAudit", {
-    sql: "select b.batchID," +
-        " sentDate as batchSentDate," +
-        " e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
-        " e.ticketID as ticketID," +
-        " t.ticketNumber as ticketNumber" +
-        " from LicencePlateLookupBatches b" +
-        " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
-        " left join ParkingTickets t on e.ticketID = t.ticketID" +
-        " where b.sentDate is not null"
-});
 reportDefinitions.set("lookupErrorLog-all", {
     sql: "select * from LicencePlateLookupErrorLog"
 });
@@ -196,28 +185,38 @@ reportDefinitions.set("cleanup-parkingLocations", {
         " and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)" +
         " and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)"
 });
-const executeQuery = (sql, parameters) => {
+export const getReportData = (reportName, requestQuery) => {
+    let reportDefinition;
+    let sql;
+    let sqlParameters = [];
+    switch (reportName) {
+        case "lookupAudit":
+            sql = "select b.batchID," +
+                " sentDate as batchSentDate," +
+                " e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
+                " e.ticketID as ticketID," +
+                " t.ticketNumber as ticketNumber" +
+                " from LicencePlateLookupBatches b" +
+                " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
+                " left join ParkingTickets t on e.ticketID = t.ticketID" +
+                " where b.sentDate is not null";
+            if (requestQuery.batchID && requestQuery.batchID !== "") {
+                sql += " and b.batchID = ?";
+                sqlParameters.push(requestQuery.batchID);
+            }
+            break;
+        default:
+            reportDefinition = reportDefinitions.get(reportName);
+            sql = reportDefinition.sql;
+            if (reportDefinition.getParams) {
+                sqlParameters = reportDefinition.getParams(requestQuery);
+            }
+    }
     const database = sqlite(databasePath, {
         readonly: true
     });
-    const stmt = database.prepare(sql);
-    stmt.raw(true);
-    const rows = stmt.all(parameters);
-    const columns = stmt.columns();
-    stmt.raw(false);
+    const rows = database.prepare(sql)
+        .all(sqlParameters);
     database.close();
-    return {
-        rows,
-        columns
-    };
-};
-export const getReportRowsColumns = (reportName, requestQuery) => {
-    if (!reportDefinitions.has(reportName)) {
-        return undefined;
-    }
-    const reportDefinition = reportDefinitions.get(reportName);
-    const parameters = Object.prototype.hasOwnProperty.call(reportDefinition, "getParams")
-        ? reportDefinition.getParams(requestQuery)
-        : [];
-    return executeQuery(reportDefinition.sql, parameters);
+    return rows;
 };

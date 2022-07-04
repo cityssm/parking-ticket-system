@@ -152,7 +152,7 @@
                   </p>
                 </div>
               </a>
-              <a class="panel-block align-items-flex-start" href="/reports/lookupAudit" download>
+              <div class="panel-block align-items-flex-start">
                 <div class="has-text-centered my-2 ml-2 mr-3">
                   <span class="icon has-text-info">
                     <i class="fas fa-2x fa-file " aria-hidden="true"></i>
@@ -166,8 +166,24 @@
                     includes licence plate numbers, the date they were requested,
                     and the ticket number associated with the request.
                   </p>
+                  <form action="/reports/lookupAudit" method="get">
+                    <% let uid = stringFns.getUID(); %>
+                    <div class="field has-addons">
+                      <div class="control">
+                        <label class="button is-static" for="<%= uid %>">
+                          Batch ID
+                        </label>
+                      </div>
+                      <div class="control is-expanded">
+                        <input id="<%= uid %>" name="batchID" class="input" type="text" inputmode="numeric" placeholder="Optional" />
+                      </div>
+                      <div class="control">
+                        <button class="button is-info" type="submit">Export</button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-              </a>
+              </div>
             </div>
           </div>
           <div class="column">

@@ -4,8 +4,6 @@ import * as configFunctions from "../helpers/functions.config.js";
 
 import { parkingDB as databasePath } from "../data/databasePaths.js";
 
-import type { RawRowsColumnsReturn } from "@cityssm/expressjs-server-js/types";
-
 
 const getCleanupRecordDeleteTimeMillis = (possibleRecordDeleteTimeMillis: string) => {
 
@@ -122,18 +120,6 @@ reportDefinitions.set("owners-reconcile", {
       " where t.ticketID = s.ticketID " +
       " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
       " and s.recordDelete_timeMillis is null)")
-});
-
-reportDefinitions.set("lookupAudit", {
-  sql: "select b.batchID," +
-    " sentDate as batchSentDate," +
-    " e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
-    " e.ticketID as ticketID," +
-    " t.ticketNumber as ticketNumber" +
-    " from LicencePlateLookupBatches b" +
-    " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
-    " left join ParkingTickets t on e.ticketID = t.ticketID" +
-    " where b.sentDate is not null"
 });
 
 reportDefinitions.set("lookupErrorLog-all", {
@@ -259,41 +245,50 @@ reportDefinitions.set("cleanup-parkingLocations", {
 });
 
 
-const executeQuery = (sql: string, parameters: Array<string | number>): RawRowsColumnsReturn => {
+export const getReportData = (reportName: string, requestQuery: { [key: string]: string }): unknown[] => {
+
+  let reportDefinition: ReportDefinition;
+  let sql: string;
+  let sqlParameters = [];
+
+  switch (reportName) {
+
+    case "lookupAudit":
+      sql = "select b.batchID," +
+        " sentDate as batchSentDate," +
+        " e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber," +
+        " e.ticketID as ticketID," +
+        " t.ticketNumber as ticketNumber" +
+        " from LicencePlateLookupBatches b" +
+        " left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID" +
+        " left join ParkingTickets t on e.ticketID = t.ticketID" +
+        " where b.sentDate is not null";
+
+      if (requestQuery.batchID && requestQuery.batchID !== "") {
+        sql += " and b.batchID = ?";
+        sqlParameters.push(requestQuery.batchID);
+      }
+
+      break;
+
+    default:
+      reportDefinition = reportDefinitions.get(reportName);
+      sql = reportDefinition.sql;
+
+      if (reportDefinition.getParams) {
+        sqlParameters = reportDefinition.getParams(requestQuery);
+      }
+  }
 
   const database = sqlite(databasePath, {
     readonly: true
   });
 
-  const stmt = database.prepare(sql);
-
-  stmt.raw(true);
-
-  const rows = stmt.all(parameters);
-  const columns = stmt.columns();
-
-  stmt.raw(false);
+  const rows =
+    database.prepare(sql)
+      .all(sqlParameters);
 
   database.close();
 
-  return {
-    rows,
-    columns
-  };
-};
-
-
-export const getReportRowsColumns = (reportName: string, requestQuery: { [key: string]: string }): RawRowsColumnsReturn => {
-
-  if (!reportDefinitions.has(reportName)) {
-    return undefined;
-  }
-
-  const reportDefinition = reportDefinitions.get(reportName);
-
-  const parameters = Object.prototype.hasOwnProperty.call(reportDefinition, "getParams")
-    ? reportDefinition.getParams(requestQuery)
-    : [];
-
-  return executeQuery(reportDefinition.sql, parameters);
+  return rows;
 };
