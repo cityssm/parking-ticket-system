@@ -11,7 +11,7 @@ declare const pts: ptsGlobal;
 
 (() => {
 
-  const ticketID = (document.querySelector("#ticket--ticketID") as HTMLInputElement).value;
+  const ticketID = cityssm.escapeHTML((document.querySelector("#ticket--ticketID") as HTMLInputElement).value);
 
   const statusPanelElement = document.querySelector("#is-status-panel") as HTMLElement;
 

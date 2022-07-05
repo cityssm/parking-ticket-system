@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const ticketID = document.querySelector("#ticket--ticketID").value;
+    const ticketID = cityssm.escapeHTML(document.querySelector("#ticket--ticketID").value);
     const statusPanelElement = document.querySelector("#is-status-panel");
     let statusList = exports.ticketStatusLog;
     delete exports.ticketStatusLog;
