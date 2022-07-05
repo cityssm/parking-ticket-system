@@ -27,7 +27,6 @@ import * as parkingDB_cleanupParkingTicketRemarksTable from "../helpers/parkingD
 import * as parkingDB_cleanupLicencePlateOwnersTable from "../helpers/parkingDB/cleanupLicencePlateOwnersTable.js";
 import * as parkingDB_ontario from "../helpers/parkingDB-ontario.js";
 import * as parkingDBOntario_getParkingTicketsAvailableForMTOLookup from "../helpers/parkingDB-ontario/getParkingTicketsAvailableForMTOLookup.js";
-import * as parkingDB_reporting from "../helpers/parkingDB-reporting.js";
 describe("helpers/parkingDB", () => {
     before(() => {
         initializeDatabase();
@@ -163,16 +162,6 @@ describe("helpers/parkingDB", () => {
         });
         it("should execute getParkingTicketsAvailableForMTOConvictionBatch()", () => {
             assert.ok(parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch());
-        });
-    });
-    describe("-reporting", () => {
-        describe("#getReportRowsColumns()", () => {
-            it("should return undefined for an invalid report", () => {
-                assert.strictEqual(parkingDB_reporting.getReportRowsColumns("invalid-report-name", {}), undefined);
-            });
-            it("should return data for a valid report", () => {
-                assert.ok(parkingDB_reporting.getReportRowsColumns("bylaws-all", {}));
-            });
         });
     });
 });
