@@ -8,11 +8,22 @@ import { fork } from "child_process";
 
 import * as configFunctions from "../helpers/functions.config.js";
 
+import exitHook from "exit-hook";
+
 import debug from "debug";
 const debugWWW = debug("parking-ticket-system:www");
 
 
-const onError = (error: Error) => {
+let httpServer: http.Server;
+
+
+interface ServerError extends Error {
+  syscall: string;
+  code: string;
+}
+
+
+const onError = (error: ServerError) => {
 
   if (error.syscall !== "listen") {
     throw error;
@@ -64,7 +75,7 @@ const httpPort = configFunctions.getProperty("application.httpPort");
 
 if (httpPort) {
 
-  const httpServer = http.createServer(app);
+  httpServer = http.createServer(app);
 
   httpServer.listen(httpPort);
 
@@ -81,5 +92,15 @@ if (httpPort) {
  */
 
 if (configFunctions.getProperty("application.task_nhtsa.runTask")) {
-  fork("./tasks/nhtsaChildProcess");
+  fork("./tasks/nhtsaChildProcess.js");
 }
+
+
+exitHook(() => {
+
+  if (httpServer) {
+    debugWWW("Closing HTTP");
+    httpServer.close();
+    httpServer = undefined;
+  }
+});

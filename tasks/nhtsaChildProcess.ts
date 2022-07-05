@@ -1,11 +1,14 @@
+import { setIntervalAsync, clearIntervalAsync, SetIntervalAsyncTimer } from "set-interval-async/dynamic/index.js";
+import exitHook from "exit-hook";
+
 import * as parkingDB from "../helpers/parkingDB.js";
 import * as vehicleFunctions from "../helpers/functions.vehicle.js";
 
 import * as configFunctions from "../helpers/functions.config.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import debug from "debug";
-const debugTask = debug("parking-ticket-system:task:nhtsaChildProcess");
+import Debug from "debug";
+const debug = Debug("parking-ticket-system:task:nhtsaChildProcess");
 
 const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
@@ -13,51 +16,77 @@ initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
 
 
-let vehicleNCICs = [];
+let terminateTask = false;
 
 
-const processNCIC = async (index: number) => {
+const doTask = async () => {
 
-  const ncicRecord = vehicleNCICs[index];
+  const vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
 
-  if (ncicRecord) {
+  for (const ncicRecord of vehicleNCICs) {
+
+    if (terminateTask) {
+      break;
+    }
 
     cutoffDate = ncicRecord.recordDateMax;
 
     const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
 
-    debugTask("Processing " + vehicleMake);
+    debug("Processing " + vehicleMake);
 
     await vehicleFunctions.getModelsByMake(vehicleMake);
-
-    processNCIC(index + 1);
-
-  } else {
-    vehicleNCICs = [];
-    scheduleRun();
   }
 };
 
 
+let timeoutId: NodeJS.Timeout;
+let intervalId: SetIntervalAsyncTimer;
+
+
 export const scheduleRun = async (): Promise<void> => {
 
-  const nextScheduleDate = new Date();
+  const firstScheduleDate = new Date();
 
-  nextScheduleDate.setHours(configFunctions.getProperty("application.task_nhtsa.executeHour"));
-  nextScheduleDate.setDate(nextScheduleDate.getDate() + 1);
+  firstScheduleDate.setHours(configFunctions.getProperty("application.task_nhtsa.executeHour"));
+  firstScheduleDate.setDate(firstScheduleDate.getDate() + 1);
 
-  debugTask("NHTSA task scheduled for " + nextScheduleDate.toString());
+  debug("NHTSA task scheduled for " + firstScheduleDate.toString());
 
-  setTimeout(async() => {
+  timeoutId = setTimeout(() => {
 
-    debugTask("NHTSA task starting");
+    if (terminateTask) {
+      return;
+    }
 
-    vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
-    await processNCIC(0);
+    debug("NHTSA task starting");
 
-  }, nextScheduleDate.getTime() - Date.now());
+    intervalId = setIntervalAsync(doTask, 86_400 * 1000);
 
+    doTask();
+
+  }, firstScheduleDate.getTime() - Date.now());
 };
 
 
 scheduleRun();
+
+
+exitHook(() => {
+  terminateTask = true;
+  debug("Exit hook called");
+
+  try {
+    clearTimeout(timeoutId);
+    debug("Timeout cleared");
+  } catch {
+    // ignore
+  }
+
+  try {
+    clearIntervalAsync(intervalId);
+    debug("Interval cleared");
+  } catch {
+    // ignore
+  }
+});

@@ -2,8 +2,10 @@ import { app } from "../app.js";
 import http from "http";
 import { fork } from "child_process";
 import * as configFunctions from "../helpers/functions.config.js";
+import exitHook from "exit-hook";
 import debug from "debug";
 const debugWWW = debug("parking-ticket-system:www");
+let httpServer;
 const onError = (error) => {
     if (error.syscall !== "listen") {
         throw error;
@@ -34,7 +36,7 @@ const onListening = (server) => {
 };
 const httpPort = configFunctions.getProperty("application.httpPort");
 if (httpPort) {
-    const httpServer = http.createServer(app);
+    httpServer = http.createServer(app);
     httpServer.listen(httpPort);
     httpServer.on("error", onError);
     httpServer.on("listening", () => {
@@ -43,5 +45,12 @@ if (httpPort) {
     debugWWW("HTTP listening on " + httpPort.toString());
 }
 if (configFunctions.getProperty("application.task_nhtsa.runTask")) {
-    fork("./tasks/nhtsaChildProcess");
+    fork("./tasks/nhtsaChildProcess.js");
 }
+exitHook(() => {
+    if (httpServer) {
+        debugWWW("Closing HTTP");
+        httpServer.close();
+        httpServer = undefined;
+    }
+});
