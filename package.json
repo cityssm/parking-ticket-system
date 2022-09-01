@@ -74,7 +74,7 @@
     "@types/mocha": "^9.1.1",
     "@types/multer": "^1.4.7",
     "@types/node-fetch": "^3.0.2",
-    "@types/papaparse": "^5.3.2",
+    "@types/papaparse": "^5.3.5",
     "@types/session-file-store": "^1.2.2",
     "@types/set-interval-async": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
