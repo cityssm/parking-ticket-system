@@ -30,7 +30,7 @@
     "@cityssm/bulma-js": "^0.3.3",
     "@cityssm/bulma-webapp-js": "^1.5.0",
     "@cityssm/expressjs-server-js": "^2.3.2",
-    "@fontsource/pt-mono": "^4.5.9",
+    "@fontsource/pt-mono": "^4.5.11",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@shaggytools/nhtsa-api-wrapper": "^2.0.3",
     "activedirectory2": "^2.1.0",
