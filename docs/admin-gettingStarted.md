@@ -50,7 +50,7 @@ Open a command line, and navigate to the folder where the application will resid
 It is recommended to copy the `config-default.js` file to get started.
 It includes the base rules used within the province of Ontario.
 
-    > cp data/config-default.js data/config.js
+    > cp data/configOntario.js data/config.js
 
 ## Step 6: Start the application
 
