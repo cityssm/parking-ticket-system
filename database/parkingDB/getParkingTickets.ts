@@ -1,13 +1,10 @@
-import sqlite from 'better-sqlite3'
-
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-import type * as pts from '../../types/recordTypes'
-
-import { canUpdateObject, getSplitWhereClauseFilter } from '../parkingDB.js'
+import sqlite from 'better-sqlite3'
+import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-
-import type * as expressSession from 'express-session'
+import type { ParkingTicket } from '../../types/recordTypes.js'
+import { canUpdateObject, getSplitWhereClauseFilter } from '../parkingDB.js'
 
 export interface GetParkingTicketsQueryOptions {
   isResolved?: boolean
@@ -17,14 +14,14 @@ export interface GetParkingTicketsQueryOptions {
   licencePlateProvince?: string
   licencePlateCountry?: string
   location?: string
-  limit?: number
-  offset?: number
+  limit: number
+  offset: number
 }
 
-const addCalculatedFields = (
-  ticket: pts.ParkingTicket,
+function addCalculatedFields(
+  ticket: ParkingTicket,
   requestSession: expressSession.Session
-) => {
+): void {
   ticket.recordType = 'ticket'
 
   ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate)
@@ -39,8 +36,11 @@ const addCalculatedFields = (
   ticket.canUpdate = canUpdateObject(ticket, requestSession)
 }
 
-const buildWhereClause = (queryOptions: GetParkingTicketsQueryOptions) => {
-  const sqlParameters: Array<number | string> = []
+function buildWhereClause(queryOptions: Partial<GetParkingTicketsQueryOptions>): {
+  sqlWhereClause: string
+  sqlParameters: unknown[]
+} {
+  const sqlParameters: unknown[] = []
 
   let sqlWhereClause = ' where t.recordDelete_timeMillis is null'
 
@@ -107,7 +107,7 @@ const buildWhereClause = (queryOptions: GetParkingTicketsQueryOptions) => {
 
   return {
     sqlWhereClause,
-    sqlParams: sqlParameters
+    sqlParameters
   }
 }
 
@@ -115,7 +115,7 @@ interface GetParkingTicketsReturn {
   count: number
   limit: number
   offset: number
-  tickets: pts.ParkingTicket[]
+  tickets: ParkingTicket[]
 }
 
 export const getParkingTickets = (
@@ -140,7 +140,7 @@ export const getParkingTickets = (
           ' left join ParkingLocations l on t.locationKey = l.locationKey' +
           sqlWhereClause.sqlWhereClause
       )
-      .get(sqlWhereClause.sqlParams) as { cnt: number }
+      .get(sqlWhereClause.sqlParameters) as { cnt: number }
   ).cnt
 
   // do query
@@ -169,7 +169,7 @@ export const getParkingTickets = (
         ' offset ' +
         queryOptions.offset.toString()
     )
-    .all(sqlWhereClause.sqlParams) as pts.ParkingTicket[]
+    .all(sqlWhereClause.sqlParameters) as ParkingTicket[]
 
   database.close()
 
@@ -190,7 +190,7 @@ export const getParkingTicketsByLicencePlate = (
   licencePlateProvince: string,
   licencePlateNumber: string,
   requestSession: expressSession.Session
-): pts.ParkingTicket[] => {
+): ParkingTicket[] => {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -215,7 +215,7 @@ export const getParkingTicketsByLicencePlate = (
       ${sqlWhereClause.sqlWhereClause}
       order by t.issueDate desc, t.ticketNumber desc`
     )
-    .all(sqlWhereClause.sqlParams) as pts.ParkingTicket[]
+    .all(sqlWhereClause.sqlParameters) as ParkingTicket[]
 
   database.close()
 

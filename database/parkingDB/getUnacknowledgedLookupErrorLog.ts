@@ -1,11 +1,13 @@
-import sqlite from 'better-sqlite3'
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-import type * as pts from '../../types/recordTypes'
+import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
+import type { LicencePlate } from '../../types/recordTypes.js'
 
-interface LookupErrorLogEntry extends pts.LicencePlate {
+interface LookupErrorLogEntry extends LicencePlate {
   batchID: number
   logIndex: number
   recordDate: number
@@ -27,7 +29,7 @@ export const getUnacknowledgedLookupErrorLog = (
     readonly: true
   })
 
-  let parameters = []
+  let parameters: unknown[] = []
 
   if (batchID_or_negOne !== -1 && logIndex_or_negOne !== -1) {
     parameters = [batchID_or_negOne, logIndex_or_negOne]

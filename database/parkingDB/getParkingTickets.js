@@ -1,15 +1,15 @@
-import sqlite from 'better-sqlite3';
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
-import { canUpdateObject, getSplitWhereClauseFilter } from '../parkingDB.js';
+import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-const addCalculatedFields = (ticket, requestSession) => {
+import { canUpdateObject, getSplitWhereClauseFilter } from '../parkingDB.js';
+function addCalculatedFields(ticket, requestSession) {
     ticket.recordType = 'ticket';
     ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
     ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
     ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
     ticket.canUpdate = canUpdateObject(ticket, requestSession);
-};
-const buildWhereClause = (queryOptions) => {
+}
+function buildWhereClause(queryOptions) {
     const sqlParameters = [];
     let sqlWhereClause = ' where t.recordDelete_timeMillis is null';
     if (Object.prototype.hasOwnProperty.call(queryOptions, 'isResolved')) {
@@ -53,9 +53,9 @@ const buildWhereClause = (queryOptions) => {
     }
     return {
         sqlWhereClause,
-        sqlParams: sqlParameters
+        sqlParameters
     };
-};
+}
 export const getParkingTickets = (requestSession, queryOptions) => {
     const database = sqlite(databasePath, {
         readonly: true
@@ -66,7 +66,7 @@ export const getParkingTickets = (requestSession, queryOptions) => {
         ' from ParkingTickets t' +
         ' left join ParkingLocations l on t.locationKey = l.locationKey' +
         sqlWhereClause.sqlWhereClause)
-        .get(sqlWhereClause.sqlParams).cnt;
+        .get(sqlWhereClause.sqlParameters).cnt;
     const rows = database
         .prepare('select t.ticketID, t.ticketNumber, t.issueDate,' +
         ' t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing,' +
@@ -89,7 +89,7 @@ export const getParkingTickets = (requestSession, queryOptions) => {
         queryOptions.limit.toString() +
         ' offset ' +
         queryOptions.offset.toString())
-        .all(sqlWhereClause.sqlParams);
+        .all(sqlWhereClause.sqlParameters);
     database.close();
     for (const ticket of rows) {
         addCalculatedFields(ticket, requestSession);
@@ -122,7 +122,7 @@ export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlat
           and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)
       ${sqlWhereClause.sqlWhereClause}
       order by t.issueDate desc, t.ticketNumber desc`)
-        .all(sqlWhereClause.sqlParams);
+        .all(sqlWhereClause.sqlParameters);
     database.close();
     for (const ticket of rows) {
         addCalculatedFields(ticket, requestSession);

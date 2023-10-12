@@ -1,7 +1,7 @@
-import sqlite from 'better-sqlite3';
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
-import { canUpdateObject } from '../parkingDB.js';
+import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
+import { canUpdateObject } from '../parkingDB.js';
 export const getParkingTicketStatusesWithDB = (database, ticketID, requestSession) => {
     const statusRows = database
         .prepare('select * from ParkingTicketStatusLog' +

@@ -1,19 +1,21 @@
-import sqlite from 'better-sqlite3'
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-import type * as pts from '../../types/recordTypes'
+import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
+import type { LicencePlateLookupBatch, LicencePlateLookupBatchEntry } from '../../types/recordTypes.js'
 
 export interface LookupBatchReturn {
   success: boolean
   message?: string
-  batch?: pts.LicencePlateLookupBatch
+  batch?: LicencePlateLookupBatch
 }
 
 export const getLookupBatch = (
   batchID_or_negOne: number
-): pts.LicencePlateLookupBatch => {
+): LicencePlateLookupBatch | undefined => {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -33,10 +35,10 @@ export const getLookupBatch = (
               ' order by batchID desc' +
               ' limit 1'
           )
-          .get() as pts.LicencePlateLookupBatch)
+          .get() as LicencePlateLookupBatch)
       : (database
           .prepare(baseBatchSQL + ' and batchID = ?')
-          .get(batchID_or_negOne) as pts.LicencePlateLookupBatch)
+          .get(batchID_or_negOne) as LicencePlateLookupBatch)
 
   if (!batch) {
     database.close()
@@ -44,9 +46,9 @@ export const getLookupBatch = (
   }
 
   batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate)
-  batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate)
-  batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate)
-  batch.receivedDateString = dateTimeFns.dateIntegerToString(batch.receivedDate)
+  batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate as number)
+  batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate as number)
+  batch.receivedDateString = dateTimeFns.dateIntegerToString(batch.receivedDate as number)
 
   batch.batchEntries = database
     .prepare(
@@ -57,7 +59,7 @@ export const getLookupBatch = (
         ' where e.batchID = ?' +
         ' order by e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber'
     )
-    .all(batch.batchID) as pts.LicencePlateLookupBatchEntry[]
+    .all(batch.batchID) as LicencePlateLookupBatchEntry[]
 
   database.close()
 

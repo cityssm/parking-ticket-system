@@ -1,5 +1,3 @@
-/* eslint-disable node/no-unpublished-import */
-
 import gulp from 'gulp'
 import changed from 'gulp-changed'
 import minify from 'gulp-minify'
@@ -10,7 +8,7 @@ import minify from 'gulp-minify'
 
 const publicJavascriptsDestination = 'public/javascripts'
 
-const publicJavascriptsMinFunction = () => {
+function publicJavascriptsMinFunction(): NodeJS.ReadWriteStream {
   return gulp
     .src('public-typescript/*.js', { allowEmpty: true })
     .pipe(
@@ -28,7 +26,7 @@ gulp.task('public-javascript-min', publicJavascriptsMinFunction)
  * Watch
  */
 
-const watchFunction = () => {
+function watchFunction(): void {
   gulp.watch('public-typescript/*.js', publicJavascriptsMinFunction)
 }
 

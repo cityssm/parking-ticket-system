@@ -1,5 +1,5 @@
-import sqlite from 'better-sqlite3';
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export const getUnacknowledgedLookupErrorLog = (batchID_or_negOne, logIndex_or_negOne) => {
     const database = sqlite(databasePath, {

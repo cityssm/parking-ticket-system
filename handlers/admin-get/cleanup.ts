@@ -5,7 +5,7 @@ import { getDatabaseCleanupCounts } from '../../database/parkingDB/getDatabaseCl
 export const handler: RequestHandler = (_request, response) => {
   const counts = getDatabaseCleanupCounts()
 
-  return response.render('admin-cleanup', {
+  response.render('admin-cleanup', {
     headTitle: 'Database Cleanup',
     counts
   })

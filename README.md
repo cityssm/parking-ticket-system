@@ -2,8 +2,8 @@
 
 [![DeepSource](https://app.deepsource.com/gh/cityssm/parking-ticket-system.svg/?label=active+issues&show_trend=true&token=VQR88xmXqu_fc-OHBT0gX9Ge)](https://app.deepsource.com/gh/cityssm/parking-ticket-system/)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/cityssm/parking-ticket-system)](https://codeclimate.com/github/cityssm/parking-ticket-system/maintainability)
-[![Test Coverage](https://img.shields.io/codeclimate/coverage/cityssm/parking-ticket-system)](https://codeclimate.com/github/cityssm/parking-ticket-system/test_coverage)
-[![Coverage Testing](https://github.com/cityssm/MonTY/actions/workflows/coverage.yml/badge.svg)](https://github.com/cityssm/MonTY/actions/workflows/coverage.yml)
+[![Coverage Testing](https://github.com/cityssm/parking-ticket-system/actions/workflows/coverage.yml/badge.svg)](https://github.com/cityssm/parking-ticket-system/actions/workflows/coverage.yml)
+[![codecov](https://codecov.io/gh/cityssm/parking-ticket-system/graph/badge.svg?token=V3OSWQEAFW)](https://codecov.io/gh/cityssm/parking-ticket-system)
 [![Cypress](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/8da27w/master&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/8da27w/runs)
 
 ![Parking Ticket Search](docs/images/ticket-search.png)

@@ -1,3 +1,3 @@
-import type * as pts from '../../types/recordTypes';
-export declare const getUnreceivedLookupBatches: (includeUnlocked: boolean) => pts.LicencePlateLookupBatch[];
+import type { LicencePlateLookupBatch } from '../../types/recordTypes.js';
+export declare const getUnreceivedLookupBatches: (includeUnlocked: boolean) => LicencePlateLookupBatch[];
 export default getUnreceivedLookupBatches;

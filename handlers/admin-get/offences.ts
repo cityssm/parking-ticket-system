@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 
-import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js'
 import { getParkingBylaws } from '../../database/parkingDB/getParkingBylaws.js'
+import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js'
 import { getParkingOffences } from '../../database/parkingDB/getParkingOffences.js'
 
 export const handler: RequestHandler = (_request, response) => {
@@ -9,7 +9,7 @@ export const handler: RequestHandler = (_request, response) => {
   const bylaws = getParkingBylaws()
   const offences = getParkingOffences()
 
-  return response.render('offence-maint', {
+  response.render('offence-maint', {
     headTitle: 'Parking Offences',
     locations,
     bylaws,

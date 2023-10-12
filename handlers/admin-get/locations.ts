@@ -5,7 +5,7 @@ import { getParkingLocations } from '../../database/parkingDB/getParkingLocation
 export const handler: RequestHandler = (_request, response) => {
   const locations = getParkingLocations()
 
-  return response.render('location-maint', {
+  response.render('location-maint', {
     headTitle: 'Parking Location Maintenance',
     locations
   })

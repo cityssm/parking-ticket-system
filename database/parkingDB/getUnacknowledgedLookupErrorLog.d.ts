@@ -1,5 +1,5 @@
-import type * as pts from '../../types/recordTypes';
-interface LookupErrorLogEntry extends pts.LicencePlate {
+import type { LicencePlate } from '../../types/recordTypes.js';
+interface LookupErrorLogEntry extends LicencePlate {
     batchID: number;
     logIndex: number;
     recordDate: number;
