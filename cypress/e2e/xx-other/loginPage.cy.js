@@ -1,6 +1,6 @@
 import { logout } from '../../support/index.js';
 describe('Login Page', () => {
-    before(logout);
+    beforeEach(logout);
     it('Has no detectable accessibility issues', () => {
         cy.injectAxe();
         cy.checkA11y();

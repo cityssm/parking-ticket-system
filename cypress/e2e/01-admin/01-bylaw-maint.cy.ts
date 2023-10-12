@@ -62,7 +62,7 @@ describe('Admin - Parking By-Laws', () => {
         cy.get("[data-cy='results'] a")
           .contains(bylawNumber)
           .log('here')
-          .parents('tr')
+          .closest('tr')
           .contains(newBylawDescription)
       })
   })

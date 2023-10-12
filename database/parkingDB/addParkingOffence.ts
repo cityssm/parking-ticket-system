@@ -81,7 +81,7 @@ export const addParkingOffence = (
           ' order by count(locationKey) desc, offenceAmount desc, discountOffenceAmount desc' +
           ' limit 1'
       )
-      .get(requestBody.bylawNumber) as pts.ParkingOffence
+      .get(requestBody.bylawNumber) as ParkingOffence
 
     if (offenceAmountRecord) {
       offenceAmount = offenceAmountRecord.offenceAmount

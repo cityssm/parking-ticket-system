@@ -1,19 +1,16 @@
-import sqlite from 'better-sqlite3'
-
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-import * as configFunctions from '../helpers/functions.config.js'
-
-import { parkingDB as databasePath } from '../data/databasePaths.js'
-
-import type * as recordTypes from '../types/recordTypes.js'
+import sqlite from 'better-sqlite3'
 import type * as expressSession from 'express-session'
 
+import { parkingDB as databasePath } from '../data/databasePaths.js'
+import * as configFunctions from '../helpers/functions.config.js'
+import type { Record, UserProperties } from '../types/recordTypes.js'
+
 export const canUpdateObject = (
-  object: recordTypes.Record,
+  object: Record,
   requestSession: expressSession.Session
 ): boolean => {
-  const userProperties: recordTypes.UserProperties =
-    requestSession.user.userProperties
+  const userProperties = requestSession.user.userProperties as UserProperties
 
   // check user permissions
 
@@ -30,7 +27,7 @@ export const canUpdateObject = (
 
   if (canUpdate) {
     switch (object.recordType) {
-      case 'ticket':
+      case 'ticket': {
         if (
           (object as recordTypes.ParkingTicket).resolvedDate &&
           Date.now() - object.recordUpdate_timeMillis >=
@@ -39,6 +36,7 @@ export const canUpdateObject = (
           canUpdate = false
         }
         break
+      }
     }
   }
 

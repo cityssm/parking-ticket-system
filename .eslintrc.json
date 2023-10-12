@@ -12,7 +12,7 @@
       "error",
       {
         "case": "camelCase",
-        "ignore": ["ID", "MTO"]
+        "ignore": ["DB", "ID", "MTO"]
       }
     ]
   }
