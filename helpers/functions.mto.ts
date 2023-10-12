@@ -10,9 +10,9 @@ import { getConvictionBatch } from '../database/parkingDB/getConvictionBatch.js'
 import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js'
 import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js'
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js'
+import type { ParkingTicketStatusLog } from '../types/recordTypes.js'
 
 import * as configFunctions from './functions.config.js'
-import { ParkingTicketStatusLog } from '../types/recordTypes.js'
 
 let currentDate: Date
 let currentDateNumber: number

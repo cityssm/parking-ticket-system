@@ -1,48 +1,47 @@
-import sqlite from "better-sqlite3";
+import sqlite from 'better-sqlite3'
+import type * as expressSession from 'express-session'
 
-import type { LookupBatchReturn } from "./getLookupBatch.js";
+import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-import { parkingDB as databasePath } from "../../data/databasePaths.js";
+import type { LookupBatchReturn } from './getLookupBatch.js'
 
-import type * as expressSession from "express-session";
-
-
-export const clearLookupBatch = (batchID: number, requestSession: expressSession.Session): LookupBatchReturn => {
-
-  const database = sqlite(databasePath);
+export const clearLookupBatch = (
+  batchID: number,
+  requestSession: expressSession.Session
+): LookupBatchReturn => {
+  const database = sqlite(databasePath)
 
   // Ensure batch is not locked
 
-  const canUpdateBatch = database.prepare("update LicencePlateLookupBatches" +
-    " set recordUpdate_userName = ?," +
-    " recordUpdate_timeMillis = ?" +
-    " where batchID = ?" +
-    " and recordDelete_timeMillis is null" +
-    " and lockDate is null")
-    .run(requestSession.user.userName,
-      Date.now(),
-      batchID).changes;
+  const canUpdateBatch = database
+    .prepare(
+      `update LicencePlateLookupBatches
+        set recordUpdate_userName = ?,
+        recordUpdate_timeMillis = ?
+        where batchID = ?
+        and recordDelete_timeMillis is null
+        and lockDate is null`
+    )
+    .run(requestSession.user.userName, Date.now(), batchID).changes
 
   if (canUpdateBatch === 0) {
-
-    database.close();
+    database.close()
 
     return {
       success: false,
-      message: "Batch cannot be updated."
-    };
+      message: 'Batch cannot be updated.'
+    }
   }
 
-  database.prepare("delete from LicencePlateLookupBatchEntries" +
-    " where batchID = ?")
-    .run(batchID);
+  database
+    .prepare('delete from LicencePlateLookupBatchEntries where batchID = ?')
+    .run(batchID)
 
-  database.close();
+  database.close()
 
   return {
     success: true
-  };
-};
+  }
+}
 
-
-export default clearLookupBatch;
+export default clearLookupBatch

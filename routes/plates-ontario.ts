@@ -1,40 +1,45 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 
-import { Router } from "express";
+import { Router } from 'express'
 
-import * as permissionHandlers from "../handlers/permissions.js";
+import * as permissionHandlers from '../handlers/permissions.js'
+import handler_mtoExport from '../handlers/plates-ontario-get/mtoExport.js'
+import handler_mtoExportDownload from '../handlers/plates-ontario-get/mtoExportDownload.js'
+import handler_mtoImport from '../handlers/plates-ontario-get/mtoImport.js'
+import handler_doGetTicketsAvailableForMTOLookup from '../handlers/plates-ontario-post/doGetTicketsAvailableForMTOLookup.js'
+import * as handler_doMTOImportUpload from '../handlers/plates-ontario-post/doMTOImportUpload.js'
 
-import handler_mtoExport from "../handlers/plates-ontario-get/mtoExport.js";
-import handler_mtoExportDownload from "../handlers/plates-ontario-get/mtoExportDownload.js";
-import handler_doGetTicketsAvailableForMTOLookup from "../handlers/plates-ontario-post/doGetTicketsAvailableForMTOLookup.js";
+export const router = Router()
 
-import handler_mtoImport from "../handlers/plates-ontario-get/mtoImport.js";
-import * as handler_doMTOImportUpload from "../handlers/plates-ontario-post/doMTOImportUpload.js";
-
-
-export const router = Router();
-
-
-router.get("/mtoExport",
+router.get(
+  '/mtoExport',
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_mtoExport);
+  handler_mtoExport
+)
 
-router.post("/doGetParkingTicketsAvailableForMTOLookup",
+router.post(
+  '/doGetParkingTicketsAvailableForMTOLookup',
   permissionHandlers.updatePostHandler,
-  handler_doGetTicketsAvailableForMTOLookup);
+  handler_doGetTicketsAvailableForMTOLookup
+)
 
-router.get("/mtoExport/:batchID",
+router.get(
+  '/mtoExport/:batchID',
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_mtoExportDownload);
+  handler_mtoExportDownload
+)
 
-router.get("/mtoImport",
+router.get(
+  '/mtoImport',
   permissionHandlers.updateOrOperatorGetHandler,
-  handler_mtoImport);
+  handler_mtoImport
+)
 
-router.post("/doMTOImportUpload",
+router.post(
+  '/doMTOImportUpload',
   permissionHandlers.updateOrOperatorPostHandler,
   handler_doMTOImportUpload.uploadHandler,
-  handler_doMTOImportUpload.handler);
+  handler_doMTOImportUpload.handler
+)
 
-
-export default router;
+export default router

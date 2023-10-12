@@ -1,12 +1,12 @@
-import * as configFunctions from "./functions.config.js";
-import ActiveDirectory from "activedirectory2";
-const userDomain = configFunctions.getProperty("application.userDomain");
-const activeDirectoryConfig = configFunctions.getProperty("activeDirectory");
+import ActiveDirectory from 'activedirectory2';
+import * as configFunctions from './functions.config.js';
+const userDomain = configFunctions.getProperty('application.userDomain');
+const activeDirectoryConfig = configFunctions.getProperty('activeDirectory');
 const authenticateViaActiveDirectory = async (userName, password) => {
-    return new Promise((resolve) => {
+    return await new Promise((resolve) => {
         try {
             const ad = new ActiveDirectory(activeDirectoryConfig);
-            ad.authenticate(userDomain + "\\" + userName, password, async (error, auth) => {
+            ad.authenticate(userDomain + '\\' + userName, password, async (error, auth) => {
                 if (error) {
                     resolve(false);
                 }
@@ -19,7 +19,7 @@ const authenticateViaActiveDirectory = async (userName, password) => {
     });
 };
 export const authenticate = async (userName, password) => {
-    if (!userName || userName === "" || !password || password === "") {
+    if (!userName || userName === '' || !password || password === '') {
         return false;
     }
     return await authenticateViaActiveDirectory(userName, password);
