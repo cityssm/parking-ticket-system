@@ -1,6 +1,6 @@
 import type * as expressSession from 'express-session';
-export declare const twoDigitYearToFourDigit: (twoDigitYear: number) => number;
-export declare const sixDigitDateNumberToEightDigit: (sixDigitDateNumber: number) => number;
+export declare function twoDigitYearToFourDigit(twoDigitYear: number): number;
+export declare function sixDigitDateNumberToEightDigit(sixDigitDateNumber: number): number;
 interface PKRDResult {
     licencePlateNumber: string;
     issueDate: number;
@@ -31,6 +31,6 @@ interface ImportLicencePlateOwnershipResult {
     insertedRecordCount?: number;
 }
 export declare const importLicencePlateOwnership: (batchID: number, ownershipData: string, requestSession: expressSession.Session) => ImportLicencePlateOwnershipResult;
-export declare const exportLicencePlateBatch: (batchID: number, requestSession: expressSession.Session) => string;
+export declare function exportLicencePlateBatch(batchID: number, requestSession: expressSession.Session): string;
 export declare const exportConvictionBatch: (batchID: number, requestSession: expressSession.Session) => string;
 export {};

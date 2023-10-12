@@ -20,10 +20,10 @@ export const isParkingTicketInConvictionBatchWithDB = (
     )
     .get(ticketID) as { statusField: string } | undefined
 
-  if (batchStatusCheck) {
+  if (batchStatusCheck !== undefined) {
     return {
       inBatch: true,
-      batchIDString: batchStatusCheck.statusField as string
+      batchIDString: batchStatusCheck.statusField
     }
   }
 

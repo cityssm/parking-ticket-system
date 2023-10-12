@@ -1,23 +1,23 @@
+import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
 import sqlite from 'better-sqlite3';
+import { parkingDB as databasePath } from '../data/databasePaths.js';
 import { getConvictionBatch } from '../database/parkingDB/getConvictionBatch.js';
-import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js';
 import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js';
+import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js';
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js';
 import * as configFunctions from './functions.config.js';
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
-import { parkingDB as databasePath } from '../data/databasePaths.js';
 let currentDate;
 let currentDateNumber;
 let currentDatePrefix;
 let currentYearPrefix;
-const resetCurrentDate = () => {
+function resetCurrentDate() {
     currentDate = new Date();
     currentDateNumber = dateTimeFns.dateToInteger(currentDate);
     currentYearPrefix = Math.floor(currentDate.getFullYear() / 100) * 100;
     currentDatePrefix = currentYearPrefix * 10000;
-};
+}
 resetCurrentDate();
-export const twoDigitYearToFourDigit = (twoDigitYear) => {
+export function twoDigitYearToFourDigit(twoDigitYear) {
     const fourDigitYear = twoDigitYear + currentYearPrefix;
     if (fourDigitYear > currentDate.getFullYear() + 10) {
         return fourDigitYear - 100;
@@ -26,15 +26,15 @@ export const twoDigitYearToFourDigit = (twoDigitYear) => {
         return fourDigitYear + 100;
     }
     return fourDigitYear;
-};
-export const sixDigitDateNumberToEightDigit = (sixDigitDateNumber) => {
+}
+export function sixDigitDateNumberToEightDigit(sixDigitDateNumber) {
     const eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix;
     if (eightDigitDateNumber > currentDateNumber) {
         return eightDigitDateNumber - 1000000;
     }
     return eightDigitDateNumber;
-};
-const parsePKRA = (rowData) => {
+}
+function parsePKRA(rowData) {
     if (!rowData.startsWith('PKRA')) {
         return false;
     }
@@ -58,7 +58,7 @@ const parsePKRA = (rowData) => {
     catch {
         return false;
     }
-};
+}
 export const parsePKRD = (rowData) => {
     if (!rowData.startsWith('PKRD')) {
         return false;
@@ -88,7 +88,7 @@ export const parsePKRD = (rowData) => {
         record.ticketNumber = rowData.slice(20, 28).trim();
         record.driverLicenceNumber = rowData.slice(32, 47).trim();
         record.ownerGenderKey = rowData.slice(53, 54);
-        record.ownerName1 = rowData.slice(54, 104).replace(/,/g, ', ').trim();
+        record.ownerName1 = rowData.slice(54, 104).replaceAll(',', ', ').trim();
         if (record.ownerName1.includes('/')) {
             const slashIndex = record.ownerName1.indexOf('/');
             record.ownerName2 = record.ownerName1.slice(Math.max(0, slashIndex + 1));
@@ -141,13 +141,13 @@ export const importLicencePlateOwnership = (batchID, ownershipData, requestSessi
     }
     const database = sqlite(databasePath);
     const batchRow = database
-        .prepare('select sentDate from LicencePlateLookupBatches' +
-        ' where batchID = ?' +
-        ' and recordDelete_timeMillis is null' +
-        ' and lockDate is not null' +
-        ' and sentDate is not null')
+        .prepare(`select sentDate from LicencePlateLookupBatches
+        where batchID = ?
+        and recordDelete_timeMillis is null
+        and lockDate is not null
+        and sentDate is not null`)
         .get(batchID);
-    if (!batchRow) {
+    if (batchRow === undefined) {
         database.close();
         return {
             success: false,
@@ -217,7 +217,7 @@ export const importLicencePlateOwnership = (batchID, ownershipData, requestSessi
         insertedRecordCount
     };
 };
-const exportBatch = (sentDate, includeLabels, batchEntries) => {
+function exportBatch(sentDate, includeLabels, batchEntries) {
     const newline = '\n';
     let output = '';
     let recordCount = 0;
@@ -247,14 +247,14 @@ const exportBatch = (sentDate, includeLabels, batchEntries) => {
             output;
     output += 'PKTZ' + recordCountPadded + newline;
     return output;
-};
-export const exportLicencePlateBatch = (batchID, requestSession) => {
+}
+export function exportLicencePlateBatch(batchID, requestSession) {
     markLookupBatchAsSent(batchID, requestSession);
     const batch = getLookupBatch(batchID);
     return exportBatch(batch.sentDate, batch.mto_includeLabels, batch.batchEntries);
-};
+}
 export const exportConvictionBatch = (batchID, requestSession) => {
     markConvictionBatchAsSent(batchID, requestSession);
     const batch = getConvictionBatch(batchID);
-    return exportBatch(batch.sentDate, true, batch.batchEntries);
+    return exportBatch(batch?.sentDate, true, batch?.batchEntries);
 };

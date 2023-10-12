@@ -1,24 +1,25 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/indent */
+
+import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
+import type * as expressSession from 'express-session'
 
+import { parkingDB as databasePath } from '../data/databasePaths.js'
 import { getConvictionBatch } from '../database/parkingDB/getConvictionBatch.js'
-import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js'
-
 import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js'
+import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js'
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js'
 
 import * as configFunctions from './functions.config.js'
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-
-import { parkingDB as databasePath } from '../data/databasePaths.js'
-
-import type * as expressSession from 'express-session'
+import { ParkingTicketStatusLog } from '../types/recordTypes.js'
 
 let currentDate: Date
 let currentDateNumber: number
 let currentDatePrefix: number
 let currentYearPrefix: number
 
-const resetCurrentDate = () => {
+function resetCurrentDate(): void {
   currentDate = new Date()
   currentDateNumber = dateTimeFns.dateToInteger(currentDate)
 
@@ -28,7 +29,7 @@ const resetCurrentDate = () => {
 
 resetCurrentDate()
 
-export const twoDigitYearToFourDigit = (twoDigitYear: number): number => {
+export function twoDigitYearToFourDigit(twoDigitYear: number): number {
   const fourDigitYear = twoDigitYear + currentYearPrefix
 
   if (fourDigitYear > currentDate.getFullYear() + 10) {
@@ -40,9 +41,9 @@ export const twoDigitYearToFourDigit = (twoDigitYear: number): number => {
   return fourDigitYear
 }
 
-export const sixDigitDateNumberToEightDigit = (
+export function sixDigitDateNumberToEightDigit(
   sixDigitDateNumber: number
-): number => {
+): number {
   const eightDigitDateNumber = sixDigitDateNumber + currentDatePrefix
 
   if (eightDigitDateNumber > currentDateNumber) {
@@ -52,7 +53,12 @@ export const sixDigitDateNumberToEightDigit = (
   return eightDigitDateNumber
 }
 
-const parsePKRA = (rowData: string) => {
+function parsePKRA(rowData: string):
+  | false
+  | {
+      sentDate: number
+      recordDate: number
+    } {
   if (!rowData.startsWith('PKRA')) {
     return false
   }
@@ -198,7 +204,7 @@ export const parsePKRD = (rowData: string): false | PKRDResult => {
 
     record.ownerGenderKey = rowData.slice(53, 54)
 
-    record.ownerName1 = rowData.slice(54, 104).replace(/,/g, ', ').trim()
+    record.ownerName1 = rowData.slice(54, 104).replaceAll(',', ', ').trim()
 
     if (record.ownerName1.includes('/')) {
       const slashIndex = record.ownerName1.indexOf('/')
@@ -308,15 +314,15 @@ export const importLicencePlateOwnership = (
 
   const batchRow = database
     .prepare(
-      'select sentDate from LicencePlateLookupBatches' +
-        ' where batchID = ?' +
-        ' and recordDelete_timeMillis is null' +
-        ' and lockDate is not null' +
-        ' and sentDate is not null'
+      `select sentDate from LicencePlateLookupBatches
+        where batchID = ?
+        and recordDelete_timeMillis is null
+        and lockDate is not null
+        and sentDate is not null`
     )
     .get(batchID) as { sentDate: number } | undefined
 
-  if (!batchRow) {
+  if (batchRow === undefined) {
     database.close()
 
     return {
@@ -452,7 +458,7 @@ export const importLicencePlateOwnership = (
   }
 }
 
-const exportBatch = (
+function exportBatch(
   sentDate: number,
   includeLabels: boolean,
   batchEntries: Array<{
@@ -461,7 +467,7 @@ const exportBatch = (
     issueDate?: number
     licencePlateNumber?: string
   }>
-) => {
+): string {
   const newline = '\n'
 
   let output = ''
@@ -533,17 +539,17 @@ const exportBatch = (
   return output
 }
 
-export const exportLicencePlateBatch = (
+export function exportLicencePlateBatch(
   batchID: number,
   requestSession: expressSession.Session
-): string => {
+): string {
   markLookupBatchAsSent(batchID, requestSession)
 
   const batch = getLookupBatch(batchID)
 
   return exportBatch(
-    batch.sentDate,
-    batch.mto_includeLabels,
+    batch.sentDate as number,
+    batch.mto_includeLabels as boolean,
     batch.batchEntries
   )
 }
@@ -559,5 +565,9 @@ export const exportConvictionBatch = (
 
   const batch = getConvictionBatch(batchID)
 
-  return exportBatch(batch.sentDate, true, batch.batchEntries)
+  return exportBatch(
+    batch?.sentDate as number,
+    true,
+    batch?.batchEntries as ParkingTicketStatusLog[]
+  )
 }

@@ -7,7 +7,7 @@ export const isParkingTicketInConvictionBatchWithDB = (database, ticketID) => {
         ' and ticketID = ?' +
         " and statusKey = 'convictionBatch'")
         .get(ticketID);
-    if (batchStatusCheck) {
+    if (batchStatusCheck !== undefined) {
         return {
             inBatch: true,
             batchIDString: batchStatusCheck.statusField
