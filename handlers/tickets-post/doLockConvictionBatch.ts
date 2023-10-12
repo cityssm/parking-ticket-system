@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-import { lockConvictionBatch } from "../../helpers/parkingDB/lockConvictionBatch.js";
+import { lockConvictionBatch } from "../../database/parkingDB/lockConvictionBatch.js";
 
 
 export const handler: RequestHandler = (request, response) => {

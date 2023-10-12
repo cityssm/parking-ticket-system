@@ -1,100 +1,89 @@
-/* eslint-disable unicorn/filename-case, promise/catch-or-return, promise/always-return */
+/* eslint-disable eslint-comments/disable-enable-pair, unicorn/filename-case */
+/* eslint-disable promise/always-return, promise/catch-or-return */
 
-import { testAdmin } from "../../../test/_globals.js";
+import { testAdmin } from '../../../test/_globals.js'
+import { logout, login } from '../../support/index.js'
+import { randomString } from '../../support/utilities.js'
 
-import { logout, login } from "../../support/index.js";
-import { randomString } from "../../support/utilities.js";
-
-
-describe("Admin - Parking By-Laws", () => {
-
-  before(() => {
-    logout();
+describe('Admin - Parking By-Laws', () => {
+  beforeEach(() => {
+    logout()
     login(testAdmin)
-  });
+    cy.visit('/admin/bylaws')
+    cy.location('pathname').should('equal', '/admin/bylaws')
+  })
 
-  after(logout);
+  afterEach(logout)
 
-  beforeEach("Loads page", () => {
-    cy.visit("/admin/bylaws");
-    cy.location("pathname").should("equal", "/admin/bylaws");
-  });
-
-  it("Adds ten new by-laws", () => {
-
+  it('Adds ten new by-laws', () => {
     for (let index = 0; index < 10; index += 1) {
+      cy.get("button[data-cy='add-bylaw']").click()
 
-      cy.get("button[data-cy='add-bylaw']").click();
+      cy.get('.modal').should('be.visible')
 
-      cy.get(".modal").should("be.visible");
+      const bylawNumberSuffix = '-' + randomString()
 
-      const bylawNumberSuffix = "-" + randomString();
+      cy.fixture('bylaw.json').then((bylawData) => {
+        const bylawNumber = bylawData.bylawNumberPrefix + bylawNumberSuffix
+        cy.get(".modal input[name='bylawNumber']").type(bylawNumber)
+        cy.get(".modal input[name='bylawDescription']").type(
+          bylawData.bylawDescription
+        )
+        cy.get('.modal form').submit()
+      })
 
-      cy.fixture("bylaw.json").then((bylawData) => {
-        const bylawNumber = bylawData.bylawNumberPrefix + bylawNumberSuffix;
-        cy.get(".modal input[name='bylawNumber']").type(bylawNumber);
-        cy.get(".modal input[name='bylawDescription']").type(bylawData.bylawDescription);
-        cy.get(".modal form").submit();
-      });
+      cy.get('.modal').should('not.exist')
 
-      cy.get(".modal").should("not.exist");
-
-      cy.fixture("bylaw.json").then((bylawData) => {
-        const bylawNumber = bylawData.bylawNumberPrefix + bylawNumberSuffix;
-        cy.get("[data-cy='results'] a").contains(bylawNumber);
-      });
+      cy.fixture('bylaw.json').then((bylawData) => {
+        const bylawNumber = bylawData.bylawNumberPrefix + bylawNumberSuffix
+        cy.get("[data-cy='results'] a").contains(bylawNumber)
+      })
     }
-  });
+  })
 
-  it("Updates a by-law", () => {
+  it('Updates a by-law', () => {
+    cy.get("[data-cy='results'] a").first().click()
 
-    cy.get("[data-cy='results'] a")
-      .first()
-      .click();
+    cy.get('.modal').should('be.visible').should('have.length', 1)
 
-    cy.get(".modal")
-      .should("be.visible")
-      .should("have.length", 1);
+    cy.get(".modal [name='bylawNumber']")
+      .invoke('val')
+      .then((bylawNumber: string) => {
+        const newBylawDescription = 'Updated By-Law - ' + randomString()
 
-    cy.get(".modal [name='bylawNumber']").invoke("val").then((bylawNumber: string) => {
+        cy.get(".modal [name='bylawDescription']")
+          .clear()
+          .type(newBylawDescription)
 
-      const newBylawDescription = "Updated By-Law - " + randomString();
+        cy.get('.modal form').submit()
 
-      cy.get(".modal [name='bylawDescription']").clear().type(newBylawDescription);
+        cy.get('.modal').should('not.exist')
 
-      cy.get(".modal form").submit();
+        cy.get("[data-cy='results'] a")
+          .contains(bylawNumber)
+          .log('here')
+          .parents('tr')
+          .contains(newBylawDescription)
+      })
+  })
 
-      cy.get(".modal").should("not.exist");
+  it('Removes a by-law', () => {
+    cy.get("[data-cy='results'] a").first().click()
 
-      cy.get("[data-cy='results'] a")
-        .contains(bylawNumber)
-        .log("here")
-        .parents("tr")
-        .contains(newBylawDescription);
-    });
-  });
+    cy.get('.modal').should('be.visible').should('have.length', 1)
 
-  it("Removes a by-law", () => {
+    cy.get(".modal [name='bylawNumber']")
+      .invoke('val')
+      .then((bylawNumber: string) => {
+        cy.get(".modal [data-cy='remove']").click()
 
-    cy.get("[data-cy='results'] a")
-      .first()
-      .click();
+        cy.focused().click()
 
-    cy.get(".modal")
-      .should("be.visible")
-      .should("have.length", 1);
+        cy.get('.modal').should('not.exist')
 
-    cy.get(".modal [name='bylawNumber']").invoke("val").then((bylawNumber: string) => {
-
-      cy.get(".modal [data-cy='remove']").click();
-
-      cy.focused().click();
-
-      cy.get(".modal").should("not.exist");
-
-      cy.get("[data-cy='results'] a")
-        .contains(bylawNumber)
-        .should("have.length", 0);
-    });
-  });
-});
+        cy.get("[data-cy='results'] a")
+          .contains(bylawNumber)
+          .should('have.length', 0)
+      })
+  })
+})

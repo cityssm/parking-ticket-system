@@ -1,6 +1,6 @@
-import * as ownerFunctions from "../../helpers/functions.owner.js";
-import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
-import { getOwnershipReconciliationRecords } from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
+import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
+import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js';
+import * as ownerFunctions from '../../helpers/functions.owner.js';
 export const handler = (request, response) => {
     const records = getOwnershipReconciliationRecords();
     const statusRecords = [];
@@ -10,9 +10,9 @@ export const handler = (request, response) => {
         }
         const ownerAddress = ownerFunctions.getFormattedOwnerAddress(record);
         const statusResponse = createParkingTicketStatus({
-            recordType: "status",
+            recordType: 'status',
             ticketID: record.ticket_ticketID,
-            statusKey: "ownerLookupMatch",
+            statusKey: 'ownerLookupMatch',
             statusField: record.owner_recordDateString,
             statusNote: ownerAddress
         }, request.session, false);

@@ -1,35 +1,28 @@
-import { testAdmin } from "../../../test/_globals.js";
-import { logout, login } from "../../support/index.js";
-describe("Admin - Database Cleanup", function () {
-    before(function () {
+import { testAdmin } from '../../../test/_globals.js';
+import { logout, login } from '../../support/index.js';
+describe('Admin - Database Cleanup', () => {
+    beforeEach(() => {
         logout();
         login(testAdmin);
+        cy.visit('/admin/cleanup');
+        cy.location('pathname').should('equal', '/admin/cleanup');
     });
-    after(logout);
-    beforeEach("Loads page", function () {
-        cy.visit("/admin/cleanup");
-        cy.location("pathname").should("equal", "/admin/cleanup");
-    });
-    it("Has no detectable accessibility issues before purging", function () {
+    afterEach(logout);
+    it('Has no detectable accessibility issues before purging', () => {
         cy.injectAxe();
         cy.checkA11y();
     });
-    it("Purges all tables", function () {
+    it('Purges all tables', () => {
         cy.get("button[data-cy='purge']")
             .should(Cypress._.noop)
-            .each(function ($buttonElement) {
+            .each(($buttonElement) => {
             cy.wrap($buttonElement).click();
-            cy.get(".modal button")
-                .contains("Yes")
-                .click();
-            cy.get(".modal button")
-                .contains("OK")
-                .click();
+            cy.get('.modal button').contains('Yes').click();
+            cy.get('.modal button').contains('OK').click();
         });
-        cy.get("button[data-cy='purge']")
-            .should("not.exist");
+        cy.get("button[data-cy='purge']").should('not.exist');
     });
-    it("Has no detectable accessibility issues after purging", function () {
+    it('Has no detectable accessibility issues after purging', () => {
         cy.injectAxe();
         cy.checkA11y();
     });

@@ -1,17 +1,14 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import { getParkingBylawsWithOffenceStats } from "../../helpers/parkingDB/getParkingBylaws.js";
-
+import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
 
 export const handler: RequestHandler = (_request, response) => {
+  const bylaws = getParkingBylawsWithOffenceStats()
 
-  const bylaws = getParkingBylawsWithOffenceStats();
-
-  return response.render("bylaw-maint", {
-    headTitle: "By-Law Maintenance",
+  return response.render('bylaw-maint', {
+    headTitle: 'By-Law Maintenance',
     bylaws
-  });
-};
+  })
+}
 
-
-export default handler;
+export default handler

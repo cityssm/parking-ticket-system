@@ -1,19 +1,19 @@
-import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
-import { getLicencePlateOwner } from "../../helpers/parkingDB/getLicencePlateOwner.js";
+import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
+import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js';
 export const handler = (request, response) => {
     const ownerRecord = getLicencePlateOwner(request.body.licencePlateCountry, request.body.licencePlateProvince, request.body.licencePlateNumber, request.body.recordDate);
     if (!ownerRecord) {
         return response.json({
             success: false,
-            message: "Ownership record not found."
+            message: 'Ownership record not found.'
         });
     }
     const statusResponse = createParkingTicketStatus({
-        recordType: "status",
+        recordType: 'status',
         ticketID: Number.parseInt(request.body.ticketID, 10),
-        statusKey: "ownerLookupError",
+        statusKey: 'ownerLookupError',
         statusField: ownerRecord.vehicleNCIC,
-        statusNote: ""
+        statusNote: ''
     }, request.session, false);
     return response.json(statusResponse);
 };

@@ -94,7 +94,6 @@ export const fakeRequest = {
     push: undefined,
     query: undefined,
     range: undefined,
-    rateLimit: undefined,
     rawHeaders: undefined,
     rawListeners: undefined,
     rawTrailers: undefined,

@@ -1,4 +1,4 @@
-import { getLastTenConvictionBatches } from "../../helpers/parkingDB/getLastTenConvictionBatches.js";
+import { getLastTenConvictionBatches } from '../../database/parkingDB/getLastTenConvictionBatches.js';
 export const handler = (_request, response) => {
     const batches = getLastTenConvictionBatches();
     return response.json(batches);

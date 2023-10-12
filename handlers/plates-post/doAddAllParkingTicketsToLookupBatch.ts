@@ -1,14 +1,14 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import { addAllParkingTicketsToLookupBatch } from "../../helpers/parkingDB/addLicencePlateToLookupBatch.js";
-
+import { addAllParkingTicketsToLookupBatch } from '../../database/parkingDB/addLicencePlateToLookupBatch.js'
 
 export const handler: RequestHandler = (request, response) => {
+  const result = addAllParkingTicketsToLookupBatch(
+    request.body,
+    request.session
+  )
 
-  const result = addAllParkingTicketsToLookupBatch(request.body, request.session);
+  return response.json(result)
+}
 
-  return response.json(result);
-};
-
-
-export default handler;
+export default handler

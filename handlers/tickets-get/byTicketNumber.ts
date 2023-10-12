@@ -1,20 +1,17 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import { getParkingTicketID } from "../../helpers/parkingDB/getParkingTicketID.js";
-
+import { getParkingTicketID } from '../../database/parkingDB/getParkingTicketID.js'
 
 export const handler: RequestHandler = (request, response) => {
+  const ticketNumber = request.params.ticketNumber
 
-  const ticketNumber = request.params.ticketNumber;
-
-  const ticketID = getParkingTicketID(ticketNumber);
+  const ticketID = getParkingTicketID(ticketNumber)
 
   if (ticketID) {
-    response.redirect("/tickets/" + ticketID.toString());
+    response.redirect('/tickets/' + ticketID.toString())
   } else {
-    response.redirect("/tickets/?error=ticketNotFound");
+    response.redirect('/tickets/?error=ticketNotFound')
   }
-};
+}
 
-
-export default handler;
+export default handler

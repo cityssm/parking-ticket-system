@@ -1,4 +1,4 @@
-import * as parkingDB_getParkingTickets from "../../helpers/parkingDB/getParkingTickets.js";
+import * as parkingDB_getParkingTickets from '../../database/parkingDB/getParkingTickets.js';
 export const handler = (request, response) => {
     const queryOptions = {
         limit: Number.parseInt(request.body.limit, 10),
@@ -7,8 +7,8 @@ export const handler = (request, response) => {
         licencePlateNumber: request.body.licencePlateNumber,
         location: request.body.location
     };
-    if (request.body.isResolved !== "") {
-        queryOptions.isResolved = request.body.isResolved === "1";
+    if (request.body.isResolved !== '') {
+        queryOptions.isResolved = request.body.isResolved === '1';
     }
     response.json(parkingDB_getParkingTickets.getParkingTickets(request.session, queryOptions));
 };

@@ -1,25 +1,19 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable eslint-comments/disable-enable-pair, unicorn/filename-case */
 
-import { testUpdate } from "../../../test/_globals.js";
+import { testUpdate } from '../../../test/_globals.js'
+import { logout, login } from '../../support/index.js'
 
-import { logout, login } from "../../support/index.js";
-
-describe("Ticket Search - Update User", () => {
-
-  before(() => {
-    logout();
+describe('Ticket Search - Update User', () => {
+  beforeEach(() => {
+    logout()
     login(testUpdate)
-  });
+    cy.visit('/tickets')
+    cy.location('pathname').should('equal', '/tickets')
+  })
 
-  after(logout);
+  afterEach(logout)
 
-  it("Loads page", () => {
-    cy.visit("/tickets");
-    cy.location("pathname").should("equal", "/tickets");
-  });
-
-  it("Has link to new ticket", () => {
-    cy.get("a[href*='/new']")
-      .should("exist");
-  });
-});
+  it('Has link to new ticket', () => {
+    cy.get("a[href*='/new']").should('exist')
+  })
+})

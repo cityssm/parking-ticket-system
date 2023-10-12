@@ -1,5 +1,5 @@
-import { getLookupBatch } from "../../helpers/parkingDB/getLookupBatch.js";
-import { lockLookupBatch } from "../../helpers/parkingDB/lockLookupBatch.js";
+import { getLookupBatch } from '../../database/parkingDB/getLookupBatch.js';
+import { lockLookupBatch } from '../../database/parkingDB/lockLookupBatch.js';
 export const handler = (request, response) => {
     const batchID = Number.parseInt(request.body.batchID, 10);
     const result = lockLookupBatch(batchID, request.session);

@@ -1,11 +1,11 @@
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/dynamic/index.js";
-import exitHook from "exit-hook";
-import * as parkingDB from "../helpers/parkingDB.js";
-import * as vehicleFunctions from "../helpers/functions.vehicle.js";
-import * as configFunctions from "../helpers/functions.config.js";
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
-import Debug from "debug";
-const debug = Debug("parking-ticket-system:task:nhtsaChildProcess");
+import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
+import exitHook from 'exit-hook';
+import * as parkingDB from '../database/parkingDB.js';
+import * as vehicleFunctions from '../helpers/functions.vehicle.js';
+import * as configFunctions from '../helpers/functions.config.js';
+import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import Debug from 'debug';
+const debug = Debug('parking-ticket-system:task:nhtsaChildProcess');
 const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
@@ -18,7 +18,7 @@ const doTask = async () => {
         }
         cutoffDate = ncicRecord.recordDateMax;
         const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
-        debug("Processing " + vehicleMake);
+        debug('Processing ' + vehicleMake);
         await vehicleFunctions.getModelsByMake(vehicleMake);
     }
 };
@@ -26,14 +26,14 @@ let timeoutId;
 let intervalId;
 export const scheduleRun = async () => {
     const firstScheduleDate = new Date();
-    firstScheduleDate.setHours(configFunctions.getProperty("application.task_nhtsa.executeHour"));
+    firstScheduleDate.setHours(configFunctions.getProperty('application.task_nhtsa.executeHour'));
     firstScheduleDate.setDate(firstScheduleDate.getDate() + 1);
-    debug("NHTSA task scheduled for " + firstScheduleDate.toString());
+    debug('NHTSA task scheduled for ' + firstScheduleDate.toString());
     timeoutId = setTimeout(() => {
         if (terminateTask) {
             return;
         }
-        debug("NHTSA task starting");
+        debug('NHTSA task starting');
         intervalId = setIntervalAsync(doTask, 86400 * 1000);
         doTask();
     }, firstScheduleDate.getTime() - Date.now());
@@ -41,16 +41,16 @@ export const scheduleRun = async () => {
 scheduleRun();
 exitHook(() => {
     terminateTask = true;
-    debug("Exit hook called");
+    debug('Exit hook called');
     try {
         clearTimeout(timeoutId);
-        debug("Timeout cleared");
+        debug('Timeout cleared');
     }
     catch {
     }
     try {
         clearIntervalAsync(intervalId);
-        debug("Interval cleared");
+        debug('Interval cleared');
     }
     catch {
     }

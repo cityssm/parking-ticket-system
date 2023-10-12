@@ -1,4 +1,4 @@
-import { getConvictionBatch } from "../../helpers/parkingDB/getConvictionBatch.js";
+import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js';
 export const handler = (request, response) => {
     const batch = getConvictionBatch(request.body.batchID);
     return response.json(batch);

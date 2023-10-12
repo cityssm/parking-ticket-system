@@ -1,45 +1,45 @@
-import config from "../data/config.js";
+import config from '../data/config.js';
 const configFallbackValues = new Map();
-configFallbackValues.set("application.applicationName", "Parking Ticket System");
-configFallbackValues.set("application.logoURL", "/images/noParking.svg");
-configFallbackValues.set("application.httpPort", 4000);
-configFallbackValues.set("application.userDomain", "");
-configFallbackValues.set("application.useTestDatabases", false);
-configFallbackValues.set("application.feature_mtoExportImport", false);
-configFallbackValues.set("application.task_nhtsa.runTask", false);
-configFallbackValues.set("application.task_nhtsa.executeHour", 2);
-configFallbackValues.set("session.cookieName", "parking-ticket-system-user-sid");
-configFallbackValues.set("session.secret", "cityssm/parking-ticket-system");
-configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
-configFallbackValues.set("session.doKeepAlive", false);
-configFallbackValues.set("users.testing", []);
-configFallbackValues.set("users.canLogin", []);
-configFallbackValues.set("users.canUpdate", []);
-configFallbackValues.set("users.isAdmin", []);
-configFallbackValues.set("users.isOperator", []);
-configFallbackValues.set("defaults.country", "");
-configFallbackValues.set("defaults.province", "");
-configFallbackValues.set("parkingTickets.ticketNumber.fieldLabel", "Ticket Number");
-configFallbackValues.set("parkingTickets.ticketNumber.pattern", /^[\w -]{1,10}$/);
-configFallbackValues.set("parkingTickets.ticketNumber.isUnique", true);
-configFallbackValues.set("parkingTickets.ticketNumber.nextTicketNumberFn", () => {
-    return "";
+configFallbackValues.set('application.applicationName', 'Parking Ticket System');
+configFallbackValues.set('application.logoURL', '/images/noParking.svg');
+configFallbackValues.set('application.httpPort', 4000);
+configFallbackValues.set('application.userDomain', '');
+configFallbackValues.set('application.useTestDatabases', false);
+configFallbackValues.set('application.feature_mtoExportImport', false);
+configFallbackValues.set('application.task_nhtsa.runTask', false);
+configFallbackValues.set('application.task_nhtsa.executeHour', 2);
+configFallbackValues.set('session.cookieName', 'parking-ticket-system-user-sid');
+configFallbackValues.set('session.secret', 'cityssm/parking-ticket-system');
+configFallbackValues.set('session.maxAgeMillis', 60 * 60 * 1000);
+configFallbackValues.set('session.doKeepAlive', false);
+configFallbackValues.set('users.testing', []);
+configFallbackValues.set('users.canLogin', []);
+configFallbackValues.set('users.canUpdate', []);
+configFallbackValues.set('users.isAdmin', []);
+configFallbackValues.set('users.isOperator', []);
+configFallbackValues.set('defaults.country', '');
+configFallbackValues.set('defaults.province', '');
+configFallbackValues.set('parkingTickets.ticketNumber.fieldLabel', 'Ticket Number');
+configFallbackValues.set('parkingTickets.ticketNumber.pattern', /^[\w -]{1,10}$/);
+configFallbackValues.set('parkingTickets.ticketNumber.isUnique', true);
+configFallbackValues.set('parkingTickets.ticketNumber.nextTicketNumberFn', () => {
+    return '';
 });
-configFallbackValues.set("parkingTickets.updateWindowMillis", 3 * 86400 * 1000);
-configFallbackValues.set("parkingTickets.licencePlateExpiryDate.includeDay", false);
-configFallbackValues.set("parkingTicketStatuses", []);
-configFallbackValues.set("parkingOffences.accountNumber.pattern", /^[\w -]{1,20}$/);
-configFallbackValues.set("locationClasses", []);
-configFallbackValues.set("licencePlateCountryAliases", Object.freeze({
-    CA: "Canada",
-    US: "USA"
+configFallbackValues.set('parkingTickets.updateWindowMillis', 3 * 86400 * 1000);
+configFallbackValues.set('parkingTickets.licencePlateExpiryDate.includeDay', false);
+configFallbackValues.set('parkingTicketStatuses', []);
+configFallbackValues.set('parkingOffences.accountNumber.pattern', /^[\w -]{1,20}$/);
+configFallbackValues.set('locationClasses', []);
+configFallbackValues.set('licencePlateCountryAliases', Object.freeze({
+    CA: 'Canada',
+    US: 'USA'
 }));
-configFallbackValues.set("licencePlateProvinceAliases", {});
-configFallbackValues.set("licencePlateProvinces", {});
-configFallbackValues.set("mtoExportImport.authorizedUser", "");
-configFallbackValues.set("databaseCleanup.windowDays", 30);
+configFallbackValues.set('licencePlateProvinceAliases', {});
+configFallbackValues.set('licencePlateProvinces', {});
+configFallbackValues.set('mtoExportImport.authorizedUser', '');
+configFallbackValues.set('databaseCleanup.windowDays', 30);
 export function getProperty(propertyName) {
-    const propertyNameSplit = propertyName.split(".");
+    const propertyNameSplit = propertyName.split('.');
     let currentObject = config;
     for (const propertyNamePiece of propertyNameSplit) {
         if (Object.prototype.hasOwnProperty.call(currentObject, propertyNamePiece)) {
@@ -51,14 +51,14 @@ export function getProperty(propertyName) {
     }
     return currentObject;
 }
-export const keepAliveMillis = getProperty("session.doKeepAlive")
-    ? Math.max(getProperty("session.maxAgeMillis") / 2, getProperty("session.maxAgeMillis") - (10 * 60 * 1000))
+export const keepAliveMillis = getProperty('session.doKeepAlive')
+    ? Math.max(getProperty('session.maxAgeMillis') / 2, getProperty('session.maxAgeMillis') - 10 * 60 * 1000)
     : 0;
 const parkingTicketStatusMap = new Map();
 let parkingTicketStatusMapIsLoaded = false;
 export const getParkingTicketStatus = (statusKey) => {
     if (!parkingTicketStatusMapIsLoaded) {
-        const parkingTicketStatusList = getProperty("parkingTicketStatuses");
+        const parkingTicketStatusList = getProperty('parkingTicketStatuses');
         for (const parkingTicketStatusObject of parkingTicketStatusList) {
             parkingTicketStatusMap.set(parkingTicketStatusObject.statusKey, parkingTicketStatusObject);
         }
@@ -69,23 +69,21 @@ export const getParkingTicketStatus = (statusKey) => {
 export const getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
     const licencePlateProvinceDefault = {
         provinceShortName: originalLicencePlateProvince,
-        color: "#000",
-        backgroundColor: "#fff"
+        color: '#000',
+        backgroundColor: '#fff'
     };
-    const licencePlateCountryAlias = Object.prototype.hasOwnProperty.call(getProperty("licencePlateCountryAliases"), originalLicencePlateCountry.toUpperCase())
-        ? getProperty("licencePlateCountryAliases")[originalLicencePlateCountry.toUpperCase()]
+    const licencePlateCountryAlias = Object.prototype.hasOwnProperty.call(getProperty('licencePlateCountryAliases'), originalLicencePlateCountry.toUpperCase())
+        ? getProperty('licencePlateCountryAliases')[originalLicencePlateCountry.toUpperCase()]
         : originalLicencePlateCountry;
     let licencePlateProvinceAlias = originalLicencePlateProvince;
-    if (Object.prototype.hasOwnProperty.call(getProperty("licencePlateProvinceAliases"), licencePlateCountryAlias)) {
+    if (Object.prototype.hasOwnProperty.call(getProperty('licencePlateProvinceAliases'), licencePlateCountryAlias)) {
         licencePlateProvinceAlias =
-            getProperty("licencePlateProvinceAliases")[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
-                originalLicencePlateProvince;
+            getProperty('licencePlateProvinceAliases')[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] || originalLicencePlateProvince;
     }
     let licencePlateProvince = licencePlateProvinceDefault;
-    if (Object.prototype.hasOwnProperty.call(getProperty("licencePlateProvinces"), licencePlateCountryAlias)) {
+    if (Object.prototype.hasOwnProperty.call(getProperty('licencePlateProvinces'), licencePlateCountryAlias)) {
         licencePlateProvince =
-            getProperty("licencePlateProvinces")[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] ||
-                licencePlateProvinceDefault;
+            getProperty('licencePlateProvinces')[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
     }
     return {
         licencePlateCountryAlias,

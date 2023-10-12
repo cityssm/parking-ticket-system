@@ -1,4 +1,4 @@
-import type * as configTypes from "./configTypes";
+import type { ConfigLocationClass, ConfigParkingTicketStatus } from './configTypes.js';
 export interface ptsGlobal {
     loadDefaultConfigProperties?: (callbackFunction: () => void) => void;
     getDefaultConfigProperty?: (propertyName: string, propertyValueCallbackFunction: (propertyValue: unknown) => void) => void;
@@ -16,8 +16,8 @@ export interface ptsGlobal {
             backgroundColor: string;
         };
     };
-    getTicketStatus?: (statusKey: string) => configTypes.ConfigParkingTicketStatus;
-    getLocationClass?: (locationClassKey: string) => configTypes.ConfigLocationClass;
+    getTicketStatus?: (statusKey: string) => ConfigParkingTicketStatus;
+    getLocationClass?: (locationClassKey: string) => ConfigLocationClass;
     initializeTabs?: (tabsListElement: HTMLElement, callbackFunctions?: {
         onshown?: (tabContentElement: HTMLElement) => void;
     }) => void;

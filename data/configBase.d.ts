@@ -1,2 +1,2 @@
-import type * as pts from "../types/configTypes";
-export declare const baseParkingTicketStatuses: pts.ConfigParkingTicketStatus[];
+import type { ConfigParkingTicketStatus } from '../types/configTypes.js';
+export declare const baseParkingTicketStatuses: ConfigParkingTicketStatus[];

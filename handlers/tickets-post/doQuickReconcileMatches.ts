@@ -1,49 +1,45 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import * as ownerFunctions from "../../helpers/functions.owner.js";
-
-import { createParkingTicketStatus } from "../../helpers/parkingDB/createParkingTicketStatus.js";
-import { getOwnershipReconciliationRecords } from "../../helpers/parkingDB/getOwnershipReconciliationRecords.js";
-
+import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
+import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js'
+import * as ownerFunctions from '../../helpers/functions.owner.js'
 
 export const handler: RequestHandler = (request, response) => {
+  const records = getOwnershipReconciliationRecords()
 
-  const records = getOwnershipReconciliationRecords();
-
-  const statusRecords: Array<{ ticketID: number; statusIndex: number }> = [];
+  const statusRecords: Array<{ ticketID: number; statusIndex: number }> = []
 
   for (const record of records) {
     if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
-      continue;
+      continue
     }
 
-    const ownerAddress = ownerFunctions.getFormattedOwnerAddress(record);
+    const ownerAddress = ownerFunctions.getFormattedOwnerAddress(record)
 
     const statusResponse = createParkingTicketStatus(
       {
-        recordType: "status",
+        recordType: 'status',
         ticketID: record.ticket_ticketID,
-        statusKey: "ownerLookupMatch",
+        statusKey: 'ownerLookupMatch',
         statusField: record.owner_recordDateString,
         statusNote: ownerAddress
       },
       request.session,
       false
-    );
+    )
 
     if (statusResponse.success) {
       statusRecords.push({
         ticketID: record.ticket_ticketID,
         statusIndex: statusResponse.statusIndex
-      });
+      })
     }
   }
 
   return response.json({
     success: true,
     statusRecords
-  });
-};
+  })
+}
 
-
-export default handler;
+export default handler

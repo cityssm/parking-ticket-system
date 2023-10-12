@@ -1,31 +1,23 @@
 /* eslint-disable node/no-unpublished-import */
 
-import "cypress-axe";
-
-
-Cypress.Cookies.defaults({
-  preserve: ["_csrf", "parking-ticket-system-user-sid"]
-});
-
+import 'cypress-axe'
 
 export const logout = () => {
-  cy.visit("/logout");
-};
-
+  cy.visit('/logout')
+}
 
 export const login = (userName: string) => {
-  cy.visit("/login");
+  cy.visit('/login')
 
-  cy.get(".message")
-    .contains("Testing", { matchCase: false });
+  cy.get('.message').contains('Testing', { matchCase: false })
 
-  cy.get("form [name='userName']").type(userName);
-  cy.get("form [name='password']").type(userName);
+  cy.get("form [name='userName']").type(userName)
+  cy.get("form [name='password']").type(userName)
 
-  cy.get("form").submit();
+  cy.get('form').submit()
 
-  cy.location("pathname").should("not.contain", "/login");
+  cy.location('pathname').should('not.contain', '/login')
 
   // Logged in pages have a navbar
-  cy.get(".navbar").should("have.length", 1);
-};
+  cy.get('.navbar').should('have.length', 1)
+}

@@ -1,6 +1,2 @@
-export declare const vehicleNCIC: {
-    [ncic: string]: string;
-};
-export declare const allNCIC: {
-    [ncic: string]: string;
-};
+export declare const vehicleNCIC: Record<string, string>;
+export declare const allNCIC: Record<string, string>;

@@ -17,17 +17,9 @@ export interface Config {
     defaults?: ConfigDefaultsConfig;
     parkingTickets?: ConfigParkingTickets;
     parkingTicketStatuses?: ConfigParkingTicketStatus[];
-    licencePlateCountryAliases?: {
-        [countryShortName: string]: string;
-    };
-    licencePlateProvinceAliases?: {
-        [countryName: string]: {
-            [provinceShortName: string]: string;
-        };
-    };
-    licencePlateProvinces?: {
-        [countryName: string]: ConfigLicencePlateCountry;
-    };
+    licencePlateCountryAliases?: Record<string, string>;
+    licencePlateProvinceAliases?: Record<string, Record<string, string>>;
+    licencePlateProvinces?: Record<string, ConfigLicencePlateCountry>;
     genders?: ConfigGender[];
     parkingOffences?: ConfigParkingOffences;
     locationClasses?: ConfigLocationClass[];
@@ -100,9 +92,7 @@ export interface ConfigParkingOffences {
 }
 export interface ConfigLicencePlateCountry {
     countryShortName: string;
-    provinces: {
-        [province: string]: ConfigLicencePlateProvince;
-    };
+    provinces: Record<string, ConfigLicencePlateProvince>;
 }
 interface ConfigLicencePlateProvince {
     provinceShortName: string;

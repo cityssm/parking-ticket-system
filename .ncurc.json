@@ -1,5 +1,7 @@
 {
   "reject": [
-    "@fortawesome/fontawesome-free"
+    "@fortawesome/fontawesome-free",
+    "better-sqlite3",
+    "exit-hook"
   ]
 }

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "isolatedModules": false,
+    "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "allowUnreachableCode": false,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true
+  },
+  "compileOnSave": true,
+  "buildOnSave": true,
+  "include": ["public-typescript/*"],
+  "exclude": [
+    "bin/*",
+    "cypress/*",
+    "data/*",
+    "handlers/*",
+    "helpers/*",
+    "routes/*",
+    "tasks/*",
+    "test/*",
+    "types/*"
+  ]
+}

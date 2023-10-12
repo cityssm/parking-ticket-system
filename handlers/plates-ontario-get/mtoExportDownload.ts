@@ -1,20 +1,19 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import * as mtoFunctions from "../../helpers/functions.mto.js";
-
+import * as mtoFunctions from '../../helpers/functions.mto.js'
 
 export const handler: RequestHandler = (request, response) => {
+  const batchID = Number.parseInt(request.params.batchID, 10)
 
-  const batchID = Number.parseInt(request.params.batchID, 10);
+  const output = mtoFunctions.exportLicencePlateBatch(batchID, request.session)
 
-  const output = mtoFunctions.exportLicencePlateBatch(batchID, request.session);
+  response.setHeader(
+    'Content-Disposition',
+    'attachment; filename=lookupBatch-' + batchID.toString() + '.txt'
+  )
+  response.setHeader('Content-Type', 'text/plain')
 
-  response.setHeader("Content-Disposition",
-    "attachment; filename=lookupBatch-" + batchID.toString() + ".txt");
-  response.setHeader("Content-Type", "text/plain");
+  response.send(output)
+}
 
-  response.send(output);
-};
-
-
-export default handler;
+export default handler

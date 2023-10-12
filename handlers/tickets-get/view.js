@@ -1,15 +1,18 @@
-import { getParkingTicket } from "../../helpers/parkingDB/getParkingTicket.js";
+import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js';
 export const handler = (request, response) => {
     const ticketID = Number.parseInt(request.params.ticketID, 10);
     const ticket = getParkingTicket(ticketID, request.session);
     if (!ticket) {
-        return response.redirect("/tickets/?error=ticketNotFound");
+        response.redirect('/tickets/?error=ticketNotFound');
+        return;
     }
-    else if (ticket.recordDelete_timeMillis && !request.session.user.userProperties.isAdmin) {
-        return response.redirect("/tickets/?error=accessDenied");
+    else if (ticket.recordDelete_timeMillis &&
+        !(request.session.user.userProperties?.isAdmin ?? false)) {
+        response.redirect('/tickets/?error=accessDenied');
+        return;
     }
-    return response.render("ticket-view", {
-        headTitle: "Ticket " + ticket.ticketNumber,
+    response.render('ticket-view', {
+        headTitle: 'Ticket ' + ticket.ticketNumber,
         ticket
     });
 };

@@ -1,4 +1,4 @@
-import { getParkingTicketsAvailableForMTOLookup } from "../../helpers/parkingDB-ontario/getParkingTicketsAvailableForMTOLookup.js";
+import { getParkingTicketsAvailableForMTOLookup } from '../../database/parkingDB-ontario/getParkingTicketsAvailableForMTOLookup.js';
 export const handler = (request, response) => {
     const batchID = Number.parseInt(request.body.batchID, 10);
     const issueDaysAgo = Number.parseInt(request.body.issueDaysAgo, 10);

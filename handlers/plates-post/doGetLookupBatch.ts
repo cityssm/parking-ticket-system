@@ -1,14 +1,11 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import { getLookupBatch } from "../../helpers/parkingDB/getLookupBatch.js";
-
+import { getLookupBatch } from '../../database/parkingDB/getLookupBatch.js'
 
 export const handler: RequestHandler = (request, response) => {
+  const batch = getLookupBatch(request.body.batchID)
 
-  const batch = getLookupBatch(request.body.batchID);
+  return response.json(batch)
+}
 
-  return response.json(batch);
-};
-
-
-export default handler;
+export default handler

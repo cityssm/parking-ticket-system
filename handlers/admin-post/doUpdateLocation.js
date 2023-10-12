@@ -1,5 +1,5 @@
-import { getParkingLocations } from "../../helpers/parkingDB/getParkingLocations.js";
-import { updateParkingLocation } from "../../helpers/parkingDB/updateParkingLocation.js";
+import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js';
+import { updateParkingLocation } from '../../database/parkingDB/updateParkingLocation.js';
 export const handler = (request, response) => {
     const results = updateParkingLocation(request.body);
     if (results.success) {

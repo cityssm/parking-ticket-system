@@ -1,91 +1,83 @@
-import { testView } from "../../../test/_globals.js";
+import { testView } from '../../../test/_globals.js'
+import { logout, login } from '../../support/index.js'
 
-import { logout, login } from "../../support/index.js";
+describe('Read Only User', () => {
+  beforeEach(() => {
+    logout()
+    login(testView)
+  })
 
+  after(logout)
 
-describe("Read Only User", () => {
+  describe('Dashboard', () => {
+    beforeEach(() => {
+      cy.visit('/dashboard')
+    })
 
-  before(logout);
+    it('Has no detectable accessibility issues', () => {
+      cy.injectAxe()
+      cy.checkA11y()
+    })
 
-  after(logout);
+    it('Has no links to new ticket', () => {
+      cy.get("a[href*='/new']").should('not.exist')
+    })
 
-  it("Logs In Successfully", () => {
-    login(testView);
-  });
+    it('Has no links to admin areas', () => {
+      cy.get("a[href*='/admin']").should('not.exist')
+    })
+  })
 
-  describe("Dashboard", () => {
-    before(() => {
-      cy.visit("/dashboard");
-    });
+  describe('Ticket Search', () => {
+    beforeEach(() => {
+      cy.visit('/tickets')
+    })
 
-    it("Has no detectable accessibility issues", () => {
-      cy.injectAxe();
-      cy.checkA11y();
-    });
+    it('Loads page', () => {
+      cy.location('pathname').should('equal', '/tickets')
+    })
 
-    it("Has no links to new ticket", () => {
-      cy.get("a[href*='/new']")
-        .should("not.exist");
-    });
+    it('Has no links to new ticket', () => {
+      cy.get("a[href*='/new']").should('not.exist')
+    })
+  })
 
-    it("Has no links to admin areas", () => {
-      cy.get("a[href*='/admin']")
-        .should("not.exist");
-    });
-  });
+  describe('Create a Ticket', () => {
+    it('Redirects to Dashboard', () => {
+      cy.visit('/tickets/new')
+      cy.location('pathname').should('equal', '/dashboard')
+    })
+  })
 
-  describe("Ticket Search", () => {
-    before(() => {
-      cy.visit("/tickets");
-    });
+  describe('Plate Search', () => {
+    beforeEach(() => {
+      cy.visit('/plates')
+    })
 
-    it("Loads page", () => {
-      cy.location("pathname").should("equal", "/tickets");
-    });
+    it('Loads page', () => {
+      cy.location('pathname').should('equal', '/plates')
+    })
+  })
 
-    it("Has no links to new ticket", () => {
-      cy.get("a[href*='/new']")
-        .should("not.exist");
-    });
-  });
+  describe('Reports', () => {
+    beforeEach(() => {
+      cy.visit('/reports')
+    })
 
-  describe("Create a Ticket", () => {
-    it("Redirects to Dashboard", () => {
-      cy.visit("/tickets/new")
-      cy.location("pathname").should("equal", "/dashboard");
-    });
-  });
+    it('Loads page', () => {
+      cy.location('pathname').should('equal', '/reports')
+    })
 
-  describe("Plate Search", () => {
-    before(() => {
-      cy.visit("/plates");
-    });
+    it('Has no detectable accessibility issues', () => {
+      cy.injectAxe()
+      cy.checkA11y()
+    })
+  })
 
-    it("Loads page", () => {
-      cy.location("pathname").should("equal", "/plates");
-    });
-  });
-
-  describe("Reports", () => {
-    before(() => {
-      cy.visit("/reports");
-    });
-
-    it("Loads page", () => {
-      cy.location("pathname").should("equal", "/reports");
-    });
-
-    it("Has no detectable accessibility issues", () => {
-      cy.injectAxe();
-      cy.checkA11y();
-    });
-  });
-
-  describe("Admin - Database Cleanup", () => {
-
-    it("Redirects to Dashboard", () => {
-      cy.visit("/admin/cleanup");
-      cy.location("pathname").should("not.contain", "/admin");
-    });
-  });
-});
+  describe('Admin - Database Cleanup', () => {
+    it('Redirects to Dashboard', () => {
+      cy.visit('/admin/cleanup')
+      cy.location('pathname').should('not.contain', '/admin')
+    })
+  })
+})

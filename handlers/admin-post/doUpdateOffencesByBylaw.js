@@ -1,5 +1,5 @@
-import { getParkingBylawsWithOffenceStats } from "../../helpers/parkingDB/getParkingBylaws.js";
-import { updateParkingOffencesByBylawNumber } from "../../helpers/parkingDB/updateParkingOffencesByBylawNumber.js";
+import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js';
+import { updateParkingOffencesByBylawNumber } from '../../database/parkingDB/updateParkingOffencesByBylawNumber.js';
 export const handler = (request, response) => {
     const results = updateParkingOffencesByBylawNumber(request.body);
     if (results.success) {

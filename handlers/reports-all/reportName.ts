@@ -1,30 +1,29 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import * as parkingDB_reporting from "../../helpers/parkingDB-reporting.js";
+import * as parkingDB_reporting from '../../database/parkingDB-reporting.js'
 
-import papaparse from "papaparse";
-
+import papaparse from 'papaparse'
 
 export const handler: RequestHandler = (request, response) => {
+  const reportName = request.params.reportName
 
-  const reportName = request.params.reportName;
-
-  const rows = parkingDB_reporting.getReportData(reportName, request.query);
+  const rows = parkingDB_reporting.getReportData(reportName, request.query as Record<string, string>)
 
   if (!rows) {
-    response.redirect("/reports/?error=reportNotAvailable");
-    return;
+    response.redirect('/reports/?error=reportNotAvailable')
+    return
   }
 
-  const csv = papaparse.unparse(rows);
+  const csv = papaparse.unparse(rows)
 
-  response.setHeader("Content-Disposition",
-    "attachment; filename=" + reportName + "-" + Date.now().toString() + ".csv");
+  response.setHeader(
+    'Content-Disposition',
+    'attachment; filename=' + reportName + '-' + Date.now().toString() + '.csv'
+  )
 
-  response.setHeader("Content-Type", "text/csv");
-  
-  response.send(csv);
-};
+  response.setHeader('Content-Type', 'text/csv')
 
+  response.send(csv)
+}
 
-export default handler;
+export default handler

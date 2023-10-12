@@ -1,8 +1,8 @@
 import * as assert from "assert";
 import { unlink } from "fs";
 import { parkingDB_testing, nhtsaDB_testing } from "../data/databasePaths.js";
-import { initializeDatabase as initializeParkingDatabase } from "../helpers/parkingDB/initializeDatabase.js";
-import { initNHTSADB } from "../helpers/initializeDatabase.js";
+import { initializeDatabase as initializeParkingDatabase } from "../database/parkingDB/initializeDatabase.js";
+import { initNHTSADB } from "../database/initializeDatabase.js";
 describe("Reinitialize " + parkingDB_testing, () => {
     it("Purges " + parkingDB_testing, (done) => {
         unlink(parkingDB_testing, (error) => {

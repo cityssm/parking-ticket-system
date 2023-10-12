@@ -1,11 +1,11 @@
-import configOntario from "./configOntario.js";
+import configOntario from './configOntario.js';
 export const config = configOntario;
-config.application.useTestDatabases = true;
+config.application = Object.assign({ useTestDatabases: true }, configOntario.application);
 config.users = {
-    testing: ["*testView", "*testUpdate", "*testAdmin"],
-    canLogin: ["*testView", "*testUpdate", "*testAdmin"],
-    canUpdate: ["*testUpdate"],
-    isAdmin: ["*testAdmin"],
-    isOperator: ["*testAdmin"]
+    testing: ['*testView', '*testUpdate', '*testAdmin'],
+    canLogin: ['*testView', '*testUpdate', '*testAdmin'],
+    canUpdate: ['*testUpdate'],
+    isAdmin: ['*testAdmin'],
+    isOperator: ['*testAdmin']
 };
 export default config;

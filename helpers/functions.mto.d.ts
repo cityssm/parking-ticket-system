@@ -1,4 +1,4 @@
-import type * as expressSession from "express-session";
+import type * as expressSession from 'express-session';
 export declare const twoDigitYearToFourDigit: (twoDigitYear: number) => number;
 export declare const sixDigitDateNumberToEightDigit: (sixDigitDateNumber: number) => number;
 interface PKRDResult {

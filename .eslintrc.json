@@ -1,61 +1,18 @@
 {
   "root": true,
-  "env": {
-    "es6": true
-  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": ["./tsconfig.json", "./cypress/tsconfig.json", "./public-typescript/tsconfig.json"],
-    "ecmaVersion": 2020,
+    "project": ["./tsconfig.json", "./tsconfig.client.json"],
+    "ecmaVersion": 2022,
     "sourceType": "module"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "unicorn"
-  ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "plugin:node/recommended",
-    "plugin:promise/recommended",
-    "plugin:unicorn/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["eslint-config-cityssm"],
   "rules": {
-    "node/no-missing-import": "off",
-    "unicorn/consistent-function-scoping": "warn",
-    "unicorn/empty-brace-spaces": "off",
     "unicorn/filename-case": [
-      "error", {
+      "error",
+      {
         "case": "camelCase",
-        "ignore": [
-          "DB",
-          "MTO",
-          "URL"
-        ]
-      }
-    ],
-    "unicorn/prefer-node-protocol": "off",
-    "unicorn/prevent-abbreviations": [
-      "error", {
-        "replacements": {
-          "def": {
-            "definition": true
-          },
-          "ele": {
-            "element": true
-          },
-          "eles": {
-            "elements": true
-          },
-          "fns": {
-            "functions": true
-          },
-          "res": {
-            "result": false
-          }
-        }
+        "ignore": ["ID", "MTO"]
       }
     ]
   }

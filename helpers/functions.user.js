@@ -6,19 +6,17 @@ const getPermission = (request, permissionName) => {
     return user.userProperties[permissionName];
 };
 export const userIsAdmin = (request) => {
-    return getPermission(request, "isAdmin");
+    return getPermission(request, 'isAdmin');
 };
 export const userCanUpdate = (request) => {
-    return getPermission(request, "canUpdate");
+    return getPermission(request, 'canUpdate');
 };
 export const userIsOperator = (request) => {
-    return getPermission(request, "isOperator");
+    return getPermission(request, 'isOperator');
 };
 export const forbiddenJSON = (response) => {
-    return response
-        .status(403)
-        .json({
+    return response.status(403).json({
         success: false,
-        message: "Forbidden"
+        message: 'Forbidden'
     });
 };

@@ -1,41 +1,35 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express'
 
+type PermissionName = 'isAdmin' | 'canUpdate' | 'isOperator'
 
-type PermissionName = "isAdmin" | "canUpdate" | "isOperator";
-
-
-const getPermission = (request: Request, permissionName: PermissionName) : boolean => {
-
-  const user = request.session?.user;
+const getPermission = (
+  request: Request,
+  permissionName: PermissionName
+): boolean => {
+  const user = request.session?.user
 
   if (!user) {
-    return false;
+    return false
   }
 
-  return user.userProperties[permissionName];
-};
-
+  return user.userProperties[permissionName]
+}
 
 export const userIsAdmin = (request: Request): boolean => {
-  return getPermission(request, "isAdmin");
-};
-
+  return getPermission(request, 'isAdmin')
+}
 
 export const userCanUpdate = (request: Request): boolean => {
-  return getPermission(request, "canUpdate");
-};
-
+  return getPermission(request, 'canUpdate')
+}
 
 export const userIsOperator = (request: Request): boolean => {
-  return getPermission(request, "isOperator");
-};
-
+  return getPermission(request, 'isOperator')
+}
 
 export const forbiddenJSON = (response: Response): Response => {
-  return response
-    .status(403)
-    .json({
-      success: false,
-      message: "Forbidden"
-    });
-};
+  return response.status(403).json({
+    success: false,
+    message: 'Forbidden'
+  })
+}

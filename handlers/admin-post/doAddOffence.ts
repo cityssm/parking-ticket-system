@@ -1,19 +1,16 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import { getParkingOffences } from "../../helpers/parkingDB/getParkingOffences.js";
-import { addParkingOffence } from "../../helpers/parkingDB/addParkingOffence.js";
-
+import { getParkingOffences } from '../../database/parkingDB/getParkingOffences.js'
+import { addParkingOffence } from '../../database/parkingDB/addParkingOffence.js'
 
 export const handler: RequestHandler = (request, response) => {
-
-  const results = addParkingOffence(request.body);
+  const results = addParkingOffence(request.body)
 
   if (results.success && request.body.returnOffences) {
-    results.offences = getParkingOffences();
+    results.offences = getParkingOffences()
   }
 
-  response.json(results);
-};
+  response.json(results)
+}
 
-
-export default handler;
+export default handler

@@ -1,4 +1,4 @@
-import { getParkingLocations } from "../../helpers/parkingDB/getParkingLocations.js";
+import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js';
 export const handler = (_request, response) => {
     response.json(getParkingLocations());
 };

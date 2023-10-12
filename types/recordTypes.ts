@@ -1,253 +1,243 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/indent */
+
 export interface Record {
-  recordType: "ticket" | "remark" | "status" | "owner" | "batch";
+  recordType: 'ticket' | 'remark' | 'status' | 'owner' | 'batch'
 
-  recordCreate_userName?: string;
-  recordCreate_timeMillis?: number;
+  recordCreate_userName?: string
+  recordCreate_timeMillis?: number
 
-  recordUpdate_userName?: string;
-  recordUpdate_timeMillis?: number;
-  recordUpdate_dateString?: string;
+  recordUpdate_userName?: string
+  recordUpdate_timeMillis?: number
+  recordUpdate_dateString?: string
 
-  recordDelete_userName?: string;
-  recordDelete_timeMillis?: number;
-  recordDelete_dateString?: string;
+  recordDelete_userName?: string
+  recordDelete_timeMillis?: number
+  recordDelete_dateString?: string
 
-  canUpdate?: boolean;
+  canUpdate?: boolean
 }
 
 export interface LicencePlate {
+  licencePlateCountry: string
+  licencePlateProvince: string
+  licencePlateNumber: string
 
-  licencePlateCountry: string;
-  licencePlateProvince: string;
-  licencePlateNumber: string;
+  licencePlateExpiryDate: number
+  licencePlateExpiryDateString?: string
+  licencePlateExpiryYear?: number | string
+  licencePlateExpiryMonth?: number | string
+  licencePlateExpiryDay?: number
 
-  licencePlateExpiryDate: number;
-  licencePlateExpiryDateString?: string;
-  licencePlateExpiryYear?: number | string;
-  licencePlateExpiryMonth?: number | string;
-  licencePlateExpiryDay?: number;
-
-  hasOwnerRecord?: boolean;
-  unresolvedTicketCount?: number;
+  hasOwnerRecord?: boolean
+  unresolvedTicketCount?: number
 }
 
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
+  recordType: 'ticket'
 
-  recordType: "ticket";
+  ticketID: number
+  ticketNumber: string
 
-  ticketID: number;
-  ticketNumber: string;
+  issueDate: number
+  issueDateString: string
 
-  issueDate: number;
-  issueDateString: string;
+  issueTime: number
+  issueTimeString: string
 
-  issueTime: number;
-  issueTimeString: string;
+  issuingOfficer: string
 
-  issuingOfficer: string;
+  bylawNumber: string
 
-  bylawNumber: string;
+  locationDescription: string
+  parkingOffence: string
+  offenceAmount: number
+  discountOffenceAmount: number
+  discountDays: number
 
-  locationDescription: string;
-  parkingOffence: string;
-  offenceAmount: number;
-  discountOffenceAmount: number;
-  discountDays: number;
+  licencePlateIsMissing: boolean
+  vehicleMakeModel: string
+  vehicleVIN: string
 
-  licencePlateIsMissing: boolean;
-  vehicleMakeModel: string;
-  vehicleVIN: string;
+  resolvedDate: number
+  resolvedDateString: string
 
-  resolvedDate: number;
-  resolvedDateString: string;
+  latestStatus_statusKey: string
+  latestStatus_statusDate: number
+  latestStatus_statusDateString: string
 
-  latestStatus_statusKey: string;
-  latestStatus_statusDate: number;
-  latestStatus_statusDateString: string;
+  ownerLookup_statusKey:
+    | 'ownerLookupPending'
+    | 'ownerLookupError'
+    | 'ownerLookupMatch'
+  ownerLookup_statusField: string
 
-  ownerLookup_statusKey: "ownerLookupPending" | "ownerLookupError" | "ownerLookupMatch";
-  ownerLookup_statusField: string;
+  licencePlateOwner?: LicencePlateOwner
+  licencePlateOwner_ownerName1?: string
 
-  licencePlateOwner: LicencePlateOwner;
-  licencePlateOwner_ownerName1?: string;
-
-  location: ParkingLocation;
-  statusLog: ParkingTicketStatusLog[];
-  remarks: ParkingTicketRemark[];
+  location: ParkingLocation
+  statusLog: ParkingTicketStatusLog[]
+  remarks: ParkingTicketRemark[]
 }
 
 export interface ParkingTicketStatusLog extends Record {
+  recordType: 'status'
 
-  recordType: "status";
+  ticketID: number
+  statusIndex?: number
 
-  ticketID: number;
-  statusIndex?: number;
+  statusDate?: number
+  statusDateString?: string
 
-  statusDate?: number;
-  statusDateString?: string;
+  statusTime?: number
+  statusTimeString?: string
 
-  statusTime?: number;
-  statusTimeString?: string;
-
-  statusKey?: string;
-  statusField?: string;
-  statusField2?: string;
-  statusNote?: string;
+  statusKey?: string
+  statusField?: string
+  statusField2?: string
+  statusNote?: string
 
   // from ticket
-  ticketNumber?: string;
-  licencePlateNumber?: string;
-  issueDate?: number;
-  issueDateString?: string;
+  ticketNumber?: string
+  licencePlateNumber?: string
+  issueDate?: number
+  issueDateString?: string
 }
 
 export interface ParkingTicketRemark extends Record {
+  recordType: 'remark'
 
-  recordType: "remark";
+  ticketID: number
+  remarkIndex: number
 
-  ticketID: number;
-  remarkIndex: number;
+  remarkDate: number
+  remarkDateString: string
 
-  remarkDate: number;
-  remarkDateString: string;
+  remarkTime: number
+  remarkTimeString: string
 
-  remarkTime: number;
-  remarkTimeString: string;
-
-  remark: string;
+  remark: string
 }
-
 
 export interface ParkingLocation {
-
-  locationKey: string;
-  locationName: string;
-  locationClassKey: string;
-  isActive: boolean;
+  locationKey: string
+  locationName: string
+  locationClassKey: string
+  isActive: boolean
 }
 
-
 export interface ParkingBylaw {
+  bylawNumber: string
+  bylawDescription: string
+  isActive: boolean
 
-  bylawNumber: string;
-  bylawDescription: string;
-  isActive: boolean;
+  offenceCount?: number
+  offenceAmountMin?: number
+  offenceAmountMax?: number
 
-  offenceCount?: number;
-  offenceAmountMin?: number;
-  offenceAmountMax?: number;
-
-  discountOffenceAmountMin?: number;
-  discountDaysMin?: number;
+  discountOffenceAmountMin?: number
+  discountDaysMin?: number
 }
 
 export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
-
-  parkingOffence: string;
-  offenceAmount: number;
-  discountOffenceAmount: number;
-  discountDays: number;
-  accountNumber: string;
+  parkingOffence: string
+  offenceAmount: number
+  discountOffenceAmount: number
+  discountDays: number
+  accountNumber: string
 }
-
 
 export interface LicencePlateOwner extends Record, LicencePlate {
+  recordType: 'owner'
 
-  recordType: "owner";
+  recordDate: number
+  recordDateString?: string
 
-  recordDate: number;
-  recordDateString?: string;
+  vehicleNCIC: string
+  vehicleMake?: string
 
-  vehicleNCIC: string;
-  vehicleMake?: string;
+  ownerName1: string
+  ownerName2: string
+  ownerAddress: string
+  ownerCity: string
+  ownerProvince: string
+  ownerPostalCode: string
+  ownerGenderKey: string
 
-  ownerName1: string;
-  ownerName2: string;
-  ownerAddress: string;
-  ownerCity: string;
-  ownerProvince: string;
-  ownerPostalCode: string;
-  ownerGenderKey: string;
-
-  driverLicenceNumber: string;
+  driverLicenceNumber: string
 }
-
 
 export interface LicencePlateLookupBatch extends Record {
+  recordType: 'batch'
 
-  recordType: "batch",
+  batchID: number
 
-  batchID: number;
+  batchDate: number
+  batchDateString: string
 
-  batchDate: number;
-  batchDateString: string;
+  lockDate?: number
+  lockDateString?: string
 
-  lockDate?: number;
-  lockDateString?: string;
+  sentDate?: number
+  sentDateString?: string
 
-  sentDate?: number;
-  sentDateString?: string;
+  receivedDate?: number
+  receivedDateString?: string
 
-  receivedDate?: number;
-  receivedDateString?: string;
+  mto_includeLabels?: boolean
 
-  mto_includeLabels?: boolean;
-
-  batchEntries: LicencePlateLookupBatchEntry[];
+  batchEntries: LicencePlateLookupBatchEntry[]
 }
 
-export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {
-  batchID: number;
+export interface LicencePlateLookupBatchEntry
+  extends LicencePlate,
+    ParkingTicket {
+  batchID: number
 }
-
 
 export interface ParkingTicketConvictionBatch extends Record {
+  recordType: 'batch'
 
-  recordType: "batch",
+  batchID: number
 
-  batchID: number;
+  batchDate: number
+  batchDateString: string
 
-  batchDate: number;
-  batchDateString: string;
+  lockDate: number
+  lockDateString: string
 
-  lockDate: number;
-  lockDateString: string;
+  sentDate?: number
+  sentDateString?: string
 
-  sentDate?: number;
-  sentDateString?: string;
-
-  batchEntries?: ParkingTicketStatusLog[];
+  batchEntries?: ParkingTicketStatusLog[]
 }
-
 
 export interface NHTSAMakeModel {
-  makeId: number;
-  makeName: string;
-  modelID: number;
-  modelName: string;
+  makeId: number
+  makeName: string
+  modelID: number
+  modelName: string
 }
-
 
 /*
  * USER DB TYPES
  */
 
-
 export interface User {
-  userName: string;
-  firstName?: string;
-  lastName?: string;
-  userProperties?: UserProperties;
+  userName: string
+  firstName?: string
+  lastName?: string
+  userProperties?: UserProperties
 }
 
 export interface UserProperties {
-  canUpdate: boolean;
-  isAdmin: boolean;
-  isOperator: boolean;
+  canUpdate: boolean
+  isAdmin: boolean
+  isOperator: boolean
 }
 
-declare module "express-session" {
+declare module 'express-session' {
   interface Session {
-    user: User;
+    user: User
   }
 }

@@ -1,260 +1,214 @@
-/* eslint-disable unicorn/filename-case, promise/catch-or-return, promise/always-return */
+/* eslint-disable eslint-comments/disable-enable-pair, unicorn/filename-case */
+/* eslint-disable promise/always-return, promise/catch-or-return */
 
-import { testAdmin } from "../../../test/_globals.js";
+import { testAdmin } from '../../../test/_globals.js'
+import { logout, login } from '../../support/index.js'
 
-import { logout, login } from "../../support/index.js";
+function setBylawFilter(): void {
+  cy.get("button[data-cy='select-bylaw']").click()
 
-const setBylawFilter = () => {
-  cy.get("button[data-cy='select-bylaw']").click();
+  cy.get('.modal').should('be.visible').find('a.panel-block').first().click()
 
-  cy.get(".modal")
-    .should("be.visible")
-    .find("a.panel-block")
-    .first()
-    .click();
+  cy.get('.modal').should('not.exist')
 
-  cy.get(".modal")
-    .should("not.exist");
+  cy.get("input[name='bylaw']").should('not.have.value', '')
+}
 
-  cy.get("input[name='bylaw']").should("not.have.value", "");
-};
+function clearBylawFilter(): void {
+  cy.get("button[data-cy='clear-bylaw']").click()
 
-const clearBylawFilter = () => {
-  cy.get("button[data-cy='clear-bylaw']")
-    .click();
+  cy.get("input[name='bylaw']").should('have.value', '')
+}
 
-  cy.get("input[name='bylaw']")
-    .should("have.value", "");
-};
+function setLocationFilter(): void {
+  cy.get("button[data-cy='select-location']").click()
 
-const setLocationFilter = () => {
-  cy.get("button[data-cy='select-location']").click();
+  cy.get('.modal').should('be.visible').find('a.panel-block').first().click()
 
-  cy.get(".modal")
-    .should("be.visible")
-    .find("a.panel-block")
-    .first()
-    .click();
+  cy.get('.modal').should('not.exist')
 
-  cy.get(".modal")
-    .should("not.exist");
+  cy.get("input[name='location']").should('not.have.value', '')
+}
 
-  cy.get("input[name='location']").should("not.have.value", "");
-};
+function clearLocationFilter(): void {
+  cy.get("button[data-cy='clear-location']").click()
 
-const clearLocationFilter = () => {
-  cy.get("button[data-cy='clear-location']")
-    .click();
+  cy.get("input[name='location']").should('have.value', '')
+}
 
-  cy.get("input[name='location']")
-    .should("have.value", "");
-};
-
-describe("Admin - Parking Offences", () => {
-
-  before(() => {
-    logout();
+describe('Admin - Parking Offences', () => {
+  beforeEach(() => {
+    logout()
     login(testAdmin)
-  });
+    cy.visit('/admin/offences')
+    cy.location('pathname').should('equal', '/admin/offences')
+  })
 
-  after(logout);
+  afterEach(logout)
 
-  beforeEach("Loads page", () => {
-    cy.visit("/admin/offences");
-    cy.location("pathname").should("equal", "/admin/offences");
-  });
+  it('Show something in the results', () => {
+    cy.get("[data-cy='results']").should('not.be.empty')
+  })
 
-  it("Show something in the results", () => {
-    cy.get("[data-cy='results']").should("not.be.empty");
-  });
+  it('Can filter results by location', () => {
+    clearBylawFilter()
+    setLocationFilter()
+  })
 
-  it("Can filter results by location", () => {
-    clearBylawFilter();
-    setLocationFilter();
-  });
+  it('Can clear the location filter', () => {
+    clearLocationFilter()
+  })
 
-  it("Can clear the location filter", () => {
-    clearLocationFilter();
-  });
+  it('Can filter results by by-law', () => {
+    clearLocationFilter()
+    setBylawFilter()
+  })
 
-  it("Can filter results by by-law", () => {
-    clearLocationFilter();
-    setBylawFilter();
-  });
+  it('Can clear the by-law filter', () => {
+    clearBylawFilter()
+  })
 
-  it("Can clear the by-law filter", () => {
-    clearBylawFilter();
-  });
+  it('Cannot add an offence when no location or by-law set', () => {
+    clearLocationFilter()
+    clearBylawFilter()
 
-  it("Cannot add an offence when no location or by-law set", () => {
+    cy.get("button[data-cy='add-offence']").click()
 
-    clearLocationFilter();
-    clearBylawFilter();
+    cy.get('.modal')
+      .should('be.visible')
+      .find('.message')
+      .should('have.class', 'is-warning')
+      .find('button')
+      .click()
 
-    cy.get("button[data-cy='add-offence']").click();
+    cy.get('.modal').should('not.exist')
+  })
 
-    cy.get(".modal")
-      .should("be.visible")
-      .find(".message")
-      .should("have.class", "is-warning")
-      .find("button")
-      .click();
+  it('Can add an offence when location and by-law filters are set', () => {
+    setLocationFilter()
+    setBylawFilter()
 
-    cy.get(".modal")
-      .should("not.exist");
-  });
+    cy.get("button[data-cy='add-offence']").click()
 
-  it("Can add an offence when location and by-law filters are set", () => {
+    cy.get('.modal')
+      .should('be.visible')
+      .find('.message')
+      .should('have.class', 'is-info')
+      .find('button')
+      .contains('Create Offence')
+      .click()
 
-    setLocationFilter();
-    setBylawFilter();
+    cy.wait(500)
 
-    cy.get("button[data-cy='add-offence']").click();
-
-    cy.get(".modal")
-      .should("be.visible")
-      .find(".message")
-      .should("have.class", "is-info")
-      .find("button")
-      .contains("Create Offence")
-      .click();
-
-    cy.wait(500);
-
-    cy.get("body").then(($body) => {
-      if ($body.find(".modal").length > 0) {
-        cy.get(".modal .message button").click();
+    cy.get('body').then(($body) => {
+      if ($body.find('.modal').length > 0) {
+        cy.get('.modal .message button').click()
       }
-    });
+    })
 
+    cy.get("[data-cy='results']").find('table').should('exist')
+  })
+
+  it('Can update an offence', () => {
     cy.get("[data-cy='results']")
-      .find("table")
-      .should("exist");
-  });
-
-  it("Can update an offence", () => {
-
-    cy.get("[data-cy='results']")
-      .find("button")
-      .contains("Edit")
+      .find('button')
+      .contains('Edit')
       .first()
-      .click();
+      .click()
 
-    cy.get(".modal")
-      .should("be.visible");
+    cy.get('.modal').should('be.visible')
 
-    cy.fixture("offence.json").then((offenceData) => {
-
+    cy.fixture('offence.json').then((offenceData) => {
       cy.get(".modal input[name='accountNumber']")
         .clear()
-        .type(offenceData.accountNumber);
+        .type(offenceData.accountNumber)
 
       cy.get(".modal input[name='offenceAmount']")
         .clear()
-        .type(offenceData.offenceAmount);
+        .type(offenceData.offenceAmount)
 
       cy.get(".modal input[name='discountDays']")
         .clear()
-        .type(offenceData.discountDays);
+        .type(offenceData.discountDays)
 
       cy.get(".modal input[name='discountOffenceAmount']")
         .clear()
-        .type(offenceData.discountOffenceAmount);
+        .type(offenceData.discountOffenceAmount)
 
       cy.get(".modal textarea[name='parkingOffence']")
         .clear()
-        .type(offenceData.parkingOffence);
+        .type(offenceData.parkingOffence)
 
-      cy.get(".modal form").submit();
+      cy.get('.modal form').submit()
 
-      cy.get(".modal")
-        .should("not.exist");
+      cy.get('.modal').should('not.exist')
 
-      cy.wait(500);
+      cy.wait(500)
 
-      cy.get("[data-cy='results']")
-        .contains(offenceData.parkingOffence);
-    });
-  });
+      cy.get("[data-cy='results']").contains(offenceData.parkingOffence)
+    })
+  })
 
-  it("Can add offences when only the by-law filter is set", () => {
+  it('Can add offences when only the by-law filter is set', () => {
+    clearLocationFilter()
+    setBylawFilter()
 
-    clearLocationFilter();
-    setBylawFilter();
+    cy.get("button[data-cy='add-offence']").click()
 
-    cy.get("button[data-cy='add-offence']").click();
-
-    cy.get(".modal")
-      .should("be.visible")
-      .find("a.panel-block")
+    cy.get('.modal')
+      .should('be.visible')
+      .find('a.panel-block')
       .each(($buttonElement, index) => {
         if (index < 5) {
-          cy.wrap($buttonElement).click();
+          cy.wrap($buttonElement).click()
         }
-      });
+      })
 
-    cy.get(".modal .is-close-modal-button")
-      .first()
-      .click();
+    cy.get('.modal .is-close-modal-button').first().click()
 
-    cy.wait(500);
+    cy.wait(500)
 
-    cy.get("[data-cy='results']")
-      .find("table")
-      .should("exist");
-  });
+    cy.get("[data-cy='results']").find('table').should('exist')
+  })
 
-  it("Can add offences when only the location filter is set", () => {
+  it('Can add offences when only the location filter is set', () => {
+    clearBylawFilter()
+    setLocationFilter()
 
-    clearBylawFilter();
-    setLocationFilter();
+    cy.get("button[data-cy='add-offence']").click()
 
-    cy.get("button[data-cy='add-offence']").click();
-
-    cy.get(".modal")
-      .should("be.visible")
-      .find("a.panel-block")
+    cy.get('.modal')
+      .should('be.visible')
+      .find('a.panel-block')
       .each(($buttonElement, index) => {
         if (index < 5) {
-          cy.wrap($buttonElement).click();
+          cy.wrap($buttonElement).click()
         }
-      });
+      })
 
-    cy.get(".modal .is-close-modal-button")
-      .first()
-      .click();
+    cy.get('.modal .is-close-modal-button').first().click()
 
-    cy.wait(500);
+    cy.wait(500)
 
-    cy.get("[data-cy='results']")
-      .find("table")
-      .should("exist");
-  });
+    cy.get("[data-cy='results']").find('table').should('exist')
+  })
 
-  it("Can remove an offence", () => {
+  it('Can remove an offence', () => {
+    clearLocationFilter()
+    clearBylawFilter()
 
-    clearLocationFilter();
-    clearBylawFilter();
+    cy.get("[data-cy='results']").find('button').contains('Edit').last().click()
 
-    cy.get("[data-cy='results']")
-      .find("button")
-      .contains("Edit")
-      .last()
-      .click();
+    cy.get('.modal')
+      .should('be.visible')
+      .find('button')
+      .contains('Remove')
+      .click()
 
-    cy.get(".modal")
-      .should("be.visible")
-      .find("button")
-      .contains("Remove")
-      .click();
+    cy.get(".modal [role='alertdialog'] button").contains('Yes').click()
 
-    cy.get(".modal [role='alertdialog'] button")
-      .contains("Yes")
-      .click();
+    cy.wait(500)
 
-    cy.wait(500);
-
-    cy.get(".modal")
-      .should("not.exist");
-  });
-});
+    cy.get('.modal').should('not.exist')
+  })
+})

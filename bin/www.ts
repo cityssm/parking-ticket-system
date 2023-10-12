@@ -1,106 +1,93 @@
-/* eslint-disable no-process-exit, unicorn/no-process-exit */
+import { fork } from 'node:child_process'
+import http from 'node:http'
 
-import { app } from "../app.js";
+import Debug from 'debug'
+import exitHook from 'exit-hook'
 
-import http from "http";
+import { app } from '../app.js'
+import * as configFunctions from '../helpers/functions.config.js'
 
-import { fork } from "child_process";
+const debug = Debug('parking-ticket-system:www')
 
-import * as configFunctions from "../helpers/functions.config.js";
-
-import exitHook from "exit-hook";
-
-import debug from "debug";
-const debugWWW = debug("parking-ticket-system:www");
-
-
-let httpServer: http.Server;
-
+let httpServer: http.Server | undefined
 
 interface ServerError extends Error {
-  syscall: string;
-  code: string;
+  syscall: string
+  code: string
 }
 
-
-const onError = (error: ServerError) => {
-
-  if (error.syscall !== "listen") {
-    throw error;
+const onError = (error: ServerError): void => {
+  if (error.syscall !== 'listen') {
+    throw error
   }
 
-  let doProcessExit = false;
+  let doProcessExit = false
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
+    case 'EACCES': {
+      debug('Requires elevated privileges')
+      doProcessExit = true
+      break
+    }
 
-    case "EACCES":
-      debugWWW("Requires elevated privileges");
-      doProcessExit = true;
-      break;
+    case 'EADDRINUSE': {
+      debug('Port is already in use.')
+      doProcessExit = true
+      break
+    }
 
-    case "EADDRINUSE":
-      debugWWW("Port is already in use.");
-      doProcessExit = true;
-      break;
-
-    default:
-      throw error;
+    default: {
+      throw error
+    }
   }
 
   if (doProcessExit) {
-    process.exit(1);
+    // eslint-disable-next-line n/no-process-exit, unicorn/no-process-exit
+    process.exit(1)
   }
-};
+}
 
+const onListening = (server: http.Server): void => {
+  const addr = server.address()
 
-const onListening = (server: http.Server) => {
+  const bind =
+    typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + (addr?.port.toString() ?? '')
 
-  const addr = server.address();
-
-  const bind = typeof addr === "string"
-    ? "pipe " + addr
-    : "port " + addr.port.toString();
-
-  debugWWW("Listening on " + bind);
-};
-
+  debug('Listening on ' + bind)
+}
 
 /**
  * Initialize HTTP
  */
 
+const httpPort = configFunctions.getProperty('application.httpPort')
 
-const httpPort = configFunctions.getProperty("application.httpPort");
+httpServer = http.createServer(app)
 
-if (httpPort) {
+httpServer.listen(httpPort)
 
-  httpServer = http.createServer(app);
+httpServer.on('error', onError)
+httpServer.on('listening', () => {
+  onListening(httpServer as http.Server)
+})
 
-  httpServer.listen(httpPort);
-
-  httpServer.on("error", onError);
-  httpServer.on("listening", () => {
-    onListening(httpServer);
-  });
-
-  debugWWW("HTTP listening on " + httpPort.toString());
-}
+debug('HTTP listening on ' + httpPort.toString())
 
 /**
  * Initialize background task
  */
 
-if (configFunctions.getProperty("application.task_nhtsa.runTask")) {
-  fork("./tasks/nhtsaChildProcess.js");
+if (configFunctions.getProperty('application.task_nhtsa.runTask')) {
+  fork('./tasks/nhtsaChildProcess.js')
 }
 
-
 exitHook(() => {
-
   if (httpServer) {
-    debugWWW("Closing HTTP");
-    httpServer.close();
-    httpServer = undefined;
+    debug('Closing HTTP')
+    httpServer.close()
+    httpServer = undefined
   }
-});
+})

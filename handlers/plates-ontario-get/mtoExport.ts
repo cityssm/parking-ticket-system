@@ -1,17 +1,14 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import { getLookupBatch } from "../../helpers/parkingDB/getLookupBatch.js";
-
+import { getLookupBatch } from '../../database/parkingDB/getLookupBatch.js'
 
 export const handler: RequestHandler = (_request, response) => {
+  const latestUnlockedBatch = getLookupBatch(-1)
 
-  const latestUnlockedBatch = getLookupBatch(-1);
-
-  response.render("mto-plateExport", {
-    headTitle: "MTO Licence Plate Export",
+  response.render('mto-plateExport', {
+    headTitle: 'MTO Licence Plate Export',
     batch: latestUnlockedBatch
-  });
-};
+  })
+}
 
-
-export default handler;
+export default handler

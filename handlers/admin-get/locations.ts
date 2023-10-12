@@ -1,17 +1,14 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
-import { getParkingLocations } from "../../helpers/parkingDB/getParkingLocations.js";
-
+import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js'
 
 export const handler: RequestHandler = (_request, response) => {
+  const locations = getParkingLocations()
 
-  const locations = getParkingLocations();
-
-  return response.render("location-maint", {
-    headTitle: "Parking Location Maintenance",
+  return response.render('location-maint', {
+    headTitle: 'Parking Location Maintenance',
     locations
-  });
-};
+  })
+}
 
-
-export default handler;
+export default handler

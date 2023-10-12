@@ -1,17 +1,14 @@
-import { testUpdate } from "../../../test/_globals.js";
-import { logout, login } from "../../support/index.js";
-describe("Ticket Search - Update User", function () {
-    before(function () {
+import { testUpdate } from '../../../test/_globals.js';
+import { logout, login } from '../../support/index.js';
+describe('Ticket Search - Update User', () => {
+    beforeEach(() => {
         logout();
         login(testUpdate);
+        cy.visit('/tickets');
+        cy.location('pathname').should('equal', '/tickets');
     });
-    after(logout);
-    it("Loads page", function () {
-        cy.visit("/tickets");
-        cy.location("pathname").should("equal", "/tickets");
-    });
-    it("Has link to new ticket", function () {
-        cy.get("a[href*='/new']")
-            .should("exist");
+    afterEach(logout);
+    it('Has link to new ticket', () => {
+        cy.get("a[href*='/new']").should('exist');
     });
 });

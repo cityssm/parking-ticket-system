@@ -1,5 +1,5 @@
 export interface Record {
-    recordType: "ticket" | "remark" | "status" | "owner" | "batch";
+    recordType: 'ticket' | 'remark' | 'status' | 'owner' | 'batch';
     recordCreate_userName?: string;
     recordCreate_timeMillis?: number;
     recordUpdate_userName?: string;
@@ -23,7 +23,7 @@ export interface LicencePlate {
     unresolvedTicketCount?: number;
 }
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
-    recordType: "ticket";
+    recordType: 'ticket';
     ticketID: number;
     ticketNumber: string;
     issueDate: number;
@@ -45,16 +45,16 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
     latestStatus_statusKey: string;
     latestStatus_statusDate: number;
     latestStatus_statusDateString: string;
-    ownerLookup_statusKey: "ownerLookupPending" | "ownerLookupError" | "ownerLookupMatch";
+    ownerLookup_statusKey: 'ownerLookupPending' | 'ownerLookupError' | 'ownerLookupMatch';
     ownerLookup_statusField: string;
-    licencePlateOwner: LicencePlateOwner;
+    licencePlateOwner?: LicencePlateOwner;
     licencePlateOwner_ownerName1?: string;
     location: ParkingLocation;
     statusLog: ParkingTicketStatusLog[];
     remarks: ParkingTicketRemark[];
 }
 export interface ParkingTicketStatusLog extends Record {
-    recordType: "status";
+    recordType: 'status';
     ticketID: number;
     statusIndex?: number;
     statusDate?: number;
@@ -71,7 +71,7 @@ export interface ParkingTicketStatusLog extends Record {
     issueDateString?: string;
 }
 export interface ParkingTicketRemark extends Record {
-    recordType: "remark";
+    recordType: 'remark';
     ticketID: number;
     remarkIndex: number;
     remarkDate: number;
@@ -104,7 +104,7 @@ export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
     accountNumber: string;
 }
 export interface LicencePlateOwner extends Record, LicencePlate {
-    recordType: "owner";
+    recordType: 'owner';
     recordDate: number;
     recordDateString?: string;
     vehicleNCIC: string;
@@ -119,7 +119,7 @@ export interface LicencePlateOwner extends Record, LicencePlate {
     driverLicenceNumber: string;
 }
 export interface LicencePlateLookupBatch extends Record {
-    recordType: "batch";
+    recordType: 'batch';
     batchID: number;
     batchDate: number;
     batchDateString: string;
@@ -136,7 +136,7 @@ export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicke
     batchID: number;
 }
 export interface ParkingTicketConvictionBatch extends Record {
-    recordType: "batch";
+    recordType: 'batch';
     batchID: number;
     batchDate: number;
     batchDateString: string;
@@ -163,7 +163,7 @@ export interface UserProperties {
     isAdmin: boolean;
     isOperator: boolean;
 }
-declare module "express-session" {
+declare module 'express-session' {
     interface Session {
         user: User;
     }
