@@ -14,8 +14,8 @@ import createError from 'http-errors'
 import FileStore from 'session-file-store'
 
 import { useTestDatabases } from './data/databasePaths.js'
-import { initNHTSADB } from './database/initializeDatabase.js'
-import * as parkingDB_init from './database/parkingDB/initializeDatabase.js'
+import { initNHTSADB } from './database/nhtsaDB/initializeDatabase.js'
+import { initializeDatabase } from './database/parkingDB/initializeDatabase.js'
 import * as configFunctions from './helpers/functions.config.js'
 import * as vehicleFunctions from './helpers/functions.vehicle.js'
 import routerAdmin from './routes/admin.js'
@@ -35,7 +35,7 @@ const debugApp = debug('parking-ticket-system:app')
  * INITALIZE THE DATABASES
  */
 
-parkingDB_init.initializeDatabase()
+initializeDatabase()
 initNHTSADB()
 
 /*
@@ -88,11 +88,6 @@ app.use(express.static(path.join('public')))
 app.use(
   '/fa',
   express.static(path.join('node_modules', '@fortawesome', 'fontawesome-free'))
-)
-
-app.use(
-  '/stylesheets/files',
-  express.static(path.join('node_modules', '@fontsource', 'inter', 'files'))
 )
 
 app.use(

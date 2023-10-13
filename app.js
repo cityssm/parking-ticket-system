@@ -12,8 +12,8 @@ import session from 'express-session';
 import createError from 'http-errors';
 import FileStore from 'session-file-store';
 import { useTestDatabases } from './data/databasePaths.js';
-import { initNHTSADB } from './database/initializeDatabase.js';
-import * as parkingDB_init from './database/parkingDB/initializeDatabase.js';
+import { initNHTSADB } from './database/nhtsaDB/initializeDatabase.js';
+import { initializeDatabase } from './database/parkingDB/initializeDatabase.js';
 import * as configFunctions from './helpers/functions.config.js';
 import * as vehicleFunctions from './helpers/functions.vehicle.js';
 import routerAdmin from './routes/admin.js';
@@ -27,7 +27,7 @@ import routeTicketsOntario from './routes/tickets-ontario.js';
 import routerTickets from './routes/tickets.js';
 import { version } from './version.js';
 const debugApp = debug('parking-ticket-system:app');
-parkingDB_init.initializeDatabase();
+initializeDatabase();
 initNHTSADB();
 export const app = express();
 app.set('views', path.join('views'));
@@ -52,7 +52,6 @@ if (!useTestDatabases) {
 }
 app.use(express.static(path.join('public')));
 app.use('/fa', express.static(path.join('node_modules', '@fortawesome', 'fontawesome-free')));
-app.use('/stylesheets/files', express.static(path.join('node_modules', '@fontsource', 'inter', 'files')));
 app.use('/fontsource-pt-mono', express.static(path.join('node_modules', '@fontsource', 'pt-mono', 'files')));
 app.use('/cityssm-bulma-webapp-js', express.static(path.join('node_modules', '@cityssm', 'bulma-webapp-js')));
 app.use('/bulma-js', express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist')));
