@@ -4,7 +4,7 @@
 import { testUpdate } from '../../../test/_globals.js'
 import { logout, login } from '../../support/index.js'
 
-function clearCurrentBatch (): void {
+function clearCurrentBatch(): void {
   cy.get("button[data-cy='clear-batch']")
     .should(Cypress._.noop)
     .then(($buttons) => {
@@ -31,12 +31,13 @@ function addAllTicketsToBatch(): void {
 }
 
 describe('MTO Licence Plate Export', () => {
-  before(() => {
+  beforeEach(() => {
     logout()
     login(testUpdate)
+    cy.visit('/plates-ontario/mtoExport')
   })
 
-  // after(logout);
+  afterEach(logout)
 
   it('Loads page', () => {
     cy.visit('/plates-ontario/mtoExport')

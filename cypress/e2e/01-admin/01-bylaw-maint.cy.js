@@ -41,7 +41,6 @@ describe('Admin - Parking By-Laws', () => {
             cy.get('.modal').should('not.exist');
             cy.get("[data-cy='results'] a")
                 .contains(bylawNumber)
-                .log('here')
                 .closest('tr')
                 .contains(newBylawDescription);
         });

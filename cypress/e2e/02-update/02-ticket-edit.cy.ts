@@ -24,13 +24,11 @@ describe('Ticket Edit - Update User', () => {
   beforeEach(() => {
     logout()
     login(testUpdate)
-    cy.visit('/tickets')
-    cy.get("a[href$='/edit']").click()
   })
 
   afterEach(logout)
 
-  it('Loads edit page for an unresolved ticket', () => {
+  it('Edits an unresolved ticket', () => {
     cy.intercept('POST', '/tickets/doGetTickets').as('results')
 
     cy.visit('/tickets')
@@ -48,18 +46,17 @@ describe('Ticket Edit - Update User', () => {
     cy.location('pathname')
       .should('contain', '/tickets/')
       .should('contain', '/edit')
-  })
 
-  it('Has no detectable accessibility issues', () => {
+    cy.log('Has no detectable accessibility issues')
+
     cy.injectAxe()
     cy.checkA11y()
-  })
 
-  it('Can save ticket as loaded', () => {
+    cy.log('Can save ticket as loaded')
     saveTicket()
-  })
 
-  it('Displays unsaved changes message', () => {
+    cy.log('Displays unsaved changes message')
+
     cy.get("textarea[name='locationDescription']")
       .clear()
       .type(
@@ -77,103 +74,97 @@ describe('Ticket Edit - Update User', () => {
     cy.wait(200)
 
     cy.get('.tag').should('contain.text', 'Unsaved Changes').should('exist')
-  })
 
-  it('Can save ticket after changes', () => {
+    cy.log('Can save ticket after changes')
+
     saveTicket()
-  })
 
-  describe('Remarks', () => {
-    it('Adds a remark', () => {
-      cy.get("button[data-cy='add-remark']").click()
+    cy.log('Adds a remark')
 
-      const remark =
-        'New Remark - ' + Cypress._.random(10_000, 99_999).toString()
+    cy.get("button[data-cy='add-remark']").click()
 
-      cy.get('.modal')
-        .should('be.visible')
-        .find("textarea[name='remark']")
-        .type(remark)
+    let remark = 'New Remark - ' + Cypress._.random(10_000, 99_999).toString()
 
-      cy.get('.modal form').submit()
+    cy.get('.modal')
+      .should('be.visible')
+      .find("textarea[name='remark']")
+      .type(remark)
 
-      cy.get('.modal').should('not.exist')
+    cy.get('.modal form').submit()
 
-      cy.get("button[data-cy='add-remark']")
-        .parents('.panel')
-        .should('contain.text', remark)
-    })
+    cy.get('.modal').should('not.exist')
 
-    it('Updates a remark', () => {
-      cy.get("button[data-cy='edit-remark']").first().click()
+    cy.get("button[data-cy='add-remark']")
+      .parents('.panel')
+      .should('contain.text', remark)
 
-      const remark =
-        'Updated Remark - ' + Cypress._.random(10_000, 99_999).toString()
+    cy.log('Updates a remark')
 
-      cy.get('.modal')
-        .should('be.visible')
-        .find("textarea[name='remark']")
+    cy.get("button[data-cy='edit-remark']").first().click()
+
+    remark = 'Updated Remark - ' + Cypress._.random(10_000, 99_999).toString()
+
+    cy.get('.modal')
+      .should('be.visible')
+      .find("textarea[name='remark']")
+      .clear()
+      .type(remark)
+
+    cy.get('.modal form').submit()
+
+    cy.get('.modal').should('not.exist')
+
+    cy.get("button[data-cy='add-remark']")
+      .parents('.panel')
+      .should('contain.text', remark)
+
+    cy.log('Deletes a remark')
+
+    cy.get("button[data-cy='delete-remark']").first().click()
+
+    cy.get('.modal')
+      .should('be.visible')
+      .find('button')
+      .contains('yes', { matchCase: false })
+      .click()
+
+    cy.get('.modal').should('not.exist')
+
+    cy.log('Adds a paid status that resolves the ticket')
+
+    cy.get("button[data-cy='add-status-paid']").click()
+
+    cy.get('.modal').should('be.visible')
+
+    cy.fixture('ticket.json').then((ticketJSON) => {
+      cy.get(".modal input[name='statusField']")
         .clear()
-        .type(remark)
+        .type(ticketJSON.statusPaid_statusField)
 
-      cy.get('.modal form').submit()
+      cy.get(".modal input[name='statusField2']")
+        .clear()
+        .type(ticketJSON.statusPaid_statusField2)
 
-      cy.get('.modal').should('not.exist')
-
-      cy.get("button[data-cy='add-remark']")
-        .parents('.panel')
-        .should('contain.text', remark)
+      cy.get(".modal textarea[name='statusNote']")
+        .clear()
+        .type(ticketJSON.statusPaid_statusNote)
     })
 
-    it('Deletes a remark', () => {
-      cy.get("button[data-cy='delete-remark']").first().click()
+    cy.get(".modal input[name='resolveTicket']").check({ force: true })
 
-      cy.get('.modal')
-        .should('be.visible')
-        .find('button')
-        .contains('yes', { matchCase: false })
-        .click()
+    cy.get('.modal form').submit()
 
-      cy.get('.modal').should('not.exist')
-    })
-  })
-
-  describe('Statuses', () => {
-    it('Adds a paid status that resolves the ticket', () => {
-      cy.get("button[data-cy='add-status-paid']").click()
-
-      cy.get('.modal').should('be.visible')
-
-      cy.fixture('ticket.json').then((ticketJSON) => {
-        cy.get(".modal input[name='statusField']")
-          .clear()
-          .type(ticketJSON.statusPaid_statusField)
-
-        cy.get(".modal input[name='statusField2']")
-          .clear()
-          .type(ticketJSON.statusPaid_statusField2)
-
-        cy.get(".modal textarea[name='statusNote']")
-          .clear()
-          .type(ticketJSON.statusPaid_statusNote)
-      })
-
-      cy.get(".modal input[name='resolveTicket']").check({ force: true })
-
-      cy.get('.modal form').submit()
-
-      cy.get('.modal').should('not.exist')
-    })
+    cy.get('.modal').should('not.exist')
   })
 })
 
 describe('Ticket View - Update User', () => {
-  before(() => {
+  beforeEach(() => {
     logout()
     login(testUpdate)
   })
 
-  after(logout)
+  afterEach(logout)
 
   it('Unresolves a resolved ticket', () => {
     cy.intercept('POST', '/tickets/doGetTickets').as('results')
@@ -193,12 +184,12 @@ describe('Ticket View - Update User', () => {
 })
 
 describe('Ticket Edit - Update User', () => {
-  before(() => {
+  beforeEach(() => {
     logout()
     login(testUpdate)
   })
 
-  // after(logout);
+  afterEach(logout)
 
   it('Loads edit page for a paid, unresolved ticket', () => {
     cy.intercept('POST', '/tickets/doGetTickets').as('results')
@@ -222,17 +213,17 @@ describe('Ticket Edit - Update User', () => {
     cy.location('pathname')
       .should('contain', '/tickets/')
       .should('contain', '/edit')
-  })
 
-  it('Resolves the ticket', () => {
+    cy.log('Resolves the ticket')
+
     cy.get("button[data-cy='resolve']").click()
 
     cy.get('.modal').should('be.visible').find('button').contains('Yes').click()
 
     cy.location('pathname').should('not.contain', '/edit')
-  })
 
-  it('Unresolves the ticket again', () => {
+    cy.log('Unresolves the ticket again')
+
     unresolveTicket()
   })
 })

@@ -1,8 +1,8 @@
 import type { RequestHandler } from 'express'
+import multer from 'multer'
 
 import * as mtoFunctions from '../../helpers/functions.mto.js'
 
-import multer from 'multer'
 const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
@@ -11,7 +11,7 @@ export const uploadHandler = upload.single('importFile')
 export const handler: RequestHandler = (request, response) => {
   const batchID = request.body.batchID
 
-  const ownershipData = request.file.buffer.toString()
+  const ownershipData = request.file!.buffer.toString()
 
   const results = mtoFunctions.importLicencePlateOwnership(
     batchID,

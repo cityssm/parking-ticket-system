@@ -15,12 +15,10 @@ describe('Create a New Ticket', () => {
 
   afterEach(logout)
 
-  it('Has no detectable accessibility issues', () => {
+  it('Creates a new parking ticket', () => {
     cy.injectAxe()
     cy.checkA11y()
-  })
 
-  it('Populates the basic "Parking Ticket Details"', () => {
     cy.fixture('ticket.json').then((ticketJSON) => {
       const ticketNumber =
         ticketJSON.ticketNumberPrefix +
@@ -50,9 +48,9 @@ describe('Create a New Ticket', () => {
         .clear()
         .type(ticketJSON.locationDescription)
     })
-  })
 
-  it('Populates the "Location" field', () => {
+    // Location field
+
     cy.get("button[data-cy='select-location']").click()
 
     cy.get('.modal').should('be.visible').find('a.panel-block').first().click()
@@ -60,9 +58,9 @@ describe('Create a New Ticket', () => {
     cy.get('.modal').should('not.exist')
 
     cy.get("input[name='locationName']").should('not.have.value', '')
-  })
 
-  it('Populates the "By-Law" field', () => {
+    // Bylaw field
+
     cy.get("button[data-cy='select-bylaw']").click()
 
     cy.get('.modal').should('be.visible').find('a.panel-block').first().click()
@@ -70,15 +68,11 @@ describe('Create a New Ticket', () => {
     cy.get('.modal').should('not.exist')
 
     cy.get("input[name='bylawNumber']").should('not.have.value', '')
-  })
 
-  it('Has automatically populated offence amounts from by-law', () => {
     cy.get("input[name='offenceAmount']").should('not.have.value', '')
     cy.get("input[name='discountOffenceAmount']").should('not.have.value', '')
     cy.get("input[name='discountDays']").should('not.have.value', '')
-  })
 
-  it('Prepopulates the "Licence Plate Country" field', () => {
     const expectedLicencePlateCountry =
       configFunctions.getProperty('defaults.country')
 
@@ -86,9 +80,7 @@ describe('Create a New Ticket', () => {
       'contain.value',
       expectedLicencePlateCountry
     )
-  })
 
-  it('Prepopulates the "Licence Plate Province" field', () => {
     const expectedLicencePlateProvince =
       configFunctions.getProperty('defaults.province')
 
@@ -96,9 +88,7 @@ describe('Create a New Ticket', () => {
       'contain.value',
       expectedLicencePlateProvince
     )
-  })
 
-  it('Populates the basic "Vehicle Details"', () => {
     cy.fixture('ticket.json').then((ticketJSON) => {
       cy.get("input[name='licencePlateNumber']")
         .clear()
@@ -114,9 +104,9 @@ describe('Create a New Ticket', () => {
         .type(ticketJSON.vehicleMakeModel)
       cy.get("input[name='vehicleVIN']").clear().type(ticketJSON.vehicleVIN)
     })
-  })
 
-  it('Disable required fields when the licence plate is unavailable', () => {
+    cy.log('Disable required fields when the licence plate is unavailable')
+
     cy.get("input[name='licencePlateIsMissing']").check({ force: true })
 
     cy.get("input[name='licencePlateCountry']").should(
@@ -133,9 +123,9 @@ describe('Create a New Ticket', () => {
       'not.have.attr',
       'required'
     )
-  })
 
-  it('Enforce required fields when the licence plate is available', () => {
+    cy.log('Enforce required fields when the licence plate is available')
+
     cy.get("input[name='licencePlateIsMissing']").uncheck({ force: true })
 
     cy.get("input[name='licencePlateCountry']").should('have.attr', 'required')
@@ -143,9 +133,9 @@ describe('Create a New Ticket', () => {
     cy.get("input[name='licencePlateProvince']").should('have.attr', 'required')
 
     cy.get("input[name='licencePlateNumber']").should('have.attr', 'required')
-  })
 
-  it('Submits the form, creates a record', () => {
+    cy.log('Submits the form, creates a record')
+
     cy.get("button[type='submit']")
       .should('contain.text', 'Create New Ticket')
       .click()

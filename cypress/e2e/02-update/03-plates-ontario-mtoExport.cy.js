@@ -21,10 +21,12 @@ function addAllTicketsToBatch() {
     cy.get("button[data-cy='add-tickets']").should('not.exist');
 }
 describe('MTO Licence Plate Export', () => {
-    before(() => {
+    beforeEach(() => {
         logout();
         login(testUpdate);
+        cy.visit('/plates-ontario/mtoExport');
     });
+    afterEach(logout);
     it('Loads page', () => {
         cy.visit('/plates-ontario/mtoExport');
         cy.location('pathname').should('equal', '/plates-ontario/mtoExport');

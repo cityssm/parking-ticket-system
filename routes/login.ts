@@ -4,7 +4,7 @@ import { Router } from 'express'
 import { useTestDatabases } from '../data/databasePaths.js'
 import * as authenticationFunctions from '../helpers/functions.authentication.js'
 import * as configFunctions from '../helpers/functions.config.js'
-import type {} from '../types/recordTypes.js'
+import type { User } from '../types/recordTypes.js'
 
 const debug = Debug('parking-ticket-system:login')
 
@@ -76,7 +76,7 @@ router
       )
     }
 
-    let userObject: recordTypes.User
+    let userObject: User
 
     if (isAuthenticated) {
       const userNameLowerCase = userName.toLowerCase()
