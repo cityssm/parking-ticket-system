@@ -158,14 +158,14 @@ export function getProperty(propertyName: 'session.doKeepAlive'): boolean
 export function getProperty(propertyName: 'session.maxAgeMillis'): number
 export function getProperty(propertyName: 'session.secret'): string
 
-export function getProperty(propertyName: 'users.testing'): string[]
-export function getProperty(propertyName: 'users.canLogin'): string[]
-export function getProperty(propertyName: 'users.canUpdate'): string[]
-export function getProperty(propertyName: 'users.isAdmin'): string[]
-export function getProperty(propertyName: 'users.isOperator'): string[]
 export function getProperty(
-  propertyName: 'users.createUpdateWindowMillis'
-): number
+  propertyName:
+    | 'users.testing'
+    | 'users.canLogin'
+    | 'users.canUpdate'
+    | 'users.isAdmin'
+    | 'users.isOperator'
+): string[]
 
 export function getProperty(
   propertyName: 'application.feature_mtoExportImport'

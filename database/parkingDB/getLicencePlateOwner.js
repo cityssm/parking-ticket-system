@@ -5,7 +5,7 @@ import * as configFunctions from '../../helpers/functions.config.js';
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
 export function getLicencePlateOwnerWithDB(database, licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore) {
     const licencePlateCountryAlias = configFunctions.getProperty('licencePlateCountryAliases')[licencePlateCountry] || licencePlateCountry;
-    const licencePlateProvinceAlias = (configFunctions.getProperty('licencePlateProvinceAliases')[licencePlateCountryAlias] || {})[licencePlateProvince] || licencePlateProvince;
+    const licencePlateProvinceAlias = configFunctions.getProperty('licencePlateProvinceAliases')[licencePlateCountryAlias]?.[licencePlateProvince] || licencePlateProvince;
     const possibleOwners = database
         .prepare('select * from LicencePlateOwners' +
         ' where recordDelete_timeMillis is null' +
@@ -15,7 +15,7 @@ export function getLicencePlateOwnerWithDB(database, licencePlateCountry, licenc
         .all(licencePlateNumber, recordDateOrBefore);
     for (const possibleOwnerObject of possibleOwners) {
         const ownerPlateCountryAlias = configFunctions.getProperty('licencePlateCountryAliases')[possibleOwnerObject.licencePlateCountry] || possibleOwnerObject.licencePlateCountry;
-        const ownerPlateProvinceAlias = (configFunctions.getProperty('licencePlateProvinceAliases')[ownerPlateCountryAlias] || {})[possibleOwnerObject.licencePlateProvince] ||
+        const ownerPlateProvinceAlias = configFunctions.getProperty('licencePlateProvinceAliases')[ownerPlateCountryAlias]?.[possibleOwnerObject.licencePlateProvince] ||
             possibleOwnerObject.licencePlateProvince;
         if (licencePlateCountryAlias === ownerPlateCountryAlias &&
             licencePlateProvinceAlias === ownerPlateProvinceAlias) {

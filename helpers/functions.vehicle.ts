@@ -1,19 +1,17 @@
+import nhtsa from '@shaggytools/nhtsa-api-wrapper'
 import sqlite from 'better-sqlite3'
 
-import nhtsa from '@shaggytools/nhtsa-api-wrapper'
-
 import { nhtsaDB as databasePath } from '../data/databasePaths.js'
-
-import * as ncic from '../data/ncicCodes.js'
 import { trailerNCIC } from '../data/ncicCodes/trailer.js'
-
-import type { NHTSAMakeModel } from '../types/recordTypes'
+import * as ncic from '../data/ncicCodes.js'
+import type { NHTSAMakeModel } from '../types/recordTypes.js'
 
 /*
  * API
  */
 
 const { GetModelsForMake } = nhtsa
+const nhtsaGetModelsForMake = new GetModelsForMake()
 
 const nhtsaSearchExpiryDurationMillis = 14 * 86_400 * 1000
 
@@ -21,24 +19,24 @@ const nhtsaSearchExpiryDurationMillis = 14 * 86_400 * 1000
  * More Data
  */
 
-const getModelsByMakeFromDB = (
+function getModelsByMakeFromDB(
   makeSearchString: string,
   database: sqlite.Database
-): NHTSAMakeModel[] => {
+): NHTSAMakeModel[] {
   return database
     .prepare(
-      'select makeID, makeName, modelID, modelName' +
-        ' from MakeModel' +
-        ' where instr(lower(makeName), ?)' +
-        ' and recordDelete_timeMillis is null' +
-        ' order by makeName, modelName'
+      `select makeID, makeName, modelID, modelName
+        from MakeModel
+        where instr(lower(makeName), ?)
+        and recordDelete_timeMillis is null
+        order by makeName, modelName`
     )
     .all(makeSearchString) as NHTSAMakeModel[]
 }
 
-export const getModelsByMakeFromCache = (
+export function getModelsByMakeFromCache(
   makeSearchStringOriginal: string
-): NHTSAMakeModel[] => {
+): NHTSAMakeModel[] {
   const makeSearchString = makeSearchStringOriginal.trim().toLowerCase()
 
   const database = sqlite(databasePath)
@@ -50,14 +48,14 @@ export const getModelsByMakeFromCache = (
   return makeModelResults
 }
 
-export const getModelsByMake = async (
+export async function getModelsByMake(
   makeSearchStringOriginal: string
-): Promise<NHTSAMakeModel[]> => {
+): Promise<NHTSAMakeModel[]> {
   const makeSearchString = makeSearchStringOriginal.trim().toLowerCase()
 
   const database = sqlite(databasePath)
 
-  const queryCloseCallbackFunction = () => {
+  const queryCloseCallbackFunction = (): NHTSAMakeModel[] => {
     const makeModelResults = getModelsByMakeFromDB(makeSearchString, database)
     database.close()
     return makeModelResults
@@ -71,12 +69,23 @@ export const getModelsByMake = async (
 
   const searchRecord = database
     .prepare(
-      'select searchExpiryMillis from MakeModelSearchHistory' +
-        ' where searchString = ?'
+      `select searchExpiryMillis
+        from MakeModelSearchHistory
+        where searchString = ?`
     )
-    .get(makeSearchString) as { searchExpiryMillis: number }
+    .get(makeSearchString) as { searchExpiryMillis: number } | undefined
 
-  if (searchRecord) {
+  if (searchRecord === undefined) {
+    useAPI = true
+
+    database
+      .prepare(
+        `insert into MakeModelSearchHistory (
+          searchString, resultCount, searchExpiryMillis)
+          values (?, ?, ?)`
+      )
+      .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis)
+  } else {
     if (searchRecord.searchExpiryMillis < nowMillis) {
       // expired
       // update searchExpiryMillis to avoid multiple queries
@@ -85,45 +94,34 @@ export const getModelsByMake = async (
 
       database
         .prepare(
-          'update MakeModelSearchHistory' +
-            ' set searchExpiryMillis = ?' +
-            ' where searchString = ?'
+          `update MakeModelSearchHistory
+            set searchExpiryMillis = ?
+            where searchString = ?`
         )
         .run(nowMillis + nhtsaSearchExpiryDurationMillis, makeSearchString)
     }
-  } else {
-    useAPI = true
-
-    database
-      .prepare(
-        'insert into MakeModelSearchHistory' +
-          ' (searchString, resultCount, searchExpiryMillis)' +
-          ' values (?, ?, ?)'
-      )
-      .run(makeSearchString, 0, nowMillis + nhtsaSearchExpiryDurationMillis)
   }
 
   if (useAPI) {
-    const data = await GetModelsForMake(makeSearchString)
+    const data = await nhtsaGetModelsForMake.GetModelsForMake(makeSearchString)
 
     database
       .prepare(
-        'update MakeModelSearchHistory' +
-          ' set resultCount = ?' +
-          'where searchString = ?'
+        `update MakeModelSearchHistory
+          set resultCount = ?
+          where searchString = ?`
       )
       .run(data.Count, makeSearchString)
 
-    const insertSQL =
-      'insert or ignore into MakeModel (makeID, makeName, modelID, modelName,' +
-      ' recordCreate_timeMillis, recordUpdate_timeMillis)' +
-      ' values (?, ?, ?, ?, ?, ?)'
+    const insertSQL = `insert or ignore into MakeModel (
+        makeID, makeName, modelID, modelName,
+        recordCreate_timeMillis, recordUpdate_timeMillis)
+        values (?, ?, ?, ?, ?, ?)`
 
-    const updateSQL =
-      'update MakeModel' +
-      ' set recordUpdate_timeMillis = ?' +
-      ' where makeName = ?' +
-      ' and modelName = ?'
+    const updateSQL = `update MakeModel
+        set recordUpdate_timeMillis = ?
+        where makeName = ?
+        and modelName = ?`
 
     for (const record of data.Results) {
       const info = database

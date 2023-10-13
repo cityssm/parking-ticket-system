@@ -4,7 +4,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import * as configFunctions from '../../helpers/functions.config.js'
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
-import { LicencePlateOwner } from '../../types/recordTypes.js'
+import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
 export function getLicencePlateOwnerWithDB(
   database: sqlite.Database,
@@ -19,9 +19,9 @@ export function getLicencePlateOwnerWithDB(
     ] || licencePlateCountry
 
   const licencePlateProvinceAlias =
-    (configFunctions.getProperty('licencePlateProvinceAliases')[
+    configFunctions.getProperty('licencePlateProvinceAliases')[
       licencePlateCountryAlias
-    ] || {})[licencePlateProvince] || licencePlateProvince
+    ]?.[licencePlateProvince] || licencePlateProvince
 
   const possibleOwners = database
     .prepare(
@@ -31,7 +31,7 @@ export function getLicencePlateOwnerWithDB(
         ' and recordDate >= ?' +
         ' order by recordDate'
     )
-    .all(licencePlateNumber, recordDateOrBefore) as pts.LicencePlateOwner[]
+    .all(licencePlateNumber, recordDateOrBefore) as LicencePlateOwner[]
 
   for (const possibleOwnerObject of possibleOwners) {
     const ownerPlateCountryAlias =
@@ -40,9 +40,9 @@ export function getLicencePlateOwnerWithDB(
       ] || possibleOwnerObject.licencePlateCountry
 
     const ownerPlateProvinceAlias =
-      (configFunctions.getProperty('licencePlateProvinceAliases')[
+      configFunctions.getProperty('licencePlateProvinceAliases')[
         ownerPlateCountryAlias
-      ] || {})[possibleOwnerObject.licencePlateProvince] ||
+      ]?.[possibleOwnerObject.licencePlateProvince] ||
       possibleOwnerObject.licencePlateProvince
 
     if (
