@@ -1,7 +1,7 @@
 import sqlite from 'better-sqlite3'
 import Debug from 'debug'
 
-import { nhtsaDB as nhtsaDatabasePath } from '../data/databasePaths.js'
+import { nhtsaDB as nhtsaDatabasePath } from '../../data/databasePaths.js'
 
 const debug = Debug('parking-ticket-system:initializeDatabase')
 
