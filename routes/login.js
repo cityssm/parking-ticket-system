@@ -29,7 +29,7 @@ router
     .get((request, response) => {
     const sessionCookieName = configFunctions.getProperty('session.cookieName');
     if (request.session.user && request.cookies[sessionCookieName]) {
-        const redirectURL = getSafeRedirectURL((request.query.redirect || ''));
+        const redirectURL = getSafeRedirectURL((request.query.redirect ?? ''));
         response.redirect(redirectURL);
     }
     else {

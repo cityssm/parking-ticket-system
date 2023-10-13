@@ -1,17 +1,16 @@
-import type * as sqlite from 'better-sqlite3'
-import type * as pts from '../../types/recordTypes'
+import type sqlite from 'better-sqlite3'
+
+import type { ParkingLocation } from '../../types/recordTypes.js'
 
 export const getParkingLocationWithDB = (
   database: sqlite.Database,
   locationKey: string
-): pts.ParkingLocation => {
-  const location = database
+): ParkingLocation => {
+  return database
     .prepare(
-      'select locationKey, locationName, locationClassKey, isActive' +
-        ' from ParkingLocations' +
-        ' where locationKey = ?'
+      `select locationKey, locationName, locationClassKey, isActive
+        from ParkingLocations
+        where locationKey = ?`
     )
-    .get(locationKey) as pts.ParkingLocation
-
-  return location
+    .get(locationKey) as ParkingLocation
 }

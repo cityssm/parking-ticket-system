@@ -9,8 +9,6 @@ import * as configFunctions from '../helpers/functions.config.js'
 
 const debug = Debug('parking-ticket-system:www')
 
-let httpServer: http.Server | undefined
-
 interface ServerError extends Error {
   syscall: string
   code: string
@@ -65,13 +63,13 @@ const onListening = (server: http.Server): void => {
 
 const httpPort = configFunctions.getProperty('application.httpPort')
 
-httpServer = http.createServer(app)
+const httpServer = http.createServer(app)
 
 httpServer.listen(httpPort)
 
 httpServer.on('error', onError)
 httpServer.on('listening', () => {
-  onListening(httpServer as http.Server)
+  onListening(httpServer)
 })
 
 debug('HTTP listening on ' + httpPort.toString())
@@ -85,9 +83,6 @@ if (configFunctions.getProperty('application.task_nhtsa.runTask')) {
 }
 
 exitHook(() => {
-  if (httpServer) {
-    debug('Closing HTTP')
-    httpServer.close()
-    httpServer = undefined
-  }
+  debug('Closing HTTP')
+  httpServer.close()
 })

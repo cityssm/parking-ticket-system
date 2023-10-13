@@ -33,7 +33,7 @@ export const unresolveParkingTicket = (
     }
   } else if (
     ticketObject.recordUpdate_timeMillis +
-      configFunctions.getProperty('user.createUpdateWindowMillis') <
+      configFunctions.getProperty('parkingTickets.updateWindowMillis') <
     Date.now()
   ) {
     database.close()

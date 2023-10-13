@@ -15,11 +15,7 @@ export const isParkingTicketConvictedWithDB = (
     )
     .get(ticketID)
 
-  if (convictedStatusCheck) {
-    return true
-  }
-
-  return false
+  return convictedStatusCheck !== undefined
 }
 
 export const isParkingTicketConvicted = (ticketID: number): boolean => {

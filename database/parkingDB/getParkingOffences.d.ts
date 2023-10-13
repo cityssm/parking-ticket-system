@@ -1,9 +1,9 @@
-import type * as pts from '../../types/recordTypes';
+import type { ParkingOffence } from '../../types/recordTypes.js';
 export interface AddUpdateParkingOffenceReturn {
     success: boolean;
     message?: string;
-    offences?: pts.ParkingOffence[];
+    offences?: ParkingOffence[];
 }
-export declare const getParkingOffences: () => pts.ParkingOffence[];
-export declare const getParkingOffencesByLocationKey: (locationKey: string) => pts.ParkingOffence[];
+export declare const getParkingOffences: () => ParkingOffence[];
+export declare const getParkingOffencesByLocationKey: (locationKey: string) => ParkingOffence[];
 export default getParkingOffences;

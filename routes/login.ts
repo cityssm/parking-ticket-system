@@ -38,7 +38,7 @@ router
 
     if (request.session.user && request.cookies[sessionCookieName]) {
       const redirectURL = getSafeRedirectURL(
-        (request.query.redirect || '') as string
+        (request.query.redirect ?? '') as string
       )
 
       response.redirect(redirectURL)

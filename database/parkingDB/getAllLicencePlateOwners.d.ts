@@ -1,3 +1,3 @@
-import type * as pts from '../../types/recordTypes';
-export declare const getAllLicencePlateOwners: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) => pts.LicencePlateOwner[];
+import type { LicencePlateOwner } from '../../types/recordTypes.js';
+export declare const getAllLicencePlateOwners: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string) => LicencePlateOwner[];
 export default getAllLicencePlateOwners;

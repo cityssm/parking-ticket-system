@@ -1,36 +1,33 @@
+import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
 
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
-import type * as pts from '../../types/recordTypes'
-
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
+import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
+import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
 export const getAllLicencePlateOwners = (
   licencePlateCountry: string,
   licencePlateProvince: string,
   licencePlateNumber: string
-): pts.LicencePlateOwner[] => {
+): LicencePlateOwner[] => {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
   const owners = database
     .prepare(
-      'select recordDate, vehicleNCIC, vehicleYear, vehicleColor,' +
-        ' ownerName1, ownerName2, ownerAddress, ownerCity, ownerProvince, ownerPostalCode' +
-        ' from LicencePlateOwners' +
-        ' where recordDelete_timeMillis is null' +
-        ' and licencePlateCountry = ?' +
-        ' and licencePlateProvince = ?' +
-        ' and licencePlateNumber = ?' +
-        ' order by recordDate desc'
+      `select recordDate, vehicleNCIC, vehicleYear, vehicleColor,
+        ownerName1, ownerName2, ownerAddress, ownerCity, ownerProvince, ownerPostalCode
+        from LicencePlateOwners
+        where recordDelete_timeMillis is null
+        and licencePlateCountry = ? and licencePlateProvince = ? and licencePlateNumber = ?
+        order by recordDate desc`
     )
     .all(
       licencePlateCountry,
       licencePlateProvince,
       licencePlateNumber
-    ) as pts.LicencePlateOwner[]
+    ) as LicencePlateOwner[]
 
   database.close()
 

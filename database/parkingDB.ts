@@ -4,7 +4,7 @@ import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'
 import * as configFunctions from '../helpers/functions.config.js'
-import type { Record, UserProperties } from '../types/recordTypes.js'
+import type { ParkingTicket, Record, UserProperties } from '../types/recordTypes.js'
 
 export const canUpdateObject = (
   object: Record,
@@ -29,7 +29,7 @@ export const canUpdateObject = (
     switch (object.recordType) {
       case 'ticket': {
         if (
-          (object as recordTypes.ParkingTicket).resolvedDate &&
+          (object as ParkingTicket).resolvedDate &&
           Date.now() - object.recordUpdate_timeMillis >=
             configFunctions.getProperty('parkingTickets.updateWindowMillis')
         ) {

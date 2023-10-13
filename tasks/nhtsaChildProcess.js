@@ -1,10 +1,10 @@
-import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
-import exitHook from 'exit-hook';
-import * as parkingDB from '../database/parkingDB.js';
-import * as vehicleFunctions from '../helpers/functions.vehicle.js';
-import * as configFunctions from '../helpers/functions.config.js';
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
 import Debug from 'debug';
+import exitHook from 'exit-hook';
+import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
+import * as parkingDB from '../database/parkingDB.js';
+import * as configFunctions from '../helpers/functions.config.js';
+import * as vehicleFunctions from '../helpers/functions.vehicle.js';
 const debug = Debug('parking-ticket-system:task:nhtsaChildProcess');
 const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);

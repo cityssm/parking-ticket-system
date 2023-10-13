@@ -5,7 +5,6 @@ import exitHook from 'exit-hook';
 import { app } from '../app.js';
 import * as configFunctions from '../helpers/functions.config.js';
 const debug = Debug('parking-ticket-system:www');
-let httpServer;
 const onError = (error) => {
     if (error.syscall !== 'listen') {
         throw error;
@@ -38,7 +37,7 @@ const onListening = (server) => {
     debug('Listening on ' + bind);
 };
 const httpPort = configFunctions.getProperty('application.httpPort');
-httpServer = http.createServer(app);
+const httpServer = http.createServer(app);
 httpServer.listen(httpPort);
 httpServer.on('error', onError);
 httpServer.on('listening', () => {
@@ -49,9 +48,6 @@ if (configFunctions.getProperty('application.task_nhtsa.runTask')) {
     fork('./tasks/nhtsaChildProcess.js');
 }
 exitHook(() => {
-    if (httpServer) {
-        debug('Closing HTTP');
-        httpServer.close();
-        httpServer = undefined;
-    }
+    debug('Closing HTTP');
+    httpServer.close();
 });

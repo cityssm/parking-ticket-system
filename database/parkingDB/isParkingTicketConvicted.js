@@ -7,10 +7,7 @@ export const isParkingTicketConvictedWithDB = (database, ticketID) => {
         ' and ticketID = ?' +
         " and statusKey = 'convicted'")
         .get(ticketID);
-    if (convictedStatusCheck) {
-        return true;
-    }
-    return false;
+    return convictedStatusCheck !== undefined;
 };
 export const isParkingTicketConvicted = (ticketID) => {
     const database = sqlite(databasePath, {

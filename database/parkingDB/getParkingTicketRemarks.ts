@@ -1,27 +1,24 @@
-import sqlite from 'better-sqlite3'
-
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-import type * as pts from '../../types/recordTypes'
-
-import { canUpdateObject } from '../parkingDB.js'
+import sqlite from 'better-sqlite3'
+import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-
-import type * as expressSession from 'express-session'
+import type { ParkingTicketRemark } from '../../types/recordTypes.js'
+import { canUpdateObject } from '../parkingDB.js'
 
 export const getParkingTicketRemarksWithDB = (
   database: sqlite.Database,
   ticketID: number,
   requestSession: expressSession.Session
-): pts.ParkingTicketRemark[] => {
+): ParkingTicketRemark[] => {
   const remarkRows = database
     .prepare(
-      'select * from ParkingTicketRemarks' +
-        ' where recordDelete_timeMillis is null' +
-        ' and ticketID = ?' +
-        ' order by remarkDate desc, remarkTime desc, remarkIndex desc'
+      `select * from ParkingTicketRemarks
+        where recordDelete_timeMillis is null
+        and ticketID = ?
+        order by remarkDate desc, remarkTime desc, remarkIndex desc`
     )
-    .all(ticketID) as pts.ParkingTicketRemark[]
+    .all(ticketID) as ParkingTicketRemark[]
 
   for (const remark of remarkRows) {
     remark.recordType = 'remark'
@@ -38,18 +35,12 @@ export const getParkingTicketRemarksWithDB = (
 export const getParkingTicketRemarks = (
   ticketID: number,
   requestSession: expressSession.Session
-): pts.ParkingTicketRemark[] => {
+): ParkingTicketRemark[] => {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
-  const remarkRows = getParkingTicketRemarksWithDB(
-    database,
-    ticketID,
-    requestSession
-  )
-
-  return remarkRows
+  return getParkingTicketRemarksWithDB(database, ticketID, requestSession)
 }
 
 export default getParkingTicketRemarks

@@ -1,9 +1,9 @@
-import type * as pts from '../../types/recordTypes';
+import type { ParkingBylaw } from '../../types/recordTypes.js';
 export interface AddUpdateParkingBylawReturn {
     success: boolean;
     message?: string;
-    bylaws?: pts.ParkingBylaw[];
+    bylaws?: ParkingBylaw[];
 }
-export declare const getParkingBylaws: () => pts.ParkingBylaw[];
-export declare const getParkingBylawsWithOffenceStats: () => pts.ParkingBylaw[];
+export declare const getParkingBylaws: () => ParkingBylaw[];
+export declare const getParkingBylawsWithOffenceStats: () => ParkingBylaw[];
 export default getParkingBylaws;
