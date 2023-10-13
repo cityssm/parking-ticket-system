@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 import * as ownerFunctions from '../helpers/functions.owner.js';
 describe('helpers/ownerFunctions', () => {
     describe('#getFormattedOwnerAddress()', () => {

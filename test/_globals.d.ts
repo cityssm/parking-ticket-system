@@ -1,6 +1,6 @@
 /// <reference types="qs" />
-import type { Request } from "express";
-import type { Session } from "express-session";
+import type { Request } from 'express';
+import type { Session } from 'express-session';
 export declare const testView = "*testView";
 export declare const testUpdate = "*testUpdate";
 export declare const testAdmin = "*testAdmin";

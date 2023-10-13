@@ -1,19 +1,16 @@
-import type { Request } from "express";
-import type { Session } from "express-session";
+import type { Request } from 'express'
+import type { Session } from 'express-session'
 
-import * as configFunctions from "../helpers/functions.config.js";
+import * as configFunctions from '../helpers/functions.config.js'
 
+export const testView = '*testView'
+export const testUpdate = '*testUpdate'
+export const testAdmin = '*testAdmin'
 
-export const testView = "*testView";
-export const testUpdate = "*testUpdate";
-export const testAdmin = "*testAdmin";
-
-
-export const portNumber = 4000;
-
+export const portNumber = 4000
 
 export const fakeViewOnlySession: Session = {
-  id: "",
+  id: '',
   cookie: undefined,
   destroy: undefined,
   regenerate: undefined,
@@ -22,18 +19,17 @@ export const fakeViewOnlySession: Session = {
   save: undefined,
   touch: undefined,
   user: {
-    userName: configFunctions.getProperty("users.testing")[0],
+    userName: configFunctions.getProperty('users.testing')[0],
     userProperties: {
       canUpdate: false,
       isAdmin: false,
       isOperator: false
     }
   }
-};
-
+}
 
 export const fakeAdminSession: Session = {
-  id: "",
+  id: '',
   cookie: undefined,
   destroy: undefined,
   regenerate: undefined,
@@ -42,18 +38,17 @@ export const fakeAdminSession: Session = {
   save: undefined,
   touch: undefined,
   user: {
-    userName: configFunctions.getProperty("users.testing")[0],
+    userName: configFunctions.getProperty('users.testing')[0],
     userProperties: {
       canUpdate: true,
       isAdmin: true,
       isOperator: true
     }
   }
-};
-
+}
 
 export const fakeRequest: Request = {
-  async * [Symbol.asyncIterator]() { },
+  async *[Symbol.asyncIterator]() {},
   _destroy: undefined,
   _read: undefined,
   accepted: undefined,
@@ -135,17 +130,12 @@ export const fakeRequest: Request = {
   url: undefined,
   wrap: undefined,
   xhr: undefined
+}
 
-};
+export const fakeViewOnlyRequest = Object.assign({}, fakeRequest, {
+  session: fakeViewOnlySession
+})
 
-
-export const fakeViewOnlyRequest =
-  Object.assign({}, fakeRequest, {
-    session: fakeViewOnlySession
-  });
-
-
-export const fakeAdminRequest =
-  Object.assign({}, fakeRequest, {
-    session: fakeAdminSession
-  });
+export const fakeAdminRequest = Object.assign({}, fakeRequest, {
+  session: fakeAdminSession
+})

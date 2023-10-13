@@ -1,12 +1,12 @@
-import * as assert from 'assert'
+import * as assert from 'node:assert'
+
+import * as userFunctions from '../helpers/functions.user.js'
 
 import {
   fakeRequest,
   fakeViewOnlyRequest,
   fakeAdminRequest
 } from './_globals.js'
-
-import * as userFunctions from '../helpers/functions.user.js'
 
 describe('helpers/userFunctions', () => {
   describe('request.session.user = null', () => {

@@ -1,10 +1,10 @@
-import * as configFunctions from "../helpers/functions.config.js";
-export const testView = "*testView";
-export const testUpdate = "*testUpdate";
-export const testAdmin = "*testAdmin";
+import * as configFunctions from '../helpers/functions.config.js';
+export const testView = '*testView';
+export const testUpdate = '*testUpdate';
+export const testAdmin = '*testAdmin';
 export const portNumber = 4000;
 export const fakeViewOnlySession = {
-    id: "",
+    id: '',
     cookie: undefined,
     destroy: undefined,
     regenerate: undefined,
@@ -13,7 +13,7 @@ export const fakeViewOnlySession = {
     save: undefined,
     touch: undefined,
     user: {
-        userName: configFunctions.getProperty("users.testing")[0],
+        userName: configFunctions.getProperty('users.testing')[0],
         userProperties: {
             canUpdate: false,
             isAdmin: false,
@@ -22,7 +22,7 @@ export const fakeViewOnlySession = {
     }
 };
 export const fakeAdminSession = {
-    id: "",
+    id: '',
     cookie: undefined,
     destroy: undefined,
     regenerate: undefined,
@@ -31,7 +31,7 @@ export const fakeAdminSession = {
     save: undefined,
     touch: undefined,
     user: {
-        userName: configFunctions.getProperty("users.testing")[0],
+        userName: configFunctions.getProperty('users.testing')[0],
         userProperties: {
             canUpdate: true,
             isAdmin: true,
