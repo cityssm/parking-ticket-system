@@ -33,7 +33,7 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@shaggytools/nhtsa-api-wrapper": "^2.0.3",
     "activedirectory2": "^2.2.0",
-    "better-sqlite3": "^8.7.0",
+    "better-sqlite3": "^9.0.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
