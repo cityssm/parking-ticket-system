@@ -13,10 +13,11 @@ export const isParkingTicketInConvictionBatchWithDB = (
 ): IsParkingTicketConvictedReturn => {
   const batchStatusCheck = database
     .prepare(
-      'select statusField from ParkingTicketStatusLog' +
-        ' where recordDelete_timeMillis is null' +
-        ' and ticketID = ?' +
-        " and statusKey = 'convictionBatch'"
+      `select statusField
+        from ParkingTicketStatusLog
+        where recordDelete_timeMillis is null
+        and ticketID = ?
+        and statusKey = 'convictionBatch'`
     )
     .get(ticketID) as { statusField: string } | undefined
 

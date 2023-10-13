@@ -1,1 +1,1 @@
-export declare const initializeDatabase: () => boolean;
+export declare function initializeDatabase(): boolean;

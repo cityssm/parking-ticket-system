@@ -1,4 +1,4 @@
-import type * as expressSession from "express-session";
+import type * as expressSession from 'express-session';
 interface LockConvictionBatchReturn {
     success: boolean;
     lockDate: number;
