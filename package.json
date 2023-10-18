@@ -55,7 +55,7 @@
     "@cityssm/bulma-sticky-table": "^2.1.0",
     "@cityssm/bulma-webapp-css": "^0.12.0",
     "@cityssm/simple-fa5-checkbox": "^0.2.1",
-    "@types/activedirectory2": "^1.2.4",
+    "@types/activedirectory2": "^1.2.5",
     "@types/better-sqlite3": "^7.6.5",
     "@types/compression": "^1.7.3",
     "@types/cookie-parser": "^1.4.4",
