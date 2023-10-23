@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 /* eslint-disable unicorn/prefer-module */
 
+// eslint-disable-next-line n/no-missing-import
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
@@ -34,11 +35,11 @@ interface UpdateLocationResponseJSON {
   let locationList = exports.locations as recordTypes.ParkingLocation[]
   delete exports.locations
 
-  const openEditLocationModalFunction = (clickEvent: Event) => {
+  function openEditLocationModalFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const listIndex = Number.parseInt(
-      clickEvent.currentTarget as HTMLButtonElement.dataset.index,
+      (clickEvent.currentTarget as HTMLButtonElement).dataset.index,
       10
     )
     const location = locationList[listIndex]
@@ -61,21 +62,19 @@ interface UpdateLocationResponseJSON {
       )
     }
 
-    const confirmDeleteFunction = (deleteClickEvent: Event) => {
+    function confirmDeleteFunction(deleteClickEvent: Event): void {
       deleteClickEvent.preventDefault()
 
       cityssm.confirmModal(
         'Delete Location',
-        'Are you sure you want to remove "' +
-          location.locationName +
-          '" from the list of available options?',
+        `Are you sure you want to remove "${location.locationName}" from the list of available options?`,
         'Yes, Remove Location',
         'danger',
         deleteFunction
       )
     }
 
-    const editFunction = (formEvent: Event) => {
+    function editFunction(formEvent: Event): void {
       formEvent.preventDefault()
 
       cityssm.postJSON(
@@ -147,7 +146,7 @@ interface UpdateLocationResponseJSON {
     })
   }
 
-  const renderLocationListFunction = () => {
+  function renderLocationListFunction(): void {
     let displayCount = 0
 
     const locationClassKeyFilter = locationClassKeyFilterElement.value
@@ -247,12 +246,11 @@ interface UpdateLocationResponseJSON {
         '<option value="">(All Location Classes)</option>'
 
       for (const locationClass of locationClassesList) {
-        locationClassKeyOptionsHTML +=
-          '<option value="' +
-          locationClass.locationClassKey +
-          '">' +
-          cityssm.escapeHTML(locationClass.locationClass) +
-          '</option>'
+        locationClassKeyOptionsHTML += `<option value="${
+          locationClass.locationClassKey
+        }">
+          ${cityssm.escapeHTML(locationClass.locationClass)}
+          </option>`
       }
 
       locationClassKeyFilterElement.insertAdjacentHTML(
@@ -268,7 +266,7 @@ interface UpdateLocationResponseJSON {
 
   document
     .querySelector('#is-add-location-button')
-    .addEventListener('click', (clickEvent) => {
+    ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
 
       let addLocationCloseModalFunction: () => void
@@ -287,7 +285,7 @@ interface UpdateLocationResponseJSON {
             } else {
               cityssm.alertModal(
                 'Location Not Added',
-                responseJSON.message,
+                responseJSON.message ?? '',
                 'OK',
                 'danger'
               )
@@ -302,11 +300,11 @@ interface UpdateLocationResponseJSON {
 
           document
             .querySelector('#addLocation--locationClassKey')
-            .insertAdjacentHTML('beforeend', locationClassKeyOptionsHTML)
+            ?.insertAdjacentHTML('beforeend', locationClassKeyOptionsHTML)
 
           document
             .querySelector('#form--addLocation')
-            .addEventListener('submit', addFunction)
+            ?.addEventListener('submit', addFunction)
         }
       })
     })
