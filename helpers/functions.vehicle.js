@@ -1,10 +1,8 @@
-import nhtsa from '@shaggytools/nhtsa-api-wrapper';
+import { GetModelsForMake } from '@shaggytools/nhtsa-api-wrapper';
 import sqlite from 'better-sqlite3';
 import { nhtsaDB as databasePath } from '../data/databasePaths.js';
 import { trailerNCIC } from '../data/ncicCodes/trailer.js';
 import * as ncic from '../data/ncicCodes.js';
-const { GetModelsForMake } = nhtsa;
-const nhtsaGetModelsForMake = new GetModelsForMake();
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
 function getModelsByMakeFromDB(makeSearchString, database) {
     return database
@@ -56,7 +54,7 @@ export async function getModelsByMake(makeSearchStringOriginal) {
         }
     }
     if (useAPI) {
-        const data = await nhtsaGetModelsForMake.GetModelsForMake(makeSearchString);
+        const data = await GetModelsForMake(makeSearchString);
         database
             .prepare(`update MakeModelSearchHistory
           set resultCount = ?

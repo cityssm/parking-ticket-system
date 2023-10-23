@@ -29,7 +29,7 @@
       <div class="message is-danger">
         <div class="message-body is-clearfix">
           <p class="has-text-weight-bold">This ticket was deleted by <%= ticket.recordDelete_userName %> on <%= dateTimeFns.dateToString(new Date(ticket.recordDelete_timeMillis)) %>.</p>
-          <% if (user.userProperties.isAdmin) { %>
+          <% if (user.isAdmin) { %>
             <button class="button is-danger is-pulled-right" id="is-restore-ticket-button" data-ticket-id="<%= ticket.ticketID %>" type="button">
               <span class="icon is-small"><i class="fas fa-trash-restore" aria-hidden="true"></i></span>
               <span>Restore Ticket</span>
@@ -351,7 +351,7 @@
 
 <%- include('_footerA'); -%>
 
-<% if (user.userProperties.canUpdate || user.userProperties.isAdmin) { %>
+<% if (user.canUpdate || user.isAdmin) { %>
   <script src="/javascripts/ticket-view.min.js"></script>
 <% } %>
 

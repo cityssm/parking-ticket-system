@@ -12,7 +12,7 @@
           <span>Parking Ticket Search</span>
         </a>
       </li>
-      <% if (user.userProperties.canUpdate) { %>
+      <% if (user.canUpdate) { %>
         <li>
           <a class="<%= (headTitle === "New Ticket" ? "is-active" : "") %>" href="/tickets/new">
             <span class="icon">
@@ -23,7 +23,7 @@
         </li>
       <% } %>
     </ul>
-    <% if (user.userProperties.canUpdate) { %>
+    <% if (user.canUpdate) { %>
       <p class="menu-label">
         Ticket Actions
       </p>
@@ -38,7 +38,7 @@
         </li>
       </ul>
     <% } %>
-    <% if (configFunctions.getProperty("application.feature_mtoExportImport") && (user.userProperties.canUpdate || user.userProperties.isOperator)) { %>
+    <% if (configFunctions.getProperty("application.feature_mtoExportImport") && (user.canUpdate || user.isOperator)) { %>
       <p class="menu-label">
         MTO Integration
       </p>

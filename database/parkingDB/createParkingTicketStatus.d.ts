@@ -1,4 +1,3 @@
-import sqlite from 'better-sqlite3';
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js';
 type CreateParkingTicketStatusReturn = {
     success: true;

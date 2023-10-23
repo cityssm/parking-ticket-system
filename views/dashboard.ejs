@@ -19,7 +19,7 @@
               </h2>
               <p>
                 Track parking tickets.
-                <% if (user.userProperties.canUpdate) { %>
+                <% if (user.canUpdate) { %>
                   Reconcile ownership records.
                 <% } %>
               </p>
@@ -33,7 +33,7 @@
             </span>
             Find Tickets
           </a>
-          <% if (user.userProperties.canUpdate) { %>
+          <% if (user.canUpdate) { %>
             <a class="card-footer-item" href="/tickets/new">
               <span class="icon">
                 <i class="fas fa-plus" aria-hidden="true"></i>
@@ -57,7 +57,7 @@
               </h2>
               <p>
                 Look up licence plate owners.
-                <% if (user.userProperties.canUpdate && configFunctions.getProperty("application.feature_mtoExportImport")) { %>
+                <% if (user.canUpdate && configFunctions.getProperty("application.feature_mtoExportImport")) { %>
                   Manage exports to and imports from the MTO.
                 <% } %>
               </p>
@@ -135,7 +135,7 @@
     </div>
   </div>
 
-  <% if (user.userProperties.isAdmin) { %>
+  <% if (user.isAdmin) { %>
     <h2 class="title is-3">Administrator Tools</h2>
 
     <div class="columns">

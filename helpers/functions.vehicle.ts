@@ -1,4 +1,4 @@
-import nhtsa from '@shaggytools/nhtsa-api-wrapper'
+import { GetModelsForMake } from '@shaggytools/nhtsa-api-wrapper'
 import sqlite from 'better-sqlite3'
 
 import { nhtsaDB as databasePath } from '../data/databasePaths.js'
@@ -9,9 +9,6 @@ import type { NHTSAMakeModel } from '../types/recordTypes.js'
 /*
  * API
  */
-
-const { GetModelsForMake } = nhtsa
-const nhtsaGetModelsForMake = new GetModelsForMake()
 
 const nhtsaSearchExpiryDurationMillis = 14 * 86_400 * 1000
 
@@ -103,7 +100,7 @@ export async function getModelsByMake(
   }
 
   if (useAPI) {
-    const data = await nhtsaGetModelsForMake.GetModelsForMake(makeSearchString)
+    const data = await GetModelsForMake(makeSearchString)
 
     database
       .prepare(

@@ -14,7 +14,7 @@
       </li>
     </ul>
 
-    <% if (configFunctions.getProperty("application.feature_mtoExportImport") && (user.userProperties.canUpdate || user.userProperties.isOperator)) { %>
+    <% if (configFunctions.getProperty("application.feature_mtoExportImport") && (user.canUpdate || user.isOperator)) { %>
       <p class="menu-label">
         MTO Integration
       </p>
