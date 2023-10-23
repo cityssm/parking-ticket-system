@@ -34,62 +34,62 @@ describe('database/parkingDB', () => {
     describe('parking ticket queries', () => {
         describe('getParkingTickets()', () => {
             it('should execute with no filters', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0
                 }));
             });
             it('should execute with ticketNumber filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     ticketNumber: 'TEST_TKT'
                 }));
             });
             it('should execute with licencePlateNumber filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     licencePlateNumber: 'TEST PLATE'
                 }));
             });
             it('should execute with licencePlateNumberEqual filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     licencePlateNumber: 'TEST PLATE'
                 }));
             });
             it('should execute with licencePlateProvince filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     licencePlateProvince: 'ON'
                 }));
             });
             it('should execute with licencePlateCountry filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     licencePlateCountry: 'CA'
                 }));
             });
             it('should execute with location filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     location: 'street'
                 }));
             });
             it('should execute with isResolved=true filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     isResolved: true
                 }));
             });
             it('should execute with isResolved=false filter', () => {
-                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession, {
+                assert.ok(parkingDB_getParkingTickets.getParkingTickets(fakeViewOnlySession.user, {
                     limit: 1,
                     offset: 0,
                     isResolved: false
@@ -97,16 +97,16 @@ describe('database/parkingDB', () => {
             });
         });
         it('should execute getParkingTicket(-1)', () => {
-            assert.strictEqual(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession), undefined);
+            assert.strictEqual(parkingDB_getParkingTicket.getParkingTicket(-1, fakeViewOnlySession.user), undefined);
         });
         it('should execute getParkingTicketID()', () => {
             assert.strictEqual(parkingDB_getParkingTicketID.getParkingTicketID('~~FAKE TICKET NUMBER~~'), undefined);
         });
         it('should execute getParkingTicketRemarks(-1)', () => {
-            assert.strictEqual(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, fakeViewOnlySession).length, 0);
+            assert.strictEqual(parkingDB_getParkingTicketRemarks.getParkingTicketRemarks(-1, fakeViewOnlySession.user).length, 0);
         });
         it('should execute getParkingTicketStatuses(-1)', () => {
-            assert.strictEqual(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, fakeViewOnlySession).length, 0);
+            assert.strictEqual(parkingDB_getParkingTicketStatuses.getParkingTicketStatuses(-1, fakeViewOnlySession.user).length, 0);
         });
     });
     describe('licence plate queries', () => {
@@ -147,7 +147,7 @@ describe('database/parkingDB', () => {
         });
         it('should execute getLookupBatch()', () => {
             const batch = parkingDB_getLookupBatch.getLookupBatch(-1);
-            assert.ok(!batch || !batch.lockDate);
+            assert.ok(batch === undefined || (batch.lockDate ?? undefined) === undefined);
         });
         it('should execute getOwnershipReconciliationRecords()', () => {
             assert.ok(parkingDB_getOwnershipReconciliationRecords.getOwnershipReconciliationRecords());

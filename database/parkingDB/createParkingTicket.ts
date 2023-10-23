@@ -1,6 +1,5 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import * as configFunctions from '../../helpers/functions.config.js'
@@ -34,7 +33,7 @@ interface CreateParkingTicketReturn {
 
 export function createParkingTicket(
   requestBody: ParkingTicket,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): CreateParkingTicketReturn {
   const database = sqlite(databasePath)
 
@@ -110,9 +109,9 @@ export function createParkingTicket(
       licencePlateExpiryDate,
       requestBody.vehicleMakeModel,
       requestBody.vehicleVIN,
-      requestSession.user.userName,
+      sessionUser.userName,
       nowMillis,
-      requestSession.user.userName,
+      sessionUser.userName,
       nowMillis
     )
 

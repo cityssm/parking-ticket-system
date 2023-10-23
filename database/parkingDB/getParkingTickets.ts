@@ -1,6 +1,8 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/indent */
+
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
@@ -20,7 +22,7 @@ export interface GetParkingTicketsQueryOptions {
 
 function addCalculatedFields(
   ticket: ParkingTicket,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): void {
   ticket.recordType = 'ticket'
 
@@ -33,10 +35,12 @@ function addCalculatedFields(
     ticket.latestStatus_statusDate
   )
 
-  ticket.canUpdate = canUpdateObject(ticket, requestSession)
+  ticket.canUpdate = canUpdateObject(ticket, sessionUser)
 }
 
-function buildWhereClause(queryOptions: Partial<GetParkingTicketsQueryOptions>): {
+function buildWhereClause(
+  queryOptions: Partial<GetParkingTicketsQueryOptions>
+): {
   sqlWhereClause: string
   sqlParameters: unknown[]
 } {
@@ -119,7 +123,7 @@ interface GetParkingTicketsReturn {
 }
 
 export const getParkingTickets = (
-  requestSession: expressSession.Session,
+  sessionUser: PTSUser,
   queryOptions: GetParkingTicketsQueryOptions
 ): GetParkingTicketsReturn => {
   const database = sqlite(databasePath, {
@@ -174,7 +178,7 @@ export const getParkingTickets = (
   database.close()
 
   for (const ticket of rows) {
-    addCalculatedFields(ticket, requestSession)
+    addCalculatedFields(ticket, sessionUser)
   }
 
   return {
@@ -189,7 +193,7 @@ export const getParkingTicketsByLicencePlate = (
   licencePlateCountry: string,
   licencePlateProvince: string,
   licencePlateNumber: string,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): ParkingTicket[] => {
   const database = sqlite(databasePath, {
     readonly: true
@@ -220,7 +224,7 @@ export const getParkingTicketsByLicencePlate = (
   database.close()
 
   for (const ticket of rows) {
-    addCalculatedFields(ticket, requestSession)
+    addCalculatedFields(ticket, sessionUser)
   }
 
   return rows

@@ -5,7 +5,7 @@ import { unlockConvictionBatch } from '../../database/parkingDB/unlockConviction
 export const handler: RequestHandler = (request, response) => {
   const batchID = request.body.batchID
 
-  const success = unlockConvictionBatch(batchID, request.session)
+  const success = unlockConvictionBatch(batchID, request.session.user as PTSUser)
 
   return response.json({ success })
 }

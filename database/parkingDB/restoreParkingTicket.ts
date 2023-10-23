@@ -1,11 +1,10 @@
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export const restoreParkingTicket = (
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean } => {
   const database = sqlite(databasePath)
 
@@ -19,7 +18,7 @@ export const restoreParkingTicket = (
         where ticketID = ?
         and recordDelete_timeMillis is not null`
     )
-    .run(requestSession.user.userName, Date.now(), ticketID)
+    .run(sessionUser.userName, Date.now(), ticketID)
 
   database.close()
 

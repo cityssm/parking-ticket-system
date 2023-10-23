@@ -1,6 +1,5 @@
-import type * as expressSession from 'express-session';
 import type { LicencePlateLookupBatch } from '../../types/recordTypes.js';
-export declare const createConvictionBatch: (requestSession: expressSession.Session) => {
+export declare const createConvictionBatch: (sessionUser: PTSUser) => {
     success: boolean;
     batch?: LicencePlateLookupBatch;
 };

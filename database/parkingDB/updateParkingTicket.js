@@ -24,17 +24,17 @@ export const getLicencePlateExpiryDateFromPieces = (requestBody) => {
         licencePlateExpiryDate
     };
 };
-export const updateParkingTicket = (requestBody, requestSession) => {
+export const updateParkingTicket = (requestBody, sessionUser) => {
     const database = sqlite(databasePath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
     if (configFunctions.getProperty('parkingTickets.ticketNumber.isUnique')) {
         const duplicateTicket = database
-            .prepare('select ticketID from ParkingTickets' +
-            ' where recordDelete_timeMillis is null' +
-            ' and ticketNumber = ?' +
-            ' and ticketID != ?' +
-            ' and abs(issueDate - ?) <= 20000')
+            .prepare(`select ticketID from ParkingTickets
+          where recordDelete_timeMillis is null
+          and ticketNumber = ?
+          and ticketID != ?
+          and abs(issueDate - ?) <= 20000`)
             .get(requestBody.ticketNumber, requestBody.ticketID, issueDate);
         if (duplicateTicket) {
             database.close();
@@ -84,7 +84,7 @@ export const updateParkingTicket = (requestBody, requestSession) => {
         where ticketID = ?
         and resolvedDate is null
         and recordDelete_timeMillis is null`)
-        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, requestSession.user.userName, nowMillis, requestBody.ticketID);
+        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, requestBody.ticketID);
     database.close();
     return info.changes > 0
         ? {

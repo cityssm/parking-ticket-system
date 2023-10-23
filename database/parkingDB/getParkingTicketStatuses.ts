@@ -1,6 +1,5 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
@@ -9,7 +8,7 @@ import { canUpdateObject } from '../parkingDB.js'
 export const getParkingTicketStatusesWithDB = (
   database: sqlite.Database,
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): ParkingTicketStatusLog[] => {
   const statusRows = database
     .prepare(
@@ -23,10 +22,14 @@ export const getParkingTicketStatusesWithDB = (
   for (const status of statusRows) {
     status.recordType = 'status'
 
-    status.statusDateString = dateTimeFns.dateIntegerToString(status.statusDate as number)
-    status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime as number)
+    status.statusDateString = dateTimeFns.dateIntegerToString(
+      status.statusDate as number
+    )
+    status.statusTimeString = dateTimeFns.timeIntegerToString(
+      status.statusTime as number
+    )
 
-    status.canUpdate = canUpdateObject(status, requestSession)
+    status.canUpdate = canUpdateObject(status, sessionUser)
   }
 
   return statusRows
@@ -34,7 +37,7 @@ export const getParkingTicketStatusesWithDB = (
 
 export const getParkingTicketStatuses = (
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): ParkingTicketStatusLog[] => {
   const database = sqlite(databasePath, {
     readonly: true
@@ -43,7 +46,7 @@ export const getParkingTicketStatuses = (
   const statusRows = getParkingTicketStatusesWithDB(
     database,
     ticketID,
-    requestSession
+    sessionUser
   )
 
   database.close()

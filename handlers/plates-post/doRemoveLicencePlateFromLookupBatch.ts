@@ -5,7 +5,7 @@ import { removeLicencePlateFromLookupBatch } from '../../database/parkingDB/remo
 export const handler: RequestHandler = (request, response) => {
   const result = removeLicencePlateFromLookupBatch(
     request.body,
-    request.session
+    request.session.user as PTSUser
   )
 
   return response.json(result)

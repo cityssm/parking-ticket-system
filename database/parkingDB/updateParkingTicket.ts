@@ -1,6 +1,5 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import * as configFunctions from '../../helpers/functions.config.js'
@@ -47,7 +46,7 @@ export const getLicencePlateExpiryDateFromPieces = (
 
 export const updateParkingTicket = (
   requestBody: ParkingTicket,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean; message?: string } => {
   const database = sqlite(databasePath)
 
@@ -60,11 +59,11 @@ export const updateParkingTicket = (
 
     const duplicateTicket = database
       .prepare(
-        'select ticketID from ParkingTickets' +
-          ' where recordDelete_timeMillis is null' +
-          ' and ticketNumber = ?' +
-          ' and ticketID != ?' +
-          ' and abs(issueDate - ?) <= 20000'
+        `select ticketID from ParkingTickets
+          where recordDelete_timeMillis is null
+          and ticketNumber = ?
+          and ticketID != ?
+          and abs(issueDate - ?) <= 20000`
       )
       .get(requestBody.ticketNumber, requestBody.ticketID, issueDate)
 
@@ -150,7 +149,7 @@ export const updateParkingTicket = (
       licencePlateExpiryDate,
       requestBody.vehicleMakeModel,
       requestBody.vehicleVIN,
-      requestSession.user.userName,
+      sessionUser.userName,
       nowMillis,
       requestBody.ticketID
     )

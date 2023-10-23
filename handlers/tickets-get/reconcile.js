@@ -3,7 +3,7 @@ import { getUnacknowledgedLookupErrorLog } from '../../database/parkingDB/getUna
 export const handler = (_request, response) => {
     const reconciliationRecords = getOwnershipReconciliationRecords();
     const lookupErrors = getUnacknowledgedLookupErrorLog(-1, -1);
-    return response.render('ticket-reconcile', {
+    response.render('ticket-reconcile', {
         headTitle: 'Ownership Reconciliation',
         records: reconciliationRecords,
         errorLog: lookupErrors

@@ -1,11 +1,10 @@
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export const unlockConvictionBatch = (
   batchID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): boolean => {
   const database = sqlite(databasePath)
 
@@ -22,7 +21,7 @@ export const unlockConvictionBatch = (
         and lockDate is not null
         and sentDate is null`
     )
-    .run(requestSession.user.userName, rightNowMillis, batchID)
+    .run(sessionUser.userName, rightNowMillis, batchID)
 
   database.close()
 

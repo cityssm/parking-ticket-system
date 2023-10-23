@@ -1,12 +1,11 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LicencePlateLookupBatch } from '../../types/recordTypes.js'
 
 export const createConvictionBatch = (
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean; batch?: LicencePlateLookupBatch } => {
   const database = sqlite(databasePath)
 
@@ -21,9 +20,9 @@ export const createConvictionBatch = (
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),
-      requestSession.user.userName,
+      sessionUser.userName,
       rightNow.getTime(),
-      requestSession.user.userName,
+      sessionUser.userName,
       rightNow.getTime()
     )
 

@@ -1,5 +1,4 @@
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
@@ -7,7 +6,7 @@ import { isConvictionBatchUpdatableWithDB } from './isConvictionBatchUpdatable.j
 
 export const clearConvictionBatch = (
   batchID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean; message?: string } => {
   const database = sqlite(databasePath)
 
@@ -37,7 +36,7 @@ export const clearConvictionBatch = (
         and statusKey in ('convicted', 'convictionBatch')
         and statusField = ?`
     )
-    .run(requestSession.user.userName, rightNowMillis, batchID.toString())
+    .run(sessionUser.userName, rightNowMillis, batchID.toString())
 
   database.close()
 

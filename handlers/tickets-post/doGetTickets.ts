@@ -17,7 +17,10 @@ export const handler: RequestHandler = (request, response) => {
   }
 
   response.json(
-    parkingDB_getParkingTickets.getParkingTickets(request.session, queryOptions)
+    parkingDB_getParkingTickets.getParkingTickets(
+      request.session.user as PTSUser,
+      queryOptions
+    )
   )
 }
 

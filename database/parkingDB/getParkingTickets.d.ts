@@ -1,4 +1,3 @@
-import type * as expressSession from 'express-session';
 import type { ParkingTicket } from '../../types/recordTypes.js';
 export interface GetParkingTicketsQueryOptions {
     isResolved?: boolean;
@@ -17,6 +16,6 @@ interface GetParkingTicketsReturn {
     offset: number;
     tickets: ParkingTicket[];
 }
-export declare const getParkingTickets: (requestSession: expressSession.Session, queryOptions: GetParkingTicketsQueryOptions) => GetParkingTicketsReturn;
-export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, requestSession: expressSession.Session) => ParkingTicket[];
+export declare const getParkingTickets: (sessionUser: PTSUser, queryOptions: GetParkingTicketsQueryOptions) => GetParkingTicketsReturn;
+export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, sessionUser: PTSUser) => ParkingTicket[];
 export default getParkingTickets;

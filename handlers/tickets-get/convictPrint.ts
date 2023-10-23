@@ -9,7 +9,7 @@ export const handler: RequestHandler = (request, response) => {
   const batch = getConvictionBatch(batchID)
 
   if (batch !== undefined && batch.sentDate === undefined) {
-    markConvictionBatchAsSent(batchID, request.session)
+    markConvictionBatchAsSent(batchID, request.session.user as PTSUser)
   }
 
   response.render('ticketConvict-print', {

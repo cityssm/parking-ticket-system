@@ -5,7 +5,7 @@ import { addAllParkingTicketsToLookupBatch } from '../../database/parkingDB/addL
 export const handler: RequestHandler = (request, response) => {
   const result = addAllParkingTicketsToLookupBatch(
     request.body,
-    request.session
+    request.session.user as PTSUser
   )
 
   return response.json(result)

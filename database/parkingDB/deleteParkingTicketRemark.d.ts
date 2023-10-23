@@ -1,5 +1,4 @@
-import type * as expressSession from "express-session";
-export declare const deleteParkingTicketRemark: (ticketID: number, remarkIndex: number, requestSession: expressSession.Session) => {
+export declare const deleteParkingTicketRemark: (ticketID: number, remarkIndex: number, sessionUser: PTSUser) => {
     success: boolean;
 };
 export default deleteParkingTicketRemark;

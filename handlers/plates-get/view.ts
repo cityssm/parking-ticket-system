@@ -32,7 +32,7 @@ export const handler: RequestHandler = (request, response) => {
     licencePlateCountry,
     licencePlateProvince,
     licencePlateNumber,
-    request.session
+    request.session.user as PTSUser
   )
 
   response.render('plate-view', {

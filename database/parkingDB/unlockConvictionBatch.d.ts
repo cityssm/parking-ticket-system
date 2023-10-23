@@ -1,3 +1,2 @@
-import type * as expressSession from 'express-session';
-export declare const unlockConvictionBatch: (batchID: number, requestSession: expressSession.Session) => boolean;
+export declare const unlockConvictionBatch: (batchID: number, sessionUser: PTSUser) => boolean;
 export default unlockConvictionBatch;

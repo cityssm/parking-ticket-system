@@ -5,7 +5,10 @@ import * as mtoFunctions from '../../helpers/functions.mto.js'
 export const handler: RequestHandler = (request, response) => {
   const batchID = Number.parseInt(request.params.batchID, 10)
 
-  const output = mtoFunctions.exportLicencePlateBatch(batchID, request.session)
+  const output = mtoFunctions.exportLicencePlateBatch(
+    batchID,
+    request.session.user as PTSUser
+  )
 
   response.setHeader(
     'Content-Disposition',

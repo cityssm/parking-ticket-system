@@ -1,12 +1,11 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export const markLookupBatchAsSent = (
   batchID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): boolean => {
   const database = sqlite(databasePath)
 
@@ -25,7 +24,7 @@ export const markLookupBatchAsSent = (
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),
-      requestSession.user.userName,
+      sessionUser.userName,
       rightNow.getTime(),
       batchID
     )

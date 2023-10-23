@@ -4,7 +4,7 @@ export const handler = (request, response) => {
     const batchID = Number.parseInt(request.params.batchID, 10);
     const batch = getConvictionBatch(batchID);
     if (batch !== undefined && batch.sentDate === undefined) {
-        markConvictionBatchAsSent(batchID, request.session);
+        markConvictionBatchAsSent(batchID, request.session.user);
     }
     response.render('ticketConvict-print', {
         headTitle: 'Parking Tickets Conviction Batch',

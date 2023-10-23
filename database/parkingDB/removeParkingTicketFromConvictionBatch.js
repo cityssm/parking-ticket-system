@@ -1,7 +1,7 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { isConvictionBatchUpdatableWithDB } from './isConvictionBatchUpdatable.js';
-export const removeParkingTicketFromConvictionBatch = (batchID, ticketID, requestSession) => {
+export const removeParkingTicketFromConvictionBatch = (batchID, ticketID, sessionUser) => {
     const database = sqlite(databasePath);
     const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
     if (!batchIsAvailable) {
@@ -20,7 +20,7 @@ export const removeParkingTicketFromConvictionBatch = (batchID, ticketID, reques
         and ticketID = ?
         and statusKey in ('convicted', 'convictionBatch')
         and statusField = ?`)
-        .run(requestSession.user.userName, rightNowMillis, ticketID, batchID.toString());
+        .run(sessionUser.userName, rightNowMillis, ticketID, batchID.toString());
     database.close();
     return {
         success: info.changes > 0

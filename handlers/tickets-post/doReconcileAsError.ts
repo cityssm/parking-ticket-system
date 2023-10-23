@@ -26,7 +26,7 @@ export const handler: RequestHandler = (request, response) => {
       statusField: ownerRecord.vehicleNCIC,
       statusNote: ''
     },
-    request.session,
+    request.session.user as PTSUser,
     false
   )
 

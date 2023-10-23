@@ -15,7 +15,7 @@ export const handler: RequestHandler = (request, response) => {
   const result = addAllParkingTicketsToConvictionBatch(
     batchID,
     ticketIDs,
-    request.session
+    request.session.user as PTSUser
   ) as {
     success: boolean
     successCount: number

@@ -1,9 +1,9 @@
 export interface Record {
     recordType: 'ticket' | 'remark' | 'status' | 'owner' | 'batch';
-    recordCreate_userName?: string;
-    recordCreate_timeMillis?: number;
-    recordUpdate_userName?: string;
-    recordUpdate_timeMillis?: number;
+    recordCreate_userName: string;
+    recordCreate_timeMillis: number;
+    recordUpdate_userName: string;
+    recordUpdate_timeMillis: number;
     recordUpdate_dateString?: string;
     recordDelete_userName?: string;
     recordDelete_timeMillis?: number;
@@ -55,7 +55,7 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
 }
 export interface ParkingTicketStatusLog extends Record {
     recordType: 'status';
-    ticketID: number;
+    ticketID: number | string;
     statusIndex?: number;
     statusDate?: number;
     statusDateString?: string;
@@ -103,7 +103,7 @@ export interface ParkingOffence extends ParkingLocation, ParkingBylaw {
     discountDays: number;
     accountNumber: string;
 }
-export interface LicencePlateOwner extends Record, LicencePlate {
+export interface LicencePlateOwner extends Partial<Record>, LicencePlate {
     recordType: 'owner';
     recordDate: number;
     recordDateString?: string;
@@ -118,7 +118,7 @@ export interface LicencePlateOwner extends Record, LicencePlate {
     ownerGenderKey: string;
     driverLicenceNumber: string;
 }
-export interface LicencePlateLookupBatch extends Record {
+export interface LicencePlateLookupBatch extends Partial<Record> {
     recordType: 'batch';
     batchID: number;
     batchDate: number;
@@ -135,7 +135,7 @@ export interface LicencePlateLookupBatch extends Record {
 export interface LicencePlateLookupBatchEntry extends LicencePlate, ParkingTicket {
     batchID: number;
 }
-export interface ParkingTicketConvictionBatch extends Record {
+export interface ParkingTicketConvictionBatch extends Partial<Record> {
     recordType: 'batch';
     batchID: number;
     batchDate: number;
@@ -152,19 +152,18 @@ export interface NHTSAMakeModel {
     modelID: number;
     modelName: string;
 }
-export interface User {
-    userName: string;
-    firstName?: string;
-    lastName?: string;
-    userProperties?: UserProperties;
-}
-export interface UserProperties {
-    canUpdate: boolean;
-    isAdmin: boolean;
-    isOperator: boolean;
+declare global {
+    export interface PTSUser {
+        userName: string;
+        firstName?: string;
+        lastName?: string;
+        canUpdate: boolean;
+        isAdmin: boolean;
+        isOperator: boolean;
+    }
 }
 declare module 'express-session' {
     interface Session {
-        user: User;
+        user?: PTSUser;
     }
 }

@@ -16,7 +16,7 @@ export const handler: RequestHandler = (request, response) => {
   const results = mtoFunctions.importLicencePlateOwnership(
     batchID,
     ownershipData,
-    request.session
+    request.session.user as PTSUser
   )
 
   return response.json(results)

@@ -14,7 +14,7 @@ export const handler = (request, response) => {
         licencePlateNumber = '';
     }
     const owners = getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
-    const tickets = getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, request.session);
+    const tickets = getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, request.session.user);
     response.render('plate-view', {
         headTitle: 'Licence Plate ' + licencePlateNumber,
         licencePlateNumber,

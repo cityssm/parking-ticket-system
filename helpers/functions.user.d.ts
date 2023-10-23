@@ -1,5 +1,11 @@
 import type { Request, Response } from 'express';
-export declare const userIsAdmin: (request: Request) => boolean;
-export declare const userCanUpdate: (request: Request) => boolean;
-export declare const userIsOperator: (request: Request) => boolean;
+interface RequestWithSessionUser {
+    session: {
+        user: PTSUser;
+    };
+}
+export declare const userIsAdmin: (request: Partial<Request> | RequestWithSessionUser) => boolean;
+export declare const userCanUpdate: (request: Partial<Request> | RequestWithSessionUser) => boolean;
+export declare const userIsOperator: (request: Partial<Request> | RequestWithSessionUser) => boolean;
 export declare const forbiddenJSON: (response: Response) => Response;
+export {};

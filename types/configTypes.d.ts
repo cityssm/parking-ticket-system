@@ -73,8 +73,9 @@ interface ConfigParkingTickets {
     };
     updateWindowMillis?: number;
 }
+type ParkingTicketStatusKey = 'receipt' | 'paid' | 'ownerLookupPending' | 'ownerLookupMatch' | 'ownerLookupError' | 'withdrawn' | 'trial' | 'convictionBatch' | 'convicted';
 export interface ConfigParkingTicketStatus {
-    statusKey: string;
+    statusKey: ParkingTicketStatusKey;
     status: string;
     statusField?: {
         fieldLabel: string;

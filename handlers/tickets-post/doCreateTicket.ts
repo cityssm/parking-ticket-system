@@ -1,11 +1,13 @@
 import type { RequestHandler } from 'express'
 
+import { createParkingTicket } from '../../database/parkingDB/createParkingTicket.js'
 import * as configFunctions from '../../helpers/functions.config.js'
 
-import { createParkingTicket } from '../../database/parkingDB/createParkingTicket.js'
-
 export const handler: RequestHandler = (request, response) => {
-  const result = createParkingTicket(request.body, request.session)
+  const result = createParkingTicket(
+    request.body,
+    request.session.user as PTSUser
+  )
 
   if (result.success) {
     const ticketNumber = request.body.ticketNumber

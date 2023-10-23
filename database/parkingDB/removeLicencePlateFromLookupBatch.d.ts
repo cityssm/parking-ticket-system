@@ -1,6 +1,5 @@
-import type * as pts from "../../types/recordTypes";
-import type * as expressSession from "express-session";
-export declare const removeLicencePlateFromLookupBatch: (requestBody: pts.LicencePlateLookupBatchEntry, requestSession: expressSession.Session) => {
+import type { LicencePlateLookupBatchEntry } from '../../types/recordTypes.js';
+export declare const removeLicencePlateFromLookupBatch: (requestBody: LicencePlateLookupBatchEntry, sessionUser: PTSUser) => {
     success: boolean;
     message?: string;
 };

@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
 import { acknowledgeLookupErrorLogEntry } from '../../database/parkingDB/acknowledgeLookupErrorLogEntry.js'
+import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
 import { getUnacknowledgedLookupErrorLog } from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js'
 
 export const handler: RequestHandler = (request, response) => {
@@ -28,9 +28,9 @@ export const handler: RequestHandler = (request, response) => {
       statusKey: 'ownerLookupError',
       statusField: '',
       statusNote:
-        logEntries[0].errorMessage + ' (' + logEntries[0].errorCode + ')'
+        `${logEntries[0].errorMessage} (${logEntries[0].errorCode})`
     },
-    request.session,
+    request.session.user as PTSUser,
     false
   )
 
@@ -47,7 +47,7 @@ export const handler: RequestHandler = (request, response) => {
   const success = acknowledgeLookupErrorLogEntry(
     request.body.batchID,
     request.body.logIndex,
-    request.session
+    request.session.user as PTSUser
   )
 
   return response.json({

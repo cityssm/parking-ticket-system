@@ -3,7 +3,6 @@
 
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
@@ -22,15 +21,15 @@ type CreateParkingTicketStatusReturn =
 
 export const createParkingTicketStatusWithDB = (
   database: sqlite.Database,
-  requestBodyOrObject: ParkingTicketStatusLog,
-  requestSession: expressSession.Session,
+  requestBodyOrObject: Partial<ParkingTicketStatusLog>,
+  sessionUser: PTSUser,
   resolveTicket: boolean
 ): CreateParkingTicketStatusReturn => {
   // Get new status index
 
   const statusIndexNew = getNextParkingTicketStatusIndex(
     database,
-    requestBodyOrObject.ticketID
+    requestBodyOrObject.ticketID as number | string
   )
 
   // Create the record
@@ -39,11 +38,13 @@ export const createParkingTicketStatusWithDB = (
 
   const info = database
     .prepare(
-      'insert into ParkingTicketStatusLog' +
-        ' (ticketID, statusIndex, statusDate, statusTime, statusKey,' +
-        ' statusField, statusField2, statusNote,' +
-        ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-        ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      `insert into ParkingTicketStatusLog (
+        ticketID, statusIndex,
+        statusDate, statusTime,
+        statusKey, statusField, statusField2, statusNote,
+        recordCreate_userName, recordCreate_timeMillis,
+        recordUpdate_userName, recordUpdate_timeMillis)
+      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .run(
       requestBodyOrObject.ticketID,
@@ -54,9 +55,9 @@ export const createParkingTicketStatusWithDB = (
       requestBodyOrObject.statusField,
       requestBodyOrObject.statusField2,
       requestBodyOrObject.statusNote,
-      requestSession.user.userName,
+      sessionUser.userName,
       rightNow.getTime(),
-      requestSession.user.userName,
+      sessionUser.userName,
       rightNow.getTime()
     )
 
@@ -64,7 +65,7 @@ export const createParkingTicketStatusWithDB = (
     resolveParkingTicketWithDB(
       database,
       requestBodyOrObject.ticketID,
-      requestSession
+      sessionUser
     )
   }
 
@@ -75,8 +76,8 @@ export const createParkingTicketStatusWithDB = (
 }
 
 export const createParkingTicketStatus = (
-  requestBodyOrObject: ParkingTicketStatusLog,
-  requestSession: expressSession.Session,
+  requestBodyOrObject: Partial<ParkingTicketStatusLog>,
+  sessionUser: PTSUser,
   resolveTicket: boolean
 ): CreateParkingTicketStatusReturn => {
   const database = sqlite(databasePath)
@@ -84,7 +85,7 @@ export const createParkingTicketStatus = (
   const result = createParkingTicketStatusWithDB(
     database,
     requestBodyOrObject,
-    requestSession,
+    sessionUser,
     resolveTicket
   )
 

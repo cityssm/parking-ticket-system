@@ -1,12 +1,14 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/indent */
+
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import * as configFunctions from '../../helpers/functions.config.js'
 
 export const unresolveParkingTicket = (
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean; message?: string } => {
   const database = sqlite(databasePath)
 
@@ -19,11 +21,13 @@ export const unresolveParkingTicket = (
         and recordDelete_timeMillis is null
         and resolvedDate is not null`
     )
-    .get(ticketID) as {
-    recordUpdate_timeMillis: number
-  }
+    .get(ticketID) as
+    | {
+        recordUpdate_timeMillis: number
+      }
+    | undefined
 
-  if (!ticketObject) {
+  if (ticketObject === undefined) {
     database.close()
 
     return {
@@ -47,15 +51,15 @@ export const unresolveParkingTicket = (
 
   const info = database
     .prepare(
-      'update ParkingTickets' +
-        ' set resolvedDate = null,' +
-        ' recordUpdate_userName = ?,' +
-        ' recordUpdate_timeMillis = ?' +
-        ' where ticketID = ?' +
-        ' and resolvedDate is not null' +
-        ' and recordDelete_timeMillis is null'
+      `update ParkingTickets
+        set resolvedDate = null,
+        recordUpdate_userName = ?,
+        recordUpdate_timeMillis = ?
+        where ticketID = ?
+        and resolvedDate is not null
+        and recordDelete_timeMillis is null`
     )
-    .run(requestSession.user.userName, Date.now(), ticketID)
+    .run(sessionUser.userName, Date.now(), ticketID)
 
   database.close()
 

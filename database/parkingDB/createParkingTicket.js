@@ -12,7 +12,7 @@ function hasDuplicateTicket(database, ticketNumber, issueDate) {
         .get(ticketNumber, issueDate);
     return !(duplicateTicket === undefined);
 }
-export function createParkingTicket(requestBody, requestSession) {
+export function createParkingTicket(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
@@ -48,7 +48,7 @@ export function createParkingTicket(requestBody, requestSession) {
         ' licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN,' +
         ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
         ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, requestSession.user.userName, nowMillis, requestSession.user.userName, nowMillis);
+        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, sessionUser.userName, nowMillis);
     database.close();
     return {
         success: true,

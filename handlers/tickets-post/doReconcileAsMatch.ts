@@ -1,9 +1,8 @@
 import type { RequestHandler } from 'express'
 
-import * as ownerFunctions from '../../helpers/functions.owner.js'
-
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js'
+import * as ownerFunctions from '../../helpers/functions.owner.js'
 
 export const handler: RequestHandler = (request, response) => {
   const ownerRecord = getLicencePlateOwner(
@@ -13,7 +12,7 @@ export const handler: RequestHandler = (request, response) => {
     request.body.recordDate
   )
 
-  if (!ownerRecord) {
+  if (ownerRecord === undefined) {
     return response.json({
       success: false,
       message: 'Ownership record not found.'
@@ -30,7 +29,7 @@ export const handler: RequestHandler = (request, response) => {
       statusField: ownerRecord.recordDate.toString(),
       statusNote: ownerAddress
     },
-    request.session,
+    request.session.user as PTSUser,
     false
   )
 

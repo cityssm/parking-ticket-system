@@ -15,7 +15,7 @@ export const handler = (request, response) => {
             statusKey: 'ownerLookupMatch',
             statusField: record.owner_recordDateString,
             statusNote: ownerAddress
-        }, request.session, false);
+        }, request.session.user, false);
         if (statusResponse.success) {
             statusRecords.push({
                 ticketID: record.ticket_ticketID,

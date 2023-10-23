@@ -4,7 +4,7 @@ import { getParkingTicketStatuses } from '../../database/parkingDB/getParkingTic
 
 export const handler: RequestHandler = (request, response) => {
   return response.json(
-    getParkingTicketStatuses(request.body.ticketID, request.session)
+    getParkingTicketStatuses(request.body.ticketID, request.session.user as PTSUser)
   )
 }
 

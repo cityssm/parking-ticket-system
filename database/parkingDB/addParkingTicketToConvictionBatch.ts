@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/indent */
 
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
@@ -17,7 +16,7 @@ function createStatus(
   batchID: number,
   ticketID: number,
   statusKey: 'convicted' | 'convictionBatch',
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): void {
   createParkingTicketStatusWithDB(
     database,
@@ -29,7 +28,7 @@ function createStatus(
       statusField2: '',
       statusNote: ''
     },
-    requestSession,
+    sessionUser,
     false
   )
 }
@@ -38,25 +37,25 @@ function createConvictedStatus(
   database: sqlite.Database,
   batchID: number,
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): void {
-  createStatus(database, batchID, ticketID, 'convicted', requestSession)
+  createStatus(database, batchID, ticketID, 'convicted', sessionUser)
 }
 
 function createConvictionBatchStatus(
   database: sqlite.Database,
   batchID: number,
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): void {
-  createStatus(database, batchID, ticketID, 'convictionBatch', requestSession)
+  createStatus(database, batchID, ticketID, 'convictionBatch', sessionUser)
 }
 
 function convictIfNotConvicted(
   database: sqlite.Database,
   batchID: number,
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): void {
   const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(
     database,
@@ -64,7 +63,7 @@ function convictIfNotConvicted(
   )
 
   if (!parkingTicketIsConvicted) {
-    createConvictedStatus(database, batchID, ticketID, requestSession)
+    createConvictedStatus(database, batchID, ticketID, sessionUser)
   }
 }
 
@@ -72,7 +71,7 @@ function addParkingTicketToConvictionBatchAfterBatchCheck(
   database: sqlite.Database,
   batchID: number,
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): {
   success: boolean
   message?: string
@@ -93,7 +92,7 @@ function addParkingTicketToConvictionBatchAfterBatchCheck(
 
   // Convict ticket
 
-  convictIfNotConvicted(database, batchID, ticketID, requestSession)
+  convictIfNotConvicted(database, batchID, ticketID, sessionUser)
 
   // Check if the ticket is part of another conviction batch
 
@@ -112,7 +111,7 @@ function addParkingTicketToConvictionBatchAfterBatchCheck(
   } else {
     // No record, add to batch now
 
-    createConvictionBatchStatus(database, batchID, ticketID, requestSession)
+    createConvictionBatchStatus(database, batchID, ticketID, sessionUser)
   }
 
   return {
@@ -123,7 +122,7 @@ function addParkingTicketToConvictionBatchAfterBatchCheck(
 export function addParkingTicketToConvictionBatch(
   batchID: number,
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean; message?: string } {
   const database = sqlite(databasePath)
 
@@ -144,14 +143,14 @@ export function addParkingTicketToConvictionBatch(
     database,
     batchID,
     ticketID,
-    requestSession
+    sessionUser
   )
 }
 
 export const addAllParkingTicketsToConvictionBatch = (
   batchID: number,
   ticketIDs: number[],
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean; successCount: number; message?: string } => {
   const database = sqlite(databasePath)
 
@@ -178,7 +177,7 @@ export const addAllParkingTicketsToConvictionBatch = (
       database,
       batchID,
       ticketID,
-      requestSession
+      sessionUser
     )
 
     if (result.success) {

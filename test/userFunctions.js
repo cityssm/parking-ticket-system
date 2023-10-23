@@ -1,6 +1,7 @@
 import * as assert from 'node:assert';
 import * as userFunctions from '../helpers/functions.user.js';
-import { fakeRequest, fakeViewOnlyRequest, fakeAdminRequest } from './_globals.js';
+import { fakeViewOnlyRequest, fakeAdminRequest } from './_globals.js';
+const fakeRequest = {};
 describe('helpers/userFunctions', () => {
     describe('request.session.user = null', () => {
         it('userCanUpdate()  => false', () => {

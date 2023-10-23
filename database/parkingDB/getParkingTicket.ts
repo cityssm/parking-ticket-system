@@ -1,6 +1,5 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
@@ -13,7 +12,7 @@ import { getParkingTicketStatusesWithDB } from './getParkingTicketStatuses.js'
 
 export const getParkingTicket = (
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): ParkingTicket | undefined => {
   const database = sqlite(databasePath, {
     readonly: true
@@ -21,20 +20,20 @@ export const getParkingTicket = (
 
   const ticket = database
     .prepare(
-      'select t.*,' +
-        ' l.locationName,' +
-        ' s.statusKey as ownerLookup_statusKey,' +
-        ' s.statusField as ownerLookup_statusField' +
-        ' from ParkingTickets t' +
-        (' left join ParkingTicketStatusLog s' +
-          ' on t.ticketID = s.ticketID' +
-          " and s.statusKey in ('ownerLookupPending', 'ownerLookupError', 'ownerLookupMatch')" +
-          ' and s.recordDelete_timeMillis is null') +
-        (' left join ParkingLocations l' +
-          ' on t.locationKey = l.locationKey') +
-        ' where t.ticketID = ?' +
-        ' order by s.statusDate desc, s.statusIndex desc' +
-        ' limit 1'
+      `select t.*,
+        l.locationName,
+        s.statusKey as ownerLookup_statusKey,
+        s.statusField as ownerLookup_statusField
+        from ParkingTickets t
+        left join ParkingTicketStatusLog s
+          on t.ticketID = s.ticketID
+          and s.statusKey in ('ownerLookupPending', 'ownerLookupError', 'ownerLookupMatch')
+          and s.recordDelete_timeMillis is null
+        left join ParkingLocations l
+          on t.locationKey = l.locationKey
+        where t.ticketID = ?
+        order by s.statusDate desc, s.statusIndex desc
+        limit 1`
     )
     .get(ticketID) as ParkingTicket
 
@@ -65,7 +64,7 @@ export const getParkingTicket = (
   ticket.resolvedDateString = dateTimeFns.dateIntegerToString(
     ticket.resolvedDate
   )
-  ticket.canUpdate = canUpdateObject(ticket, requestSession)
+  ticket.canUpdate = canUpdateObject(ticket, sessionUser)
 
   // Owner
 
@@ -88,7 +87,7 @@ export const getParkingTicket = (
   ticket.statusLog = getParkingTicketStatusesWithDB(
     database,
     ticketID,
-    requestSession
+    sessionUser
   )
 
   if (!ticket.canUpdate) {
@@ -102,7 +101,7 @@ export const getParkingTicket = (
   ticket.remarks = getParkingTicketRemarksWithDB(
     database,
     ticketID,
-    requestSession
+    sessionUser
   )
 
   if (!ticket.canUpdate) {

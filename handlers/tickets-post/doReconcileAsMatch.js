@@ -1,9 +1,9 @@
-import * as ownerFunctions from '../../helpers/functions.owner.js';
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js';
+import * as ownerFunctions from '../../helpers/functions.owner.js';
 export const handler = (request, response) => {
     const ownerRecord = getLicencePlateOwner(request.body.licencePlateCountry, request.body.licencePlateProvince, request.body.licencePlateNumber, request.body.recordDate);
-    if (!ownerRecord) {
+    if (ownerRecord === undefined) {
         return response.json({
             success: false,
             message: 'Ownership record not found.'
@@ -16,7 +16,7 @@ export const handler = (request, response) => {
         statusKey: 'ownerLookupMatch',
         statusField: ownerRecord.recordDate.toString(),
         statusNote: ownerAddress
-    }, request.session, false);
+    }, request.session.user, false);
     return response.json(statusResponse);
 };
 export default handler;

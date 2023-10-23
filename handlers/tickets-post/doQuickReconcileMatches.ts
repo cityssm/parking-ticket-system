@@ -24,7 +24,7 @@ export const handler: RequestHandler = (request, response) => {
         statusField: record.owner_recordDateString,
         statusNote: ownerAddress
       },
-      request.session,
+      request.session.user as PTSUser,
       false
     )
 

@@ -19,7 +19,7 @@ interface GetLicencePlatesReturn {
   licencePlates: LicencePlate[]
 }
 
-export function getLicencePlates (
+export function getLicencePlates(
   queryOptions: GetLicencePlatesQueryOptions
 ): GetLicencePlatesReturn {
   const database = sqlite(databasePath, {
@@ -28,17 +28,14 @@ export function getLicencePlates (
 
   // build where clause
 
-  const sqlParameters = []
+  const sqlParameters: unknown[] = []
 
   let sqlInnerWhereClause = ' where recordDelete_timeMillis is null'
 
-  if (
-    queryOptions.licencePlateNumber &&
-    queryOptions.licencePlateNumber !== ''
-  ) {
+  if ((queryOptions.licencePlateNumber ?? '') !== '') {
     const filter = getSplitWhereClauseFilter(
       'licencePlateNumber',
-      queryOptions.licencePlateNumber
+      queryOptions.licencePlateNumber ?? ''
     )
     sqlInnerWhereClause += filter.sqlWhereClause
     sqlParameters.push(...filter.sqlParams)
@@ -66,24 +63,24 @@ export function getLicencePlates (
 
   // get the count
 
-  const innerSql =
-    'select licencePlateCountry, licencePlateProvince, licencePlateNumber,' +
-    ' sum(unresolvedTicketCountInternal) as unresolvedTicketCount,' +
-    ' cast(sum(hasOwnerRecordInternal) as bit) as hasOwnerRecord from (' +
-    'select licencePlateCountry, licencePlateProvince, licencePlateNumber,' +
-    ' 0 as unresolvedTicketCountInternal, 1 as hasOwnerRecordInternal' +
-    ' from LicencePlateOwners' +
-    sqlInnerWhereClause +
-    ' union' +
-    ' select licencePlateCountry, licencePlateProvince, licencePlateNumber,' +
-    ' sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal,' +
-    ' 0 as hasOwnerRecordInternal' +
-    ' from ParkingTickets' +
-    sqlInnerWhereClause +
-    ' group by licencePlateCountry, licencePlateProvince, licencePlateNumber' +
-    ')' +
-    ' group by licencePlateCountry, licencePlateProvince, licencePlateNumber' +
-    sqlHavingClause
+  const innerSql = `select licencePlateCountry, licencePlateProvince, licencePlateNumber,
+      sum(unresolvedTicketCountInternal) as unresolvedTicketCount,
+      cast(sum(hasOwnerRecordInternal) as bit) as hasOwnerRecord
+      from (
+        select licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        0 as unresolvedTicketCountInternal,
+        1 as hasOwnerRecordInternal
+        from LicencePlateOwners
+        ${sqlInnerWhereClause}
+        union
+        select licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal,
+        0 as hasOwnerRecordInternal
+        from ParkingTickets
+        ${sqlInnerWhereClause}
+        group by licencePlateCountry, licencePlateProvince, licencePlateNumber)
+      group by licencePlateCountry, licencePlateProvince, licencePlateNumber
+      ${sqlHavingClause}`
 
   const count: number = (
     database
@@ -95,12 +92,10 @@ export function getLicencePlates (
 
   const rows = database
     .prepare(
-      innerSql +
-        ' order by licencePlateNumber, licencePlateProvince, licencePlateCountry' +
-        ' limit ' +
-        queryOptions.limit.toString() +
-        ' offset ' +
-        queryOptions.offset.toString()
+      `${innerSql}
+        order by licencePlateNumber, licencePlateProvince, licencePlateCountry
+        limit ${queryOptions.limit.toString()}
+        offset ${queryOptions.offset.toString()}`
     )
     .all(sqlParameters) as LicencePlate[]
 

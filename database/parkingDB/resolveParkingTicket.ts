@@ -1,13 +1,12 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export function resolveParkingTicketWithDB(
   database: sqlite.Database,
-  ticketID: number,
-  requestSession: expressSession.Session
+  ticketID: number | string,
+  sessionUser: PTSUser
 ): { success: boolean } {
   const rightNow = new Date()
 
@@ -23,7 +22,7 @@ export function resolveParkingTicketWithDB(
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),
-      requestSession.user.userName,
+      sessionUser.userName,
       rightNow.getTime(),
       ticketID
     )
@@ -35,11 +34,11 @@ export function resolveParkingTicketWithDB(
 
 export function resolveParkingTicket(
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean } {
   const database = sqlite(databasePath)
 
-  const success = resolveParkingTicketWithDB(database, ticketID, requestSession)
+  const success = resolveParkingTicketWithDB(database, ticketID, sessionUser)
 
   database.close()
 

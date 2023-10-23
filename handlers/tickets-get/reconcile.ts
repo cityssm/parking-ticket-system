@@ -8,7 +8,7 @@ export const handler: RequestHandler = (_request, response) => {
 
   const lookupErrors = getUnacknowledgedLookupErrorLog(-1, -1)
 
-  return response.render('ticket-reconcile', {
+  response.render('ticket-reconcile', {
     headTitle: 'Ownership Reconciliation',
     records: reconciliationRecords,
     errorLog: lookupErrors

@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const restoreParkingTicket = (ticketID, requestSession) => {
+export const restoreParkingTicket = (ticketID, sessionUser) => {
     const database = sqlite(databasePath);
     const info = database
         .prepare(`update ParkingTickets
@@ -10,7 +10,7 @@ export const restoreParkingTicket = (ticketID, requestSession) => {
         recordUpdate_timeMillis = ?
         where ticketID = ?
         and recordDelete_timeMillis is not null`)
-        .run(requestSession.user.userName, Date.now(), ticketID);
+        .run(sessionUser.userName, Date.now(), ticketID);
     database.close();
     return {
         success: info.changes > 0

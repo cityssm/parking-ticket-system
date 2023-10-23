@@ -1,7 +1,7 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getLookupBatch } from './getLookupBatch.js';
-export const addLicencePlateToLookupBatch = (requestBody, requestSession) => {
+export const addLicencePlateToLookupBatch = (requestBody, sessionUser) => {
     const database = sqlite(databasePath);
     const canUpdateBatch = database
         .prepare(`update LicencePlateLookupBatches
@@ -10,7 +10,7 @@ export const addLicencePlateToLookupBatch = (requestBody, requestSession) => {
         where batchID = ?
         and recordDelete_timeMillis is null
         and lockDate is null`)
-        .run(requestSession.user.userName, Date.now(), requestBody.batchID).changes;
+        .run(sessionUser.userName, Date.now(), requestBody.batchID).changes;
     if (canUpdateBatch === 0) {
         database.close();
         return {
@@ -33,7 +33,7 @@ export const addLicencePlateToLookupBatch = (requestBody, requestSession) => {
             message: 'Licence plate not added to the batch.  It may be already part of the batch.'
         };
 };
-export const addAllParkingTicketsToLookupBatch = (requestBody, requestSession) => {
+export const addAllParkingTicketsToLookupBatch = (requestBody, sessionUser) => {
     const database = sqlite(databasePath);
     const canUpdateBatch = database
         .prepare('update LicencePlateLookupBatches' +
@@ -42,7 +42,7 @@ export const addAllParkingTicketsToLookupBatch = (requestBody, requestSession) =
         ' where batchID = ?' +
         ' and recordDelete_timeMillis is null' +
         ' and lockDate is null')
-        .run(requestSession.user.userName, Date.now(), requestBody.batchID).changes;
+        .run(sessionUser.userName, Date.now(), requestBody.batchID).changes;
     if (canUpdateBatch === 0) {
         database.close();
         return {

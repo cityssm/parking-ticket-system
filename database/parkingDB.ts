@@ -1,31 +1,29 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'
 import * as configFunctions from '../helpers/functions.config.js'
-import type { ParkingTicket, Record, UserProperties } from '../types/recordTypes.js'
+import type { ParkingTicket, Record } from '../types/recordTypes.js'
 
 export const canUpdateObject = (
   object: Record,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): boolean => {
-  const userProperties = requestSession.user.userProperties as UserProperties
-
   // check user permissions
 
   let canUpdate = false
 
-  if (!requestSession) {
+  if ((sessionUser ?? undefined) === undefined) {
     canUpdate = false
-  } else if (object.recordDelete_timeMillis) {
+  } else if ((object.recordDelete_timeMillis ?? undefined) !== undefined) {
     // Deleted records cannot be updated
     canUpdate = false
-  } else if (userProperties.canUpdate) {
+  } else if (sessionUser.canUpdate) {
     canUpdate = true
   }
 
   if (canUpdate) {
+    // eslint-disable-next-line sonarjs/no-small-switch
     switch (object.recordType) {
       case 'ticket': {
         if (

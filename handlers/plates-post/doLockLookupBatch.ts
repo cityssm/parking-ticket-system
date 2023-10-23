@@ -6,7 +6,7 @@ import { lockLookupBatch } from '../../database/parkingDB/lockLookupBatch.js'
 export const handler: RequestHandler = (request, response) => {
   const batchID = Number.parseInt(request.body.batchID, 10)
 
-  const result = lockLookupBatch(batchID, request.session)
+  const result = lockLookupBatch(batchID, request.session.user as PTSUser)
 
   if (result.success) {
     result.batch = getLookupBatch(batchID)

@@ -1,9 +1,9 @@
 const getPermission = (request, permissionName) => {
     const user = request.session?.user;
-    if (!user) {
+    if (user === undefined) {
         return false;
     }
-    return user.userProperties[permissionName];
+    return user[permissionName] ?? false;
 };
 export const userIsAdmin = (request) => {
     return getPermission(request, 'isAdmin');

@@ -14,7 +14,7 @@ export const handler = (request, response) => {
         statusKey: 'ownerLookupError',
         statusField: ownerRecord.vehicleNCIC,
         statusNote: ''
-    }, request.session, false);
+    }, request.session.user, false);
     return response.json(statusResponse);
 };
 export default handler;

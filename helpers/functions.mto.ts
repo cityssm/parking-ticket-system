@@ -3,14 +3,17 @@
 
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'
 import { getConvictionBatch } from '../database/parkingDB/getConvictionBatch.js'
 import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js'
 import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js'
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js'
-import type { ParkingTicketStatusLog } from '../types/recordTypes.js'
+import type {
+  LicencePlateLookupBatch,
+  ParkingTicketConvictionBatch,
+  ParkingTicketStatusLog
+} from '../types/recordTypes.js'
 
 import * as configFunctions from './functions.config.js'
 
@@ -281,7 +284,7 @@ interface ImportLicencePlateOwnershipResult {
 export const importLicencePlateOwnership = (
   batchID: number,
   ownershipData: string,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): ImportLicencePlateOwnershipResult => {
   // Split the file into rows
 
@@ -327,7 +330,7 @@ export const importLicencePlateOwnership = (
 
     return {
       success: false,
-      message: 'Batch #' + batchID.toString() + ' is unavailable for imports.'
+      message: `Batch #${batchID.toString()} is unavailable for imports.`
     }
   } else if (batchRow.sentDate !== headerRow.sentDate) {
     database.close()
@@ -366,12 +369,12 @@ export const importLicencePlateOwnership = (
 
         insertedErrorCount += database
           .prepare(
-            'insert or ignore into LicencePlateLookupErrorLog (' +
-              'batchID, logIndex,' +
-              ' licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate,' +
-              ' errorCode, errorMessage,' +
-              ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-              ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            `insert or ignore into LicencePlateLookupErrorLog (
+              batchID, logIndex, licencePlateCountry, licencePlateProvince, licencePlateNumber,
+              recordDate, errorCode, errorMessage,
+              recordCreate_userName, recordCreate_timeMillis,
+              recordUpdate_userName, recordUpdate_timeMillis) 
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
           )
           .run(
             batchID,
@@ -382,9 +385,9 @@ export const importLicencePlateOwnership = (
             headerRow.recordDate,
             recordRow.errorCode,
             recordRow.errorMessage,
-            requestSession.user.userName,
+            sessionUser.userName,
             rightNowMillis,
-            requestSession.user.userName,
+            sessionUser.userName,
             rightNowMillis
           ).changes
       }
@@ -394,14 +397,14 @@ export const importLicencePlateOwnership = (
 
         insertedRecordCount += database
           .prepare(
-            'insert or ignore into LicencePlateOwners (' +
-              'licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate,' +
-              ' vehicleNCIC, vehicleYear, vehicleColor, licencePlateExpiryDate,' +
-              ' ownerName1, ownerName2,' +
-              ' ownerAddress, ownerCity, ownerProvince, ownerPostalCode, ownerGenderKey,' +
-              ' driverLicenceNumber,' +
-              ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-              ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            `insert or ignore into LicencePlateOwners (
+              licencePlateCountry, licencePlateProvince, licencePlateNumber,
+              recordDate, vehicleNCIC, vehicleYear, vehicleColor, licencePlateExpiryDate,
+              ownerName1, ownerName2, ownerAddress, ownerCity, ownerProvince, ownerPostalCode, ownerGenderKey,
+              driverLicenceNumber,
+              recordCreate_userName, recordCreate_timeMillis,
+              recordUpdate_userName, recordUpdate_timeMillis)
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
           )
           .run(
             'CA',
@@ -420,9 +423,9 @@ export const importLicencePlateOwnership = (
             recordRow.ownerPostalCode,
             recordRow.ownerGenderKey,
             recordRow.driverLicenceNumber,
-            requestSession.user.userName,
+            sessionUser.userName,
             rightNowMillis,
-            requestSession.user.userName,
+            sessionUser.userName,
             rightNowMillis
           ).changes
       }
@@ -439,12 +442,7 @@ export const importLicencePlateOwnership = (
         ' recordUpdate_timeMillis = ?' +
         ' where batchID = ?'
     )
-    .run(
-      headerRow.recordDate,
-      requestSession.user.userName,
-      rightNowMillis,
-      batchID
-    )
+    .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchID)
 
   database.close()
 
@@ -462,7 +460,7 @@ function exportBatch(
   sentDate: number,
   includeLabels: boolean,
   batchEntries: Array<{
-    ticketID?: number
+    ticketID?: number | string
     ticketNumber?: string
     issueDate?: number
     licencePlateNumber?: string
@@ -497,9 +495,9 @@ function exportBatch(
 
     output +=
       'PKTD' +
-      (entry.licencePlateNumber + '          ').slice(0, 10) +
-      entry.issueDate.toString().slice(-6) +
-      (entry.ticketNumber + '                       ').slice(0, 23) +
+      entry.licencePlateNumber?.padEnd(10).slice(0, 10) +
+      entry.issueDate?.toString().slice(-6) +
+      entry.ticketNumber?.padEnd(23, ' ').slice(0, 23) +
       authorizedUserPadded +
       newline
   }
@@ -541,11 +539,11 @@ function exportBatch(
 
 export function exportLicencePlateBatch(
   batchID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): string {
-  markLookupBatchAsSent(batchID, requestSession)
+  markLookupBatchAsSent(batchID, sessionUser)
 
-  const batch = getLookupBatch(batchID)
+  const batch = getLookupBatch(batchID) as LicencePlateLookupBatch
 
   return exportBatch(
     batch.sentDate as number,
@@ -559,15 +557,15 @@ export function exportLicencePlateBatch(
  */
 export const exportConvictionBatch = (
   batchID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): string => {
-  markConvictionBatchAsSent(batchID, requestSession)
+  markConvictionBatchAsSent(batchID, sessionUser)
 
-  const batch = getConvictionBatch(batchID)
+  const batch = getConvictionBatch(batchID) as ParkingTicketConvictionBatch
 
   return exportBatch(
-    batch?.sentDate as number,
+    batch.sentDate as number,
     true,
-    batch?.batchEntries as ParkingTicketStatusLog[]
+    batch.batchEntries as ParkingTicketStatusLog[]
   )
 }

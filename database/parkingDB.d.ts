@@ -1,6 +1,5 @@
-import type * as expressSession from 'express-session';
 import type { Record } from '../types/recordTypes.js';
-export declare const canUpdateObject: (object: Record, requestSession: expressSession.Session) => boolean;
+export declare const canUpdateObject: (object: Record, sessionUser: PTSUser) => boolean;
 export declare const getRecentParkingTicketVehicleMakeModelValues: () => string[];
 interface GetSplitWhereClauseFilterReturn {
     sqlWhereClause: string;

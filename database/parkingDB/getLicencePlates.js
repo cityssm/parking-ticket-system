@@ -7,9 +7,8 @@ export function getLicencePlates(queryOptions) {
     });
     const sqlParameters = [];
     let sqlInnerWhereClause = ' where recordDelete_timeMillis is null';
-    if (queryOptions.licencePlateNumber &&
-        queryOptions.licencePlateNumber !== '') {
-        const filter = getSplitWhereClauseFilter('licencePlateNumber', queryOptions.licencePlateNumber);
+    if ((queryOptions.licencePlateNumber ?? '') !== '') {
+        const filter = getSplitWhereClauseFilter('licencePlateNumber', queryOptions.licencePlateNumber ?? '');
         sqlInnerWhereClause += filter.sqlWhereClause;
         sqlParameters.push(...filter.sqlParams);
     }
@@ -25,33 +24,32 @@ export function getLicencePlates(queryOptions) {
             ? ' and unresolvedTicketCount > 0'
             : ' and unresolvedTicketCount = 0';
     }
-    const innerSql = 'select licencePlateCountry, licencePlateProvince, licencePlateNumber,' +
-        ' sum(unresolvedTicketCountInternal) as unresolvedTicketCount,' +
-        ' cast(sum(hasOwnerRecordInternal) as bit) as hasOwnerRecord from (' +
-        'select licencePlateCountry, licencePlateProvince, licencePlateNumber,' +
-        ' 0 as unresolvedTicketCountInternal, 1 as hasOwnerRecordInternal' +
-        ' from LicencePlateOwners' +
-        sqlInnerWhereClause +
-        ' union' +
-        ' select licencePlateCountry, licencePlateProvince, licencePlateNumber,' +
-        ' sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal,' +
-        ' 0 as hasOwnerRecordInternal' +
-        ' from ParkingTickets' +
-        sqlInnerWhereClause +
-        ' group by licencePlateCountry, licencePlateProvince, licencePlateNumber' +
-        ')' +
-        ' group by licencePlateCountry, licencePlateProvince, licencePlateNumber' +
-        sqlHavingClause;
+    const innerSql = `select licencePlateCountry, licencePlateProvince, licencePlateNumber,
+      sum(unresolvedTicketCountInternal) as unresolvedTicketCount,
+      cast(sum(hasOwnerRecordInternal) as bit) as hasOwnerRecord
+      from (
+        select licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        0 as unresolvedTicketCountInternal,
+        1 as hasOwnerRecordInternal
+        from LicencePlateOwners
+        ${sqlInnerWhereClause}
+        union
+        select licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        sum(case when resolvedDate is null then 1 else 0 end) as unresolvedTicketCountInternal,
+        0 as hasOwnerRecordInternal
+        from ParkingTickets
+        ${sqlInnerWhereClause}
+        group by licencePlateCountry, licencePlateProvince, licencePlateNumber)
+      group by licencePlateCountry, licencePlateProvince, licencePlateNumber
+      ${sqlHavingClause}`;
     const count = database
         .prepare('select ifnull(count(*), 0) as cnt' + ' from (' + innerSql + ')')
         .get(sqlParameters).cnt;
     const rows = database
-        .prepare(innerSql +
-        ' order by licencePlateNumber, licencePlateProvince, licencePlateCountry' +
-        ' limit ' +
-        queryOptions.limit.toString() +
-        ' offset ' +
-        queryOptions.offset.toString())
+        .prepare(`${innerSql}
+        order by licencePlateNumber, licencePlateProvince, licencePlateCountry
+        limit ${queryOptions.limit.toString()}
+        offset ${queryOptions.offset.toString()}`)
         .all(sqlParameters);
     database.close();
     return {

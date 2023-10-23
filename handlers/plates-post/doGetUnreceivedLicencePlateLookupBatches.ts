@@ -4,7 +4,7 @@ import { getUnreceivedLookupBatches } from '../../database/parkingDB/getUnreceiv
 
 export const handler: RequestHandler = (request, response) => {
   const batches = getUnreceivedLookupBatches(
-    request.session.user.userProperties?.canUpdate ?? false
+    (request.session.user as PTSUser).canUpdate ?? false
   )
   return response.json(batches)
 }

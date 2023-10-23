@@ -1,6 +1,5 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketRemark } from '../../types/recordTypes.js'
@@ -9,7 +8,7 @@ import { canUpdateObject } from '../parkingDB.js'
 export const getParkingTicketRemarksWithDB = (
   database: sqlite.Database,
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): ParkingTicketRemark[] => {
   const remarkRows = database
     .prepare(
@@ -26,7 +25,7 @@ export const getParkingTicketRemarksWithDB = (
     remark.remarkDateString = dateTimeFns.dateIntegerToString(remark.remarkDate)
     remark.remarkTimeString = dateTimeFns.timeIntegerToString(remark.remarkTime)
 
-    remark.canUpdate = canUpdateObject(remark, requestSession)
+    remark.canUpdate = canUpdateObject(remark, sessionUser)
   }
 
   return remarkRows
@@ -34,13 +33,13 @@ export const getParkingTicketRemarksWithDB = (
 
 export const getParkingTicketRemarks = (
   ticketID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): ParkingTicketRemark[] => {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
-  return getParkingTicketRemarksWithDB(database, ticketID, requestSession)
+  return getParkingTicketRemarksWithDB(database, ticketID, sessionUser)
 }
 
 export default getParkingTicketRemarks

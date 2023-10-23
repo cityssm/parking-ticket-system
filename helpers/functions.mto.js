@@ -123,7 +123,7 @@ export const parsePKRD = (rowData) => {
         return false;
     }
 };
-export const importLicencePlateOwnership = (batchID, ownershipData, requestSession) => {
+export const importLicencePlateOwnership = (batchID, ownershipData, sessionUser) => {
     const ownershipDataRows = ownershipData.split('\n');
     if (ownershipDataRows.length === 0) {
         return {
@@ -151,7 +151,7 @@ export const importLicencePlateOwnership = (batchID, ownershipData, requestSessi
         database.close();
         return {
             success: false,
-            message: 'Batch #' + batchID.toString() + ' is unavailable for imports.'
+            message: `Batch #${batchID.toString()} is unavailable for imports.`
         };
     }
     else if (batchRow.sentDate !== headerRow.sentDate) {
@@ -177,26 +177,26 @@ export const importLicencePlateOwnership = (batchID, ownershipData, requestSessi
             if (recordRow.errorCode !== '') {
                 errorCount += 1;
                 insertedErrorCount += database
-                    .prepare('insert or ignore into LicencePlateLookupErrorLog (' +
-                    'batchID, logIndex,' +
-                    ' licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate,' +
-                    ' errorCode, errorMessage,' +
-                    ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-                    ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-                    .run(batchID, errorCount, 'CA', 'ON', recordRow.licencePlateNumber, headerRow.recordDate, recordRow.errorCode, recordRow.errorMessage, requestSession.user.userName, rightNowMillis, requestSession.user.userName, rightNowMillis).changes;
+                    .prepare(`insert or ignore into LicencePlateLookupErrorLog (
+              batchID, logIndex, licencePlateCountry, licencePlateProvince, licencePlateNumber,
+              recordDate, errorCode, errorMessage,
+              recordCreate_userName, recordCreate_timeMillis,
+              recordUpdate_userName, recordUpdate_timeMillis) 
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+                    .run(batchID, errorCount, 'CA', 'ON', recordRow.licencePlateNumber, headerRow.recordDate, recordRow.errorCode, recordRow.errorMessage, sessionUser.userName, rightNowMillis, sessionUser.userName, rightNowMillis).changes;
             }
             if (recordRow.ownerName1 !== '') {
                 recordCount += 1;
                 insertedRecordCount += database
-                    .prepare('insert or ignore into LicencePlateOwners (' +
-                    'licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDate,' +
-                    ' vehicleNCIC, vehicleYear, vehicleColor, licencePlateExpiryDate,' +
-                    ' ownerName1, ownerName2,' +
-                    ' ownerAddress, ownerCity, ownerProvince, ownerPostalCode, ownerGenderKey,' +
-                    ' driverLicenceNumber,' +
-                    ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-                    ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-                    .run('CA', 'ON', recordRow.licencePlateNumber, headerRow.recordDate, recordRow.vehicleNCIC, recordRow.vehicleYear, recordRow.vehicleColor, recordRow.licencePlateExpiryDate, recordRow.ownerName1, recordRow.ownerName2, recordRow.ownerAddress, recordRow.ownerCity, recordRow.ownerProvince, recordRow.ownerPostalCode, recordRow.ownerGenderKey, recordRow.driverLicenceNumber, requestSession.user.userName, rightNowMillis, requestSession.user.userName, rightNowMillis).changes;
+                    .prepare(`insert or ignore into LicencePlateOwners (
+              licencePlateCountry, licencePlateProvince, licencePlateNumber,
+              recordDate, vehicleNCIC, vehicleYear, vehicleColor, licencePlateExpiryDate,
+              ownerName1, ownerName2, ownerAddress, ownerCity, ownerProvince, ownerPostalCode, ownerGenderKey,
+              driverLicenceNumber,
+              recordCreate_userName, recordCreate_timeMillis,
+              recordUpdate_userName, recordUpdate_timeMillis)
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+                    .run('CA', 'ON', recordRow.licencePlateNumber, headerRow.recordDate, recordRow.vehicleNCIC, recordRow.vehicleYear, recordRow.vehicleColor, recordRow.licencePlateExpiryDate, recordRow.ownerName1, recordRow.ownerName2, recordRow.ownerAddress, recordRow.ownerCity, recordRow.ownerProvince, recordRow.ownerPostalCode, recordRow.ownerGenderKey, recordRow.driverLicenceNumber, sessionUser.userName, rightNowMillis, sessionUser.userName, rightNowMillis).changes;
             }
         }
     }
@@ -206,7 +206,7 @@ export const importLicencePlateOwnership = (batchID, ownershipData, requestSessi
         ' recordUpdate_userName = ?,' +
         ' recordUpdate_timeMillis = ?' +
         ' where batchID = ?')
-        .run(headerRow.recordDate, requestSession.user.userName, rightNowMillis, batchID);
+        .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchID);
     database.close();
     return {
         success: true,
@@ -229,9 +229,9 @@ function exportBatch(sentDate, includeLabels, batchEntries) {
         recordCount += 1;
         output +=
             'PKTD' +
-                (entry.licencePlateNumber + '          ').slice(0, 10) +
-                entry.issueDate.toString().slice(-6) +
-                (entry.ticketNumber + '                       ').slice(0, 23) +
+                entry.licencePlateNumber?.padEnd(10).slice(0, 10) +
+                entry.issueDate?.toString().slice(-6) +
+                entry.ticketNumber?.padEnd(23, ' ').slice(0, 23) +
                 authorizedUserPadded +
                 newline;
     }
@@ -248,13 +248,13 @@ function exportBatch(sentDate, includeLabels, batchEntries) {
     output += 'PKTZ' + recordCountPadded + newline;
     return output;
 }
-export function exportLicencePlateBatch(batchID, requestSession) {
-    markLookupBatchAsSent(batchID, requestSession);
+export function exportLicencePlateBatch(batchID, sessionUser) {
+    markLookupBatchAsSent(batchID, sessionUser);
     const batch = getLookupBatch(batchID);
     return exportBatch(batch.sentDate, batch.mto_includeLabels, batch.batchEntries);
 }
-export const exportConvictionBatch = (batchID, requestSession) => {
-    markConvictionBatchAsSent(batchID, requestSession);
+export const exportConvictionBatch = (batchID, sessionUser) => {
+    markConvictionBatchAsSent(batchID, sessionUser);
     const batch = getConvictionBatch(batchID);
-    return exportBatch(batch?.sentDate, true, batch?.batchEntries);
+    return exportBatch(batch.sentDate, true, batch.batchEntries);
 };

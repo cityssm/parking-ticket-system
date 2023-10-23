@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const clearLookupBatch = (batchID, requestSession) => {
+export const clearLookupBatch = (batchID, sessionUser) => {
     const database = sqlite(databasePath);
     const canUpdateBatch = database
         .prepare(`update LicencePlateLookupBatches
@@ -9,7 +9,7 @@ export const clearLookupBatch = (batchID, requestSession) => {
         where batchID = ?
         and recordDelete_timeMillis is null
         and lockDate is null`)
-        .run(requestSession.user.userName, Date.now(), batchID).changes;
+        .run(sessionUser.userName, Date.now(), batchID).changes;
     if (canUpdateBatch === 0) {
         database.close();
         return {

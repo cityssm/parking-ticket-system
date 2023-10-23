@@ -1,4 +1,3 @@
-import type * as expressSession from 'express-session';
 import type { ParkingTicket } from '../../types/recordTypes.js';
 interface CreateParkingTicketReturn {
     success: boolean;
@@ -6,5 +5,5 @@ interface CreateParkingTicketReturn {
     ticketID?: number;
     nextTicketNumber?: string;
 }
-export declare function createParkingTicket(requestBody: ParkingTicket, requestSession: expressSession.Session): CreateParkingTicketReturn;
+export declare function createParkingTicket(requestBody: ParkingTicket, sessionUser: PTSUser): CreateParkingTicketReturn;
 export default createParkingTicket;

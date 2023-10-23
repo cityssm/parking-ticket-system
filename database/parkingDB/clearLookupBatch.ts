@@ -1,5 +1,4 @@
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
@@ -7,7 +6,7 @@ import type { LookupBatchReturn } from './getLookupBatch.js'
 
 export const clearLookupBatch = (
   batchID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): LookupBatchReturn => {
   const database = sqlite(databasePath)
 
@@ -22,7 +21,7 @@ export const clearLookupBatch = (
         and recordDelete_timeMillis is null
         and lockDate is null`
     )
-    .run(requestSession.user.userName, Date.now(), batchID).changes
+    .run(sessionUser.userName, Date.now(), batchID).changes
 
   if (canUpdateBatch === 0) {
     database.close()

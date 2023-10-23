@@ -1,6 +1,5 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LicencePlateLookupBatch } from '../../types/recordTypes.js'
@@ -11,7 +10,7 @@ interface CreateLookupBatchForm {
 
 export const createLookupBatch = (
   requestBody: CreateLookupBatchForm,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): { success: boolean; batch?: LicencePlateLookupBatch } => {
   const database = sqlite(databasePath)
 
@@ -25,12 +24,10 @@ export const createLookupBatch = (
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),
-      requestBody.mto_includeLabels && requestBody.mto_includeLabels === '1'
-        ? 1
-        : 0,
-      requestSession.user.userName,
+      (requestBody.mto_includeLabels ?? '0') === '1' ? 1 : 0,
+      sessionUser.userName,
       rightNow.getTime(),
-      requestSession.user.userName,
+      sessionUser.userName,
       rightNow.getTime()
     )
 

@@ -2,28 +2,40 @@ import type { Request, Response } from 'express'
 
 type PermissionName = 'isAdmin' | 'canUpdate' | 'isOperator'
 
+interface RequestWithSessionUser {
+  session: {
+    user: PTSUser
+  }
+}
+
 const getPermission = (
-  request: Request,
+  request: Partial<Request> | RequestWithSessionUser,
   permissionName: PermissionName
 ): boolean => {
   const user = request.session?.user
 
-  if (!user) {
+  if (user === undefined) {
     return false
   }
 
-  return user.userProperties[permissionName]
+  return user[permissionName] ?? false
 }
 
-export const userIsAdmin = (request: Request): boolean => {
+export const userIsAdmin = (
+  request: Partial<Request> | RequestWithSessionUser
+): boolean => {
   return getPermission(request, 'isAdmin')
 }
 
-export const userCanUpdate = (request: Request): boolean => {
+export const userCanUpdate = (
+  request: Partial<Request> | RequestWithSessionUser
+): boolean => {
   return getPermission(request, 'canUpdate')
 }
 
-export const userIsOperator = (request: Request): boolean => {
+export const userIsOperator = (
+  request: Partial<Request> | RequestWithSessionUser
+): boolean => {
   return getPermission(request, 'isOperator')
 }
 

@@ -1,6 +1,5 @@
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
@@ -12,7 +11,7 @@ interface LockConvictionBatchReturn {
 
 export const lockConvictionBatch = (
   batchID: number,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): LockConvictionBatchReturn => {
   const database = sqlite(databasePath)
 
@@ -30,7 +29,7 @@ export const lockConvictionBatch = (
         and batchID = ?
         and lockDate is null`
     )
-    .run(lockDate, requestSession.user.userName, rightNow.getTime(), batchID)
+    .run(lockDate, sessionUser.userName, rightNow.getTime(), batchID)
 
   database.close()
 

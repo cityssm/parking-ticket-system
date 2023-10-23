@@ -3,7 +3,7 @@ import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.
 export const handler = (request, response) => {
     const batchID = request.body.batchID;
     const ticketID = request.body.ticketID;
-    const result = addParkingTicketToConvictionBatch(batchID, ticketID, request.session);
+    const result = addParkingTicketToConvictionBatch(batchID, ticketID, request.session.user);
     if (result.success) {
         result.batch = getConvictionBatch(batchID);
     }

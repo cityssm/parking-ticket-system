@@ -10,6 +10,6 @@ export const handler = (request, response) => {
     if (request.body.isResolved !== '') {
         queryOptions.isResolved = request.body.isResolved === '1';
     }
-    response.json(parkingDB_getParkingTickets.getParkingTickets(request.session, queryOptions));
+    response.json(parkingDB_getParkingTickets.getParkingTickets(request.session.user, queryOptions));
 };
 export default handler;

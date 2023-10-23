@@ -5,7 +5,7 @@ import { createParkingTicketStatus } from '../../database/parkingDB/createParkin
 export const handler: RequestHandler = (request, response) => {
   const result = createParkingTicketStatus(
     request.body,
-    request.session,
+    request.session.user as PTSUser,
     request.body.resolveTicket === '1'
   )
 

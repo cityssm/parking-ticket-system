@@ -1,5 +1,4 @@
 import sqlite from 'better-sqlite3'
-import type * as expressSession from 'express-session'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type {
@@ -17,7 +16,7 @@ interface AddLicencePlateToLookupBatchReturn {
 
 export const addLicencePlateToLookupBatch = (
   requestBody: LicencePlateLookupBatchEntry,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): AddLicencePlateToLookupBatchReturn => {
   const database = sqlite(databasePath)
 
@@ -32,7 +31,7 @@ export const addLicencePlateToLookupBatch = (
         and recordDelete_timeMillis is null
         and lockDate is null`
     )
-    .run(requestSession.user.userName, Date.now(), requestBody.batchID).changes
+    .run(sessionUser.userName, Date.now(), requestBody.batchID).changes
 
   if (canUpdateBatch === 0) {
     database.close()
@@ -77,7 +76,7 @@ interface AddAllParkingTicketsToLookupBatchBody {
 
 export const addAllParkingTicketsToLookupBatch = (
   requestBody: AddAllParkingTicketsToLookupBatchBody,
-  requestSession: expressSession.Session
+  sessionUser: PTSUser
 ): AddLicencePlateToLookupBatchReturn => {
   const database = sqlite(databasePath)
 
@@ -92,7 +91,7 @@ export const addAllParkingTicketsToLookupBatch = (
         ' and recordDelete_timeMillis is null' +
         ' and lockDate is null'
     )
-    .run(requestSession.user.userName, Date.now(), requestBody.batchID).changes
+    .run(sessionUser.userName, Date.now(), requestBody.batchID).changes
 
   if (canUpdateBatch === 0) {
     database.close()

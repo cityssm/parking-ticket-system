@@ -6,7 +6,7 @@ export const handler: RequestHandler = (request, response) => {
   const result = deleteParkingTicketStatus(
     request.body.ticketID,
     request.body.statusIndex,
-    request.session
+    request.session.user as PTSUser
   )
 
   return response.json(result)

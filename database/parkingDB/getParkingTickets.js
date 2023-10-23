@@ -2,12 +2,12 @@ import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { canUpdateObject, getSplitWhereClauseFilter } from '../parkingDB.js';
-function addCalculatedFields(ticket, requestSession) {
+function addCalculatedFields(ticket, sessionUser) {
     ticket.recordType = 'ticket';
     ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
     ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
     ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(ticket.latestStatus_statusDate);
-    ticket.canUpdate = canUpdateObject(ticket, requestSession);
+    ticket.canUpdate = canUpdateObject(ticket, sessionUser);
 }
 function buildWhereClause(queryOptions) {
     const sqlParameters = [];
@@ -56,7 +56,7 @@ function buildWhereClause(queryOptions) {
         sqlParameters
     };
 }
-export const getParkingTickets = (requestSession, queryOptions) => {
+export const getParkingTickets = (sessionUser, queryOptions) => {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -92,7 +92,7 @@ export const getParkingTickets = (requestSession, queryOptions) => {
         .all(sqlWhereClause.sqlParameters);
     database.close();
     for (const ticket of rows) {
-        addCalculatedFields(ticket, requestSession);
+        addCalculatedFields(ticket, sessionUser);
     }
     return {
         count,
@@ -101,7 +101,7 @@ export const getParkingTickets = (requestSession, queryOptions) => {
         tickets: rows
     };
 };
-export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProvince, licencePlateNumber, requestSession) => {
+export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProvince, licencePlateNumber, sessionUser) => {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -125,7 +125,7 @@ export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlat
         .all(sqlWhereClause.sqlParameters);
     database.close();
     for (const ticket of rows) {
-        addCalculatedFields(ticket, requestSession);
+        addCalculatedFields(ticket, sessionUser);
     }
     return rows;
 };

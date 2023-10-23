@@ -1,5 +1,4 @@
-import type * as expressSession from 'express-session';
-export declare const restoreParkingTicket: (ticketID: number, requestSession: expressSession.Session) => {
+export declare const restoreParkingTicket: (ticketID: number, sessionUser: PTSUser) => {
     success: boolean;
 };
 export default restoreParkingTicket;

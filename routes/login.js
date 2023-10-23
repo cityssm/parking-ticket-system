@@ -24,24 +24,7 @@ function getSafeRedirectURL(possibleRedirectURL = '') {
     }
     return '/dashboard';
 }
-router
-    .route('/')
-    .get((request, response) => {
-    const sessionCookieName = configFunctions.getProperty('session.cookieName');
-    if (request.session.user && request.cookies[sessionCookieName]) {
-        const redirectURL = getSafeRedirectURL((request.query.redirect ?? ''));
-        response.redirect(redirectURL);
-    }
-    else {
-        response.render('login', {
-            userName: '',
-            message: '',
-            redirect: request.query.redirect,
-            useTestDatabases
-        });
-    }
-})
-    .post(async (request, response) => {
+async function postHandler(request, response) {
     const userName = request.body.userName;
     const passwordPlain = request.body.password;
     const redirectURL = getSafeRedirectURL(request.body.redirect);
@@ -52,7 +35,7 @@ router
                 .getProperty('users.testing')
                 .includes(userName);
             if (isAuthenticated) {
-                debug('Authenticated testing user: ' + userName);
+                debug(`Authenticated testing user: ${userName}`);
             }
         }
     }
@@ -85,15 +68,13 @@ router
             });
             userObject = {
                 userName: userNameLowerCase,
-                userProperties: {
-                    canUpdate,
-                    isAdmin,
-                    isOperator
-                }
+                canUpdate,
+                isAdmin,
+                isOperator
             };
         }
     }
-    if (isAuthenticated && userObject) {
+    if (isAuthenticated && userObject !== undefined) {
         request.session.user = userObject;
         response.redirect(redirectURL);
     }
@@ -105,5 +86,23 @@ router
             useTestDatabases
         });
     }
-});
+}
+router
+    .route('/')
+    .get((request, response) => {
+    const sessionCookieName = configFunctions.getProperty('session.cookieName');
+    if (request.session.user && request.cookies[sessionCookieName]) {
+        const redirectURL = getSafeRedirectURL((request.query.redirect ?? ''));
+        response.redirect(redirectURL);
+    }
+    else {
+        response.render('login', {
+            userName: '',
+            message: '',
+            redirect: request.query.redirect,
+            useTestDatabases
+        });
+    }
+})
+    .post(postHandler);
 export default router;

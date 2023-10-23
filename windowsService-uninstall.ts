@@ -1,7 +1,8 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
+
+import path from 'node:path'
 
 import { Service } from 'node-windows'
-import path from 'path'
 
 // Create a new service object
 const svc = new Service({
