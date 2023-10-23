@@ -55,7 +55,7 @@ export function createParkingTicket(
   }
 
   let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(
-    requestBody.licencePlateExpiryDateString!
+    requestBody.licencePlateExpiryDateString ?? ''
   )
 
   if (
@@ -68,7 +68,7 @@ export function createParkingTicket(
 
     if (licencePlateExpiryDateReturn.success) {
       licencePlateExpiryDate =
-        licencePlateExpiryDateReturn.licencePlateExpiryDate!
+        licencePlateExpiryDateReturn.licencePlateExpiryDate ?? 0
     } else {
       database.close()
 

@@ -64,7 +64,7 @@ export const createParkingTicketStatusWithDB = (
   if (info.changes > 0 && resolveTicket) {
     resolveParkingTicketWithDB(
       database,
-      requestBodyOrObject.ticketID,
+      requestBodyOrObject.ticketID as number | string,
       sessionUser
     )
   }

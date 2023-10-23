@@ -1,4 +1,4 @@
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 interface RequestWithSessionUser {
     session: {
         user: PTSUser;

@@ -11,7 +11,7 @@ export const uploadHandler = upload.single('importFile')
 export const handler: RequestHandler = (request, response) => {
   const batchID = request.body.batchID
 
-  const ownershipData = request.file!.buffer.toString()
+  const ownershipData = request.file?.buffer.toString() ?? ''
 
   const results = mtoFunctions.importLicencePlateOwnership(
     batchID,

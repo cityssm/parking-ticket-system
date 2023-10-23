@@ -4,10 +4,10 @@ const pts = {};
 (() => {
     let defaultConfigProperties = {};
     let defaultConfigPropertiesIsLoaded = false;
-    const loadConfigPropertiesFromStorage = () => {
+    function loadConfigPropertiesFromStorage() {
         try {
-            const defaultConfigPropertiesString = window.localStorage.getItem("defaultConfigProperties");
-            if (defaultConfigPropertiesString) {
+            const defaultConfigPropertiesString = window.localStorage.getItem('defaultConfigProperties');
+            if (defaultConfigPropertiesString !== null) {
                 defaultConfigProperties = JSON.parse(defaultConfigPropertiesString);
                 defaultConfigPropertiesIsLoaded = true;
                 return true;
@@ -18,7 +18,7 @@ const pts = {};
             defaultConfigPropertiesIsLoaded = true;
         }
         return false;
-    };
+    }
     pts.loadDefaultConfigProperties = (callbackFunction) => {
         if (defaultConfigPropertiesIsLoaded) {
             callbackFunction();
@@ -28,11 +28,11 @@ const pts = {};
             callbackFunction();
             return;
         }
-        cityssm.postJSON("/dashboard/doGetDefaultConfigProperties", {}, (defaultConfigPropertiesResult) => {
+        cityssm.postJSON('/dashboard/doGetDefaultConfigProperties', {}, (defaultConfigPropertiesResult) => {
             defaultConfigProperties = defaultConfigPropertiesResult;
             defaultConfigPropertiesIsLoaded = true;
             try {
-                window.localStorage.setItem("defaultConfigProperties", JSON.stringify(defaultConfigProperties));
+                window.localStorage.setItem('defaultConfigProperties', JSON.stringify(defaultConfigProperties));
             }
             catch (_a) {
             }
@@ -65,8 +65,8 @@ const pts = {};
     pts.getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
         const licencePlateProvinceDefault = {
             provinceShortName: originalLicencePlateProvince,
-            color: "#000",
-            backgroundColor: "#fff"
+            color: '#000',
+            backgroundColor: '#fff'
         };
         if (!defaultConfigPropertiesIsLoaded) {
             return {
@@ -142,29 +142,29 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
     if (!tabsListElement) {
         return;
     }
-    const isPanelOrMenuListTabs = tabsListElement.classList.contains("panel-tabs") ||
-        tabsListElement.classList.contains("menu-list");
-    const listItemElements = tabsListElement.querySelectorAll(isPanelOrMenuListTabs ? "a" : "li");
+    const isPanelOrMenuListTabs = tabsListElement.classList.contains('panel-tabs') ||
+        tabsListElement.classList.contains('menu-list');
+    const listItemElements = tabsListElement.querySelectorAll(isPanelOrMenuListTabs ? 'a' : 'li');
     const tabLinkElements = isPanelOrMenuListTabs
         ? listItemElements
-        : tabsListElement.querySelectorAll("a");
+        : tabsListElement.querySelectorAll('a');
     const tabClickFunction = (clickEvent) => {
         clickEvent.preventDefault();
         const selectedTabLinkElement = clickEvent.currentTarget;
-        const selectedTabContentElement = document.querySelector(selectedTabLinkElement.getAttribute("href"));
+        const selectedTabContentElement = document.querySelector(selectedTabLinkElement.getAttribute('href'));
         for (const [index, listItemElement] of listItemElements.entries()) {
-            listItemElement.classList.remove("is-active");
-            tabLinkElements[index].setAttribute("aria-selected", "false");
+            listItemElement.classList.remove('is-active');
+            tabLinkElements[index].setAttribute('aria-selected', 'false');
         }
         (isPanelOrMenuListTabs
             ? selectedTabLinkElement
-            : selectedTabLinkElement.parentElement).classList.add("is-active");
-        selectedTabLinkElement.setAttribute("aria-selected", "true");
-        const tabContentElements = selectedTabContentElement.parentElement.querySelectorAll(".tab-content");
+            : selectedTabLinkElement.parentElement).classList.add('is-active');
+        selectedTabLinkElement.setAttribute('aria-selected', 'true');
+        const tabContentElements = selectedTabContentElement.parentElement.querySelectorAll('.tab-content');
         for (const tabContentElement_ of tabContentElements) {
-            tabContentElement_.classList.remove("is-active");
+            tabContentElement_.classList.remove('is-active');
         }
-        selectedTabContentElement.classList.add("is-active");
+        selectedTabContentElement.classList.add('is-active');
         if (callbackFunctions === null || callbackFunctions === void 0 ? void 0 : callbackFunctions.onshown) {
             callbackFunctions.onshown(selectedTabContentElement);
         }
@@ -172,20 +172,20 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
     for (const listItemElement of listItemElements) {
         (isPanelOrMenuListTabs
             ? listItemElement
-            : listItemElement.querySelector("a")).addEventListener("click", tabClickFunction);
+            : listItemElement.querySelector('a')).addEventListener('click', tabClickFunction);
     }
 };
 (() => {
     const toggleHiddenFunction = (clickEvent) => {
         clickEvent.preventDefault();
         const href = clickEvent.currentTarget.href;
-        const divID = href.slice(Math.max(0, href.indexOf("#") + 1));
-        document.querySelector("#" + divID).classList.toggle("is-hidden");
+        const divID = href.slice(Math.max(0, href.indexOf('#') + 1));
+        document.querySelector('#' + divID).classList.toggle('is-hidden');
     };
     pts.initializeToggleHiddenLinks = (searchContainerElement) => {
-        const linkElements = searchContainerElement.querySelectorAll(".is-toggle-hidden-link");
+        const linkElements = searchContainerElement.querySelectorAll('.is-toggle-hidden-link');
         for (const linkElement of linkElements) {
-            linkElement.addEventListener("click", toggleHiddenFunction);
+            linkElement.addEventListener('click', toggleHiddenFunction);
         }
     };
 })();

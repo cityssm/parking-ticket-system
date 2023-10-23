@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
-
 import * as assert from 'node:assert'
 
 import * as configFunctions from '../helpers/functions.config.js'

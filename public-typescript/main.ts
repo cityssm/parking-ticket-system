@@ -1,82 +1,77 @@
-import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "../types/publicTypes";
-import type * as configTypes from "../types/configTypes";
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type * as configTypes from '../types/configTypes.js'
+import type { ptsGlobal } from '../types/publicTypes.js'
 
-declare const cityssm: cityssmGlobal;
-const pts: ptsGlobal = {};
-
+declare const cityssm: cityssmGlobal
+const pts: ptsGlobal = {}
 
 // CONFIG DEFAULTS
 
 interface DefaultConfigProperties {
-  locationClasses?: configTypes.ConfigLocationClass[];
-  ticketNumber_fieldLabel?: string;
-  parkingTicketStatuses?: configTypes.ConfigParkingTicketStatus[];
-  licencePlateCountryAliases?: { [countryShortName: string]: string };
-  licencePlateProvinceAliases?: {
-    [countryName: string]: { [provinceShortName: string]: string };
-  };
-  licencePlateProvinces?: {
-    [countryName: string]: configTypes.ConfigLicencePlateCountry;
-  };
+  locationClasses?: configTypes.ConfigLocationClass[]
+  ticketNumber_fieldLabel?: string
+  parkingTicketStatuses?: configTypes.ConfigParkingTicketStatus[]
+  licencePlateCountryAliases?: Record<string, string>
+  licencePlateProvinceAliases?: Record<string, Record<string, string>>
+  licencePlateProvinces?: Record<string, configTypes.ConfigLicencePlateCountry>
 }
 
 (() => {
-  let defaultConfigProperties: DefaultConfigProperties = {};
-  let defaultConfigPropertiesIsLoaded = false;
+  let defaultConfigProperties: DefaultConfigProperties = {}
+  let defaultConfigPropertiesIsLoaded = false
 
-  const loadConfigPropertiesFromStorage = () => {
+  function loadConfigPropertiesFromStorage(): boolean {
     try {
       const defaultConfigPropertiesString = window.localStorage.getItem(
-        "defaultConfigProperties"
-      );
+        'defaultConfigProperties'
+      )
 
-      if (defaultConfigPropertiesString) {
-        defaultConfigProperties = JSON.parse(defaultConfigPropertiesString);
-        defaultConfigPropertiesIsLoaded = true;
+      if (defaultConfigPropertiesString !== null) {
+        defaultConfigProperties = JSON.parse(defaultConfigPropertiesString)
+        defaultConfigPropertiesIsLoaded = true
 
-        return true;
+        return true
       }
     } catch {
-      defaultConfigProperties = {};
-      defaultConfigPropertiesIsLoaded = true;
+      defaultConfigProperties = {}
+      defaultConfigPropertiesIsLoaded = true
     }
 
-    return false;
-  };
+    return false
+  }
 
   pts.loadDefaultConfigProperties = (callbackFunction: () => void) => {
     if (defaultConfigPropertiesIsLoaded) {
-      callbackFunction();
-      return;
+      callbackFunction()
+      return
     }
 
     if (loadConfigPropertiesFromStorage()) {
-      callbackFunction();
-      return;
+      callbackFunction()
+      return
     }
 
     cityssm.postJSON(
-      "/dashboard/doGetDefaultConfigProperties",
+      '/dashboard/doGetDefaultConfigProperties',
       {},
       (defaultConfigPropertiesResult: DefaultConfigProperties) => {
-        defaultConfigProperties = defaultConfigPropertiesResult;
-        defaultConfigPropertiesIsLoaded = true;
+        defaultConfigProperties = defaultConfigPropertiesResult
+        defaultConfigPropertiesIsLoaded = true
 
         try {
           window.localStorage.setItem(
-            "defaultConfigProperties",
+            'defaultConfigProperties',
             JSON.stringify(defaultConfigProperties)
-          );
+          )
         } catch {
           // Ignore
         }
 
-        callbackFunction();
+        callbackFunction()
       }
-    );
-  };
+    )
+  }
 
   pts.getDefaultConfigProperty = (
     propertyName,
@@ -85,42 +80,47 @@ interface DefaultConfigProperties {
     // Check memory
 
     if (defaultConfigPropertiesIsLoaded) {
-      propertyValueCallbackFunction(defaultConfigProperties[propertyName]);
-      return;
+      propertyValueCallbackFunction(defaultConfigProperties[propertyName])
+      return
     }
 
     // Check local storage
 
     if (loadConfigPropertiesFromStorage()) {
-      propertyValueCallbackFunction(defaultConfigProperties[propertyName]);
-      return;
+      propertyValueCallbackFunction(defaultConfigProperties[propertyName])
+      return
     }
 
     // Populate local storage
 
     pts.loadDefaultConfigProperties(() => {
-      propertyValueCallbackFunction(defaultConfigProperties[propertyName]);
-    });
-  };
+      propertyValueCallbackFunction(defaultConfigProperties[propertyName])
+    })
+  }
 
   pts.getLicencePlateCountryProperties = (originalLicencePlateCountry) => {
     if (!defaultConfigPropertiesIsLoaded) {
-      return {};
+      return {}
     }
 
     const licencePlateCountryAlias =
       defaultConfigProperties.licencePlateCountryAliases[
-      originalLicencePlateCountry.toUpperCase()
-      ] || originalLicencePlateCountry;
+        originalLicencePlateCountry.toUpperCase()
+      ] || originalLicencePlateCountry
 
-    if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinces, licencePlateCountryAlias)) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        defaultConfigProperties.licencePlateProvinces,
+        licencePlateCountryAlias
+      )
+    ) {
       return defaultConfigProperties.licencePlateProvinces[
         licencePlateCountryAlias
-      ];
+      ]
     }
 
-    return {};
-  };
+    return {}
+  }
 
   pts.getLicencePlateLocationProperties = (
     originalLicencePlateCountry,
@@ -128,48 +128,58 @@ interface DefaultConfigProperties {
   ) => {
     const licencePlateProvinceDefault = {
       provinceShortName: originalLicencePlateProvince,
-      color: "#000",
-      backgroundColor: "#fff"
-    };
+      color: '#000',
+      backgroundColor: '#fff'
+    }
 
     if (!defaultConfigPropertiesIsLoaded) {
       return {
         licencePlateCountryAlias: originalLicencePlateCountry,
         licencePlateProvinceAlias: originalLicencePlateProvince,
         licencePlateProvince: licencePlateProvinceDefault
-      };
+      }
     }
 
     // Get the country alias
 
     const licencePlateCountryAlias =
       defaultConfigProperties.licencePlateCountryAliases[
-      originalLicencePlateCountry.toUpperCase()
-      ] || originalLicencePlateCountry;
+        originalLicencePlateCountry.toUpperCase()
+      ] || originalLicencePlateCountry
 
     // Get the province alias
 
-    let licencePlateProvinceAlias = originalLicencePlateProvince;
+    let licencePlateProvinceAlias = originalLicencePlateProvince
 
-    if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinceAliases, licencePlateCountryAlias)) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        defaultConfigProperties.licencePlateProvinceAliases,
+        licencePlateCountryAlias
+      )
+    ) {
       const provinceAliases =
         defaultConfigProperties.licencePlateProvinceAliases[
-        licencePlateCountryAlias
-        ];
+          licencePlateCountryAlias
+        ]
 
       licencePlateProvinceAlias =
         provinceAliases[originalLicencePlateProvince.toUpperCase()] ||
-        originalLicencePlateProvince;
+        originalLicencePlateProvince
     }
 
     // Get the province object
 
-    let licencePlateProvince = licencePlateProvinceDefault;
+    let licencePlateProvince = licencePlateProvinceDefault
 
-    if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinces, licencePlateCountryAlias)) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        defaultConfigProperties.licencePlateProvinces,
+        licencePlateCountryAlias
+      )
+    ) {
       licencePlateProvince =
         defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias]
-          .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+          .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault
     }
 
     // Return
@@ -178,141 +188,156 @@ interface DefaultConfigProperties {
       licencePlateCountryAlias,
       licencePlateProvinceAlias,
       licencePlateProvince
-    };
-  };
+    }
+  }
 
-  const ticketStatusKeyToObject = new Map<string, configTypes.ConfigParkingTicketStatus>();
-  let ticketStatusKeyToObjectIsLoaded = false;
+  const ticketStatusKeyToObject = new Map<
+  string,
+  configTypes.ConfigParkingTicketStatus
+  >()
+  let ticketStatusKeyToObjectIsLoaded = false
 
   pts.getTicketStatus = (statusKey) => {
-
     const noResult = {
       statusKey,
       status: statusKey,
       isUserSettable: false,
       isFinalStatus: false
-    };
+    }
 
     if (!defaultConfigPropertiesIsLoaded) {
-      return noResult;
+      return noResult
     }
 
     if (!ticketStatusKeyToObjectIsLoaded) {
       for (const ticketStatusObject of defaultConfigProperties.parkingTicketStatuses) {
-        ticketStatusKeyToObject.set(ticketStatusObject.statusKey, ticketStatusObject);
+        ticketStatusKeyToObject.set(
+          ticketStatusObject.statusKey,
+          ticketStatusObject
+        )
       }
 
-      ticketStatusKeyToObjectIsLoaded = true;
+      ticketStatusKeyToObjectIsLoaded = true
     }
 
     return ticketStatusKeyToObject.has(statusKey)
       ? ticketStatusKeyToObject.get(statusKey)
-      : noResult;
-  };
+      : noResult
+  }
 
-  const locationClassKeyToObject = new Map<string, configTypes.ConfigLocationClass>();
-  let locationClassKeyToObjectIsLoaded = false;
+  const locationClassKeyToObject = new Map<
+  string,
+  configTypes.ConfigLocationClass
+  >()
+  let locationClassKeyToObjectIsLoaded = false
 
   pts.getLocationClass = (locationClassKey) => {
-
     const noResult: configTypes.ConfigLocationClass = {
       locationClassKey,
       locationClass: locationClassKey
-    };
+    }
 
     if (!defaultConfigPropertiesIsLoaded) {
-      return noResult;
+      return noResult
     }
 
     if (!locationClassKeyToObjectIsLoaded) {
       for (const locationClassObject of defaultConfigProperties.locationClasses) {
-        locationClassKeyToObject.set(locationClassObject.locationClassKey, locationClassObject);
+        locationClassKeyToObject.set(
+          locationClassObject.locationClassKey,
+          locationClassObject
+        )
       }
 
-      locationClassKeyToObjectIsLoaded = true;
+      locationClassKeyToObjectIsLoaded = true
     }
 
     return locationClassKeyToObject.has(locationClassKey)
       ? locationClassKeyToObject.get(locationClassKey)
-      : noResult;
-  };
-})();
+      : noResult
+  }
+})()
 
 // TABS
 
 pts.initializeTabs = (tabsListElement, callbackFunctions) => {
   if (!tabsListElement) {
-    return;
+    return
   }
 
   const isPanelOrMenuListTabs =
-    tabsListElement.classList.contains("panel-tabs") ||
-    tabsListElement.classList.contains("menu-list");
+    tabsListElement.classList.contains('panel-tabs') ||
+    tabsListElement.classList.contains('menu-list')
 
   const listItemElements = tabsListElement.querySelectorAll(
-    isPanelOrMenuListTabs ? "a" : "li"
-  );
+    isPanelOrMenuListTabs ? 'a' : 'li'
+  )
 
   const tabLinkElements = isPanelOrMenuListTabs
     ? listItemElements
-    : tabsListElement.querySelectorAll("a");
+    : tabsListElement.querySelectorAll('a')
 
   const tabClickFunction = (clickEvent: Event) => {
-    clickEvent.preventDefault();
+    clickEvent.preventDefault()
 
-    const selectedTabLinkElement = clickEvent.currentTarget as HTMLAnchorElement;
-    const selectedTabContentElement = document.querySelector(selectedTabLinkElement.getAttribute("href")) as HTMLElement;
+    const selectedTabLinkElement = clickEvent.currentTarget as HTMLAnchorElement
+    const selectedTabContentElement = document.querySelector(
+      selectedTabLinkElement.getAttribute('href')
+    ) as HTMLElement
 
     for (const [index, listItemElement] of listItemElements.entries()) {
-      listItemElement.classList.remove("is-active");
-      tabLinkElements[index].setAttribute("aria-selected", "false");
+      listItemElement.classList.remove('is-active')
+      tabLinkElements[index].setAttribute('aria-selected', 'false')
     }
 
     // Add .is-active to the selected tab
     (isPanelOrMenuListTabs
       ? selectedTabLinkElement
       : selectedTabLinkElement.parentElement
-    ).classList.add("is-active");
-    selectedTabLinkElement.setAttribute("aria-selected", "true");
+    ).classList.add('is-active')
+    selectedTabLinkElement.setAttribute('aria-selected', 'true')
 
-    const tabContentElements = selectedTabContentElement.parentElement.querySelectorAll(".tab-content");
+    const tabContentElements =
+      selectedTabContentElement.parentElement.querySelectorAll('.tab-content')
 
     for (const tabContentElement_ of tabContentElements) {
-      tabContentElement_.classList.remove("is-active");
+      tabContentElement_.classList.remove('is-active')
     }
 
-    selectedTabContentElement.classList.add("is-active");
+    selectedTabContentElement.classList.add('is-active')
 
-    if (callbackFunctions ?.onshown) {
-      callbackFunctions.onshown(selectedTabContentElement);
+    if (callbackFunctions?.onshown) {
+      callbackFunctions.onshown(selectedTabContentElement)
     }
-  };
+  }
 
   for (const listItemElement of listItemElements) {
     (isPanelOrMenuListTabs
       ? listItemElement
-      : listItemElement.querySelector("a")
-    ).addEventListener("click", tabClickFunction);
+      : listItemElement.querySelector('a')
+    ).addEventListener('click', tabClickFunction)
   }
-};
+}
 
 // TOGGLE CONTAINERS
 
-(() => {
+;(() => {
   const toggleHiddenFunction = (clickEvent: Event) => {
-    clickEvent.preventDefault();
+    clickEvent.preventDefault()
 
-    const href = (clickEvent.currentTarget as HTMLAnchorElement).href;
-    const divID = href.slice(Math.max(0, href.indexOf("#") + 1));
+    const href = (clickEvent.currentTarget as HTMLAnchorElement).href
+    const divID = href.slice(Math.max(0, href.indexOf('#') + 1))
 
-    document.querySelector("#" + divID).classList.toggle("is-hidden");
-  };
+    document.querySelector('#' + divID).classList.toggle('is-hidden')
+  }
 
   pts.initializeToggleHiddenLinks = (searchContainerElement) => {
-    const linkElements = searchContainerElement.querySelectorAll(".is-toggle-hidden-link");
+    const linkElements = searchContainerElement.querySelectorAll(
+      '.is-toggle-hidden-link'
+    )
 
     for (const linkElement of linkElements) {
-      linkElement.addEventListener("click", toggleHiddenFunction);
+      linkElement.addEventListener('click', toggleHiddenFunction)
     }
-  };
-})();
+  }
+})()

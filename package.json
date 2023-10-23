@@ -29,6 +29,7 @@
     "@cityssm/bulma-js": "^0.4.0",
     "@cityssm/bulma-webapp-js": "^1.5.0",
     "@cityssm/expressjs-server-js": "^2.3.2",
+    "@cityssm/utils-datetime": "^0.2.0",
     "@fontsource/pt-mono": "^5.0.8",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@shaggytools/nhtsa-api-wrapper": "^3.0.4",

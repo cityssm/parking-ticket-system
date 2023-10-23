@@ -24,12 +24,12 @@ export function createParkingTicket(requestBody, sessionUser) {
             message: 'A ticket with the same ticket number was seen in the last two years.'
         };
     }
-    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(requestBody.licencePlateExpiryDateString);
+    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(requestBody.licencePlateExpiryDateString ?? '');
     if (!configFunctions.getProperty('parkingTickets.licencePlateExpiryDate.includeDay')) {
         const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(requestBody);
         if (licencePlateExpiryDateReturn.success) {
             licencePlateExpiryDate =
-                licencePlateExpiryDateReturn.licencePlateExpiryDate;
+                licencePlateExpiryDateReturn.licencePlateExpiryDate ?? 0;
         }
         else {
             database.close();
