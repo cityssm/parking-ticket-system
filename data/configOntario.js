@@ -1,4 +1,4 @@
-import * as base from '../data/configBase.js';
+import * as base from './configBase.js';
 export const config = {};
 config.application = {
     feature_mtoExportImport: true,

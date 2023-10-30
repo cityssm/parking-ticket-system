@@ -1,7 +1,8 @@
-import * as base from '../data/configBase.js'
-import type * as pts from '../types/configTypes.js'
+import type { Config } from '../types/configTypes.js'
 
-export const config: pts.Config = {}
+import * as base from './configBase.js'
+
+export const config: Config = {}
 
 config.application = {
   feature_mtoExportImport: true,

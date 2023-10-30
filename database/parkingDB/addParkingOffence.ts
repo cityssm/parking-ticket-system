@@ -59,31 +59,28 @@ export const addParkingOffence = (
   let discountOffenceAmount = 0
   let discountDays = 0
 
-  if (Object.prototype.hasOwnProperty.call(requestBody, 'offenceAmount')) {
+  if (Object.hasOwn(requestBody, 'offenceAmount')) {
     offenceAmount = requestBody.offenceAmount
 
-    discountOffenceAmount = Object.prototype.hasOwnProperty.call(
-      requestBody,
-      'discountOffenceAmount'
-    )
+    discountOffenceAmount = Object.hasOwn(requestBody, 'discountOffenceAmount')
       ? requestBody.discountOffenceAmount
       : requestBody.offenceAmount
 
-    discountDays = requestBody.discountDays || 0
+    discountDays = requestBody.discountDays ?? 0
   } else {
     const offenceAmountRecord = database
       .prepare(
-        'select offenceAmount, discountOffenceAmount, discountDays' +
-          ' from ParkingOffences' +
-          ' where bylawNumber = ?' +
-          ' and isActive = 1' +
-          ' group by offenceAmount, discountOffenceAmount, discountDays' +
-          ' order by count(locationKey) desc, offenceAmount desc, discountOffenceAmount desc' +
-          ' limit 1'
+        `select offenceAmount, discountOffenceAmount, discountDays
+          from ParkingOffences
+          where bylawNumber = ?
+          and isActive = 1
+          group by offenceAmount, discountOffenceAmount, discountDays
+          order by count(locationKey) desc, offenceAmount desc, discountOffenceAmount desc
+          limit 1`
       )
-      .get(requestBody.bylawNumber) as ParkingOffence
+      .get(requestBody.bylawNumber) as ParkingOffence | undefined
 
-    if (offenceAmountRecord) {
+    if (offenceAmountRecord !== undefined) {
       offenceAmount = offenceAmountRecord.offenceAmount
       discountOffenceAmount = offenceAmountRecord.discountOffenceAmount
       discountDays = offenceAmountRecord.discountDays
@@ -94,20 +91,20 @@ export const addParkingOffence = (
 
   const info = database
     .prepare(
-      'insert into ParkingOffences' +
-        ' (bylawNumber, locationKey, parkingOffence,' +
-        ' offenceAmount, discountOffenceAmount, discountDays,' +
-        ' accountNumber, isActive)' +
-        ' values (?, ?, ?, ?, ?, ?, ?, 1)'
+      `insert into ParkingOffences (
+        bylawNumber, locationKey, parkingOffence,
+        offenceAmount, discountOffenceAmount, discountDays,
+        accountNumber, isActive)
+        values (?, ?, ?, ?, ?, ?, ?, 1)`
     )
     .run(
       requestBody.bylawNumber,
       requestBody.locationKey,
-      requestBody.parkingOffence || '',
+      requestBody.parkingOffence ?? '',
       offenceAmount,
       discountOffenceAmount,
       discountDays,
-      requestBody.accountNumber || ''
+      requestBody.accountNumber ?? ''
     )
 
   database.close()

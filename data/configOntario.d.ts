@@ -1,3 +1,3 @@
-import type * as pts from '../types/configTypes.js';
-export declare const config: pts.Config;
+import type { Config } from '../types/configTypes.js';
+export declare const config: Config;
 export default config;

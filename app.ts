@@ -229,7 +229,7 @@ app.use(
       request.app.get('env') === 'development' ? error : {}
 
     // Render the error page
-    response.status(error.status || 500)
+    response.status(error.status ?? 500)
     response.render('error')
   }
 )

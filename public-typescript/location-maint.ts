@@ -7,7 +7,7 @@ import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 import type * as configTypes from '../types/configTypes.js'
 import type { ptsGlobal } from '../types/publicTypes.js'
-import type * as recordTypes from '../types/recordTypes.js'
+import type { ParkingLocation } from '../types/recordTypes.js'
 
 declare const cityssm: cityssmGlobal
 declare const bulmaJS: BulmaJS
@@ -16,7 +16,7 @@ declare const pts: ptsGlobal
 interface UpdateLocationResponseJSON {
   success: boolean
   message?: string
-  locations?: recordTypes.ParkingLocation[]
+  locations?: ParkingLocation[]
 }
 
 ;(() => {
@@ -32,7 +32,7 @@ interface UpdateLocationResponseJSON {
     '#locationResults'
   ) as HTMLElement
 
-  let locationList = exports.locations as recordTypes.ParkingLocation[]
+  let locationList = exports.locations as ParkingLocation[]
   delete exports.locations
 
   function openEditLocationModalFunction(clickEvent: Event): void {
