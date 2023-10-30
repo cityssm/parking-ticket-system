@@ -1,11 +1,8 @@
-import path from 'node:path';
 import { Service } from 'node-windows';
-const svc = new Service({
-    name: 'Parking Ticket System',
-    script: path.join('bin', 'www.js')
-});
-svc.on('uninstall', function () {
+import { windowsServiceConfig } from './windowsService.js';
+const svc = new Service(windowsServiceConfig);
+svc.on('uninstall', () => {
     console.log('Uninstall complete.');
-    console.log('The service exists:', svc.exists);
+    console.log('Service exists:', svc.exists);
 });
 svc.uninstall();

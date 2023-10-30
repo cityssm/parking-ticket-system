@@ -1,11 +1,9 @@
-import path from 'node:path';
 import { Service } from 'node-windows';
-const svc = new Service({
-    name: 'Parking Ticket System',
-    description: 'A system for managing parking tickets tracked by municipalities.',
-    script: path.join('bin', 'www.js')
-});
+import { windowsServiceConfig } from './windowsService.js';
+const svc = new Service(windowsServiceConfig);
 svc.on('install', () => {
+    console.log('Install complete.');
+    console.log('Service exists:', svc.exists);
     svc.start();
 });
 svc.install();

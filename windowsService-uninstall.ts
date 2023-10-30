@@ -1,19 +1,17 @@
 /* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 
-import path from 'node:path'
-
+// eslint-disable-next-line import/no-unresolved, n/no-missing-import
 import { Service } from 'node-windows'
 
+import { windowsServiceConfig } from './windowsService.js'
+
 // Create a new service object
-const svc = new Service({
-  name: 'Parking Ticket System',
-  script: path.join('bin', 'www.js')
-})
+const svc = new Service(windowsServiceConfig)
 
 // Listen for the "uninstall" event so we know when it's done.
-svc.on('uninstall', function () {
+svc.on('uninstall', () => {
   console.log('Uninstall complete.')
-  console.log('The service exists:', svc.exists)
+  console.log('Service exists:', svc.exists)
 })
 
 // Uninstall the service.
