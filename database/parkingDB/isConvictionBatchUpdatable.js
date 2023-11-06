@@ -12,6 +12,6 @@ export function isConvictionBatchUpdatable(batchID, connectedDatabase) {
     if (connectedDatabase === undefined) {
         database.close();
     }
-    return (lockDate ?? undefined) === undefined;
+    return lockDate === null;
 }
 export default isConvictionBatchUpdatable;

@@ -22,7 +22,7 @@ export function isConvictionBatchUpdatable(
     database.close()
   }
 
-  return (lockDate ?? undefined) === undefined
+  return lockDate === null
 }
 
 export default isConvictionBatchUpdatable

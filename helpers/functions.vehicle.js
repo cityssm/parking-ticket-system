@@ -61,13 +61,13 @@ export async function getModelsByMake(makeSearchStringOriginal) {
           where searchString = ?`)
             .run(data.Count, makeSearchString);
         const insertSQL = `insert or ignore into MakeModel (
-        makeID, makeName, modelID, modelName,
-        recordCreate_timeMillis, recordUpdate_timeMillis)
-        values (?, ?, ?, ?, ?, ?)`;
+      makeID, makeName, modelID, modelName,
+      recordCreate_timeMillis, recordUpdate_timeMillis)
+      values (?, ?, ?, ?, ?, ?)`;
         const updateSQL = `update MakeModel
-        set recordUpdate_timeMillis = ?
-        where makeName = ?
-        and modelName = ?`;
+      set recordUpdate_timeMillis = ?
+      where makeName = ?
+      and modelName = ?`;
         for (const record of data.Results) {
             const info = database
                 .prepare(insertSQL)
@@ -85,9 +85,6 @@ export const getMakeFromNCIC = (vehicleNCIC) => {
     return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
 };
 export const isNCICExclusivelyTrailer = (vehicleNCIC) => {
-    if (Object.prototype.hasOwnProperty.call(trailerNCIC, vehicleNCIC) &&
-        !Object.prototype.hasOwnProperty.call(ncic.vehicleNCIC, vehicleNCIC)) {
-        return true;
-    }
-    return false;
+    return !!(Object.hasOwn(trailerNCIC, vehicleNCIC) &&
+        !Object.hasOwn(ncic.vehicleNCIC, vehicleNCIC));
 };
