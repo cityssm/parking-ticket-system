@@ -15,28 +15,28 @@ reportDefinitions.set('tickets-all', {
 });
 reportDefinitions.set('tickets-unresolved', {
     sql: `select t.ticketID, t.ticketNumber, t.issueDate,
-      t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber,
-      t.locationKey, l.locationName, l.locationClassKey, t.locationDescription,
-      t.parkingOffence, t.offenceAmount,
-      s.statusDate as latestStatus_statusDate,
-      s.statusKey as latestStatus_statusKey,
-      t.recordCreate_userName, t.recordCreate_timeMillis,
-      t.recordUpdate_userName, t.recordUpdate_timeMillis
-      from ParkingTickets t
-      left join ParkingLocations l on t.locationKey = l.locationKey
-      left join ParkingTicketStatusLog s
-        on t.ticketID = s.ticketID
-        and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)
-      where t.recordDelete_timeMillis is null
-      and t.resolvedDate is null`
+    t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber,
+    t.locationKey, l.locationName, l.locationClassKey, t.locationDescription,
+    t.parkingOffence, t.offenceAmount,
+    s.statusDate as latestStatus_statusDate,
+    s.statusKey as latestStatus_statusKey,
+    t.recordCreate_userName, t.recordCreate_timeMillis,
+    t.recordUpdate_userName, t.recordUpdate_timeMillis
+    from ParkingTickets t
+    left join ParkingLocations l on t.locationKey = l.locationKey
+    left join ParkingTicketStatusLog s
+      on t.ticketID = s.ticketID
+      and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)
+    where t.recordDelete_timeMillis is null
+    and t.resolvedDate is null`
 });
 reportDefinitions.set('statuses-all', {
     sql: 'select * from ParkingTicketStatusLog'
 });
 reportDefinitions.set('statuses-byTicketID', {
     sql: `select * from ParkingTicketStatusLog
-      where recordDelete_timeMillis is null
-      and ticketID = ?`,
+    where recordDelete_timeMillis is null
+    and ticketID = ?`,
     getParams: (requestQuery) => [requestQuery.ticketID]
 });
 reportDefinitions.set('remarks-all', {
@@ -44,8 +44,8 @@ reportDefinitions.set('remarks-all', {
 });
 reportDefinitions.set('remarks-byTicketID', {
     sql: `select * from ParkingTicketRemarks
-      where recordDelete_timeMillis is null
-      and ticketID = ?`,
+    where recordDelete_timeMillis is null
+    and ticketID = ?`,
     getParams: (requestQuery) => [requestQuery.ticketID]
 });
 reportDefinitions.set('owners-all', {
@@ -121,72 +121,70 @@ reportDefinitions.set('bylaws-all', {
     sql: 'select * from ParkingBylaws'
 });
 reportDefinitions.set('bylaws-usageByYear', {
-    sql: 'select b.bylawNumber, b.bylawDescription, b.isActive,' +
-        ' cast(round (issueDate / 10000 - 0.5) as integer) as issueYear,' +
-        ' count(ticketID) as ticket_count,' +
-        ' min(issueDate) as issueDate_min,' +
-        ' max(issueDate) as issueDate_max,' +
-        ' min(offenceAmount) as offenceAmount_min,' +
-        ' max(offenceAmount) as offenceAmount_max,' +
-        ' sum(case when resolvedDate is null then 0 else 1 end) as isResolved_count' +
-        ' from ParkingBylaws b' +
-        ' inner join ParkingTickets t on b.bylawNumber = t.bylawNumber' +
-        ' where t.recordDelete_timeMillis is null' +
-        ' group by b.bylawNumber, b.bylawDescription, b.isActive,' +
-        ' round (issueDate / 10000 - 0.5)'
+    sql: `select b.bylawNumber, b.bylawDescription,
+    b.isActive,
+    cast(round (issueDate / 10000 - 0.5) as integer) as issueYear,
+    count(ticketID) as ticket_count,
+    min(issueDate) as issueDate_min,
+    max(issueDate) as issueDate_max,
+    min(offenceAmount) as offenceAmount_min,
+    max(offenceAmount) as offenceAmount_max,
+    sum(case when resolvedDate is null then 0 else 1 end) as isResolved_count
+    from ParkingBylaws b
+    inner join ParkingTickets t on b.bylawNumber = t.bylawNumber
+    where t.recordDelete_timeMillis is null
+    group by b.bylawNumber, b.bylawDescription, b.isActive, round (issueDate / 10000 - 0.5)`
 });
 reportDefinitions.set('cleanup-parkingTickets', {
-    sql: 'select * from ParkingTickets t' +
-        ' where t.recordDelete_timeMillis is not null' +
-        ' and t.recordDelete_timeMillis < ?' +
-        (' and not exists (' +
-            'select 1 from LicencePlateLookupBatchEntries b' +
-            ' where t.ticketID = b.ticketID)'),
+    sql: `select * from ParkingTickets t
+      where t.recordDelete_timeMillis is not null
+      and t.recordDelete_timeMillis < ?
+      and not exists (select 1 from LicencePlateLookupBatchEntries b where t.ticketID = b.ticketID)`,
     getParams: (requestQuery) => [
         getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set('cleanup-parkingTicketStatusLog', {
-    sql: 'select * from ParkingTicketStatusLog' +
-        ' where recordDelete_timeMillis is not null' +
-        ' and recordDelete_timeMillis < ?',
+    sql: `select * from ParkingTicketStatusLog
+      where recordDelete_timeMillis is not null
+      and recordDelete_timeMillis < ?`,
     getParams: (requestQuery) => [
         getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set('cleanup-parkingTicketRemarks', {
-    sql: 'select * from ParkingTicketRemarks' +
-        ' where recordDelete_timeMillis is not null' +
-        ' and recordDelete_timeMillis < ?',
+    sql: `select * from ParkingTicketRemarks
+      where recordDelete_timeMillis is not null
+      and recordDelete_timeMillis < ?`,
     getParams: (requestQuery) => [
         getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set('cleanup-licencePlateOwners', {
-    sql: 'select * from LicencePlateOwners' +
-        ' where recordDelete_timeMillis is not null' +
-        ' and recordDelete_timeMillis < ?',
+    sql: `select * from LicencePlateOwners
+      where recordDelete_timeMillis is not null
+      and recordDelete_timeMillis < ?`,
     getParams: (requestQuery) => [
         getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
     ]
 });
 reportDefinitions.set('cleanup-parkingOffences', {
-    sql: 'select * from ParkingOffences o' +
-        ' where isActive = 0' +
-        (' and not exists (' +
-            'select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)')
+    sql: `select * from ParkingOffences o
+      where isActive = 0
+      and not exists (
+        select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)`
 });
 reportDefinitions.set('cleanup-parkingBylaws', {
-    sql: 'select * from ParkingBylaws b' +
-        ' where isActive = 0' +
-        ' and not exists (select 1 from ParkingTickets t where b.bylawNumber = t.bylawNumber)' +
-        ' and not exists (select 1 from ParkingOffences o where b.bylawNumber = o.bylawNumber)'
+    sql: `select * from ParkingBylaws b
+      where isActive = 0
+      and not exists (select 1 from ParkingTickets t where b.bylawNumber = t.bylawNumber)
+      and not exists (select 1 from ParkingOffences o where b.bylawNumber = o.bylawNumber)`
 });
 reportDefinitions.set('cleanup-parkingLocations', {
-    sql: 'select * from ParkingLocations l' +
-        ' where isActive = 0' +
-        ' and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)' +
-        ' and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)'
+    sql: `select * from ParkingLocations l
+      where isActive = 0
+      and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)
+      and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)`
 });
 export const getReportData = (reportName, requestQuery) => {
     let reportDefinition;

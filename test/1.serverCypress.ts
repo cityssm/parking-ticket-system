@@ -52,7 +52,7 @@ describe('parking-ticket-system', () => {
     }
   })
 
-  it('should start server starts on port ' + portNumber.toString(), () => {
+  it(`should start server starts on port ${portNumber.toString()}`, () => {
     assert.ok(serverStarted)
   })
 

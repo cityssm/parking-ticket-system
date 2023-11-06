@@ -37,7 +37,7 @@ describe('parking-ticket-system', () => {
         catch {
         }
     });
-    it('should start server starts on port ' + portNumber.toString(), () => {
+    it(`should start server starts on port ${portNumber.toString()}`, () => {
         assert.ok(serverStarted);
     });
     describe('Cypress tests', () => {

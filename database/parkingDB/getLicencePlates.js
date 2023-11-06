@@ -43,8 +43,10 @@ export function getLicencePlates(queryOptions) {
       group by licencePlateCountry, licencePlateProvince, licencePlateNumber
       ${sqlHavingClause}`;
     const count = database
-        .prepare('select ifnull(count(*), 0) as cnt' + ' from (' + innerSql + ')')
-        .get(sqlParameters).cnt;
+        .prepare(`select ifnull(count(*), 0) as cnt
+        from (${innerSql})`)
+        .pluck()
+        .get(sqlParameters);
     const rows = database
         .prepare(`${innerSql}
         order by licencePlateNumber, licencePlateProvince, licencePlateCountry

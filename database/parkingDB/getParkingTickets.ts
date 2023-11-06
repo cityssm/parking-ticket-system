@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateIntegerToString } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -26,12 +26,10 @@ function addCalculatedFields(
 ): void {
   ticket.recordType = 'ticket'
 
-  ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate)
-  ticket.resolvedDateString = dateTimeFns.dateIntegerToString(
-    ticket.resolvedDate
-  )
+  ticket.issueDateString = dateIntegerToString(ticket.issueDate)
+  ticket.resolvedDateString = dateIntegerToString(ticket.resolvedDate)
 
-  ticket.latestStatus_statusDateString = dateTimeFns.dateIntegerToString(
+  ticket.latestStatus_statusDateString = dateIntegerToString(
     ticket.latestStatus_statusDate
   )
 
@@ -48,7 +46,7 @@ function buildWhereClause(
 
   let sqlWhereClause = ' where t.recordDelete_timeMillis is null'
 
-  if (Object.hasOwn(queryOptions, 'isResolved')) {
+  if (queryOptions.isResolved !== undefined) {
     sqlWhereClause += queryOptions.isResolved
       ? ' and t.resolvedDate is not null'
       : ' and t.resolvedDate is null'
