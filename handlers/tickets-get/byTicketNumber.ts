@@ -7,10 +7,10 @@ export const handler: RequestHandler = (request, response) => {
 
   const ticketID = getParkingTicketID(ticketNumber)
 
-  if (ticketID) {
-    response.redirect('/tickets/' + ticketID.toString())
-  } else {
+  if (ticketID === undefined) {
     response.redirect('/tickets/?error=ticketNotFound')
+  } else {
+    response.redirect(`/tickets/${ticketID.toString()}`)
   }
 }
 

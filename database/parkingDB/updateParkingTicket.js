@@ -44,8 +44,14 @@ export const updateParkingTicket = (requestBody, sessionUser) => {
             };
         }
     }
-    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(requestBody.licencePlateExpiryDateString);
-    if (!configFunctions.getProperty('parkingTickets.licencePlateExpiryDate.includeDay')) {
+    let licencePlateExpiryDate;
+    if (configFunctions.getProperty('parkingTickets.licencePlateExpiryDate.includeDay')) {
+        licencePlateExpiryDate =
+            requestBody.licencePlateExpiryDateString === ''
+                ? undefined
+                : dateTimeFns.dateStringToInteger(requestBody.licencePlateExpiryDateString);
+    }
+    else {
         const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(requestBody);
         if (licencePlateExpiryDateReturn.success) {
             licencePlateExpiryDate =

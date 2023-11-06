@@ -11,7 +11,7 @@ export const handler: RequestHandler = (request, response) => {
     request.body.recordDate
   )
 
-  if (!ownerRecord) {
+  if (ownerRecord === undefined) {
     return response.json({
       success: false,
       message: 'Ownership record not found.'

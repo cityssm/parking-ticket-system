@@ -1,3 +1,6 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/indent */
+
 import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
@@ -78,15 +81,20 @@ export const updateParkingTicket = (
     }
   }
 
-  let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(
-    requestBody.licencePlateExpiryDateString as string
-  )
+  let licencePlateExpiryDate: number | undefined
 
   if (
-    !configFunctions.getProperty(
+    configFunctions.getProperty(
       'parkingTickets.licencePlateExpiryDate.includeDay'
     )
   ) {
+    licencePlateExpiryDate =
+      requestBody.licencePlateExpiryDateString === ''
+        ? undefined
+        : dateTimeFns.dateStringToInteger(
+            requestBody.licencePlateExpiryDateString as string
+          )
+  } else {
     const licencePlateExpiryDateReturn =
       getLicencePlateExpiryDateFromPieces(requestBody)
 

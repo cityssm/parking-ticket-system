@@ -2,7 +2,7 @@ import { createParkingTicketStatus } from '../../database/parkingDB/createParkin
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js';
 export const handler = (request, response) => {
     const ownerRecord = getLicencePlateOwner(request.body.licencePlateCountry, request.body.licencePlateProvince, request.body.licencePlateNumber, request.body.recordDate);
-    if (!ownerRecord) {
+    if (ownerRecord === undefined) {
         return response.json({
             success: false,
             message: 'Ownership record not found.'
