@@ -1,4 +1,6 @@
 /* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable no-extra-semi */
 /* eslint-disable unicorn/prefer-module */
 
 // eslint-disable-next-line n/no-missing-import
@@ -13,13 +15,15 @@ declare const cityssm: cityssmGlobal
 declare const bulmaJS: BulmaJS
 declare const pts: ptsGlobal
 
-interface UpdateLocationResponseJSON {
-  success: boolean
-  message?: string
-  locations?: ParkingLocation[]
-}
-
-// eslint-disable-next-line no-extra-semi
+type UpdateLocationResponseJSON =
+  | {
+      success: true
+      locations: ParkingLocation[]
+    }
+  | {
+      success: false
+      message?: string
+    }
 ;(() => {
   let locationClassKeyOptionsHTML = ''
 
@@ -53,7 +57,10 @@ interface UpdateLocationResponseJSON {
         {
           locationKey: location.locationKey
         },
-        (responseJSON: UpdateLocationResponseJSON) => {
+        (rawResponseJSON) => {
+          const responseJSON =
+            rawResponseJSON as unknown as UpdateLocationResponseJSON
+
           if (responseJSON.success) {
             editLocationCloseModalFunction()
             locationList = responseJSON.locations
@@ -81,7 +88,8 @@ interface UpdateLocationResponseJSON {
       cityssm.postJSON(
         '/admin/doUpdateLocation',
         formEvent.currentTarget,
-        (responseJSON: UpdateLocationResponseJSON) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as UpdateLocationResponseJSON
           if (responseJSON.success) {
             editLocationCloseModalFunction()
             locationList = responseJSON.locations
@@ -107,17 +115,15 @@ interface UpdateLocationResponseJSON {
           locationClassKeyOptionsHTML
 
         if (
-          !locationClassKeyEditSelectElement.querySelector(
-            "[value='" + location.locationClassKey + "']"
-          )
+          locationClassKeyEditSelectElement.querySelector(
+            `[value='${location.locationClassKey}']`
+          ) === null
         ) {
           locationClassKeyEditSelectElement.insertAdjacentHTML(
             'beforeend',
-            '<option value="' +
-              cityssm.escapeHTML(location.locationClassKey) +
-              '">' +
-              cityssm.escapeHTML(location.locationClassKey) +
-              '</option>'
+            `<option value="${cityssm.escapeHTML(location.locationClassKey)}">
+              ${cityssm.escapeHTML(location.locationClassKey)}
+              </option>`
           )
         }
 
@@ -188,21 +194,17 @@ interface UpdateLocationResponseJSON {
 
       const trElement = document.createElement('tr')
 
-      trElement.innerHTML =
-        '<td>' +
-        '<a data-index="' +
-        locationIndex.toString() +
-        '" href="#">' +
-        cityssm.escapeHTML(location.locationName) +
-        '</a>' +
-        '</td>' +
-        '<td>' +
-        cityssm.escapeHTML(locationClass) +
-        '</td>'
+      trElement.innerHTML = `<td>
+          <a data-index="${locationIndex.toString()}" href="#">
+          ${cityssm.escapeHTML(location.locationName)}
+          </a>
+        </td><td>
+          ${cityssm.escapeHTML(locationClass)}
+        </td>`
 
       trElement
         .querySelector('a')
-        .addEventListener('click', openEditLocationModalFunction)
+        ?.addEventListener('click', openEditLocationModalFunction)
 
       tbodyElement.append(trElement)
     }
@@ -210,23 +212,21 @@ interface UpdateLocationResponseJSON {
     cityssm.clearElement(locationResultsElement)
 
     if (displayCount === 0) {
-      locationResultsElement.innerHTML =
-        '<div class="message is-info">' +
-        '<div class="message-body">There are no locations that meet your search criteria.</div>' +
-        '</div>'
+      locationResultsElement.innerHTML = `<div class="message is-info">
+          <div class="message-body">There are no locations that meet your search criteria.</div>
+          </div>`
 
       return
     }
 
-    locationResultsElement.innerHTML =
-      '<table class="table is-fixed is-striped is-hoverable is-fullwidth">' +
-      '<thead><tr>' +
-      '<th>Location</th>' +
-      '<th>Class</th>' +
-      '</tr></thead>' +
-      '</table>'
+    locationResultsElement.innerHTML = `<table class="table is-fixed is-striped is-hoverable is-fullwidth">
+        <thead><tr>
+          <th>Location</th>
+          <th>Class</th>
+        </tr></thead>
+        </table>`
 
-    locationResultsElement.querySelector('table').append(tbodyElement)
+    locationResultsElement.querySelector('table')?.append(tbodyElement)
   }
 
   // Initialize location classes select and map
@@ -272,13 +272,15 @@ interface UpdateLocationResponseJSON {
 
       let addLocationCloseModalFunction: () => void
 
-      const addFunction = (formEvent: Event) => {
+      function addFunction(formEvent: Event): void {
         formEvent.preventDefault()
 
         cityssm.postJSON(
           '/admin/doAddLocation',
           formEvent.currentTarget,
-          (responseJSON: UpdateLocationResponseJSON) => {
+          (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON as UpdateLocationResponseJSON
+
             if (responseJSON.success) {
               addLocationCloseModalFunction()
               locationList = responseJSON.locations

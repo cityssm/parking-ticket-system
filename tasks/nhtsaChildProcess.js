@@ -18,26 +18,26 @@ async function doTask() {
         }
         cutoffDate = ncicRecord.recordDateMax;
         const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
-        debug('Processing ' + vehicleMake);
+        debug(`Processing ${vehicleMake}`);
         await vehicleFunctions.getModelsByMake(vehicleMake);
     }
 }
 let timeoutId;
 let intervalId;
-export const scheduleRun = async () => {
+export async function scheduleRun() {
     const firstScheduleDate = new Date();
     firstScheduleDate.setHours(configFunctions.getProperty('application.task_nhtsa.executeHour'));
     firstScheduleDate.setDate(firstScheduleDate.getDate() + 1);
-    debug('NHTSA task scheduled for ' + firstScheduleDate.toString());
-    timeoutId = setTimeout(async () => {
+    debug(`NHTSA task scheduled for ${firstScheduleDate.toString()}`);
+    timeoutId = setTimeout(() => {
         if (terminateTask) {
             return;
         }
         debug('NHTSA task starting');
         intervalId = setIntervalAsync(doTask, 86400 * 1000);
-        await doTask();
+        void doTask();
     }, firstScheduleDate.getTime() - Date.now());
-};
+}
 await scheduleRun();
 exitHook(() => {
     terminateTask = true;

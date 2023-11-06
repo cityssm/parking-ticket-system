@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-;
 (() => {
     var _a;
     let locationClassKeyOptionsHTML = '';
@@ -18,7 +17,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         function deleteFunction() {
             cityssm.postJSON('/admin/doDeleteLocation', {
                 locationKey: location.locationKey
-            }, (responseJSON) => {
+            }, (rawResponseJSON) => {
+                const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     editLocationCloseModalFunction();
                     locationList = responseJSON.locations;
@@ -32,7 +32,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         function editFunction(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON('/admin/doUpdateLocation', formEvent.currentTarget, (responseJSON) => {
+            cityssm.postJSON('/admin/doUpdateLocation', formEvent.currentTarget, (rawResponseJSON) => {
+                const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     editLocationCloseModalFunction();
                     locationList = responseJSON.locations;
@@ -47,12 +48,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 const locationClassKeyEditSelectElement = document.querySelector('#editLocation--locationClassKey');
                 locationClassKeyEditSelectElement.innerHTML =
                     locationClassKeyOptionsHTML;
-                if (!locationClassKeyEditSelectElement.querySelector("[value='" + location.locationClassKey + "']")) {
-                    locationClassKeyEditSelectElement.insertAdjacentHTML('beforeend', '<option value="' +
-                        cityssm.escapeHTML(location.locationClassKey) +
-                        '">' +
-                        cityssm.escapeHTML(location.locationClassKey) +
-                        '</option>');
+                if (locationClassKeyEditSelectElement.querySelector(`[value='${location.locationClassKey}']`) === null) {
+                    locationClassKeyEditSelectElement.insertAdjacentHTML('beforeend', `<option value="${cityssm.escapeHTML(location.locationClassKey)}">
+              ${cityssm.escapeHTML(location.locationClassKey)}
+              </option>`);
                 }
                 locationClassKeyEditSelectElement.value = location.locationClassKey;
                 document.querySelector('#editLocation--locationName').value = location.locationName;
@@ -72,6 +71,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function renderLocationListFunction() {
+        var _a, _b;
         let displayCount = 0;
         const locationClassKeyFilter = locationClassKeyFilterElement.value;
         const locationNameFilterSplit = locationNameFilterElement.value
@@ -98,38 +98,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
             displayCount += 1;
             const locationClass = pts.getLocationClass(location.locationClassKey).locationClass;
             const trElement = document.createElement('tr');
-            trElement.innerHTML =
-                '<td>' +
-                    '<a data-index="' +
-                    locationIndex.toString() +
-                    '" href="#">' +
-                    cityssm.escapeHTML(location.locationName) +
-                    '</a>' +
-                    '</td>' +
-                    '<td>' +
-                    cityssm.escapeHTML(locationClass) +
-                    '</td>';
-            trElement
-                .querySelector('a')
-                .addEventListener('click', openEditLocationModalFunction);
+            trElement.innerHTML = `<td>
+          <a data-index="${locationIndex.toString()}" href="#">
+          ${cityssm.escapeHTML(location.locationName)}
+          </a>
+        </td><td>
+          ${cityssm.escapeHTML(locationClass)}
+        </td>`;
+            (_a = trElement
+                .querySelector('a')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', openEditLocationModalFunction);
             tbodyElement.append(trElement);
         }
         cityssm.clearElement(locationResultsElement);
         if (displayCount === 0) {
-            locationResultsElement.innerHTML =
-                '<div class="message is-info">' +
-                    '<div class="message-body">There are no locations that meet your search criteria.</div>' +
-                    '</div>';
+            locationResultsElement.innerHTML = `<div class="message is-info">
+          <div class="message-body">There are no locations that meet your search criteria.</div>
+          </div>`;
             return;
         }
-        locationResultsElement.innerHTML =
-            '<table class="table is-fixed is-striped is-hoverable is-fullwidth">' +
-                '<thead><tr>' +
-                '<th>Location</th>' +
-                '<th>Class</th>' +
-                '</tr></thead>' +
-                '</table>';
-        locationResultsElement.querySelector('table').append(tbodyElement);
+        locationResultsElement.innerHTML = `<table class="table is-fixed is-striped is-hoverable is-fullwidth">
+        <thead><tr>
+          <th>Location</th>
+          <th>Class</th>
+        </tr></thead>
+        </table>`;
+        (_b = locationResultsElement.querySelector('table')) === null || _b === void 0 ? void 0 : _b.append(tbodyElement);
     }
     locationClassKeyFilterElement.addEventListener('change', renderLocationListFunction);
     locationNameFilterElement.addEventListener('keyup', renderLocationListFunction);
@@ -148,10 +141,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         .querySelector('#is-add-location-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let addLocationCloseModalFunction;
-        const addFunction = (formEvent) => {
+        function addFunction(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON('/admin/doAddLocation', formEvent.currentTarget, (responseJSON) => {
+            cityssm.postJSON('/admin/doAddLocation', formEvent.currentTarget, (rawResponseJSON) => {
                 var _a;
+                const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addLocationCloseModalFunction();
                     locationList = responseJSON.locations;
@@ -161,7 +155,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     cityssm.alertModal('Location Not Added', (_a = responseJSON.message) !== null && _a !== void 0 ? _a : '', 'OK', 'danger');
                 }
             });
-        };
+        }
         cityssm.openHtmlModal('location-add', {
             onshown(_modalElement, closeModalFunction) {
                 var _a, _b;

@@ -10,10 +10,11 @@ export function isParkingTicketConvicted(
 
   const statusIndex = database
     .prepare(
-      'select statusIndex from ParkingTicketStatusLog' +
-        ' where recordDelete_timeMillis is null' +
-        ' and ticketID = ?' +
-        " and statusKey = 'convicted'"
+      `select statusIndex
+        from ParkingTicketStatusLog
+        where recordDelete_timeMillis is null
+        and ticketID = ?
+        and statusKey = 'convicted'`
     )
     .pluck()
     .get(ticketID) as number | undefined

@@ -33,7 +33,7 @@ async function doTask(): Promise<void> {
 
     const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC)
 
-    debug('Processing ' + vehicleMake)
+    debug(`Processing ${vehicleMake}`)
 
     await vehicleFunctions.getModelsByMake(vehicleMake)
   }
@@ -42,7 +42,7 @@ async function doTask(): Promise<void> {
 let timeoutId: NodeJS.Timeout
 let intervalId: SetIntervalAsyncTimer<[]>
 
-export const scheduleRun = async (): Promise<void> => {
+export async function scheduleRun(): Promise<void> {
   const firstScheduleDate = new Date()
 
   firstScheduleDate.setHours(
@@ -50,9 +50,9 @@ export const scheduleRun = async (): Promise<void> => {
   )
   firstScheduleDate.setDate(firstScheduleDate.getDate() + 1)
 
-  debug('NHTSA task scheduled for ' + firstScheduleDate.toString())
+  debug(`NHTSA task scheduled for ${firstScheduleDate.toString()}`)
 
-  timeoutId = setTimeout(async () => {
+  timeoutId = setTimeout(() => {
     if (terminateTask) {
       return
     }
@@ -61,7 +61,7 @@ export const scheduleRun = async (): Promise<void> => {
 
     intervalId = setIntervalAsync(doTask, 86_400 * 1000)
 
-    await doTask()
+    void doTask()
   }, firstScheduleDate.getTime() - Date.now())
 }
 

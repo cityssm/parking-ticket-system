@@ -12,39 +12,37 @@ function addCalculatedFields(ticket, sessionUser) {
 function buildWhereClause(queryOptions) {
     const sqlParameters = [];
     let sqlWhereClause = ' where t.recordDelete_timeMillis is null';
-    if (Object.prototype.hasOwnProperty.call(queryOptions, 'isResolved')) {
+    if (Object.hasOwn(queryOptions, 'isResolved')) {
         sqlWhereClause += queryOptions.isResolved
             ? ' and t.resolvedDate is not null'
             : ' and t.resolvedDate is null';
     }
-    if (queryOptions.ticketNumber && queryOptions.ticketNumber !== '') {
-        const filter = getSplitWhereClauseFilter('t.ticketNumber', queryOptions.ticketNumber);
+    if ((queryOptions.ticketNumber ?? '') !== '') {
+        const filter = getSplitWhereClauseFilter('t.ticketNumber', queryOptions.ticketNumber ?? '');
         sqlWhereClause += filter.sqlWhereClause;
         sqlParameters.push(...filter.sqlParams);
     }
-    if (queryOptions.licencePlateNumber &&
-        queryOptions.licencePlateNumber !== '') {
-        const filter = getSplitWhereClauseFilter('t.licencePlateNumber', queryOptions.licencePlateNumber);
+    if ((queryOptions.licencePlateNumber ?? '') !== '') {
+        const filter = getSplitWhereClauseFilter('t.licencePlateNumber', queryOptions.licencePlateNumber ?? '');
         sqlWhereClause += filter.sqlWhereClause;
         sqlParameters.push(...filter.sqlParams);
     }
-    if (queryOptions.licencePlateNumberEqual &&
-        queryOptions.licencePlateNumberEqual !== '') {
+    if ((queryOptions.licencePlateNumberEqual ?? '') !== '') {
         sqlWhereClause += ' and t.licencePlateNumber = ?';
         sqlParameters.push(queryOptions.licencePlateNumberEqual);
     }
-    if (queryOptions.licencePlateProvince &&
-        queryOptions.licencePlateProvince !== '') {
+    if ((queryOptions.licencePlateProvince ?? '') !== '') {
         sqlWhereClause += ' and t.licencePlateProvince = ?';
         sqlParameters.push(queryOptions.licencePlateProvince);
     }
-    if (queryOptions.licencePlateCountry &&
-        queryOptions.licencePlateCountry !== '') {
+    if ((queryOptions.licencePlateCountry ?? '') !== '') {
         sqlWhereClause += ' and t.licencePlateCountry = ?';
         sqlParameters.push(queryOptions.licencePlateCountry);
     }
-    if (queryOptions.location && queryOptions.location !== '') {
-        const locationPieces = queryOptions.location.toLowerCase().split(' ');
+    if ((queryOptions.location ?? '') !== '') {
+        const locationPieces = (queryOptions.location ?? '')
+            .toLowerCase()
+            .split(' ');
         for (const locationPiece of locationPieces) {
             sqlWhereClause +=
                 ' and (instr(lower(t.locationDescription), ?) or instr(lower(l.locationName), ?))';
@@ -62,11 +60,12 @@ export const getParkingTickets = (sessionUser, queryOptions) => {
     });
     const sqlWhereClause = buildWhereClause(queryOptions);
     const count = database
-        .prepare('select ifnull(count(*), 0) as cnt' +
-        ' from ParkingTickets t' +
-        ' left join ParkingLocations l on t.locationKey = l.locationKey' +
-        sqlWhereClause.sqlWhereClause)
-        .get(sqlWhereClause.sqlParameters).cnt;
+        .prepare(`select ifnull(count(*), 0) as cnt
+        from ParkingTickets t
+        left join ParkingLocations l on t.locationKey = l.locationKey
+        ${sqlWhereClause.sqlWhereClause}`)
+        .pluck()
+        .get(sqlWhereClause.sqlParameters);
     const rows = database
         .prepare('select t.ticketID, t.ticketNumber, t.issueDate,' +
         ' t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing,' +

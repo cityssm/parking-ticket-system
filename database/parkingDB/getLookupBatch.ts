@@ -33,17 +33,17 @@ export const getLookupBatch = (
     batchID_or_negOne === -1
       ? (database
           .prepare(
-            baseBatchSQL +
-              ' and lockDate is null' +
-              ' order by batchID desc' +
-              ' limit 1'
+            `${baseBatchSQL}
+              and lockDate is null
+              order by batchID desc
+              limit 1`
           )
           .get() as LicencePlateLookupBatch)
       : (database
-          .prepare(baseBatchSQL + ' and batchID = ?')
+          .prepare(`${baseBatchSQL} and batchID = ?`)
           .get(batchID_or_negOne) as LicencePlateLookupBatch)
 
-  if (!batch) {
+  if (batch === undefined) {
     database.close()
     return undefined
   }
@@ -61,12 +61,12 @@ export const getLookupBatch = (
 
   batch.batchEntries = database
     .prepare(
-      'select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber,' +
-        ' e.ticketID, t.ticketNumber, t.issueDate' +
-        ' from LicencePlateLookupBatchEntries e' +
-        ' left join ParkingTickets t on e.ticketID = t.ticketID' +
-        ' where e.batchID = ?' +
-        ' order by e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber'
+      `select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber,
+        e.ticketID, t.ticketNumber, t.issueDate
+        from LicencePlateLookupBatchEntries e
+        left join ParkingTickets t on e.ticketID = t.ticketID
+        where e.batchID = ?
+        order by e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber`
     )
     .all(batch.batchID) as LicencePlateLookupBatchEntry[]
 

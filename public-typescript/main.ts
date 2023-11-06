@@ -1,3 +1,7 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable no-extra-semi */
+
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 import type * as configTypes from '../types/configTypes.js'
@@ -17,7 +21,7 @@ interface DefaultConfigProperties {
   licencePlateProvinces?: Record<string, configTypes.ConfigLicencePlateCountry>
 }
 
-(() => {
+;(() => {
   let defaultConfigProperties: DefaultConfigProperties = {}
   let defaultConfigPropertiesIsLoaded = false
 
@@ -55,7 +59,9 @@ interface DefaultConfigProperties {
     cityssm.postJSON(
       '/dashboard/doGetDefaultConfigProperties',
       {},
-      (defaultConfigPropertiesResult: DefaultConfigProperties) => {
+      (rawResponseJSON) => {
+        const defaultConfigPropertiesResult =
+          rawResponseJSON as DefaultConfigProperties
         defaultConfigProperties = defaultConfigPropertiesResult
         defaultConfigPropertiesIsLoaded = true
 
@@ -106,7 +112,7 @@ interface DefaultConfigProperties {
     const licencePlateCountryAlias =
       defaultConfigProperties.licencePlateCountryAliases[
         originalLicencePlateCountry.toUpperCase()
-      ] || originalLicencePlateCountry
+      ] ?? originalLicencePlateCountry
 
     if (
       Object.prototype.hasOwnProperty.call(
@@ -192,8 +198,8 @@ interface DefaultConfigProperties {
   }
 
   const ticketStatusKeyToObject = new Map<
-  string,
-  configTypes.ConfigParkingTicketStatus
+    string,
+    configTypes.ConfigParkingTicketStatus
   >()
   let ticketStatusKeyToObjectIsLoaded = false
 
@@ -210,7 +216,8 @@ interface DefaultConfigProperties {
     }
 
     if (!ticketStatusKeyToObjectIsLoaded) {
-      for (const ticketStatusObject of defaultConfigProperties.parkingTicketStatuses) {
+      for (const ticketStatusObject of defaultConfigProperties.parkingTicketStatuses ??
+        []) {
         ticketStatusKeyToObject.set(
           ticketStatusObject.statusKey,
           ticketStatusObject
@@ -226,8 +233,8 @@ interface DefaultConfigProperties {
   }
 
   const locationClassKeyToObject = new Map<
-  string,
-  configTypes.ConfigLocationClass
+    string,
+    configTypes.ConfigLocationClass
   >()
   let locationClassKeyToObjectIsLoaded = false
 
@@ -242,7 +249,8 @@ interface DefaultConfigProperties {
     }
 
     if (!locationClassKeyToObjectIsLoaded) {
-      for (const locationClassObject of defaultConfigProperties.locationClasses) {
+      for (const locationClassObject of defaultConfigProperties.locationClasses ??
+        []) {
         locationClassKeyToObject.set(
           locationClassObject.locationClassKey,
           locationClassObject
@@ -277,7 +285,7 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
     ? listItemElements
     : tabsListElement.querySelectorAll('a')
 
-  const tabClickFunction = (clickEvent: Event) => {
+  function tabClickFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const selectedTabLinkElement = clickEvent.currentTarget as HTMLAnchorElement
@@ -291,16 +299,16 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
     }
 
     // Add .is-active to the selected tab
-    (isPanelOrMenuListTabs
+    ;(isPanelOrMenuListTabs
       ? selectedTabLinkElement
       : selectedTabLinkElement.parentElement
-    ).classList.add('is-active')
+    )?.classList.add('is-active')
     selectedTabLinkElement.setAttribute('aria-selected', 'true')
 
     const tabContentElements =
-      selectedTabContentElement.parentElement.querySelectorAll('.tab-content')
+      selectedTabContentElement.parentElement?.querySelectorAll('.tab-content')
 
-    for (const tabContentElement_ of tabContentElements) {
+    for (const tabContentElement_ of tabContentElements ?? []) {
       tabContentElement_.classList.remove('is-active')
     }
 
@@ -312,23 +320,22 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
   }
 
   for (const listItemElement of listItemElements) {
-    (isPanelOrMenuListTabs
+    ;(isPanelOrMenuListTabs
       ? listItemElement
       : listItemElement.querySelector('a')
-    ).addEventListener('click', tabClickFunction)
+    )?.addEventListener('click', tabClickFunction)
   }
 }
 
 // TOGGLE CONTAINERS
-
 ;(() => {
-  const toggleHiddenFunction = (clickEvent: Event) => {
+  function toggleHiddenFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const href = (clickEvent.currentTarget as HTMLAnchorElement).href
     const divID = href.slice(Math.max(0, href.indexOf('#') + 1))
 
-    document.querySelector('#' + divID).classList.toggle('is-hidden')
+    document.querySelector(`#${divID}`)?.classList.toggle('is-hidden')
   }
 
   pts.initializeToggleHiddenLinks = (searchContainerElement) => {

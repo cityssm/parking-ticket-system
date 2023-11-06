@@ -1,1 +1,1 @@
-export declare const scheduleRun: () => Promise<void>;
+export declare function scheduleRun(): Promise<void>;
