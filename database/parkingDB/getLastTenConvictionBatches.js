@@ -1,17 +1,17 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getLastTenConvictionBatches = () => {
+export function getLastTenConvictionBatches() {
     const database = sqlite(databasePath, {
         readonly: true
     });
     const batches = database
         .prepare(`select batchID, batchDate, lockDate, sentDate,
-          recordCreate_userName, recordCreate_timeMillis,
-          recordUpdate_userName, recordUpdate_timeMillis
-          from ParkingTicketConvictionBatches
-          where recordDelete_timeMillis is null
-          order by batchID desc limit 10`)
+        recordCreate_userName, recordCreate_timeMillis,
+        recordUpdate_userName, recordUpdate_timeMillis
+        from ParkingTicketConvictionBatches
+        where recordDelete_timeMillis is null
+        order by batchID desc limit 10`)
         .all();
     database.close();
     for (const batch of batches) {
@@ -20,5 +20,5 @@ export const getLastTenConvictionBatches = () => {
         batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
     }
     return batches;
-};
+}
 export default getLastTenConvictionBatches;

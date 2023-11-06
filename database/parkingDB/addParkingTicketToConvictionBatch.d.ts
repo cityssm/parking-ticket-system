@@ -5,6 +5,6 @@ export declare function addParkingTicketToConvictionBatch(batchID: number, ticke
 export declare const addAllParkingTicketsToConvictionBatch: (batchID: number, ticketIDs: number[], sessionUser: PTSUser) => {
     success: boolean;
     successCount: number;
-    message?: string | undefined;
+    message?: string;
 };
 export default addParkingTicketToConvictionBatch;

@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import { Router } from 'express';
 import handler_reportName from '../handlers/reports-all/reportName.js';
 export const router = Router();

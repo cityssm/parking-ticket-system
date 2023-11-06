@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -21,10 +21,10 @@ interface LookupErrorLogEntry extends LicencePlate {
   vehicleMakeModel: string
 }
 
-export const getUnacknowledgedLookupErrorLog = (
+export function getUnacknowledgedLookupErrorLog(
   batchID_or_negOne: number,
   logIndex_or_negOne: number
-): LookupErrorLogEntry[] => {
+): LookupErrorLogEntry[] {
   const database = sqlite(databasePath, {
     readonly: true
   })

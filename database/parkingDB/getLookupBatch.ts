@@ -1,11 +1,14 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-import type { LicencePlateLookupBatch, LicencePlateLookupBatchEntry } from '../../types/recordTypes.js'
+import type {
+  LicencePlateLookupBatch,
+  LicencePlateLookupBatchEntry
+} from '../../types/recordTypes.js'
 
 export interface LookupBatchReturn {
   success: boolean
@@ -20,11 +23,11 @@ export const getLookupBatch = (
     readonly: true
   })
 
-  const baseBatchSQL =
-    'select batchID, batchDate, lockDate, sentDate, receivedDate, mto_includeLabels,' +
-    ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis' +
-    ' from LicencePlateLookupBatches' +
-    ' where recordDelete_timeMillis is null'
+  const baseBatchSQL = `select batchID, batchDate, lockDate, sentDate, receivedDate, mto_includeLabels,
+    recordCreate_userName, recordCreate_timeMillis,
+    recordUpdate_userName, recordUpdate_timeMillis
+    from LicencePlateLookupBatches
+    where recordDelete_timeMillis is null`
 
   const batch =
     batchID_or_negOne === -1
@@ -46,9 +49,15 @@ export const getLookupBatch = (
   }
 
   batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate)
-  batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate as number)
-  batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate as number)
-  batch.receivedDateString = dateTimeFns.dateIntegerToString(batch.receivedDate as number)
+  batch.lockDateString = dateTimeFns.dateIntegerToString(
+    batch.lockDate as number
+  )
+  batch.sentDateString = dateTimeFns.dateIntegerToString(
+    batch.sentDate as number
+  )
+  batch.receivedDateString = dateTimeFns.dateIntegerToString(
+    batch.receivedDate as number
+  )
 
   batch.batchEntries = database
     .prepare(

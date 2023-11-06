@@ -1,3 +1,3 @@
-import type * as sqlite from 'better-sqlite3';
-export declare const canParkingTicketBeAddedToConvictionBatch: (database: sqlite.Database, ticketID: number) => boolean;
+import sqlite from 'better-sqlite3';
+export declare const canParkingTicketBeAddedToConvictionBatch: (ticketID: number, connectedDatabase?: sqlite.Database) => boolean;
 export default canParkingTicketBeAddedToConvictionBatch;

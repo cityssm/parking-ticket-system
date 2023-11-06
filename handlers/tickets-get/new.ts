@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import type { RequestHandler } from 'express'
 
 import { getRecentParkingTicketVehicleMakeModelValues } from '../../database/parkingDB.js'

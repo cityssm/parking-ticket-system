@@ -14,9 +14,9 @@ export function addParkingBylaw(
 
   const bylawRecord = database
     .prepare(
-      'select bylawDescription, isActive' +
-        ' from ParkingBylaws' +
-        ' where bylawNumber = ?'
+      `select bylawDescription, isActive
+        from ParkingBylaws
+        where bylawNumber = ?`
     )
     .get(requestBody.bylawNumber) as ParkingBylaw | undefined
 
@@ -26,14 +26,7 @@ export function addParkingBylaw(
 
       return {
         success: false,
-        message:
-          'By-law number "' +
-          requestBody.bylawNumber +
-          '"' +
-          ' is already associated with the ' +
-          ' record "' +
-          bylawRecord.bylawDescription +
-          '".'
+        message: `By-law number "${requestBody.bylawNumber}" is already associated with the record "${bylawRecord.bylawDescription}".`
       }
     }
 
@@ -41,7 +34,9 @@ export function addParkingBylaw(
 
     const info = database
       .prepare(
-        'update ParkingBylaws' + ' set isActive = 1' + ' where bylawNumber = ?'
+        `update ParkingBylaws
+          set isActive = 1
+          where bylawNumber = ?`
       )
       .run(requestBody.bylawNumber)
 
@@ -49,11 +44,8 @@ export function addParkingBylaw(
 
     return {
       success: info.changes > 0,
-      message:
-        'By-law number "' +
-        requestBody.bylawNumber +
-        '" is associated with a previously removed record.' +
-        ' That record has been restored with the original description.'
+      message: `By-law number "${requestBody.bylawNumber}" is associated with a previously removed record.
+          That record has been restored with the original description.`
     }
   }
 
@@ -61,9 +53,10 @@ export function addParkingBylaw(
 
   const info = database
     .prepare(
-      'insert into ParkingBylaws (' +
-        'bylawNumber, bylawDescription, orderNumber, isActive)' +
-        ' values (?, ?, 0, 1)'
+      `insert into ParkingBylaws (
+        bylawNumber, bylawDescription,
+        orderNumber, isActive)
+        values (?, ?, 0, 1)`
     )
     .run(requestBody.bylawNumber, requestBody.bylawDescription)
 

@@ -1,4 +1,4 @@
-import type { ParkingBylaw } from "../../types/recordTypes";
+import type { ParkingBylaw } from '../../types/recordTypes.js';
 export declare const updateParkingOffencesByBylawNumber: (requestBody: {
     bylawNumber: string;
     offenceAmount: string;

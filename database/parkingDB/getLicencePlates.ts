@@ -47,15 +47,13 @@ export function getLicencePlates(
 
   let sqlHavingClause = ' having 1 = 1'
 
-  if (Object.prototype.hasOwnProperty.call(queryOptions, 'hasOwnerRecord')) {
+  if (Object.hasOwn(queryOptions, 'hasOwnerRecord')) {
     sqlHavingClause += queryOptions.hasOwnerRecord
       ? ' and hasOwnerRecord = 1'
       : ' and hasOwnerRecord = 0'
   }
 
-  if (
-    Object.prototype.hasOwnProperty.call(queryOptions, 'hasUnresolvedTickets')
-  ) {
+  if (Object.hasOwn(queryOptions, 'hasUnresolvedTickets')) {
     sqlHavingClause += queryOptions.hasUnresolvedTickets
       ? ' and unresolvedTicketCount > 0'
       : ' and unresolvedTicketCount = 0'

@@ -1,21 +1,22 @@
-import sqlite from "better-sqlite3";
+import sqlite from 'better-sqlite3'
 
-import { parkingDB as databasePath } from "../../data/databasePaths.js";
+import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function cleanupLicencePlateOwnersTable(recordDelete_timeMillis: number): boolean {
+  const database = sqlite(databasePath)
 
-export const cleanupLicencePlateOwnersTable = (recordDelete_timeMillis: number): boolean => {
+  database
+    .prepare(
+      `delete from LicencePlateOwners
+        where recordDelete_timeMillis is not null
+        and recordDelete_timeMillis < ?`
+    )
+    .run(recordDelete_timeMillis)
 
-  const database = sqlite(databasePath);
+  database.close()
 
-  database.prepare("delete from LicencePlateOwners" +
-    " where recordDelete_timeMillis is not null" +
-    " and recordDelete_timeMillis < ?")
-    .run(recordDelete_timeMillis);
+  return true
+}
 
-  database.close();
-
-  return true;
-};
-
-
-export default cleanupLicencePlateOwnersTable;
+export default cleanupLicencePlateOwnersTable

@@ -1,7 +1,8 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function resolveParkingTicketWithDB(database, ticketID, sessionUser) {
+export function resolveParkingTicket(ticketID, sessionUser, connectedDatabase) {
+    const database = connectedDatabase ?? sqlite(databasePath);
     const rightNow = new Date();
     const info = database
         .prepare(`update ParkingTickets
@@ -12,14 +13,11 @@ export function resolveParkingTicketWithDB(database, ticketID, sessionUser) {
         and resolvedDate is null
         and recordDelete_timeMillis is null`)
         .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), ticketID);
+    if (connectedDatabase === undefined) {
+        database.close();
+    }
     return {
         success: info.changes > 0
     };
-}
-export function resolveParkingTicket(ticketID, sessionUser) {
-    const database = sqlite(databasePath);
-    const success = resolveParkingTicketWithDB(database, ticketID, sessionUser);
-    database.close();
-    return success;
 }
 export default resolveParkingTicket;

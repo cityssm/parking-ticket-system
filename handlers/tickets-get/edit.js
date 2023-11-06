@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js';
 import * as parkingDB from '../../database/parkingDB.js';
 export const handler = (request, response) => {

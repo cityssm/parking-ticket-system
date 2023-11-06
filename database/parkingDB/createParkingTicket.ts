@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -8,20 +8,27 @@ import type { ParkingTicket } from '../../types/recordTypes.js'
 import { getLicencePlateExpiryDateFromPieces } from './updateParkingTicket.js'
 
 function hasDuplicateTicket(
-  database: sqlite.Database,
   ticketNumber: string,
-  issueDate: number
+  issueDate: number,
+  connectedDatabase?: sqlite.Database
 ): boolean {
-  const duplicateTicket = database
-    .prepare(
-      'select ticketID from ParkingTickets' +
-        ' where recordDelete_timeMillis is null' +
-        ' and ticketNumber = ?' +
-        ' and abs(issueDate - ?) <= 20000'
-    )
-    .get(ticketNumber, issueDate)
+  const database = connectedDatabase ?? sqlite(databasePath)
 
-  return !(duplicateTicket === undefined)
+  const duplicateTicketID = database
+    .prepare(
+      `select ticketID from ParkingTickets
+        where recordDelete_timeMillis is null
+        and ticketNumber = ?
+        and abs(issueDate - ?) <= 20000`
+    )
+    .pluck()
+    .get(ticketNumber, issueDate) as number | null | undefined
+
+  if (connectedDatabase === undefined) {
+    database.close()
+  }
+
+  return (duplicateTicketID ?? undefined) !== undefined
 }
 
 interface CreateParkingTicketReturn {
@@ -43,7 +50,7 @@ export function createParkingTicket(
 
   if (
     configFunctions.getProperty('parkingTickets.ticketNumber.isUnique') &&
-    hasDuplicateTicket(database, requestBody.ticketNumber, issueDate)
+    hasDuplicateTicket(requestBody.ticketNumber, issueDate, database)
   ) {
     database.close()
 
@@ -81,14 +88,17 @@ export function createParkingTicket(
 
   const info = database
     .prepare(
-      'insert into ParkingTickets' +
-        ' (ticketNumber, issueDate, issueTime, issuingOfficer,' +
-        ' locationKey, locationDescription,' +
-        ' bylawNumber, parkingOffence, offenceAmount, discountOffenceAmount, discountDays,' +
-        ' licencePlateCountry, licencePlateProvince, licencePlateNumber,' +
-        ' licencePlateIsMissing, licencePlateExpiryDate, vehicleMakeModel, vehicleVIN,' +
-        ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-        ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      `insert into ParkingTickets (ticketNumber,
+        issueDate, issueTime, issuingOfficer,
+        locationKey, locationDescription,
+        bylawNumber,
+        parkingOffence, offenceAmount, discountOffenceAmount, discountDays,
+        licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        licencePlateIsMissing, licencePlateExpiryDate,
+        vehicleMakeModel, vehicleVIN,
+        recordCreate_userName, recordCreate_timeMillis,
+        recordUpdate_userName, recordUpdate_timeMillis)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .run(
       requestBody.ticketNumber,

@@ -1,22 +1,27 @@
-import type * as sqlite from 'better-sqlite3'
+import sqlite from 'better-sqlite3'
+
+import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export const canParkingTicketBeAddedToConvictionBatch = (
-  database: sqlite.Database,
-  ticketID: number
+  ticketID: number,
+  connectedDatabase?: sqlite.Database
 ): boolean => {
-  const check = database
-    .prepare(
-      'select resolvedDate from ParkingTickets' +
-        ' where ticketID = ?' +
-        ' and recordDelete_timeMillis is null'
-    )
-    .get(ticketID) as { resolvedDate?: number } | undefined
+  const database = connectedDatabase ?? sqlite(databasePath)
 
-  if (!check || check.resolvedDate) {
-    return false
+  const resolvedDate = database
+    .prepare(
+      `select resolvedDate from ParkingTickets
+        where ticketID = ?
+        and recordDelete_timeMillis is null`
+    )
+    .pluck()
+    .get(ticketID) as number | undefined
+
+  if (connectedDatabase === undefined) {
+    database.close()
   }
 
-  return true
+  return (resolvedDate ?? undefined) === undefined
 }
 
 export default canParkingTicketBeAddedToConvictionBatch

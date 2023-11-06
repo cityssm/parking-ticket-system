@@ -1,14 +1,14 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
 
 import { getNextParkingTicketStatusIndex } from './getNextParkingTicketStatusIndex.js'
-import { resolveParkingTicketWithDB } from './resolveParkingTicket.js'
+import { resolveParkingTicket } from './resolveParkingTicket.js'
 
 type CreateParkingTicketStatusReturn =
   | {
@@ -19,21 +19,21 @@ type CreateParkingTicketStatusReturn =
       success: false
     }
 
-export const createParkingTicketStatusWithDB = (
-  database: sqlite.Database,
+export function createParkingTicketStatus(
   requestBodyOrObject: Partial<ParkingTicketStatusLog>,
   sessionUser: PTSUser,
-  resolveTicket: boolean
-): CreateParkingTicketStatusReturn => {
-  // Get new status index
+  resolveTicket: boolean,
+  connectedDatabase?: sqlite.Database
+): CreateParkingTicketStatusReturn {
+  const database = connectedDatabase ?? sqlite(databasePath)
 
+  // Get new status index
   const statusIndexNew = getNextParkingTicketStatusIndex(
-    database,
-    requestBodyOrObject.ticketID as number | string
+    requestBodyOrObject.ticketID as number | string,
+    database
   )
 
   // Create the record
-
   const rightNow = new Date()
 
   const info = database
@@ -62,36 +62,21 @@ export const createParkingTicketStatusWithDB = (
     )
 
   if (info.changes > 0 && resolveTicket) {
-    resolveParkingTicketWithDB(
-      database,
+    resolveParkingTicket(
       requestBodyOrObject.ticketID as number | string,
-      sessionUser
+      sessionUser,
+      database
     )
+  }
+
+  if (connectedDatabase === undefined) {
+    database.close()
   }
 
   return {
     success: true,
     statusIndex: statusIndexNew
   }
-}
-
-export const createParkingTicketStatus = (
-  requestBodyOrObject: Partial<ParkingTicketStatusLog>,
-  sessionUser: PTSUser,
-  resolveTicket: boolean
-): CreateParkingTicketStatusReturn => {
-  const database = sqlite(databasePath)
-
-  const result = createParkingTicketStatusWithDB(
-    database,
-    requestBodyOrObject,
-    sessionUser,
-    resolveTicket
-  )
-
-  database.close()
-
-  return result
 }
 
 export default createParkingTicketStatus

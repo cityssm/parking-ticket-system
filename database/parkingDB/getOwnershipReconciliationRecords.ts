@@ -1,10 +1,9 @@
+import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
 import sqlite from 'better-sqlite3'
 
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
-import type * as pts from '../../types/recordTypes'
-
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
+import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
+import type * as pts from '../../types/recordTypes.js'
 
 export interface ReconciliationRecord extends pts.LicencePlate {
   ticket_ticketID: number

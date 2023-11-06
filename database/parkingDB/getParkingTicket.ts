@@ -1,14 +1,14 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
-import { getLicencePlateOwnerWithDB } from './getLicencePlateOwner.js'
-import { getParkingLocationWithDB } from './getParkingLocation.js'
-import { getParkingTicketRemarksWithDB } from './getParkingTicketRemarks.js'
-import { getParkingTicketStatusesWithDB } from './getParkingTicketStatuses.js'
+import { getLicencePlateOwner } from './getLicencePlateOwner.js'
+import { getParkingLocation } from './getParkingLocation.js'
+import { getParkingTicketRemarks } from './getParkingTicketRemarks.js'
+import { getParkingTicketStatuses } from './getParkingTicketStatuses.js'
 
 export const getParkingTicket = (
   ticketID: number,
@@ -35,9 +35,9 @@ export const getParkingTicket = (
         order by s.statusDate desc, s.statusIndex desc
         limit 1`
     )
-    .get(ticketID) as ParkingTicket
+    .get(ticketID) as ParkingTicket | undefined
 
-  if (!ticket) {
+  if (ticket === undefined) {
     database.close()
     return undefined
   }
@@ -69,26 +69,22 @@ export const getParkingTicket = (
   // Owner
 
   if (ticket.ownerLookup_statusKey === 'ownerLookupMatch') {
-    ticket.licencePlateOwner = getLicencePlateOwnerWithDB(
-      database,
+    ticket.licencePlateOwner = getLicencePlateOwner(
       ticket.licencePlateCountry,
       ticket.licencePlateProvince,
       ticket.licencePlateNumber,
-      Number.parseInt(ticket.ownerLookup_statusField, 10)
+      Number.parseInt(ticket.ownerLookup_statusField, 10),
+      database
     )
   }
 
   // Location
 
-  ticket.location = getParkingLocationWithDB(database, ticket.locationKey)
+  ticket.location = getParkingLocation(ticket.locationKey, database)
 
   // Status Log
 
-  ticket.statusLog = getParkingTicketStatusesWithDB(
-    database,
-    ticketID,
-    sessionUser
-  )
+  ticket.statusLog = getParkingTicketStatuses(ticketID, sessionUser, database)
 
   if (!ticket.canUpdate) {
     for (const status of ticket.statusLog) {
@@ -98,11 +94,7 @@ export const getParkingTicket = (
 
   // Remarks
 
-  ticket.remarks = getParkingTicketRemarksWithDB(
-    database,
-    ticketID,
-    sessionUser
-  )
+  ticket.remarks = getParkingTicketRemarks(ticketID, sessionUser, database)
 
   if (!ticket.canUpdate) {
     for (const remark of ticket.remarks) {

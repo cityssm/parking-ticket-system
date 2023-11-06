@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
 import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
@@ -10,7 +10,7 @@ const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
 let terminateTask = false;
-const doTask = async () => {
+async function doTask() {
     const vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
     for (const ncicRecord of vehicleNCICs) {
         if (terminateTask) {
@@ -21,7 +21,7 @@ const doTask = async () => {
         debug('Processing ' + vehicleMake);
         await vehicleFunctions.getModelsByMake(vehicleMake);
     }
-};
+}
 let timeoutId;
 let intervalId;
 export const scheduleRun = async () => {
@@ -29,16 +29,16 @@ export const scheduleRun = async () => {
     firstScheduleDate.setHours(configFunctions.getProperty('application.task_nhtsa.executeHour'));
     firstScheduleDate.setDate(firstScheduleDate.getDate() + 1);
     debug('NHTSA task scheduled for ' + firstScheduleDate.toString());
-    timeoutId = setTimeout(() => {
+    timeoutId = setTimeout(async () => {
         if (terminateTask) {
             return;
         }
         debug('NHTSA task starting');
         intervalId = setIntervalAsync(doTask, 86400 * 1000);
-        doTask();
+        await doTask();
     }, firstScheduleDate.getTime() - Date.now());
 };
-scheduleRun();
+await scheduleRun();
 exitHook(() => {
     terminateTask = true;
     debug('Exit hook called');
@@ -49,7 +49,7 @@ exitHook(() => {
     catch {
     }
     try {
-        clearIntervalAsync(intervalId);
+        void clearIntervalAsync(intervalId);
         debug('Interval cleared');
     }
     catch {

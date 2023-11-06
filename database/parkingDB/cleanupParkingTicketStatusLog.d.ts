@@ -1,2 +1,2 @@
-export declare const cleanupParkingTicketStatusLog: (recordDelete_timeMillis: number) => boolean;
+export declare function cleanupParkingTicketStatusLog(recordDelete_timeMillis: number): boolean;
 export default cleanupParkingTicketStatusLog;

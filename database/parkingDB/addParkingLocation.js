@@ -3,9 +3,9 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export function addParkingLocation(requestBody) {
     const database = sqlite(databasePath);
     const locationRecord = database
-        .prepare('select locationName, isActive' +
-        ' from ParkingLocations' +
-        ' where locationKey = ?')
+        .prepare(`select locationName, isActive
+        from ParkingLocations
+        where locationKey = ?`)
         .get(requestBody.locationKey);
     if (locationRecord !== undefined) {
         database.close();

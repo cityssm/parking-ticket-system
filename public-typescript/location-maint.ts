@@ -19,6 +19,7 @@ interface UpdateLocationResponseJSON {
   locations?: ParkingLocation[]
 }
 
+// eslint-disable-next-line no-extra-semi
 ;(() => {
   let locationClassKeyOptionsHTML = ''
 
@@ -39,14 +40,14 @@ interface UpdateLocationResponseJSON {
     clickEvent.preventDefault()
 
     const listIndex = Number.parseInt(
-      (clickEvent.currentTarget as HTMLButtonElement).dataset.index,
+      (clickEvent.currentTarget as HTMLButtonElement).dataset.index ?? '-1',
       10
     )
     const location = locationList[listIndex]
 
     let editLocationCloseModalFunction: () => void
 
-    const deleteFunction = () => {
+    function deleteFunction(): void {
       cityssm.postJSON(
         '/admin/doDeleteLocation',
         {

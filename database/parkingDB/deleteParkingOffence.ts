@@ -1,29 +1,31 @@
-import sqlite from "better-sqlite3";
+import sqlite from 'better-sqlite3'
 
-import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
+import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-import { parkingDB as databasePath } from "../../data/databasePaths.js";
+import type { AddUpdateParkingOffenceReturn } from './getParkingOffences.js'
 
-
-export const deleteParkingOffence = (bylawNumber: string, locationKey: string): AddUpdateParkingOffenceReturn => {
-
-  const database = sqlite(databasePath);
+export function deleteParkingOffence(
+  bylawNumber: string,
+  locationKey: string
+): AddUpdateParkingOffenceReturn {
+  const database = sqlite(databasePath)
 
   // Do update
+  const info = database
+    .prepare(
+      `update ParkingOffences
+        set isActive = 0
+        where bylawNumber = ?
+        and locationKey = ?
+        and isActive = 1`
+    )
+    .run(bylawNumber, locationKey)
 
-  const info = database.prepare("update ParkingOffences" +
-    " set isActive = 0" +
-    " where bylawNumber = ?" +
-    " and locationKey = ?" +
-    " and isActive = 1")
-    .run(bylawNumber, locationKey);
-
-  database.close();
+  database.close()
 
   return {
-    success: (info.changes > 0)
-  };
-};
+    success: info.changes > 0
+  }
+}
 
-
-export default deleteParkingOffence;
+export default deleteParkingOffence

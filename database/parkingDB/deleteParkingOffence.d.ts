@@ -1,3 +1,3 @@
-import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences";
-export declare const deleteParkingOffence: (bylawNumber: string, locationKey: string) => AddUpdateParkingOffenceReturn;
+import type { AddUpdateParkingOffenceReturn } from './getParkingOffences.js';
+export declare function deleteParkingOffence(bylawNumber: string, locationKey: string): AddUpdateParkingOffenceReturn;
 export default deleteParkingOffence;

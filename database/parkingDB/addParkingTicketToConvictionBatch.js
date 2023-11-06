@@ -1,89 +1,104 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { canParkingTicketBeAddedToConvictionBatch } from './canParkingTicketBeAddedToConvictionBatch.js';
-import { createParkingTicketStatusWithDB } from './createParkingTicketStatus.js';
-import { isConvictionBatchUpdatableWithDB } from './isConvictionBatchUpdatable.js';
-import { isParkingTicketConvictedWithDB } from './isParkingTicketConvicted.js';
+import { createParkingTicketStatus } from './createParkingTicketStatus.js';
+import { isConvictionBatchUpdatable } from './isConvictionBatchUpdatable.js';
+import { isParkingTicketConvicted } from './isParkingTicketConvicted.js';
 import { isParkingTicketInConvictionBatchWithDB } from './isParkingTicketInConvictionBatch.js';
-function createStatus(database, batchID, ticketID, statusKey, sessionUser) {
-    createParkingTicketStatusWithDB(database, {
+function createStatus(batchID, ticketID, statusKey, sessionUser, connectedDatabase) {
+    createParkingTicketStatus({
         recordType: 'status',
         ticketID,
         statusKey,
         statusField: batchID.toString(),
         statusField2: '',
         statusNote: ''
-    }, sessionUser, false);
+    }, sessionUser, false, connectedDatabase);
 }
-function createConvictedStatus(database, batchID, ticketID, sessionUser) {
-    createStatus(database, batchID, ticketID, 'convicted', sessionUser);
+function createConvictedStatus(batchID, ticketID, sessionUser, connectedDatabase) {
+    createStatus(batchID, ticketID, 'convicted', sessionUser, connectedDatabase);
 }
-function createConvictionBatchStatus(database, batchID, ticketID, sessionUser) {
-    createStatus(database, batchID, ticketID, 'convictionBatch', sessionUser);
+function createConvictionBatchStatus(batchID, ticketID, sessionUser, connectedDatabase) {
+    createStatus(batchID, ticketID, 'convictionBatch', sessionUser, connectedDatabase);
 }
-function convictIfNotConvicted(database, batchID, ticketID, sessionUser) {
-    const parkingTicketIsConvicted = isParkingTicketConvictedWithDB(database, ticketID);
+function convictIfNotConvicted(batchID, ticketID, sessionUser, connectedDatabase) {
+    const parkingTicketIsConvicted = isParkingTicketConvicted(ticketID, connectedDatabase);
     if (!parkingTicketIsConvicted) {
-        createConvictedStatus(database, batchID, ticketID, sessionUser);
+        createConvictedStatus(batchID, ticketID, sessionUser, connectedDatabase);
     }
 }
-function addParkingTicketToConvictionBatchAfterBatchCheck(database, batchID, ticketID, sessionUser) {
-    const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(database, ticketID);
-    if (!ticketIsAvailable) {
+function addParkingTicketToConvictionBatchAfterBatchCheck(batchID, ticketID, sessionUser, connectedDatabase) {
+    const database = connectedDatabase ?? sqlite(databasePath);
+    try {
+        const ticketIsAvailable = canParkingTicketBeAddedToConvictionBatch(ticketID, database);
+        if (!ticketIsAvailable) {
+            return {
+                success: false,
+                message: 'The ticket cannot be added to the batch.'
+            };
+        }
+        convictIfNotConvicted(batchID, ticketID, sessionUser, database);
+        const parkingTicketInBatch = isParkingTicketInConvictionBatchWithDB(database, ticketID);
+        if (parkingTicketInBatch.inBatch) {
+            return {
+                success: false,
+                message: `Parking ticket already included in conviction batch #${parkingTicketInBatch.batchIDString ?? ''}.`
+            };
+        }
+        else {
+            createConvictionBatchStatus(batchID, ticketID, sessionUser, database);
+        }
         return {
-            success: false,
-            message: 'The ticket cannot be added to the batch.'
+            success: true
         };
     }
-    convictIfNotConvicted(database, batchID, ticketID, sessionUser);
-    const parkingTicketInBatch = isParkingTicketInConvictionBatchWithDB(database, ticketID);
-    if (parkingTicketInBatch.inBatch) {
-        return {
-            success: false,
-            message: `Parking ticket already included in conviction batch #${parkingTicketInBatch.batchIDString ?? ''}.`
-        };
+    finally {
+        if (connectedDatabase === undefined) {
+            database.close();
+        }
     }
-    else {
-        createConvictionBatchStatus(database, batchID, ticketID, sessionUser);
-    }
-    return {
-        success: true
-    };
 }
 export function addParkingTicketToConvictionBatch(batchID, ticketID, sessionUser) {
     const database = sqlite(databasePath);
-    const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
-    if (!batchIsAvailable) {
-        database.close();
-        return {
-            success: false,
-            message: 'The batch cannot be updated.'
-        };
+    try {
+        const batchIsAvailable = isConvictionBatchUpdatable(batchID, database);
+        if (!batchIsAvailable) {
+            return {
+                success: false,
+                message: 'The batch cannot be updated.'
+            };
+        }
+        return addParkingTicketToConvictionBatchAfterBatchCheck(batchID, ticketID, sessionUser, database);
     }
-    return addParkingTicketToConvictionBatchAfterBatchCheck(database, batchID, ticketID, sessionUser);
+    finally {
+        database.close();
+    }
 }
 export const addAllParkingTicketsToConvictionBatch = (batchID, ticketIDs, sessionUser) => {
     const database = sqlite(databasePath);
-    const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID);
-    if (!batchIsAvailable) {
-        database.close();
+    try {
+        const batchIsAvailable = isConvictionBatchUpdatable(batchID, database);
+        if (!batchIsAvailable) {
+            return {
+                success: false,
+                successCount: 0,
+                message: 'The batch cannot be updated.'
+            };
+        }
+        let successCount = 0;
+        for (const ticketID of ticketIDs) {
+            const result = addParkingTicketToConvictionBatchAfterBatchCheck(batchID, ticketID, sessionUser, database);
+            if (result.success) {
+                successCount += 1;
+            }
+        }
         return {
-            success: false,
-            successCount: 0,
-            message: 'The batch cannot be updated.'
+            success: true,
+            successCount
         };
     }
-    let successCount = 0;
-    for (const ticketID of ticketIDs) {
-        const result = addParkingTicketToConvictionBatchAfterBatchCheck(database, batchID, ticketID, sessionUser);
-        if (result.success) {
-            successCount += 1;
-        }
+    finally {
+        database.close();
     }
-    database.close();
-    return {
-        success: true,
-        successCount
-    };
 };
 export default addParkingTicketToConvictionBatch;

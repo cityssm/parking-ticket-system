@@ -2,10 +2,10 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const deleteParkingTicket = (
+export function deleteParkingTicket(
   ticketID: number,
   sessionUser: PTSUser
-): { success: boolean } => {
+): { success: boolean } {
   const database = sqlite(databasePath)
 
   const info = database

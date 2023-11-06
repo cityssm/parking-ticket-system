@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-import { isConvictionBatchUpdatableWithDB } from './isConvictionBatchUpdatable.js'
+import { isConvictionBatchUpdatable } from './isConvictionBatchUpdatable.js'
 
 export const clearConvictionBatch = (
   batchID: number,
@@ -12,7 +12,7 @@ export const clearConvictionBatch = (
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatableWithDB(database, batchID)
+  const batchIsAvailable = isConvictionBatchUpdatable(batchID, database)
 
   if (!batchIsAvailable) {
     database.close()

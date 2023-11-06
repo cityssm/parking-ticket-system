@@ -1,13 +1,15 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export function resolveParkingTicketWithDB(
-  database: sqlite.Database,
+export function resolveParkingTicket(
   ticketID: number | string,
-  sessionUser: PTSUser
+  sessionUser: PTSUser,
+  connectedDatabase?: sqlite.Database
 ): { success: boolean } {
+  const database = connectedDatabase ?? sqlite(databasePath)
+
   const rightNow = new Date()
 
   const info = database
@@ -27,22 +29,13 @@ export function resolveParkingTicketWithDB(
       ticketID
     )
 
+  if (connectedDatabase === undefined) {
+    database.close()
+  }
+
   return {
     success: info.changes > 0
   }
-}
-
-export function resolveParkingTicket(
-  ticketID: number,
-  sessionUser: PTSUser
-): { success: boolean } {
-  const database = sqlite(databasePath)
-
-  const success = resolveParkingTicketWithDB(database, ticketID, sessionUser)
-
-  database.close()
-
-  return success
 }
 
 export default resolveParkingTicket

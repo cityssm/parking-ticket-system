@@ -10,11 +10,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
     let locationList = exports.locations;
     delete exports.locations;
     function openEditLocationModalFunction(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
-        const listIndex = Number.parseInt(clickEvent.currentTarget.dataset.index, 10);
+        const listIndex = Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '-1', 10);
         const location = locationList[listIndex];
         let editLocationCloseModalFunction;
-        const deleteFunction = () => {
+        function deleteFunction() {
             cityssm.postJSON('/admin/doDeleteLocation', {
                 locationKey: location.locationKey
             }, (responseJSON) => {
@@ -24,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     renderLocationListFunction();
                 }
             });
-        };
+        }
         function confirmDeleteFunction(deleteClickEvent) {
             deleteClickEvent.preventDefault();
             cityssm.confirmModal('Delete Location', `Are you sure you want to remove "${location.locationName}" from the list of available options?`, 'Yes, Remove Location', 'danger', deleteFunction);

@@ -18,10 +18,10 @@ export const addParkingOffence = (requestBody) => {
         }
         else {
             const info = database
-                .prepare('update ParkingOffences' +
-                ' set isActive = 1' +
-                ' where bylawNumber = ?' +
-                ' and locationKey = ?')
+                .prepare(`update ParkingOffences
+            set isActive = 1
+            where bylawNumber = ?
+            and locationKey = ?`)
                 .run(requestBody.bylawNumber, requestBody.locationKey);
             database.close();
             return {

@@ -4,18 +4,17 @@ export const getParkingTicketID = (ticketNumber) => {
     const database = sqlite(databasePath, {
         readonly: true
     });
-    const ticketRow = database
+    const ticketID = database
         .prepare(`select ticketID
         from ParkingTickets
         where ticketNumber = ?
         and recordDelete_timeMillis is null
         order by ticketID desc
         limit 1`)
+        .pluck()
         .get(ticketNumber);
     database.close();
-    if (ticketRow !== undefined) {
-        return ticketRow.ticketID;
-    }
-    return undefined;
+    console.log(ticketID);
+    return ticketID ?? undefined;
 };
 export default getParkingTicketID;

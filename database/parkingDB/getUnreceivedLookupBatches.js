@@ -1,20 +1,20 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getUnreceivedLookupBatches = (includeUnlocked) => {
+export function getUnreceivedLookupBatches(includeUnlocked) {
     const database = sqlite(databasePath, {
         readonly: true
     });
     const batches = database
-        .prepare('select b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels,' +
-        ' count(e.batchID) as batchEntryCount' +
-        ' from LicencePlateLookupBatches b' +
-        ' left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID' +
-        ' where b.recordDelete_timeMillis is null' +
-        ' and b.receivedDate is null' +
-        (includeUnlocked ? '' : ' and b.lockDate is not null') +
-        ' group by b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels' +
-        ' order by b.batchID desc')
+        .prepare(`select b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels,
+        count(e.batchID) as batchEntryCount
+        from LicencePlateLookupBatches b
+        left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID
+        where b.recordDelete_timeMillis is null
+        and b.receivedDate is null
+        ${includeUnlocked ? '' : ' and b.lockDate is not null'}
+        group by b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels
+        order by b.batchID desc`)
         .all();
     database.close();
     for (const batch of batches) {
@@ -23,5 +23,5 @@ export const getUnreceivedLookupBatches = (includeUnlocked) => {
         batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
     }
     return batches;
-};
+}
 export default getUnreceivedLookupBatches;

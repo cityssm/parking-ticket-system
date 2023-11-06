@@ -1,21 +1,23 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
-export const getParkingTicketStatusesWithDB = (
-  database: sqlite.Database,
+export const getParkingTicketStatuses = (
   ticketID: number,
-  sessionUser: PTSUser
+  sessionUser: PTSUser,
+  connectedDatabase?: sqlite.Database
 ): ParkingTicketStatusLog[] => {
+  const database = connectedDatabase ?? sqlite(databasePath, { readonly: true })
+
   const statusRows = database
     .prepare(
-      'select * from ParkingTicketStatusLog' +
-        ' where recordDelete_timeMillis is null' +
-        ' and ticketID = ?' +
-        ' order by statusDate desc, statusTime desc, statusIndex desc'
+      `select * from ParkingTicketStatusLog
+        where recordDelete_timeMillis is null
+        and ticketID = ?
+        order by statusDate desc, statusTime desc, statusIndex desc`
     )
     .all(ticketID) as ParkingTicketStatusLog[]
 
@@ -32,24 +34,9 @@ export const getParkingTicketStatusesWithDB = (
     status.canUpdate = canUpdateObject(status, sessionUser)
   }
 
-  return statusRows
-}
-
-export const getParkingTicketStatuses = (
-  ticketID: number,
-  sessionUser: PTSUser
-): ParkingTicketStatusLog[] => {
-  const database = sqlite(databasePath, {
-    readonly: true
-  })
-
-  const statusRows = getParkingTicketStatusesWithDB(
-    database,
-    ticketID,
-    sessionUser
-  )
-
-  database.close()
+  if (connectedDatabase === undefined) {
+    database.close()
+  }
 
   return statusRows
 }

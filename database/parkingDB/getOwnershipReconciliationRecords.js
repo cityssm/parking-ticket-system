@@ -1,7 +1,7 @@
-import sqlite from 'better-sqlite3';
 import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
+import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
+import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
 export const getOwnershipReconciliationRecords = () => {
     const database = sqlite(databasePath, {
         readonly: true

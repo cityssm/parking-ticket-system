@@ -2,35 +2,27 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const isConvictionBatchUpdatableWithDB = (
-  database: sqlite.Database,
-  batchID: number
-): boolean => {
-  const check = database
-    .prepare(
-      'select lockDate from ParkingTicketConvictionBatches' +
-        ' where recordDelete_timeMillis is null' +
-        ' and batchID = ?'
-    )
-    .get(batchID) as { lockDate?: number } | undefined
+export function isConvictionBatchUpdatable(
+  batchID: number,
+  connectedDatabase?: sqlite.Database
+): boolean {
+  const database = connectedDatabase ?? sqlite(databasePath)
 
-  if (!check || check.lockDate) {
-    return false
+  const lockDate = database
+    .prepare(
+      `select lockDate
+        from ParkingTicketConvictionBatches
+        where recordDelete_timeMillis is null
+        and batchID = ?`
+    )
+    .pluck()
+    .get(batchID) as number | undefined | null
+
+  if (connectedDatabase === undefined) {
+    database.close()
   }
 
-  return true
-}
-
-export const isConvictionBatchUpdatable = (ticketID: number): boolean => {
-  const database = sqlite(databasePath, {
-    readonly: true
-  })
-
-  const result = isConvictionBatchUpdatableWithDB(database, ticketID)
-
-  database.close()
-
-  return result
+  return (lockDate ?? undefined) === undefined
 }
 
 export default isConvictionBatchUpdatable

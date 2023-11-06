@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -15,8 +15,8 @@ export const createParkingTicketRemark = (
   // Get new remark index
 
   const remarkIndexNew = getNextParkingTicketRemarkIndex(
-    database,
-    requestBody.ticketID
+    requestBody.ticketID,
+    database
   )
 
   // Create the record
@@ -25,10 +25,13 @@ export const createParkingTicketRemark = (
 
   const info = database
     .prepare(
-      'insert into ParkingTicketRemarks' +
-        ' (ticketID, remarkIndex, remarkDate, remarkTime, remark,' +
-        ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-        ' values (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      `insert into ParkingTicketRemarks (
+        ticketID, remarkIndex,
+        remarkDate, remarkTime,
+        remark,
+        recordCreate_userName, recordCreate_timeMillis,
+        recordUpdate_userName, recordUpdate_timeMillis)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .run(
       requestBody.ticketID,

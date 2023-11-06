@@ -2,9 +2,10 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const cleanupParkingTicketsTable = (
+export function cleanupParkingTicketsTable(
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   recordDelete_timeMillis: number
-): boolean => {
+): boolean {
   const database = sqlite(databasePath)
 
   const recordsToDelete = database
@@ -20,15 +21,24 @@ export const cleanupParkingTicketsTable = (
 
   for (const recordToDelete of recordsToDelete) {
     database
-      .prepare('delete from ParkingTicketRemarks' + ' where ticketID = ?')
+      .prepare(
+        `delete from ParkingTicketRemarks
+          where ticketID = ?`
+      )
       .run(recordToDelete.ticketID)
 
     database
-      .prepare('delete from ParkingTicketStatusLog' + ' where ticketID = ?')
+      .prepare(
+        `delete from ParkingTicketStatusLog
+          where ticketID = ?`
+      )
       .run(recordToDelete.ticketID)
 
     database
-      .prepare('delete from ParkingTickets' + ' where ticketID = ?')
+      .prepare(
+        `delete from ParkingTickets
+          where ticketID = ?`
+      )
       .run(recordToDelete.ticketID)
   }
 

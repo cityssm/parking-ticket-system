@@ -8,5 +8,5 @@ interface GetDatabaseCleanupCountsReturn {
     parkingBylaws: number;
     parkingOffences: number;
 }
-export declare const getDatabaseCleanupCounts: () => GetDatabaseCleanupCountsReturn;
+export declare function getDatabaseCleanupCounts(): GetDatabaseCleanupCountsReturn;
 export default getDatabaseCleanupCounts;

@@ -1,4 +1,4 @@
-import type { AddUpdateParkingOffenceReturn } from "./getParkingOffences.js";
-import type * as pts from "../../types/recordTypes";
+import type * as pts from '../../types/recordTypes.js';
+import type { AddUpdateParkingOffenceReturn } from './getParkingOffences.js';
 export declare const updateParkingOffence: (requestBody: pts.ParkingOffence) => AddUpdateParkingOffenceReturn;
 export default updateParkingOffence;

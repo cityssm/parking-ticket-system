@@ -1,2 +1,2 @@
-export declare const cleanupParkingTicketRemarksTable: (recordDelete_timeMillis: number) => boolean;
+export declare function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number): boolean;
 export default cleanupParkingTicketRemarksTable;

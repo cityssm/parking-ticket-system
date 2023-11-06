@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'
@@ -343,7 +343,7 @@ export const importLicencePlateOwnership = (
   }
 
   database
-    .prepare('delete from LicencePlateLookupErrorLog' + ' where batchID = ?')
+    .prepare('delete from LicencePlateLookupErrorLog where batchID = ?')
     .run(batchID)
 
   // Look through record rows

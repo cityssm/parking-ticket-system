@@ -6,6 +6,5 @@ type CreateParkingTicketStatusReturn = {
 } | {
     success: false;
 };
-export declare const createParkingTicketStatusWithDB: (database: sqlite.Database, requestBodyOrObject: Partial<ParkingTicketStatusLog>, sessionUser: PTSUser, resolveTicket: boolean) => CreateParkingTicketStatusReturn;
-export declare const createParkingTicketStatus: (requestBodyOrObject: Partial<ParkingTicketStatusLog>, sessionUser: PTSUser, resolveTicket: boolean) => CreateParkingTicketStatusReturn;
+export declare function createParkingTicketStatus(requestBodyOrObject: Partial<ParkingTicketStatusLog>, sessionUser: PTSUser, resolveTicket: boolean, connectedDatabase?: sqlite.Database): CreateParkingTicketStatusReturn;
 export default createParkingTicketStatus;

@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
 import {
@@ -20,7 +20,7 @@ let cutoffDate = dateTimeFns.dateToInteger(initDate)
 
 let terminateTask = false
 
-const doTask = async () => {
+async function doTask(): Promise<void> {
   const vehicleNCICs =
     parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate)
 
@@ -52,7 +52,7 @@ export const scheduleRun = async (): Promise<void> => {
 
   debug('NHTSA task scheduled for ' + firstScheduleDate.toString())
 
-  timeoutId = setTimeout(() => {
+  timeoutId = setTimeout(async () => {
     if (terminateTask) {
       return
     }
@@ -61,11 +61,11 @@ export const scheduleRun = async (): Promise<void> => {
 
     intervalId = setIntervalAsync(doTask, 86_400 * 1000)
 
-    doTask()
+    await doTask()
   }, firstScheduleDate.getTime() - Date.now())
 }
 
-scheduleRun()
+await scheduleRun()
 
 exitHook(() => {
   terminateTask = true
@@ -79,7 +79,7 @@ exitHook(() => {
   }
 
   try {
-    clearIntervalAsync(intervalId)
+    void clearIntervalAsync(intervalId)
     debug('Interval cleared')
   } catch {
     // ignore

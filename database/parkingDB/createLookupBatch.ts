@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -18,9 +18,11 @@ export const createLookupBatch = (
 
   const info = database
     .prepare(
-      'insert into LicencePlateLookupBatches' +
-        ' (batchDate, mto_includeLabels, recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)' +
-        ' values (?, ?, ?, ?, ?, ?)'
+      `insert into LicencePlateLookupBatches (
+        batchDate, mto_includeLabels,
+        recordCreate_userName, recordCreate_timeMillis,
+        recordUpdate_userName, recordUpdate_timeMillis)
+        values (?, ?, ?, ?, ?, ?)`
     )
     .run(
       dateTimeFns.dateToInteger(rightNow),

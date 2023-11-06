@@ -14,9 +14,9 @@ export function addParkingLocation(
 
   const locationRecord = database
     .prepare(
-      'select locationName, isActive' +
-        ' from ParkingLocations' +
-        ' where locationKey = ?'
+      `select locationName, isActive
+        from ParkingLocations
+        where locationKey = ?`
     )
     .get(requestBody.locationKey) as ParkingLocation | undefined
 

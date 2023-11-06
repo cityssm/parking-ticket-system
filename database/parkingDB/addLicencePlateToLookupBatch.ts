@@ -44,9 +44,11 @@ export const addLicencePlateToLookupBatch = (
 
   const info = database
     .prepare(
-      'insert or ignore into LicencePlateLookupBatchEntries' +
-        ' (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)' +
-        ' values (?, ?, ?, ?, ?)'
+      `insert or ignore into LicencePlateLookupBatchEntries (
+        batchID,
+        licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        ticketID) 
+        values (?, ?, ?, ?, ?)`
     )
     .run(
       requestBody.batchID,
@@ -84,12 +86,12 @@ export const addAllParkingTicketsToLookupBatch = (
 
   const canUpdateBatch = database
     .prepare(
-      'update LicencePlateLookupBatches' +
-        ' set recordUpdate_userName = ?,' +
-        ' recordUpdate_timeMillis = ?' +
-        ' where batchID = ?' +
-        ' and recordDelete_timeMillis is null' +
-        ' and lockDate is null'
+      `update LicencePlateLookupBatches
+        set recordUpdate_userName = ?,
+        recordUpdate_timeMillis = ?
+        where batchID = ?
+        and recordDelete_timeMillis is null
+        and lockDate is null`
     )
     .run(sessionUser.userName, Date.now(), requestBody.batchID).changes
 
@@ -103,12 +105,17 @@ export const addAllParkingTicketsToLookupBatch = (
   }
 
   const insertStmt = database.prepare(
-    'insert or ignore into LicencePlateLookupBatchEntries' +
-      ' (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)' +
-      ' select ? as batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID' +
-      ' from ParkingTickets' +
-      ' where recordDelete_timeMillis is null' +
-      ' and ticketID = ?'
+    `insert or ignore into LicencePlateLookupBatchEntries (
+      batchID,
+      licencePlateCountry, licencePlateProvince, licencePlateNumber,
+      ticketID)
+      
+      select ? as batchID,
+        licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        ticketID
+      from ParkingTickets
+      where recordDelete_timeMillis is null
+      and ticketID = ?`
   )
 
   for (const ticketID of requestBody.ticketIDs) {

@@ -9,7 +9,7 @@ export const getParkingTicketID = (
     readonly: true
   })
 
-  const ticketRow = database
+  const ticketID = database
     .prepare(
       `select ticketID
         from ParkingTickets
@@ -18,15 +18,14 @@ export const getParkingTicketID = (
         order by ticketID desc
         limit 1`
     )
-    .get(ticketNumber) as { ticketID: number } | undefined
+    .pluck()
+    .get(ticketNumber) as number | undefined
 
   database.close()
 
-  if (ticketRow !== undefined) {
-    return ticketRow.ticketID
-  }
+  console.log(ticketID)
 
-  return undefined
+  return ticketID ?? undefined
 }
 
 export default getParkingTicketID

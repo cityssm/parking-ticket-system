@@ -1,8 +1,8 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
-export const getAllLicencePlateOwners = (licencePlateCountry, licencePlateProvince, licencePlateNumber) => {
+export function getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -20,5 +20,5 @@ export const getAllLicencePlateOwners = (licencePlateCountry, licencePlateProvin
         owner.vehicleMake = vehicleFunctions.getMakeFromNCIC(owner.vehicleNCIC);
     }
     return owners;
-};
+}
 export default getAllLicencePlateOwners;

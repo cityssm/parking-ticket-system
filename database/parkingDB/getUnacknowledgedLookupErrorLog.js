@@ -1,7 +1,7 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getUnacknowledgedLookupErrorLog = (batchID_or_negOne, logIndex_or_negOne) => {
+export function getUnacknowledgedLookupErrorLog(batchID_or_negOne, logIndex_or_negOne) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -40,5 +40,5 @@ export const getUnacknowledgedLookupErrorLog = (batchID_or_negOne, logIndex_or_n
         logEntry.issueDateString = dateTimeFns.dateIntegerToString(logEntry.issueDate);
     }
     return logEntries;
-};
+}
 export default getUnacknowledgedLookupErrorLog;

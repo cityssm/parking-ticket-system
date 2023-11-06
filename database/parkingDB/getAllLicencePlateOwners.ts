@@ -1,15 +1,15 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
 import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
-export const getAllLicencePlateOwners = (
+export function getAllLicencePlateOwners(
   licencePlateCountry: string,
   licencePlateProvince: string,
   licencePlateNumber: string
-): LicencePlateOwner[] => {
+): LicencePlateOwner[] {
   const database = sqlite(databasePath, {
     readonly: true
   })

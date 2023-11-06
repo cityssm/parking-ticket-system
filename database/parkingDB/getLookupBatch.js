@@ -1,14 +1,15 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
+import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export const getLookupBatch = (batchID_or_negOne) => {
     const database = sqlite(databasePath, {
         readonly: true
     });
-    const baseBatchSQL = 'select batchID, batchDate, lockDate, sentDate, receivedDate, mto_includeLabels,' +
-        ' recordCreate_userName, recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis' +
-        ' from LicencePlateLookupBatches' +
-        ' where recordDelete_timeMillis is null';
+    const baseBatchSQL = `select batchID, batchDate, lockDate, sentDate, receivedDate, mto_includeLabels,
+    recordCreate_userName, recordCreate_timeMillis,
+    recordUpdate_userName, recordUpdate_timeMillis
+    from LicencePlateLookupBatches
+    where recordDelete_timeMillis is null`;
     const batch = batchID_or_negOne === -1
         ? database
             .prepare(baseBatchSQL +

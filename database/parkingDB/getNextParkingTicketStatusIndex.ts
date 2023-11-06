@@ -1,19 +1,18 @@
 import type * as sqlite from 'better-sqlite3'
 
 export const getNextParkingTicketStatusIndex = (
-  database: sqlite.Database,
-  ticketID: number | string
+  ticketID: number | string,
+  database: sqlite.Database
 ): number => {
   return (
-    (
-      database
-        .prepare(
-          'select ifnull(max(statusIndex), 0) as statusIndexMax' +
-            ' from ParkingTicketStatusLog' +
-            ' where ticketID = ?'
-        )
-        .get(ticketID) as { statusIndexMax: number }
-    ).statusIndexMax + 1
+    (database
+      .prepare(
+        `select ifnull(max(statusIndex), 0) as statusIndexMax
+          from ParkingTicketStatusLog
+          where ticketID = ?`
+      )
+      .pluck()
+      .get(ticketID) as number) + 1
   )
 }
 

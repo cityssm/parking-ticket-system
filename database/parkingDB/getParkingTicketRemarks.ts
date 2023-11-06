@@ -1,15 +1,17 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketRemark } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
-export const getParkingTicketRemarksWithDB = (
-  database: sqlite.Database,
+export function getParkingTicketRemarks(
   ticketID: number,
-  sessionUser: PTSUser
-): ParkingTicketRemark[] => {
+  sessionUser: PTSUser,
+  connectedDatabase?: sqlite.Database
+): ParkingTicketRemark[] {
+  const database = connectedDatabase ?? sqlite(databasePath, { readonly: true })
+
   const remarkRows = database
     .prepare(
       `select * from ParkingTicketRemarks
@@ -28,18 +30,11 @@ export const getParkingTicketRemarksWithDB = (
     remark.canUpdate = canUpdateObject(remark, sessionUser)
   }
 
+  if (connectedDatabase === undefined) {
+    database.close()
+  }
+
   return remarkRows
-}
-
-export const getParkingTicketRemarks = (
-  ticketID: number,
-  sessionUser: PTSUser
-): ParkingTicketRemark[] => {
-  const database = sqlite(databasePath, {
-    readonly: true
-  })
-
-  return getParkingTicketRemarksWithDB(database, ticketID, sessionUser)
 }
 
 export default getParkingTicketRemarks

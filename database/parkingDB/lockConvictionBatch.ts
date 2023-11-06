@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js'
+import { dateIntegerToString, dateToInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -17,7 +17,7 @@ export const lockConvictionBatch = (
 
   const rightNow = new Date()
 
-  const lockDate = dateTimeFns.dateToInteger(rightNow)
+  const lockDate = dateToInteger(rightNow)
 
   const info = database
     .prepare(
@@ -36,7 +36,7 @@ export const lockConvictionBatch = (
   return {
     success: info.changes > 0,
     lockDate,
-    lockDateString: dateTimeFns.dateIntegerToString(lockDate)
+    lockDateString: dateIntegerToString(lockDate)
   }
 }
 

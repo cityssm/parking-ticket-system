@@ -19,9 +19,11 @@ export const addLicencePlateToLookupBatch = (requestBody, sessionUser) => {
         };
     }
     const info = database
-        .prepare('insert or ignore into LicencePlateLookupBatchEntries' +
-        ' (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)' +
-        ' values (?, ?, ?, ?, ?)')
+        .prepare(`insert or ignore into LicencePlateLookupBatchEntries (
+        batchID,
+        licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        ticketID) 
+        values (?, ?, ?, ?, ?)`)
         .run(requestBody.batchID, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.ticketID);
     database.close();
     return info.changes > 0
@@ -36,12 +38,12 @@ export const addLicencePlateToLookupBatch = (requestBody, sessionUser) => {
 export const addAllParkingTicketsToLookupBatch = (requestBody, sessionUser) => {
     const database = sqlite(databasePath);
     const canUpdateBatch = database
-        .prepare('update LicencePlateLookupBatches' +
-        ' set recordUpdate_userName = ?,' +
-        ' recordUpdate_timeMillis = ?' +
-        ' where batchID = ?' +
-        ' and recordDelete_timeMillis is null' +
-        ' and lockDate is null')
+        .prepare(`update LicencePlateLookupBatches
+        set recordUpdate_userName = ?,
+        recordUpdate_timeMillis = ?
+        where batchID = ?
+        and recordDelete_timeMillis is null
+        and lockDate is null`)
         .run(sessionUser.userName, Date.now(), requestBody.batchID).changes;
     if (canUpdateBatch === 0) {
         database.close();
@@ -50,12 +52,17 @@ export const addAllParkingTicketsToLookupBatch = (requestBody, sessionUser) => {
             message: 'Batch cannot be updated.'
         };
     }
-    const insertStmt = database.prepare('insert or ignore into LicencePlateLookupBatchEntries' +
-        ' (batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID)' +
-        ' select ? as batchID, licencePlateCountry, licencePlateProvince, licencePlateNumber, ticketID' +
-        ' from ParkingTickets' +
-        ' where recordDelete_timeMillis is null' +
-        ' and ticketID = ?');
+    const insertStmt = database.prepare(`insert or ignore into LicencePlateLookupBatchEntries (
+      batchID,
+      licencePlateCountry, licencePlateProvince, licencePlateNumber,
+      ticketID)
+      
+      select ? as batchID,
+        licencePlateCountry, licencePlateProvince, licencePlateNumber,
+        ticketID
+      from ParkingTickets
+      where recordDelete_timeMillis is null
+      and ticketID = ?`);
     for (const ticketID of requestBody.ticketIDs) {
         insertStmt.run(requestBody.batchID, ticketID);
     }
