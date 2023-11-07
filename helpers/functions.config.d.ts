@@ -1,7 +1,7 @@
 import type { ConfigActiveDirectory, ConfigLicencePlateCountry, ConfigLocationClass, ConfigParkingTicketStatus } from '../types/configTypes.js';
 export declare function getProperty(propertyName: 'activeDirectory'): ConfigActiveDirectory;
 export declare function getProperty(propertyName: 'application.applicationName' | 'application.logoURL' | 'application.userDomain' | 'defaults.country' | 'defaults.province'): string;
-export declare function getProperty(propertyName: 'application.httpPort' | 'databaseCleanup.windowDays'): number;
+export declare function getProperty(propertyName: 'application.httpPort' | 'application.maximumProcesses' | 'databaseCleanup.windowDays'): number;
 export declare function getProperty(propertyName: 'application.useTestDatabases'): boolean;
 export declare function getProperty(propertyName: 'locationClasses'): ConfigLocationClass[];
 export declare function getProperty(propertyName: 'licencePlateCountryAliases'): Record<string, string>;

@@ -1,88 +1,109 @@
 import { fork } from 'node:child_process'
-import http from 'node:http'
+import type { Worker } from 'node:cluster'
+import cluster from 'node:cluster'
+import os from 'node:os'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import Debug from 'debug'
-import exitHook from 'exit-hook'
 
-import { app } from '../app.js'
-import * as configFunctions from '../helpers/functions.config.js'
+import { initNHTSADB } from '../database/nhtsaDB/initializeDatabase.js'
+import { initializeDatabase } from '../database/parkingDB/initializeDatabase.js'
+import { getProperty } from '../helpers/functions.config.js'
+import type { WorkerMessage } from '../types/applicationTypes.js'
 
-const debug = Debug('parking-ticket-system:www')
+const debug = Debug(`parking-ticket-system:www:${process.pid}`)
 
-interface ServerError extends Error {
-  syscall: string
-  code: string
+process.title = `${getProperty('application.applicationName')} (Primary)`
+
+debug(`Primary pid:   ${process.pid}`)
+debug(`Primary title: ${process.title}`)
+
+/*
+ * Initialize Databases
+ */
+
+initializeDatabase()
+initNHTSADB()
+
+/*
+ * Start Processes
+ */
+
+const processCount = Math.min(
+  getProperty('application.maximumProcesses'),
+  os.cpus().length
+)
+
+debug(`Launching ${processCount} processes`)
+
+const directoryName = dirname(fileURLToPath(import.meta.url))
+
+const clusterSettings = {
+  exec: `${directoryName}/wwwProcess.js`
 }
 
-const onError = (error: ServerError): void => {
-  if (error.syscall !== 'listen') {
-    throw error
+cluster.setupPrimary(clusterSettings)
+
+const activeWorkers = new Map<number, Worker>()
+
+for (let index = 0; index < processCount; index += 1) {
+  const worker = cluster.fork()
+  if (worker.process.pid !== undefined) {
+    activeWorkers.set(worker.process.pid, worker)
   }
+}
 
-  let doProcessExit = false
+cluster.on('message', (worker, message: WorkerMessage) => {
+  // eslint-disable-next-line sonarjs/no-small-switch
+  switch (message.messageType) {
+    case 'clearCache': {
+      for (const [pid, activeWorker] of activeWorkers.entries()) {
+        if (activeWorker === undefined || pid === message.pid) {
+          continue
+        }
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES': {
-      debug('Requires elevated privileges')
-      doProcessExit = true
+        debug(`Relaying message to worker: ${pid}`)
+        activeWorker.send(message)
+      }
       break
     }
-
-    case 'EADDRINUSE': {
-      debug('Port is already in use.')
-      doProcessExit = true
-      break
-    }
-
     default: {
-      throw error
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      debug(`Ignoring unknown message type: ${message.messageType}`)
     }
   }
+})
 
-  if (doProcessExit) {
+cluster.on('exit', (worker) => {
+  debug(`Worker ${(worker.process.pid ?? 0).toString()} has been killed`)
+  activeWorkers.delete(worker.process.pid ?? 0)
+
+  debug('Starting another worker')
+
+  const newWorker = cluster.fork()
+
+  if (newWorker.process.pid !== undefined) {
+    activeWorkers.set(newWorker.process.pid, newWorker)
+  }
+})
+
+if (process.env.STARTUP_TEST === 'true') {
+  const killSeconds = 10
+
+  debug(`Killing processes in ${killSeconds} seconds...`)
+
+  setTimeout(() => {
+    debug('Killing processes')
+
     // eslint-disable-next-line n/no-process-exit, unicorn/no-process-exit
-    process.exit(1)
+    process.exit(0)
+  }, 10_000)
+} else {
+  const lowPriority = 19
+
+  if (getProperty('application.task_nhtsa.runTask')) {
+    const childProcess = fork('./tasks/nhtsaChildProcess.js')
+    os.setPriority(childProcess.pid as number, lowPriority)
   }
 }
-
-const onListening = (server: http.Server): void => {
-  const addr = server.address()
-
-  const bind =
-    typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + (addr?.port.toString() ?? '')
-
-  debug('Listening on ' + bind)
-}
-
-/**
- * Initialize HTTP
- */
-
-const httpPort = configFunctions.getProperty('application.httpPort')
-
-const httpServer = http.createServer(app)
-
-httpServer.listen(httpPort)
-
-httpServer.on('error', onError)
-httpServer.on('listening', () => {
-  onListening(httpServer)
-})
-
-debug('HTTP listening on ' + httpPort.toString())
-
-/**
- * Initialize background task
- */
-
-if (configFunctions.getProperty('application.task_nhtsa.runTask')) {
-  fork('./tasks/nhtsaChildProcess.js')
-}
-
-exitHook(() => {
-  debug('Closing HTTP')
-  httpServer.close()
-})

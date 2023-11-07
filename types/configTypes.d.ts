@@ -34,6 +34,7 @@ interface ConfigApplicationConfig {
     httpPort?: number;
     userDomain?: string;
     useTestDatabases?: boolean;
+    maximumProcesses?: number;
     feature_mtoExportImport?: boolean;
     task_nhtsa?: ConfigApplicationTask;
 }

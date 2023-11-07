@@ -1,53 +1,70 @@
 import { fork } from 'node:child_process';
-import http from 'node:http';
+import cluster from 'node:cluster';
+import os from 'node:os';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import Debug from 'debug';
-import exitHook from 'exit-hook';
-import { app } from '../app.js';
-import * as configFunctions from '../helpers/functions.config.js';
-const debug = Debug('parking-ticket-system:www');
-const onError = (error) => {
-    if (error.syscall !== 'listen') {
-        throw error;
+import { initNHTSADB } from '../database/nhtsaDB/initializeDatabase.js';
+import { initializeDatabase } from '../database/parkingDB/initializeDatabase.js';
+import { getProperty } from '../helpers/functions.config.js';
+const debug = Debug(`parking-ticket-system:www:${process.pid}`);
+process.title = `${getProperty('application.applicationName')} (Primary)`;
+debug(`Primary pid:   ${process.pid}`);
+debug(`Primary title: ${process.title}`);
+initializeDatabase();
+initNHTSADB();
+const processCount = Math.min(getProperty('application.maximumProcesses'), os.cpus().length);
+debug(`Launching ${processCount} processes`);
+const directoryName = dirname(fileURLToPath(import.meta.url));
+const clusterSettings = {
+    exec: `${directoryName}/wwwProcess.js`
+};
+cluster.setupPrimary(clusterSettings);
+const activeWorkers = new Map();
+for (let index = 0; index < processCount; index += 1) {
+    const worker = cluster.fork();
+    if (worker.process.pid !== undefined) {
+        activeWorkers.set(worker.process.pid, worker);
     }
-    let doProcessExit = false;
-    switch (error.code) {
-        case 'EACCES': {
-            debug('Requires elevated privileges');
-            doProcessExit = true;
-            break;
-        }
-        case 'EADDRINUSE': {
-            debug('Port is already in use.');
-            doProcessExit = true;
+}
+cluster.on('message', (worker, message) => {
+    switch (message.messageType) {
+        case 'clearCache': {
+            for (const [pid, activeWorker] of activeWorkers.entries()) {
+                if (activeWorker === undefined || pid === message.pid) {
+                    continue;
+                }
+                debug(`Relaying message to worker: ${pid}`);
+                activeWorker.send(message);
+            }
             break;
         }
         default: {
-            throw error;
+            debug(`Ignoring unknown message type: ${message.messageType}`);
         }
     }
-    if (doProcessExit) {
-        process.exit(1);
+});
+cluster.on('exit', (worker) => {
+    debug(`Worker ${(worker.process.pid ?? 0).toString()} has been killed`);
+    activeWorkers.delete(worker.process.pid ?? 0);
+    debug('Starting another worker');
+    const newWorker = cluster.fork();
+    if (newWorker.process.pid !== undefined) {
+        activeWorkers.set(newWorker.process.pid, newWorker);
     }
-};
-const onListening = (server) => {
-    const addr = server.address();
-    const bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + (addr?.port.toString() ?? '');
-    debug('Listening on ' + bind);
-};
-const httpPort = configFunctions.getProperty('application.httpPort');
-const httpServer = http.createServer(app);
-httpServer.listen(httpPort);
-httpServer.on('error', onError);
-httpServer.on('listening', () => {
-    onListening(httpServer);
 });
-debug('HTTP listening on ' + httpPort.toString());
-if (configFunctions.getProperty('application.task_nhtsa.runTask')) {
-    fork('./tasks/nhtsaChildProcess.js');
+if (process.env.STARTUP_TEST === 'true') {
+    const killSeconds = 10;
+    debug(`Killing processes in ${killSeconds} seconds...`);
+    setTimeout(() => {
+        debug('Killing processes');
+        process.exit(0);
+    }, 10000);
 }
-exitHook(() => {
-    debug('Closing HTTP');
-    httpServer.close();
-});
+else {
+    const lowPriority = 19;
+    if (getProperty('application.task_nhtsa.runTask')) {
+        const childProcess = fork('./tasks/nhtsaChildProcess.js');
+        os.setPriority(childProcess.pid, lowPriority);
+    }
+}

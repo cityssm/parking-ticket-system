@@ -20,6 +20,7 @@ configFallbackValues.set('application.logoURL', '/images/noParking.svg')
 configFallbackValues.set('application.httpPort', 4000)
 configFallbackValues.set('application.userDomain', '')
 configFallbackValues.set('application.useTestDatabases', false)
+configFallbackValues.set('application.maximumProcesses', 4)
 
 configFallbackValues.set('application.feature_mtoExportImport', false)
 
@@ -105,7 +106,10 @@ export function getProperty(
 ): string
 
 export function getProperty(
-  propertyName: 'application.httpPort' | 'databaseCleanup.windowDays'
+  propertyName:
+    | 'application.httpPort'
+    | 'application.maximumProcesses'
+    | 'databaseCleanup.windowDays'
 ): number
 
 export function getProperty(

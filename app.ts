@@ -6,7 +6,7 @@ import * as dateTimeFns from '@cityssm/utils-datetime'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import csurf from 'csurf'
-import debug from 'debug'
+import Debug from 'debug'
 import express from 'express'
 import rateLimit from 'express-rate-limit'
 import session from 'express-session'
@@ -14,8 +14,6 @@ import createError from 'http-errors'
 import FileStore from 'session-file-store'
 
 import { useTestDatabases } from './data/databasePaths.js'
-import { initNHTSADB } from './database/nhtsaDB/initializeDatabase.js'
-import { initializeDatabase } from './database/parkingDB/initializeDatabase.js'
 import * as configFunctions from './helpers/functions.config.js'
 import * as vehicleFunctions from './helpers/functions.vehicle.js'
 import routerAdmin from './routes/admin.js'
@@ -29,14 +27,7 @@ import routeTicketsOntario from './routes/tickets-ontario.js'
 import routerTickets from './routes/tickets.js'
 import { version } from './version.js'
 
-const debugApp = debug('parking-ticket-system:app')
-
-/*
- * INITALIZE THE DATABASES
- */
-
-initializeDatabase()
-initNHTSADB()
+const debug = Debug(`parking-ticket-system:app:${process.pid}`)
 
 /*
  * INITIALIZE APP
@@ -51,7 +42,7 @@ app.set('view engine', 'ejs')
 app.use(compression())
 
 app.use((request, _response, next) => {
-  debugApp(`${request.method} ${request.url}`)
+  debug(`${request.method} ${request.url}`)
   next()
 })
 
@@ -119,7 +110,7 @@ app.use(
   session({
     store: new FileStoreSession({
       path: './data/sessions',
-      logFn: debug('parking-ticket-system:session'),
+      logFn: Debug('parking-ticket-system:session'),
       retries: 10
     }),
     name: sessionCookieName,
