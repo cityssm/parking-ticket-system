@@ -1,232 +1,269 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 
-import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "../types/publicTypes";
-import type * as recordTypes from "../types/recordTypes";
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-declare const cityssm: cityssmGlobal;
-declare const pts: ptsGlobal;
+import type { ptsGlobal } from '../types/publicTypes.js'
+import type { ParkingTicket } from '../types/recordTypes.js'
 
+declare const cityssm: cityssmGlobal
+declare const pts: ptsGlobal
+;(() => {
+  let ticketNumberFieldLabel = ''
 
-(() => {
+  const formElement = document.querySelector(
+    '#form--filters'
+  ) as HTMLFormElement
 
-  let ticketNumberFieldLabel = "";
+  const offsetElement = document.querySelector(
+    '#filter--offset'
+  ) as HTMLInputElement
 
-  const formElement = document.querySelector("#form--filters") as HTMLFormElement;
+  const searchResultsElement = document.querySelector(
+    '#container--searchResults'
+  ) as HTMLElement
 
-  const offsetElement = document.querySelector("#filter--offset") as HTMLInputElement;
-
-  const searchResultsElement = document.querySelector("#container--searchResults") as HTMLElement;
-
-
-  const buildTicketTrElement = (ticketObject: recordTypes.ParkingTicket) => {
-
-    const trElement = document.createElement("tr");
+  function buildTicketTrElement(
+    ticketObject: ParkingTicket
+  ): HTMLTableRowElement {
+    const trElement = document.createElement('tr')
 
     // Licence plate location properties
-
-    const locationProperties =
-      pts.getLicencePlateLocationProperties(ticketObject.licencePlateCountry, ticketObject.licencePlateProvince);
+    const locationProperties = pts.getLicencePlateLocationProperties(
+      ticketObject.licencePlateCountry,
+      ticketObject.licencePlateProvince
+    )
 
     // Location classes
-
-    let locationClass = "";
+    let locationClass = ''
 
     if (ticketObject.locationClassKey) {
-      locationClass = pts.getLocationClass(ticketObject.locationClassKey).locationClass;
+      locationClass = pts.getLocationClass(
+        ticketObject.locationClassKey
+      ).locationClass
     }
 
     // Statuses
-
-    const ticketStatusObject = pts.getTicketStatus(ticketObject.latestStatus_statusKey);
+    const ticketStatusObject = pts.getTicketStatus(
+      ticketObject.latestStatus_statusKey
+    )
 
     // Output row
-
-    trElement.innerHTML = "<td>" +
-      "<a href=\"/tickets/" + ticketObject.ticketID.toString() + "\" data-tooltip=\"View Parking Ticket\">" +
-      ticketObject.ticketNumber +
-      "</a>" +
-      "</td>" +
-      "<td class=\"is-nowrap\">" + ticketObject.issueDateString + "</td>" +
-      ("<td>" +
-        "<div class=\"licence-plate is-fullwidth\"" +
-        " style=\"--color:" + locationProperties.licencePlateProvince.color + ";" +
-        "--backgroundColor:" + locationProperties.licencePlateProvince.backgroundColor + "\">" +
-
-        ("<div class=\"licence-plate-province\">" +
-          locationProperties.licencePlateProvinceAlias +
-          "</div>") +
-
-        ("<div class=\"licence-plate-number\">" +
-          (ticketObject.licencePlateNumber === ""
-            ? "<i class=\"fas fa-question-circle has-opacity-2\" aria-hidden=\"true\"></i>"
-            : cityssm.escapeHTML(ticketObject.licencePlateNumber)) +
-          "</div>") +
-
-        "</div>" +
-        "</td>") +
-      ("<td>" +
-        (ticketObject.locationDescription
+    trElement.innerHTML = `<td>
+        <a href="/tickets/${ticketObject.ticketID.toString()}" data-tooltip="View Parking Ticket">
+        ${ticketObject.ticketNumber}
+        </a>
+      </td>
+      <td class="is-nowrap">
+        ${ticketObject.issueDateString}
+      </td>
+      <td>
+      <div class="licence-plate is-fullwidth"
+        style="
+        --color:${locationProperties.licencePlateProvince.color};
+        --backgroundColor:${
+          locationProperties.licencePlateProvince.backgroundColor
+        }
+        ">
+        <div class="licence-plate-province">
+           ${locationProperties.licencePlateProvinceAlias}
+        </div>
+    
+        <div class="licence-plate-number">
+        ${
+          ticketObject.licencePlateNumber === ''
+            ? '<i class="fas fa-question-circle has-opacity-2" aria-hidden="true"></i>'
+            : cityssm.escapeHTML(ticketObject.licencePlateNumber)
+        }
+        </div>
+      </div>
+      </td>
+      <td>
+      ${
+        ticketObject.locationDescription
           ? `${ticketObject.locationDescription}<br />`
-          : "") +
-        (ticketObject.locationKey && ticketObject.locationKey !== "" && ticketObject.locationName
+          : ''
+      }
+      ${
+        ticketObject.locationKey &&
+        ticketObject.locationKey !== '' &&
+        ticketObject.locationName
           ? `<small class="has-tooltip-right" data-tooltip="${locationClass}">
-              <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-              ${cityssm.escapeHTML(ticketObject.locationName)}
-              </small>`
-          : "") +
-        "</td>") +
-      "<td>" + cityssm.escapeHTML(ticketObject.parkingOffence) + "</td>" +
-      "<td>" +
+            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+            ${cityssm.escapeHTML(ticketObject.locationName)}
+            </small>`
+          : ''
+      }
+    </td>
+    <td>
+    ${cityssm.escapeHTML(ticketObject.parkingOffence)}
+    </td>
+    <td>
+    ${
+      ticketObject.resolvedDateString === ''
+        ? 'Unresolved'
+        : '<span class="sr-only">Resolved</span>' +
+          '<i class="fas fa-check" aria-hidden="true"></i> ' +
+          ticketObject.resolvedDateString
+    }
+    ${
+      ticketObject.latestStatus_statusKey
+        ? '<br /><span class="tag is-light is-primary">' +
+          ticketStatusObject.status +
+          '</span>'
+        : ''
+    }
+    </td>`
 
-      (ticketObject.resolvedDateString === ""
-        ? "Unresolved"
-        : "<span class=\"sr-only\">Resolved</span>" +
-        "<i class=\"fas fa-check\" aria-hidden=\"true\"></i> " + ticketObject.resolvedDateString) +
+    return trElement
+  }
 
-      (ticketObject.latestStatus_statusKey
-        ? "<br /><span class=\"tag is-light is-primary\">" + ticketStatusObject.status + "</span>"
-        : "") +
-      "</td>";
-
-    return trElement;
-  };
-
-
-  const processTicketResults = (ticketResults: { count: number; limit: number; offset: number; tickets: recordTypes.ParkingTicket[] }) => {
-
-    const ticketList = ticketResults.tickets;
+  function processTicketResults(ticketResults: {
+    count: number
+    limit: number
+    offset: number
+    tickets: ParkingTicket[]
+  }): void {
+    const ticketList = ticketResults.tickets
 
     if (ticketList.length === 0) {
+      searchResultsElement.innerHTML = `<div class="message is-info">
+        <div class="message-body">
+        <strong>Your search returned no results.</strong><br />
+        Please try expanding your search criteria.
+        </div>
+        </div>`
 
-      searchResultsElement.innerHTML = "<div class=\"message is-info\">" +
-        "<div class=\"message-body\">" +
-        "<strong>Your search returned no results.</strong><br />" +
-        "Please try expanding your search criteria." +
-        "</div>" +
-        "</div>";
-
-      return;
+      return
     }
 
-    searchResultsElement.innerHTML = "<table class=\"table is-fullwidth is-striped is-hoverable\">" +
-      "<thead><tr>" +
-      "<th>" + cityssm.escapeHTML(ticketNumberFieldLabel) + "</th>" +
-      "<th>Issue Date</th>" +
-      "<th>Plate Number</th>" +
-      "<th>Location</th>" +
-      "<th>Offence</th>" +
-      "<th>Status</th>" +
-      "</tr></thead>" +
-      "<tbody></tbody>" +
-      "</table>";
+    searchResultsElement.innerHTML = `<table class="table is-fullwidth is-striped is-hoverable">
+      <thead><tr>
+      <th>
+      ${cityssm.escapeHTML(ticketNumberFieldLabel)}
+      </th>
+      <th>Issue Date</th>
+      <th>Plate Number</th>
+      <th>Location</th>
+      <th>Offence</th>
+      <th>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+      </table>`
 
-    const tbodyElement = searchResultsElement.querySelector("tbody");
+    const tbodyElement = searchResultsElement.querySelector(
+      'tbody'
+    ) as HTMLTableSectionElement
 
     for (const ticketObject of ticketList) {
-      const trElement = buildTicketTrElement(ticketObject);
-      tbodyElement.append(trElement);
+      const trElement = buildTicketTrElement(ticketObject)
+      tbodyElement.append(trElement)
     }
 
-    searchResultsElement.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
-      "<div class=\"level-left has-text-weight-bold\">" +
-      "Displaying parking tickets " +
-      (ticketResults.offset + 1).toString() +
-      " to " +
-      Math.min(ticketResults.limit + ticketResults.offset, ticketResults.count).toString() +
-      " of " +
-      ticketResults.count.toString() +
-      "</div>" +
-      "</div>");
+    searchResultsElement.insertAdjacentHTML(
+      'beforeend',
+      `<div class="level is-block-print">
+        <div class="level-left has-text-weight-bold">
+        Displaying parking tickets
+        ${(ticketResults.offset + 1).toString()}
+        to
+        ${Math.min(
+          ticketResults.limit + ticketResults.offset,
+          ticketResults.count
+        ).toString()}
+        of
+        ${ticketResults.count.toString()}
+        </div>
+      </div>`
+    )
 
     if (ticketResults.limit < ticketResults.count) {
-
-      const paginationElement = document.createElement("nav");
-      paginationElement.className = "level-right is-hidden-print";
-      paginationElement.setAttribute("role", "pagination");
-      paginationElement.setAttribute("aria-label", "pagination");
+      const paginationElement = document.createElement('nav')
+      paginationElement.className = 'level-right is-hidden-print'
+      paginationElement.setAttribute('role', 'pagination')
+      paginationElement.setAttribute('aria-label', 'pagination')
 
       if (ticketResults.offset > 0) {
+        const previousElement = document.createElement('a')
+        previousElement.className = 'button'
+        previousElement.textContent = 'Previous'
+        previousElement.addEventListener('click', (clickEvent) => {
+          clickEvent.preventDefault()
+          offsetElement.value = Math.max(
+            0,
+            ticketResults.offset - ticketResults.limit
+          ).toString()
 
-        const previousElement = document.createElement("a");
-        previousElement.className = "button";
-        previousElement.textContent = "Previous";
-        previousElement.addEventListener("click", (clickEvent) => {
+          searchResultsElement.scrollIntoView(true)
 
-          clickEvent.preventDefault();
-          offsetElement.value = Math.max(0, ticketResults.offset - ticketResults.limit).toString();
+          getTicketsFunction()
+        })
 
-          searchResultsElement.scrollIntoView(true);
-
-          getTicketsFunction();
-
-        });
-
-        paginationElement.append(previousElement);
+        paginationElement.append(previousElement)
       }
 
       if (ticketResults.limit + ticketResults.offset < ticketResults.count) {
+        const nextElement = document.createElement('a')
+        nextElement.className = 'button ml-3'
 
-        const nextElement = document.createElement("a");
-        nextElement.className = "button ml-3";
+        nextElement.innerHTML = `<span>Next Tickets</span>
+          <span class="icon"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>`
 
-        nextElement.innerHTML =
-          "<span>Next Tickets</span>" +
-          "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
+        nextElement.addEventListener('click', (clickEvent) => {
+          clickEvent.preventDefault()
+          offsetElement.value = (
+            ticketResults.offset + ticketResults.limit
+          ).toString()
 
-        nextElement.addEventListener("click", (clickEvent) => {
+          searchResultsElement.scrollIntoView(true)
 
-          clickEvent.preventDefault();
-          offsetElement.value = (ticketResults.offset + ticketResults.limit).toString();
+          getTicketsFunction()
+        })
 
-          searchResultsElement.scrollIntoView(true);
-
-          getTicketsFunction();
-
-        });
-
-        paginationElement.append(nextElement);
-
+        paginationElement.append(nextElement)
       }
 
-      searchResultsElement.querySelectorAll(".level")[0].append(paginationElement);
+      searchResultsElement
+        .querySelectorAll('.level')[0]
+        .append(paginationElement)
     }
-  };
+  }
 
+  function getTicketsFunction(): void {
+    cityssm.clearElement(searchResultsElement)
 
-  const getTicketsFunction = () => {
+    searchResultsElement.innerHTML = `<p class="has-text-centered has-text-grey-light">
+      <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
+      <em>Loading tickets...</em>
+      </p>`
 
-    cityssm.clearElement(searchResultsElement);
+    cityssm.postJSON('/tickets/doGetTickets', formElement, processTicketResults)
+  }
 
-    searchResultsElement.innerHTML = "<p class=\"has-text-centered has-text-grey-light\">" +
-      "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
-      "<em>Loading tickets..." +
-      "</p>";
+  function resetOffsetAndGetTicketsFunction(): void {
+    offsetElement.value = '0'
+    getTicketsFunction()
+  }
 
-    cityssm.postJSON("/tickets/doGetTickets", formElement, processTicketResults);
-  };
+  formElement.addEventListener('submit', (formEvent) => {
+    formEvent.preventDefault()
+  })
 
+  document
+    .querySelector('#filter--ticketNumber')
+    ?.addEventListener('change', resetOffsetAndGetTicketsFunction)
+  document
+    .querySelector('#filter--licencePlateNumber')
+    ?.addEventListener('change', resetOffsetAndGetTicketsFunction)
+  document
+    .querySelector('#filter--location')
+    ?.addEventListener('change', resetOffsetAndGetTicketsFunction)
+  document
+    .querySelector('#filter--isResolved')
+    ?.addEventListener('change', resetOffsetAndGetTicketsFunction)
 
-  const resetOffsetAndGetTicketsFunction = () => {
-    offsetElement.value = "0";
-    getTicketsFunction();
-  };
+  pts.getDefaultConfigProperty('ticketNumber_fieldLabel', (fieldLabel) => {
+    ticketNumberFieldLabel = fieldLabel
 
-
-  formElement.addEventListener("submit", (formEvent) => {
-    formEvent.preventDefault();
-  });
-
-  document.querySelector("#filter--ticketNumber").addEventListener("change", resetOffsetAndGetTicketsFunction);
-  document.querySelector("#filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetTicketsFunction);
-  document.querySelector("#filter--location").addEventListener("change", resetOffsetAndGetTicketsFunction);
-  document.querySelector("#filter--isResolved").addEventListener("change", resetOffsetAndGetTicketsFunction);
-
-
-  pts.getDefaultConfigProperty("ticketNumber_fieldLabel", (fieldLabel) => {
-
-    ticketNumberFieldLabel = fieldLabel;
-
-    pts.getDefaultConfigProperty("locationClasses", getTicketsFunction);
-  });
-})();
+    pts.getDefaultConfigProperty('locationClasses', getTicketsFunction)
+  })
+})()

@@ -1,191 +1,220 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 
-import type { cityssmGlobal } from "@cityssm/bulma-webapp-js/src/types";
-import type { ptsGlobal } from "../types/publicTypes";
-import type * as recordTypes from "../types/recordTypes";
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-declare const cityssm: cityssmGlobal;
-declare const pts: ptsGlobal;
+import type { ptsGlobal } from '../types/publicTypes.js'
+import type { LicencePlate } from '../types/recordTypes.js'
 
+declare const cityssm: cityssmGlobal
+declare const pts: ptsGlobal
+;(() => {
+  const formElement = document.querySelector(
+    '#form--filters'
+  ) as HTMLFormElement
 
-(() => {
+  const offsetElement = document.querySelector(
+    '#filter--offset'
+  ) as HTMLInputElement
 
-  const formElement = document.querySelector("#form--filters") as HTMLFormElement;
+  const searchResultsElement = document.querySelector(
+    '#container--searchResults'
+  ) as HTMLElement
 
-  const offsetElement = document.querySelector("#filter--offset") as HTMLInputElement;
-
-  const searchResultsElement = document.querySelector("#container--searchResults") as HTMLElement;
-
-
-  const buildPlateTrElementFunction = (plateObject: recordTypes.LicencePlate) => {
-
-    const trElement = document.createElement("tr");
+  function buildPlateTrElementFunction(
+    plateObject: LicencePlate
+  ): HTMLTableRowElement {
+    const trElement = document.createElement('tr')
 
     // Output row
+    const url = `/plates/${
+      plateObject.licencePlateCountry === ''
+        ? '_'
+        : encodeURIComponent(plateObject.licencePlateCountry)
+    }/${
+      plateObject.licencePlateProvince === ''
+        ? '_'
+        : encodeURIComponent(plateObject.licencePlateProvince)
+    }/${
+      plateObject.licencePlateNumber === ''
+        ? '_'
+        : encodeURIComponent(plateObject.licencePlateNumber)
+    }`
 
-    const url = "/plates/" +
-      (plateObject.licencePlateCountry === "" ? "_" : encodeURIComponent(plateObject.licencePlateCountry)) +
-      "/" +
-      (plateObject.licencePlateProvince === "" ? "_" : encodeURIComponent(plateObject.licencePlateProvince)) +
-      "/" +
-      (plateObject.licencePlateNumber === "" ? "_" : encodeURIComponent(plateObject.licencePlateNumber));
-
-
-    trElement.innerHTML = "<td>" +
-      "<a href=\"" + url + "\" data-tooltip=\"View Licence Plate\">" +
-      (plateObject.licencePlateNumber === ""
-        ? "(Blank)"
-        : "<span class=\"licence-plate-number\">" + plateObject.licencePlateNumber + "</span>") +
-      "</a>" +
-      "</td>" +
-      ("<td class=\"is-vcentered\">" +
-        (plateObject.licencePlateProvince === ""
-          ? "<span class=\"has-text-grey\">(Blank)</span>"
+    trElement.innerHTML =
+      '<td>' +
+      '<a href="' +
+      url +
+      '" data-tooltip="View Licence Plate">' +
+      (plateObject.licencePlateNumber === ''
+        ? '(Blank)'
+        : '<span class="licence-plate-number">' +
+          plateObject.licencePlateNumber +
+          '</span>') +
+      '</a>' +
+      '</td>' +
+      ('<td class="is-vcentered">' +
+        (plateObject.licencePlateProvince === ''
+          ? '<span class="has-text-grey">(Blank)</span>'
           : plateObject.licencePlateProvince) +
-        "</td>") +
-      ("<td class=\"is-vcentered\">" +
-        (plateObject.licencePlateCountry === ""
-          ? "<span class=\"has-text-grey\">(Blank)</span>"
+        '</td>') +
+      ('<td class="is-vcentered">' +
+        (plateObject.licencePlateCountry === ''
+          ? '<span class="has-text-grey">(Blank)</span>'
           : plateObject.licencePlateCountry) +
-        "</td>") +
-      ("<td class=\"has-text-right is-vcentered\">" +
+        '</td>') +
+      ('<td class="has-text-right is-vcentered">' +
         (plateObject.hasOwnerRecord
-          ? "<span data-tooltip=\"Has Ownership Record\">" +
-          "<i class=\"fas fa-check\" aria-hidden=\"true\"></i>" +
-          "</span>" +
-          "<span class=\"sr-only\">Has Ownership Record</span>"
-          : "") +
-        "</td>") +
-      ("<td class=\"has-text-right is-vcentered\">" +
-        plateObject.unresolvedTicketCount.toString() +
-        "</td>");
+          ? '<span data-tooltip="Has Ownership Record">' +
+            '<i class="fas fa-check" aria-hidden="true"></i>' +
+            '</span>' +
+            '<span class="sr-only">Has Ownership Record</span>'
+          : '') +
+        '</td>') +
+      ('<td class="has-text-right is-vcentered">' +
+        (plateObject.unresolvedTicketCount ?? -1).toString() +
+        '</td>')
 
-    return trElement;
-  };
+    return trElement
+  }
 
-
-  const processPlateResultsFunction = (licencePlateResults: {
-    count: number;
-    limit: number;
-    offset: number;
-    licencePlates: recordTypes.LicencePlate[];
-  }) => {
-
-    const plateList = licencePlateResults.licencePlates;
+  function processPlateResultsFunction(licencePlateResults: {
+    count: number
+    limit: number
+    offset: number
+    licencePlates: LicencePlate[]
+  }): void {
+    const plateList = licencePlateResults.licencePlates
 
     if (plateList.length === 0) {
+      searchResultsElement.innerHTML = `<div class="message is-info">
+        <div class="message-body">
+        <strong>Your search returned no results.</strong><br />
+        Please try expanding your search criteria.
+        </div>
+        </div>`
 
-      searchResultsElement.innerHTML = "<div class=\"message is-info\">" +
-        "<div class=\"message-body\">" +
-        "<strong>Your search returned no results.</strong><br />" +
-        "Please try expanding your search criteria." +
-        "</div>" +
-        "</div>";
-
-      return;
+      return
     }
 
-    searchResultsElement.innerHTML = "<table class=\"table is-fullwidth is-striped is-hoverable\">" +
-      "<thead><tr>" +
-      "<th>Licence Plate Number</th>" +
-      "<th>Province</th>" +
-      "<th>Country</th>" +
-      "<th class=\"has-text-right\">Ownership Record</th>" +
-      "<th class=\"has-text-right\">Unresolved Tickets</th>" +
-      "</tr></thead>" +
-      "<tbody></tbody>" +
-      "</table>";
+    searchResultsElement.innerHTML = `<table class="table is-fullwidth is-striped is-hoverable">
+      <thead><tr>
+      <th>Licence Plate Number</th>
+      <th>Province</th>
+      <th>Country</th>
+      <th class="has-text-right">Ownership Record</th>
+      <th class="has-text-right">Unresolved Tickets</th>
+      </tr></thead>
+      <tbody></tbody>
+      </table>`
 
-    const tbodyElement = searchResultsElement.querySelector("tbody");
+    const tbodyElement = searchResultsElement.querySelector(
+      'tbody'
+    ) as HTMLTableSectionElement
 
     for (const plateObject of plateList) {
-
-      const trElement = buildPlateTrElementFunction(plateObject);
-      tbodyElement.append(trElement);
+      const trElement = buildPlateTrElementFunction(plateObject)
+      tbodyElement.append(trElement)
     }
 
-    searchResultsElement.insertAdjacentHTML("beforeend", "<div class=\"level is-block-print\">" +
-      "<div class=\"level-left has-text-weight-bold\">" +
-      "Displaying licence plates " +
-      (licencePlateResults.offset + 1).toString() +
-      " to " +
-      Math.min(licencePlateResults.limit + licencePlateResults.offset, licencePlateResults.count).toString() +
-      " of " +
-      licencePlateResults.count.toString() +
-      "</div>" +
-      "</div>");
+    searchResultsElement.insertAdjacentHTML(
+      'beforeend',
+      `<div class="level is-block-print">
+      <div class="level-left has-text-weight-bold">
+      Displaying licence plates
+      ${(licencePlateResults.offset + 1).toString()}
+      to
+      ${Math.min(
+        licencePlateResults.limit + licencePlateResults.offset,
+        licencePlateResults.count
+      ).toString()}
+      of
+      ${licencePlateResults.count.toString()}
+      </div>
+      </div>`
+    )
 
     if (licencePlateResults.limit < licencePlateResults.count) {
-
-      const paginationElement = document.createElement("nav");
-      paginationElement.className = "level-right is-hidden-print";
-      paginationElement.setAttribute("role", "pagination");
-      paginationElement.setAttribute("aria-label", "pagination");
+      const paginationElement = document.createElement('nav')
+      paginationElement.className = 'level-right is-hidden-print'
+      paginationElement.setAttribute('role', 'pagination')
+      paginationElement.setAttribute('aria-label', 'pagination')
 
       if (licencePlateResults.offset > 0) {
+        const previousElement = document.createElement('a')
+        previousElement.className = 'button'
+        previousElement.innerHTML = `<span class="icon">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </span>
+          <span>Previous</span>`
 
-        const previousElement = document.createElement("a");
-        previousElement.className = "button";
-        previousElement.innerHTML =
-          "<span class=\"icon\"><i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i></span>" +
-          "<span>Previous</span>";
+        previousElement.addEventListener('click', (clickEvent) => {
+          clickEvent.preventDefault()
+          offsetElement.value = Math.max(
+            0,
+            licencePlateResults.offset - licencePlateResults.limit
+          ).toString()
+          getLicencePlatesFunction()
+        })
 
-        previousElement.addEventListener("click", (clickEvent) => {
-          clickEvent.preventDefault();
-          offsetElement.value = Math.max(0, licencePlateResults.offset - licencePlateResults.limit).toString();
-          getLicencePlatesFunction();
-        });
-
-        paginationElement.append(previousElement);
+        paginationElement.append(previousElement)
       }
 
-      if (licencePlateResults.limit + licencePlateResults.offset < licencePlateResults.count) {
+      if (
+        licencePlateResults.limit + licencePlateResults.offset <
+        licencePlateResults.count
+      ) {
+        const nextElement = document.createElement('a')
+        nextElement.className = 'button ml-3'
+        nextElement.innerHTML = `<span>Next Licence Plates</span>
+          <span class="icon"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>`
 
-        const nextElement = document.createElement("a");
-        nextElement.className = "button ml-3";
-        nextElement.innerHTML = "<span>Next Licence Plates</span>" +
-          "<span class=\"icon\"><i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i></span>";
+        nextElement.addEventListener('click', (clickEvent) => {
+          clickEvent.preventDefault()
+          offsetElement.value = (
+            licencePlateResults.offset + licencePlateResults.limit
+          ).toString()
+          getLicencePlatesFunction()
+        })
 
-        nextElement.addEventListener("click", (clickEvent) => {
-
-          clickEvent.preventDefault();
-          offsetElement.value = (licencePlateResults.offset + licencePlateResults.limit).toString();
-          getLicencePlatesFunction();
-        });
-
-        paginationElement.append(nextElement);
+        paginationElement.append(nextElement)
       }
 
-      searchResultsElement.querySelector(".level").append(paginationElement);
+      searchResultsElement.querySelector('.level')?.append(paginationElement)
     }
-  };
+  }
 
+  function getLicencePlatesFunction(): void {
+    searchResultsElement.innerHTML =
+      '<p class="has-text-centered has-text-grey-lighter">' +
+      '<i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />' +
+      '<em>Loading licence plates...' +
+      '</p>'
 
-  const getLicencePlatesFunction = () => {
+    cityssm.postJSON(
+      '/plates/doGetLicencePlates',
+      formElement,
+      processPlateResultsFunction
+    )
+  }
 
-    searchResultsElement.innerHTML = "<p class=\"has-text-centered has-text-grey-lighter\">" +
-      "<i class=\"fas fa-3x fa-circle-notch fa-spin\" aria-hidden=\"true\"></i><br />" +
-      "<em>Loading licence plates..." +
-      "</p>";
+  function resetOffsetAndGetLicencePlatesFunction(): void {
+    offsetElement.value = '0'
+    getLicencePlatesFunction()
+  }
 
-    cityssm.postJSON("/plates/doGetLicencePlates", formElement, processPlateResultsFunction);
-  };
+  formElement.addEventListener('submit', (formEvent) => {
+    formEvent.preventDefault()
+  })
 
+  document
+    .querySelector('#filter--licencePlateNumber')
+    ?.addEventListener('change', resetOffsetAndGetLicencePlatesFunction)
+  document
+    .querySelector('#filter--hasOwnerRecord')
+    ?.addEventListener('change', resetOffsetAndGetLicencePlatesFunction)
+  document
+    .querySelector('#filter--hasUnresolvedTickets')
+    ?.addEventListener('change', resetOffsetAndGetLicencePlatesFunction)
 
-  const resetOffsetAndGetLicencePlatesFunction = () => {
-    offsetElement.value = "0";
-    getLicencePlatesFunction();
-  };
-
-
-  formElement.addEventListener("submit", (formEvent) => {
-    formEvent.preventDefault();
-  });
-
-
-  document.querySelector("#filter--licencePlateNumber").addEventListener("change", resetOffsetAndGetLicencePlatesFunction);
-  document.querySelector("#filter--hasOwnerRecord").addEventListener("change", resetOffsetAndGetLicencePlatesFunction);
-  document.querySelector("#filter--hasUnresolvedTickets").addEventListener("change", resetOffsetAndGetLicencePlatesFunction);
-
-  pts.loadDefaultConfigProperties(resetOffsetAndGetLicencePlatesFunction);
-})();
+  pts.loadDefaultConfigProperties(resetOffsetAndGetLicencePlatesFunction)
+})()

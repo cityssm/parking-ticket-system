@@ -4,18 +4,18 @@ import type {
 } from './configTypes.js'
 
 export interface ptsGlobal {
-  loadDefaultConfigProperties?: (callbackFunction: () => void) => void
+  loadDefaultConfigProperties: (callbackFunction: () => void) => void
 
-  getDefaultConfigProperty?: (
+  getDefaultConfigProperty: (
     propertyName: string,
     propertyValueCallbackFunction: (propertyValue: unknown) => void
   ) => void
 
-  getLicencePlateCountryProperties?: (originalLicencePlateCountry: string) => {
+  getLicencePlateCountryProperties: (originalLicencePlateCountry: string) => {
     provinces?: Array<{ provinceShortName: string }>
   }
 
-  getLicencePlateLocationProperties?: (
+  getLicencePlateLocationProperties: (
     originalLicencePlateCountry: string,
     originalLicencePlateProvince: string
   ) => {
@@ -28,16 +28,16 @@ export interface ptsGlobal {
     }
   }
 
-  getTicketStatus?: (statusKey: string) => ConfigParkingTicketStatus
+  getTicketStatus: (statusKey: string) => ConfigParkingTicketStatus
 
-  getLocationClass?: (locationClassKey: string) => ConfigLocationClass
+  getLocationClass: (locationClassKey: string) => ConfigLocationClass
 
-  initializeTabs?: (
+  initializeTabs: (
     tabsListElement: HTMLElement,
     callbackFunctions?: {
       onshown?: (tabContentElement: HTMLElement) => void
     }
   ) => void
 
-  initializeToggleHiddenLinks?: (containerElement: HTMLElement) => void
+  initializeToggleHiddenLinks: (containerElement: HTMLElement) => void
 }

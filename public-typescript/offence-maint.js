@@ -1,23 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+;
 (() => {
     const offenceMap = new Map();
     const offenceAccountNumberPatternString = exports.accountNumberPattern;
     delete exports.accountNumberPattern;
     const locationMap = new Map();
-    const limitResultsCheckboxElement = document.querySelector("#offenceFilter--limitResults");
-    const resultsElement = document.querySelector("#offenceResults");
-    const locationInputElement = document.querySelector("#offenceFilter--location");
-    const locationTextElement = document.querySelector("#offenceFilter--locationText");
+    const limitResultsCheckboxElement = document.querySelector('#offenceFilter--limitResults');
+    const resultsElement = document.querySelector('#offenceResults');
+    const locationInputElement = document.querySelector('#offenceFilter--location');
+    const locationTextElement = document.querySelector('#offenceFilter--locationText');
     let locationKeyFilterIsSet = false;
-    let locationKeyFilter = "";
+    let locationKeyFilter = '';
     const bylawMap = new Map();
-    const bylawInputElement = document.querySelector("#offenceFilter--bylaw");
-    const bylawTextElement = document.querySelector("#offenceFilter--bylawText");
+    const bylawInputElement = document.querySelector('#offenceFilter--bylaw');
+    const bylawTextElement = document.querySelector('#offenceFilter--bylawText');
     let bylawNumberFilterIsSet = false;
-    let bylawNumberFilter = "";
+    let bylawNumberFilter = '';
     const getOffenceMapKeyFunction = (bylawNumber, locationKey) => {
-        return bylawNumber + "::::" + locationKey;
+        return bylawNumber + '::::' + locationKey;
     };
     const loadOffenceMapFunction = (offenceList) => {
         offenceMap.clear();
@@ -35,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const bylaw = bylawMap.get(offence.bylawNumber);
         let editOffenceModalCloseFunction;
         const deleteFunction = () => {
-            cityssm.postJSON("/admin/doDeleteOffence", {
+            cityssm.postJSON('/admin/doDeleteOffence', {
                 bylawNumber: offence.bylawNumber,
                 locationKey: offence.locationKey
             }, (responseJSON) => {
@@ -48,11 +49,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         };
         const confirmDeleteFunction = (deleteClickEvent) => {
             deleteClickEvent.preventDefault();
-            cityssm.confirmModal("Remove Offence?", "Are you sure you want to remove this offence?", "Yes, Remove Offence", "warning", deleteFunction);
+            cityssm.confirmModal('Remove Offence?', 'Are you sure you want to remove this offence?', 'Yes, Remove Offence', 'warning', deleteFunction);
         };
         const submitFunction = (formEvent) => {
             formEvent.preventDefault();
-            cityssm.postJSON("/admin/doUpdateOffence", formEvent.currentTarget, (responseJSON) => {
+            cityssm.postJSON('/admin/doUpdateOffence', formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     loadOffenceMapFunction(responseJSON.offences);
                     editOffenceModalCloseFunction();
@@ -60,31 +61,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        cityssm.openHtmlModal("offence-edit", {
+        cityssm.openHtmlModal('offence-edit', {
             onshow() {
-                document.querySelector("#offenceEdit--locationKey").value = offence.locationKey;
-                document.querySelector("#offenceEdit--bylawNumber").value = offence.bylawNumber;
-                document.querySelector("#offenceEdit--locationName").textContent = location.locationName;
-                document.querySelector("#offenceEdit--locationClass").textContent =
-                    pts.getLocationClass(location.locationClassKey).locationClass;
-                document.querySelector("#offenceEdit--bylawNumberSpan").textContent = bylaw.bylawNumber;
-                document.querySelector("#offenceEdit--bylawDescription").textContent = bylaw.bylawDescription;
-                document.querySelector("#offenceEdit--parkingOffence").value = offence.parkingOffence;
-                document.querySelector("#offenceEdit--offenceAmount").value =
-                    offence.offenceAmount.toFixed(2);
-                document.querySelector("#offenceEdit--discountOffenceAmount").value =
-                    offence.discountOffenceAmount.toFixed(2);
-                document.querySelector("#offenceEdit--discountDays").value =
-                    offence.discountDays.toString();
-                const accountNumberElement = document.querySelector("#offenceEdit--accountNumber");
+                ;
+                document.querySelector('#offenceEdit--locationKey').value = offence.locationKey;
+                document.querySelector('#offenceEdit--bylawNumber').value = offence.bylawNumber;
+                document.querySelector('#offenceEdit--locationName').textContent = location.locationName;
+                document.querySelector('#offenceEdit--locationClass').textContent = pts.getLocationClass(location.locationClassKey).locationClass;
+                document.querySelector('#offenceEdit--bylawNumberSpan').textContent =
+                    bylaw.bylawNumber;
+                document.querySelector('#offenceEdit--bylawDescription').textContent =
+                    bylaw.bylawDescription;
+                document.querySelector('#offenceEdit--parkingOffence').value = offence.parkingOffence;
+                document.querySelector('#offenceEdit--offenceAmount').value = offence.offenceAmount.toFixed(2);
+                document.querySelector('#offenceEdit--discountOffenceAmount').value = offence.discountOffenceAmount.toFixed(2);
+                document.querySelector('#offenceEdit--discountDays').value = offence.discountDays.toString();
+                const accountNumberElement = document.querySelector('#offenceEdit--accountNumber');
                 accountNumberElement.value = offence.accountNumber;
-                accountNumberElement.setAttribute("pattern", offenceAccountNumberPatternString);
+                accountNumberElement.setAttribute('pattern', offenceAccountNumberPatternString);
             },
             onshown(modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
                 editOffenceModalCloseFunction = closeModalFunction;
-                document.querySelector("#form--offenceEdit").addEventListener("submit", submitFunction);
-                modalElement.querySelector(".is-delete-button").addEventListener("click", confirmDeleteFunction);
+                document
+                    .querySelector('#form--offenceEdit')
+                    .addEventListener('submit', submitFunction);
+                modalElement
+                    .querySelector('.is-delete-button')
+                    .addEventListener('click', confirmDeleteFunction);
             },
             onhidden() {
                 bulmaJS.toggleHtmlClipped();
@@ -92,12 +96,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     };
     const addOffenceFunction = (bylawNumber, locationKey, returnAndRenderOffences, callbackFunction) => {
-        cityssm.postJSON("/admin/doAddOffence", {
+        cityssm.postJSON('/admin/doAddOffence', {
             bylawNumber,
             locationKey,
             returnOffences: returnAndRenderOffences
         }, (responseJSON) => {
-            if (responseJSON.success && responseJSON.offences && returnAndRenderOffences) {
+            if (responseJSON.success &&
+                responseJSON.offences &&
+                returnAndRenderOffences) {
                 loadOffenceMapFunction(responseJSON.offences);
                 renderOffencesFunction();
             }
@@ -120,31 +126,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         };
-        cityssm.openHtmlModal("offence-addFromList", {
+        cityssm.openHtmlModal('offence-addFromList', {
             onshow(modalElement) {
-                let titleHTML = "";
-                let selectedHTML = "";
+                let titleHTML = '';
+                let selectedHTML = '';
                 if (locationKeyFilterIsSet) {
-                    titleHTML = "Select By-Laws";
+                    titleHTML = 'Select By-Laws';
                     const location = locationMap.get(locationKeyFilter);
                     const locationClass = pts.getLocationClass(location.locationClassKey);
-                    selectedHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
-                        "<span class=\"is-size-7\">" +
-                        cityssm.escapeHTML(locationClass.locationClass) +
-                        "</span>";
+                    selectedHTML =
+                        cityssm.escapeHTML(location.locationName) +
+                            '<br />' +
+                            '<span class="is-size-7">' +
+                            cityssm.escapeHTML(locationClass.locationClass) +
+                            '</span>';
                 }
                 else {
-                    titleHTML = "Select Locations";
+                    titleHTML = 'Select Locations';
                     const bylaw = bylawMap.get(bylawNumberFilter);
-                    selectedHTML = cityssm.escapeHTML(bylaw.bylawNumber) + "<br />" +
-                        "<span class=\"is-size-7\">" + bylaw.bylawDescription + "</span>";
+                    selectedHTML =
+                        cityssm.escapeHTML(bylaw.bylawNumber) +
+                            '<br />' +
+                            '<span class="is-size-7">' +
+                            bylaw.bylawDescription +
+                            '</span>';
                 }
-                modalElement.querySelector(".modal-card-title").innerHTML = titleHTML;
-                document.querySelector("#addContainer--selected").innerHTML = selectedHTML;
+                modalElement.querySelector('.modal-card-title').innerHTML = titleHTML;
+                document.querySelector('#addContainer--selected').innerHTML =
+                    selectedHTML;
             },
             onshown() {
-                const listElement = document.createElement("div");
-                listElement.className = "panel";
+                const listElement = document.createElement('div');
+                listElement.className = 'panel';
                 let displayCount = 0;
                 if (locationKeyFilterIsSet) {
                     for (const bylaw of bylawMap.values()) {
@@ -153,13 +166,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             continue;
                         }
                         displayCount += 1;
-                        const linkElement = document.createElement("a");
-                        linkElement.className = "panel-block is-block";
+                        const linkElement = document.createElement('a');
+                        linkElement.className = 'panel-block is-block';
                         linkElement.dataset.bylawNumber = bylaw.bylawNumber;
                         linkElement.dataset.locationKey = locationKeyFilter;
-                        linkElement.innerHTML = cityssm.escapeHTML(bylaw.bylawNumber) + "<br />" +
-                            "<span class=\"is-size-7\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</span>";
-                        linkElement.addEventListener("click", addFunction);
+                        linkElement.innerHTML =
+                            cityssm.escapeHTML(bylaw.bylawNumber) +
+                                '<br />' +
+                                '<span class="is-size-7">' +
+                                cityssm.escapeHTML(bylaw.bylawDescription) +
+                                '</span>';
+                        linkElement.addEventListener('click', addFunction);
                         listElement.append(linkElement);
                     }
                 }
@@ -170,24 +187,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             continue;
                         }
                         displayCount += 1;
-                        const linkElement = document.createElement("a");
-                        linkElement.className = "panel-block is-block";
+                        const linkElement = document.createElement('a');
+                        linkElement.className = 'panel-block is-block';
                         linkElement.dataset.bylawNumber = bylawNumberFilter;
                         linkElement.dataset.locationKey = location.locationKey;
-                        linkElement.innerHTML = cityssm.escapeHTML(location.locationName) + "<br />" +
-                            "<span class=\"is-size-7\">" +
-                            cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
-                            "</span>";
-                        linkElement.addEventListener("click", addFunction);
+                        linkElement.innerHTML =
+                            cityssm.escapeHTML(location.locationName) +
+                                '<br />' +
+                                '<span class="is-size-7">' +
+                                cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
+                                '</span>';
+                        linkElement.addEventListener('click', addFunction);
                         listElement.append(linkElement);
                     }
                 }
-                const addResultsElement = document.querySelector("#addContainer--results");
+                const addResultsElement = document.querySelector('#addContainer--results');
                 cityssm.clearElement(addResultsElement);
                 if (displayCount === 0) {
-                    addResultsElement.innerHTML = "<div class=\"message is-info\">" +
-                        "<div class=\"message-body\">There are no offence records available for creation.</div>" +
-                        "</div>";
+                    addResultsElement.innerHTML =
+                        '<div class="message is-info">' +
+                            '<div class="message-body">There are no offence records available for creation.</div>' +
+                            '</div>';
                 }
                 else {
                     addResultsElement.append(listElement);
@@ -195,7 +215,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             },
             onremoved() {
                 if (doRefreshOnClose) {
-                    cityssm.postJSON("/offences/doGetAllOffences", {}, (offenceList) => {
+                    cityssm.postJSON('/offences/doGetAllOffences', {}, (offenceList) => {
                         loadOffenceMapFunction(offenceList);
                         renderOffencesFunction();
                     });
@@ -204,11 +224,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     };
     const renderOffencesFunction = () => {
-        const tbodyElement = document.createElement("tbody");
+        const tbodyElement = document.createElement('tbody');
         let matchCount = 0;
-        const displayLimit = (limitResultsCheckboxElement.checked
+        const displayLimit = limitResultsCheckboxElement.checked
             ? Number.parseInt(limitResultsCheckboxElement.value, 10)
-            : offenceMap.size);
+            : offenceMap.size;
         for (const offence of offenceMap.values()) {
             if (matchCount >= displayLimit) {
                 continue;
@@ -229,111 +249,136 @@ Object.defineProperty(exports, "__esModule", { value: true });
             if (matchCount > displayLimit) {
                 continue;
             }
-            const trElement = document.createElement("tr");
+            const trElement = document.createElement('tr');
             trElement.innerHTML =
-                ("<td class=\"has-border-right-width-2\">" +
-                    cityssm.escapeHTML(location.locationName) + "<br />" +
-                    "<span class=\"is-size-7\">" +
+                '<td class="has-border-right-width-2">' +
+                    cityssm.escapeHTML(location.locationName) +
+                    '<br />' +
+                    '<span class="is-size-7">' +
                     cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
-                    "</span>" +
-                    "</td>") +
-                    ("<td class=\"has-border-right-width-2\">" +
-                        "<strong>" + cityssm.escapeHTML(bylaw.bylawNumber) + "</strong><br />" +
-                        "<span class=\"is-size-7\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</span>" +
-                        "</td>") +
-                    ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Set Rate\">" +
-                        "$" + offence.offenceAmount.toFixed(2) + "<br />" +
-                        "<span class=\"is-size-7\">" + offence.accountNumber + "</span>" +
-                        "</td>") +
-                    ("<td class=\"has-text-right has-tooltip-bottom\" data-tooltip=\"Discount Rate\">" +
-                        "$" + offence.discountOffenceAmount.toFixed(2) + "<br />" +
-                        "<span class=\"is-size-7\">" +
-                        offence.discountDays.toString() + " day" + (offence.discountDays === 1 ? "" : "s") +
-                        "</span>" +
-                        "</td>") +
-                    ("<td class=\"has-border-right-width-2\">" +
-                        "<div class=\"is-size-7\">" +
+                    '</span>' +
+                    '</td>' +
+                    ('<td class="has-border-right-width-2">' +
+                        '<strong>' +
+                        cityssm.escapeHTML(bylaw.bylawNumber) +
+                        '</strong><br />' +
+                        '<span class="is-size-7">' +
+                        cityssm.escapeHTML(bylaw.bylawDescription) +
+                        '</span>' +
+                        '</td>') +
+                    ('<td class="has-text-right has-tooltip-bottom" data-tooltip="Set Rate">' +
+                        '$' +
+                        offence.offenceAmount.toFixed(2) +
+                        '<br />' +
+                        '<span class="is-size-7">' +
+                        offence.accountNumber +
+                        '</span>' +
+                        '</td>') +
+                    ('<td class="has-text-right has-tooltip-bottom" data-tooltip="Discount Rate">' +
+                        '$' +
+                        offence.discountOffenceAmount.toFixed(2) +
+                        '<br />' +
+                        '<span class="is-size-7">' +
+                        offence.discountDays.toString() +
+                        ' day' +
+                        (offence.discountDays === 1 ? '' : 's') +
+                        '</span>' +
+                        '</td>') +
+                    ('<td class="has-border-right-width-2">' +
+                        '<div class="is-size-7">' +
                         cityssm.escapeHTML(offence.parkingOffence) +
-                        "</div>" +
-                        "</td>") +
-                    ("<td class=\"has-text-right\">" +
-                        "<button class=\"button is-small\"" +
-                        " data-bylaw-number=\"" + offence.bylawNumber + "\"" +
-                        " data-location-key=\"" + offence.locationKey + "\"" +
-                        " type=\"button\">" +
-                        "<span class=\"icon is-small\"><i class=\"fas fa-pencil-alt\" aria-hidden=\"true\"></i></span>" +
-                        "<span>Edit</span>" +
-                        "</button>" +
-                        "</td>");
-            trElement.querySelector("button").addEventListener("click", openEditOffenceModalFunction);
+                        '</div>' +
+                        '</td>') +
+                    ('<td class="has-text-right">' +
+                        '<button class="button is-small"' +
+                        ' data-bylaw-number="' +
+                        offence.bylawNumber +
+                        '"' +
+                        ' data-location-key="' +
+                        offence.locationKey +
+                        '"' +
+                        ' type="button">' +
+                        '<span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>' +
+                        '<span>Edit</span>' +
+                        '</button>' +
+                        '</td>');
+            trElement
+                .querySelector('button')
+                .addEventListener('click', openEditOffenceModalFunction);
             tbodyElement.append(trElement);
         }
         cityssm.clearElement(resultsElement);
         if (matchCount === 0) {
-            resultsElement.innerHTML = "<div class=\"message is-info\">" +
-                "<div class=\"message-body\">" +
-                "<p>There are no offences that match the given criteria.</p>" +
-                "</div>" +
-                "</div>";
+            resultsElement.innerHTML =
+                '<div class="message is-info">' +
+                    '<div class="message-body">' +
+                    '<p>There are no offences that match the given criteria.</p>' +
+                    '</div>' +
+                    '</div>';
             return;
         }
-        resultsElement.innerHTML = "<table class=\"table is-striped is-hoverable is-fullwidth\">" +
-            "<thead>" +
-            "<tr>" +
-            "<th class=\"has-border-right-width-2\">Location</th>" +
-            "<th class=\"has-border-right-width-2\">By-Law</th>" +
-            "<th class=\"has-border-right-width-2\" colspan=\"3\">Offence</th>" +
-            "<th class=\"has-width-50\"></th>" +
-            "</tr>" +
-            "</thead>" +
-            "</table>";
-        resultsElement.querySelector("table").append(tbodyElement);
+        resultsElement.innerHTML =
+            '<table class="table is-striped is-hoverable is-fullwidth">' +
+                '<thead>' +
+                '<tr>' +
+                '<th class="has-border-right-width-2">Location</th>' +
+                '<th class="has-border-right-width-2">By-Law</th>' +
+                '<th class="has-border-right-width-2" colspan="3">Offence</th>' +
+                '<th class="has-width-50"></th>' +
+                '</tr>' +
+                '</thead>' +
+                '</table>';
+        resultsElement.querySelector('table').append(tbodyElement);
         if (matchCount > displayLimit) {
-            resultsElement.insertAdjacentHTML("afterbegin", "<div class=\"message is-warning\">" +
-                "<div class=\"message-body has-text-centered\">Limit Reached</div>" +
-                "</div>");
+            resultsElement.insertAdjacentHTML('afterbegin', '<div class="message is-warning">' +
+                '<div class="message-body has-text-centered">Limit Reached</div>' +
+                '</div>');
         }
     };
-    document.querySelector("#is-add-offence-button").addEventListener("click", (clickEvent) => {
+    document
+        .querySelector('#is-add-offence-button')
+        .addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         if (locationKeyFilterIsSet && bylawNumberFilterIsSet) {
             const bylaw = bylawMap.get(bylawNumberFilter);
             const location = locationMap.get(locationKeyFilter);
             bulmaJS.confirm({
-                title: "Create Offence?",
-                message: "<p class=\"has-text-centered\">Are you sure you want to create the offence record below?</p>" +
-                    "<div class=\"columns my-4\">" +
-                    ("<div class=\"column has-text-centered\">" +
-                        cityssm.escapeHTML(location.locationName) + "<br />" +
-                        "<span class=\"is-size-7\">" +
+                title: 'Create Offence?',
+                message: '<p class="has-text-centered">Are you sure you want to create the offence record below?</p>' +
+                    '<div class="columns my-4">' +
+                    ('<div class="column has-text-centered">' +
+                        cityssm.escapeHTML(location.locationName) +
+                        '<br />' +
+                        '<span class="is-size-7">' +
                         cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
-                        "</span>" +
-                        "</div>") +
-                    ("<div class=\"column has-text-centered\">" +
-                        cityssm.escapeHTML(bylaw.bylawNumber) + "<br />" +
-                        "<span class=\"is-size-7\">" +
+                        '</span>' +
+                        '</div>') +
+                    ('<div class="column has-text-centered">' +
+                        cityssm.escapeHTML(bylaw.bylawNumber) +
+                        '<br />' +
+                        '<span class="is-size-7">' +
                         cityssm.escapeHTML(bylaw.bylawDescription) +
-                        "</span>" +
-                        "</div>") +
-                    "</div>",
+                        '</span>' +
+                        '</div>') +
+                    '</div>',
                 messageIsHtml: true,
-                contextualColorName: "info",
+                contextualColorName: 'info',
                 okButton: {
-                    text: "Yes, Create Offence",
+                    text: 'Yes, Create Offence',
                     callbackFunction: () => {
                         addOffenceFunction(bylawNumberFilter, locationKeyFilter, true, (responseJSON) => {
                             if (!responseJSON.success) {
                                 bulmaJS.alert({
-                                    title: "Offence Not Added",
+                                    title: 'Offence Not Added',
                                     message: responseJSON.message,
-                                    contextualColorName: "danger"
+                                    contextualColorName: 'danger'
                                 });
                             }
                             else if (responseJSON.message) {
                                 bulmaJS.alert({
-                                    title: "Offence Added Successfully",
+                                    title: 'Offence Added Successfully',
                                     message: responseJSON.message,
-                                    contextualColorName: "warning"
+                                    contextualColorName: 'warning'
                                 });
                             }
                         });
@@ -346,16 +391,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         else {
             bulmaJS.alert({
-                title: "How to Create a New Offence",
-                message: "To add an offence, use the main filters to select either a location, a by-law, or both.",
-                contextualColorName: "warning"
+                title: 'How to Create a New Offence',
+                message: 'To add an offence, use the main filters to select either a location, a by-law, or both.',
+                contextualColorName: 'warning'
             });
         }
     });
     const clearLocationFilterFunction = () => {
-        locationInputElement.value = "";
+        locationInputElement.value = '';
         cityssm.clearElement(locationTextElement);
-        locationKeyFilter = "";
+        locationKeyFilter = '';
         locationKeyFilterIsSet = false;
     };
     const openSelectLocationFilterModalFunction = () => {
@@ -369,27 +414,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
             selectLocationCloseModalFunction();
             renderOffencesFunction();
         };
-        cityssm.openHtmlModal("location-select", {
+        cityssm.openHtmlModal('location-select', {
             onshow() {
-                const listElement = document.createElement("div");
-                listElement.className = "panel mb-4";
+                const listElement = document.createElement('div');
+                listElement.className = 'panel mb-4';
                 for (const location of locationMap.values()) {
-                    const linkElement = document.createElement("a");
-                    linkElement.className = "panel-block is-block";
+                    const linkElement = document.createElement('a');
+                    linkElement.className = 'panel-block is-block';
                     linkElement.dataset.locationKey = location.locationKey;
-                    linkElement.setAttribute("href", "#");
-                    linkElement.innerHTML = "<div class=\"level\">" +
-                        ("<div class=\"level-left\">" +
-                            cityssm.escapeHTML(location.locationName) +
-                            "</div>") +
-                        "<div class=\"level-right\">" +
-                        cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
-                        "</div>" +
-                        "</div>";
-                    linkElement.addEventListener("click", selectFunction);
+                    linkElement.setAttribute('href', '#');
+                    linkElement.innerHTML =
+                        '<div class="level">' +
+                            ('<div class="level-left">' +
+                                cityssm.escapeHTML(location.locationName) +
+                                '</div>') +
+                            '<div class="level-right">' +
+                            cityssm.escapeHTML(pts.getLocationClass(location.locationClassKey).locationClass) +
+                            '</div>' +
+                            '</div>';
+                    linkElement.addEventListener('click', selectFunction);
                     listElement.append(linkElement);
                 }
-                const listContainerElement = document.querySelector("#container--parkingLocations");
+                const listContainerElement = document.querySelector('#container--parkingLocations');
                 cityssm.clearElement(listContainerElement);
                 listContainerElement.append(listElement);
             },
@@ -398,10 +444,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     };
-    locationInputElement.addEventListener("dblclick", openSelectLocationFilterModalFunction);
-    document.querySelector("#is-select-location-filter-button")
-        .addEventListener("click", openSelectLocationFilterModalFunction);
-    document.querySelector("#is-clear-location-filter-button").addEventListener("click", () => {
+    locationInputElement.addEventListener('dblclick', openSelectLocationFilterModalFunction);
+    document
+        .querySelector('#is-select-location-filter-button')
+        .addEventListener('click', openSelectLocationFilterModalFunction);
+    document
+        .querySelector('#is-clear-location-filter-button')
+        .addEventListener('click', () => {
         clearLocationFilterFunction();
         renderOffencesFunction();
     });
@@ -409,9 +458,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clearLocationFilterFunction();
     }
     const clearBylawFilterFunction = () => {
-        bylawInputElement.value = "";
+        bylawInputElement.value = '';
         cityssm.clearElement(bylawTextElement);
-        bylawNumberFilter = "";
+        bylawNumberFilter = '';
         bylawNumberFilterIsSet = false;
     };
     const openSelectBylawFilterModalFunction = () => {
@@ -426,21 +475,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
             selectBylawCloseModalFunction();
             renderOffencesFunction();
         };
-        cityssm.openHtmlModal("bylaw-select", {
+        cityssm.openHtmlModal('bylaw-select', {
             onshow() {
-                const listElement = document.createElement("div");
-                listElement.className = "panel mb-4";
+                const listElement = document.createElement('div');
+                listElement.className = 'panel mb-4';
                 for (const bylaw of bylawMap.values()) {
-                    const linkElement = document.createElement("a");
-                    linkElement.className = "panel-block is-block";
+                    const linkElement = document.createElement('a');
+                    linkElement.className = 'panel-block is-block';
                     linkElement.dataset.bylawNumber = bylaw.bylawNumber;
-                    linkElement.setAttribute("href", "#");
-                    linkElement.innerHTML = cityssm.escapeHTML(bylaw.bylawNumber) + "<br />" +
-                        "<span class=\"is-size-7\">" + cityssm.escapeHTML(bylaw.bylawDescription) + "</span>";
-                    linkElement.addEventListener("click", selectFunction);
+                    linkElement.setAttribute('href', '#');
+                    linkElement.innerHTML =
+                        cityssm.escapeHTML(bylaw.bylawNumber) +
+                            '<br />' +
+                            '<span class="is-size-7">' +
+                            cityssm.escapeHTML(bylaw.bylawDescription) +
+                            '</span>';
+                    linkElement.addEventListener('click', selectFunction);
                     listElement.append(linkElement);
                 }
-                const listContainerElement = document.querySelector("#container--parkingBylaws");
+                const listContainerElement = document.querySelector('#container--parkingBylaws');
                 cityssm.clearElement(listContainerElement);
                 listContainerElement.append(listElement);
             },
@@ -449,17 +502,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     };
-    bylawInputElement.addEventListener("dblclick", openSelectBylawFilterModalFunction);
-    document.querySelector("#is-select-bylaw-filter-button")
-        .addEventListener("click", openSelectBylawFilterModalFunction);
-    document.querySelector("#is-clear-bylaw-filter-button").addEventListener("click", () => {
+    bylawInputElement.addEventListener('dblclick', openSelectBylawFilterModalFunction);
+    document
+        .querySelector('#is-select-bylaw-filter-button')
+        .addEventListener('click', openSelectBylawFilterModalFunction);
+    document
+        .querySelector('#is-clear-bylaw-filter-button')
+        .addEventListener('click', () => {
         clearBylawFilterFunction();
         renderOffencesFunction();
     });
     if (!bylawNumberFilterIsSet) {
         clearBylawFilterFunction();
     }
-    limitResultsCheckboxElement.addEventListener("change", renderOffencesFunction);
+    limitResultsCheckboxElement.addEventListener('change', renderOffencesFunction);
     for (const location of exports.locations) {
         locationMap.set(location.locationKey, location);
     }
@@ -470,5 +526,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
     delete exports.bylaws;
     loadOffenceMapFunction(exports.offences);
     delete exports.offences;
-    pts.getDefaultConfigProperty("locationClasses", renderOffencesFunction);
+    pts.getDefaultConfigProperty('locationClasses', renderOffencesFunction);
 })();

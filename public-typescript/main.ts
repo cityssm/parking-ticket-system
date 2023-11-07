@@ -8,7 +8,7 @@ import type * as configTypes from '../types/configTypes.js'
 import type { ptsGlobal } from '../types/publicTypes.js'
 
 declare const cityssm: cityssmGlobal
-const pts: ptsGlobal = {}
+const pts: Partial<ptsGlobal> = {}
 
 // CONFIG DEFAULTS
 
