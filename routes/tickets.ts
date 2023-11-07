@@ -23,6 +23,7 @@ import handler_doGetRemarks from '../handlers/tickets-post/doGetRemarks.js'
 import handler_doGetStatuses from '../handlers/tickets-post/doGetStatuses.js'
 import handler_doGetTickets from '../handlers/tickets-post/doGetTickets.js'
 import handler_doLockConvictionBatch from '../handlers/tickets-post/doLockConvictionBatch.js'
+import handler_doMarkConvictionBatchSent from '../handlers/tickets-post/doMarkConvictionBatchSent.js'
 import handler_doQuickReconcileMatches from '../handlers/tickets-post/doQuickReconcileMatches.js'
 import handler_doReconcileAsError from '../handlers/tickets-post/doReconcileAsError.js'
 import handler_doReconcileAsMatch from '../handlers/tickets-post/doReconcileAsMatch.js'
@@ -236,6 +237,12 @@ router.get(
   '/convict/:batchID/print',
   permissionHandlers.updateOrOperatorGetHandler,
   handler_convictPrint
+)
+
+router.post(
+  '/doMarkConvictionBatchSent',
+  permissionHandlers.updateOrOperatorGetHandler,
+  handler_doMarkConvictionBatchSent
 )
 
 export default router
