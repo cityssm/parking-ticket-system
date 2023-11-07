@@ -43,7 +43,7 @@ export function getProperty(propertyName) {
     const propertyNameSplit = propertyName.split('.');
     let currentObject = config;
     for (const propertyNamePiece of propertyNameSplit) {
-        if (Object.prototype.hasOwnProperty.call(currentObject, propertyNamePiece)) {
+        if (Object.hasOwn(currentObject, propertyNamePiece)) {
             currentObject = currentObject[propertyNamePiece];
         }
         else {
@@ -73,16 +73,16 @@ export const getLicencePlateLocationProperties = (originalLicencePlateCountry, o
         color: '#000',
         backgroundColor: '#fff'
     };
-    const licencePlateCountryAlias = Object.prototype.hasOwnProperty.call(getProperty('licencePlateCountryAliases'), originalLicencePlateCountry.toUpperCase())
+    const licencePlateCountryAlias = Object.hasOwn(getProperty('licencePlateCountryAliases'), originalLicencePlateCountry.toUpperCase())
         ? getProperty('licencePlateCountryAliases')[originalLicencePlateCountry.toUpperCase()]
         : originalLicencePlateCountry;
     let licencePlateProvinceAlias = originalLicencePlateProvince;
-    if (Object.prototype.hasOwnProperty.call(getProperty('licencePlateProvinceAliases'), licencePlateCountryAlias)) {
+    if (Object.hasOwn(getProperty('licencePlateProvinceAliases'), licencePlateCountryAlias)) {
         licencePlateProvinceAlias =
             getProperty('licencePlateProvinceAliases')[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] || originalLicencePlateProvince;
     }
     let licencePlateProvince = licencePlateProvinceDefault;
-    if (Object.prototype.hasOwnProperty.call(getProperty('licencePlateProvinces'), licencePlateCountryAlias)) {
+    if (Object.hasOwn(getProperty('licencePlateProvinces'), licencePlateCountryAlias)) {
         licencePlateProvince =
             getProperty('licencePlateProvinces')[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
     }

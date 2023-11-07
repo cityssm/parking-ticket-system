@@ -29,7 +29,7 @@ async function postHandler(request, response) {
     const passwordPlain = request.body.password;
     const redirectURL = getSafeRedirectURL(request.body.redirect);
     let isAuthenticated = false;
-    if (userName.charAt(0) === '*') {
+    if (userName.startsWith('*')) {
         if (useTestDatabases && userName === passwordPlain) {
             isAuthenticated = configFunctions
                 .getProperty('users.testing')

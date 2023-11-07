@@ -101,66 +101,63 @@ export function getProperty(
     | 'application.applicationName'
     | 'application.logoURL'
     | 'application.userDomain'
+    | 'session.cookieName'
+    | 'session.secret'
     | 'defaults.country'
     | 'defaults.province'
+    | 'parkingTickets.ticketNumber.fieldLabel'
+    | 'mtoExportImport.authorizedUser'
 ): string
 
 export function getProperty(
   propertyName:
     | 'application.httpPort'
     | 'application.maximumProcesses'
+    | 'application.task_nhtsa.executeHour'
+    | 'session.maxAgeMillis'
     | 'databaseCleanup.windowDays'
+    | 'parkingTickets.updateWindowMillis'
 ): number
 
 export function getProperty(
-  propertyName: 'application.useTestDatabases'
+  propertyName:
+    | 'application.useTestDatabases'
+    | 'application.feature_mtoExportImport'
+    | 'application.task_nhtsa.runTask'
+    | 'session.doKeepAlive'
+    | 'parkingTickets.licencePlateExpiryDate.includeDay'
+    | 'parkingTickets.ticketNumber.isUnique'
 ): boolean
+
+export function getProperty(
+  propertyName:
+    | 'parkingOffences.accountNumber.pattern'
+    | 'parkingTickets.ticketNumber.pattern'
+): RegExp
 
 export function getProperty(
   propertyName: 'locationClasses'
 ): ConfigLocationClass[]
+
 export function getProperty(
   propertyName: 'licencePlateCountryAliases'
 ): Record<string, string>
+
 export function getProperty(
   propertyName: 'licencePlateProvinceAliases'
 ): Record<string, Record<string, string>>
+
 export function getProperty(
   propertyName: 'licencePlateProvinces'
 ): Record<string, ConfigLicencePlateCountry>
 
 export function getProperty(
-  propertyName: 'parkingOffences.accountNumber.pattern'
-): RegExp
-
-export function getProperty(
-  propertyName: 'parkingTickets.licencePlateExpiryDate.includeDay'
-): boolean
-
-export function getProperty(
-  propertyName: 'parkingTickets.ticketNumber.fieldLabel'
-): string
-export function getProperty(
-  propertyName: 'parkingTickets.ticketNumber.isUnique'
-): boolean
-export function getProperty(
   propertyName: 'parkingTickets.ticketNumber.nextTicketNumberFn'
 ): (currentTicketNumber: string) => string
-export function getProperty(
-  propertyName: 'parkingTickets.ticketNumber.pattern'
-): RegExp
-export function getProperty(
-  propertyName: 'parkingTickets.updateWindowMillis'
-): number
 
 export function getProperty(
   propertyName: 'parkingTicketStatuses'
 ): ConfigParkingTicketStatus[]
-
-export function getProperty(propertyName: 'session.cookieName'): string
-export function getProperty(propertyName: 'session.doKeepAlive'): boolean
-export function getProperty(propertyName: 'session.maxAgeMillis'): number
-export function getProperty(propertyName: 'session.secret'): string
 
 export function getProperty(
   propertyName:
@@ -171,29 +168,13 @@ export function getProperty(
     | 'users.isOperator'
 ): string[]
 
-export function getProperty(
-  propertyName: 'application.feature_mtoExportImport'
-): boolean
-export function getProperty(
-  propertyName: 'mtoExportImport.authorizedUser'
-): string
-
-export function getProperty(
-  propertyName: 'application.task_nhtsa.runTask'
-): boolean
-export function getProperty(
-  propertyName: 'application.task_nhtsa.executeHour'
-): number
-
 export function getProperty(propertyName: string): unknown {
   const propertyNameSplit = propertyName.split('.')
 
   let currentObject = config
 
   for (const propertyNamePiece of propertyNameSplit) {
-    if (
-      Object.prototype.hasOwnProperty.call(currentObject, propertyNamePiece)
-    ) {
+    if (Object.hasOwn(currentObject, propertyNamePiece)) {
       currentObject = currentObject[propertyNamePiece]
     } else {
       return configFallbackValues.get(propertyName)
@@ -254,7 +235,7 @@ export const getLicencePlateLocationProperties = (
 
   // Get the country alias
 
-  const licencePlateCountryAlias: string = Object.prototype.hasOwnProperty.call(
+  const licencePlateCountryAlias: string = Object.hasOwn(
     getProperty('licencePlateCountryAliases'),
     originalLicencePlateCountry.toUpperCase()
   )
@@ -268,7 +249,7 @@ export const getLicencePlateLocationProperties = (
   let licencePlateProvinceAlias = originalLicencePlateProvince
 
   if (
-    Object.prototype.hasOwnProperty.call(
+    Object.hasOwn(
       getProperty('licencePlateProvinceAliases'),
       licencePlateCountryAlias
     )
@@ -284,7 +265,7 @@ export const getLicencePlateLocationProperties = (
   let licencePlateProvince = licencePlateProvinceDefault
 
   if (
-    Object.prototype.hasOwnProperty.call(
+    Object.hasOwn(
       getProperty('licencePlateProvinces'),
       licencePlateCountryAlias
     )

@@ -46,7 +46,7 @@ async function postHandler(
 
   let isAuthenticated = false
 
-  if (userName.charAt(0) === '*') {
+  if (userName.startsWith('*')) {
     if (useTestDatabases && userName === passwordPlain) {
       isAuthenticated = configFunctions
         .getProperty('users.testing')
