@@ -2,7 +2,7 @@
 
 <div id="is-site-layout">
   <h1 class="title is-1">
-    <%= configFunctions.getProperty("application.applicationName") %>
+    <%= configFunctions.getConfigProperty("application.applicationName") %>
   </h1>
 
   <div class="columns">
@@ -57,7 +57,7 @@
               </h2>
               <p>
                 Look up licence plate owners.
-                <% if (user.canUpdate && configFunctions.getProperty("application.feature_mtoExportImport")) { %>
+                <% if (user.canUpdate && configFunctions.getConfigProperty("application.feature_mtoExportImport")) { %>
                   Manage exports to and imports from the MTO.
                 <% } %>
               </p>

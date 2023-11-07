@@ -116,7 +116,7 @@
         <span class="is-size-7">
           Expires<br />
           <%=
-            (configFunctions.getProperty("parkingTickets.licencePlateExpiryDate.includeDay") ?
+            (configFunctions.getConfigProperty("parkingTickets.licencePlateExpiryDate.includeDay") ?
               ticket.licencePlateExpiryDateString :
               ticket.licencePlateExpiryDateString.substring(0, ticket.licencePlateExpiryDateString.lastIndexOf("-")))
           %>

@@ -5,7 +5,7 @@ import { getConvictionBatch } from '../database/parkingDB/getConvictionBatch.js'
 import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js';
 import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js';
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js';
-import * as configFunctions from './functions.config.js';
+import { getConfigProperty } from './functions.config.js';
 let currentDate;
 let currentDateNumber;
 let currentDatePrefix;
@@ -221,7 +221,7 @@ function exportBatch(sentDate, includeLabels, batchEntries) {
     const newline = '\n';
     let output = '';
     let recordCount = 0;
-    const authorizedUserPadded = (configFunctions.getProperty('mtoExportImport.authorizedUser') + '    ').slice(0, 4);
+    const authorizedUserPadded = (getConfigProperty('mtoExportImport.authorizedUser') + '    ').slice(0, 4);
     for (const entry of batchEntries) {
         if (entry.ticketID === null) {
             continue;

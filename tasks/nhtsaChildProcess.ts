@@ -8,7 +8,7 @@ import {
 } from 'set-interval-async'
 
 import * as parkingDB from '../database/parkingDB.js'
-import * as configFunctions from '../helpers/functions.config.js'
+import { getConfigProperty } from '../helpers/functions.config.js'
 import * as vehicleFunctions from '../helpers/functions.vehicle.js'
 
 const debug = Debug('parking-ticket-system:task:nhtsaChildProcess')
@@ -46,7 +46,7 @@ export async function scheduleRun(): Promise<void> {
   const firstScheduleDate = new Date()
 
   firstScheduleDate.setHours(
-    configFunctions.getProperty('application.task_nhtsa.executeHour')
+    getConfigProperty('application.task_nhtsa.executeHour')
   )
   firstScheduleDate.setDate(firstScheduleDate.getDate() + 1)
 

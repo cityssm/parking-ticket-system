@@ -100,7 +100,7 @@
   exports.bylaws = <%- JSON.stringify(bylaws) -%>;
   exports.offences = <%- JSON.stringify(offences) -%>;
 
-  exports.accountNumberPattern = <%- JSON.stringify(configFunctions.getProperty("parkingOffences.accountNumber.pattern").source) -%>;
+  exports.accountNumberPattern = <%- JSON.stringify(configFunctions.getConfigProperty("parkingOffences.accountNumber.pattern").source) -%>;
 </script>
 
 <script src="/javascripts/offence-maint.min.js"></script>

@@ -2,7 +2,7 @@ import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-import * as configFunctions from '../../helpers/functions.config.js'
+import { getConfigProperty } from '../../helpers/functions.config.js'
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
 import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
@@ -16,12 +16,11 @@ export function getLicencePlateOwner(
   const database = connectedDatabase ?? sqlite(databasePath, { readonly: true })
 
   const licencePlateCountryAlias =
-    configFunctions.getProperty('licencePlateCountryAliases')[
-      licencePlateCountry
-    ] ?? licencePlateCountry
+    getConfigProperty('licencePlateCountryAliases')[licencePlateCountry] ??
+    licencePlateCountry
 
   const licencePlateProvinceAlias =
-    configFunctions.getProperty('licencePlateProvinceAliases')[
+    getConfigProperty('licencePlateProvinceAliases')[
       licencePlateCountryAlias
     ]?.[licencePlateProvince] ?? licencePlateProvince
 
@@ -37,12 +36,12 @@ export function getLicencePlateOwner(
 
   for (const possibleOwnerObject of possibleOwners) {
     const ownerPlateCountryAlias =
-      configFunctions.getProperty('licencePlateCountryAliases')[
+      getConfigProperty('licencePlateCountryAliases')[
         possibleOwnerObject.licencePlateCountry
       ] ?? possibleOwnerObject.licencePlateCountry
 
     const ownerPlateProvinceAlias =
-      configFunctions.getProperty('licencePlateProvinceAliases')[
+      getConfigProperty('licencePlateProvinceAliases')[
         ownerPlateCountryAlias
       ]?.[possibleOwnerObject.licencePlateProvince] ??
       possibleOwnerObject.licencePlateProvince

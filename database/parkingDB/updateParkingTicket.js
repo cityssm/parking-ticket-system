@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-import * as configFunctions from '../../helpers/functions.config.js';
+import { getConfigProperty } from '../../helpers/functions.config.js';
 export const getLicencePlateExpiryDateFromPieces = (requestBody) => {
     let licencePlateExpiryDate = 0;
     const licencePlateExpiryYear = Number.parseInt(requestBody.licencePlateExpiryYear, 10) ?? 0;
@@ -28,7 +28,7 @@ export const updateParkingTicket = (requestBody, sessionUser) => {
     const database = sqlite(databasePath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
-    if (configFunctions.getProperty('parkingTickets.ticketNumber.isUnique')) {
+    if (getConfigProperty('parkingTickets.ticketNumber.isUnique')) {
         const duplicateTicket = database
             .prepare(`select ticketID from ParkingTickets
           where recordDelete_timeMillis is null
@@ -45,7 +45,7 @@ export const updateParkingTicket = (requestBody, sessionUser) => {
         }
     }
     let licencePlateExpiryDate;
-    if (configFunctions.getProperty('parkingTickets.licencePlateExpiryDate.includeDay')) {
+    if (getConfigProperty('parkingTickets.licencePlateExpiryDate.includeDay')) {
         licencePlateExpiryDate =
             requestBody.licencePlateExpiryDateString === ''
                 ? undefined

@@ -48,7 +48,7 @@
           <div class="columns is-multiline is-desktop">
             <div class="column is-6-widescreen is-12-desktop">
               <label class="label" for="ticket--ticketNumber">
-                <%= configFunctions.getProperty("parkingTickets.ticketNumber.fieldLabel") %>
+                <%= configFunctions.getConfigProperty("parkingTickets.ticketNumber.fieldLabel") %>
               </label>
               <div class="field <%= (isCreate ? "" : "has-addons") %>">
                 <div class="control is-expanded">
@@ -56,7 +56,7 @@
                     class="input <%= (isCreate ? "" : "is-readonly") %>"
                     id="ticket--ticketNumber" name="ticketNumber" type="text"
                     value="<%= ticket.ticketNumber %>"
-                    pattern="<%= configFunctions.getProperty("parkingTickets.ticketNumber.pattern").source %>"
+                    pattern="<%= configFunctions.getConfigProperty("parkingTickets.ticketNumber.pattern").source %>"
                     maxlength="10"
                     autocomplete="off"
                     <%= (isCreate ? "" : "readonly") %>
@@ -212,7 +212,7 @@
                     <%= (ticket.licencePlateIsMissing ? "" : " required") %> />
                   <datalist id="datalist--licencePlateCountry">
                     <%
-                      const licencePlateCountries = Object.values(configFunctions.getProperty("licencePlateProvinces"));
+                      const licencePlateCountries = Object.values(configFunctions.getConfigProperty("licencePlateProvinces"));
                       for (let countryObj of licencePlateCountries) {
                     %>
                       <option value="<%= countryObj.countryShortName %>"></option>
@@ -247,7 +247,7 @@
 
           </div>
           <div class="columns is-multiline is-desktop">
-            <% if (configFunctions.getProperty("parkingTickets.licencePlateExpiryDate.includeDay")) { %>
+            <% if (configFunctions.getConfigProperty("parkingTickets.licencePlateExpiryDate.includeDay")) { %>
               <div class="columnn">
                 <div class="field">
                   <label class="label" for="ticket--licencePlateExpiryDateString">Plate Expiry Date</label>

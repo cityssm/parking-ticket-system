@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 
-import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js'
 import { deleteParkingLocation } from '../../database/parkingDB/deleteParkingLocation.js'
+import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js'
 
 export const handler: RequestHandler = (request, response) => {
   const results = deleteParkingLocation(request.body.locationKey)

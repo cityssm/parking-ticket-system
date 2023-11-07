@@ -1,38 +1,44 @@
-import * as configFunctions from '../../helpers/functions.config.js';
-import { cleanupParkingTicketsTable } from '../../database/parkingDB/cleanupParkingTicketsTable.js';
-import { cleanupParkingTicketRemarksTable } from '../../database/parkingDB/cleanupParkingTicketRemarksTable.js';
-import { cleanupParkingTicketStatusLog } from '../../database/parkingDB/cleanupParkingTicketStatusLog.js';
 import { cleanupLicencePlateOwnersTable } from '../../database/parkingDB/cleanupLicencePlateOwnersTable.js';
 import { cleanupParkingBylawsTable } from '../../database/parkingDB/cleanupParkingBylawsTable.js';
 import { cleanupParkingLocationsTable } from '../../database/parkingDB/cleanupParkingLocationsTable.js';
 import { cleanupParkingOffencesTable } from '../../database/parkingDB/cleanupParkingOffencesTable.js';
+import { cleanupParkingTicketRemarksTable } from '../../database/parkingDB/cleanupParkingTicketRemarksTable.js';
+import { cleanupParkingTicketStatusLog } from '../../database/parkingDB/cleanupParkingTicketStatusLog.js';
+import { cleanupParkingTicketsTable } from '../../database/parkingDB/cleanupParkingTicketsTable.js';
+import { getConfigProperty } from '../../helpers/functions.config.js';
 export const handler = (request, response) => {
     const table = request.body.table;
-    const recordDelete_timeMillis = Math.min(Number.parseInt(request.body.recordDelete_timeMillis, 10), Date.now() -
-        configFunctions.getProperty('databaseCleanup.windowDays') * 86400 * 1000);
+    const recordDeleteTimeMillis = Math.min(Number.parseInt(request.body.recordDelete_timeMillis, 10), Date.now() - getConfigProperty('databaseCleanup.windowDays') * 86400 * 1000);
     let success = false;
     switch (table) {
-        case 'parkingTickets':
-            success = cleanupParkingTicketsTable(recordDelete_timeMillis);
+        case 'parkingTickets': {
+            success = cleanupParkingTicketsTable(recordDeleteTimeMillis);
             break;
-        case 'parkingTicketRemarks':
-            success = cleanupParkingTicketRemarksTable(recordDelete_timeMillis);
+        }
+        case 'parkingTicketRemarks': {
+            success = cleanupParkingTicketRemarksTable(recordDeleteTimeMillis);
             break;
-        case 'parkingTicketStatusLog':
-            success = cleanupParkingTicketStatusLog(recordDelete_timeMillis);
+        }
+        case 'parkingTicketStatusLog': {
+            success = cleanupParkingTicketStatusLog(recordDeleteTimeMillis);
             break;
-        case 'licencePlateOwners':
-            success = cleanupLicencePlateOwnersTable(recordDelete_timeMillis);
+        }
+        case 'licencePlateOwners': {
+            success = cleanupLicencePlateOwnersTable(recordDeleteTimeMillis);
             break;
-        case 'parkingOffences':
+        }
+        case 'parkingOffences': {
             success = cleanupParkingOffencesTable();
             break;
-        case 'parkingLocations':
+        }
+        case 'parkingLocations': {
             success = cleanupParkingLocationsTable();
             break;
-        case 'parkingBylaws':
+        }
+        case 'parkingBylaws': {
             success = cleanupParkingBylawsTable();
             break;
+        }
     }
     return response.json({ success });
 };

@@ -4,7 +4,7 @@
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-import * as configFunctions from '../../helpers/functions.config.js'
+import { getConfigProperty } from '../../helpers/functions.config.js'
 
 export const unresolveParkingTicket = (
   ticketID: number,
@@ -37,7 +37,7 @@ export const unresolveParkingTicket = (
     }
   } else if (
     ticketObject.recordUpdate_timeMillis +
-      configFunctions.getProperty('parkingTickets.updateWindowMillis') <
+      getConfigProperty('parkingTickets.updateWindowMillis') <
     Date.now()
   ) {
     database.close()

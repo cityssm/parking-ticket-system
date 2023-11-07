@@ -89,14 +89,14 @@ configFallbackValues.set('mtoExportImport.authorizedUser', '')
 configFallbackValues.set('databaseCleanup.windowDays', 30)
 
 /*
- * Set up getProperty()
+ * Set up getConfigProperty()
  */
 
-export function getProperty(
+export function getConfigProperty(
   propertyName: 'activeDirectory'
 ): ConfigActiveDirectory
 
-export function getProperty(
+export function getConfigProperty(
   propertyName:
     | 'application.applicationName'
     | 'application.logoURL'
@@ -109,7 +109,7 @@ export function getProperty(
     | 'mtoExportImport.authorizedUser'
 ): string
 
-export function getProperty(
+export function getConfigProperty(
   propertyName:
     | 'application.httpPort'
     | 'application.maximumProcesses'
@@ -119,7 +119,7 @@ export function getProperty(
     | 'parkingTickets.updateWindowMillis'
 ): number
 
-export function getProperty(
+export function getConfigProperty(
   propertyName:
     | 'application.useTestDatabases'
     | 'application.feature_mtoExportImport'
@@ -129,37 +129,37 @@ export function getProperty(
     | 'parkingTickets.ticketNumber.isUnique'
 ): boolean
 
-export function getProperty(
+export function getConfigProperty(
   propertyName:
     | 'parkingOffences.accountNumber.pattern'
     | 'parkingTickets.ticketNumber.pattern'
 ): RegExp
 
-export function getProperty(
+export function getConfigProperty(
   propertyName: 'locationClasses'
 ): ConfigLocationClass[]
 
-export function getProperty(
+export function getConfigProperty(
   propertyName: 'licencePlateCountryAliases'
 ): Record<string, string>
 
-export function getProperty(
+export function getConfigProperty(
   propertyName: 'licencePlateProvinceAliases'
 ): Record<string, Record<string, string>>
 
-export function getProperty(
+export function getConfigProperty(
   propertyName: 'licencePlateProvinces'
 ): Record<string, ConfigLicencePlateCountry>
 
-export function getProperty(
+export function getConfigProperty(
   propertyName: 'parkingTickets.ticketNumber.nextTicketNumberFn'
 ): (currentTicketNumber: string) => string
 
-export function getProperty(
+export function getConfigProperty(
   propertyName: 'parkingTicketStatuses'
 ): ConfigParkingTicketStatus[]
 
-export function getProperty(
+export function getConfigProperty(
   propertyName:
     | 'users.testing'
     | 'users.canLogin'
@@ -168,7 +168,7 @@ export function getProperty(
     | 'users.isOperator'
 ): string[]
 
-export function getProperty(propertyName: string): unknown {
+export function getConfigProperty(propertyName: string): unknown {
   const propertyNameSplit = propertyName.split('.')
 
   let currentObject = config
@@ -184,10 +184,10 @@ export function getProperty(propertyName: string): unknown {
   return currentObject
 }
 
-export const keepAliveMillis = getProperty('session.doKeepAlive')
+export const keepAliveMillis = getConfigProperty('session.doKeepAlive')
   ? Math.max(
-      getProperty('session.maxAgeMillis') / 2,
-      getProperty('session.maxAgeMillis') - 10 * 60 * 1000
+      getConfigProperty('session.maxAgeMillis') / 2,
+      getConfigProperty('session.maxAgeMillis') - 10 * 60 * 1000
     )
   : 0
 
@@ -198,7 +198,7 @@ export const getParkingTicketStatus = (
   statusKey: string
 ): ConfigParkingTicketStatus | undefined => {
   if (!parkingTicketStatusMapIsLoaded) {
-    const parkingTicketStatusList = getProperty('parkingTicketStatuses')
+    const parkingTicketStatusList = getConfigProperty('parkingTicketStatuses')
 
     for (const parkingTicketStatusObject of parkingTicketStatusList) {
       parkingTicketStatusMap.set(
@@ -236,10 +236,10 @@ export const getLicencePlateLocationProperties = (
   // Get the country alias
 
   const licencePlateCountryAlias: string = Object.hasOwn(
-    getProperty('licencePlateCountryAliases'),
+    getConfigProperty('licencePlateCountryAliases'),
     originalLicencePlateCountry.toUpperCase()
   )
-    ? getProperty('licencePlateCountryAliases')[
+    ? getConfigProperty('licencePlateCountryAliases')[
         originalLicencePlateCountry.toUpperCase()
       ]
     : originalLicencePlateCountry
@@ -250,12 +250,12 @@ export const getLicencePlateLocationProperties = (
 
   if (
     Object.hasOwn(
-      getProperty('licencePlateProvinceAliases'),
+      getConfigProperty('licencePlateProvinceAliases'),
       licencePlateCountryAlias
     )
   ) {
     licencePlateProvinceAlias =
-      getProperty('licencePlateProvinceAliases')[licencePlateCountryAlias][
+      getConfigProperty('licencePlateProvinceAliases')[licencePlateCountryAlias][
         originalLicencePlateProvince.toUpperCase()
       ] || originalLicencePlateProvince
   }
@@ -266,12 +266,12 @@ export const getLicencePlateLocationProperties = (
 
   if (
     Object.hasOwn(
-      getProperty('licencePlateProvinces'),
+      getConfigProperty('licencePlateProvinces'),
       licencePlateCountryAlias
     )
   ) {
     licencePlateProvince =
-      getProperty('licencePlateProvinces')[licencePlateCountryAlias].provinces[
+      getConfigProperty('licencePlateProvinces')[licencePlateCountryAlias].provinces[
         licencePlateProvinceAlias
       ] || licencePlateProvinceDefault
   }

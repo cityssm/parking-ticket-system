@@ -15,7 +15,7 @@ import type {
   ParkingTicketStatusLog
 } from '../types/recordTypes.js'
 
-import * as configFunctions from './functions.config.js'
+import { getConfigProperty } from './functions.config.js'
 
 let currentDate: Date
 let currentDateNumber: number
@@ -483,7 +483,7 @@ function exportBatch(
    */
 
   const authorizedUserPadded = (
-    configFunctions.getProperty('mtoExportImport.authorizedUser') + '    '
+    getConfigProperty('mtoExportImport.authorizedUser') + '    '
   ).slice(0, 4)
 
   for (const entry of batchEntries) {

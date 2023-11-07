@@ -2,7 +2,7 @@ import http from 'node:http';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
 import { app } from '../app.js';
-import { getProperty } from '../helpers/functions.config.js';
+import { getConfigProperty } from '../helpers/functions.config.js';
 const debug = Debug(`parking-ticket-system:wwwProcess:${process.pid}`);
 const onError = (error) => {
     if (error.syscall !== 'listen') {
@@ -35,8 +35,8 @@ const onListening = (server) => {
         : 'port ' + (addr?.port.toString() ?? '');
     debug('Listening on ' + bind);
 };
-process.title = `${getProperty('application.applicationName')} (Worker)`;
-const httpPort = getProperty('application.httpPort');
+process.title = `${getConfigProperty('application.applicationName')} (Worker)`;
+const httpPort = getConfigProperty('application.httpPort');
 const httpServer = http.createServer(app);
 httpServer.listen(httpPort);
 httpServer.on('error', onError);

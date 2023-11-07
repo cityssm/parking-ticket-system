@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 
 import { createParkingTicket } from '../../database/parkingDB/createParkingTicket.js'
-import * as configFunctions from '../../helpers/functions.config.js'
+import { getConfigProperty } from '../../helpers/functions.config.js'
 
 export const handler: RequestHandler = (request, response) => {
   const result = createParkingTicket(
@@ -11,7 +11,7 @@ export const handler: RequestHandler = (request, response) => {
 
   if (result.success) {
     const ticketNumber = request.body.ticketNumber
-    result.nextTicketNumber = configFunctions.getProperty(
+    result.nextTicketNumber = getConfigProperty(
       'parkingTickets.ticketNumber.nextTicketNumberFn'
     )(ticketNumber)
   }

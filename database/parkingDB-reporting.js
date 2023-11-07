@@ -1,12 +1,10 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
-import * as configFunctions from '../helpers/functions.config.js';
+import { getConfigProperty } from '../helpers/functions.config.js';
 function getCleanupRecordDeleteTimeMillis(possibleRecordDeleteTimeMillis) {
     return (possibleRecordDeleteTimeMillis ?? '') === ''
         ? Date.now() -
-            configFunctions.getProperty('databaseCleanup.windowDays') *
-                86400 *
-                1000
+            getConfigProperty('databaseCleanup.windowDays') * 86400 * 1000
         : Number.parseInt(possibleRecordDeleteTimeMillis);
 }
 const reportDefinitions = new Map();

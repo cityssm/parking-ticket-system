@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { Router } from 'express';
 import { useTestDatabases } from '../data/databasePaths.js';
 import * as authenticationFunctions from '../helpers/functions.authentication.js';
-import * as configFunctions from '../helpers/functions.config.js';
+import { getConfigProperty } from '../helpers/functions.config.js';
 const debug = Debug('parking-ticket-system:login');
 export const router = Router();
 function getSafeRedirectURL(possibleRedirectURL = '') {
@@ -31,9 +31,7 @@ async function postHandler(request, response) {
     let isAuthenticated = false;
     if (userName.startsWith('*')) {
         if (useTestDatabases && userName === passwordPlain) {
-            isAuthenticated = configFunctions
-                .getProperty('users.testing')
-                .includes(userName);
+            isAuthenticated = getConfigProperty('users.testing').includes(userName);
             if (isAuthenticated) {
                 debug(`Authenticated testing user: ${userName}`);
             }
@@ -45,25 +43,17 @@ async function postHandler(request, response) {
     let userObject;
     if (isAuthenticated) {
         const userNameLowerCase = userName.toLowerCase();
-        const canLogin = configFunctions
-            .getProperty('users.canLogin')
-            .some((currentUserName) => {
+        const canLogin = getConfigProperty('users.canLogin').some((currentUserName) => {
             return userNameLowerCase === currentUserName.toLowerCase();
         });
         if (canLogin) {
-            const canUpdate = configFunctions
-                .getProperty('users.canUpdate')
-                .some((currentUserName) => {
+            const canUpdate = getConfigProperty('users.canUpdate').some((currentUserName) => {
                 return userNameLowerCase === currentUserName.toLowerCase();
             });
-            const isAdmin = configFunctions
-                .getProperty('users.isAdmin')
-                .some((currentUserName) => {
+            const isAdmin = getConfigProperty('users.isAdmin').some((currentUserName) => {
                 return userNameLowerCase === currentUserName.toLowerCase();
             });
-            const isOperator = configFunctions
-                .getProperty('users.isOperator')
-                .some((currentUserName) => {
+            const isOperator = getConfigProperty('users.isOperator').some((currentUserName) => {
                 return userNameLowerCase === currentUserName.toLowerCase();
             });
             userObject = {
@@ -90,7 +80,7 @@ async function postHandler(request, response) {
 router
     .route('/')
     .get((request, response) => {
-    const sessionCookieName = configFunctions.getProperty('session.cookieName');
+    const sessionCookieName = getConfigProperty('session.cookieName');
     if (request.session.user && request.cookies[sessionCookieName]) {
         const redirectURL = getSafeRedirectURL((request.query.redirect ?? ''));
         response.redirect(redirectURL);

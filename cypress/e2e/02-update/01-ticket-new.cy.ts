@@ -74,7 +74,7 @@ describe('Create a New Ticket', () => {
     cy.get("input[name='discountDays']").should('not.have.value', '')
 
     const expectedLicencePlateCountry =
-      configFunctions.getProperty('defaults.country')
+      configFunctions.getConfigProperty('defaults.country')
 
     cy.get("input[name='licencePlateCountry']").should(
       'contain.value',
@@ -82,7 +82,7 @@ describe('Create a New Ticket', () => {
     )
 
     const expectedLicencePlateProvince =
-      configFunctions.getProperty('defaults.province')
+      configFunctions.getConfigProperty('defaults.province')
 
     cy.get("input[name='licencePlateProvince']").should(
       'contain.value',

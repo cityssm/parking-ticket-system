@@ -2,7 +2,7 @@ import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-import * as configFunctions from '../../helpers/functions.config.js'
+import { getConfigProperty } from '../../helpers/functions.config.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
 
 import { getLicencePlateExpiryDateFromPieces } from './updateParkingTicket.js'
@@ -49,7 +49,7 @@ export function createParkingTicket(
   const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString)
 
   if (
-    configFunctions.getProperty('parkingTickets.ticketNumber.isUnique') &&
+    getConfigProperty('parkingTickets.ticketNumber.isUnique') &&
     hasDuplicateTicket(requestBody.ticketNumber, issueDate, database)
   ) {
     database.close()
@@ -65,11 +65,7 @@ export function createParkingTicket(
     requestBody.licencePlateExpiryDateString ?? ''
   )
 
-  if (
-    !configFunctions.getProperty(
-      'parkingTickets.licencePlateExpiryDate.includeDay'
-    )
-  ) {
+  if (!getConfigProperty('parkingTickets.licencePlateExpiryDate.includeDay')) {
     const licencePlateExpiryDateReturn =
       getLicencePlateExpiryDateFromPieces(requestBody)
 

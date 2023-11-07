@@ -3,7 +3,7 @@ import Debug from 'debug';
 import exitHook from 'exit-hook';
 import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
 import * as parkingDB from '../database/parkingDB.js';
-import * as configFunctions from '../helpers/functions.config.js';
+import { getConfigProperty } from '../helpers/functions.config.js';
 import * as vehicleFunctions from '../helpers/functions.vehicle.js';
 const debug = Debug('parking-ticket-system:task:nhtsaChildProcess');
 const initDate = new Date();
@@ -26,7 +26,7 @@ let timeoutId;
 let intervalId;
 export async function scheduleRun() {
     const firstScheduleDate = new Date();
-    firstScheduleDate.setHours(configFunctions.getProperty('application.task_nhtsa.executeHour'));
+    firstScheduleDate.setHours(getConfigProperty('application.task_nhtsa.executeHour'));
     firstScheduleDate.setDate(firstScheduleDate.getDate() + 1);
     debug(`NHTSA task scheduled for ${firstScheduleDate.toString()}`);
     timeoutId = setTimeout(() => {

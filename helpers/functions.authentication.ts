@@ -2,9 +2,9 @@ import ActiveDirectory from 'activedirectory2'
 
 import * as configFunctions from './functions.config.js'
 
-const userDomain = configFunctions.getProperty('application.userDomain')
+const userDomain = configFunctions.getConfigProperty('application.userDomain')
 
-const activeDirectoryConfig = configFunctions.getProperty('activeDirectory')
+const activeDirectoryConfig = configFunctions.getConfigProperty('activeDirectory')
 
 const authenticateViaActiveDirectory = async (
   userName: string,

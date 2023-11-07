@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import * as configFunctions from '../helpers/functions.config.js'
+import { getConfigProperty } from '../helpers/functions.config.js'
 
 export const router = Router()
 
@@ -12,18 +12,16 @@ router.get('/', (_request, response) => {
 
 router.all('/doGetDefaultConfigProperties', (_request, response) => {
   response.json({
-    locationClasses: configFunctions.getProperty('locationClasses'),
-    ticketNumber_fieldLabel: configFunctions.getProperty(
+    locationClasses: getConfigProperty('locationClasses'),
+    ticketNumber_fieldLabel: getConfigProperty(
       'parkingTickets.ticketNumber.fieldLabel'
     ),
-    parkingTicketStatuses: configFunctions.getProperty('parkingTicketStatuses'),
-    licencePlateCountryAliases: configFunctions.getProperty(
-      'licencePlateCountryAliases'
-    ),
-    licencePlateProvinceAliases: configFunctions.getProperty(
+    parkingTicketStatuses: getConfigProperty('parkingTicketStatuses'),
+    licencePlateCountryAliases: getConfigProperty('licencePlateCountryAliases'),
+    licencePlateProvinceAliases: getConfigProperty(
       'licencePlateProvinceAliases'
     ),
-    licencePlateProvinces: configFunctions.getProperty('licencePlateProvinces')
+    licencePlateProvinces: getConfigProperty('licencePlateProvinces')
   })
 })
 

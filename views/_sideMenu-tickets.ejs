@@ -38,7 +38,7 @@
         </li>
       </ul>
     <% } %>
-    <% if (configFunctions.getProperty("application.feature_mtoExportImport") && (user.canUpdate || user.isOperator)) { %>
+    <% if (configFunctions.getConfigProperty("application.feature_mtoExportImport") && (user.canUpdate || user.isOperator)) { %>
       <p class="menu-label">
         MTO Integration
       </p>

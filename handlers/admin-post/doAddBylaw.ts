@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 
-import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
 import { addParkingBylaw } from '../../database/parkingDB/addParkingBylaw.js'
+import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
 
 export const handler: RequestHandler = (request, response) => {
   const results = addParkingBylaw(request.body)

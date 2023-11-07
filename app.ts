@@ -101,7 +101,7 @@ app.use(
  */
 
 const sessionCookieName: string =
-  configFunctions.getProperty('session.cookieName')
+  configFunctions.getConfigProperty('session.cookieName')
 
 const FileStoreSession = FileStore(session)
 
@@ -114,12 +114,12 @@ app.use(
       retries: 10
     }),
     name: sessionCookieName,
-    secret: configFunctions.getProperty('session.secret'),
+    secret: configFunctions.getConfigProperty('session.secret'),
     resave: true,
     saveUninitialized: false,
     rolling: true,
     cookie: {
-      maxAge: configFunctions.getProperty('session.maxAgeMillis'),
+      maxAge: configFunctions.getConfigProperty('session.maxAgeMillis'),
       sameSite: 'strict'
     }
   })
@@ -178,7 +178,7 @@ app.use('/plates', sessionChecker, routerPlates)
 app.use('/offences', sessionChecker, routerOffences)
 app.use('/reports', sessionChecker, routerReports)
 
-if (configFunctions.getProperty('application.feature_mtoExportImport')) {
+if (configFunctions.getConfigProperty('application.feature_mtoExportImport')) {
   app.use('/plates-ontario', sessionChecker, routePlatesOntario)
   app.use('/tickets-ontario', sessionChecker, routeTicketsOntario)
 }

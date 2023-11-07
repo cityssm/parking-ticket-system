@@ -12,7 +12,7 @@ export const handler: RequestHandler = (request, response) => {
 
   response.setHeader(
     'Content-Disposition',
-    'attachment; filename=lookupBatch-' + batchID.toString() + '.txt'
+    `attachment; filename=lookupBatch-${batchID.toString()}.txt`
   )
   response.setHeader('Content-Type', 'text/plain')
 

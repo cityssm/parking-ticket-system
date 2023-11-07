@@ -4,7 +4,7 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 
 import { app } from '../app.js'
-import { getProperty } from '../helpers/functions.config.js'
+import { getConfigProperty } from '../helpers/functions.config.js'
 
 const debug = Debug(`parking-ticket-system:wwwProcess:${process.pid}`)
 
@@ -60,9 +60,9 @@ const onListening = (server: http.Server): void => {
  * Initialize HTTP
  */
 
-process.title = `${getProperty('application.applicationName')} (Worker)`
+process.title = `${getConfigProperty('application.applicationName')} (Worker)`
 
-const httpPort = getProperty('application.httpPort')
+const httpPort = getConfigProperty('application.httpPort')
 
 const httpServer = http.createServer(app)
 

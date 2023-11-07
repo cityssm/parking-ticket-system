@@ -51,7 +51,7 @@ app.use('/fa', express.static(path.join('node_modules', '@fortawesome', 'fontawe
 app.use('/fontsource-pt-mono', express.static(path.join('node_modules', '@fontsource', 'pt-mono', 'files')));
 app.use('/cityssm-bulma-webapp-js', express.static(path.join('node_modules', '@cityssm', 'bulma-webapp-js')));
 app.use('/bulma-js', express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist')));
-const sessionCookieName = configFunctions.getProperty('session.cookieName');
+const sessionCookieName = configFunctions.getConfigProperty('session.cookieName');
 const FileStoreSession = FileStore(session);
 app.use(session({
     store: new FileStoreSession({
@@ -60,12 +60,12 @@ app.use(session({
         retries: 10
     }),
     name: sessionCookieName,
-    secret: configFunctions.getProperty('session.secret'),
+    secret: configFunctions.getConfigProperty('session.secret'),
     resave: true,
     saveUninitialized: false,
     rolling: true,
     cookie: {
-        maxAge: configFunctions.getProperty('session.maxAgeMillis'),
+        maxAge: configFunctions.getConfigProperty('session.maxAgeMillis'),
         sameSite: 'strict'
     }
 }));
@@ -101,7 +101,7 @@ app.use('/tickets', sessionChecker, routerTickets);
 app.use('/plates', sessionChecker, routerPlates);
 app.use('/offences', sessionChecker, routerOffences);
 app.use('/reports', sessionChecker, routerReports);
-if (configFunctions.getProperty('application.feature_mtoExportImport')) {
+if (configFunctions.getConfigProperty('application.feature_mtoExportImport')) {
     app.use('/plates-ontario', sessionChecker, routePlatesOntario);
     app.use('/tickets-ontario', sessionChecker, routeTicketsOntario);
 }

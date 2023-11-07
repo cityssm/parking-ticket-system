@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as configFunctions from '../helpers/functions.config.js';
+import { getConfigProperty } from '../helpers/functions.config.js';
 export const router = Router();
 router.get('/', (_request, response) => {
     response.render('dashboard', {
@@ -8,12 +8,12 @@ router.get('/', (_request, response) => {
 });
 router.all('/doGetDefaultConfigProperties', (_request, response) => {
     response.json({
-        locationClasses: configFunctions.getProperty('locationClasses'),
-        ticketNumber_fieldLabel: configFunctions.getProperty('parkingTickets.ticketNumber.fieldLabel'),
-        parkingTicketStatuses: configFunctions.getProperty('parkingTicketStatuses'),
-        licencePlateCountryAliases: configFunctions.getProperty('licencePlateCountryAliases'),
-        licencePlateProvinceAliases: configFunctions.getProperty('licencePlateProvinceAliases'),
-        licencePlateProvinces: configFunctions.getProperty('licencePlateProvinces')
+        locationClasses: getConfigProperty('locationClasses'),
+        ticketNumber_fieldLabel: getConfigProperty('parkingTickets.ticketNumber.fieldLabel'),
+        parkingTicketStatuses: getConfigProperty('parkingTicketStatuses'),
+        licencePlateCountryAliases: getConfigProperty('licencePlateCountryAliases'),
+        licencePlateProvinceAliases: getConfigProperty('licencePlateProvinceAliases'),
+        licencePlateProvinces: getConfigProperty('licencePlateProvinces')
     });
 });
 export default router;

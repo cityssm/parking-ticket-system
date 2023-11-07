@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
-import * as configFunctions from '../helpers/functions.config.js';
+import { getConfigProperty } from '../helpers/functions.config.js';
 export const canUpdateObject = (object, sessionUser) => {
     let canUpdate = false;
     if ((sessionUser ?? undefined) === undefined) {
@@ -18,7 +18,7 @@ export const canUpdateObject = (object, sessionUser) => {
             case 'ticket': {
                 if (object.resolvedDate &&
                     Date.now() - object.recordUpdate_timeMillis >=
-                        configFunctions.getProperty('parkingTickets.updateWindowMillis')) {
+                        getConfigProperty('parkingTickets.updateWindowMillis')) {
                     canUpdate = false;
                 }
                 break;

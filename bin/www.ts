@@ -9,12 +9,12 @@ import Debug from 'debug'
 
 import { initNHTSADB } from '../database/nhtsaDB/initializeDatabase.js'
 import { initializeDatabase } from '../database/parkingDB/initializeDatabase.js'
-import { getProperty } from '../helpers/functions.config.js'
+import { getConfigProperty } from '../helpers/functions.config.js'
 import type { WorkerMessage } from '../types/applicationTypes.js'
 
 const debug = Debug(`parking-ticket-system:www:${process.pid}`)
 
-process.title = `${getProperty('application.applicationName')} (Primary)`
+process.title = `${getConfigProperty('application.applicationName')} (Primary)`
 
 debug(`Primary pid:   ${process.pid}`)
 debug(`Primary title: ${process.title}`)
@@ -31,7 +31,7 @@ initNHTSADB()
  */
 
 const processCount = Math.min(
-  getProperty('application.maximumProcesses'),
+  getConfigProperty('application.maximumProcesses'),
   os.cpus().length
 )
 
@@ -102,7 +102,7 @@ if (process.env.STARTUP_TEST === 'true') {
 } else {
   const lowPriority = 19
 
-  if (getProperty('application.task_nhtsa.runTask')) {
+  if (getConfigProperty('application.task_nhtsa.runTask')) {
     const childProcess = fork('./tasks/nhtsaChildProcess.js')
     os.setPriority(childProcess.pid as number, lowPriority)
   }
