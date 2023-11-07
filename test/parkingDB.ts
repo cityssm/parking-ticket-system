@@ -227,7 +227,7 @@ describe('database/parkingDB', () => {
     it('should execute getConvictionBatch()', () => {
       const batch = parkingDB_getConvictionBatch.getConvictionBatch(-1)
 
-      assert.ok(batch === undefined || batch.lockDate === undefined)
+      assert.ok(batch?.lockDate === undefined)
     })
 
     it('should execute parkingDB_isConvictionBatchUpdatable()', () => {

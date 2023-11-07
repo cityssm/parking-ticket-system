@@ -192,16 +192,14 @@ export const getReportData = (reportName, requestQuery) => {
     let sqlParameters = [];
     switch (reportName) {
         case 'lookupAudit': {
-            sql =
-                'select b.batchID,' +
-                    ' sentDate as batchSentDate,' +
-                    ' e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber,' +
-                    ' e.ticketID as ticketID,' +
-                    ' t.ticketNumber as ticketNumber' +
-                    ' from LicencePlateLookupBatches b' +
-                    ' left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID' +
-                    ' left join ParkingTickets t on e.ticketID = t.ticketID' +
-                    ' where b.sentDate is not null';
+            sql = `select b.batchID,
+        sentDate as batchSentDate,
+        e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber,
+        e.ticketID as ticketID, t.ticketNumber as ticketNumber
+        from LicencePlateLookupBatches b
+        left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID
+        left join ParkingTickets t on e.ticketID = t.ticketID
+        where b.sentDate is not null`;
             if (requestQuery.batchID && requestQuery.batchID !== '') {
                 sql += ' and b.batchID = ?';
                 sqlParameters.push(requestQuery.batchID);
