@@ -58,7 +58,7 @@
     "@cityssm/simple-fa5-checkbox": "^0.2.1",
     "@types/activedirectory2": "^1.2.5",
     "@types/better-sqlite3": "^7.6.6",
-    "@types/compression": "^1.7.4",
+    "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.5",
     "@types/csurf": "^1.11.4",
     "@types/debug": "^4.1.10",
