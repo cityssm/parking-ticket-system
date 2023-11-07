@@ -2,28 +2,33 @@ import type { RequestHandler } from 'express'
 
 import * as userFunctions from '../helpers/functions.user.js'
 
+const dashboardRedirectUrl = '/dashboard'
+
 export const adminGetHandler: RequestHandler = (request, response, next) => {
   if (userFunctions.userIsAdmin(request)) {
-    return next()
+    next()
+    return
   }
 
-  return response.redirect('/dashboard')
+  response.redirect(dashboardRedirectUrl)
 }
 
 export const adminPostHandler: RequestHandler = (request, response, next) => {
   if (userFunctions.userIsAdmin(request)) {
-    return next()
+    next()
+    return
   }
 
-  return response.json(userFunctions.forbiddenJSON)
+  response.json(userFunctions.forbiddenJSON)
 }
 
 export const updateGetHandler: RequestHandler = (request, response, next) => {
   if (userFunctions.userCanUpdate(request)) {
-    return next()
+    next()
+    return
   }
 
-  return response.redirect('/dashboard')
+  response.redirect(dashboardRedirectUrl)
 }
 
 export const updateOrOperatorGetHandler: RequestHandler = (
@@ -35,18 +40,20 @@ export const updateOrOperatorGetHandler: RequestHandler = (
     userFunctions.userCanUpdate(request) ||
     userFunctions.userIsOperator(request)
   ) {
-    return next()
+    next()
+    return
   }
 
-  return response.redirect('/dashboard')
+  response.redirect(dashboardRedirectUrl)
 }
 
 export const updatePostHandler: RequestHandler = (request, response, next) => {
   if (userFunctions.userCanUpdate(request)) {
-    return next()
+    next()
+    return
   }
 
-  return response.json(userFunctions.forbiddenJSON)
+  response.json(userFunctions.forbiddenJSON)
 }
 
 export const updateOrOperatorPostHandler: RequestHandler = (
@@ -58,8 +65,9 @@ export const updateOrOperatorPostHandler: RequestHandler = (
     userFunctions.userCanUpdate(request) ||
     userFunctions.userIsOperator(request)
   ) {
-    return next()
+    next()
+    return
   }
 
-  return response.json(userFunctions.forbiddenJSON)
+  response.json(userFunctions.forbiddenJSON)
 }

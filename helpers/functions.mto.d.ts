@@ -31,5 +31,4 @@ interface ImportLicencePlateOwnershipResult {
 }
 export declare const importLicencePlateOwnership: (batchID: number, ownershipData: string, sessionUser: PTSUser) => ImportLicencePlateOwnershipResult;
 export declare function exportLicencePlateBatch(batchID: number, sessionUser: PTSUser): string;
-export declare const exportConvictionBatch: (batchID: number, sessionUser: PTSUser) => string;
 export {};

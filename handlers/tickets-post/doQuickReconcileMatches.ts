@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express'
 
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
 import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js'
-import * as ownerFunctions from '../../helpers/functions.owner.js'
+import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js'
 
 export const handler: RequestHandler = (request, response) => {
   const records = getOwnershipReconciliationRecords()
@@ -14,7 +14,7 @@ export const handler: RequestHandler = (request, response) => {
       continue
     }
 
-    const ownerAddress = ownerFunctions.getFormattedOwnerAddress(record)
+    const ownerAddress = getFormattedOwnerAddress(record)
 
     const statusResponse = createParkingTicketStatus(
       {

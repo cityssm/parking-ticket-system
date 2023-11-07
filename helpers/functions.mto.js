@@ -1,9 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
-import { getConvictionBatch } from '../database/parkingDB/getConvictionBatch.js';
 import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js';
-import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js';
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js';
 import { getConfigProperty } from './functions.config.js';
 let currentDate;
@@ -253,8 +251,3 @@ export function exportLicencePlateBatch(batchID, sessionUser) {
     const batch = getLookupBatch(batchID);
     return exportBatch(batch.sentDate, batch.mto_includeLabels, batch.batchEntries);
 }
-export const exportConvictionBatch = (batchID, sessionUser) => {
-    markConvictionBatchAsSent(batchID, sessionUser);
-    const batch = getConvictionBatch(batchID);
-    return exportBatch(batch.sentDate, true, batch.batchEntries);
-};

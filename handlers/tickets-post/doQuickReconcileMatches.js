@@ -1,6 +1,6 @@
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js';
-import * as ownerFunctions from '../../helpers/functions.owner.js';
+import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js';
 export const handler = (request, response) => {
     const records = getOwnershipReconciliationRecords();
     const statusRecords = [];
@@ -8,7 +8,7 @@ export const handler = (request, response) => {
         if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
             continue;
         }
-        const ownerAddress = ownerFunctions.getFormattedOwnerAddress(record);
+        const ownerAddress = getFormattedOwnerAddress(record);
         const statusResponse = createParkingTicketStatus({
             recordType: 'status',
             ticketID: record.ticket_ticketID,

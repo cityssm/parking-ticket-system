@@ -49,7 +49,7 @@ describe('Admin - Parking By-Laws', () => {
     cy.get(".modal [name='bylawNumber']")
       .invoke('val')
       .then((bylawNumber: string) => {
-        const newBylawDescription = 'Updated By-Law - ' + randomString()
+        const newBylawDescription = `Updated By-Law - ${randomString()}`
 
         cy.get(".modal [name='bylawDescription']")
           .clear()

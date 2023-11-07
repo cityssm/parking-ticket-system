@@ -12,7 +12,7 @@ export declare function getConfigProperty(propertyName: 'parkingTickets.ticketNu
 export declare function getConfigProperty(propertyName: 'parkingTicketStatuses'): ConfigParkingTicketStatus[];
 export declare function getConfigProperty(propertyName: 'users.testing' | 'users.canLogin' | 'users.canUpdate' | 'users.isAdmin' | 'users.isOperator'): string[];
 export declare const keepAliveMillis: number;
-export declare const getParkingTicketStatus: (statusKey: string) => ConfigParkingTicketStatus | undefined;
+export declare function getParkingTicketStatus(statusKey: string): ConfigParkingTicketStatus | undefined;
 interface LicencePlateLocationProperties {
     licencePlateCountryAlias: string;
     licencePlateProvinceAlias: string;
@@ -22,5 +22,5 @@ interface LicencePlateLocationProperties {
         backgroundColor: string;
     };
 }
-export declare const getLicencePlateLocationProperties: (originalLicencePlateCountry: string, originalLicencePlateProvince: string) => LicencePlateLocationProperties;
+export declare function getLicencePlateLocationProperties(originalLicencePlateCountry: string, originalLicencePlateProvince: string): LicencePlateLocationProperties;
 export {};

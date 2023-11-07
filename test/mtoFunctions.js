@@ -5,23 +5,17 @@ describe('helpers/mtoFunctions', () => {
     describe('#twoDigitYearToFourDigit()', () => {
         const currentYear = currentDate.getFullYear();
         const currentYearTwoDigits = currentYear % 100;
-        it('(' + currentYearTwoDigits.toString() + ') => ' + currentYear.toString(), () => {
+        it(`(${currentYearTwoDigits.toString()}) => ${currentYear.toString()}`, () => {
             assert.strictEqual(mtoFunctions.twoDigitYearToFourDigit(currentYearTwoDigits), currentYear);
         });
         const futureYear = currentYear + 5;
         const futureYearTwoDigits = futureYear % 100;
-        it('should convert ' +
-            futureYearTwoDigits.toString() +
-            ' to ' +
-            futureYear.toString(), () => {
+        it(`should convert ${futureYearTwoDigits.toString()} to ${futureYear.toString()}`, () => {
             assert.strictEqual(mtoFunctions.twoDigitYearToFourDigit(futureYearTwoDigits), futureYear);
         });
         const pastYear = currentYear + 15 - 100;
         const pastYearTwoDigits = pastYear % 100;
-        it('should convert ' +
-            pastYearTwoDigits.toString() +
-            ' to ' +
-            pastYear.toString(), () => {
+        it(`should convert ${pastYearTwoDigits.toString()} to ${pastYear.toString()}`, () => {
             assert.strictEqual(mtoFunctions.twoDigitYearToFourDigit(pastYearTwoDigits), pastYear);
         });
     });
@@ -30,10 +24,7 @@ describe('helpers/mtoFunctions', () => {
             (currentDate.getMonth() + 1) * 100 +
             currentDate.getDate();
         const currentDateSixDigits = Number.parseInt(currentDateEightDigits.toString().slice(-6), 10);
-        it('should convert ' +
-            currentDateSixDigits.toString() +
-            ' to ' +
-            currentDateEightDigits.toString(), () => {
+        it(`should convert ${currentDateSixDigits.toString()} to ${currentDateEightDigits.toString()}`, () => {
             assert.strictEqual(mtoFunctions.sixDigitDateNumberToEightDigit(currentDateSixDigits), currentDateEightDigits);
         });
     });

@@ -5,15 +5,9 @@ import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'
-import { getConvictionBatch } from '../database/parkingDB/getConvictionBatch.js'
 import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js'
-import { markConvictionBatchAsSent } from '../database/parkingDB/markConvictionBatchAsSent.js'
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js'
-import type {
-  LicencePlateLookupBatch,
-  ParkingTicketConvictionBatch,
-  ParkingTicketStatusLog
-} from '../types/recordTypes.js'
+import type { LicencePlateLookupBatch } from '../types/recordTypes.js'
 
 import { getConfigProperty } from './functions.config.js'
 
@@ -549,23 +543,5 @@ export function exportLicencePlateBatch(
     batch.sentDate as number,
     batch.mto_includeLabels as boolean,
     batch.batchEntries
-  )
-}
-
-/**
- * @deprecated
- */
-export const exportConvictionBatch = (
-  batchID: number,
-  sessionUser: PTSUser
-): string => {
-  markConvictionBatchAsSent(batchID, sessionUser)
-
-  const batch = getConvictionBatch(batchID) as ParkingTicketConvictionBatch
-
-  return exportBatch(
-    batch.sentDate as number,
-    true,
-    batch.batchEntries as ParkingTicketStatusLog[]
   )
 }

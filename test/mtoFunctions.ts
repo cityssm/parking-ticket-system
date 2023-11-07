@@ -9,15 +9,12 @@ describe('helpers/mtoFunctions', () => {
     const currentYear = currentDate.getFullYear()
     const currentYearTwoDigits = currentYear % 100
 
-    it(
-      '(' + currentYearTwoDigits.toString() + ') => ' + currentYear.toString(),
-      () => {
-        assert.strictEqual(
-          mtoFunctions.twoDigitYearToFourDigit(currentYearTwoDigits),
-          currentYear
-        )
-      }
-    )
+    it(`(${currentYearTwoDigits.toString()}) => ${currentYear.toString()}`, () => {
+      assert.strictEqual(
+        mtoFunctions.twoDigitYearToFourDigit(currentYearTwoDigits),
+        currentYear
+      )
+    })
 
     // Two digit years more than 10 years in the future
     // are considered in the past.
@@ -25,34 +22,22 @@ describe('helpers/mtoFunctions', () => {
     const futureYear = currentYear + 5
     const futureYearTwoDigits = futureYear % 100
 
-    it(
-      'should convert ' +
-        futureYearTwoDigits.toString() +
-        ' to ' +
-        futureYear.toString(),
-      () => {
-        assert.strictEqual(
-          mtoFunctions.twoDigitYearToFourDigit(futureYearTwoDigits),
-          futureYear
-        )
-      }
-    )
+    it(`should convert ${futureYearTwoDigits.toString()} to ${futureYear.toString()}`, () => {
+      assert.strictEqual(
+        mtoFunctions.twoDigitYearToFourDigit(futureYearTwoDigits),
+        futureYear
+      )
+    })
 
     const pastYear = currentYear + 15 - 100
     const pastYearTwoDigits = pastYear % 100
 
-    it(
-      'should convert ' +
-        pastYearTwoDigits.toString() +
-        ' to ' +
-        pastYear.toString(),
-      () => {
-        assert.strictEqual(
-          mtoFunctions.twoDigitYearToFourDigit(pastYearTwoDigits),
-          pastYear
-        )
-      }
-    )
+    it(`should convert ${pastYearTwoDigits.toString()} to ${pastYear.toString()}`, () => {
+      assert.strictEqual(
+        mtoFunctions.twoDigitYearToFourDigit(pastYearTwoDigits),
+        pastYear
+      )
+    })
   })
 
   describe('#sixDigitDateNumberToEightDigit()', () => {
@@ -66,18 +51,12 @@ describe('helpers/mtoFunctions', () => {
       10
     )
 
-    it(
-      'should convert ' +
-        currentDateSixDigits.toString() +
-        ' to ' +
-        currentDateEightDigits.toString(),
-      () => {
-        assert.strictEqual(
-          mtoFunctions.sixDigitDateNumberToEightDigit(currentDateSixDigits),
-          currentDateEightDigits
-        )
-      }
-    )
+    it(`should convert ${currentDateSixDigits.toString()} to ${currentDateEightDigits.toString()}`, () => {
+      assert.strictEqual(
+        mtoFunctions.sixDigitDateNumberToEightDigit(currentDateSixDigits),
+        currentDateEightDigits
+      )
+    })
   })
 
   describe('#parsePKRD()', () => {

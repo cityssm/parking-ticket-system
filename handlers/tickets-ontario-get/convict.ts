@@ -1,8 +1,7 @@
 import type { RequestHandler } from 'express'
 
-import * as parkingDB_ontario from '../../database/parkingDB-ontario.js'
-
 import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js'
+import * as parkingDB_ontario from '../../database/parkingDB-ontario.js'
 
 export const handler: RequestHandler = (_request, response) => {
   const tickets =

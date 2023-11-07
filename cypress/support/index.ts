@@ -1,12 +1,10 @@
-/* eslint-disable node/no-unpublished-import */
-
 import 'cypress-axe'
 
-export const logout = () => {
+export function logout(): void {
   cy.visit('/logout')
 }
 
-export const login = (userName: string) => {
+export function login(userName: string): void {
   cy.visit('/login')
 
   cy.get('.message').contains('Testing', { matchCase: false })

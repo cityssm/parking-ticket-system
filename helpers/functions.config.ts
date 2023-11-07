@@ -194,9 +194,9 @@ export const keepAliveMillis = getConfigProperty('session.doKeepAlive')
 const parkingTicketStatusMap = new Map<string, ConfigParkingTicketStatus>()
 let parkingTicketStatusMapIsLoaded = false
 
-export const getParkingTicketStatus = (
+export function getParkingTicketStatus(
   statusKey: string
-): ConfigParkingTicketStatus | undefined => {
+): ConfigParkingTicketStatus | undefined {
   if (!parkingTicketStatusMapIsLoaded) {
     const parkingTicketStatusList = getConfigProperty('parkingTicketStatuses')
 
@@ -223,10 +223,10 @@ interface LicencePlateLocationProperties {
   }
 }
 
-export const getLicencePlateLocationProperties = (
+export function getLicencePlateLocationProperties(
   originalLicencePlateCountry: string,
   originalLicencePlateProvince: string
-): LicencePlateLocationProperties => {
+): LicencePlateLocationProperties {
   const licencePlateProvinceDefault = {
     provinceShortName: originalLicencePlateProvince,
     color: '#000',
@@ -234,7 +234,6 @@ export const getLicencePlateLocationProperties = (
   }
 
   // Get the country alias
-
   const licencePlateCountryAlias: string = Object.hasOwn(
     getConfigProperty('licencePlateCountryAliases'),
     originalLicencePlateCountry.toUpperCase()
@@ -245,7 +244,6 @@ export const getLicencePlateLocationProperties = (
     : originalLicencePlateCountry
 
   // Get the province alias
-
   let licencePlateProvinceAlias = originalLicencePlateProvince
 
   if (
@@ -255,13 +253,13 @@ export const getLicencePlateLocationProperties = (
     )
   ) {
     licencePlateProvinceAlias =
-      getConfigProperty('licencePlateProvinceAliases')[licencePlateCountryAlias][
-        originalLicencePlateProvince.toUpperCase()
-      ] || originalLicencePlateProvince
+      getConfigProperty('licencePlateProvinceAliases')[
+        licencePlateCountryAlias
+      ][originalLicencePlateProvince.toUpperCase()] ||
+      originalLicencePlateProvince
   }
 
   // Get the province object
-
   let licencePlateProvince = licencePlateProvinceDefault
 
   if (
@@ -271,13 +269,11 @@ export const getLicencePlateLocationProperties = (
     )
   ) {
     licencePlateProvince =
-      getConfigProperty('licencePlateProvinces')[licencePlateCountryAlias].provinces[
-        licencePlateProvinceAlias
-      ] || licencePlateProvinceDefault
+      getConfigProperty('licencePlateProvinces')[licencePlateCountryAlias]
+        .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault
   }
 
   // Return
-
   return {
     licencePlateCountryAlias,
     licencePlateProvinceAlias,

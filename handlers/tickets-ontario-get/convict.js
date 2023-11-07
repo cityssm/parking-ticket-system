@@ -1,5 +1,5 @@
-import * as parkingDB_ontario from '../../database/parkingDB-ontario.js';
 import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js';
+import * as parkingDB_ontario from '../../database/parkingDB-ontario.js';
 export const handler = (_request, response) => {
     const tickets = parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch();
     const batch = getConvictionBatch(-1);

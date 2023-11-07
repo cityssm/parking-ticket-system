@@ -57,7 +57,7 @@ export const keepAliveMillis = getConfigProperty('session.doKeepAlive')
     : 0;
 const parkingTicketStatusMap = new Map();
 let parkingTicketStatusMapIsLoaded = false;
-export const getParkingTicketStatus = (statusKey) => {
+export function getParkingTicketStatus(statusKey) {
     if (!parkingTicketStatusMapIsLoaded) {
         const parkingTicketStatusList = getConfigProperty('parkingTicketStatuses');
         for (const parkingTicketStatusObject of parkingTicketStatusList) {
@@ -66,8 +66,8 @@ export const getParkingTicketStatus = (statusKey) => {
         parkingTicketStatusMapIsLoaded = true;
     }
     return parkingTicketStatusMap.get(statusKey);
-};
-export const getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
+}
+export function getLicencePlateLocationProperties(originalLicencePlateCountry, originalLicencePlateProvince) {
     const licencePlateProvinceDefault = {
         provinceShortName: originalLicencePlateProvince,
         color: '#000',
@@ -79,16 +79,18 @@ export const getLicencePlateLocationProperties = (originalLicencePlateCountry, o
     let licencePlateProvinceAlias = originalLicencePlateProvince;
     if (Object.hasOwn(getConfigProperty('licencePlateProvinceAliases'), licencePlateCountryAlias)) {
         licencePlateProvinceAlias =
-            getConfigProperty('licencePlateProvinceAliases')[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] || originalLicencePlateProvince;
+            getConfigProperty('licencePlateProvinceAliases')[licencePlateCountryAlias][originalLicencePlateProvince.toUpperCase()] ||
+                originalLicencePlateProvince;
     }
     let licencePlateProvince = licencePlateProvinceDefault;
     if (Object.hasOwn(getConfigProperty('licencePlateProvinces'), licencePlateCountryAlias)) {
         licencePlateProvince =
-            getConfigProperty('licencePlateProvinces')[licencePlateCountryAlias].provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+            getConfigProperty('licencePlateProvinces')[licencePlateCountryAlias]
+                .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
     }
     return {
         licencePlateCountryAlias,
         licencePlateProvinceAlias,
         licencePlateProvince
     };
-};
+}

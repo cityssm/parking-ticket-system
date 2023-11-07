@@ -1,3 +1,3 @@
 import 'cypress-axe';
-export declare const logout: () => void;
-export declare const login: (userName: string) => void;
+export declare function logout(): void;
+export declare function login(userName: string): void;
