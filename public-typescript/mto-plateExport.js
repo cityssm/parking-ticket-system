@@ -79,7 +79,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function downloadBatch(clickEvent) {
         clickEvent.preventDefault();
         function downloadFunction() {
-            window.open('/plates-ontario/mtoExport/' + batchId.toString());
+            window.open(`/plates-ontario/mtoExport/${batchId.toString()}`);
             batchIsSent = true;
         }
         if (batchIsSent) {
@@ -251,24 +251,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     : '') +
                 ' ' +
                 (batchIsLocked
-                    ? '<span class="tag is-light">' +
-                        '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
-                        ' <span>' +
-                        batch.lockDateString +
-                        '</span>' +
-                        '</span>'
+                    ? `<span class="tag is-light">
+          <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+          <span>${batch.lockDateString}</span>
+          </span>`
                     : '');
-        document.querySelector('#batchSelector--batchDetails').innerHTML =
-            '<span class="icon is-small"><i class="fas fa-calendar" aria-hidden="true"></i></span>' +
-                '<span>' +
-                batch.batchDateString +
-                '</span>';
+        document.querySelector('#batchSelector--batchDetails').innerHTML = `<span class="icon is-small"><i class="fas fa-calendar" aria-hidden="true"></i></span>
+      <span>${batch.batchDateString}</span>`;
         cityssm.clearElement(batchEntriesContainerElement);
         if (batchEntriesList.length === 0) {
-            batchEntriesContainerElement.innerHTML =
-                '<div class="message is-info">' +
-                    '<p class="message-body">There are no parking tickets included in the batch.</p>' +
-                    '</div>';
+            batchEntriesContainerElement.innerHTML = `<div class="message is-info">
+        <p class="message-body">There are no parking tickets included in the batch.</p>
+        </div>`;
             return;
         }
         cityssm.clearElement(batchEntriesContainerElement);
@@ -325,9 +319,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const clearAllButtonElement = document.createElement('button');
             clearAllButtonElement.className = 'button is-fullwidth mb-3';
             clearAllButtonElement.dataset.cy = 'clear-batch';
-            clearAllButtonElement.innerHTML =
-                '<span class="icon is-small"><i class="fas fa-broom" aria-hidden="true"></i></span>' +
-                    '<span>Clear Batch</span>';
+            clearAllButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-broom" aria-hidden="true"></i></span>
+        <span>Clear Batch</span>`;
             clearAllButtonElement.addEventListener('click', clearBatch);
             batchEntriesContainerElement.append(clearAllButtonElement);
         }

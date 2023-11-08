@@ -32,7 +32,7 @@ declare const cityssm: cityssmGlobal
     '#available--licencePlateNumber'
   ) as HTMLInputElement
 
-  let availableTicketsList: ParkingTicket[] = []
+  let availableTicketsList: Array<ParkingTicket | undefined> = []
 
   let batchEntriesList: LicencePlateLookupBatchEntry[] = []
 
@@ -90,7 +90,9 @@ declare const cityssm: cityssmGlobal
 
     const batchEntry = batchEntriesList[recordIndex]
 
-    const entryContainerElement = buttonElement.closest('.is-entry-container')
+    const entryContainerElement = buttonElement.closest(
+      '.is-entry-container'
+    ) as HTMLElement
 
     cityssm.postJSON(
       '/plates/doRemoveLicencePlateFromLookupBatch',
@@ -148,7 +150,7 @@ declare const cityssm: cityssmGlobal
     clickEvent.preventDefault()
 
     function downloadFunction(): void {
-      window.open('/plates-ontario/mtoExport/' + batchId.toString())
+      window.open(`/plates-ontario/mtoExport/${batchId.toString()}`)
       batchIsSent = true
     }
 
@@ -350,7 +352,9 @@ declare const cityssm: cityssmGlobal
 
   // Current Batch
 
-  const lockBatchButtonElement = document.querySelector('#is-lock-batch-button')
+  const lockBatchButtonElement = document.querySelector(
+    '#is-lock-batch-button'
+  ) as HTMLElement
 
   const batchEntriesContainerElement = document.querySelector(
     '#is-batch-entries-container'
@@ -384,27 +388,23 @@ declare const cityssm: cityssmGlobal
         : '') +
       ' ' +
       (batchIsLocked
-        ? '<span class="tag is-light">' +
-          '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
-          ' <span>' +
-          batch.lockDateString +
-          '</span>' +
-          '</span>'
+        ? `<span class="tag is-light">
+          <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+          <span>${batch.lockDateString}</span>
+          </span>`
         : '')
 
-    document.querySelector('#batchSelector--batchDetails').innerHTML =
-      '<span class="icon is-small"><i class="fas fa-calendar" aria-hidden="true"></i></span>' +
-      '<span>' +
-      batch.batchDateString +
-      '</span>'
+    document.querySelector(
+      '#batchSelector--batchDetails'
+    ).innerHTML = `<span class="icon is-small"><i class="fas fa-calendar" aria-hidden="true"></i></span>
+      <span>${batch.batchDateString}</span>`
 
     cityssm.clearElement(batchEntriesContainerElement)
 
     if (batchEntriesList.length === 0) {
-      batchEntriesContainerElement.innerHTML =
-        '<div class="message is-info">' +
-        '<p class="message-body">There are no parking tickets included in the batch.</p>' +
-        '</div>'
+      batchEntriesContainerElement.innerHTML = `<div class="message is-info">
+        <p class="message-body">There are no parking tickets included in the batch.</p>
+        </div>`
 
       return
     }
@@ -475,9 +475,8 @@ declare const cityssm: cityssmGlobal
       const clearAllButtonElement = document.createElement('button')
       clearAllButtonElement.className = 'button is-fullwidth mb-3'
       clearAllButtonElement.dataset.cy = 'clear-batch'
-      clearAllButtonElement.innerHTML =
-        '<span class="icon is-small"><i class="fas fa-broom" aria-hidden="true"></i></span>' +
-        '<span>Clear Batch</span>'
+      clearAllButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-broom" aria-hidden="true"></i></span>
+        <span>Clear Batch</span>`
 
       clearAllButtonElement.addEventListener('click', clearBatch)
 

@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/filename-case, unicorn/prefer-module */
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
+
 import type {
   ParkingTicket,
   ParkingTicketConvictionBatch
@@ -64,7 +65,7 @@ declare const cityssm: cityssmGlobal
 
           cityssm.alertModal(
             'Ticket Not Added',
-            resultJSON.message,
+            resultJSON.message ?? '',
             'OK',
             'danger'
           )
@@ -181,34 +182,26 @@ declare const cityssm: cityssmGlobal
 
       const trElement = document.createElement('tr')
 
-      trElement.innerHTML =
-        '<td>' +
-        '<a data-tooltip="View Ticket (Opens in New Window)"' +
-        ' href="/tickets/' +
-        ticket.ticketId.toString() +
-        '" target="_blank">' +
-        cityssm.escapeHTML(ticket.ticketNumber) +
-        '</a>' +
-        '</td>' +
-        '<td>' +
-        ticket.issueDateString +
-        '</td>' +
-        ('<td>' +
-          '<span class="licence-plate-number is-size-6">' +
-          cityssm.escapeHTML(ticket.licencePlateNumber) +
-          '</span><br />' +
-          '<span class="has-tooltip-right is-size-7" data-tooltip="Primary Owner">' +
-          cityssm.escapeHTML(ticket.licencePlateOwner_ownerName1 ?? '') +
-          '</span>' +
-          '</td>') +
-        ('<td class="has-text-right">' +
-          '<button class="button is-small" data-index="' +
-          index.toString() +
-          '" type="button">' +
-          '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
-          '<span>Add</span>' +
-          '</button>' +
-          '</td>')
+      trElement.innerHTML = `<td>
+          <a data-tooltip="View Ticket (Opens in New Window)" href="/tickets/${ticket.ticketId.toString()}" target="_blank">
+          ${cityssm.escapeHTML(ticket.ticketNumber)}
+          </a>
+        </td>
+        <td>${ticket.issueDateString}</td>
+        <td>
+          <span class="licence-plate-number is-size-6">
+          ${cityssm.escapeHTML(ticket.licencePlateNumber)}
+          </span><br />
+          <span class="has-tooltip-right is-size-7" data-tooltip="Primary Owner">
+          ${cityssm.escapeHTML(ticket.licencePlateOwner_ownerName1 ?? '')}
+          </span>
+        </td>
+        <td class="has-text-right">
+          <button class="button is-small" data-index="${index.toString()}" type="button">
+            <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+            <span>Add</span>
+          </button>
+        </td>`
 
       trElement
         .querySelector('button')
@@ -266,7 +259,7 @@ declare const cityssm: cityssmGlobal
     '#batch-entries-container'
   ) as HTMLElement
 
-  const removeTicketFromBatchByIndexFunction = (clickEvent: Event) => {
+  function removeTicketFromBatchByIndex(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
@@ -297,10 +290,10 @@ declare const cityssm: cityssmGlobal
     )
   }
 
-  const clearBatchFunction = (clickEvent: Event) => {
+  function clearBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    const clearFunction = () => {
+    function doClear(): void {
       cityssm.postJSON(
         '/tickets-ontario/doClearConvictionBatch',
         {
@@ -339,7 +332,7 @@ declare const cityssm: cityssmGlobal
       'Are you sure you want to remove all the parking tickets from the batch?',
       'Yes, Clear the Batch',
       'warning',
-      clearFunction
+      doClear
     )
   }
 
@@ -481,7 +474,9 @@ declare const cityssm: cityssmGlobal
 
     const canRemove = canUpdate && !currentBatch.lockDate
 
-    for (const [index, batchEntry] of currentBatch.batchEntries.entries()) {
+    for (const [index, batchEntry] of (
+      currentBatch.batchEntries ?? []
+    ).entries()) {
       const trElement = document.createElement('tr')
 
       trElement.innerHTML =
@@ -501,20 +496,18 @@ declare const cityssm: cityssmGlobal
           '</span>' +
           '</td>') +
         (canRemove
-          ? '<td class="has-text-right">' +
-            '<button class="button is-small" data-index="' +
-            index.toString() +
-            '" type="button">' +
-            '<span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>' +
-            '<span>Remove</span>' +
-            '</button>' +
-            '</td>'
+          ? `<td class="has-text-right">
+              <button class="button is-small" data-index="${index.toString()}" type="button">
+              <span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>
+              <span>Remove</span>
+              </button>
+              </td>`
           : '')
 
       if (canRemove) {
         trElement
           .querySelector('button')
-          ?.addEventListener('click', removeTicketFromBatchByIndexFunction)
+          ?.addEventListener('click', removeTicketFromBatchByIndex)
       }
 
       tbodyElement.append(trElement)
@@ -557,7 +550,7 @@ declare const cityssm: cityssmGlobal
         </span>
         <span>Clear Batch</span>`
 
-      clearButtonElement.addEventListener('click', clearBatchFunction)
+      clearButtonElement.addEventListener('click', clearBatch)
 
       tableElement.before(clearButtonElement)
     }
@@ -567,9 +560,8 @@ declare const cityssm: cityssmGlobal
 
       unlockButtonElement.className = 'button is-fullwidth mb-3'
 
-      unlockButtonElement.innerHTML =
-        '<span class="icon is-small"><i class="fas fa-unlock" aria-hidden="true"></i></span>' +
-        '<span>Unlock Batch</span>'
+      unlockButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+        <span>Unlock Batch</span>`
 
       unlockButtonElement.addEventListener('click', unlockBatchFunction)
 
@@ -592,8 +584,8 @@ declare const cityssm: cityssmGlobal
     }
   }
 
-  const confirmCreateBatchFunction = () => {
-    const createFunction = () => {
+  function confirmCreateBatch(): void {
+    function doCreate(): void {
       cityssm.postJSON(
         '/tickets/doCreateConvictionBatch',
         {},
@@ -615,7 +607,7 @@ declare const cityssm: cityssmGlobal
       'Are you sure you want to create a new conviction batch?',
       'Yes, Create Batch',
       'info',
-      createFunction
+      doCreate
     )
   }
 
@@ -662,7 +654,7 @@ declare const cityssm: cityssmGlobal
               (clickEvent: Event) => {
                 clickEvent.preventDefault()
                 selectBatchCloseModalFunction()
-                confirmCreateBatchFunction()
+                confirmCreateBatch()
               }
             )
           }
@@ -702,11 +694,13 @@ declare const cityssm: cityssmGlobal
                   '<div class="column has-text-right">' +
                   batch.batchDateString +
                   (batch.lockDate
-                    ? '<br /><div class="tags justify-flex-end">' +
-                      '<span class="tag">' +
-                      '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
-                      '<span>Locked</span>' +
-                      '</span>'
+                    ? `<br />
+                      <div class="tags justify-flex-end">
+                        <span class="tag">
+                          <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+                          <span>Locked</span>
+                        </span>
+                      </div>`
                     : '') +
                   '</div>' +
                   '</div>'
