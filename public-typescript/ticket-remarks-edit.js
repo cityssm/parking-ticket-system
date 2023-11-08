@@ -56,17 +56,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
-    const populateRemarksPanelFunction = () => {
+    function populateRemarksPanel() {
         var _a, _b;
         clearRemarkPanel();
         if (remarkList.length === 0) {
-            remarkPanelElement.insertAdjacentHTML('beforeend', '<div class="panel-block is-block">' +
-                '<div class="message is-info">' +
-                '<p class="message-body">' +
-                'There are no remarks associated with this ticket.' +
-                '</p>' +
-                '</div>' +
-                '</div>');
+            remarkPanelElement.insertAdjacentHTML('beforeend', `<div class="panel-block is-block">
+          <div class="message is-info"><p class="message-body">There are no remarks associated with this ticket.</p></div>
+          </div>`);
             return;
         }
         for (const [index, remarkObject] of remarkList.entries()) {
@@ -122,7 +118,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             remarkPanelElement.append(panelBlockElement);
         }
-    };
+    }
     function getRemarks() {
         clearRemarkPanel();
         remarkPanelElement.insertAdjacentHTML('beforeend', `<div class="panel-block is-block">
@@ -135,7 +131,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ticketId
         }, (responseRemarkList) => {
             remarkList = responseRemarkList;
-            populateRemarksPanelFunction();
+            populateRemarksPanel();
         });
     }
     (_a = document
@@ -164,5 +160,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-    populateRemarksPanelFunction();
+    populateRemarksPanel();
 })();

@@ -109,19 +109,15 @@ declare const cityssm: cityssmGlobal
     })
   }
 
-  const populateRemarksPanelFunction = () => {
+  function populateRemarksPanel(): void {
     clearRemarkPanel()
 
     if (remarkList.length === 0) {
       remarkPanelElement.insertAdjacentHTML(
         'beforeend',
-        '<div class="panel-block is-block">' +
-          '<div class="message is-info">' +
-          '<p class="message-body">' +
-          'There are no remarks associated with this ticket.' +
-          '</p>' +
-          '</div>' +
-          '</div>'
+        `<div class="panel-block is-block">
+          <div class="message is-info"><p class="message-body">There are no remarks associated with this ticket.</p></div>
+          </div>`
       )
 
       return
@@ -208,7 +204,7 @@ declare const cityssm: cityssmGlobal
       },
       (responseRemarkList: recordTypes.ParkingTicketRemark[]) => {
         remarkList = responseRemarkList
-        populateRemarksPanelFunction()
+        populateRemarksPanel()
       }
     )
   }
@@ -251,5 +247,5 @@ declare const cityssm: cityssmGlobal
       })
     })
 
-  populateRemarksPanelFunction()
+  populateRemarksPanel()
 })()
