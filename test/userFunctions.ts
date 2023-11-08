@@ -1,4 +1,4 @@
-import * as assert from 'node:assert'
+import assert from 'node:assert'
 
 import * as userFunctions from '../helpers/functions.user.js'
 

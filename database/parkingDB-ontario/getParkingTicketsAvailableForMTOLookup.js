@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getParkingTicketsAvailableForMTOLookup = (currentBatchID, issueDaysAgo) => {
+export function getParkingTicketsAvailableForMTOLookup(currentBatchID, issueDaysAgo) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -46,4 +46,5 @@ export const getParkingTicketsAvailableForMTOLookup = (currentBatchID, issueDays
         .all(currentBatchID, issueDateNumber);
     database.close();
     return tickets;
-};
+}
+export default getParkingTicketsAvailableForMTOLookup;

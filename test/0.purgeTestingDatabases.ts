@@ -1,4 +1,4 @@
-import * as assert from 'node:assert'
+import assert from 'node:assert'
 import { unlink } from 'node:fs/promises'
 
 import { parkingDB_testing, nhtsaDB_testing } from '../data/databasePaths.js'

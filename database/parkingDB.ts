@@ -53,13 +53,13 @@ export const getRecentParkingTicketVehicleMakeModelValues = (): string[] => {
 
   const rows = database
     .prepare(
-      'select vehicleMakeModel' +
-        ' from ParkingTickets' +
-        ' where recordDelete_timeMillis is null' +
-        ' and issueDate > ?' +
-        ' group by vehicleMakeModel' +
-        ' having count(vehicleMakeModel) > 3' +
-        ' order by vehicleMakeModel'
+      `select vehicleMakeModel
+        from ParkingTickets
+        where recordDelete_timeMillis is null
+        and issueDate > ?
+        group by vehicleMakeModel
+        having count(vehicleMakeModel) > 3
+        order by vehicleMakeModel`
     )
     .all(issueDate) as Array<{ vehicleMakeModel: string }>
 
@@ -89,7 +89,7 @@ export const getSplitWhereClauseFilter = (
   const ticketNumberPieces = searchString.toLowerCase().split(' ')
 
   for (const ticketNumberPiece of ticketNumberPieces) {
-    sqlWhereClause += ' and instr(lower(' + columnName + '), ?)'
+    sqlWhereClause += ` and instr(lower(${columnName}), ?)`
     sqlParameters.push(ticketNumberPiece)
   }
 
@@ -115,11 +115,11 @@ export const getDistinctLicencePlateOwnerVehicleNCICs = (
 
   const rows = database
     .prepare(
-      'select vehicleNCIC, max(recordDate) as recordDateMax' +
-        ' from LicencePlateOwners' +
-        ' where recordDate >= ?' +
-        ' group by vehicleNCIC' +
-        ' order by recordDateMax desc'
+      `select vehicleNCIC, max(recordDate) as recordDateMax
+        from LicencePlateOwners
+        where recordDate >= ?
+        group by vehicleNCIC
+        order by recordDateMax desc`
     )
     .all(cutoffDate) as GetDistinctLicencePlateOwnerVehicleNCICsReturn[]
 

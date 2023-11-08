@@ -1,4 +1,4 @@
-import * as assert from 'node:assert';
+import assert from 'node:assert';
 import * as configFunctions from '../helpers/functions.config.js';
 describe('helpers/configFunctions', () => {
     describe('#getConfigProperty', () => {

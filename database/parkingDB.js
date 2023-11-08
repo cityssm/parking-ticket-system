@@ -35,13 +35,13 @@ export const getRecentParkingTicketVehicleMakeModelValues = () => {
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
     const issueDate = dateTimeFns.dateToInteger(sixMonthsAgo);
     const rows = database
-        .prepare('select vehicleMakeModel' +
-        ' from ParkingTickets' +
-        ' where recordDelete_timeMillis is null' +
-        ' and issueDate > ?' +
-        ' group by vehicleMakeModel' +
-        ' having count(vehicleMakeModel) > 3' +
-        ' order by vehicleMakeModel')
+        .prepare(`select vehicleMakeModel
+        from ParkingTickets
+        where recordDelete_timeMillis is null
+        and issueDate > ?
+        group by vehicleMakeModel
+        having count(vehicleMakeModel) > 3
+        order by vehicleMakeModel`)
         .all(issueDate);
     database.close();
     const vehicleMakeModelList = [];
@@ -55,7 +55,7 @@ export const getSplitWhereClauseFilter = (columnName, searchString) => {
     const sqlParameters = [];
     const ticketNumberPieces = searchString.toLowerCase().split(' ');
     for (const ticketNumberPiece of ticketNumberPieces) {
-        sqlWhereClause += ' and instr(lower(' + columnName + '), ?)';
+        sqlWhereClause += ` and instr(lower(${columnName}), ?)`;
         sqlParameters.push(ticketNumberPiece);
     }
     return {
@@ -68,11 +68,11 @@ export const getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate) => {
         readonly: true
     });
     const rows = database
-        .prepare('select vehicleNCIC, max(recordDate) as recordDateMax' +
-        ' from LicencePlateOwners' +
-        ' where recordDate >= ?' +
-        ' group by vehicleNCIC' +
-        ' order by recordDateMax desc')
+        .prepare(`select vehicleNCIC, max(recordDate) as recordDateMax
+        from LicencePlateOwners
+        where recordDate >= ?
+        group by vehicleNCIC
+        order by recordDateMax desc`)
         .all(cutoffDate);
     database.close();
     return rows;

@@ -1,4 +1,4 @@
-import * as assert from 'node:assert';
+import assert from 'node:assert';
 import * as parkingDB_cleanupLicencePlateOwnersTable from '../database/parkingDB/cleanupLicencePlateOwnersTable.js';
 import * as parkingDB_cleanupParkingTicketRemarksTable from '../database/parkingDB/cleanupParkingTicketRemarksTable.js';
 import * as parkingDB_cleanupParkingTicketStatusLog from '../database/parkingDB/cleanupParkingTicketStatusLog.js';

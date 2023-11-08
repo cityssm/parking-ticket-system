@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable unicorn/numeric-separators-style */
 
-import * as assert from 'node:assert'
+import assert from 'node:assert'
 
 import type { ReconciliationRecord } from '../database/parkingDB/getOwnershipReconciliationRecords.js'
 import * as ownerFunctions from '../helpers/functions.owner.js'
