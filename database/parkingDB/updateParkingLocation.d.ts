@@ -1,4 +1,4 @@
-import type * as pts from '../../types/recordTypes.js';
+import type { ParkingLocation } from '../../types/recordTypes.js';
 import type { AddUpdateParkingLocationReturn } from './getParkingLocations.js';
-export declare const updateParkingLocation: (requestBody: pts.ParkingLocation) => AddUpdateParkingLocationReturn;
+export declare const updateParkingLocation: (requestBody: ParkingLocation) => AddUpdateParkingLocationReturn;
 export default updateParkingLocation;

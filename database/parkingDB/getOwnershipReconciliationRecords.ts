@@ -3,9 +3,9 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
-import type * as pts from '../../types/recordTypes.js'
+import type { LicencePlate } from '../../types/recordTypes.js'
 
-export interface ReconciliationRecord extends pts.LicencePlate {
+export interface ReconciliationRecord extends LicencePlate {
   ticket_ticketID: number
   ticket_ticketNumber: string
   ticket_issueDate: number

@@ -22,9 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 '" data-tooltip="View Licence Plate">' +
                 (plateObject.licencePlateNumber === ''
                     ? '(Blank)'
-                    : '<span class="licence-plate-number">' +
-                        plateObject.licencePlateNumber +
-                        '</span>') +
+                    : `<span class="licence-plate-number">${plateObject.licencePlateNumber}</span>`) +
                 '</a>' +
                 '</td>' +
                 ('<td class="is-vcentered">' +
@@ -39,10 +37,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     '</td>') +
                 ('<td class="has-text-right is-vcentered">' +
                     (plateObject.hasOwnerRecord
-                        ? '<span data-tooltip="Has Ownership Record">' +
-                            '<i class="fas fa-check" aria-hidden="true"></i>' +
-                            '</span>' +
-                            '<span class="sr-only">Has Ownership Record</span>'
+                        ? `<span data-tooltip="Has Ownership Record">
+            <i class="fas fa-check" aria-hidden="true"></i>
+            </span>
+            <span class="sr-only">Has Ownership Record</span>`
                         : '') +
                     '</td>') +
                 ('<td class="has-text-right is-vcentered">' +
@@ -78,14 +76,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
             tbodyElement.append(trElement);
         }
         searchResultsElement.insertAdjacentHTML('beforeend', `<div class="level is-block-print">
-      <div class="level-left has-text-weight-bold">
-      Displaying licence plates
-      ${(licencePlateResults.offset + 1).toString()}
-      to
-      ${Math.min(licencePlateResults.limit + licencePlateResults.offset, licencePlateResults.count).toString()}
-      of
-      ${licencePlateResults.count.toString()}
-      </div>
+        <div class="level-left has-text-weight-bold">
+        Displaying licence plates
+        ${(licencePlateResults.offset + 1).toString()}
+        to
+        ${Math.min(licencePlateResults.limit + licencePlateResults.offset, licencePlateResults.count).toString()}
+        of
+        ${licencePlateResults.count.toString()}
+        </div>
       </div>`);
         if (licencePlateResults.limit < licencePlateResults.count) {
             const paginationElement = document.createElement('nav');
@@ -123,11 +121,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     function getLicencePlatesFunction() {
-        searchResultsElement.innerHTML =
-            '<p class="has-text-centered has-text-grey-lighter">' +
-                '<i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />' +
-                '<em>Loading licence plates...' +
-                '</p>';
+        searchResultsElement.innerHTML = `<p class="has-text-centered has-text-grey-lighter">
+      <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
+      <em>Loading licence plates...</em>
+      </p>`;
         cityssm.postJSON('/plates/doGetLicencePlates', formElement, processPlateResultsFunction);
     }
     function resetOffsetAndGetLicencePlatesFunction() {

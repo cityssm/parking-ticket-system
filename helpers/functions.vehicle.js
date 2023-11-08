@@ -85,6 +85,6 @@ export const getMakeFromNCIC = (vehicleNCIC) => {
     return ncic.allNCIC[vehicleNCIC] || vehicleNCIC;
 };
 export const isNCICExclusivelyTrailer = (vehicleNCIC) => {
-    return !!(Object.hasOwn(trailerNCIC, vehicleNCIC) &&
+    return Boolean(Object.hasOwn(trailerNCIC, vehicleNCIC) &&
         !Object.hasOwn(ncic.vehicleNCIC, vehicleNCIC));
 };

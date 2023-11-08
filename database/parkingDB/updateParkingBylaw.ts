@@ -1,12 +1,12 @@
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-import type * as pts from '../../types/recordTypes.js'
+import type { ParkingBylaw } from '../../types/recordTypes.js'
 
 import type { AddUpdateParkingBylawReturn } from './getParkingBylaws.js'
 
 export const updateParkingBylaw = (
-  requestBody: pts.ParkingBylaw
+  requestBody: ParkingBylaw
 ): AddUpdateParkingBylawReturn => {
   const database = sqlite(databasePath)
 

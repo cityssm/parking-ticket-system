@@ -4,7 +4,7 @@
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-import type * as configTypes from '../types/configTypes.js'
+import type { ConfigLicencePlateCountry, ConfigLocationClass, ConfigParkingTicketStatus } from '../types/configTypes.js'
 import type { ptsGlobal } from '../types/publicTypes.js'
 
 declare const cityssm: cityssmGlobal
@@ -13,12 +13,12 @@ const pts: Partial<ptsGlobal> = {}
 // CONFIG DEFAULTS
 
 interface DefaultConfigProperties {
-  locationClasses?: configTypes.ConfigLocationClass[]
+  locationClasses?: ConfigLocationClass[]
   ticketNumber_fieldLabel?: string
-  parkingTicketStatuses?: configTypes.ConfigParkingTicketStatus[]
+  parkingTicketStatuses?: ConfigParkingTicketStatus[]
   licencePlateCountryAliases?: Record<string, string>
   licencePlateProvinceAliases?: Record<string, Record<string, string>>
-  licencePlateProvinces?: Record<string, configTypes.ConfigLicencePlateCountry>
+  licencePlateProvinces?: Record<string, ConfigLicencePlateCountry>
 }
 
 ;(() => {
@@ -199,7 +199,7 @@ interface DefaultConfigProperties {
 
   const ticketStatusKeyToObject = new Map<
     string,
-    configTypes.ConfigParkingTicketStatus
+    ConfigParkingTicketStatus
   >()
   let ticketStatusKeyToObjectIsLoaded = false
 
@@ -234,12 +234,12 @@ interface DefaultConfigProperties {
 
   const locationClassKeyToObject = new Map<
     string,
-    configTypes.ConfigLocationClass
+    ConfigLocationClass
   >()
   let locationClassKeyToObjectIsLoaded = false
 
   pts.getLocationClass = (locationClassKey) => {
-    const noResult: configTypes.ConfigLocationClass = {
+    const noResult: ConfigLocationClass = {
       locationClassKey,
       locationClass: locationClassKey
     }
@@ -290,7 +290,7 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
 
     const selectedTabLinkElement = clickEvent.currentTarget as HTMLAnchorElement
     const selectedTabContentElement = document.querySelector(
-      selectedTabLinkElement.getAttribute('href')
+      selectedTabLinkElement.getAttribute('href') ?? ''
     ) as HTMLElement
 
     for (const [index, listItemElement] of listItemElements.entries()) {

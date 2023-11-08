@@ -7,7 +7,7 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-import type * as configTypes from '../types/configTypes.js'
+import type { ConfigLocationClass } from '../types/configTypes.js'
 import type { ptsGlobal } from '../types/publicTypes.js'
 import type { ParkingLocation } from '../types/recordTypes.js'
 
@@ -242,7 +242,7 @@ type UpdateLocationResponseJSON =
 
   pts.getDefaultConfigProperty(
     'locationClasses',
-    (locationClassesList: configTypes.ConfigLocationClass[]) => {
+    (locationClassesList: ConfigLocationClass[]) => {
       locationClassKeyFilterElement.innerHTML =
         '<option value="">(All Location Classes)</option>'
 

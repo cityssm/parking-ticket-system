@@ -1,13 +1,17 @@
-/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
+/* eslint-disable no-extra-semi */
 
-import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types'
-import type { ptsGlobal } from '../types/publicTypes'
-import type * as configTypes from '../types/configTypes'
-import type * as recordTypes from '../types/recordTypes'
+// eslint-disable-next-line n/no-missing-import
+import type { BulmaJS } from '@cityssm/bulma-js/types.js'
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { ConfigParkingTicketStatus } from '../types/configTypes.js'
+import type { ptsGlobal } from '../types/publicTypes.js'
+import type { ParkingTicketStatusLog } from '../types/recordTypes.js'
+
+declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 declare const pts: ptsGlobal
-
 ;(() => {
   const ticketID = cityssm.escapeHTML(
     (document.querySelector('#ticket--ticketID') as HTMLInputElement).value
@@ -17,11 +21,10 @@ declare const pts: ptsGlobal
     '#is-status-panel'
   ) as HTMLElement
 
-  let statusList =
-    exports.ticketStatusLog as recordTypes.ParkingTicketStatusLog[]
+  let statusList = exports.ticketStatusLog as ParkingTicketStatusLog[]
   delete exports.ticketStatusLog
 
-  const clearStatusPanelFunction = () => {
+  function clearStatusPanelFunction(): void {
     const panelBlockElements =
       statusPanelElement.querySelectorAll('.panel-block')
 
@@ -30,75 +33,87 @@ declare const pts: ptsGlobal
     }
   }
 
-  const confirmResolveTicketFunction = (clickEvent: Event) => {
-    clickEvent.preventDefault()
-
-    cityssm.confirmModal(
-      'Mark Ticket as Resolved?',
-      'Once resolved, you will no longer be able to make changes to the ticket.',
-      'Yes, Resolve Ticket',
-      'info',
-      () => {
-        cityssm.postJSON(
-          '/tickets/doResolveTicket',
-          {
-            ticketID
-          },
-          (responseJSON: { success: boolean }) => {
-            if (responseJSON.success) {
-              window.location.href = '/tickets/' + ticketID
-            }
-          }
-        )
+  function doResolve(): void {
+    cityssm.postJSON(
+      '/tickets/doResolveTicket',
+      {
+        ticketID
+      },
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as { success: boolean }
+        if (responseJSON.success) {
+          window.location.href = `/tickets/${ticketID}`
+        }
       }
     )
   }
 
-  const confirmDeleteStatusFunction = (clickEvent: Event) => {
+  function confirmResolveTicketFunction(clickEvent: Event): void {
+    clickEvent.preventDefault()
+
+    bulmaJS.confirm({
+      title: 'Mark Ticket as Resolved',
+      message:
+        'Once resolved, you will no longer be able to make changes to the ticket.',
+      contextualColorName: 'info',
+      okButton: {
+        text: 'Yes, Resolve Ticket',
+        callbackFunction: doResolve
+      }
+    })
+  }
+
+  function confirmDeleteStatusFunction(clickEvent: Event): void {
     const statusIndex = (clickEvent.currentTarget as HTMLButtonElement).dataset
       .statusIndex
 
-    cityssm.confirmModal(
-      'Delete Remark?',
-      'Are you sure you want to delete this status?',
-      'Yes, Delete',
-      'warning',
-      () => {
-        cityssm.postJSON(
-          '/tickets/doDeleteStatus',
-          {
-            ticketID,
-            statusIndex
-          },
-          (responseJSON: { success: boolean }) => {
-            if (responseJSON.success) {
-              getStatusesFunction()
-            }
+    function doDeleteStatus(): void {
+      cityssm.postJSON(
+        '/tickets/doDeleteStatus',
+        {
+          ticketID,
+          statusIndex
+        },
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as { success: boolean }
+          if (responseJSON.success) {
+            getStatusesFunction()
           }
-        )
+        }
+      )
+    }
+
+    bulmaJS.confirm({
+      title: 'Delete Status',
+      message: 'Are you sure you want to delete this status?',
+      contextualColorName: 'warning',
+      okButton: {
+        text: 'Yes, Delete Status',
+        callbackFunction: doDeleteStatus
       }
-    )
+    })
   }
 
-  const openEditStatusModalFunction = (clickEvent: Event) => {
+  function openEditStatusModalFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     let editStatusCloseModalFunction: () => void
 
     const index = Number.parseInt(
-      (clickEvent.currentTarget as HTMLButtonElement).dataset.index,
+      (clickEvent.currentTarget as HTMLButtonElement).dataset.index ?? '-1',
       10
     )
 
     const statusObject = statusList[index]
 
-    const submitFunction = (formEvent: Event) => {
+    function submitFunction(formEvent: Event): void {
       formEvent.preventDefault()
 
       cityssm.postJSON(
         '/tickets/doUpdateStatus',
         formEvent.currentTarget,
-        (responseJSON: { success: boolean }) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as { success: boolean }
           if (responseJSON.success) {
             editStatusCloseModalFunction()
             getStatusesFunction()
@@ -107,38 +122,45 @@ declare const pts: ptsGlobal
       )
     }
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const statusKeyChangeFunction = (changeEvent: Event) => {
+    function statusKeyChangeFunction(changeEvent: Event): void {
       const statusKeyObject = pts.getTicketStatus(
         (changeEvent.currentTarget as HTMLSelectElement).value
       )
 
-      const statusFieldElement = document.querySelector(
+      const statusFieldInputElement = document.querySelector(
         '#editStatus--statusField'
       ) as HTMLInputElement
-      statusFieldElement.value = ''
+      statusFieldInputElement.value = ''
+
+      const statusFieldFieldElement = statusFieldInputElement.closest(
+        '.field'
+      ) as HTMLElement
 
       if (statusKeyObject?.statusField) {
-        const fieldElement = statusFieldElement.closest('.field')
-        fieldElement.querySelector('label').textContent =
-          statusKeyObject.statusField.fieldLabel
-        fieldElement.classList.remove('is-hidden')
+        ;(
+          statusFieldFieldElement.querySelector('label') as HTMLLabelElement
+        ).textContent = statusKeyObject.statusField.fieldLabel
+        statusFieldFieldElement.classList.remove('is-hidden')
       } else {
-        statusFieldElement.closest('.field').classList.add('is-hidden')
+        statusFieldFieldElement.classList.add('is-hidden')
       }
 
-      const statusField2Element = document.querySelector(
+      const statusField2InputElement = document.querySelector(
         '#editStatus--statusField2'
       ) as HTMLInputElement
-      statusField2Element.value = ''
+      statusField2InputElement.value = ''
+
+      const statusField2FieldElement = statusField2InputElement.closest(
+        '.field'
+      ) as HTMLElement
 
       if (statusKeyObject?.statusField2) {
-        const fieldElement = statusField2Element.closest('.field')
-        fieldElement.querySelector('label').textContent =
-          statusKeyObject.statusField2.fieldLabel
-        fieldElement.classList.remove('is-hidden')
+        ;(
+          statusField2FieldElement.querySelector('label') as HTMLLabelElement
+        ).textContent = statusKeyObject.statusField2.fieldLabel
+        statusField2FieldElement.classList.remove('is-hidden')
       } else {
-        statusFieldElement.closest('.field').classList.add('is-hidden')
+        statusField2FieldElement.classList.add('is-hidden')
       }
     }
 
@@ -147,40 +169,37 @@ declare const pts: ptsGlobal
         ;(
           document.querySelector('#editStatus--ticketID') as HTMLInputElement
         ).value = ticketID
-
         ;(
           document.querySelector('#editStatus--statusIndex') as HTMLInputElement
         ).value = statusObject.statusIndex.toString()
-
         ;(
           document.querySelector('#editStatus--statusField') as HTMLInputElement
-        ).value = statusObject.statusField
+        ).value = statusObject.statusField ?? ''
         ;(
           document.querySelector(
             '#editStatus--statusField2'
           ) as HTMLInputElement
-        ).value = statusObject.statusField2
+        ).value = statusObject.statusField2 ?? ''
         ;(
           document.querySelector(
             '#editStatus--statusNote'
           ) as HTMLTextAreaElement
-        ).value = statusObject.statusNote
+        ).value = statusObject.statusNote ?? ''
 
         const statusDateElement = document.querySelector(
           '#editStatus--statusDateString'
         ) as HTMLInputElement
-        statusDateElement.value = statusObject.statusDateString
+        statusDateElement.value = statusObject.statusDateString ?? ''
         statusDateElement.setAttribute('max', cityssm.dateToString(new Date()))
-
         ;(
           document.querySelector(
             '#editStatus--statusTimeString'
           ) as HTMLInputElement
-        ).value = statusObject.statusTimeString
+        ).value = statusObject.statusTimeString ?? ''
 
         pts.getDefaultConfigProperty(
           'parkingTicketStatuses',
-          (parkingTicketStatuses: configTypes.ConfigParkingTicketStatus[]) => {
+          (parkingTicketStatuses: ConfigParkingTicketStatus[]) => {
             let statusKeyFound = false
 
             const statusKeyElement = document.querySelector(
@@ -194,11 +213,7 @@ declare const pts: ptsGlobal
               ) {
                 statusKeyElement.insertAdjacentHTML(
                   'beforeend',
-                  '<option value="' +
-                    statusKeyObject.statusKey +
-                    '">' +
-                    statusKeyObject.status +
-                    '</option>'
+                  `<option value="${statusKeyObject.statusKey}">${statusKeyObject.status}</option>`
                 )
 
                 if (statusKeyObject.statusKey === statusObject.statusKey) {
@@ -207,7 +222,7 @@ declare const pts: ptsGlobal
                   if (statusKeyObject.statusField) {
                     const fieldElement = document
                       .querySelector('#editStatus--statusField')
-                      .closest('.field')
+                      ?.closest('.field')
                     fieldElement.querySelector('label').textContent =
                       statusKeyObject.statusField.fieldLabel
                     fieldElement.classList.remove('is-hidden')
@@ -216,7 +231,7 @@ declare const pts: ptsGlobal
                   if (statusKeyObject.statusField2) {
                     const fieldElement = document
                       .querySelector('#editStatus--statusField2')
-                      .closest('.field')
+                      ?.closest('.field')
                     fieldElement.querySelector('label').textContent =
                       statusKeyObject.statusField2.fieldLabel
                     fieldElement.classList.remove('is-hidden')
@@ -228,11 +243,7 @@ declare const pts: ptsGlobal
             if (!statusKeyFound) {
               statusKeyElement.insertAdjacentHTML(
                 'beforeend',
-                '<option value="' +
-                  statusObject.statusKey +
-                  '">' +
-                  statusObject.statusKey +
-                  '</option>'
+                `<option value="${statusObject.statusKey}">${statusObject.statusKey}</option>`
               )
             }
 
@@ -244,7 +255,7 @@ declare const pts: ptsGlobal
 
         modalElement
           .querySelector('form')
-          .addEventListener('submit', submitFunction)
+          ?.addEventListener('submit', submitFunction)
       },
       onshown(_modalElement, closeModalFunction) {
         editStatusCloseModalFunction = closeModalFunction
@@ -252,26 +263,23 @@ declare const pts: ptsGlobal
     })
   }
 
-  const populateStatusesPanelFunction = () => {
+  function populateStatusesPanelFunction(): void {
     clearStatusPanelFunction()
 
     if (statusList.length === 0) {
       statusPanelElement.insertAdjacentHTML(
         'beforeend',
-        '<div class="panel-block is-block">' +
-          '<div class="message is-info">' +
-          '<p class="message-body">' +
-          'There are no statuses associated with this ticket.' +
-          '</p>' +
-          '</div>' +
-          '</div>'
+        `<div class="panel-block is-block">
+          <div class="message is-info">
+          <p class="message-body">There are no statuses associated with this ticket.</p>
+          </div>
+          </div>`
       )
 
       return
     }
 
     // Loop through statuses
-
     for (const statusObject of statusList) {
       const statusDefinitionObject = pts.getTicketStatus(statusObject.statusKey)
 
@@ -323,45 +331,39 @@ declare const pts: ptsGlobal
     }
 
     // Initialize edit and delete buttons (if applicable)
-
     const firstStatusObject = statusList[0]
 
     if (firstStatusObject.canUpdate) {
       const firstStatusColumnsElement = statusPanelElement
         .querySelector('.panel-block')
-        .querySelector('.columns')
+        ?.querySelector('.columns') as HTMLElement
 
       firstStatusColumnsElement.insertAdjacentHTML(
         'beforeend',
-        '<div class="column is-narrow">' +
-          '<div class="buttons is-right has-addons">' +
-          ('<button class="button is-small is-edit-status-button"' +
-            ' data-tooltip="Edit Status" data-index="0" type="button">' +
-            '<span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>' +
-            ' <span>Edit</span>' +
-            '</button>') +
-          ('<button class="button is-small has-text-danger is-delete-status-button" data-tooltip="Delete Status"' +
-            ' data-status-index="' +
-            firstStatusObject.statusIndex.toString() +
-            '" type="button">' +
-            '<i class="fas fa-trash" aria-hidden="true"></i>' +
-            '<span class="sr-only">Delete</span>' +
-            '</button>') +
-          '</div>' +
-          '</div>'
+        `<div class="column is-narrow">
+          <div class="buttons is-right has-addons">
+            <button class="button is-small is-edit-status-button" data-tooltip="Edit Status" data-index="0" type="button">
+              <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
+              <span>Edit</span>
+            </button>
+            <button class="button is-small has-text-danger is-delete-status-button" data-tooltip="Delete Status" data-status-index="${firstStatusObject.statusIndex.toString()}" type="button">
+              <i class="fas fa-trash" aria-hidden="true"></i>
+              <span class="sr-only">Delete</span>
+            </button>
+          </div>
+          </div>`
       )
 
       firstStatusColumnsElement
         .querySelector('.is-edit-status-button')
-        .addEventListener('click', openEditStatusModalFunction)
+        ?.addEventListener('click', openEditStatusModalFunction)
 
       firstStatusColumnsElement
         .querySelector('.is-delete-status-button')
-        .addEventListener('click', confirmDeleteStatusFunction)
+        ?.addEventListener('click', confirmDeleteStatusFunction)
     }
 
     // Add finalize button
-
     const firstStatusDefinitionObject = pts.getTicketStatus(
       firstStatusObject.statusKey
     )
@@ -370,42 +372,41 @@ declare const pts: ptsGlobal
       const finalizePanelBlockElement = document.createElement('div')
       finalizePanelBlockElement.className = 'panel-block is-block'
 
-      finalizePanelBlockElement.innerHTML =
-        '<div class="message is-info is-clearfix">' +
-        '<div class="message-body">' +
-        '<div class="columns">' +
-        '<div class="column">' +
-        '<strong>This ticket is able to be marked as resolved.</strong>' +
-        '</div>' +
-        '<div class="column is-narrow has-text-right align-self-flex-end">' +
-        '<button class="button is-info" data-cy="resolve" type="button">' +
-        '<span class="icon is-small"><i class="fas fa-check" aria-hidden="true"></i></span>' +
-        '<span>Resolve Ticket</span>' +
-        '</button>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>'
+      finalizePanelBlockElement.innerHTML = `<div class="message is-info is-clearfix">
+        <div class="message-body">
+          <div class="columns">
+            <div class="column">
+              <strong>This ticket is able to be marked as resolved.</strong>
+            </div>
+            <div class="column is-narrow has-text-right align-self-flex-end">
+              <button class="button is-info" data-cy="resolve" type="button">
+                <span class="icon is-small"><i class="fas fa-check" aria-hidden="true"></i></span>
+                <span>Resolve Ticket</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        </div>`
 
       finalizePanelBlockElement
         .querySelector('button')
-        .addEventListener('click', confirmResolveTicketFunction)
+        ?.addEventListener('click', confirmResolveTicketFunction)
 
       statusPanelElement.prepend(finalizePanelBlockElement)
     }
   }
 
-  const getStatusesFunction = () => {
+  function getStatusesFunction(): void {
     clearStatusPanelFunction()
 
     statusPanelElement.insertAdjacentHTML(
       'beforeend',
-      '<div class="panel-block is-block">' +
-        '<p class="has-text-centered has-text-grey-lighter">' +
-        '<i class="fas fa-2x fa-circle-notch fa-spin" aria-hidden="true"></i><br />' +
-        '<em>Loading statuses...' +
-        '</p>' +
-        '</div>'
+      `<div class="panel-block is-block">
+        <p class="has-text-centered has-text-grey-lighter">
+          <i class="fas fa-2x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
+          <em>Loading statuses...</em>
+        </p>
+        </div>`
     )
 
     cityssm.postJSON(
@@ -413,7 +414,9 @@ declare const pts: ptsGlobal
       {
         ticketID
       },
-      (responseStatusList: recordTypes.ParkingTicketStatusLog[]) => {
+      (rawResponseJSON) => {
+        const responseStatusList =
+          rawResponseJSON as unknown as ParkingTicketStatusLog[]
         statusList = responseStatusList
         populateStatusesPanelFunction()
       }
@@ -422,12 +425,12 @@ declare const pts: ptsGlobal
 
   document
     .querySelector('#is-add-status-button')
-    .addEventListener('click', (clickEvent) => {
+    ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
 
       let addStatusCloseModalFunction: () => void
 
-      const submitFunction = (formEvent: Event) => {
+      function submitFunction(formEvent: Event): void {
         formEvent.preventDefault()
 
         const resolveTicket = (
@@ -439,12 +442,13 @@ declare const pts: ptsGlobal
         cityssm.postJSON(
           '/tickets/doAddStatus',
           formEvent.currentTarget,
-          (responseJSON: { success: boolean }) => {
+          (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON as { success: boolean }
             if (responseJSON.success) {
               addStatusCloseModalFunction()
 
               if (resolveTicket) {
-                window.location.href = '/tickets/' + ticketID
+                window.location.href = `/tickets/${ticketID}`
               } else {
                 getStatusesFunction()
               }
@@ -453,38 +457,45 @@ declare const pts: ptsGlobal
         )
       }
 
-      // eslint-disable-next-line unicorn/consistent-function-scoping
-      const statusKeyChangeFunction = (changeEvent: Event) => {
+      function statusKeyChangeFunction(changeEvent: Event): void {
         const statusObject = pts.getTicketStatus(
           (changeEvent.currentTarget as HTMLInputElement).value
         )
 
-        const statusFieldElement = document.querySelector(
+        const statusFieldInputElement = document.querySelector(
           '#addStatus--statusField'
         ) as HTMLInputElement
-        statusFieldElement.value = ''
+        statusFieldInputElement.value = ''
+
+        const statusFieldFieldElement = statusFieldInputElement.closest(
+          '.field'
+        ) as HTMLElement
 
         if (statusObject?.statusField) {
-          const fieldElement = statusFieldElement.closest('.field')
-          fieldElement.querySelector('label').textContent =
-            statusObject.statusField.fieldLabel
-          fieldElement.classList.remove('is-hidden')
+          ;(
+            statusFieldFieldElement.querySelector('label') as HTMLLabelElement
+          ).textContent = statusObject.statusField.fieldLabel
+          statusFieldFieldElement.classList.remove('is-hidden')
         } else {
-          statusFieldElement.closest('.field').classList.add('is-hidden')
+          statusFieldFieldElement.classList.add('is-hidden')
         }
 
-        const statusField2Element = document.querySelector(
+        const statusField2InputElement = document.querySelector(
           '#addStatus--statusField2'
         ) as HTMLInputElement
-        statusField2Element.value = ''
+        statusField2InputElement.value = ''
+
+        const statusField2FieldElement = statusField2InputElement.closest(
+          '.field'
+        ) as HTMLElement
 
         if (statusObject?.statusField2) {
-          const fieldElement = statusField2Element.closest('.field')
-          fieldElement.querySelector('label').textContent =
-            statusObject.statusField2.fieldLabel
-          fieldElement.classList.remove('is-hidden')
+          ;(
+            statusField2FieldElement.querySelector('label') as HTMLLabelElement
+          ).textContent = statusObject.statusField2.fieldLabel
+          statusField2FieldElement.classList.remove('is-hidden')
         } else {
-          statusField2Element.closest('.field').classList.add('is-hidden')
+          statusField2FieldElement.classList.add('is-hidden')
         }
 
         const resolveTicketElement = document.querySelector(
@@ -493,9 +504,9 @@ declare const pts: ptsGlobal
         resolveTicketElement.checked = false
 
         if (statusObject?.isFinalStatus) {
-          resolveTicketElement.closest('.field').classList.remove('is-hidden')
+          resolveTicketElement.closest('.field')?.classList.remove('is-hidden')
         } else {
-          resolveTicketElement.closest('.field').classList.add('is-hidden')
+          resolveTicketElement.closest('.field')?.classList.add('is-hidden')
         }
       }
 
@@ -512,17 +523,13 @@ declare const pts: ptsGlobal
             ) => {
               const statusKeyElement = document.querySelector(
                 '#addStatus--statusKey'
-              )
+              ) as HTMLSelectElement
 
               for (const statusObject of parkingTicketStatuses) {
                 if (statusObject.isUserSettable) {
                   statusKeyElement.insertAdjacentHTML(
                     'beforeend',
-                    '<option value="' +
-                      statusObject.statusKey +
-                      '">' +
-                      statusObject.status +
-                      '</option>'
+                    `<option value="${statusObject.statusKey}">${statusObject.status}</option>`
                   )
                 }
               }
@@ -536,7 +543,7 @@ declare const pts: ptsGlobal
 
           modalElement
             .querySelector('form')
-            .addEventListener('submit', submitFunction)
+            ?.addEventListener('submit', submitFunction)
         },
         onshown(_modalElement, closeModalFunction) {
           addStatusCloseModalFunction = closeModalFunction
@@ -546,12 +553,12 @@ declare const pts: ptsGlobal
 
   document
     .querySelector('#is-add-paid-status-button')
-    .addEventListener('click', (clickEvent) => {
+    ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
 
       let addPaidStatusCloseModalFunction: () => void
 
-      const submitFunction = (formEvent: Event) => {
+      function submitFunction(formEvent: Event): void {
         formEvent.preventDefault()
 
         const resolveTicket = (
@@ -563,12 +570,13 @@ declare const pts: ptsGlobal
         cityssm.postJSON(
           '/tickets/doAddStatus',
           formEvent.currentTarget,
-          (responseJSON: { success: boolean }) => {
+          (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON as { success: boolean }
             if (responseJSON.success) {
               addPaidStatusCloseModalFunction()
 
               if (resolveTicket) {
-                window.location.href = '/tickets/' + ticketID
+                window.location.href = `/tickets/${ticketID}`
               } else {
                 getStatusesFunction()
               }
@@ -627,7 +635,7 @@ declare const pts: ptsGlobal
 
           modalElement
             .querySelector('form')
-            .addEventListener('submit', submitFunction)
+            ?.addEventListener('submit', submitFunction)
         },
         onshown(_modalElement, closeModalFunction) {
           addPaidStatusCloseModalFunction = closeModalFunction

@@ -155,20 +155,20 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
         ? listItemElements
         : tabsListElement.querySelectorAll('a');
     function tabClickFunction(clickEvent) {
-        var _a, _b;
+        var _a, _b, _c;
         clickEvent.preventDefault();
         const selectedTabLinkElement = clickEvent.currentTarget;
-        const selectedTabContentElement = document.querySelector(selectedTabLinkElement.getAttribute('href'));
+        const selectedTabContentElement = document.querySelector((_a = selectedTabLinkElement.getAttribute('href')) !== null && _a !== void 0 ? _a : '');
         for (const [index, listItemElement] of listItemElements.entries()) {
             listItemElement.classList.remove('is-active');
             tabLinkElements[index].setAttribute('aria-selected', 'false');
         }
         ;
-        (_a = (isPanelOrMenuListTabs
+        (_b = (isPanelOrMenuListTabs
             ? selectedTabLinkElement
-            : selectedTabLinkElement.parentElement)) === null || _a === void 0 ? void 0 : _a.classList.add('is-active');
+            : selectedTabLinkElement.parentElement)) === null || _b === void 0 ? void 0 : _b.classList.add('is-active');
         selectedTabLinkElement.setAttribute('aria-selected', 'true');
-        const tabContentElements = (_b = selectedTabContentElement.parentElement) === null || _b === void 0 ? void 0 : _b.querySelectorAll('.tab-content');
+        const tabContentElements = (_c = selectedTabContentElement.parentElement) === null || _c === void 0 ? void 0 : _c.querySelectorAll('.tab-content');
         for (const tabContentElement_ of tabContentElements !== null && tabContentElements !== void 0 ? tabContentElements : []) {
             tabContentElement_.classList.remove('is-active');
         }

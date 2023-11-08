@@ -1,5 +1,5 @@
-import type * as pts from '../../types/recordTypes.js';
-export interface ReconciliationRecord extends pts.LicencePlate {
+import type { LicencePlate } from '../../types/recordTypes.js';
+export interface ReconciliationRecord extends LicencePlate {
     ticket_ticketID: number;
     ticket_ticketNumber: string;
     ticket_issueDate: number;

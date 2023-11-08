@@ -2,12 +2,15 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-extra-semi */
 
+// eslint-disable-next-line n/no-missing-import
+import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 import type { ptsGlobal } from '../types/publicTypes.js'
 // eslint-disable-next-line import/namespace
-import type * as recordTypes from '../types/recordTypes.js'
+import type { ParkingLocation, ParkingOffence } from '../types/recordTypes.js'
 
+declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 declare const pts: ptsGlobal
 
@@ -121,35 +124,37 @@ declare const pts: ptsGlobal
       )
     })
 
-  if (!isCreate) {
-    document
-      .querySelector('#is-delete-ticket-button')
-      ?.addEventListener('click', (clickEvent) => {
-        clickEvent.preventDefault()
+  function doDelete(): void {
+    cityssm.postJSON(
+      '/tickets/doDeleteTicket',
+      {
+        ticketID
+      },
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as { success: boolean }
 
-        cityssm.confirmModal(
-          'Delete Ticket?',
-          'Are you sure you want to delete this ticket record?',
-          'Yes, Delete Ticket',
-          'danger',
-          () => {
-            cityssm.postJSON(
-              '/tickets/doDeleteTicket',
-              {
-                ticketID
-              },
-              (rawResponseJSON) => {
-                const responseJSON = rawResponseJSON as { success: boolean }
-
-                if (responseJSON.success) {
-                  window.location.href = '/tickets'
-                }
-              }
-            )
-          }
-        )
-      })
+        if (responseJSON.success) {
+          window.location.href = '/tickets'
+        }
+      }
+    )
   }
+
+  document
+    .querySelector('#is-delete-ticket-button')
+    ?.addEventListener('click', (clickEvent) => {
+      clickEvent.preventDefault()
+
+      bulmaJS.confirm({
+        title: 'Delete Ticket',
+        message: 'Are you sure you want to delete this ticket record?',
+        contextualColorName: 'danger',
+        okButton: {
+          text: 'Yes, Delete Ticket',
+          callbackFunction: doDelete
+        }
+      })
+    })
 
   /*
    * Location Lookup
@@ -158,7 +163,7 @@ declare const pts: ptsGlobal
   pts.getDefaultConfigProperty('locationClasses', () => {
     let locationLookupCloseModalFunction: () => void
 
-    let locationList: recordTypes.ParkingLocation[] = []
+    let locationList: ParkingLocation[] = []
 
     function clearLocationFunction(clickEvent: Event): void {
       clickEvent.preventDefault()
@@ -196,53 +201,52 @@ declare const pts: ptsGlobal
       locationList = []
     }
 
-    const populateLocationsFunction = () => {
-      cityssm.postJSON(
-        '/offences/doGetAllLocations',
-        {},
-        (locationListResponse: recordTypes.ParkingLocation[]) => {
-          locationList = locationListResponse
+    function populateLocationsFunction(): void {
+      cityssm.postJSON('/offences/doGetAllLocations', {}, (rawResponseJSON) => {
+        const locationListResponse =
+          rawResponseJSON as unknown as ParkingLocation[]
 
-          const listElement = document.createElement('div')
-          listElement.className = 'panel mb-4'
+        locationList = locationListResponse
 
-          for (const [index, locationObject] of locationList.entries()) {
-            const locationClassObject = pts.getLocationClass(
-              locationObject.locationClassKey
-            )
+        const listElement = document.createElement('div')
+        listElement.className = 'panel mb-4'
 
-            const linkElement = document.createElement('a')
-            linkElement.className = 'panel-block is-block'
-            linkElement.dataset.index = index.toString()
-            linkElement.setAttribute('href', '#')
-            linkElement.addEventListener('click', setLocationFunction)
-            linkElement.innerHTML =
-              '<div class="level">' +
-              '<div class="level-left">' +
-              cityssm.escapeHTML(locationObject.locationName) +
-              '</div>' +
-              (locationClassObject?.locationClass
-                ? '<div class="level-right">' +
-                  '<span class="tag is-primary">' +
-                  cityssm.escapeHTML(locationClassObject.locationClass) +
-                  '</span>' +
-                  '</div>'
-                : '') +
-              '</div>'
+        for (const [index, locationObject] of locationList.entries()) {
+          const locationClassObject = pts.getLocationClass(
+            locationObject.locationClassKey
+          )
 
-            listElement.append(linkElement)
-          }
+          const linkElement = document.createElement('a')
+          linkElement.className = 'panel-block is-block'
+          linkElement.dataset.index = index.toString()
+          linkElement.setAttribute('href', '#')
+          linkElement.addEventListener('click', setLocationFunction)
+          linkElement.innerHTML =
+            '<div class="level">' +
+            '<div class="level-left">' +
+            cityssm.escapeHTML(locationObject.locationName) +
+            '</div>' +
+            (locationClassObject?.locationClass
+              ? '<div class="level-right">' +
+                '<span class="tag is-primary">' +
+                cityssm.escapeHTML(locationClassObject.locationClass) +
+                '</span>' +
+                '</div>'
+              : '') +
+            '</div>'
 
-          const containerElement = document.querySelector(
-            '#container--parkingLocations'
-          ) as HTMLElement
-          cityssm.clearElement(containerElement)
-          containerElement.append(listElement)
+          listElement.append(linkElement)
         }
-      )
+
+        const containerElement = document.querySelector(
+          '#container--parkingLocations'
+        ) as HTMLElement
+        cityssm.clearElement(containerElement)
+        containerElement.append(listElement)
+      })
     }
 
-    const openLocationLookupModalFunction = (clickEvent: Event) => {
+    function openLocationLookupModalFunction(clickEvent: Event): void {
       clickEvent.preventDefault()
 
       cityssm.openHtmlModal('ticket-setLocation', {
@@ -278,7 +282,7 @@ declare const pts: ptsGlobal
    */
 
   let bylawLookupCloseModalFunction: () => void
-  let offenceList: recordTypes.ParkingOffence[] = []
+  let offenceList: ParkingOffence[] = []
   let listItemElements: HTMLAnchorElement[] = []
 
   function clearBylawOffenceFunction(clickEvent: Event): void {
@@ -406,7 +410,10 @@ declare const pts: ptsGlobal
       {
         locationKey
       },
-      (offenceListResponse: recordTypes.ParkingOffence[]) => {
+      (rawResponseJSON) => {
+        const offenceListResponse =
+          rawResponseJSON as unknown as ParkingOffence[]
+
         offenceList = offenceListResponse
         listItemElements = []
 
@@ -419,21 +426,18 @@ declare const pts: ptsGlobal
           linkElement.dataset.index = index.toString()
           linkElement.setAttribute('href', '#')
           linkElement.addEventListener('click', setBylawOffenceFunction)
-          linkElement.innerHTML =
-            '<div class="columns">' +
-            ('<div class="column">' +
-              '<span class="has-text-weight-semibold">' +
-              cityssm.escapeHTML(offenceObject.bylawNumber) +
-              '</span><br />' +
-              '<small>' +
-              cityssm.escapeHTML(offenceObject.bylawDescription) +
-              '</small>' +
-              '</div>') +
-            ('<div class="column is-narrow has-text-weight-semibold">' +
-              '$' +
-              offenceObject.offenceAmount.toFixed(2) +
-              '</div>') +
-            '</div>'
+          linkElement.innerHTML = `<div class="columns">
+            <div class="column">
+              <span class="has-text-weight-semibold">
+                ${cityssm.escapeHTML(offenceObject.bylawNumber)}
+              </span><br />
+              <small>
+                ${cityssm.escapeHTML(offenceObject.bylawDescription)}
+              </small>
+            </div>
+            <div class="column is-narrow has-text-weight-semibold">
+              $${offenceObject.offenceAmount.toFixed(2)}
+            </div></div>`
 
           listElement.append(linkElement)
           listItemElements.push(linkElement)
@@ -550,7 +554,7 @@ declare const pts: ptsGlobal
    * Licence Plate Province Datalist
    */
 
-  const populateLicencePlateProvinceDatalistFunction = () => {
+  function populateLicencePlateProvinceDatalistFunction(): void {
     const datalistElement = document.querySelector(
       '#datalist--licencePlateProvince'
     ) as HTMLElement
@@ -584,7 +588,7 @@ declare const pts: ptsGlobal
    * Unlock Buttons
    */
 
-  const unlockFieldFunction = (unlockButtonClickEvent: Event) => {
+  function unlockFieldFunction(unlockButtonClickEvent: Event): void {
     unlockButtonClickEvent.preventDefault()
 
     const unlockButtonElement =

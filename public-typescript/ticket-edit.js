@@ -52,22 +52,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-    if (!isCreate) {
-        (_b = document
-            .querySelector('#is-delete-ticket-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', (clickEvent) => {
-            clickEvent.preventDefault();
-            cityssm.confirmModal('Delete Ticket?', 'Are you sure you want to delete this ticket record?', 'Yes, Delete Ticket', 'danger', () => {
-                cityssm.postJSON('/tickets/doDeleteTicket', {
-                    ticketID
-                }, (rawResponseJSON) => {
-                    const responseJSON = rawResponseJSON;
-                    if (responseJSON.success) {
-                        window.location.href = '/tickets';
-                    }
-                });
-            });
+    function doDelete() {
+        cityssm.postJSON('/tickets/doDeleteTicket', {
+            ticketID
+        }, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
+            if (responseJSON.success) {
+                window.location.href = '/tickets';
+            }
         });
     }
+    (_b = document
+        .querySelector('#is-delete-ticket-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', (clickEvent) => {
+        clickEvent.preventDefault();
+        bulmaJS.confirm({
+            title: 'Delete Ticket',
+            message: 'Are you sure you want to delete this ticket record?',
+            contextualColorName: 'danger',
+            okButton: {
+                text: 'Yes, Delete Ticket',
+                callbackFunction: doDelete
+            }
+        });
+    });
     pts.getDefaultConfigProperty('locationClasses', () => {
         var _a, _b;
         let locationLookupCloseModalFunction;
@@ -88,8 +95,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             locationLookupCloseModalFunction();
             locationList = [];
         }
-        const populateLocationsFunction = () => {
-            cityssm.postJSON('/offences/doGetAllLocations', {}, (locationListResponse) => {
+        function populateLocationsFunction() {
+            cityssm.postJSON('/offences/doGetAllLocations', {}, (rawResponseJSON) => {
+                const locationListResponse = rawResponseJSON;
                 locationList = locationListResponse;
                 const listElement = document.createElement('div');
                 listElement.className = 'panel mb-4';
@@ -119,8 +127,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 cityssm.clearElement(containerElement);
                 containerElement.append(listElement);
             });
-        };
-        const openLocationLookupModalFunction = (clickEvent) => {
+        }
+        function openLocationLookupModalFunction(clickEvent) {
             clickEvent.preventDefault();
             cityssm.openHtmlModal('ticket-setLocation', {
                 onshown(_modalElement, closeModalFunction) {
@@ -135,7 +143,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     document.querySelector('#is-location-lookup-button').focus();
                 }
             });
-        };
+        }
         (_a = document
             .querySelector('#is-location-lookup-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', openLocationLookupModalFunction);
         (_b = document
@@ -202,7 +210,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const locationKey = document.querySelector('#ticket--locationKey').value;
         cityssm.postJSON('/offences/doGetOffencesByLocation', {
             locationKey
-        }, (offenceListResponse) => {
+        }, (rawResponseJSON) => {
+            const offenceListResponse = rawResponseJSON;
             offenceList = offenceListResponse;
             listItemElements = [];
             const listElement = document.createElement('div');
@@ -213,21 +222,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 linkElement.dataset.index = index.toString();
                 linkElement.setAttribute('href', '#');
                 linkElement.addEventListener('click', setBylawOffenceFunction);
-                linkElement.innerHTML =
-                    '<div class="columns">' +
-                        ('<div class="column">' +
-                            '<span class="has-text-weight-semibold">' +
-                            cityssm.escapeHTML(offenceObject.bylawNumber) +
-                            '</span><br />' +
-                            '<small>' +
-                            cityssm.escapeHTML(offenceObject.bylawDescription) +
-                            '</small>' +
-                            '</div>') +
-                        ('<div class="column is-narrow has-text-weight-semibold">' +
-                            '$' +
-                            offenceObject.offenceAmount.toFixed(2) +
-                            '</div>') +
-                        '</div>';
+                linkElement.innerHTML = `<div class="columns">
+            <div class="column">
+              <span class="has-text-weight-semibold">
+                ${cityssm.escapeHTML(offenceObject.bylawNumber)}
+              </span><br />
+              <small>
+                ${cityssm.escapeHTML(offenceObject.bylawDescription)}
+              </small>
+            </div>
+            <div class="column is-narrow has-text-weight-semibold">
+              $${offenceObject.offenceAmount.toFixed(2)}
+            </div></div>`;
                 listElement.append(linkElement);
                 listItemElements.push(linkElement);
             }
@@ -303,7 +309,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
-    const populateLicencePlateProvinceDatalistFunction = () => {
+    function populateLicencePlateProvinceDatalistFunction() {
         const datalistElement = document.querySelector('#datalist--licencePlateProvince');
         cityssm.clearElement(datalistElement);
         const countryString = document.querySelector('#ticket--licencePlateCountry').value;
@@ -316,11 +322,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 datalistElement.append(optionElement);
             }
         }
-    };
+    }
     (_e = document
         .querySelector('#ticket--licencePlateCountry')) === null || _e === void 0 ? void 0 : _e.addEventListener('change', populateLicencePlateProvinceDatalistFunction);
     pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFunction);
-    const unlockFieldFunction = (unlockButtonClickEvent) => {
+    function unlockFieldFunction(unlockButtonClickEvent) {
         var _a, _b;
         unlockButtonClickEvent.preventDefault();
         const unlockButtonElement = unlockButtonClickEvent.currentTarget;
@@ -331,7 +337,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         readOnlyElement.classList.remove('is-readonly');
         readOnlyElement.focus();
         unlockButtonElement.setAttribute('disabled', 'disabled');
-    };
+    }
     const unlockButtonElements = document.querySelectorAll('.is-unlock-field-button');
     for (const unlockButtonElement of unlockButtonElements) {
         unlockButtonElement.addEventListener('click', unlockFieldFunction);
