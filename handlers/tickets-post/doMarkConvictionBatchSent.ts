@@ -4,14 +4,14 @@ import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.
 import { markConvictionBatchAsSent } from '../../database/parkingDB/markConvictionBatchAsSent.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const batchID = request.body.batchID
+  const batchId = request.body.batchId
 
   const success = markConvictionBatchAsSent(
-    batchID,
+    batchId,
     request.session.user as PTSUser
   )
 
-  const batch = getConvictionBatch(batchID)
+  const batch = getConvictionBatch(batchId)
 
   response.json({
     success,

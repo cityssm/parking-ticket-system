@@ -1,2 +1,2 @@
-export declare const markConvictionBatchAsSent: (batchID: number, sessionUser: PTSUser) => boolean;
+export declare function markConvictionBatchAsSent(batchId: number, sessionUser: PTSUser): boolean;
 export default markConvictionBatchAsSent;

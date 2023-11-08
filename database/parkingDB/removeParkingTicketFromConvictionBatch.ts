@@ -5,15 +5,15 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import { isConvictionBatchUpdatable } from './isConvictionBatchUpdatable.js'
 
 export const removeParkingTicketFromConvictionBatch = (
-  batchID: number,
-  ticketID: number,
+  batchId: number,
+  ticketId: number,
   sessionUser: PTSUser
 ): { success: boolean; message?: string } => {
   const database = sqlite(databasePath)
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatable(batchID, database)
+  const batchIsAvailable = isConvictionBatchUpdatable(batchId, database)
 
   if (!batchIsAvailable) {
     database.close()
@@ -34,11 +34,11 @@ export const removeParkingTicketFromConvictionBatch = (
         set recordDelete_userName = ?,
         recordDelete_timeMillis = ?
         where recordDelete_timeMillis is null
-        and ticketID = ?
+        and ticketId = ?
         and statusKey in ('convicted', 'convictionBatch')
         and statusField = ?`
     )
-    .run(sessionUser.userName, rightNowMillis, ticketID, batchID.toString())
+    .run(sessionUser.userName, rightNowMillis, ticketId, batchId.toString())
 
   database.close()
 

@@ -4,7 +4,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export const markLookupBatchAsSent = (
-  batchID: number,
+  batchId: number,
   sessionUser: PTSUser
 ): boolean => {
   const database = sqlite(databasePath)
@@ -17,7 +17,7 @@ export const markLookupBatchAsSent = (
         set sentDate = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is not null
         and sentDate is null`
@@ -26,7 +26,7 @@ export const markLookupBatchAsSent = (
       dateTimeFns.dateToInteger(rightNow),
       sessionUser.userName,
       rightNow.getTime(),
-      batchID
+      batchId
     )
 
   database.close()

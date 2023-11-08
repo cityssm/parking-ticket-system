@@ -24,7 +24,7 @@ router.post(
 )
 
 router.get(
-  '/mtoExport/:batchID',
+  '/mtoExport/:batchId',
   permissionHandlers.updateOrOperatorGetHandler,
   handler_mtoExportDownload
 )

@@ -10,7 +10,7 @@
         <% if (isCreate) { %>
           <li class="is-active"><a href="#" aria-current="page">New Ticket</a></li>
         <% } else { %>
-          <li><a href="/tickets/<%= ticket.ticketID %>">Ticket <%=ticket.ticketNumber %></a></li>
+          <li><a href="/tickets/<%= ticket.ticketId %>">Ticket <%=ticket.ticketNumber %></a></li>
           <li class="is-active"><a href="#" aria-current="page">Edit</a></li>
         <% } %>
       </ul>
@@ -28,7 +28,7 @@
           </h1>
         </div>
         <div class="column is-narrow has-text-right">
-          <a class="button is-link" href="/tickets/<%= ticket.ticketID %>/print" target="_blank">
+          <a class="button is-link" href="/tickets/<%= ticket.ticketId %>/print" target="_blank">
             <span class="icon"><i class="fas fa-print" aria-hidden="true"></i></span>
             <span>Print</span>
           </a>
@@ -38,7 +38,7 @@
 
 
     <form id="form--ticket">
-      <input id="ticket--ticketID" name="ticketID" type="hidden" value="<%=ticket.ticketID %>" />
+      <input id="ticket--ticketId" name="ticketId" type="hidden" value="<%=ticket.ticketId %>" />
 
       <div class="panel">
         <h2 class="panel-heading">

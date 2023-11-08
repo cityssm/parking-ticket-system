@@ -121,7 +121,7 @@ export const parsePKRD = (rowData) => {
         return false;
     }
 };
-export const importLicencePlateOwnership = (batchID, ownershipData, sessionUser) => {
+export const importLicencePlateOwnership = (batchId, ownershipData, sessionUser) => {
     const ownershipDataRows = ownershipData.split('\n');
     if (ownershipDataRows.length === 0) {
         return {
@@ -140,16 +140,16 @@ export const importLicencePlateOwnership = (batchID, ownershipData, sessionUser)
     const database = sqlite(databasePath);
     const batchRow = database
         .prepare(`select sentDate from LicencePlateLookupBatches
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is not null
         and sentDate is not null`)
-        .get(batchID);
+        .get(batchId);
     if (batchRow === undefined) {
         database.close();
         return {
             success: false,
-            message: `Batch #${batchID.toString()} is unavailable for imports.`
+            message: `Batch #${batchId.toString()} is unavailable for imports.`
         };
     }
     else if (batchRow.sentDate !== headerRow.sentDate) {
@@ -160,8 +160,8 @@ export const importLicencePlateOwnership = (batchID, ownershipData, sessionUser)
         };
     }
     database
-        .prepare('delete from LicencePlateLookupErrorLog where batchID = ?')
-        .run(batchID);
+        .prepare('delete from LicencePlateLookupErrorLog where batchId = ?')
+        .run(batchId);
     let rowCount = 0;
     let errorCount = 0;
     let insertedErrorCount = 0;
@@ -176,12 +176,12 @@ export const importLicencePlateOwnership = (batchID, ownershipData, sessionUser)
                 errorCount += 1;
                 insertedErrorCount += database
                     .prepare(`insert or ignore into LicencePlateLookupErrorLog (
-              batchID, logIndex, licencePlateCountry, licencePlateProvince, licencePlateNumber,
+              batchId, logIndex, licencePlateCountry, licencePlateProvince, licencePlateNumber,
               recordDate, errorCode, errorMessage,
               recordCreate_userName, recordCreate_timeMillis,
               recordUpdate_userName, recordUpdate_timeMillis) 
             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-                    .run(batchID, errorCount, 'CA', 'ON', recordRow.licencePlateNumber, headerRow.recordDate, recordRow.errorCode, recordRow.errorMessage, sessionUser.userName, rightNowMillis, sessionUser.userName, rightNowMillis).changes;
+                    .run(batchId, errorCount, 'CA', 'ON', recordRow.licencePlateNumber, headerRow.recordDate, recordRow.errorCode, recordRow.errorMessage, sessionUser.userName, rightNowMillis, sessionUser.userName, rightNowMillis).changes;
             }
             if (recordRow.ownerName1 !== '') {
                 recordCount += 1;
@@ -203,8 +203,8 @@ export const importLicencePlateOwnership = (batchID, ownershipData, sessionUser)
         ' set receivedDate = ?,' +
         ' recordUpdate_userName = ?,' +
         ' recordUpdate_timeMillis = ?' +
-        ' where batchID = ?')
-        .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchID);
+        ' where batchId = ?')
+        .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchId);
     database.close();
     return {
         success: true,
@@ -221,7 +221,7 @@ function exportBatch(sentDate, includeLabels, batchEntries) {
     let recordCount = 0;
     const authorizedUserPadded = (getConfigProperty('mtoExportImport.authorizedUser') + '    ').slice(0, 4);
     for (const entry of batchEntries) {
-        if (entry.ticketID === null) {
+        if (entry.ticketId === null) {
             continue;
         }
         recordCount += 1;
@@ -246,8 +246,8 @@ function exportBatch(sentDate, includeLabels, batchEntries) {
     output += 'PKTZ' + recordCountPadded + newline;
     return output;
 }
-export function exportLicencePlateBatch(batchID, sessionUser) {
-    markLookupBatchAsSent(batchID, sessionUser);
-    const batch = getLookupBatch(batchID);
+export function exportLicencePlateBatch(batchId, sessionUser) {
+    markLookupBatchAsSent(batchId, sessionUser);
+    const batch = getLookupBatch(batchId);
     return exportBatch(batch.sentDate, batch.mto_includeLabels, batch.batchEntries);
 }

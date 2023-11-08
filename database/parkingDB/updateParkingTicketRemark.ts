@@ -18,7 +18,7 @@ export const updateParkingTicketRemark = (
         remark = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and remarkIndex = ?
         and recordDelete_timeMillis is null`
     )
@@ -28,7 +28,7 @@ export const updateParkingTicketRemark = (
       requestBody.remark,
       sessionUser.userName,
       Date.now(),
-      requestBody.ticketID,
+      requestBody.ticketId,
       requestBody.remarkIndex
     )
 

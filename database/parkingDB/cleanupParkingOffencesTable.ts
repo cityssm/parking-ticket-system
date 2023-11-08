@@ -7,21 +7,20 @@ export const cleanupParkingOffencesTable = (): boolean => {
 
   const recordsToDelete = database
     .prepare(
-      'select o.bylawNumber, o.locationKey' +
-        ' from ParkingOffences o' +
-        ' where isActive = 0' +
-        (' and not exists (' +
-          'select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)')
+      `select o.bylawNumber, o.locationKey
+        from ParkingOffences o
+        where isActive = 0
+        and not exists (select 1 from ParkingTickets t where o.bylawNumber = t.bylawNumber and o.locationKey = t.locationKey)`
     )
     .all() as Array<{ bylawNumber: string; locationKey: string }>
 
   for (const record of recordsToDelete) {
     database
       .prepare(
-        'delete from ParkingOffences' +
-          ' where bylawNumber = ?' +
-          ' and locationKey = ?' +
-          ' and isActive = 0'
+        `delete from ParkingOffences
+          where bylawNumber = ?
+          and locationKey = ?
+          and isActive = 0`
       )
       .run(record.bylawNumber, record.locationKey)
   }

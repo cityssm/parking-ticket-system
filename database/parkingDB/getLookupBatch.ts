@@ -17,31 +17,31 @@ export interface LookupBatchReturn {
 }
 
 export const getLookupBatch = (
-  batchID_or_negOne: number
+  batchId_or_negOne: number
 ): LicencePlateLookupBatch | undefined => {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
-  const baseBatchSQL = `select batchID, batchDate, lockDate, sentDate, receivedDate, mto_includeLabels,
+  const baseBatchSQL = `select batchId, batchDate, lockDate, sentDate, receivedDate, mto_includeLabels,
     recordCreate_userName, recordCreate_timeMillis,
     recordUpdate_userName, recordUpdate_timeMillis
     from LicencePlateLookupBatches
     where recordDelete_timeMillis is null`
 
   const batch =
-    batchID_or_negOne === -1
+    batchId_or_negOne === -1
       ? (database
           .prepare(
             `${baseBatchSQL}
               and lockDate is null
-              order by batchID desc
+              order by batchId desc
               limit 1`
           )
           .get() as LicencePlateLookupBatch)
       : (database
-          .prepare(`${baseBatchSQL} and batchID = ?`)
-          .get(batchID_or_negOne) as LicencePlateLookupBatch)
+          .prepare(`${baseBatchSQL} and batchId = ?`)
+          .get(batchId_or_negOne) as LicencePlateLookupBatch)
 
   if (batch === undefined) {
     database.close()
@@ -62,13 +62,13 @@ export const getLookupBatch = (
   batch.batchEntries = database
     .prepare(
       `select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber,
-        e.ticketID, t.ticketNumber, t.issueDate
+        e.ticketId, t.ticketNumber, t.issueDate
         from LicencePlateLookupBatchEntries e
-        left join ParkingTickets t on e.ticketID = t.ticketID
-        where e.batchID = ?
+        left join ParkingTickets t on e.ticketId = t.ticketId
+        where e.batchId = ?
         order by e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber`
     )
-    .all(batch.batchID) as LicencePlateLookupBatchEntry[]
+    .all(batch.batchId) as LicencePlateLookupBatchEntry[]
 
   database.close()
 

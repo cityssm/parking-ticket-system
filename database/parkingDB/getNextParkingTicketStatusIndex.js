@@ -1,9 +1,9 @@
-export const getNextParkingTicketStatusIndex = (ticketID, database) => {
+export const getNextParkingTicketStatusIndex = (ticketId, database) => {
     return (database
         .prepare(`select ifnull(max(statusIndex), 0) as statusIndexMax
           from ParkingTicketStatusLog
-          where ticketID = ?`)
+          where ticketId = ?`)
         .pluck()
-        .get(ticketID) + 1);
+        .get(ticketId) + 1);
 };
 export default getNextParkingTicketStatusIndex;

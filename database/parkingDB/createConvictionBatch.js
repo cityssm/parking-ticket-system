@@ -16,7 +16,7 @@ export const createConvictionBatch = (sessionUser) => {
             success: true,
             batch: {
                 recordType: 'batch',
-                batchID: info.lastInsertRowid,
+                batchId: info.lastInsertRowid,
                 batchDate: dateTimeFns.dateToInteger(rightNow),
                 batchDateString: dateTimeFns.dateToString(rightNow),
                 lockDate: undefined,

@@ -22,7 +22,7 @@ function getModelsByMakeFromDB(
 ): NHTSAMakeModel[] {
   return database
     .prepare(
-      `select makeID, makeName, modelID, modelName
+      `select makeId, makeName, modelId, modelName
         from MakeModel
         where instr(lower(makeName), ?)
         and recordDelete_timeMillis is null
@@ -111,7 +111,7 @@ export async function getModelsByMake(
       .run(data.Count, makeSearchString)
 
     const insertSQL = `insert or ignore into MakeModel (
-      makeID, makeName, modelID, modelName,
+      makeId, makeName, modelId, modelName,
       recordCreate_timeMillis, recordUpdate_timeMillis)
       values (?, ?, ?, ?, ?, ?)`
 

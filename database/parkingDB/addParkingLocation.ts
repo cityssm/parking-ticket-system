@@ -37,9 +37,9 @@ export function addParkingLocation(
 
   const info = database
     .prepare(
-      'insert into ParkingLocations (' +
-        'locationKey, locationName, locationClassKey, orderNumber, isActive)' +
-        ' values (?, ?, ?, 0, 1)'
+      `insert into ParkingLocations (
+        locationKey, locationName, locationClassKey, orderNumber, isActive)
+        values (?, ?, ?, 0, 1)`
     )
     .run(
       requestBody.locationKey,

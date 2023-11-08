@@ -9,12 +9,12 @@ const upload = multer({ storage })
 export const uploadHandler = upload.single('importFile')
 
 export const handler: RequestHandler = (request, response) => {
-  const batchID = request.body.batchID
+  const batchId = request.body.batchId
 
   const ownershipData = request.file?.buffer.toString() ?? ''
 
   const results = mtoFunctions.importLicencePlateOwnership(
-    batchID,
+    batchId,
     ownershipData,
     request.session.user as PTSUser
   )

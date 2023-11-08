@@ -5,14 +5,14 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import { isConvictionBatchUpdatable } from './isConvictionBatchUpdatable.js'
 
 export const clearConvictionBatch = (
-  batchID: number,
+  batchId: number,
   sessionUser: PTSUser
 ): { success: boolean; message?: string } => {
   const database = sqlite(databasePath)
 
   // Ensure batch is not locked
 
-  const batchIsAvailable = isConvictionBatchUpdatable(batchID, database)
+  const batchIsAvailable = isConvictionBatchUpdatable(batchId, database)
 
   if (!batchIsAvailable) {
     database.close()
@@ -36,7 +36,7 @@ export const clearConvictionBatch = (
         and statusKey in ('convicted', 'convictionBatch')
         and statusField = ?`
     )
-    .run(sessionUser.userName, rightNowMillis, batchID.toString())
+    .run(sessionUser.userName, rightNowMillis, batchId.toString())
 
   database.close()
 

@@ -3,10 +3,10 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const markConvictionBatchAsSent = (
-  batchID: number,
+export function markConvictionBatchAsSent(
+  batchId: number,
   sessionUser: PTSUser
-): boolean => {
+): boolean {
   const database = sqlite(databasePath)
 
   const rightNow = new Date()
@@ -17,7 +17,7 @@ export const markConvictionBatchAsSent = (
         set sentDate = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is not null
         and sentDate is null`
@@ -26,7 +26,7 @@ export const markConvictionBatchAsSent = (
       dateTimeFns.dateToInteger(rightNow),
       sessionUser.userName,
       rightNow.getTime(),
-      batchID
+      batchId
     )
 
   database
@@ -38,7 +38,7 @@ export const markConvictionBatchAsSent = (
         where resolvedDate is null
         and exists (
           select 1 from ParkingTicketStatusLog s
-          where ParkingTickets.ticketID = s.ticketID
+          where ParkingTickets.ticketId = s.ticketId
           and s.recordDelete_timeMillis is null
           and s.statusField = ?)`
     )
@@ -46,7 +46,7 @@ export const markConvictionBatchAsSent = (
       dateTimeFns.dateToInteger(rightNow),
       sessionUser.userName,
       rightNow.getTime(),
-      batchID.toString()
+      batchId.toString()
     )
 
   database.close()

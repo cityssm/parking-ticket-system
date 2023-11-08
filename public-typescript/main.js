@@ -189,8 +189,8 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
         var _a;
         clickEvent.preventDefault();
         const href = clickEvent.currentTarget.href;
-        const divID = href.slice(Math.max(0, href.indexOf('#') + 1));
-        (_a = document.querySelector(`#${divID}`)) === null || _a === void 0 ? void 0 : _a.classList.toggle('is-hidden');
+        const divId = href.slice(Math.max(0, href.indexOf('#') + 1));
+        (_a = document.querySelector(`#${divId}`)) === null || _a === void 0 ? void 0 : _a.classList.toggle('is-hidden');
     }
     pts.initializeToggleHiddenLinks = (searchContainerElement) => {
         const linkElements = searchContainerElement.querySelectorAll('.is-toggle-hidden-link');

@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export function isParkingTicketConvicted(
-  ticketID: number,
+  ticketId: number,
   connectedDatabase?: sqlite.Database
 ): boolean {
   const database = connectedDatabase ?? sqlite(databasePath)
@@ -13,11 +13,11 @@ export function isParkingTicketConvicted(
       `select statusIndex
         from ParkingTicketStatusLog
         where recordDelete_timeMillis is null
-        and ticketID = ?
+        and ticketId = ?
         and statusKey = 'convicted'`
     )
     .pluck()
-    .get(ticketID) as number | undefined
+    .get(ticketId) as number | undefined
 
   if (connectedDatabase === undefined) {
     database.close()

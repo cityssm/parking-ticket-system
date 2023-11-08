@@ -1,13 +1,13 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const canParkingTicketBeAddedToConvictionBatch = (ticketID, connectedDatabase) => {
+export const canParkingTicketBeAddedToConvictionBatch = (ticketId, connectedDatabase) => {
     const database = connectedDatabase ?? sqlite(databasePath);
     const resolvedDate = database
         .prepare(`select resolvedDate from ParkingTickets
-        where ticketID = ?
+        where ticketId = ?
         and recordDelete_timeMillis is null`)
         .pluck()
-        .get(ticketID);
+        .get(ticketId);
     if (connectedDatabase === undefined) {
         database.close();
     }

@@ -333,9 +333,9 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
     clickEvent.preventDefault()
 
     const href = (clickEvent.currentTarget as HTMLAnchorElement).href
-    const divID = href.slice(Math.max(0, href.indexOf('#') + 1))
+    const divId = href.slice(Math.max(0, href.indexOf('#') + 1))
 
-    document.querySelector(`#${divID}`)?.classList.toggle('is-hidden')
+    document.querySelector(`#${divId}`)?.classList.toggle('is-hidden')
   }
 
   pts.initializeToggleHiddenLinks = (searchContainerElement) => {

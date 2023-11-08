@@ -1,4 +1,4 @@
-export declare const restoreParkingTicket: (ticketID: number, sessionUser: PTSUser) => {
+export declare const restoreParkingTicket: (ticketId: number, sessionUser: PTSUser) => {
     success: boolean;
 };
 export default restoreParkingTicket;

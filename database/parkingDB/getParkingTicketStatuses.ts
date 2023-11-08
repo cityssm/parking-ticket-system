@@ -6,7 +6,7 @@ import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
 export const getParkingTicketStatuses = (
-  ticketID: number,
+  ticketId: number,
   sessionUser: PTSUser,
   connectedDatabase?: sqlite.Database
 ): ParkingTicketStatusLog[] => {
@@ -16,10 +16,10 @@ export const getParkingTicketStatuses = (
     .prepare(
       `select * from ParkingTicketStatusLog
         where recordDelete_timeMillis is null
-        and ticketID = ?
+        and ticketId = ?
         order by statusDate desc, statusTime desc, statusIndex desc`
     )
-    .all(ticketID) as ParkingTicketStatusLog[]
+    .all(ticketId) as ParkingTicketStatusLog[]
 
   for (const status of statusRows) {
     status.recordType = 'status'

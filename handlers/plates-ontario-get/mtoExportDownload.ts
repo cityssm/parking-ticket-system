@@ -3,16 +3,16 @@ import type { RequestHandler } from 'express'
 import * as mtoFunctions from '../../helpers/functions.mto.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const batchID = Number.parseInt(request.params.batchID, 10)
+  const batchId = Number.parseInt(request.params.batchId, 10)
 
   const output = mtoFunctions.exportLicencePlateBatch(
-    batchID,
+    batchId,
     request.session.user as PTSUser
   )
 
   response.setHeader(
     'Content-Disposition',
-    `attachment; filename=lookupBatch-${batchID.toString()}.txt`
+    `attachment; filename=lookupBatch-${batchId.toString()}.txt`
   )
   response.setHeader('Content-Type', 'text/plain')
 

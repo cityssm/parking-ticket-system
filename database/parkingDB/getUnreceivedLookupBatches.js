@@ -6,15 +6,15 @@ export function getUnreceivedLookupBatches(includeUnlocked) {
         readonly: true
     });
     const batches = database
-        .prepare(`select b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels,
-        count(e.batchID) as batchEntryCount
+        .prepare(`select b.batchId, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels,
+        count(e.batchId) as batchEntryCount
         from LicencePlateLookupBatches b
-        left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID
+        left join LicencePlateLookupBatchEntries e on b.batchId = e.batchId
         where b.recordDelete_timeMillis is null
         and b.receivedDate is null
         ${includeUnlocked ? '' : ' and b.lockDate is not null'}
-        group by b.batchID, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels
-        order by b.batchID desc`)
+        group by b.batchId, b.batchDate, b.lockDate, b.sentDate, b.mto_includeLabels
+        order by b.batchId desc`)
         .all();
     database.close();
     for (const batch of batches) {

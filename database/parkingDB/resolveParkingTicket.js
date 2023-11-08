@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function resolveParkingTicket(ticketID, sessionUser, connectedDatabase) {
+export function resolveParkingTicket(ticketId, sessionUser, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath);
     const rightNow = new Date();
     const info = database
@@ -9,10 +9,10 @@ export function resolveParkingTicket(ticketID, sessionUser, connectedDatabase) {
         set resolvedDate = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and resolvedDate is null
         and recordDelete_timeMillis is null`)
-        .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), ticketID);
+        .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), ticketId);
     if (connectedDatabase === undefined) {
         database.close();
     }

@@ -19,9 +19,9 @@ export const initNHTSADB = () => {
             .run();
         nhtsaDB
             .prepare(`create table if not exists MakeModel (
-          makeID integer,
+          makeId integer,
           makeName varchar(50),
-          modelID integer,
+          modelId integer,
           modelName varchar(50),
           recordCreate_timeMillis integer not null,
           recordUpdate_timeMillis integer not null,

@@ -8,7 +8,7 @@ import * as handler_doMTOImportUpload from '../handlers/plates-ontario-post/doMT
 export const router = Router();
 router.get('/mtoExport', permissionHandlers.updateOrOperatorGetHandler, handler_mtoExport);
 router.post('/doGetParkingTicketsAvailableForMTOLookup', permissionHandlers.updatePostHandler, handler_doGetTicketsAvailableForMTOLookup);
-router.get('/mtoExport/:batchID', permissionHandlers.updateOrOperatorGetHandler, handler_mtoExportDownload);
+router.get('/mtoExport/:batchId', permissionHandlers.updateOrOperatorGetHandler, handler_mtoExportDownload);
 router.get('/mtoImport', permissionHandlers.updateOrOperatorGetHandler, handler_mtoImport);
 router.post('/doMTOImportUpload', permissionHandlers.updateOrOperatorPostHandler, handler_doMTOImportUpload.uploadHandler, handler_doMTOImportUpload.handler);
 export default router;

@@ -1,14 +1,14 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
-export const unresolveParkingTicket = (ticketID, sessionUser) => {
+export const unresolveParkingTicket = (ticketId, sessionUser) => {
     const database = sqlite(databasePath);
     const ticketObject = database
         .prepare(`select recordUpdate_timeMillis from ParkingTickets
-        where ticketID = ?
+        where ticketId = ?
         and recordDelete_timeMillis is null
         and resolvedDate is not null`)
-        .get(ticketID);
+        .get(ticketId);
     if (ticketObject === undefined) {
         database.close();
         return {
@@ -30,10 +30,10 @@ export const unresolveParkingTicket = (ticketID, sessionUser) => {
         set resolvedDate = null,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and resolvedDate is not null
         and recordDelete_timeMillis is null`)
-        .run(sessionUser.userName, Date.now(), ticketID);
+        .run(sessionUser.userName, Date.now(), ticketId);
     database.close();
     return {
         success: info.changes > 0

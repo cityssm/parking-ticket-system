@@ -6,7 +6,7 @@ import type { ParkingTicketRemark } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
 export function getParkingTicketRemarks(
-  ticketID: number,
+  ticketId: number,
   sessionUser: PTSUser,
   connectedDatabase?: sqlite.Database
 ): ParkingTicketRemark[] {
@@ -16,10 +16,10 @@ export function getParkingTicketRemarks(
     .prepare(
       `select * from ParkingTicketRemarks
         where recordDelete_timeMillis is null
-        and ticketID = ?
+        and ticketId = ?
         order by remarkDate desc, remarkTime desc, remarkIndex desc`
     )
-    .all(ticketID) as ParkingTicketRemark[]
+    .all(ticketId) as ParkingTicketRemark[]
 
   for (const remark of remarkRows) {
     remark.recordType = 'remark'

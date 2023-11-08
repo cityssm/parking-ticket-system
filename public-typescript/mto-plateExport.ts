@@ -1,32 +1,19 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
 /* eslint-disable no-extra-semi */
-/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 import type {
   LicencePlateLookupBatch,
+  LicencePlateLookupBatchEntry,
   ParkingTicket
 } from '../types/recordTypes.js'
 
 declare const cityssm: cityssmGlobal
-
-interface AvailableLicencePlate {
-  licencePlateNumber: string
-  ticketIDMin: number
-  ticketCount: number
-  issueDateMin: number
-  issueDateMinString: string
-  issueDateMax: number
-  issueDateMaxString: string
-  ticketNumbersConcat: string
-  ticketNumbers: string[]
-}
-
 ;(() => {
   const canUpdate = document.querySelector('main')?.dataset.canUpdate === 'true'
 
-  let batchID = -1
+  let batchId = -1
   let batchIsLocked = true
   let batchIncludesLabels = false
   let batchIsSent = false
@@ -36,6 +23,7 @@ interface AvailableLicencePlate {
   const availableIssueDaysAgoElement = document.querySelector(
     '#available--issueDaysAgo'
   ) as HTMLSelectElement
+
   const availableTicketsContainerElement = document.querySelector(
     '#is-available-tickets-container'
   ) as HTMLElement
@@ -46,9 +34,9 @@ interface AvailableLicencePlate {
 
   let availableTicketsList: ParkingTicket[] = []
 
-  let batchEntriesList = []
+  let batchEntriesList: LicencePlateLookupBatchEntry[] = []
 
-  function clickFunction_addParkingTicketToBatch(clickEvent: Event): void {
+  function addParkingTicketToBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
@@ -65,13 +53,18 @@ interface AvailableLicencePlate {
     cityssm.postJSON(
       '/plates/doAddLicencePlateToLookupBatch',
       {
-        batchID,
+        batchId,
         licencePlateCountry: 'CA',
         licencePlateProvince: 'ON',
         licencePlateNumber: ticketRecord.licencePlateNumber,
-        ticketID: ticketRecord.ticketID
+        ticketId: ticketRecord.ticketId
       },
-      (responseJSON: { success: boolean; batch?: LicencePlateLookupBatch }) => {
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as {
+          success: boolean
+          batch?: LicencePlateLookupBatch
+        }
+
         if (responseJSON.success) {
           // Remove element from available list
           ticketContainerElement.remove()
@@ -79,7 +72,7 @@ interface AvailableLicencePlate {
           // Set tombstone in available plates list
           availableTicketsList[recordIndex] = undefined
 
-          function_populateBatchView(responseJSON.batch)
+          populateBatchView(responseJSON.batch)
         } else {
           buttonElement.removeAttribute('disabled')
         }
@@ -87,13 +80,13 @@ interface AvailableLicencePlate {
     )
   }
 
-  function clickFunction_removeParkingTicketFromBatch(clickEvent: Event): void {
+  function removeParkingTicketFromBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
     buttonElement.setAttribute('disabled', 'disabled')
 
-    const recordIndex = Number.parseInt(buttonElement.dataset.index, 10)
+    const recordIndex = Number.parseInt(buttonElement.dataset.index ?? '-1', 10)
 
     const batchEntry = batchEntriesList[recordIndex]
 
@@ -102,8 +95,8 @@ interface AvailableLicencePlate {
     cityssm.postJSON(
       '/plates/doRemoveLicencePlateFromLookupBatch',
       {
-        batchID,
-        ticketID: batchEntry.ticketID,
+        batchId,
+        ticketId: batchEntry.ticketId,
         licencePlateCountry: 'CA',
         licencePlateProvince: 'ON',
         licencePlateNumber: batchEntry.licencePlateNumber
@@ -113,7 +106,7 @@ interface AvailableLicencePlate {
           // Remove element from list
           entryContainerElement.remove()
 
-          function_refreshAvailableTickets()
+          refreshAvailableTickets()
         } else {
           buttonElement.removeAttribute('disabled')
         }
@@ -121,22 +114,22 @@ interface AvailableLicencePlate {
     )
   }
 
-  function clickFunction_clearBatch(clickEvent: Event): void {
+  function clearBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    const clearFunction = () => {
+    function clearFunction(): void {
       cityssm.postJSON(
         '/plates/doClearLookupBatch',
         {
-          batchID
+          batchId
         },
         (responseJSON: {
           success: boolean
           batch?: LicencePlateLookupBatch
         }) => {
           if (responseJSON.success) {
-            function_populateBatchView(responseJSON.batch)
-            function_refreshAvailableTickets()
+            populateBatchView(responseJSON.batch)
+            refreshAvailableTickets()
           }
         }
       )
@@ -151,11 +144,11 @@ interface AvailableLicencePlate {
     )
   }
 
-  const clickFunction_downloadBatch = (clickEvent: Event) => {
+  function downloadBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    const downloadFunction = () => {
-      window.open('/plates-ontario/mtoExport/' + batchID.toString())
+    function downloadFunction(): void {
+      window.open('/plates-ontario/mtoExport/' + batchId.toString())
       batchIsSent = true
     }
 
@@ -174,7 +167,7 @@ interface AvailableLicencePlate {
     )
   }
 
-  const function_populateAvailableTicketsView = () => {
+  function populateAvailableTicketsView(): void {
     cityssm.clearElement(availableTicketsContainerElement)
 
     const resultsPanelElement = document.createElement('div')
@@ -185,7 +178,7 @@ interface AvailableLicencePlate {
       .trim()
       .split(' ')
 
-    const includedTicketIDs = []
+    const includedTicketIds = []
 
     for (const [recordIndex, ticketRecord] of availableTicketsList.entries()) {
       // Tombstone record
@@ -208,7 +201,7 @@ interface AvailableLicencePlate {
         continue
       }
 
-      includedTicketIDs.push(ticketRecord.ticketID)
+      includedTicketIds.push(ticketRecord.ticketId)
 
       const resultElement = document.createElement('div')
       resultElement.className = 'panel-block is-block is-ticket-container'
@@ -237,7 +230,7 @@ interface AvailableLicencePlate {
         '<div class="level-left"><div class="tags">' +
         '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
         ' href="/tickets/' +
-        encodeURIComponent(ticketRecord.ticketID) +
+        encodeURIComponent(ticketRecord.ticketId) +
         '" target="_blank">' +
         cityssm.escapeHTML(ticketRecord.ticketNumber) +
         '</a>' +
@@ -249,12 +242,12 @@ interface AvailableLicencePlate {
 
       resultElement
         .querySelector('button')
-        .addEventListener('click', clickFunction_addParkingTicketToBatch)
+        ?.addEventListener('click', addParkingTicketToBatch)
 
       resultsPanelElement.append(resultElement)
     }
 
-    if (includedTicketIDs.length > 0) {
+    if (includedTicketIds.length > 0) {
       const addAllButtonElement = document.createElement('button')
       addAllButtonElement.className = 'button is-fullwidth mb-3'
       addAllButtonElement.dataset.cy = 'add-tickets'
@@ -263,26 +256,25 @@ interface AvailableLicencePlate {
         '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
         ('<span>' +
           'Add ' +
-          includedTicketIDs.length.toString() +
+          includedTicketIds.length.toString() +
           ' Parking Ticket' +
-          (includedTicketIDs.length === 1 ? '' : 's') +
+          (includedTicketIds.length === 1 ? '' : 's') +
           '</span>')
 
       addAllButtonElement.addEventListener('click', () => {
         cityssm.openHtmlModal('loading', {
           onshown(_modalElement, closeModalFunction) {
-            document.querySelector('#is-loading-modal-message').textContent =
-              'Adding ' +
-              includedTicketIDs.length.toString() +
-              ' Parking Ticket' +
-              (includedTicketIDs.length === 1 ? '' : 's') +
-              '...'
+            document.querySelector(
+              '#is-loading-modal-message'
+            ).textContent = `Adding
+              ${includedTicketIds.length.toString()}
+              Parking Ticket${includedTicketIds.length === 1 ? '' : 's'}...`
 
             cityssm.postJSON(
               '/plates/doAddAllParkingTicketsToLookupBatch',
               {
-                batchID,
-                ticketIDs: includedTicketIDs
+                batchId,
+                ticketIds: includedTicketIds
               },
               (resultJSON: {
                 success: boolean
@@ -291,8 +283,8 @@ interface AvailableLicencePlate {
                 closeModalFunction()
 
                 if (resultJSON.success) {
-                  function_populateBatchView(resultJSON.batch)
-                  function_refreshAvailableTickets()
+                  populateBatchView(resultJSON.batch)
+                  refreshAvailableTickets()
                 }
               }
             )
@@ -304,59 +296,56 @@ interface AvailableLicencePlate {
 
       availableTicketsContainerElement.append(resultsPanelElement)
     } else {
-      availableTicketsContainerElement.innerHTML =
-        '<div class="message is-info">' +
-        '<div class="message-body">There are no parking tickets that meet your search criteria.</div>' +
-        '</div>'
+      availableTicketsContainerElement.innerHTML = `<div class="message is-info">
+        <div class="message-body">There are no parking tickets that meet your search criteria.</div>
+        </div>`
     }
   }
 
-  const function_refreshAvailableTickets = () => {
+  function refreshAvailableTickets(): void {
     if (batchIsLocked) {
-      availableTicketsContainerElement.innerHTML =
-        '<div class="message is-info">' +
-        '<div class="message-body">Parking Tickets cannot be added to a locked batch.</div>' +
-        '</div>'
+      availableTicketsContainerElement.innerHTML = `<div class="message is-info">
+        <div class="message-body">Parking Tickets cannot be added to a locked batch.</div>
+        </div>`
 
       return
     }
 
-    availableTicketsContainerElement.innerHTML =
-      '<p class="has-text-centered has-text-grey-lighter">' +
-      '<i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />' +
-      '<em>Loading parking tickets...' +
-      '</p>'
+    availableTicketsContainerElement.innerHTML = `<p class="has-text-centered has-text-grey-lighter">
+      <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
+      <em>Loading parking tickets...</em>
+      </p>`
 
     cityssm.postJSON(
       '/plates-ontario/doGetParkingTicketsAvailableForMTOLookup',
       {
-        batchID,
+        batchId,
         issueDaysAgo: availableIssueDaysAgoElement.value
       },
       (responseJSON: { tickets: ParkingTicket[] }) => {
         availableTicketsList = responseJSON.tickets
-        function_populateAvailableTicketsView()
+        populateAvailableTicketsView()
       }
     )
   }
 
   document
     .querySelector('#is-more-available-filters-toggle')
-    .addEventListener('click', (clickEvent) => {
+    ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
       document
         .querySelector('#is-more-available-filters')
-        .classList.toggle('is-hidden')
+        ?.classList.toggle('is-hidden')
     })
 
   licencePlateNumberFilterElement.addEventListener(
     'keyup',
-    function_populateAvailableTicketsView
+    populateAvailableTicketsView
   )
 
   availableIssueDaysAgoElement.addEventListener(
     'change',
-    function_refreshAvailableTickets
+    refreshAvailableTickets
   )
 
   // Current Batch
@@ -367,8 +356,8 @@ interface AvailableLicencePlate {
     '#is-batch-entries-container'
   ) as HTMLElement
 
-  const function_populateBatchView = (batch: LicencePlateLookupBatch) => {
-    batchID = batch.batchID
+  function populateBatchView(batch: LicencePlateLookupBatch): void {
+    batchId = batch.batchId
     batchEntriesList = batch.batchEntries
 
     batchIsLocked = batch.lockDateString !== ''
@@ -383,9 +372,9 @@ interface AvailableLicencePlate {
       }
     }
 
-    document.querySelector('#batchSelector--batchID').innerHTML =
+    document.querySelector('#batchSelector--batchId').innerHTML =
       'Batch #' +
-      batch.batchID.toString() +
+      batch.batchId.toString() +
       '<br />' +
       (batchIncludesLabels
         ? '<span class="tag is-light">' +
@@ -451,7 +440,7 @@ interface AvailableLicencePlate {
         '</div>' +
         '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
         ' href="/tickets/' +
-        encodeURIComponent(batchEntry.ticketID) +
+        encodeURIComponent(batchEntry.ticketId) +
         '" target="_blank">' +
         cityssm.escapeHTML(batchEntry.ticketNumber) +
         '</a>'
@@ -459,7 +448,7 @@ interface AvailableLicencePlate {
       if (!batchIsLocked) {
         panelBlockElement
           .querySelector('button')
-          .addEventListener('click', clickFunction_removeParkingTicketFromBatch)
+          ?.addEventListener('click', removeParkingTicketFromBatch)
       }
 
       panelElement.append(panelBlockElement)
@@ -468,24 +457,19 @@ interface AvailableLicencePlate {
     if (batchIsLocked) {
       const downloadFileButtonElement = document.createElement('button')
       downloadFileButtonElement.className = 'button is-fullwidth mb-3'
-      downloadFileButtonElement.innerHTML =
-        '<span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>' +
-        '<span>Download File for MTO</span>'
+      downloadFileButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>
+        <span>Download File for MTO</span>`
 
-      downloadFileButtonElement.addEventListener(
-        'click',
-        clickFunction_downloadBatch
-      )
+      downloadFileButtonElement.addEventListener('click', downloadBatch)
 
       batchEntriesContainerElement.append(downloadFileButtonElement)
 
       batchEntriesContainerElement.insertAdjacentHTML(
         'beforeend',
-        '<a class="button is-fullwidth mb-3" href="https://www.aris.mto.gov.on.ca/edtW/login/login.jsp"' +
-          ' target="_blank" rel="noreferrer">' +
-          '<span class="icon is-small"><i class="fas fa-building" aria-hidden="true"></i></span>' +
-          '<span>MTO ARIS Login</span>' +
-          '</a>'
+        `<a class="button is-fullwidth mb-3" href="https://www.aris.mto.gov.on.ca/edtW/login/login.jsp" target="_blank" rel="noreferrer">
+          <span class="icon is-small"><i class="fas fa-building" aria-hidden="true"></i></span>
+          <span>MTO ARIS Login</span>
+          </a>`
       )
     } else {
       const clearAllButtonElement = document.createElement('button')
@@ -495,7 +479,7 @@ interface AvailableLicencePlate {
         '<span class="icon is-small"><i class="fas fa-broom" aria-hidden="true"></i></span>' +
         '<span>Clear Batch</span>'
 
-      clearAllButtonElement.addEventListener('click', clickFunction_clearBatch)
+      clearAllButtonElement.addEventListener('click', clearBatch)
 
       batchEntriesContainerElement.append(clearAllButtonElement)
     }
@@ -503,23 +487,23 @@ interface AvailableLicencePlate {
     batchEntriesContainerElement.append(panelElement)
   }
 
-  const function_refreshBatch = () => {
+  function refreshBatch(): void {
     cityssm.postJSON(
       '/plates/doGetLookupBatch',
       {
-        batchID
+        batchId
       },
       (batch: LicencePlateLookupBatch) => {
-        function_populateBatchView(batch)
-        function_refreshAvailableTickets()
+        populateBatchView(batch)
+        refreshAvailableTickets()
       }
     )
   }
 
-  const openCreateBatchModal = () => {
+  function openCreateBatchModal(): void {
     let createCloseModal: () => void
 
-    const createFunction = (clickEvent: Event) => {
+    function createFunction(clickEvent: Event): void {
       clickEvent.preventDefault()
 
       const mto_includeLabels = (clickEvent.currentTarget as HTMLButtonElement)
@@ -536,8 +520,8 @@ interface AvailableLicencePlate {
         }) => {
           if (responseJSON.success) {
             createCloseModal()
-            function_populateBatchView(responseJSON.batch)
-            function_refreshAvailableTickets()
+            populateBatchView(responseJSON.batch)
+            refreshAvailableTickets()
           }
         }
       )
@@ -559,34 +543,34 @@ interface AvailableLicencePlate {
     })
   }
 
-  const clickFunction_openSelectBatchModal = (clickEvent: Event) => {
+  function openSelectBatchModal(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     let selectBatchCloseModalFunction: () => void
     let resultsContainerElement: HTMLDivElement
 
-    const clickFunction_selectBatch = (batchClickEvent: Event) => {
+    function selectBatch(batchClickEvent: Event): void {
       batchClickEvent.preventDefault()
 
-      batchID = Number.parseInt(
-        (batchClickEvent.currentTarget as HTMLAnchorElement).dataset.batchId,
+      batchId = Number.parseInt(
+        (batchClickEvent.currentTarget as HTMLAnchorElement).dataset.batchId ??
+          '-1',
         10
       )
 
       selectBatchCloseModalFunction()
-      function_refreshBatch()
+      refreshBatch()
     }
 
-    const function_loadBatches = () => {
+    function loadBatches(): void {
       cityssm.postJSON(
         '/plates/doGetUnreceivedLicencePlateLookupBatches',
         {},
         (batchList: LicencePlateLookupBatch[]) => {
           if (batchList.length === 0) {
-            resultsContainerElement.innerHTML =
-              '<div class="message is-info">' +
-              '<p class="message-body">There are no unsent batches available.</p>' +
-              '</div>'
+            resultsContainerElement.innerHTML = `<div class="message is-info">
+              <p class="message-body">There are no unsent batches available.</p>
+              </div>`
             return
           }
 
@@ -597,12 +581,12 @@ interface AvailableLicencePlate {
             const linkElement = document.createElement('a')
             linkElement.className = 'panel-block is-block'
             linkElement.setAttribute('href', '#')
-            linkElement.dataset.batchId = batch.batchID.toString()
+            linkElement.dataset.batchId = batch.batchId.toString()
 
             linkElement.innerHTML =
               '<div class="columns">' +
               '<div class="column is-narrow">#' +
-              batch.batchID.toString() +
+              batch.batchId.toString() +
               '</div>' +
               '<div class="column has-text-right">' +
               batch.batchDateString +
@@ -630,7 +614,7 @@ interface AvailableLicencePlate {
               '</div>' +
               '</div>'
 
-            linkElement.addEventListener('click', clickFunction_selectBatch)
+            linkElement.addEventListener('click', selectBatch)
 
             listElement.append(linkElement)
           }
@@ -646,12 +630,12 @@ interface AvailableLicencePlate {
         resultsContainerElement = modalElement.querySelector(
           '.is-results-container'
         ) as HTMLDivElement
-        function_loadBatches()
+        loadBatches()
 
         if (canUpdate) {
           const createBatchButtonElement = modalElement.querySelector(
             '.is-create-batch-button'
-          )
+          ) as HTMLElement
 
           createBatchButtonElement.classList.remove('is-hidden')
 
@@ -670,26 +654,26 @@ interface AvailableLicencePlate {
 
   document
     .querySelector('#is-select-batch-button')
-    .addEventListener('click', clickFunction_openSelectBatchModal)
+    ?.addEventListener('click', openSelectBatchModal)
 
   if (canUpdate) {
-    lockBatchButtonElement.addEventListener('click', () => {
+    lockBatchButtonElement?.addEventListener('click', () => {
       if (batchIsLocked) {
         return
       }
 
-      const lockFunction = () => {
+      function lockFunction(): void {
         cityssm.postJSON(
           '/plates/doLockLookupBatch',
           {
-            batchID
+            batchId
           },
           (responseJSON: {
             success: boolean
             batch?: LicencePlateLookupBatch
           }) => {
             if (responseJSON.success) {
-              function_populateBatchView(responseJSON.batch)
+              populateBatchView(responseJSON.batch)
             }
           }
         )
@@ -708,9 +692,9 @@ interface AvailableLicencePlate {
   }
 
   if (exports.plateExportBatch) {
-    function_populateBatchView(exports.plateExportBatch)
+    populateBatchView(exports.plateExportBatch)
     delete exports.plateExportBatch
 
-    function_refreshAvailableTickets()
+    refreshAvailableTickets()
   }
 })()

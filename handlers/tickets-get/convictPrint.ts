@@ -4,12 +4,12 @@ import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.
 import { markConvictionBatchAsSent } from '../../database/parkingDB/markConvictionBatchAsSent.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const batchID = Number.parseInt(request.params.batchID, 10)
+  const batchId = Number.parseInt(request.params.batchId, 10)
 
-  const batch = getConvictionBatch(batchID)
+  const batch = getConvictionBatch(batchId)
 
   if (batch !== undefined && batch.sentDate === undefined) {
-    markConvictionBatchAsSent(batchID, request.session.user as PTSUser)
+    markConvictionBatchAsSent(batchId, request.session.user as PTSUser)
   }
 
   response.render('ticketConvict-print', {

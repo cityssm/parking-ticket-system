@@ -2,10 +2,10 @@ import { clearConvictionBatch } from '../../database/parkingDB/clearConvictionBa
 import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js';
 import * as parkingDB_ontario from '../../database/parkingDB-ontario.js';
 export const handler = (request, response) => {
-    const batchID = request.body.batchID;
-    const result = clearConvictionBatch(batchID, request.session.user);
+    const batchId = request.body.batchId;
+    const result = clearConvictionBatch(batchId, request.session.user);
     if (result.success) {
-        result.batch = getConvictionBatch(batchID);
+        result.batch = getConvictionBatch(batchId);
         result.tickets =
             parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch();
     }

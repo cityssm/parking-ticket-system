@@ -1,2 +1,2 @@
-export declare const getParkingTicketID: (ticketNumber: string) => number | undefined;
-export default getParkingTicketID;
+export declare const getParkingTicketId: (ticketNumber: string) => number | undefined;
+export default getParkingTicketId;

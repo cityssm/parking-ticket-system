@@ -10,36 +10,34 @@ export function cleanupParkingTicketsTable(
 
   const recordsToDelete = database
     .prepare(
-      'select ticketID from ParkingTickets t' +
-        ' where t.recordDelete_timeMillis is not null' +
-        ' and t.recordDelete_timeMillis < ?' +
-        (' and not exists (' +
-          'select 1 from LicencePlateLookupBatchEntries b' +
-          ' where t.ticketID = b.ticketID)')
+      `select ticketId from ParkingTickets t
+        where t.recordDelete_timeMillis is not null
+        and t.recordDelete_timeMillis < ?
+        and not exists (select 1 from LicencePlateLookupBatchEntries b where t.ticketId = b.ticketId)`
     )
-    .all(recordDelete_timeMillis) as Array<{ ticketID: number }>
+    .all(recordDelete_timeMillis) as Array<{ ticketId: number }>
 
   for (const recordToDelete of recordsToDelete) {
     database
       .prepare(
         `delete from ParkingTicketRemarks
-          where ticketID = ?`
+          where ticketId = ?`
       )
-      .run(recordToDelete.ticketID)
+      .run(recordToDelete.ticketId)
 
     database
       .prepare(
         `delete from ParkingTicketStatusLog
-          where ticketID = ?`
+          where ticketId = ?`
       )
-      .run(recordToDelete.ticketID)
+      .run(recordToDelete.ticketId)
 
     database
       .prepare(
         `delete from ParkingTickets
-          where ticketID = ?`
+          where ticketId = ?`
       )
-      .run(recordToDelete.ticketID)
+      .run(recordToDelete.ticketId)
   }
 
   database.close()

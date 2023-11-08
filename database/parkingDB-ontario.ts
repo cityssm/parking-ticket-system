@@ -16,11 +16,11 @@ export const getParkingTicketsAvailableForMTOConvictionBatch =
 
     const parkingTickets = database
       .prepare(
-        'select t.ticketID, t.ticketNumber, t.issueDate, t.licencePlateNumber,' +
+        'select t.ticketId, t.ticketNumber, t.issueDate, t.licencePlateNumber,' +
           ' o.ownerName1 as licencePlateOwner_ownerName1' +
           ' from ParkingTickets t' +
           // Matching Ownership Record
-          (' inner join ParkingTicketStatusLog ol on t.ticketID = ol.ticketID' +
+          (' inner join ParkingTicketStatusLog ol on t.ticketId = ol.ticketId' +
             ' and ol.recordDelete_timeMillis is null' +
             " and ol.statusKey = 'ownerLookupMatch'") +
           (' left join LicencePlateOwners o' +
@@ -39,7 +39,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch =
           // Not Part of Another Conviction Batch
           (' and not exists (' +
             'select 1 from ParkingTicketStatusLog s' +
-            ' where t.ticketID = s.ticketID' +
+            ' where t.ticketId = s.ticketId' +
             ' and s.recordDelete_timeMillis is null' +
             " and s.statusKey in ('trial', 'convictionBatch')" +
             ')') +
@@ -48,7 +48,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch =
             't.resolvedDate is null' +
             ' or exists (' +
             'select 1 from ParkingTicketStatusLog s' +
-            ' where t.ticketID = s.ticketID' +
+            ' where t.ticketId = s.ticketId' +
             ' and s.recordDelete_timeMillis is null' +
             " and s.statusKey = 'convicted'" +
             ')' +

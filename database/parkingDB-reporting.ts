@@ -28,7 +28,7 @@ reportDefinitions.set('tickets-all', {
 })
 
 reportDefinitions.set('tickets-unresolved', {
-  sql: `select t.ticketID, t.ticketNumber, t.issueDate,
+  sql: `select t.ticketId, t.ticketNumber, t.issueDate,
     t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber,
     t.locationKey, l.locationName, l.locationClassKey, t.locationDescription,
     t.parkingOffence, t.offenceAmount,
@@ -39,8 +39,8 @@ reportDefinitions.set('tickets-unresolved', {
     from ParkingTickets t
     left join ParkingLocations l on t.locationKey = l.locationKey
     left join ParkingTicketStatusLog s
-      on t.ticketID = s.ticketID
-      and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)
+      on t.ticketId = s.ticketId
+      and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketId = s.ticketId order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)
     where t.recordDelete_timeMillis is null
     and t.resolvedDate is null`
 })
@@ -49,24 +49,24 @@ reportDefinitions.set('statuses-all', {
   sql: 'select * from ParkingTicketStatusLog'
 })
 
-reportDefinitions.set('statuses-byTicketID', {
+reportDefinitions.set('statuses-byTicketId', {
   sql: `select * from ParkingTicketStatusLog
     where recordDelete_timeMillis is null
-    and ticketID = ?`,
+    and ticketId = ?`,
 
-  getParams: (requestQuery) => [requestQuery.ticketID]
+  getParams: (requestQuery) => [requestQuery.ticketId]
 })
 
 reportDefinitions.set('remarks-all', {
   sql: 'select * from ParkingTicketRemarks'
 })
 
-reportDefinitions.set('remarks-byTicketID', {
+reportDefinitions.set('remarks-byTicketId', {
   sql: `select * from ParkingTicketRemarks
     where recordDelete_timeMillis is null
-    and ticketID = ?`,
+    and ticketId = ?`,
 
-  getParams: (requestQuery) => [requestQuery.ticketID]
+  getParams: (requestQuery) => [requestQuery.ticketId]
 })
 
 reportDefinitions.set('owners-all', {
@@ -76,7 +76,7 @@ reportDefinitions.set('owners-all', {
 reportDefinitions.set('owners-reconcile', {
   sql:
     'select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber,' +
-    ' t.ticketID as ticket_ticketID,' +
+    ' t.ticketId as ticket_ticketId,' +
     ' t.ticketNumber as ticket_ticketNumber,' +
     ' t.issueDate as ticket_issueDate,' +
     ' t.vehicleMakeModel as ticket_vehicleMakeModel,' +
@@ -112,7 +112,7 @@ reportDefinitions.set('owners-reconcile', {
     ' and t.resolvedDate is null' +
     (' and not exists (' +
       'select 1 from ParkingTicketStatusLog s ' +
-      ' where t.ticketID = s.ticketID ' +
+      ' where t.ticketId = s.ticketId ' +
       " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
       ' and s.recordDelete_timeMillis is null)')
 })
@@ -132,7 +132,7 @@ reportDefinitions.set('locations-all', {
 reportDefinitions.set('locations-usageByYear', {
   sql: `select l.locationKey, l.locationName, l.locationClassKey, l.isActive,
       cast(round (issueDate / 10000 - 0.5) as integer) as issueYear,
-      count(ticketID) as ticket_count,
+      count(ticketId) as ticket_count,
       min(issueDate) as issueDate_min,
       max(issueDate) as issueDate_max,
       min(offenceAmount) as offenceAmount_min,
@@ -153,7 +153,7 @@ reportDefinitions.set('bylaws-usageByYear', {
   sql: `select b.bylawNumber, b.bylawDescription,
     b.isActive,
     cast(round (issueDate / 10000 - 0.5) as integer) as issueYear,
-    count(ticketID) as ticket_count,
+    count(ticketId) as ticket_count,
     min(issueDate) as issueDate_min,
     max(issueDate) as issueDate_max,
     min(offenceAmount) as offenceAmount_min,
@@ -169,7 +169,7 @@ reportDefinitions.set('cleanup-parkingTickets', {
   sql: `select * from ParkingTickets t
       where t.recordDelete_timeMillis is not null
       and t.recordDelete_timeMillis < ?
-      and not exists (select 1 from LicencePlateLookupBatchEntries b where t.ticketID = b.ticketID)`,
+      and not exists (select 1 from LicencePlateLookupBatchEntries b where t.ticketId = b.ticketId)`,
 
   getParams: (requestQuery) => [
     getCleanupRecordDeleteTimeMillis(requestQuery.recordDelete_timeMillis)
@@ -238,18 +238,18 @@ export const getReportData = (
   // eslint-disable-next-line sonarjs/no-small-switch
   switch (reportName) {
     case 'lookupAudit': {
-      sql = `select b.batchID,
+      sql = `select b.batchId,
         sentDate as batchSentDate,
         e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber,
-        e.ticketID as ticketID, t.ticketNumber as ticketNumber
+        e.ticketId as ticketId, t.ticketNumber as ticketNumber
         from LicencePlateLookupBatches b
-        left join LicencePlateLookupBatchEntries e on b.batchID = e.batchID
-        left join ParkingTickets t on e.ticketID = t.ticketID
+        left join LicencePlateLookupBatchEntries e on b.batchId = e.batchId
+        left join ParkingTickets t on e.ticketId = t.ticketId
         where b.sentDate is not null`
 
-      if (requestQuery.batchID && requestQuery.batchID !== '') {
-        sql += ' and b.batchID = ?'
-        sqlParameters.push(requestQuery.batchID)
+      if ((requestQuery.batchId ?? '') !== '') {
+        sql += ' and b.batchId = ?'
+        sqlParameters.push(requestQuery.batchId)
       }
 
       break

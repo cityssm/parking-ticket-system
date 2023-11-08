@@ -1,4 +1,4 @@
-export declare const clearConvictionBatch: (batchID: number, sessionUser: PTSUser) => {
+export declare const clearConvictionBatch: (batchId: number, sessionUser: PTSUser) => {
     success: boolean;
     message?: string;
 };

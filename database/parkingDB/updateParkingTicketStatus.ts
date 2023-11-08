@@ -21,7 +21,7 @@ export const updateParkingTicketStatus = (
         statusNote = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and statusIndex = ?
         and recordDelete_timeMillis is null`
     )
@@ -34,7 +34,7 @@ export const updateParkingTicketStatus = (
       requestBody.statusNote,
       sessionUser.userName,
       Date.now(),
-      requestBody.ticketID,
+      requestBody.ticketId,
       requestBody.statusIndex
     )
 

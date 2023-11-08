@@ -1,7 +1,7 @@
-import type * as sqlite from 'better-sqlite3'
+import type sqlite from 'better-sqlite3'
 
 export const getNextParkingTicketStatusIndex = (
-  ticketID: number | string,
+  ticketId: number | string,
   database: sqlite.Database
 ): number => {
   return (
@@ -9,10 +9,10 @@ export const getNextParkingTicketStatusIndex = (
       .prepare(
         `select ifnull(max(statusIndex), 0) as statusIndexMax
           from ParkingTicketStatusLog
-          where ticketID = ?`
+          where ticketId = ?`
       )
       .pluck()
-      .get(ticketID) as number) + 1
+      .get(ticketId) as number) + 1
   )
 }
 

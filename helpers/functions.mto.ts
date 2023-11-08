@@ -63,7 +63,7 @@ function parsePKRA(rowData: string):
   /*
    * PKRA RECORD
    * -----------
-   * Record ID    | 4 characters               | "PKRA"
+   * Record Id    | 4 characters               | "PKRA"
    * DEST-CODE    | 4 characters               | "    "
    * BATCH-NO     | 1 character                | "1"
    * Sent Date    | 6 numbers                  | YYMMDD
@@ -141,7 +141,7 @@ export const parsePKRD = (rowData: string): false | PKRDResult => {
   /*
    * PKRD RECORD
    * -----------
-   * Record ID                 | 4 characters                  | "PKRD"
+   * Record Id                 | 4 characters                  | "PKRD"
    * Licence Plate Number      | 10 characters                 | "XXXX111   "
    * Issue Date                | 6 numbers                     | YYMMDD
    * Ticket Number             | 8 characters                  | "XX00000 "
@@ -276,7 +276,7 @@ interface ImportLicencePlateOwnershipResult {
 }
 
 export const importLicencePlateOwnership = (
-  batchID: number,
+  batchId: number,
   ownershipData: string,
   sessionUser: PTSUser
 ): ImportLicencePlateOwnershipResult => {
@@ -312,19 +312,19 @@ export const importLicencePlateOwnership = (
   const batchRow = database
     .prepare(
       `select sentDate from LicencePlateLookupBatches
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is not null
         and sentDate is not null`
     )
-    .get(batchID) as { sentDate: number } | undefined
+    .get(batchId) as { sentDate: number } | undefined
 
   if (batchRow === undefined) {
     database.close()
 
     return {
       success: false,
-      message: `Batch #${batchID.toString()} is unavailable for imports.`
+      message: `Batch #${batchId.toString()} is unavailable for imports.`
     }
   } else if (batchRow.sentDate !== headerRow.sentDate) {
     database.close()
@@ -337,8 +337,8 @@ export const importLicencePlateOwnership = (
   }
 
   database
-    .prepare('delete from LicencePlateLookupErrorLog where batchID = ?')
-    .run(batchID)
+    .prepare('delete from LicencePlateLookupErrorLog where batchId = ?')
+    .run(batchId)
 
   // Look through record rows
 
@@ -364,14 +364,14 @@ export const importLicencePlateOwnership = (
         insertedErrorCount += database
           .prepare(
             `insert or ignore into LicencePlateLookupErrorLog (
-              batchID, logIndex, licencePlateCountry, licencePlateProvince, licencePlateNumber,
+              batchId, logIndex, licencePlateCountry, licencePlateProvince, licencePlateNumber,
               recordDate, errorCode, errorMessage,
               recordCreate_userName, recordCreate_timeMillis,
               recordUpdate_userName, recordUpdate_timeMillis) 
             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
           )
           .run(
-            batchID,
+            batchId,
             errorCount,
             'CA',
             'ON',
@@ -434,9 +434,9 @@ export const importLicencePlateOwnership = (
         ' set receivedDate = ?,' +
         ' recordUpdate_userName = ?,' +
         ' recordUpdate_timeMillis = ?' +
-        ' where batchID = ?'
+        ' where batchId = ?'
     )
-    .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchID)
+    .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchId)
 
   database.close()
 
@@ -454,7 +454,7 @@ function exportBatch(
   sentDate: number,
   includeLabels: boolean,
   batchEntries: Array<{
-    ticketID?: number | string
+    ticketId?: number | string
     ticketNumber?: string
     issueDate?: number
     licencePlateNumber?: string
@@ -469,7 +469,7 @@ function exportBatch(
   /*
    * RECORD ROWS
    * -----------
-   * Record ID       | 4 characters  | "PKTD"
+   * Record Id       | 4 characters  | "PKTD"
    * Plate Number    | 10 characters | "XXXX111   "
    * Issue Date      | 6 numbers     | YYMMDD
    * Ticket Number   | 23 characters | "XX00000                  "
@@ -481,7 +481,7 @@ function exportBatch(
   ).slice(0, 4)
 
   for (const entry of batchEntries) {
-    if (entry.ticketID === null) {
+    if (entry.ticketId === null) {
       continue
     }
 
@@ -501,7 +501,7 @@ function exportBatch(
   /*
    * HEADER ROW
    * ----------
-   * Record ID    | 4 characters           | "PKTA"
+   * Record Id    | 4 characters           | "PKTA"
    * Unknown      | 5 characters           | "    1"
    * Export Date  | 6 numbers              | YYMMDD
    * Record Count | 6 numbers, zero padded | 000201
@@ -522,7 +522,7 @@ function exportBatch(
   /*
    * FOOTER ROW
    * ----------
-   * Record ID    | 4 characters           | "PKTZ"
+   * Record Id    | 4 characters           | "PKTZ"
    * Record Count | 6 numbers, zero padded | 000201
    */
 
@@ -532,12 +532,12 @@ function exportBatch(
 }
 
 export function exportLicencePlateBatch(
-  batchID: number,
+  batchId: number,
   sessionUser: PTSUser
 ): string {
-  markLookupBatchAsSent(batchID, sessionUser)
+  markLookupBatchAsSent(batchId, sessionUser)
 
-  const batch = getLookupBatch(batchID) as LicencePlateLookupBatch
+  const batch = getLookupBatch(batchId) as LicencePlateLookupBatch
 
   return exportBatch(
     batch.sentDate as number,

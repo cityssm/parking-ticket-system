@@ -1,25 +1,25 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function getConvictionBatch(batchID_or_negOne) {
+export function getConvictionBatch(batchId_or_negOne) {
     const database = sqlite(databasePath, {
         readonly: true
     });
-    const baseBatchSQL = `select batchID, batchDate, lockDate, sentDate,
+    const baseBatchSQL = `select batchId, batchDate, lockDate, sentDate,
     recordCreate_userName, recordCreate_timeMillis,
     recordUpdate_userName, recordUpdate_timeMillis
     from ParkingTicketConvictionBatches
     where recordDelete_timeMillis is null`;
-    const batch = batchID_or_negOne === -1
+    const batch = batchId_or_negOne === -1
         ? database
             .prepare(`${baseBatchSQL}
               and lockDate is null
-              order by batchID desc
+              order by batchId desc
               limit 1`)
             .get()
         : database
-            .prepare(`${baseBatchSQL} and batchID = ?`)
-            .get(batchID_or_negOne);
+            .prepare(`${baseBatchSQL} and batchId = ?`)
+            .get(batchId_or_negOne);
     if (batch === undefined) {
         database.close();
         return undefined;
@@ -30,17 +30,17 @@ export function getConvictionBatch(batchID_or_negOne) {
     batch.batchEntries = database
         .prepare(`select s.statusIndex,
         s.statusDate, s.statusTime,
-        t.ticketID, t.ticketNumber, t.issueDate,
+        t.ticketId, t.ticketNumber, t.issueDate,
         t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber,
         s.recordCreate_userName, s.recordCreate_timeMillis,
         s.recordUpdate_userName, s.recordUpdate_timeMillis
         from ParkingTicketStatusLog s
-        left join ParkingTickets t on s.ticketID = t.ticketID
+        left join ParkingTickets t on s.ticketId = t.ticketId
         where s.recordDelete_timeMillis is null
         and s.statusKey = 'convictionBatch'
         and s.statusField = ?
         order by t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber`)
-        .all(batch.batchID.toString());
+        .all(batch.batchId.toString());
     for (const batchEntry of batch.batchEntries) {
         batchEntry.statusDateString = dateTimeFns.dateIntegerToString(batchEntry.statusDate);
         batchEntry.statusTimeString = dateTimeFns.timeIntegerToString(batchEntry.statusTime);

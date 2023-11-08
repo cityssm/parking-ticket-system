@@ -11,12 +11,13 @@ export function getLastTenConvictionBatches(): ParkingTicketConvictionBatch[] {
 
   const batches = database
     .prepare(
-      `select batchID, batchDate, lockDate, sentDate,
+      `select batchId, batchDate, lockDate, sentDate,
         recordCreate_userName, recordCreate_timeMillis,
         recordUpdate_userName, recordUpdate_timeMillis
         from ParkingTicketConvictionBatches
         where recordDelete_timeMillis is null
-        order by batchID desc limit 10`
+        order by batchId desc
+        limit 10`
     )
     .all() as ParkingTicketConvictionBatch[]
 

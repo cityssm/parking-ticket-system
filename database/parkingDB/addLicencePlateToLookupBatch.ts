@@ -27,11 +27,11 @@ export const addLicencePlateToLookupBatch = (
       `update LicencePlateLookupBatches
         set recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is null`
     )
-    .run(sessionUser.userName, Date.now(), requestBody.batchID).changes
+    .run(sessionUser.userName, Date.now(), requestBody.batchId).changes
 
   if (canUpdateBatch === 0) {
     database.close()
@@ -45,17 +45,17 @@ export const addLicencePlateToLookupBatch = (
   const info = database
     .prepare(
       `insert or ignore into LicencePlateLookupBatchEntries (
-        batchID,
+        batchId,
         licencePlateCountry, licencePlateProvince, licencePlateNumber,
-        ticketID) 
+        ticketId) 
         values (?, ?, ?, ?, ?)`
     )
     .run(
-      requestBody.batchID,
+      requestBody.batchId,
       requestBody.licencePlateCountry,
       requestBody.licencePlateProvince,
       requestBody.licencePlateNumber,
-      requestBody.ticketID
+      requestBody.ticketId
     )
 
   database.close()
@@ -72,8 +72,8 @@ export const addLicencePlateToLookupBatch = (
 }
 
 interface AddAllParkingTicketsToLookupBatchBody {
-  batchID: number
-  ticketIDs: string[]
+  batchId: number
+  ticketIds: string[]
 }
 
 export const addAllParkingTicketsToLookupBatch = (
@@ -89,11 +89,11 @@ export const addAllParkingTicketsToLookupBatch = (
       `update LicencePlateLookupBatches
         set recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is null`
     )
-    .run(sessionUser.userName, Date.now(), requestBody.batchID).changes
+    .run(sessionUser.userName, Date.now(), requestBody.batchId).changes
 
   if (canUpdateBatch === 0) {
     database.close()
@@ -106,27 +106,27 @@ export const addAllParkingTicketsToLookupBatch = (
 
   const insertStmt = database.prepare(
     `insert or ignore into LicencePlateLookupBatchEntries (
-      batchID,
+      batchId,
       licencePlateCountry, licencePlateProvince, licencePlateNumber,
-      ticketID)
+      ticketId)
       
-      select ? as batchID,
+      select ? as batchId,
         licencePlateCountry, licencePlateProvince, licencePlateNumber,
-        ticketID
+        ticketId
       from ParkingTickets
       where recordDelete_timeMillis is null
-      and ticketID = ?`
+      and ticketId = ?`
   )
 
-  for (const ticketID of requestBody.ticketIDs) {
-    insertStmt.run(requestBody.batchID, ticketID)
+  for (const ticketId of requestBody.ticketIds) {
+    insertStmt.run(requestBody.batchId, ticketId)
   }
 
   database.close()
 
   return {
     success: true,
-    batch: getLookupBatch(requestBody.batchID)
+    batch: getLookupBatch(requestBody.batchId)
   }
 }
 

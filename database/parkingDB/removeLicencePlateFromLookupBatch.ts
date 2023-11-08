@@ -16,11 +16,11 @@ export const removeLicencePlateFromLookupBatch = (
       `update LicencePlateLookupBatches
         set recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is null`
     )
-    .run(sessionUser.userName, Date.now(), requestBody.batchID).changes
+    .run(sessionUser.userName, Date.now(), requestBody.batchId).changes
 
   if (canUpdateBatch === 0) {
     database.close()
@@ -34,15 +34,15 @@ export const removeLicencePlateFromLookupBatch = (
   const info = database
     .prepare(
       `delete from LicencePlateLookupBatchEntries
-        where batchID = ?
-        and ticketID = ?
+        where batchId = ?
+        and ticketId = ?
         and licencePlateCountry = ?
         and licencePlateProvince = ?
         and licencePlateNumber = ?`
     )
     .run(
-      requestBody.batchID,
-      requestBody.ticketID,
+      requestBody.batchId,
+      requestBody.ticketId,
       requestBody.licencePlateCountry,
       requestBody.licencePlateProvince,
       requestBody.licencePlateNumber

@@ -1,13 +1,13 @@
-/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
 
-import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types'
-import type * as recordTypes from '../types/recordTypes'
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
+
+import type * as recordTypes from '../types/recordTypes.js'
 
 declare const cityssm: cityssmGlobal
-
 ;(() => {
-  const ticketID = (
-    document.querySelector('#ticket--ticketID') as HTMLInputElement
+  const ticketId = (
+    document.querySelector('#ticket--ticketId') as HTMLInputElement
   ).value
 
   const remarkPanelElement = document.querySelector(
@@ -17,7 +17,7 @@ declare const cityssm: cityssmGlobal
   let remarkList: recordTypes.ParkingTicketRemark[] = exports.ticketRemarks
   delete exports.ticketRemarks
 
-  const clearRemarkPanelFunction = () => {
+  function clearRemarkPanel(): void {
     const panelBlockElements =
       remarkPanelElement.querySelectorAll('.panel-block')
 
@@ -26,7 +26,7 @@ declare const cityssm: cityssmGlobal
     }
   }
 
-  const confirmDeleteRemarkFunction = (clickEvent: Event) => {
+  function confirmDeleteRemark(clickEvent: Event): void {
     const remarkIndex = (clickEvent.currentTarget as HTMLAnchorElement).dataset
       .remarkIndex
 
@@ -39,12 +39,12 @@ declare const cityssm: cityssmGlobal
         cityssm.postJSON(
           '/tickets/doDeleteRemark',
           {
-            ticketID,
+            ticketId,
             remarkIndex
           },
           (resultJSON: { success: boolean }) => {
             if (resultJSON.success) {
-              getRemarksFunction()
+              getRemarks()
             }
           }
         )
@@ -52,7 +52,7 @@ declare const cityssm: cityssmGlobal
     )
   }
 
-  const openEditRemarkModalFunction = (clickEvent: Event) => {
+  function openEditRemarkModal(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     let editRemarkCloseModalFunction: () => void
@@ -64,7 +64,7 @@ declare const cityssm: cityssmGlobal
 
     const remarkObject = remarkList[index]
 
-    const submitFunction = (formEvent: Event) => {
+    function doSubmit(formEvent: Event): void {
       formEvent.preventDefault()
 
       cityssm.postJSON(
@@ -73,7 +73,7 @@ declare const cityssm: cityssmGlobal
         (responseJSON: { success: boolean }) => {
           if (responseJSON.success) {
             editRemarkCloseModalFunction()
-            getRemarksFunction()
+            getRemarks()
           }
         }
       )
@@ -82,8 +82,8 @@ declare const cityssm: cityssmGlobal
     cityssm.openHtmlModal('ticket-editRemark', {
       onshow(modalElement) {
         ;(
-          document.querySelector('#editRemark--ticketID') as HTMLInputElement
-        ).value = ticketID
+          document.querySelector('#editRemark--ticketId') as HTMLInputElement
+        ).value = ticketId
         ;(
           document.querySelector('#editRemark--remarkIndex') as HTMLInputElement
         ).value = remarkObject.remarkIndex.toString()
@@ -101,9 +101,7 @@ declare const cityssm: cityssmGlobal
           ) as HTMLInputElement
         ).value = remarkObject.remarkTimeString
 
-        modalElement
-          .querySelector('form')
-          .addEventListener('submit', submitFunction)
+        modalElement.querySelector('form')?.addEventListener('submit', doSubmit)
       },
       onshown(_modalElement, closeModalFunction) {
         editRemarkCloseModalFunction = closeModalFunction
@@ -112,7 +110,7 @@ declare const cityssm: cityssmGlobal
   }
 
   const populateRemarksPanelFunction = () => {
-    clearRemarkPanelFunction()
+    clearRemarkPanel()
 
     if (remarkList.length === 0) {
       remarkPanelElement.insertAdjacentHTML(
@@ -179,34 +177,34 @@ declare const cityssm: cityssmGlobal
       if (remarkObject.canUpdate) {
         panelBlockElement
           .querySelector('.is-edit-remark-button')
-          .addEventListener('click', openEditRemarkModalFunction)
+          ?.addEventListener('click', openEditRemarkModal)
 
         panelBlockElement
           .querySelector('.is-delete-remark-button')
-          .addEventListener('click', confirmDeleteRemarkFunction)
+          ?.addEventListener('click', confirmDeleteRemark)
       }
 
       remarkPanelElement.append(panelBlockElement)
     }
   }
 
-  const getRemarksFunction = () => {
-    clearRemarkPanelFunction()
+  function getRemarks(): void {
+    clearRemarkPanel()
 
     remarkPanelElement.insertAdjacentHTML(
       'beforeend',
-      '<div class="panel-block is-block">' +
-        '<p class="has-text-centered has-text-grey-lighter">' +
-        '<i class="fas fa-2x fa-circle-notch fa-spin" aria-hidden="true"></i><br />' +
-        '<em>Loading remarks...' +
-        '</p>' +
-        '</div>'
+      `<div class="panel-block is-block">
+        <p class="has-text-centered has-text-grey-lighter">
+        <i class="fas fa-2x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
+        <em>Loading remarks...</em>
+        </p>
+        </div>`
     )
 
     cityssm.postJSON(
       '/tickets/doGetRemarks',
       {
-        ticketID
+        ticketId
       },
       (responseRemarkList: recordTypes.ParkingTicketRemark[]) => {
         remarkList = responseRemarkList
@@ -217,7 +215,7 @@ declare const cityssm: cityssmGlobal
 
   document
     .querySelector('#is-add-remark-button')
-    .addEventListener('click', (clickEvent) => {
+    ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
 
       let addRemarkCloseModalFunction: () => void
@@ -231,7 +229,7 @@ declare const cityssm: cityssmGlobal
           (responseJSON: { success: boolean }) => {
             if (responseJSON.success) {
               addRemarkCloseModalFunction()
-              getRemarksFunction()
+              getRemarks()
             }
           }
         )
@@ -240,11 +238,12 @@ declare const cityssm: cityssmGlobal
       cityssm.openHtmlModal('ticket-addRemark', {
         onshow(modalElement) {
           ;(
-            document.querySelector('#addRemark--ticketID') as HTMLInputElement
-          ).value = ticketID
+            document.querySelector('#addRemark--ticketId') as HTMLInputElement
+          ).value = ticketId
+
           modalElement
             .querySelector('form')
-            .addEventListener('submit', submitFunction)
+            ?.addEventListener('submit', submitFunction)
         },
         onshown(_modalElement, closeModalFunction) {
           addRemarkCloseModalFunction = closeModalFunction

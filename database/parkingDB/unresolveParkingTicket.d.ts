@@ -1,4 +1,4 @@
-export declare const unresolveParkingTicket: (ticketID: number, sessionUser: PTSUser) => {
+export declare const unresolveParkingTicket: (ticketId: number, sessionUser: PTSUser) => {
     success: boolean;
     message?: string;
 };

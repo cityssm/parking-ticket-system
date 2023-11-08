@@ -6,7 +6,7 @@ import * as ncic from '../data/ncicCodes.js';
 const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
 function getModelsByMakeFromDB(makeSearchString, database) {
     return database
-        .prepare(`select makeID, makeName, modelID, modelName
+        .prepare(`select makeId, makeName, modelId, modelName
         from MakeModel
         where instr(lower(makeName), ?)
         and recordDelete_timeMillis is null
@@ -61,7 +61,7 @@ export async function getModelsByMake(makeSearchStringOriginal) {
           where searchString = ?`)
             .run(data.Count, makeSearchString);
         const insertSQL = `insert or ignore into MakeModel (
-      makeID, makeName, modelID, modelName,
+      makeId, makeName, modelId, modelName,
       recordCreate_timeMillis, recordUpdate_timeMillis)
       values (?, ?, ?, ?, ?, ?)`;
         const updateSQL = `update MakeModel

@@ -62,13 +62,13 @@ export const updateParkingTicket = (
 
     const duplicateTicket = database
       .prepare(
-        `select ticketID from ParkingTickets
+        `select ticketId from ParkingTickets
           where recordDelete_timeMillis is null
           and ticketNumber = ?
-          and ticketID != ?
+          and ticketId != ?
           and abs(issueDate - ?) <= 20000`
       )
-      .get(requestBody.ticketNumber, requestBody.ticketID, issueDate)
+      .get(requestBody.ticketNumber, requestBody.ticketId, issueDate)
 
     if (duplicateTicket) {
       database.close()
@@ -130,7 +130,7 @@ export const updateParkingTicket = (
         vehicleVIN = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and resolvedDate is null
         and recordDelete_timeMillis is null`
     )
@@ -155,7 +155,7 @@ export const updateParkingTicket = (
       requestBody.vehicleVIN,
       sessionUser.userName,
       nowMillis,
-      requestBody.ticketID
+      requestBody.ticketId
     )
 
   database.close()

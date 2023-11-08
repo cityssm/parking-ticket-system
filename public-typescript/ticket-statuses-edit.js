@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     var _a, _b;
-    const ticketID = cityssm.escapeHTML(document.querySelector('#ticket--ticketID').value);
+    const ticketId = cityssm.escapeHTML(document.querySelector('#ticket--ticketId').value);
     const statusPanelElement = document.querySelector('#is-status-panel');
     let statusList = exports.ticketStatusLog;
     delete exports.ticketStatusLog;
@@ -14,11 +14,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function doResolve() {
         cityssm.postJSON('/tickets/doResolveTicket', {
-            ticketID
+            ticketId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
             if (responseJSON.success) {
-                window.location.href = `/tickets/${ticketID}`;
+                window.location.href = `/tickets/${ticketId}`;
             }
         });
     }
@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             .statusIndex;
         function doDeleteStatus() {
             cityssm.postJSON('/tickets/doDeleteStatus', {
-                ticketID,
+                ticketId,
                 statusIndex
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -58,7 +58,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
-    function openEditStatusModalFunction(clickEvent) {
+    function openEditStatusModal(clickEvent) {
         var _a;
         clickEvent.preventDefault();
         let editStatusCloseModalFunction;
@@ -103,7 +103,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshow(modalElement) {
                 var _a, _b, _c, _d, _e, _f;
                 ;
-                document.querySelector('#editStatus--ticketID').value = ticketID;
+                document.querySelector('#editStatus--ticketId').value = ticketId;
                 document.querySelector('#editStatus--statusIndex').value = statusObject.statusIndex.toString();
                 document.querySelector('#editStatus--statusField').value = (_a = statusObject.statusField) !== null && _a !== void 0 ? _a : '';
                 document.querySelector('#editStatus--statusField2').value = (_b = statusObject.statusField2) !== null && _b !== void 0 ? _b : '';
@@ -227,7 +227,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
           </div>
           </div>`);
             (_b = firstStatusColumnsElement
-                .querySelector('.is-edit-status-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', openEditStatusModalFunction);
+                .querySelector('.is-edit-status-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', openEditStatusModal);
             (_c = firstStatusColumnsElement
                 .querySelector('.is-delete-status-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', confirmDeleteStatusFunction);
         }
@@ -264,7 +264,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         </p>
         </div>`);
         cityssm.postJSON('/tickets/doGetStatuses', {
-            ticketID
+            ticketId
         }, (rawResponseJSON) => {
             const responseStatusList = rawResponseJSON;
             statusList = responseStatusList;
@@ -283,7 +283,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 if (responseJSON.success) {
                     addStatusCloseModalFunction();
                     if (resolveTicket) {
-                        window.location.href = `/tickets/${ticketID}`;
+                        window.location.href = `/tickets/${ticketId}`;
                     }
                     else {
                         getStatusesFunction();
@@ -329,7 +329,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshow(modalElement) {
                 var _a;
                 ;
-                document.querySelector('#addStatus--ticketID').value = ticketID;
+                document.querySelector('#addStatus--ticketId').value = ticketId;
                 pts.getDefaultConfigProperty('parkingTicketStatuses', (parkingTicketStatuses) => {
                     const statusKeyElement = document.querySelector('#addStatus--statusKey');
                     for (const statusObject of parkingTicketStatuses) {
@@ -359,7 +359,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 if (responseJSON.success) {
                     addPaidStatusCloseModalFunction();
                     if (resolveTicket) {
-                        window.location.href = `/tickets/${ticketID}`;
+                        window.location.href = `/tickets/${ticketId}`;
                     }
                     else {
                         getStatusesFunction();
@@ -371,7 +371,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshow(modalElement) {
                 var _a;
                 ;
-                document.querySelector('#addPaidStatus--ticketID').value = ticketID;
+                document.querySelector('#addPaidStatus--ticketId').value = ticketId;
                 const statusFieldElement = document.querySelector('#addPaidStatus--statusField');
                 const offenceAmount = document.querySelector('#ticket--offenceAmount').value;
                 const issueDateString = document.querySelector('#ticket--issueDateString').value;

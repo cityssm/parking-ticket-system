@@ -49,7 +49,7 @@ declare const pts: ptsGlobal
 
     // Output row
     trElement.innerHTML = `<td>
-        <a href="/tickets/${ticketObject.ticketID.toString()}" data-tooltip="View Parking Ticket">
+        <a href="/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
         ${ticketObject.ticketNumber}
         </a>
       </td>
@@ -262,7 +262,7 @@ declare const pts: ptsGlobal
     ?.addEventListener('change', resetOffsetAndGetTicketsFunction)
 
   pts.getDefaultConfigProperty('ticketNumber_fieldLabel', (fieldLabel) => {
-    ticketNumberFieldLabel = fieldLabel
+    ticketNumberFieldLabel = fieldLabel as string
 
     pts.getDefaultConfigProperty('locationClasses', getTicketsFunction)
   })

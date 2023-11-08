@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     var _a, _b, _c, _d, _e;
-    const ticketID = document.querySelector('#ticket--ticketID').value;
-    const isCreate = ticketID === '';
+    const ticketId = document.querySelector('#ticket--ticketId').value;
+    const isCreate = ticketId === '';
     const formMessageElement = document.querySelector('#container--form-message');
     function setUnsavedChangesFunction() {
         cityssm.enableNavBlocker();
@@ -44,7 +44,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         ;
                         document.querySelector('#createSuccess--ticketNumber').textContent = ticketNumber;
                         (_a = document
-                            .querySelector('#createSuccess--editTicketButton')) === null || _a === void 0 ? void 0 : _a.setAttribute('href', `/tickets/${responseJSON.ticketID.toString()}/edit`);
+                            .querySelector('#createSuccess--editTicketButton')) === null || _a === void 0 ? void 0 : _a.setAttribute('href', `/tickets/${responseJSON.ticketId.toString()}/edit`);
                         (_b = document
                             .querySelector('#createSuccess--newTicketButton')) === null || _b === void 0 ? void 0 : _b.setAttribute('href', `/tickets/new/${responseJSON.nextTicketNumber}`);
                     }
@@ -54,7 +54,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     });
     function doDelete() {
         cityssm.postJSON('/tickets/doDeleteTicket', {
-            ticketID
+            ticketId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
             if (responseJSON.success) {

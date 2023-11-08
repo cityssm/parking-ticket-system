@@ -2,8 +2,8 @@ import * as dateTimeFns from '@cityssm/utils-datetime';
 import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js';
 import * as parkingDB from '../../database/parkingDB.js';
 export const handler = (request, response) => {
-    const ticketID = Number.parseInt(request.params.ticketID, 10);
-    const ticket = getParkingTicket(ticketID, request.session.user);
+    const ticketId = Number.parseInt(request.params.ticketId, 10);
+    const ticket = getParkingTicket(ticketId, request.session.user);
     if (!ticket) {
         response.redirect('/tickets/?error=ticketNotFound');
         return;
@@ -11,7 +11,7 @@ export const handler = (request, response) => {
     else if (!ticket.canUpdate ||
         ticket.resolvedDate ||
         ticket.recordDelete_timeMillis) {
-        response.redirect(`/tickets/${ticketID.toString()}/?error=accessDenied`);
+        response.redirect(`/tickets/${ticketId.toString()}/?error=accessDenied`);
         return;
     }
     const vehicleMakeModelDatalist = parkingDB.getRecentParkingTicketVehicleMakeModelValues();

@@ -5,16 +5,16 @@ import * as parkingDB_ontario from '../../database/parkingDB-ontario.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const batchID = request.body.batchID
-  const ticketID = request.body.ticketID
+  const batchId = request.body.batchId
+  const ticketId = request.body.ticketId
 
   const result: {
     success: boolean
     message?: string
     tickets?: ParkingTicket[]
   } = removeParkingTicketFromConvictionBatch(
-    batchID,
-    ticketID,
+    batchId,
+    ticketId,
     request.session.user as PTSUser
   )
 

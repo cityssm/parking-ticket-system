@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export function isConvictionBatchUpdatable(
-  batchID: number,
+  batchId: number,
   connectedDatabase?: sqlite.Database
 ): boolean {
   const database = connectedDatabase ?? sqlite(databasePath)
@@ -13,10 +13,10 @@ export function isConvictionBatchUpdatable(
       `select lockDate
         from ParkingTicketConvictionBatches
         where recordDelete_timeMillis is null
-        and batchID = ?`
+        and batchId = ?`
     )
     .pluck()
-    .get(batchID) as number | undefined | null
+    .get(batchId) as number | undefined | null
 
   if (connectedDatabase === undefined) {
     database.close()

@@ -1,13 +1,21 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/indent */
+
 import type {
   ConfigLocationClass,
   ConfigParkingTicketStatus
 } from './configTypes.js'
 
+type GetDefaultConfigProperty_PropertyNames =
+  | 'locationClasses'
+  | 'parkingTicketStatuses'
+  | 'ticketNumber_fieldLabel'
+
 export interface ptsGlobal {
   loadDefaultConfigProperties: (callbackFunction: () => void) => void
 
   getDefaultConfigProperty: (
-    propertyName: string,
+    propertyName: GetDefaultConfigProperty_PropertyNames,
     propertyValueCallbackFunction: (propertyValue: unknown) => void
   ) => void
 

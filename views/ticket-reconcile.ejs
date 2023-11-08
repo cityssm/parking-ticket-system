@@ -52,7 +52,7 @@
                     <%= logEntry.licencePlateNumber %>
                   </td>
                   <td>
-                    <a href="/tickets/<%= logEntry.ticketID %>" target="_blank">
+                    <a href="/tickets/<%= logEntry.ticketId %>" target="_blank">
                       <%= logEntry.ticketNumber %>
                     </a>
                   </td>
@@ -64,7 +64,7 @@
                   </td>
                   <td>
                     <button class="button is-warning is-acknowledge-error-button"
-                      data-batch-id="<%= logEntry.batchID %>"
+                      data-batch-id="<%= logEntry.batchId %>"
                       data-log-index="<%= logEntry.logIndex %>"
                       type="button">
                       <span class="icon is-small">
@@ -145,7 +145,7 @@
                   data-licence-plate-country="<%= record.licencePlateCountry %>"
                   data-licence-plate-province="<%= record.licencePlateProvince %>"
                   data-licence-plate-number="<%= record.licencePlateNumber %>"
-                  data-ticket-id="<%= record.ticket_ticketID %>"
+                  data-ticket-id="<%= record.ticket_ticketId %>"
                   data-ticket-vehicle="<%= record.ticket_vehicleMakeModel %>"
                   data-ticket-expiry-date="<%= record.ticket_licencePlateExpiryDateString %>"
                   data-owner-vehicle="<%= record.owner_vehicleMake %>"
@@ -166,7 +166,7 @@
                   </td>
 
                   <td>
-                    <a href="/tickets/<%= record.ticket_ticketID %>" target="_blank">
+                    <a href="/tickets/<%= record.ticket_ticketId %>" target="_blank">
                       <%= record.ticket_ticketNumber %>
                     </a><br />
                     <small class="has-cursor-help has-tooltip-right" data-tooltip="Ticket Issue Date" aria-label="Ticket Issue Date"><%= record.ticket_issueDateString %></small>
@@ -215,7 +215,7 @@
                     <% } %>
                   </td>
 
-                  <td class="is-nowrap is-options-cell" id="is-options-cell--<%= record.ticket_ticketID %>">
+                  <td class="is-nowrap is-options-cell" id="is-options-cell--<%= record.ticket_ticketId %>">
                     <button class="button is-success is-ownership-match-button" type="button">
                       <span class="icon">
                         <i class="fas fa-check" aria-hidden="true"></i>

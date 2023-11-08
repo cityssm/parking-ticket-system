@@ -5,9 +5,9 @@ import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js'
 import * as parkingDB from '../../database/parkingDB.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const ticketID = Number.parseInt(request.params.ticketID, 10)
+  const ticketId = Number.parseInt(request.params.ticketId, 10)
 
-  const ticket = getParkingTicket(ticketID, request.session.user as PTSUser)
+  const ticket = getParkingTicket(ticketId, request.session.user as PTSUser)
 
   if (!ticket) {
     response.redirect('/tickets/?error=ticketNotFound')
@@ -17,7 +17,7 @@ export const handler: RequestHandler = (request, response) => {
     ticket.resolvedDate ||
     ticket.recordDelete_timeMillis
   ) {
-    response.redirect(`/tickets/${ticketID.toString()}/?error=accessDenied`)
+    response.redirect(`/tickets/${ticketId.toString()}/?error=accessDenied`)
     return
   }
 

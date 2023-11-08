@@ -12,7 +12,7 @@ export const handler = (request, response) => {
     const ownerAddress = ownerFunctions.getFormattedOwnerAddress(ownerRecord);
     const statusResponse = createParkingTicketStatus({
         recordType: 'status',
-        ticketID: Number.parseInt(request.body.ticketID, 10),
+        ticketId: Number.parseInt(request.body.ticketId, 10),
         statusKey: 'ownerLookupMatch',
         statusField: ownerRecord.recordDate.toString(),
         statusNote: ownerAddress

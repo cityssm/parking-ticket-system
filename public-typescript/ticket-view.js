@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     (_a = document
         .querySelector('#is-unresolve-ticket-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
-        const ticketID = clickEvent.currentTarget.dataset
+        const ticketId = clickEvent.currentTarget.dataset
             .ticketId;
         function doUnresolve() {
             cityssm.postJSON('/tickets/doUnresolveTicket', {
-                ticketID
+                ticketId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
@@ -31,11 +31,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     (_b = document
         .querySelector('#is-restore-ticket-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
-        const ticketID = clickEvent.currentTarget.dataset
+        const ticketId = clickEvent.currentTarget.dataset
             .ticketId;
         function doRestore() {
             cityssm.postJSON('/tickets/doRestoreTicket', {
-                ticketID
+                ticketId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {

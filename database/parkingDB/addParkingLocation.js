@@ -15,9 +15,9 @@ export function addParkingLocation(requestBody) {
         };
     }
     const info = database
-        .prepare('insert into ParkingLocations (' +
-        'locationKey, locationName, locationClassKey, orderNumber, isActive)' +
-        ' values (?, ?, ?, 0, 1)')
+        .prepare(`insert into ParkingLocations (
+        locationKey, locationName, locationClassKey, orderNumber, isActive)
+        values (?, ?, ?, 0, 1)`)
         .run(requestBody.locationKey, requestBody.locationName, requestBody.locationClassKey);
     database.close();
     return {

@@ -11,7 +11,7 @@ import { getParkingTicketRemarks } from './getParkingTicketRemarks.js'
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js'
 
 export const getParkingTicket = (
-  ticketID: number,
+  ticketId: number,
   sessionUser: PTSUser
 ): ParkingTicket | undefined => {
   const database = sqlite(databasePath, {
@@ -26,16 +26,16 @@ export const getParkingTicket = (
         s.statusField as ownerLookup_statusField
         from ParkingTickets t
         left join ParkingTicketStatusLog s
-          on t.ticketID = s.ticketID
+          on t.ticketId = s.ticketId
           and s.statusKey in ('ownerLookupPending', 'ownerLookupError', 'ownerLookupMatch')
           and s.recordDelete_timeMillis is null
         left join ParkingLocations l
           on t.locationKey = l.locationKey
-        where t.ticketID = ?
+        where t.ticketId = ?
         order by s.statusDate desc, s.statusIndex desc
         limit 1`
     )
-    .get(ticketID) as ParkingTicket | undefined
+    .get(ticketId) as ParkingTicket | undefined
 
   if (ticket === undefined) {
     database.close()
@@ -84,7 +84,7 @@ export const getParkingTicket = (
 
   // Status Log
 
-  ticket.statusLog = getParkingTicketStatuses(ticketID, sessionUser, database)
+  ticket.statusLog = getParkingTicketStatuses(ticketId, sessionUser, database)
 
   if (!ticket.canUpdate) {
     for (const status of ticket.statusLog) {
@@ -94,7 +94,7 @@ export const getParkingTicket = (
 
   // Remarks
 
-  ticket.remarks = getParkingTicketRemarks(ticketID, sessionUser, database)
+  ticket.remarks = getParkingTicketRemarks(ticketId, sessionUser, database)
 
   if (!ticket.canUpdate) {
     for (const remark of ticket.remarks) {

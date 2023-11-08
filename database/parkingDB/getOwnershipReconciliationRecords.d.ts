@@ -1,6 +1,6 @@
 import type { LicencePlate } from '../../types/recordTypes.js';
 export interface ReconciliationRecord extends LicencePlate {
-    ticket_ticketID: number;
+    ticket_ticketId: number;
     ticket_ticketNumber: string;
     ticket_issueDate: number;
     ticket_issueDateString?: string;

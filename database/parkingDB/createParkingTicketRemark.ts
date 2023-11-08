@@ -15,7 +15,7 @@ export const createParkingTicketRemark = (
   // Get new remark index
 
   const remarkIndexNew = getNextParkingTicketRemarkIndex(
-    requestBody.ticketID,
+    requestBody.ticketId,
     database
   )
 
@@ -26,7 +26,7 @@ export const createParkingTicketRemark = (
   const info = database
     .prepare(
       `insert into ParkingTicketRemarks (
-        ticketID, remarkIndex,
+        ticketId, remarkIndex,
         remarkDate, remarkTime,
         remark,
         recordCreate_userName, recordCreate_timeMillis,
@@ -34,7 +34,7 @@ export const createParkingTicketRemark = (
         values (?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .run(
-      requestBody.ticketID,
+      requestBody.ticketId,
       remarkIndexNew,
       dateTimeFns.dateToInteger(rightNow),
       dateTimeFns.dateToTimeInteger(rightNow),

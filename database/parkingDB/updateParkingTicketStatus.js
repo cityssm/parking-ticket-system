@@ -13,10 +13,10 @@ export const updateParkingTicketStatus = (requestBody, sessionUser) => {
         statusNote = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and statusIndex = ?
         and recordDelete_timeMillis is null`)
-        .run(dateTimeFns.dateStringToInteger(requestBody.statusDateString), dateTimeFns.timeStringToInteger(requestBody.statusTimeString), requestBody.statusKey, requestBody.statusField, requestBody.statusField2, requestBody.statusNote, sessionUser.userName, Date.now(), requestBody.ticketID, requestBody.statusIndex);
+        .run(dateTimeFns.dateStringToInteger(requestBody.statusDateString), dateTimeFns.timeStringToInteger(requestBody.statusTimeString), requestBody.statusKey, requestBody.statusField, requestBody.statusField2, requestBody.statusNote, sessionUser.userName, Date.now(), requestBody.ticketId, requestBody.statusIndex);
     database.close();
     return {
         success: info.changes > 0

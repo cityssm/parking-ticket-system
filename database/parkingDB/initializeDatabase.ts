@@ -68,7 +68,7 @@ function createParkingTickets(parkingDB: sqlite.Database): void {
   parkingDB
     .prepare(
       `create table if not exists ParkingTickets (
-        ticketID integer primary key autoincrement,
+        ticketId integer primary key autoincrement,
         ticketNumber varchar(10),
         issueDate integer not null,
         issueTime integer,
@@ -105,14 +105,14 @@ function createParkingTicketRemarks(parkingDB: sqlite.Database): void {
   parkingDB
     .prepare(
       `create table if not exists ParkingTicketRemarks (
-        ticketID integer not null,
+        ticketId integer not null,
         remarkIndex integer not null,
         remarkDate integer not null,
         remarkTime integer not null,
         remark text,
         ${recordFields},
-        primary key (ticketID, remarkIndex),
-        foreign key (ticketID) references ParkingTickets (ticketID)) without rowid`
+        primary key (ticketId, remarkIndex),
+        foreign key (ticketId) references ParkingTickets (ticketId)) without rowid`
     )
     .run()
 }
@@ -121,7 +121,7 @@ function createParkingTicketStatusLog(parkingDB: sqlite.Database): void {
   parkingDB
     .prepare(
       `create table if not exists ParkingTicketStatusLog (
-        ticketID integer not null,
+        ticketId integer not null,
         statusIndex integer not null,
         statusDate integer not null,
         statusTime integer not null,
@@ -130,8 +130,8 @@ function createParkingTicketStatusLog(parkingDB: sqlite.Database): void {
         statusField2 text,
         statusNote text,
         ${recordFields},
-        primary key (ticketID, statusIndex),
-        foreign key (ticketID) references ParkingTickets (ticketID)) without rowid`
+        primary key (ticketId, statusIndex),
+        foreign key (ticketId) references ParkingTickets (ticketId)) without rowid`
     )
     .run()
 }
@@ -140,7 +140,7 @@ function createLicencePlateLookupBatches(parkingDB: sqlite.Database): void {
   parkingDB
     .prepare(
       `create table if not exists LicencePlateLookupBatches (
-        batchID integer primary key autoincrement,
+        batchId integer primary key autoincrement,
         batchDate integer not null,
         lockDate integer,
         sentDate integer,
@@ -157,14 +157,14 @@ function createLicencePlateLookupBatchEntries(
   parkingDB
     .prepare(
       `create table if not exists LicencePlateLookupBatchEntries (
-        batchID integer not null,
-        ticketID integer,
+        batchId integer not null,
+        ticketId integer,
         licencePlateCountry varchar(2) not null,
         licencePlateProvince varchar(5) not null,
         licencePlateNumber varchar(15) not null,
-        primary key (batchID, ticketID, licencePlateCountry, licencePlateProvince, licencePlateNumber),
-        foreign key (batchID) references LicencePlateLookupBatches (batchID),
-        foreign key (ticketID) references ParkingTickets (ticketID)) without rowid`
+        primary key (batchId, ticketId, licencePlateCountry, licencePlateProvince, licencePlateNumber),
+        foreign key (batchId) references LicencePlateLookupBatches (batchId),
+        foreign key (ticketId) references ParkingTickets (ticketId)) without rowid`
     )
     .run()
 }
@@ -175,7 +175,7 @@ function createParkingTicketConvictionBatches(
   parkingDB
     .prepare(
       `create table if not exists ParkingTicketConvictionBatches (
-        batchID integer primary key autoincrement,
+        batchId integer primary key autoincrement,
         batchDate integer not null,
         lockDate integer,
         sentDate integer,
@@ -214,7 +214,7 @@ function createLicencePlateLookupErrorLog(parkingDB: sqlite.Database): void {
   parkingDB
     .prepare(
       `create table if not exists LicencePlateLookupErrorLog (
-        batchID integer not null,
+        batchId integer not null,
         logIndex integer not null,
         licencePlateCountry varchar(2) not null,
         licencePlateProvince varchar(5) not null,
@@ -224,8 +224,8 @@ function createLicencePlateLookupErrorLog(parkingDB: sqlite.Database): void {
         errorMessage varchar(100),
         isAcknowledged bit not null default 0,
         ${recordFields},
-        primary key (batchID, logIndex),
-        foreign key (batchID) references LicencePlateLookupBatches (batchID)) without rowid`
+        primary key (batchId, logIndex),
+        foreign key (batchId) references LicencePlateLookupBatches (batchId)) without rowid`
     )
     .run()
 
@@ -250,7 +250,7 @@ export function initializeDatabase(): boolean {
     .get()
 
   if (row === undefined) {
-    debug('Creating ' + databasePath)
+    debug(`Creating ${databasePath}`)
     doCreate = true
 
     /*

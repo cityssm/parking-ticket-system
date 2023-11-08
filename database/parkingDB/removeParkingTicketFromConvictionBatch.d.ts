@@ -1,4 +1,4 @@
-export declare const removeParkingTicketFromConvictionBatch: (batchID: number, ticketID: number, sessionUser: PTSUser) => {
+export declare const removeParkingTicketFromConvictionBatch: (batchId: number, ticketId: number, sessionUser: PTSUser) => {
     success: boolean;
     message?: string;
 };

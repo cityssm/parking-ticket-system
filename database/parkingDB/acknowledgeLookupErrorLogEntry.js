@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function acknowledgeLookupErrorLogEntry(batchID, logIndex, sessionUser) {
+export function acknowledgeLookupErrorLogEntry(batchId, logIndex, sessionUser) {
     const database = sqlite(databasePath);
     const info = database
         .prepare(`update LicencePlateLookupErrorLog
@@ -8,10 +8,10 @@ export function acknowledgeLookupErrorLogEntry(batchID, logIndex, sessionUser) {
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
         where recordDelete_timeMillis is null
-        and batchID = ?
+        and batchId = ?
         and logIndex = ?
         and isAcknowledged = 0`)
-        .run(sessionUser.userName, Date.now(), batchID, logIndex);
+        .run(sessionUser.userName, Date.now(), batchId, logIndex);
     database.close();
     return info.changes > 0;
 }

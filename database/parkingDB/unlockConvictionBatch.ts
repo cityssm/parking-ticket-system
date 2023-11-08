@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export const unlockConvictionBatch = (
-  batchID: number,
+  batchId: number,
   sessionUser: PTSUser
 ): boolean => {
   const database = sqlite(databasePath)
@@ -17,11 +17,11 @@ export const unlockConvictionBatch = (
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
         where recordDelete_timeMillis is null
-        and batchID = ?
+        and batchId = ?
         and lockDate is not null
         and sentDate is null`
     )
-    .run(sessionUser.userName, rightNowMillis, batchID)
+    .run(sessionUser.userName, rightNowMillis, batchId)
 
   database.close()
 

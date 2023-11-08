@@ -1,63 +1,64 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const ticketID = document.querySelector('#ticket--ticketID').value;
+    var _a;
+    const ticketId = document.querySelector('#ticket--ticketId').value;
     const remarkPanelElement = document.querySelector('#is-remark-panel');
     let remarkList = exports.ticketRemarks;
     delete exports.ticketRemarks;
-    const clearRemarkPanelFunction = () => {
+    function clearRemarkPanel() {
         const panelBlockElements = remarkPanelElement.querySelectorAll('.panel-block');
         for (const panelBlockElement of panelBlockElements) {
             panelBlockElement.remove();
         }
-    };
-    const confirmDeleteRemarkFunction = (clickEvent) => {
+    }
+    function confirmDeleteRemark(clickEvent) {
         const remarkIndex = clickEvent.currentTarget.dataset
             .remarkIndex;
         cityssm.confirmModal('Delete Remark?', 'Are you sure you want to delete this remark?', 'Yes, Delete', 'warning', () => {
             cityssm.postJSON('/tickets/doDeleteRemark', {
-                ticketID,
+                ticketId,
                 remarkIndex
             }, (resultJSON) => {
                 if (resultJSON.success) {
-                    getRemarksFunction();
+                    getRemarks();
                 }
             });
         });
-    };
-    const openEditRemarkModalFunction = (clickEvent) => {
+    }
+    function openEditRemarkModal(clickEvent) {
         clickEvent.preventDefault();
         let editRemarkCloseModalFunction;
         const index = Number.parseInt(clickEvent.currentTarget.dataset.index, 10);
         const remarkObject = remarkList[index];
-        const submitFunction = (formEvent) => {
+        function doSubmit(formEvent) {
             formEvent.preventDefault();
             cityssm.postJSON('/tickets/doUpdateRemark', formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     editRemarkCloseModalFunction();
-                    getRemarksFunction();
+                    getRemarks();
                 }
             });
-        };
+        }
         cityssm.openHtmlModal('ticket-editRemark', {
             onshow(modalElement) {
+                var _a;
                 ;
-                document.querySelector('#editRemark--ticketID').value = ticketID;
+                document.querySelector('#editRemark--ticketId').value = ticketId;
                 document.querySelector('#editRemark--remarkIndex').value = remarkObject.remarkIndex.toString();
                 document.querySelector('#editRemark--remark').value = remarkObject.remark;
                 document.querySelector('#editRemark--remarkDateString').value = remarkObject.remarkDateString;
                 document.querySelector('#editRemark--remarkTimeString').value = remarkObject.remarkTimeString;
-                modalElement
-                    .querySelector('form')
-                    .addEventListener('submit', submitFunction);
+                (_a = modalElement.querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', doSubmit);
             },
             onshown(_modalElement, closeModalFunction) {
                 editRemarkCloseModalFunction = closeModalFunction;
             }
         });
-    };
+    }
     const populateRemarksPanelFunction = () => {
-        clearRemarkPanelFunction();
+        var _a, _b;
+        clearRemarkPanel();
         if (remarkList.length === 0) {
             remarkPanelElement.insertAdjacentHTML('beforeend', '<div class="panel-block is-block">' +
                 '<div class="message is-info">' +
@@ -114,34 +115,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         : '') +
                     '</div>';
             if (remarkObject.canUpdate) {
-                panelBlockElement
-                    .querySelector('.is-edit-remark-button')
-                    .addEventListener('click', openEditRemarkModalFunction);
-                panelBlockElement
-                    .querySelector('.is-delete-remark-button')
-                    .addEventListener('click', confirmDeleteRemarkFunction);
+                (_a = panelBlockElement
+                    .querySelector('.is-edit-remark-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', openEditRemarkModal);
+                (_b = panelBlockElement
+                    .querySelector('.is-delete-remark-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', confirmDeleteRemark);
             }
             remarkPanelElement.append(panelBlockElement);
         }
     };
-    const getRemarksFunction = () => {
-        clearRemarkPanelFunction();
-        remarkPanelElement.insertAdjacentHTML('beforeend', '<div class="panel-block is-block">' +
-            '<p class="has-text-centered has-text-grey-lighter">' +
-            '<i class="fas fa-2x fa-circle-notch fa-spin" aria-hidden="true"></i><br />' +
-            '<em>Loading remarks...' +
-            '</p>' +
-            '</div>');
+    function getRemarks() {
+        clearRemarkPanel();
+        remarkPanelElement.insertAdjacentHTML('beforeend', `<div class="panel-block is-block">
+        <p class="has-text-centered has-text-grey-lighter">
+        <i class="fas fa-2x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
+        <em>Loading remarks...</em>
+        </p>
+        </div>`);
         cityssm.postJSON('/tickets/doGetRemarks', {
-            ticketID
+            ticketId
         }, (responseRemarkList) => {
             remarkList = responseRemarkList;
             populateRemarksPanelFunction();
         });
-    };
-    document
-        .querySelector('#is-add-remark-button')
-        .addEventListener('click', (clickEvent) => {
+    }
+    (_a = document
+        .querySelector('#is-add-remark-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let addRemarkCloseModalFunction;
         const submitFunction = (formEvent) => {
@@ -149,17 +147,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
             cityssm.postJSON('/tickets/doAddRemark', formEvent.currentTarget, (responseJSON) => {
                 if (responseJSON.success) {
                     addRemarkCloseModalFunction();
-                    getRemarksFunction();
+                    getRemarks();
                 }
             });
         };
         cityssm.openHtmlModal('ticket-addRemark', {
             onshow(modalElement) {
+                var _a;
                 ;
-                document.querySelector('#addRemark--ticketID').value = ticketID;
-                modalElement
-                    .querySelector('form')
-                    .addEventListener('submit', submitFunction);
+                document.querySelector('#addRemark--ticketId').value = ticketId;
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', submitFunction);
             },
             onshown(_modalElement, closeModalFunction) {
                 addRemarkCloseModalFunction = closeModalFunction;

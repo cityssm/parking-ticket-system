@@ -8,13 +8,13 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LicencePlate } from '../../types/recordTypes.js'
 
 interface LookupErrorLogEntry extends LicencePlate {
-  batchID: number
+  batchId: number
   logIndex: number
   recordDate: number
   recordDateString: string
   errorCode: string
   errorMessage: string
-  ticketID: number
+  ticketId: number
   ticketNumber: string
   issueDate: number
   issueDateString: string
@@ -22,7 +22,7 @@ interface LookupErrorLogEntry extends LicencePlate {
 }
 
 export function getUnacknowledgedLookupErrorLog(
-  batchID_or_negOne: number,
+  batchId_or_negOne: number,
   logIndex_or_negOne: number
 ): LookupErrorLogEntry[] {
   const database = sqlite(databasePath, {
@@ -31,27 +31,27 @@ export function getUnacknowledgedLookupErrorLog(
 
   let parameters: unknown[] = []
 
-  if (batchID_or_negOne !== -1 && logIndex_or_negOne !== -1) {
-    parameters = [batchID_or_negOne, logIndex_or_negOne]
+  if (batchId_or_negOne !== -1 && logIndex_or_negOne !== -1) {
+    parameters = [batchId_or_negOne, logIndex_or_negOne]
   }
 
   const logEntries = database
     .prepare(
-      `select l.batchID, l.logIndex,
+      `select l.batchId, l.logIndex,
         l.licencePlateCountry, l.licencePlateProvince, l.licencePlateNumber,
         l.recordDate, l.errorCode, l.errorMessage,
-        e.ticketID, t.ticketNumber, t.issueDate, t.vehicleMakeModel
+        e.ticketId, t.ticketNumber, t.issueDate, t.vehicleMakeModel
         from LicencePlateLookupErrorLog l
         inner join LicencePlateLookupBatches b
-          on l.batchID = b.batchID
+          on l.batchId = b.batchId
           and b.recordDelete_timeMillis is null
         inner join LicencePlateLookupBatchEntries e
-          on b.batchID = e.batchID
+          on b.batchId = e.batchId
           and l.licencePlateCountry = e.licencePlateCountry
           and l.licencePlateProvince = e.licencePlateProvince
           and l.licencePlateNumber = e.licencePlateNumber
         inner join ParkingTickets t
-          on e.ticketID = t.ticketID
+          on e.ticketId = t.ticketId
           and e.licencePlateCountry = t.licencePlateCountry
           and e.licencePlateProvince = t.licencePlateProvince
           and e.licencePlateNumber = t.licencePlateNumber
@@ -59,7 +59,7 @@ export function getUnacknowledgedLookupErrorLog(
           and t.resolvedDate is null
         where l.recordDelete_timeMillis is null
         and l.isAcknowledged = 0
-        ${parameters.length > 0 ? ' and l.batchID = ? and l.logIndex = ?' : ''}`
+        ${parameters.length > 0 ? ' and l.batchId = ? and l.logIndex = ?' : ''}`
     )
     .all(parameters) as LookupErrorLogEntry[]
 

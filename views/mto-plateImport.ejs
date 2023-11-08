@@ -49,18 +49,18 @@
         <form id="form--mtoImport">
           <div class="field has-addons">
             <div class="control">
-              <label class="button is-static" for="mtoImport--batchID">Unreceived Batch</label>
+              <label class="button is-static" for="mtoImport--batchId">Unreceived Batch</label>
             </div>
             <div class="control is-expanded">
               <div class="select is-fullwidth">
-                <select id="mtoImport--batchID" name="batchID" required>
+                <select id="mtoImport--batchId" name="batchId" required>
                   <option value="">(Select the Corresponding Batch)</option>
                   <%
                     for (let index = 0; index < batches.length; index += 1) {
                       let batch = batches[index];
                       if (batch.sentDate) {
                   %>
-                      <option value="<%= batch.batchID %>">Batch #<%= batch.batchID %>, Sent <%= batch.sentDateString %></option>
+                      <option value="<%= batch.batchId %>">Batch #<%= batch.batchId %>, Sent <%= batch.sentDateString %></option>
                   <%
                       }
                     }

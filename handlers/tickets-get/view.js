@@ -1,7 +1,7 @@
 import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js';
 export const handler = (request, response) => {
-    const ticketID = Number.parseInt(request.params.ticketID, 10);
-    const ticket = getParkingTicket(ticketID, request.session.user);
+    const ticketId = Number.parseInt(request.params.ticketId, 10);
+    const ticket = getParkingTicket(ticketId, request.session.user);
     if (!ticket) {
         response.redirect('/tickets/?error=ticketNotFound');
         return;
@@ -12,7 +12,7 @@ export const handler = (request, response) => {
         return;
     }
     response.render('ticket-view', {
-        headTitle: 'Ticket ' + ticket.ticketNumber,
+        headTitle: `Ticket ${ticket.ticketNumber}`,
         ticket
     });
 };

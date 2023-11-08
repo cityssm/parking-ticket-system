@@ -6,7 +6,7 @@ import { getLicencePlateOwner } from './getLicencePlateOwner.js';
 import { getParkingLocation } from './getParkingLocation.js';
 import { getParkingTicketRemarks } from './getParkingTicketRemarks.js';
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js';
-export const getParkingTicket = (ticketID, sessionUser) => {
+export const getParkingTicket = (ticketId, sessionUser) => {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -17,15 +17,15 @@ export const getParkingTicket = (ticketID, sessionUser) => {
         s.statusField as ownerLookup_statusField
         from ParkingTickets t
         left join ParkingTicketStatusLog s
-          on t.ticketID = s.ticketID
+          on t.ticketId = s.ticketId
           and s.statusKey in ('ownerLookupPending', 'ownerLookupError', 'ownerLookupMatch')
           and s.recordDelete_timeMillis is null
         left join ParkingLocations l
           on t.locationKey = l.locationKey
-        where t.ticketID = ?
+        where t.ticketId = ?
         order by s.statusDate desc, s.statusIndex desc
         limit 1`)
-        .get(ticketID);
+        .get(ticketId);
     if (ticket === undefined) {
         database.close();
         return undefined;
@@ -44,13 +44,13 @@ export const getParkingTicket = (ticketID, sessionUser) => {
         ticket.licencePlateOwner = getLicencePlateOwner(ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, Number.parseInt(ticket.ownerLookup_statusField, 10), database);
     }
     ticket.location = getParkingLocation(ticket.locationKey, database);
-    ticket.statusLog = getParkingTicketStatuses(ticketID, sessionUser, database);
+    ticket.statusLog = getParkingTicketStatuses(ticketId, sessionUser, database);
     if (!ticket.canUpdate) {
         for (const status of ticket.statusLog) {
             status.canUpdate = false;
         }
     }
-    ticket.remarks = getParkingTicketRemarks(ticketID, sessionUser, database);
+    ticket.remarks = getParkingTicketRemarks(ticketId, sessionUser, database);
     if (!ticket.canUpdate) {
         for (const remark of ticket.remarks) {
             remark.canUpdate = false;

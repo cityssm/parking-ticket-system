@@ -5,21 +5,21 @@ import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.
 import type { ParkingTicketConvictionBatch } from '../../types/recordTypes.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const batchID = request.body.batchID
-  const ticketID = request.body.ticketID
+  const batchId = request.body.batchId
+  const ticketId = request.body.ticketId
 
   const result: {
     success: boolean
     message?: string
     batch?: ParkingTicketConvictionBatch
   } = addParkingTicketToConvictionBatch(
-    batchID,
-    ticketID,
+    batchId,
+    ticketId,
     request.session.user as PTSUser
   )
 
   if (result.success) {
-    result.batch = getConvictionBatch(batchID)
+    result.batch = getConvictionBatch(batchId)
   }
 
   return response.json(result)

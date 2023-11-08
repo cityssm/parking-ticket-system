@@ -16,10 +16,10 @@ declare const pts: ptsGlobal
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ;(() => {
-  const ticketID = (
-    document.querySelector('#ticket--ticketID') as HTMLInputElement
+  const ticketId = (
+    document.querySelector('#ticket--ticketId') as HTMLInputElement
   ).value
-  const isCreate = ticketID === ''
+  const isCreate = ticketId === ''
 
   /*
    * Form Management
@@ -50,7 +50,7 @@ declare const pts: ptsGlobal
   type FormResponseJSON =
     | {
         success: true
-        ticketID: number
+        ticketId: number
         nextTicketNumber?: string
       }
     | {
@@ -108,7 +108,7 @@ declare const pts: ptsGlobal
                   .querySelector('#createSuccess--editTicketButton')
                   ?.setAttribute(
                     'href',
-                    `/tickets/${responseJSON.ticketID.toString()}/edit`
+                    `/tickets/${responseJSON.ticketId.toString()}/edit`
                   )
 
                 document
@@ -128,7 +128,7 @@ declare const pts: ptsGlobal
     cityssm.postJSON(
       '/tickets/doDeleteTicket',
       {
-        ticketID
+        ticketId
       },
       (rawResponseJSON) => {
         const responseJSON = rawResponseJSON as { success: boolean }

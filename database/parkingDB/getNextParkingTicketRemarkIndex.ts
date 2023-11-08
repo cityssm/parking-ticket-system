@@ -1,7 +1,7 @@
-import type * as sqlite from 'better-sqlite3'
+import type sqlite from 'better-sqlite3'
 
 export const getNextParkingTicketRemarkIndex = (
-  ticketID: number,
+  ticketId: number,
   database: sqlite.Database
 ): number => {
   return (
@@ -9,10 +9,10 @@ export const getNextParkingTicketRemarkIndex = (
       .prepare(
         `select ifnull(max(remarkIndex), 0) as remarkIndexMax
           from ParkingTicketRemarks
-          where ticketID = ?`
+          where ticketId = ?`
       )
       .pluck()
-      .get(ticketID) as number) + 1
+      .get(ticketId) as number) + 1
   )
 }
 

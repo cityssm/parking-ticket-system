@@ -30,12 +30,12 @@ export const updateParkingTicket = (requestBody, sessionUser) => {
     const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
     if (getConfigProperty('parkingTickets.ticketNumber.isUnique')) {
         const duplicateTicket = database
-            .prepare(`select ticketID from ParkingTickets
+            .prepare(`select ticketId from ParkingTickets
           where recordDelete_timeMillis is null
           and ticketNumber = ?
-          and ticketID != ?
+          and ticketId != ?
           and abs(issueDate - ?) <= 20000`)
-            .get(requestBody.ticketNumber, requestBody.ticketID, issueDate);
+            .get(requestBody.ticketNumber, requestBody.ticketId, issueDate);
         if (duplicateTicket) {
             database.close();
             return {
@@ -87,10 +87,10 @@ export const updateParkingTicket = (requestBody, sessionUser) => {
         vehicleVIN = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and resolvedDate is null
         and recordDelete_timeMillis is null`)
-        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, requestBody.ticketID);
+        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, requestBody.ticketId);
     database.close();
     return info.changes > 0
         ? {

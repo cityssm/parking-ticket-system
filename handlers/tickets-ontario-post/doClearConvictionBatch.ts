@@ -9,17 +9,17 @@ import type {
 } from '../../types/recordTypes.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const batchID = request.body.batchID
+  const batchId = request.body.batchId
 
   const result: {
     success: boolean
     message?: string
     batch?: ParkingTicketConvictionBatch
     tickets?: ParkingTicket[]
-  } = clearConvictionBatch(batchID, request.session.user as PTSUser)
+  } = clearConvictionBatch(batchId, request.session.user as PTSUser)
 
   if (result.success) {
-    result.batch = getConvictionBatch(batchID)
+    result.batch = getConvictionBatch(batchId)
     result.tickets =
       parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch()
   }

@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function getParkingTicketsAvailableForMTOLookup(currentBatchID, issueDaysAgo) {
+export function getParkingTicketsAvailableForMTOLookup(currentBatchId, issueDaysAgo) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -13,7 +13,7 @@ export function getParkingTicketsAvailableForMTOLookup(currentBatchID, issueDays
         issueDateNumber = dateTimeFns.dateToInteger(issueDate);
     }
     const tickets = database
-        .prepare(`select t.ticketID, t.ticketNumber,
+        .prepare(`select t.ticketId, t.ticketNumber,
         t.issueDate, userFn_dateIntegerToString(t.issueDate) as issueDateString,
         t.licencePlateNumber,
         max(
@@ -25,11 +25,11 @@ export function getParkingTicketsAvailableForMTOLookup(currentBatchID, issueDays
           else null end) as batchStringDate_withLabels
         from ParkingTickets t
         left join (
-          select e.batchID, b.batchDate, b.mto_includeLabels, e.ticketID,
+          select e.batchId, b.batchDate, b.mto_includeLabels, e.ticketId,
           e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber
           from LicencePlateLookupBatchEntries e
-          left join LicencePlateLookupBatches b on e.batchID = b.batchID
-        ) b on t.ticketID = b.ticketID
+          left join LicencePlateLookupBatches b on e.batchId = b.batchId
+        ) b on t.ticketId = b.ticketId
           and t.licencePlateCountry = b.licencePlateCountry
           and t.licencePlateProvince = b.licencePlateProvince
           and t.licencePlateNumber = b.licencePlateNumber
@@ -39,11 +39,11 @@ export function getParkingTicketsAvailableForMTOLookup(currentBatchID, issueDays
         and t.licencePlateProvince = 'ON'
         and t.licencePlateNumber != ''
         and t.resolvedDate is null
-        and t.ticketID not in (select ticketID from LicencePlateLookupBatchEntries where batchID = ?)
+        and t.ticketId not in (select ticketId from LicencePlateLookupBatchEntries where batchId = ?)
         and t.issueDate < ?
-        group by t.ticketID, t.ticketNumber, t.issueDate, t.issueTime, t.licencePlateNumber
+        group by t.ticketId, t.ticketNumber, t.issueDate, t.issueTime, t.licencePlateNumber
         order by t.licencePlateNumber, t.issueDate`)
-        .all(currentBatchID, issueDateNumber);
+        .all(currentBatchId, issueDateNumber);
     database.close();
     return tickets;
 }

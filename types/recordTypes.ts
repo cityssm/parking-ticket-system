@@ -36,7 +36,7 @@ export interface LicencePlate {
 export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
   recordType: 'ticket'
 
-  ticketID: number
+  ticketId: number
   ticketNumber: string
 
   issueDate: number
@@ -83,7 +83,7 @@ export interface ParkingTicket extends Record, LicencePlate, ParkingLocation {
 export interface ParkingTicketStatusLog extends Record {
   recordType: 'status'
 
-  ticketID: number | string
+  ticketId: number | string
   statusIndex?: number
 
   statusDate?: number
@@ -107,7 +107,7 @@ export interface ParkingTicketStatusLog extends Record {
 export interface ParkingTicketRemark extends Record {
   recordType: 'remark'
 
-  ticketID: number
+  ticketId: number
   remarkIndex: number
 
   remarkDate: number
@@ -170,7 +170,7 @@ export interface LicencePlateOwner extends Partial<Record>, LicencePlate {
 export interface LicencePlateLookupBatch extends Partial<Record> {
   recordType: 'batch'
 
-  batchID: number
+  batchId: number
 
   batchDate: number
   batchDateString: string
@@ -192,13 +192,13 @@ export interface LicencePlateLookupBatch extends Partial<Record> {
 export interface LicencePlateLookupBatchEntry
   extends LicencePlate,
     ParkingTicket {
-  batchID: number
+  batchId: number
 }
 
 export interface ParkingTicketConvictionBatch extends Partial<Record> {
   recordType: 'batch'
 
-  batchID: number
+  batchId: number
 
   batchDate: number
   batchDateString: string
@@ -215,7 +215,7 @@ export interface ParkingTicketConvictionBatch extends Partial<Record> {
 export interface NHTSAMakeModel {
   makeId: number
   makeName: string
-  modelID: number
+  modelId: number
   modelName: string
 }
 

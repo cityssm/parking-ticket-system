@@ -13,8 +13,8 @@ declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 declare const pts: ptsGlobal
 ;(() => {
-  const ticketID = cityssm.escapeHTML(
-    (document.querySelector('#ticket--ticketID') as HTMLInputElement).value
+  const ticketId = cityssm.escapeHTML(
+    (document.querySelector('#ticket--ticketId') as HTMLInputElement).value
   )
 
   const statusPanelElement = document.querySelector(
@@ -37,12 +37,12 @@ declare const pts: ptsGlobal
     cityssm.postJSON(
       '/tickets/doResolveTicket',
       {
-        ticketID
+        ticketId
       },
       (rawResponseJSON) => {
         const responseJSON = rawResponseJSON as { success: boolean }
         if (responseJSON.success) {
-          window.location.href = `/tickets/${ticketID}`
+          window.location.href = `/tickets/${ticketId}`
         }
       }
     )
@@ -71,7 +71,7 @@ declare const pts: ptsGlobal
       cityssm.postJSON(
         '/tickets/doDeleteStatus',
         {
-          ticketID,
+          ticketId,
           statusIndex
         },
         (rawResponseJSON) => {
@@ -94,7 +94,7 @@ declare const pts: ptsGlobal
     })
   }
 
-  function openEditStatusModalFunction(clickEvent: Event): void {
+  function openEditStatusModal(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     let editStatusCloseModalFunction: () => void
@@ -167,8 +167,8 @@ declare const pts: ptsGlobal
     cityssm.openHtmlModal('ticket-editStatus', {
       onshow(modalElement) {
         ;(
-          document.querySelector('#editStatus--ticketID') as HTMLInputElement
-        ).value = ticketID
+          document.querySelector('#editStatus--ticketId') as HTMLInputElement
+        ).value = ticketId
         ;(
           document.querySelector('#editStatus--statusIndex') as HTMLInputElement
         ).value = statusObject.statusIndex.toString()
@@ -356,7 +356,7 @@ declare const pts: ptsGlobal
 
       firstStatusColumnsElement
         .querySelector('.is-edit-status-button')
-        ?.addEventListener('click', openEditStatusModalFunction)
+        ?.addEventListener('click', openEditStatusModal)
 
       firstStatusColumnsElement
         .querySelector('.is-delete-status-button')
@@ -412,7 +412,7 @@ declare const pts: ptsGlobal
     cityssm.postJSON(
       '/tickets/doGetStatuses',
       {
-        ticketID
+        ticketId
       },
       (rawResponseJSON) => {
         const responseStatusList =
@@ -448,7 +448,7 @@ declare const pts: ptsGlobal
               addStatusCloseModalFunction()
 
               if (resolveTicket) {
-                window.location.href = `/tickets/${ticketID}`
+                window.location.href = `/tickets/${ticketId}`
               } else {
                 getStatusesFunction()
               }
@@ -513,8 +513,8 @@ declare const pts: ptsGlobal
       cityssm.openHtmlModal('ticket-addStatus', {
         onshow(modalElement) {
           ;(
-            document.querySelector('#addStatus--ticketID') as HTMLInputElement
-          ).value = ticketID
+            document.querySelector('#addStatus--ticketId') as HTMLInputElement
+          ).value = ticketId
 
           pts.getDefaultConfigProperty(
             'parkingTicketStatuses',
@@ -576,7 +576,7 @@ declare const pts: ptsGlobal
               addPaidStatusCloseModalFunction()
 
               if (resolveTicket) {
-                window.location.href = `/tickets/${ticketID}`
+                window.location.href = `/tickets/${ticketId}`
               } else {
                 getStatusesFunction()
               }
@@ -589,9 +589,9 @@ declare const pts: ptsGlobal
         onshow(modalElement) {
           ;(
             document.querySelector(
-              '#addPaidStatus--ticketID'
+              '#addPaidStatus--ticketId'
             ) as HTMLInputElement
-          ).value = ticketID
+          ).value = ticketId
 
           // Set amount
 

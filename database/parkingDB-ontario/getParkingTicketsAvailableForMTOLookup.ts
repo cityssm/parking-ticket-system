@@ -5,7 +5,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
 
 export function getParkingTicketsAvailableForMTOLookup(
-  currentBatchID: number,
+  currentBatchId: number,
   issueDaysAgo: number
 ): ParkingTicket[] {
   const database = sqlite(databasePath, {
@@ -27,7 +27,7 @@ export function getParkingTicketsAvailableForMTOLookup(
 
   const tickets = database
     .prepare(
-      `select t.ticketID, t.ticketNumber,
+      `select t.ticketId, t.ticketNumber,
         t.issueDate, userFn_dateIntegerToString(t.issueDate) as issueDateString,
         t.licencePlateNumber,
         max(
@@ -39,11 +39,11 @@ export function getParkingTicketsAvailableForMTOLookup(
           else null end) as batchStringDate_withLabels
         from ParkingTickets t
         left join (
-          select e.batchID, b.batchDate, b.mto_includeLabels, e.ticketID,
+          select e.batchId, b.batchDate, b.mto_includeLabels, e.ticketId,
           e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber
           from LicencePlateLookupBatchEntries e
-          left join LicencePlateLookupBatches b on e.batchID = b.batchID
-        ) b on t.ticketID = b.ticketID
+          left join LicencePlateLookupBatches b on e.batchId = b.batchId
+        ) b on t.ticketId = b.ticketId
           and t.licencePlateCountry = b.licencePlateCountry
           and t.licencePlateProvince = b.licencePlateProvince
           and t.licencePlateNumber = b.licencePlateNumber
@@ -53,12 +53,12 @@ export function getParkingTicketsAvailableForMTOLookup(
         and t.licencePlateProvince = 'ON'
         and t.licencePlateNumber != ''
         and t.resolvedDate is null
-        and t.ticketID not in (select ticketID from LicencePlateLookupBatchEntries where batchID = ?)
+        and t.ticketId not in (select ticketId from LicencePlateLookupBatchEntries where batchId = ?)
         and t.issueDate < ?
-        group by t.ticketID, t.ticketNumber, t.issueDate, t.issueTime, t.licencePlateNumber
+        group by t.ticketId, t.ticketNumber, t.issueDate, t.issueTime, t.licencePlateNumber
         order by t.licencePlateNumber, t.issueDate`
     )
-    .all(currentBatchID, issueDateNumber) as ParkingTicket[]
+    .all(currentBatchId, issueDateNumber) as ParkingTicket[]
 
   database.close()
 

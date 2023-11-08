@@ -33,7 +33,7 @@ export const createConvictionBatch = (
         success: true,
         batch: {
           recordType: 'batch',
-          batchID: info.lastInsertRowid as number,
+          batchId: info.lastInsertRowid as number,
           batchDate: dateTimeFns.dateToInteger(rightNow),
           batchDateString: dateTimeFns.dateToString(rightNow),
           lockDate: undefined,

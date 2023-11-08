@@ -1,29 +1,29 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const isParkingTicketInConvictionBatchWithDB = (database, ticketID) => {
+export function isParkingTicketInConvictionBatchWithDB(database, ticketId) {
     const batchStatusCheck = database
         .prepare(`select statusField
         from ParkingTicketStatusLog
         where recordDelete_timeMillis is null
-        and ticketID = ?
+        and ticketId = ?
         and statusKey = 'convictionBatch'`)
-        .get(ticketID);
+        .get(ticketId);
     if (batchStatusCheck !== undefined) {
         return {
             inBatch: true,
-            batchIDString: batchStatusCheck.statusField
+            batchIdString: batchStatusCheck.statusField
         };
     }
     return {
         inBatch: false
     };
-};
-export const isParkingTicketInConvictionBatch = (ticketID) => {
+}
+export function isParkingTicketInConvictionBatch(ticketId) {
     const database = sqlite(databasePath, {
         readonly: true
     });
-    const result = isParkingTicketInConvictionBatchWithDB(database, ticketID);
+    const result = isParkingTicketInConvictionBatchWithDB(database, ticketId);
     database.close();
     return result;
-};
+}
 export default isParkingTicketInConvictionBatch;

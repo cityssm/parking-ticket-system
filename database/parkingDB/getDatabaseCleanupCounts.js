@@ -8,10 +8,10 @@ export function getDatabaseCleanupCounts() {
     });
     const parkingTickets = database
         .prepare(`select count(*) as cnt
-          from ParkingTickets t
-          where t.recordDelete_timeMillis is not null
-          and t.recordDelete_timeMillis < ?
-          and not exists (select 1 from LicencePlateLookupBatchEntries b where t.ticketID = b.ticketID)`)
+        from ParkingTickets t
+        where t.recordDelete_timeMillis is not null
+        and t.recordDelete_timeMillis < ?
+        and not exists (select 1 from LicencePlateLookupBatchEntries b where t.ticketId = b.ticketId)`)
         .pluck()
         .get(recordDelete_timeMillisWindow);
     const parkingTicketStatusLog = database

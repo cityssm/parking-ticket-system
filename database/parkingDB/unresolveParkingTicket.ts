@@ -7,7 +7,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import { getConfigProperty } from '../../helpers/functions.config.js'
 
 export const unresolveParkingTicket = (
-  ticketID: number,
+  ticketId: number,
   sessionUser: PTSUser
 ): { success: boolean; message?: string } => {
   const database = sqlite(databasePath)
@@ -17,11 +17,11 @@ export const unresolveParkingTicket = (
   const ticketObject = database
     .prepare(
       `select recordUpdate_timeMillis from ParkingTickets
-        where ticketID = ?
+        where ticketId = ?
         and recordDelete_timeMillis is null
         and resolvedDate is not null`
     )
-    .get(ticketID) as
+    .get(ticketId) as
     | {
         recordUpdate_timeMillis: number
       }
@@ -55,11 +55,11 @@ export const unresolveParkingTicket = (
         set resolvedDate = null,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and resolvedDate is not null
         and recordDelete_timeMillis is null`
     )
-    .run(sessionUser.userName, Date.now(), ticketID)
+    .run(sessionUser.userName, Date.now(), ticketId)
 
   database.close()
 

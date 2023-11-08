@@ -217,9 +217,9 @@ router.post(
  * Ticket View
  */
 
-router.get('/:ticketID', handler_view)
+router.get('/:ticketId', handler_view)
 
-router.get('/:ticketID/print', handler_print)
+router.get('/:ticketId/print', handler_print)
 
 router.get('/byTicketNumber/:ticketNumber', handler_byTicketNumber)
 
@@ -227,14 +227,14 @@ router.get('/byTicketNumber/:ticketNumber', handler_byTicketNumber)
  * Ticket Edit
  */
 
-router.get('/:ticketID/edit', permissionHandlers.updateGetHandler, handler_edit)
+router.get('/:ticketId/edit', permissionHandlers.updateGetHandler, handler_edit)
 
 /*
  * Ticket Convict
  */
 
 router.get(
-  '/convict/:batchID/print',
+  '/convict/:batchId/print',
   permissionHandlers.updateOrOperatorGetHandler,
   handler_convictPrint
 )

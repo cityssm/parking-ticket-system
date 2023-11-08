@@ -18,14 +18,14 @@ interface SuccessResponse {
     ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
 
-      const ticketID = (clickEvent.currentTarget as HTMLButtonElement).dataset
+      const ticketId = (clickEvent.currentTarget as HTMLButtonElement).dataset
         .ticketId
 
       function doUnresolve(): void {
         cityssm.postJSON(
           '/tickets/doUnresolveTicket',
           {
-            ticketID
+            ticketId
           },
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as unknown as SuccessResponse
@@ -53,14 +53,14 @@ interface SuccessResponse {
     ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
 
-      const ticketID = (clickEvent.currentTarget as HTMLButtonElement).dataset
+      const ticketId = (clickEvent.currentTarget as HTMLButtonElement).dataset
         .ticketId
 
       function doRestore(): void {
         cityssm.postJSON(
           '/tickets/doRestoreTicket',
           {
-            ticketID
+            ticketId
           },
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as unknown as SuccessResponse

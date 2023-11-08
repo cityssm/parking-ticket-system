@@ -2,20 +2,20 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const getParkingTicketID = (
+export const getParkingTicketId = (
   ticketNumber: string
 ): number | undefined => {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
-  const ticketID = database
+  const ticketId = database
     .prepare(
-      `select ticketID
+      `select ticketId
         from ParkingTickets
         where ticketNumber = ?
         and recordDelete_timeMillis is null
-        order by ticketID desc
+        order by ticketId desc
         limit 1`
     )
     .pluck()
@@ -23,9 +23,9 @@ export const getParkingTicketID = (
 
   database.close()
 
-  console.log(ticketID)
+  console.log(ticketId)
 
-  return ticketID ?? undefined
+  return ticketId ?? undefined
 }
 
-export default getParkingTicketID
+export default getParkingTicketId

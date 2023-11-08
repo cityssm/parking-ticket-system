@@ -18,7 +18,7 @@
         </h1>
       </div>
       <div class="column is-narrow has-text-right">
-        <a class="button is-link" href="/tickets/<%= ticket.ticketID %>/print" target="_blank">
+        <a class="button is-link" href="/tickets/<%= ticket.ticketId %>/print" target="_blank">
           <span class="icon"><i class="fas fa-print" aria-hidden="true"></i></span>
           <span>Print</span>
         </a>
@@ -30,7 +30,7 @@
         <div class="message-body is-clearfix">
           <p class="has-text-weight-bold">This ticket was deleted by <%= ticket.recordDelete_userName %> on <%= dateTimeFns.dateToString(new Date(ticket.recordDelete_timeMillis)) %>.</p>
           <% if (user.isAdmin) { %>
-            <button class="button is-danger is-pulled-right" id="is-restore-ticket-button" data-ticket-id="<%= ticket.ticketID %>" type="button">
+            <button class="button is-danger is-pulled-right" id="is-restore-ticket-button" data-ticket-id="<%= ticket.ticketId %>" type="button">
               <span class="icon is-small"><i class="fas fa-trash-restore" aria-hidden="true"></i></span>
               <span>Restore Ticket</span>
             </button>
@@ -44,7 +44,7 @@
           <p class="has-text-weight-bold">This ticket was resolved <%= ticket.resolvedDateString %>.</p>
           <% if (ticket.canUpdate && !ticket.recordDelete_timeMillis) { %>
             <p class="mb-3">If further changes are required, you can remove the resolved status from the ticket.</p>
-            <button class="button is-warning is-pulled-right" id="is-unresolve-ticket-button" data-ticket-id="<%= ticket.ticketID %>" type="button">
+            <button class="button is-warning is-pulled-right" id="is-unresolve-ticket-button" data-ticket-id="<%= ticket.ticketId %>" type="button">
               <span class="icon is-small"><i class="fas fa-ban" aria-hidden="true"></i></span>
               <span>Remove Resolved Status</span>
             </button>
@@ -55,7 +55,7 @@
 
     <% if (ticket.canUpdate && !ticket.resolvedDate && !ticket.recordDelete_timeMillis) { %>
       <div class="fixed-container is-fixed-bottom-right mb-4 mr-4 has-text-right is-hidden-print">
-        <a class="button is-circle is-primary has-tooltip-left" data-tooltip="Edit this Ticket" href="/tickets/<%=ticket.ticketID %>/edit">
+        <a class="button is-circle is-primary has-tooltip-left" data-tooltip="Edit this Ticket" href="/tickets/<%=ticket.ticketId %>/edit">
           <i class="fas fa-pencil-alt" aria-hidden="true"></i>
           <span class="sr-only">Edit this Ticket</span>
         </a>
@@ -253,7 +253,7 @@
                 <h2 class="has-text-weight-bold">Remarks</h2>
               </div>
               <div class="level-right">
-                <a class="button is-small" href="/reports/remarks-byTicketID/?ticketID=<%= ticket.ticketID %>" download>
+                <a class="button is-small" href="/reports/remarks-byTicketId/?ticketId=<%= ticket.ticketId %>" download>
                   <span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>
                   <span>Export</span>
                 </a>
@@ -305,7 +305,7 @@
                     Open
                   </span>
                 <% } %>
-                <a class="button is-small ml-3" href="/reports/statuses-byTicketID/?ticketID=<%= ticket.ticketID %>" download>
+                <a class="button is-small ml-3" href="/reports/statuses-byTicketId/?ticketId=<%= ticket.ticketId %>" download>
                   <span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>
                   <span>Export</span>
                 </a>

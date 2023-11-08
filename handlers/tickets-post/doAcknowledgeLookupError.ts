@@ -8,7 +8,7 @@ export const handler: RequestHandler = (request, response) => {
   // Get log entry
 
   const logEntries = getUnacknowledgedLookupErrorLog(
-    request.body.batchID,
+    request.body.batchId,
     request.body.logIndex
   )
 
@@ -24,11 +24,10 @@ export const handler: RequestHandler = (request, response) => {
   const statusResponse = createParkingTicketStatus(
     {
       recordType: 'status',
-      ticketID: logEntries[0].ticketID,
+      ticketId: logEntries[0].ticketId,
       statusKey: 'ownerLookupError',
       statusField: '',
-      statusNote:
-        `${logEntries[0].errorMessage} (${logEntries[0].errorCode})`
+      statusNote: `${logEntries[0].errorMessage} (${logEntries[0].errorCode})`
     },
     request.session.user as PTSUser,
     false
@@ -45,7 +44,7 @@ export const handler: RequestHandler = (request, response) => {
   // Mark log entry as acknowledged
 
   const success = acknowledgeLookupErrorLogEntry(
-    request.body.batchID,
+    request.body.batchId,
     request.body.logIndex,
     request.session.user as PTSUser
   )

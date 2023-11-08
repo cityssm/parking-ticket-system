@@ -2,7 +2,7 @@ import { acknowledgeLookupErrorLogEntry } from '../../database/parkingDB/acknowl
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getUnacknowledgedLookupErrorLog } from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js';
 export const handler = (request, response) => {
-    const logEntries = getUnacknowledgedLookupErrorLog(request.body.batchID, request.body.logIndex);
+    const logEntries = getUnacknowledgedLookupErrorLog(request.body.batchId, request.body.logIndex);
     if (logEntries.length === 0) {
         return response.json({
             success: false,
@@ -11,7 +11,7 @@ export const handler = (request, response) => {
     }
     const statusResponse = createParkingTicketStatus({
         recordType: 'status',
-        ticketID: logEntries[0].ticketID,
+        ticketId: logEntries[0].ticketId,
         statusKey: 'ownerLookupError',
         statusField: '',
         statusNote: `${logEntries[0].errorMessage} (${logEntries[0].errorCode})`
@@ -22,7 +22,7 @@ export const handler = (request, response) => {
             message: 'Unable to update the status on the parking ticket.  It may have been resolved.'
         });
     }
-    const success = acknowledgeLookupErrorLogEntry(request.body.batchID, request.body.logIndex, request.session.user);
+    const success = acknowledgeLookupErrorLogEntry(request.body.batchId, request.body.logIndex, request.session.user);
     return response.json({
         success
     });

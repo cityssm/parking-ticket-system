@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const ticketStatusObject = pts.getTicketStatus(ticketObject.latestStatus_statusKey);
         trElement.innerHTML = `<td>
-        <a href="/tickets/${ticketObject.ticketID.toString()}" data-tooltip="View Parking Ticket">
+        <a href="/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
         ${ticketObject.ticketNumber}
         </a>
       </td>

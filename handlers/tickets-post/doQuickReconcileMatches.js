@@ -11,14 +11,14 @@ export const handler = (request, response) => {
         const ownerAddress = getFormattedOwnerAddress(record);
         const statusResponse = createParkingTicketStatus({
             recordType: 'status',
-            ticketID: record.ticket_ticketID,
+            ticketId: record.ticket_ticketId,
             statusKey: 'ownerLookupMatch',
             statusField: record.owner_recordDateString,
             statusNote: ownerAddress
         }, request.session.user, false);
         if (statusResponse.success) {
             statusRecords.push({
-                ticketID: record.ticket_ticketID,
+                ticketId: record.ticket_ticketId,
                 statusIndex: statusResponse.statusIndex
             });
         }

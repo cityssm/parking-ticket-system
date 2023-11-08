@@ -67,27 +67,29 @@ export const getParkingTickets = (sessionUser, queryOptions) => {
         .pluck()
         .get(sqlWhereClause.sqlParameters);
     const rows = database
-        .prepare('select t.ticketID, t.ticketNumber, t.issueDate,' +
-        ' t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing,' +
-        ' t.locationKey, l.locationName, l.locationClassKey, t.locationDescription,' +
-        ' t.parkingOffence, t.offenceAmount, t.resolvedDate,' +
-        ' s.statusDate as latestStatus_statusDate,' +
-        ' s.statusKey as latestStatus_statusKey,' +
-        ' t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis' +
-        ' from ParkingTickets t' +
-        ' left join ParkingLocations l on t.locationKey = l.locationKey' +
-        ' left join ParkingTicketStatusLog s on t.ticketID = s.ticketID' +
-        (' and s.statusIndex = (' +
-            'select statusIndex from ParkingTicketStatusLog s' +
-            ' where t.ticketID = s.ticketID' +
-            ' and s.recordDelete_timeMillis is null' +
-            ' order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)') +
-        sqlWhereClause.sqlWhereClause +
-        ' order by t.issueDate desc, t.ticketNumber desc' +
-        ' limit ' +
-        queryOptions.limit.toString() +
-        ' offset ' +
-        queryOptions.offset.toString())
+        .prepare(`select t.ticketId, t.ticketNumber, t.issueDate,
+        t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber, t.licencePlateIsMissing,
+        t.locationKey, l.locationName, l.locationClassKey, t.locationDescription,
+        t.parkingOffence, t.offenceAmount,
+        t.resolvedDate,
+        s.statusDate as latestStatus_statusDate,
+        s.statusKey as latestStatus_statusKey,
+        t.recordCreate_userName, t.recordCreate_timeMillis,
+        t.recordUpdate_userName, t.recordUpdate_timeMillis
+        from ParkingTickets t
+        left join ParkingLocations l on t.locationKey = l.locationKey
+        left join ParkingTicketStatusLog s
+          on t.ticketId = s.ticketId
+          and s.statusIndex = (
+            select statusIndex from ParkingTicketStatusLog s
+            where t.ticketId = s.ticketId
+            and s.recordDelete_timeMillis is null
+            order by s.statusDate desc, s.statusTime desc, s.statusIndex desc
+            limit 1)
+        ${sqlWhereClause.sqlWhereClause}
+        order by t.issueDate desc, t.ticketNumber desc
+        limit ${queryOptions.limit.toString()}
+        offset ${queryOptions.offset.toString()}`)
         .all(sqlWhereClause.sqlParameters);
     database.close();
     for (const ticket of rows) {
@@ -110,15 +112,15 @@ export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlat
         licencePlateNumberEqual: licencePlateNumber
     });
     const rows = database
-        .prepare(`select t.ticketID, t.ticketNumber, t.issueDate, t.vehicleMakeModel,
+        .prepare(`select t.ticketId, t.ticketNumber, t.issueDate, t.vehicleMakeModel,
         t.locationKey, l.locationName, l.locationClassKey, t.locationDescription,
         t.parkingOffence, t.offenceAmount, t.resolvedDate,
         s.statusDate as latestStatus_statusDate, s.statusKey as latestStatus_statusKey,
         t.recordCreate_userName, t.recordCreate_timeMillis, t.recordUpdate_userName, t.recordUpdate_timeMillis
         from ParkingTickets t
         left join ParkingLocations l on t.locationKey = l.locationKey
-        left join ParkingTicketStatusLog s on t.ticketID = s.ticketID
-          and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketID = s.ticketID order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)
+        left join ParkingTicketStatusLog s on t.ticketId = s.ticketId
+          and s.statusIndex = (select statusIndex from ParkingTicketStatusLog s where t.ticketId = s.ticketId order by s.statusDate desc, s.statusTime desc, s.statusIndex desc limit 1)
       ${sqlWhereClause.sqlWhereClause}
       order by t.issueDate desc, t.ticketNumber desc`)
         .all(sqlWhereClause.sqlParameters);

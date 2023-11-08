@@ -4,7 +4,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export function resolveParkingTicket(
-  ticketID: number | string,
+  ticketId: number | string,
   sessionUser: PTSUser,
   connectedDatabase?: sqlite.Database
 ): { success: boolean } {
@@ -18,7 +18,7 @@ export function resolveParkingTicket(
         set resolvedDate = ?,
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and resolvedDate is null
         and recordDelete_timeMillis is null`
     )
@@ -26,7 +26,7 @@ export function resolveParkingTicket(
       dateTimeFns.dateToInteger(rightNow),
       sessionUser.userName,
       rightNow.getTime(),
-      ticketID
+      ticketId
     )
 
   if (connectedDatabase === undefined) {

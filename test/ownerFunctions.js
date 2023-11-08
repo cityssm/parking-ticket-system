@@ -26,7 +26,7 @@ describe('helpers/ownerFunctions', () => {
         });
         it('should format a ReconciliationRecord object', () => {
             const rec = {
-                ticket_ticketID: -1,
+                ticket_ticketId: -1,
                 ticket_ticketNumber: 'TKT123',
                 ticket_issueDate: 20200102,
                 ticket_vehicleMakeModel: 'Chevrolet',

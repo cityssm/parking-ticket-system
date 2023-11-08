@@ -5,8 +5,8 @@ import { getConfigProperty } from '../../helpers/functions.config.js';
 import { getLicencePlateExpiryDateFromPieces } from './updateParkingTicket.js';
 function hasDuplicateTicket(ticketNumber, issueDate, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath);
-    const duplicateTicketID = database
-        .prepare(`select ticketID from ParkingTickets
+    const duplicateTicketId = database
+        .prepare(`select ticketId from ParkingTickets
         where recordDelete_timeMillis is null
         and ticketNumber = ?
         and abs(issueDate - ?) <= 20000`)
@@ -15,7 +15,7 @@ function hasDuplicateTicket(ticketNumber, issueDate, connectedDatabase) {
     if (connectedDatabase === undefined) {
         database.close();
     }
-    return (duplicateTicketID ?? undefined) !== undefined;
+    return (duplicateTicketId ?? undefined) !== undefined;
 }
 export function createParkingTicket(requestBody, sessionUser) {
     const database = sqlite(databasePath);
@@ -60,7 +60,7 @@ export function createParkingTicket(requestBody, sessionUser) {
     database.close();
     return {
         success: true,
-        ticketID: info.lastInsertRowid,
+        ticketId: info.lastInsertRowid,
         nextTicketNumber: undefined
     };
 }

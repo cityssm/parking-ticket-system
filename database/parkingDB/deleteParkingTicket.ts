@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export function deleteParkingTicket(
-  ticketID: number,
+  ticketId: number,
   sessionUser: PTSUser
 ): { success: boolean } {
   const database = sqlite(databasePath)
@@ -13,10 +13,10 @@ export function deleteParkingTicket(
       `update ParkingTickets
         set recordDelete_userName = ?,
         recordDelete_timeMillis = ?
-        where ticketID = ?
+        where ticketId = ?
         and recordDelete_timeMillis is null`
     )
-    .run(sessionUser.userName, Date.now(), ticketID)
+    .run(sessionUser.userName, Date.now(), ticketId)
 
   database.close()
 

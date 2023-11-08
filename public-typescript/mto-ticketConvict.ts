@@ -29,7 +29,7 @@ declare const cityssm: cityssmGlobal
     '#convictable-tickets-container'
   ) as HTMLElement
 
-  let displayedTicketIDs: number[] = []
+  let displayedTicketIds: number[] = []
 
   function addTicketToBatchByIndexFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
@@ -40,13 +40,13 @@ declare const cityssm: cityssmGlobal
 
     const index = Number.parseInt(buttonElement.dataset.index ?? '-1', 10)
 
-    const ticketID = convictableTickets[index].ticketID
+    const ticketId = convictableTickets[index].ticketId
 
     cityssm.postJSON(
       '/tickets/doAddTicketToConvictionBatch',
       {
-        batchID: currentBatch.batchID,
-        ticketID
+        batchId: currentBatch.batchId,
+        ticketId
       },
       (resultJSON: {
         success: boolean
@@ -78,12 +78,12 @@ declare const cityssm: cityssmGlobal
 
     let loadingCloseModalFunction: () => void
 
-    const addFunction = () => {
+    function addFunction(): void {
       cityssm.postJSON(
         '/tickets-ontario/doAddAllTicketsToConvictionBatch',
         {
-          batchID: currentBatch.batchID,
-          ticketIDs: displayedTicketIDs
+          batchId: currentBatch.batchId,
+          ticketIds: displayedTicketIds
         },
         (responseJSON: {
           batch?: ParkingTicketConvictionBatch
@@ -106,9 +106,7 @@ declare const cityssm: cityssmGlobal
           if (responseJSON.successCount === 0) {
             cityssm.alertModal(
               'Results',
-              responseJSON.message
-                ? responseJSON.message
-                : 'No tickets were added to the batch.',
+              responseJSON.message ?? 'No tickets were added to the batch.',
               'OK',
               'warning'
             )
@@ -119,12 +117,10 @@ declare const cityssm: cityssmGlobal
 
     cityssm.openHtmlModal('loading', {
       onshow() {
-        document.querySelector('#is-loading-modal-message').textContent =
-          'Adding ' +
-          displayedTicketIDs.length.toString() +
-          ' ticket' +
-          (displayedTicketIDs.length === 1 ? '' : 's') +
-          '...'
+        document.querySelector(
+          '#is-loading-modal-message'
+        ).textContent = `Adding ${displayedTicketIds.length.toString()}
+          ticket${displayedTicketIds.length === 1 ? '' : 's'}...`
       },
       onshown(_modalElement, closeModalFunction) {
         loadingCloseModalFunction = closeModalFunction
@@ -135,7 +131,7 @@ declare const cityssm: cityssmGlobal
 
   function renderConvictableTicketsFunction(): void {
     cityssm.clearElement(convictableTicketsContainerElement)
-    displayedTicketIDs = []
+    displayedTicketIds = []
 
     if (!currentBatch) {
       convictableTicketsContainerElement.innerHTML = `<div class="message is-warning">
@@ -181,7 +177,7 @@ declare const cityssm: cityssmGlobal
         continue
       }
 
-      displayedTicketIDs.push(ticket.ticketID)
+      displayedTicketIds.push(ticket.ticketId)
 
       const trElement = document.createElement('tr')
 
@@ -189,7 +185,7 @@ declare const cityssm: cityssmGlobal
         '<td>' +
         '<a data-tooltip="View Ticket (Opens in New Window)"' +
         ' href="/tickets/' +
-        ticket.ticketID.toString() +
+        ticket.ticketId.toString() +
         '" target="_blank">' +
         cityssm.escapeHTML(ticket.ticketNumber) +
         '</a>' +
@@ -221,7 +217,7 @@ declare const cityssm: cityssmGlobal
       tbodyElement.append(trElement)
     }
 
-    if (displayedTicketIDs.length === 0) {
+    if (displayedTicketIds.length === 0) {
       convictableTicketsContainerElement.innerHTML = `<div class="message is-info">
         <div class="message-body">There are no parking tickets that meet the search criteria.</div>
         </div>`
@@ -232,14 +228,11 @@ declare const cityssm: cityssmGlobal
     const addAllButtonElement = document.createElement('button')
     addAllButtonElement.className = 'button is-fullwidth mb-3'
 
-    addAllButtonElement.innerHTML =
-      '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
-      '<span>' +
-      'Add ' +
-      displayedTicketIDs.length.toString() +
-      ' Parking Ticket' +
-      (displayedTicketIDs.length === 1 ? '' : 's') +
-      '</span>'
+    addAllButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+      <span>
+        Add ${displayedTicketIds.length.toString()}
+        Parking Ticket${displayedTicketIds.length === 1 ? '' : 's'}
+      </span>`
 
     addAllButtonElement.addEventListener('click', addAllTicketsToBatchFunction)
 
@@ -248,13 +241,12 @@ declare const cityssm: cityssmGlobal
     const tableElement = document.createElement('table')
     tableElement.className = 'table is-striped is-hoverable is-fullwidth'
 
-    tableElement.innerHTML =
-      '<thead><tr>' +
-      '<th>Ticket Number</th>' +
-      '<th>Issue Date</th>' +
-      '<th>Licence Plate</th>' +
-      '<th></th>' +
-      '</tr></thead>'
+    tableElement.innerHTML = `<thead><tr>
+      <th>Ticket Number</th>
+      <th>Issue Date</th>
+      <th>Licence Plate</th>
+      <th></th>
+      </tr></thead>`
 
     tableElement.append(tbodyElement)
 
@@ -283,13 +275,13 @@ declare const cityssm: cityssmGlobal
 
     const index = Number.parseInt(buttonElement.dataset.index ?? '-1', 10)
 
-    const ticketID = currentBatch.batchEntries[index].ticketID
+    const ticketId = currentBatch.batchEntries[index].ticketId
 
     cityssm.postJSON(
       '/tickets-ontario/doRemoveTicketFromConvictionBatch',
       {
-        batchID: currentBatch.batchID,
-        ticketID
+        batchId: currentBatch.batchId,
+        ticketId
       },
       (resultJSON: { success: boolean; tickets?: ParkingTicket[] }) => {
         if (resultJSON.success) {
@@ -312,7 +304,7 @@ declare const cityssm: cityssmGlobal
       cityssm.postJSON(
         '/tickets-ontario/doClearConvictionBatch',
         {
-          batchID: currentBatch.batchID
+          batchId: currentBatch.batchId
         },
         (responseJSON: {
           success: boolean
@@ -323,7 +315,7 @@ declare const cityssm: cityssmGlobal
           if (!responseJSON.success) {
             cityssm.alertModal(
               'Batch Not Cleared',
-              responseJSON.message,
+              responseJSON.message ?? '',
               'OK',
               'danger'
             )
@@ -351,14 +343,14 @@ declare const cityssm: cityssmGlobal
     )
   }
 
-  const lockBatchFunction = (clickEvent: Event) => {
+  function lockBatchFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    const lockFunction = () => {
+    function lockFunction(): void {
       cityssm.postJSON(
         '/tickets/doLockConvictionBatch',
         {
-          batchID: currentBatch.batchID
+          batchId: currentBatch.batchId
         },
         (responseJSON: {
           success: boolean
@@ -387,14 +379,14 @@ declare const cityssm: cityssmGlobal
     )
   }
 
-  const unlockBatchFunction = (clickEvent: Event) => {
+  function unlockBatchFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    const lockFunction = () => {
+    function lockFunction(): void {
       cityssm.postJSON(
         '/tickets/doUnlockConvictionBatch',
         {
-          batchID: currentBatch.batchID
+          batchId: currentBatch.batchId
         },
         (responseJSON: { success: boolean }) => {
           if (responseJSON.success) {
@@ -418,13 +410,11 @@ declare const cityssm: cityssmGlobal
     )
   }
 
-  const downloadBatchFunction = (clickEvent: Event) => {
+  function downloadBatchFunction(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    const downloadFunction = () => {
-      window.open(
-        '/tickets/convict/' + currentBatch.batchID.toString() + '/print'
-      )
+    function downloadFunction(): void {
+      window.open(`/tickets/convict/${currentBatch.batchId.toString()}/print`)
     }
 
     if (!currentBatch.sentDate) {
@@ -438,7 +428,7 @@ declare const cityssm: cityssmGlobal
           cityssm.postJSON(
             '/tickets/doMarkConvictionBatchSent',
             {
-              batchID: currentBatch.batchID
+              batchId: currentBatch.batchId
             },
             (rawResponseJSON) => {
               const responseJSON = rawResponseJSON as {
@@ -460,9 +450,9 @@ declare const cityssm: cityssmGlobal
     }
   }
 
-  const renderCurrentBatchFunction = () => {
-    document.querySelector('#batchSelector--batchID').textContent =
-      'Batch #' + currentBatch.batchID.toString()
+  function renderCurrentBatchFunction(): void {
+    document.querySelector('#batchSelector--batchId').textContent =
+      'Batch #' + currentBatch.batchId.toString()
 
     document.querySelector('#batchSelector--batchDetails').innerHTML =
       '<span class="has-tooltip-left" data-tooltip="Batch Date">' +
@@ -497,7 +487,7 @@ declare const cityssm: cityssmGlobal
       trElement.innerHTML =
         '<td>' +
         '<a href="/tickets/' +
-        batchEntry.ticketID.toString() +
+        batchEntry.ticketId.toString() +
         '" target="_blank">' +
         batchEntry.ticketNumber +
         '</a>' +
@@ -524,7 +514,7 @@ declare const cityssm: cityssmGlobal
       if (canRemove) {
         trElement
           .querySelector('button')
-          .addEventListener('click', removeTicketFromBatchByIndexFunction)
+          ?.addEventListener('click', removeTicketFromBatchByIndexFunction)
       }
 
       tbodyElement.append(trElement)
@@ -636,16 +626,16 @@ declare const cityssm: cityssmGlobal
 
       let selectBatchCloseModalFunction: () => void
 
-      const selectFunction = (clickEvent: Event) => {
+      function selectFunction(clickEvent: Event): void {
         clickEvent.preventDefault()
 
-        const batchID = (clickEvent.currentTarget as HTMLAnchorElement).dataset
+        const batchId = (clickEvent.currentTarget as HTMLAnchorElement).dataset
           .batchId
 
         cityssm.postJSON(
           '/tickets/doGetConvictionBatch',
           {
-            batchID
+            batchId
           },
           (batchObject: ParkingTicketConvictionBatch) => {
             currentBatch = batchObject
@@ -663,7 +653,7 @@ declare const cityssm: cityssmGlobal
           if (canUpdate) {
             const createButtonElement = modalElement.querySelector(
               '.is-create-batch-button'
-            )
+            ) as HTMLElement
 
             createButtonElement.classList.remove('is-hidden')
 
@@ -679,7 +669,7 @@ declare const cityssm: cityssmGlobal
 
           cityssm.postJSON(
             '/tickets/doGetRecentConvictionBatches',
-            [],
+            {},
             (batchList: ParkingTicketConvictionBatch[]) => {
               const resultsContainerElement = modalElement.querySelector(
                 '.is-results-container'
@@ -701,13 +691,13 @@ declare const cityssm: cityssmGlobal
               for (const batch of batchList) {
                 const batchListItemElement = document.createElement('a')
                 batchListItemElement.className = 'list-item'
-                batchListItemElement.dataset.batchId = batch.batchID.toString()
+                batchListItemElement.dataset.batchId = batch.batchId.toString()
                 batchListItemElement.href = '#'
 
                 batchListItemElement.innerHTML =
                   '<div class="columns">' +
                   '<div class="column is-narrow">#' +
-                  batch.batchID.toString() +
+                  batch.batchId.toString() +
                   '</div>' +
                   '<div class="column has-text-right">' +
                   batch.batchDateString +

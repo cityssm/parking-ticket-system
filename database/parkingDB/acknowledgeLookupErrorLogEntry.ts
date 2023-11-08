@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 export function acknowledgeLookupErrorLogEntry(
-  batchID: number,
+  batchId: number,
   logIndex: number,
   sessionUser: PTSUser
 ): boolean {
@@ -16,11 +16,11 @@ export function acknowledgeLookupErrorLogEntry(
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
         where recordDelete_timeMillis is null
-        and batchID = ?
+        and batchId = ?
         and logIndex = ?
         and isAcknowledged = 0`
     )
-    .run(sessionUser.userName, Date.now(), batchID, logIndex)
+    .run(sessionUser.userName, Date.now(), batchId, logIndex)
 
   database.close()
 

@@ -4,27 +4,27 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 interface IsParkingTicketConvictedReturn {
   inBatch: boolean
-  batchIDString?: string
+  batchIdString?: string
 }
 
-export const isParkingTicketInConvictionBatchWithDB = (
+export function isParkingTicketInConvictionBatchWithDB(
   database: sqlite.Database,
-  ticketID: number
-): IsParkingTicketConvictedReturn => {
+  ticketId: number
+): IsParkingTicketConvictedReturn {
   const batchStatusCheck = database
     .prepare(
       `select statusField
         from ParkingTicketStatusLog
         where recordDelete_timeMillis is null
-        and ticketID = ?
+        and ticketId = ?
         and statusKey = 'convictionBatch'`
     )
-    .get(ticketID) as { statusField: string } | undefined
+    .get(ticketId) as { statusField: string } | undefined
 
   if (batchStatusCheck !== undefined) {
     return {
       inBatch: true,
-      batchIDString: batchStatusCheck.statusField
+      batchIdString: batchStatusCheck.statusField
     }
   }
 
@@ -33,14 +33,14 @@ export const isParkingTicketInConvictionBatchWithDB = (
   }
 }
 
-export const isParkingTicketInConvictionBatch = (
-  ticketID: number
-): IsParkingTicketConvictedReturn => {
+export function isParkingTicketInConvictionBatch(
+  ticketId: number
+): IsParkingTicketConvictedReturn {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
-  const result = isParkingTicketInConvictionBatchWithDB(database, ticketID)
+  const result = isParkingTicketInConvictionBatchWithDB(database, ticketId)
 
   database.close()
 

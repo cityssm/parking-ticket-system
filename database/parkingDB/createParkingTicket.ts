@@ -14,9 +14,9 @@ function hasDuplicateTicket(
 ): boolean {
   const database = connectedDatabase ?? sqlite(databasePath)
 
-  const duplicateTicketID = database
+  const duplicateTicketId = database
     .prepare(
-      `select ticketID from ParkingTickets
+      `select ticketId from ParkingTickets
         where recordDelete_timeMillis is null
         and ticketNumber = ?
         and abs(issueDate - ?) <= 20000`
@@ -28,13 +28,13 @@ function hasDuplicateTicket(
     database.close()
   }
 
-  return (duplicateTicketID ?? undefined) !== undefined
+  return (duplicateTicketId ?? undefined) !== undefined
 }
 
 interface CreateParkingTicketReturn {
   success: boolean
   message?: string
-  ticketID?: number
+  ticketId?: number
   nextTicketNumber?: string
 }
 
@@ -125,7 +125,7 @@ export function createParkingTicket(
 
   return {
     success: true,
-    ticketID: info.lastInsertRowid as number,
+    ticketId: info.lastInsertRowid as number,
     nextTicketNumber: undefined // populated in handler
   }
 }

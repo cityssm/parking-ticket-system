@@ -1,42 +1,41 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 
-import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types'
-import type { ptsGlobal } from '../types/publicTypes'
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
+
+import type { ptsGlobal } from '../types/publicTypes.js'
 
 declare const cityssm: cityssmGlobal
 declare const pts: ptsGlobal
-
 ;(() => {
-  pts.initializeToggleHiddenLinks(document.querySelector('main'))
+  pts.initializeToggleHiddenLinks(document.querySelector('main') as HTMLElement)
 
   // ERROR LOG TABLE
 
-  const clickFunction_acknowledgeError = (clickEvent: Event) => {
+  function acknowledgeError(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
     buttonElement.setAttribute('disabled', 'disabled')
 
-    const batchID = buttonElement.dataset.batchId
+    const batchId = buttonElement.dataset.batchId
     const logIndex = buttonElement.dataset.logIndex
 
     cityssm.postJSON(
       '/tickets/doAcknowledgeLookupError',
       {
-        batchID,
+        batchId,
         logIndex
       },
       (responseJSON: { success: boolean }) => {
         if (responseJSON.success) {
-          const tdElement = buttonElement.closest('td')
+          const tdElement = buttonElement.closest('td') as HTMLTableCellElement
 
           cityssm.clearElement(tdElement)
 
-          tdElement.innerHTML =
-            '<span class="tag is-light is-warning">' +
-            '<span class="icon is-small"><i class="fas fa-check" aria-hidden="true"></i></span>' +
-            '<span>Acknowledged</span>' +
-            '</span>'
+          tdElement.innerHTML = `<span class="tag is-light is-warning">
+            <span class="icon is-small"><i class="fas fa-check" aria-hidden="true"></i></span>
+            <span>Acknowledged</span>
+            </span>`
         } else {
           buttonElement.removeAttribute('disabled')
         }
@@ -49,28 +48,26 @@ declare const pts: ptsGlobal
   )
 
   for (const acknowledgeButtonElement of acknowledgeButtonElements) {
-    acknowledgeButtonElement.addEventListener(
-      'click',
-      clickFunction_acknowledgeError
-    )
+    acknowledgeButtonElement.addEventListener('click', acknowledgeError)
   }
 
   // RECONCILE TABLE
 
-  const clickFunction_clearStatus = (clickEvent: Event) => {
+  function clearStatus(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const anchorElement = clickEvent.currentTarget as HTMLAnchorElement
 
-    const optionsTdElement = anchorElement.closest('td')
-    const trElement = optionsTdElement.closest('tr')
+    const optionsTdElement = anchorElement.closest('td') as HTMLTableCellElement
 
-    const clearFunction = () => {
+    const trElement = optionsTdElement.closest('tr') as HTMLTableRowElement
+
+    function clearFunction(): void {
       cityssm.postJSON(
         '/tickets/doDeleteStatus',
         {
-          ticketID: trElement.getAttribute('data-ticket-id'),
-          statusIndex: anchorElement.getAttribute('data-status-index')
+          ticketId: trElement.dataset.ticketId,
+          statusIndex: anchorElement.dataset.statusIndex
         },
         (responseJSON: { success: boolean }) => {
           if (responseJSON.success) {
@@ -78,23 +75,22 @@ declare const pts: ptsGlobal
 
             optionsTdElement.classList.remove('has-width-200')
 
-            optionsTdElement.innerHTML =
-              '<button class="button is-success is-ownership-match-button" type="button">' +
-              '<span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>' +
-              '<span>Match</span>' +
-              '</button>' +
-              ' <button class="button is-danger is-ownership-error-button" type="button">' +
-              '<i class="fas fa-times" aria-hidden="true"></i>' +
-              '<span class="sr-only">Error</span>' +
-              '</button>'
+            optionsTdElement.innerHTML = `<button class="button is-success is-ownership-match-button" type="button">
+              <span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+              <span>Match</span>
+              </button>
+              <button class="button is-danger is-ownership-error-button" type="button">
+              <i class="fas fa-times" aria-hidden="true"></i>
+              <span class="sr-only">Error</span>
+              </button>`
 
             optionsTdElement
               .querySelector('.is-ownership-match-button')
-              .addEventListener('click', clickFunction_markAsMatch)
+              ?.addEventListener('click', markAsMatch)
 
             optionsTdElement
               .querySelector('.is-ownership-error-button')
-              .addEventListener('click', clickFunction_markAsError)
+              ?.addEventListener('click', markAsError)
           }
         }
       )
@@ -109,22 +105,22 @@ declare const pts: ptsGlobal
     )
   }
 
-  const clickFunction_markAsMatch = (clickEvent: Event) => {
+  function markAsMatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
 
-    const optionsTdElement = buttonElement.closest('td')
-    const trElement = optionsTdElement.closest('tr')
+    const optionsTdElement = buttonElement.closest('td') as HTMLTableCellElement
+    const trElement = optionsTdElement.closest('tr') as HTMLTableRowElement
 
-    const matchFunction = () => {
+    function doMatch(): void {
       buttonElement.setAttribute('disabled', 'disabled')
 
       const licencePlateCountry = trElement.dataset.licencePlateCountry
       const licencePlateProvince = trElement.dataset.licencePlateProvince
       const licencePlateNumber = trElement.dataset.licencePlateNumber
 
-      const ticketID = trElement.dataset.ticketId
+      const ticketId = trElement.dataset.ticketId
       const recordDate = trElement.dataset.recordDate
 
       cityssm.postJSON(
@@ -133,7 +129,7 @@ declare const pts: ptsGlobal
           licencePlateCountry,
           licencePlateProvince,
           licencePlateNumber,
-          ticketID,
+          ticketId,
           recordDate
         },
         (responseJSON: {
@@ -161,13 +157,13 @@ declare const pts: ptsGlobal
 
             optionsTdElement
               .querySelector('a')
-              .addEventListener('click', clickFunction_clearStatus)
+              ?.addEventListener('click', clearStatus)
           } else {
             buttonElement.removeAttribute('disabled')
 
             cityssm.alertModal(
               'Record Not Updated',
-              responseJSON.message,
+              responseJSON.message ?? '',
               'OK',
               'danger'
             )
@@ -180,7 +176,7 @@ declare const pts: ptsGlobal
       trElement.hasAttribute('data-is-vehicle-make-match') &&
       trElement.hasAttribute('data-is-licence-plate-expiry-date-match')
     ) {
-      matchFunction()
+      doMatch()
     } else {
       const ticketVehicle = trElement.dataset.ticketVehicle
       const ticketExpiryDate = trElement.dataset.ticketExpiryDate
@@ -216,18 +212,18 @@ declare const pts: ptsGlobal
           '</div>',
         'Yes, Confirm Match',
         'warning',
-        matchFunction
+        doMatch
       )
     }
   }
 
-  const clickFunction_markAsError = (clickEvent: Event) => {
+  function markAsError(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
 
-    const optionsTdElement = buttonElement.closest('td')
-    const trElement = optionsTdElement.closest('tr')
+    const optionsTdElement = buttonElement.closest('td') as HTMLTableCellElement
+    const trElement = optionsTdElement.closest('tr') as HTMLTableRowElement
 
     const errorFunction = () => {
       buttonElement.setAttribute('disabled', 'disabled')
@@ -236,7 +232,7 @@ declare const pts: ptsGlobal
       const licencePlateProvince = trElement.dataset.licencePlateProvince
       const licencePlateNumber = trElement.dataset.licencePlateNumber
 
-      const ticketID = trElement.dataset.ticketId
+      const ticketId = trElement.dataset.ticketId
       const recordDate = trElement.dataset.recordDate
 
       cityssm.postJSON(
@@ -245,7 +241,7 @@ declare const pts: ptsGlobal
           licencePlateCountry,
           licencePlateProvince,
           licencePlateNumber,
-          ticketID,
+          ticketId,
           recordDate
         },
         (responseJSON: {
@@ -274,13 +270,13 @@ declare const pts: ptsGlobal
 
             optionsTdElement
               .querySelector('a')
-              .addEventListener('click', clickFunction_clearStatus)
+              ?.addEventListener('click', clearStatus)
           } else {
             buttonElement.removeAttribute('disabled')
 
             cityssm.alertModal(
               'Record Not Updated',
-              responseJSON.message,
+              responseJSON.message ?? '',
               'OK',
               'danger'
             )
@@ -293,10 +289,10 @@ declare const pts: ptsGlobal
       trElement.hasAttribute('data-is-vehicle-make-match') ||
       trElement.hasAttribute('data-is-licence-plate-expiry-date-match')
     ) {
-      const ticketVehicle = trElement.getAttribute('data-ticket-vehicle')
-      const ticketExpiryDate = trElement.getAttribute('data-ticket-expiry-date')
-      const ownerVehicle = trElement.getAttribute('data-owner-vehicle')
-      const ownerExpiryDate = trElement.getAttribute('data-owner-expiry-date')
+      const ticketVehicle = trElement.dataset.ticketVehicle ?? ''
+      const ticketExpiryDate = trElement.dataset.ticketExpiryDate ?? ''
+      const ownerVehicle = trElement.dataset.ownerVehicle ?? ''
+      const ownerExpiryDate = trElement.dataset.ownerExpiryDate ?? ''
 
       cityssm.confirmModal(
         'Confirm Error',
@@ -340,7 +336,7 @@ declare const pts: ptsGlobal
   )
 
   for (const matchButtonElement of matchButtonElements) {
-    matchButtonElement.addEventListener('click', clickFunction_markAsMatch)
+    matchButtonElement.addEventListener('click', markAsMatch)
   }
 
   const errorButtonElements = document.querySelectorAll(
@@ -348,7 +344,7 @@ declare const pts: ptsGlobal
   )
 
   for (const errorButtonElement of errorButtonElements) {
-    errorButtonElement.addEventListener('click', clickFunction_markAsError)
+    errorButtonElement.addEventListener('click', markAsError)
   }
 
   const quickReconcilieButtonElement = document.querySelector(
@@ -361,14 +357,14 @@ declare const pts: ptsGlobal
 
       let loadingCloseModalFunction: () => void
 
-      const reconcileFunction = () => {
+      function doReconcile(): void {
         cityssm.postJSON(
           '/tickets/doQuickReconcileMatches',
           {},
           (responseJSON: {
             success: boolean
             statusRecords: Array<{
-              ticketID: number
+              ticketId: number
               statusIndex: number
             }>
           }) => {
@@ -387,7 +383,7 @@ declare const pts: ptsGlobal
 
               for (const statusRecord of responseJSON.statusRecords) {
                 const optionsTdElement = document.querySelector(
-                  '#is-options-cell--' + statusRecord.ticketID.toString()
+                  '#is-options-cell--' + statusRecord.ticketId.toString()
                 ) as HTMLElement
 
                 if (optionsTdElement) {
@@ -411,7 +407,7 @@ declare const pts: ptsGlobal
 
                   optionsTdElement
                     .querySelector('a')
-                    .addEventListener('click', clickFunction_clearStatus)
+                    ?.addEventListener('click', clearStatus)
                 }
               }
             }
@@ -426,7 +422,7 @@ declare const pts: ptsGlobal
               'Reconciling matches...'
             loadingCloseModalFunction = closeModalFunction
 
-            reconcileFunction()
+            doReconcile()
           }
         })
       }

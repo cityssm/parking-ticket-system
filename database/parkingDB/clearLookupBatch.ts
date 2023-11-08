@@ -5,7 +5,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LookupBatchReturn } from './getLookupBatch.js'
 
 export const clearLookupBatch = (
-  batchID: number,
+  batchId: number,
   sessionUser: PTSUser
 ): LookupBatchReturn => {
   const database = sqlite(databasePath)
@@ -17,11 +17,11 @@ export const clearLookupBatch = (
       `update LicencePlateLookupBatches
         set recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
-        where batchID = ?
+        where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is null`
     )
-    .run(sessionUser.userName, Date.now(), batchID).changes
+    .run(sessionUser.userName, Date.now(), batchId).changes
 
   if (canUpdateBatch === 0) {
     database.close()
@@ -33,8 +33,8 @@ export const clearLookupBatch = (
   }
 
   database
-    .prepare('delete from LicencePlateLookupBatchEntries where batchID = ?')
-    .run(batchID)
+    .prepare('delete from LicencePlateLookupBatchEntries where batchId = ?')
+    .run(batchId)
 
   database.close()
 

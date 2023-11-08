@@ -6,7 +6,7 @@ import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
 import type { LicencePlate } from '../../types/recordTypes.js'
 
 export interface ReconciliationRecord extends LicencePlate {
-  ticket_ticketID: number
+  ticket_ticketId: number
   ticket_ticketNumber: string
   ticket_issueDate: number
   ticket_issueDateString?: string
@@ -47,7 +47,7 @@ export const getOwnershipReconciliationRecords = (): ReconciliationRecord[] => {
   const records = database
     .prepare(
       'select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber,' +
-        ' t.ticketID as ticket_ticketID,' +
+        ' t.ticketId as ticket_ticketId,' +
         ' t.ticketNumber as ticket_ticketNumber,' +
         ' t.issueDate as ticket_issueDate,' +
         ' t.vehicleMakeModel as ticket_vehicleMakeModel,' +
@@ -83,7 +83,7 @@ export const getOwnershipReconciliationRecords = (): ReconciliationRecord[] => {
         ' and t.resolvedDate is null' +
         (' and not exists (' +
           'select 1 from ParkingTicketStatusLog s ' +
-          ' where t.ticketID = s.ticketID ' +
+          ' where t.ticketId = s.ticketId ' +
           " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
           ' and s.recordDelete_timeMillis is null)')
     )

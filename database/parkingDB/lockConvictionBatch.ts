@@ -9,10 +9,10 @@ interface LockConvictionBatchReturn {
   lockDateString: string
 }
 
-export const lockConvictionBatch = (
-  batchID: number,
+export function lockConvictionBatch(
+  batchId: number,
   sessionUser: PTSUser
-): LockConvictionBatchReturn => {
+): LockConvictionBatchReturn {
   const database = sqlite(databasePath)
 
   const rightNow = new Date()
@@ -26,10 +26,10 @@ export const lockConvictionBatch = (
         recordUpdate_userName = ?,
         recordUpdate_timeMillis = ?
         where recordDelete_timeMillis is null
-        and batchID = ?
+        and batchId = ?
         and lockDate is null`
     )
-    .run(lockDate, sessionUser.userName, rightNow.getTime(), batchID)
+    .run(lockDate, sessionUser.userName, rightNow.getTime(), batchId)
 
   database.close()
 

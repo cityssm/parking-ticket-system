@@ -29,7 +29,7 @@ export function createParkingTicketStatus(
 
   // Get new status index
   const statusIndexNew = getNextParkingTicketStatusIndex(
-    requestBodyOrObject.ticketID as number | string,
+    requestBodyOrObject.ticketId as number | string,
     database
   )
 
@@ -39,7 +39,7 @@ export function createParkingTicketStatus(
   const info = database
     .prepare(
       `insert into ParkingTicketStatusLog (
-        ticketID, statusIndex,
+        ticketId, statusIndex,
         statusDate, statusTime,
         statusKey, statusField, statusField2, statusNote,
         recordCreate_userName, recordCreate_timeMillis,
@@ -47,7 +47,7 @@ export function createParkingTicketStatus(
       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .run(
-      requestBodyOrObject.ticketID,
+      requestBodyOrObject.ticketId,
       statusIndexNew,
       dateTimeFns.dateToInteger(rightNow),
       dateTimeFns.dateToTimeInteger(rightNow),
@@ -63,7 +63,7 @@ export function createParkingTicketStatus(
 
   if (info.changes > 0 && resolveTicket) {
     resolveParkingTicket(
-      requestBodyOrObject.ticketID as number | string,
+      requestBodyOrObject.ticketId as number | string,
       sessionUser,
       database
     )

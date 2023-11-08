@@ -4,7 +4,7 @@ import { deleteParkingTicketRemark } from '../../database/parkingDB/deleteParkin
 
 export const handler: RequestHandler = (request, response) => {
   const result = deleteParkingTicketRemark(
-    request.body.ticketID,
+    request.body.ticketId,
     request.body.remarkIndex,
     request.session.user as PTSUser
   )

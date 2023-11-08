@@ -3,9 +3,9 @@ import type { RequestHandler } from 'express'
 import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const ticketID = Number.parseInt(request.params.ticketID, 10)
+  const ticketId = Number.parseInt(request.params.ticketId, 10)
 
-  const ticket = getParkingTicket(ticketID, request.session.user as PTSUser)
+  const ticket = getParkingTicket(ticketId, request.session.user as PTSUser)
 
   if (!ticket) {
     response.redirect('/tickets/?error=ticketNotFound')
