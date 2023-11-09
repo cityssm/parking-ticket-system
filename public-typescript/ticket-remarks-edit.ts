@@ -1,9 +1,13 @@
 /* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
+/* eslint-disable no-extra-semi */
 
+// eslint-disable-next-line n/no-missing-import
+import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-import type * as recordTypes from '../types/recordTypes.js'
+import type { ParkingTicketRemark } from '../types/recordTypes.js'
 
+declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 ;(() => {
   const ticketId = (
@@ -14,7 +18,7 @@ declare const cityssm: cityssmGlobal
     '#is-remark-panel'
   ) as HTMLElement
 
-  let remarkList: recordTypes.ParkingTicketRemark[] = exports.ticketRemarks
+  let remarkList: ParkingTicketRemark[] = exports.ticketRemarks
   delete exports.ticketRemarks
 
   function clearRemarkPanel(): void {
@@ -27,29 +31,34 @@ declare const cityssm: cityssmGlobal
   }
 
   function confirmDeleteRemark(clickEvent: Event): void {
-    const remarkIndex = (clickEvent.currentTarget as HTMLAnchorElement).dataset
+    const remarkIndex = (clickEvent.currentTarget as HTMLElement).dataset
       .remarkIndex
 
-    cityssm.confirmModal(
-      'Delete Remark?',
-      'Are you sure you want to delete this remark?',
-      'Yes, Delete',
-      'warning',
-      () => {
-        cityssm.postJSON(
-          '/tickets/doDeleteRemark',
-          {
-            ticketId,
-            remarkIndex
-          },
-          (resultJSON: { success: boolean }) => {
-            if (resultJSON.success) {
-              getRemarks()
-            }
+    function doDelete(): void {
+      cityssm.postJSON(
+        '/tickets/doDeleteRemark',
+        {
+          ticketId,
+          remarkIndex
+        },
+        (rawResponseJSON) => {
+          const resultJSON = rawResponseJSON as { success: boolean }
+          if (resultJSON.success) {
+            getRemarks()
           }
-        )
+        }
+      )
+    }
+
+    bulmaJS.confirm({
+      title: 'Delete Remark',
+      message: 'Are you sure you want to delete this remark?',
+      contextualColorName: 'warning',
+      okButton: {
+        text: 'Yes, Delete',
+        callbackFunction: doDelete
       }
-    )
+    })
   }
 
   function openEditRemarkModal(clickEvent: Event): void {
@@ -58,7 +67,7 @@ declare const cityssm: cityssmGlobal
     let editRemarkCloseModalFunction: () => void
 
     const index = Number.parseInt(
-      (clickEvent.currentTarget as HTMLButtonElement).dataset.index,
+      (clickEvent.currentTarget as HTMLButtonElement).dataset.index ?? '-1',
       10
     )
 
@@ -70,7 +79,8 @@ declare const cityssm: cityssmGlobal
       cityssm.postJSON(
         '/tickets/doUpdateRemark',
         formEvent.currentTarget,
-        (responseJSON: { success: boolean }) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as { success: boolean }
           if (responseJSON.success) {
             editRemarkCloseModalFunction()
             getRemarks()
@@ -127,50 +137,41 @@ declare const cityssm: cityssmGlobal
       const panelBlockElement = document.createElement('div')
       panelBlockElement.className = 'panel-block is-block'
 
-      panelBlockElement.innerHTML =
-        '<div class="columns">' +
-        ('<div class="column">' +
-          '<p class="has-newline-chars">' +
-          cityssm.escapeHTML(remarkObject.remark) +
-          '</p>' +
-          '<p class="is-size-7">' +
-          (remarkObject.recordCreate_timeMillis ===
-          remarkObject.recordUpdate_timeMillis
-            ? ''
-            : '<i class="fas fa-pencil-alt" aria-hidden="true"></i> ') +
-          remarkObject.recordUpdate_userName +
-          ' - ' +
-          remarkObject.remarkDateString +
-          ' ' +
-          remarkObject.remarkTimeString +
-          '</p>' +
-          '</div>') +
-        (remarkObject.canUpdate
-          ? '<div class="column is-narrow">' +
-            '<div class="buttons is-right has-addons">' +
-            ('<button class="button is-small is-edit-remark-button"' +
-              ' data-cy="edit-remark"' +
-              ' data-tooltip="Edit Remark" data-index="' +
-              index.toString() +
-              '" type="button">' +
-              '<span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>' +
-              ' <span>Edit</span>' +
-              '</button>') +
-            ('<button class="button is-small has-text-danger is-delete-remark-button"' +
-              ' data-cy="delete-remark"' +
-              ' data-tooltip="Delete Remark"' +
-              ' data-remark-index="' +
-              remarkObject.remarkIndex.toString() +
-              '" type="button">' +
-              '<i class="fas fa-trash" aria-hidden="true"></i>' +
-              '<span class="sr-only">Delete</span>' +
-              '</button>') +
-            '</div>' +
-            '</div>'
-          : '') +
-        '</div>'
+      panelBlockElement.innerHTML = `<div class="columns">
+          <div class="column">
+            <p class="has-newline-chars">
+              ${cityssm.escapeHTML(remarkObject.remark)}
+            </p>
+            <p class="is-size-7">
+            ${
+              remarkObject.recordCreate_timeMillis ===
+              remarkObject.recordUpdate_timeMillis
+                ? ''
+                : '<i class="fas fa-pencil-alt" aria-hidden="true"></i> '
+            }
+            ${remarkObject.recordUpdate_userName}
+            - ${remarkObject.remarkDateString} ${remarkObject.remarkTimeString}
+            </p>
+          </div>
+          ${
+            remarkObject.canUpdate ?? false
+              ? `<div class="column is-narrow">
+                  <div class="buttons is-right has-addons">
+                    <button class="button is-small is-edit-remark-button" data-cy="edit-remark" data-tooltip="Edit Remark" data-index="${index.toString()}" type="button">
+                      <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
+                      <span>Edit</span>
+                    </button>
+                    <button class="button is-small has-text-danger is-delete-remark-button" data-cy="delete-remark" data-tooltip="Delete Remark" data-remark-index="${remarkObject.remarkIndex.toString()}" type="button">
+                      <i class="fas fa-trash" aria-hidden="true"></i>
+                      <span class="sr-only">Delete</span>
+                    </button>
+                  </div>
+                  </div>`
+              : ''
+          }
+        </div>`
 
-      if (remarkObject.canUpdate) {
+      if (remarkObject.canUpdate ?? false) {
         panelBlockElement
           .querySelector('.is-edit-remark-button')
           ?.addEventListener('click', openEditRemarkModal)
@@ -202,7 +203,9 @@ declare const cityssm: cityssmGlobal
       {
         ticketId
       },
-      (responseRemarkList: recordTypes.ParkingTicketRemark[]) => {
+      (rawResponseJSON) => {
+        const responseRemarkList =
+          rawResponseJSON as unknown as ParkingTicketRemark[]
         remarkList = responseRemarkList
         populateRemarksPanel()
       }
@@ -216,13 +219,14 @@ declare const cityssm: cityssmGlobal
 
       let addRemarkCloseModalFunction: () => void
 
-      const submitFunction = (formEvent: Event) => {
+      function doSubmit(formEvent: Event): void {
         formEvent.preventDefault()
 
         cityssm.postJSON(
           '/tickets/doAddRemark',
           formEvent.currentTarget,
-          (responseJSON: { success: boolean }) => {
+          (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON as { success: boolean }
             if (responseJSON.success) {
               addRemarkCloseModalFunction()
               getRemarks()
@@ -239,7 +243,7 @@ declare const cityssm: cityssmGlobal
 
           modalElement
             .querySelector('form')
-            ?.addEventListener('submit', submitFunction)
+            ?.addEventListener('submit', doSubmit)
         },
         onshown(_modalElement, closeModalFunction) {
           addRemarkCloseModalFunction = closeModalFunction

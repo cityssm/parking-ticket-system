@@ -64,7 +64,7 @@ declare const pts: ptsGlobal
   }
 
   function confirmDeleteStatusFunction(clickEvent: Event): void {
-    const statusIndex = (clickEvent.currentTarget as HTMLButtonElement).dataset
+    const statusIndex = (clickEvent.currentTarget as HTMLElement).dataset
       .statusIndex
 
     function doDeleteStatus(): void {
@@ -106,7 +106,7 @@ declare const pts: ptsGlobal
 
     const statusObject = statusList[index]
 
-    function submitFunction(formEvent: Event): void {
+    function doSubmit(formEvent: Event): void {
       formEvent.preventDefault()
 
       cityssm.postJSON(
@@ -222,7 +222,8 @@ declare const pts: ptsGlobal
                   if (statusKeyObject.statusField) {
                     const fieldElement = document
                       .querySelector('#editStatus--statusField')
-                      ?.closest('.field')
+                      ?.closest('.field') as HTMLElement
+
                     fieldElement.querySelector('label').textContent =
                       statusKeyObject.statusField.fieldLabel
                     fieldElement.classList.remove('is-hidden')
@@ -231,7 +232,8 @@ declare const pts: ptsGlobal
                   if (statusKeyObject.statusField2) {
                     const fieldElement = document
                       .querySelector('#editStatus--statusField2')
-                      ?.closest('.field')
+                      ?.closest('.field') as HTMLElement
+
                     fieldElement.querySelector('label').textContent =
                       statusKeyObject.statusField2.fieldLabel
                     fieldElement.classList.remove('is-hidden')
@@ -247,15 +249,13 @@ declare const pts: ptsGlobal
               )
             }
 
-            statusKeyElement.value = statusObject.statusKey
+            statusKeyElement.value = statusObject.statusKey ?? ''
 
             statusKeyElement.addEventListener('change', statusKeyChangeFunction)
           }
         )
 
-        modalElement
-          .querySelector('form')
-          ?.addEventListener('submit', submitFunction)
+        modalElement.querySelector('form')?.addEventListener('submit', doSubmit)
       },
       onshown(_modalElement, closeModalFunction) {
         editStatusCloseModalFunction = closeModalFunction

@@ -64,7 +64,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let editStatusCloseModalFunction;
         const index = Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '-1', 10);
         const statusObject = statusList[index];
-        function submitFunction(formEvent) {
+        function doSubmit(formEvent) {
             formEvent.preventDefault();
             cityssm.postJSON('/tickets/doUpdateStatus', formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -113,7 +113,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 statusDateElement.setAttribute('max', cityssm.dateToString(new Date()));
                 document.querySelector('#editStatus--statusTimeString').value = (_e = statusObject.statusTimeString) !== null && _e !== void 0 ? _e : '';
                 pts.getDefaultConfigProperty('parkingTicketStatuses', (parkingTicketStatuses) => {
-                    var _a, _b;
+                    var _a, _b, _c;
                     let statusKeyFound = false;
                     const statusKeyElement = document.querySelector('#editStatus--statusKey');
                     for (const statusKeyObject of parkingTicketStatuses) {
@@ -142,11 +142,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     if (!statusKeyFound) {
                         statusKeyElement.insertAdjacentHTML('beforeend', `<option value="${statusObject.statusKey}">${statusObject.statusKey}</option>`);
                     }
-                    statusKeyElement.value = statusObject.statusKey;
+                    statusKeyElement.value = (_c = statusObject.statusKey) !== null && _c !== void 0 ? _c : '';
                     statusKeyElement.addEventListener('change', statusKeyChangeFunction);
                 });
-                (_f = modalElement
-                    .querySelector('form')) === null || _f === void 0 ? void 0 : _f.addEventListener('submit', submitFunction);
+                (_f = modalElement.querySelector('form')) === null || _f === void 0 ? void 0 : _f.addEventListener('submit', doSubmit);
             },
             onshown(_modalElement, closeModalFunction) {
                 editStatusCloseModalFunction = closeModalFunction;

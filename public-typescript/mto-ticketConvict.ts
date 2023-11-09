@@ -13,9 +13,10 @@ import type {
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 ;(() => {
-  const canUpdate =
-    document.querySelector('main')?.dataset.canUpdate === 'true'
+  const canUpdate = document.querySelector('main')?.dataset.canUpdate === 'true'
 
   let currentBatch: ParkingTicketConvictionBatch = exports.currentBatch
   delete exports.currentBatch
