@@ -140,9 +140,9 @@ export interface ParkingTicketConvictionBatch extends Partial<Record> {
     batchId: number;
     batchDate: number;
     batchDateString: string;
-    lockDate: number;
-    lockDateString: string;
-    sentDate?: number;
+    lockDate?: number | null;
+    lockDateString?: string;
+    sentDate?: number | null;
     sentDateString?: string;
     batchEntries?: ParkingTicketStatusLog[];
 }

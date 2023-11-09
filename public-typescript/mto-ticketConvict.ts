@@ -1,5 +1,9 @@
-/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable no-extra-semi */
 
+// eslint-disable-next-line n/no-missing-import
+import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 import type {
@@ -7,10 +11,11 @@ import type {
   ParkingTicketConvictionBatch
 } from '../types/recordTypes.js'
 
+declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 ;(() => {
   const canUpdate =
-    document.querySelectorAll('main')[0].dataset.canUpdate === 'true'
+    document.querySelector('main')?.dataset.canUpdate === 'true'
 
   let currentBatch: ParkingTicketConvictionBatch = exports.currentBatch
   delete exports.currentBatch
@@ -32,7 +37,7 @@ declare const cityssm: cityssmGlobal
 
   let displayedTicketIds: number[] = []
 
-  function addTicketToBatchByIndexFunction(clickEvent: Event): void {
+  function addTicketToBatchByIndex(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
@@ -49,26 +54,31 @@ declare const cityssm: cityssmGlobal
         batchId: currentBatch.batchId,
         ticketId
       },
-      (resultJSON: {
-        success: boolean
-        message?: string
-        batch?: ParkingTicketConvictionBatch
-      }) => {
+      (rawResponseJSON) => {
+        const resultJSON = rawResponseJSON as
+          | {
+              success: true
+              batch: ParkingTicketConvictionBatch
+            }
+          | {
+              success: false
+              message?: string
+            }
+
         if (resultJSON.success) {
           currentBatch = resultJSON.batch
-          renderCurrentBatchFunction()
+          renderCurrentBatch()
 
           convictableTickets.splice(index, 1)
           renderConvictableTicketsFunction()
         } else {
           buttonElement.removeAttribute('disabled')
 
-          cityssm.alertModal(
-            'Ticket Not Added',
-            resultJSON.message ?? '',
-            'OK',
-            'danger'
-          )
+          bulmaJS.alert({
+            title: 'Ticket Not Added',
+            message: resultJSON.message ?? 'Please try again.',
+            contextualColorName: 'danger'
+          })
         }
       }
     )
@@ -86,17 +96,19 @@ declare const cityssm: cityssmGlobal
           batchId: currentBatch.batchId,
           ticketIds: displayedTicketIds
         },
-        (responseJSON: {
-          batch?: ParkingTicketConvictionBatch
-          tickets?: ParkingTicket[]
-          successCount?: number
-          message: string
-        }) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            batch?: ParkingTicketConvictionBatch
+            tickets?: ParkingTicket[]
+            successCount?: number
+            message: string
+          }
+
           loadingCloseModalFunction()
 
           if (responseJSON.batch) {
             currentBatch = responseJSON.batch
-            renderCurrentBatchFunction()
+            renderCurrentBatch()
           }
 
           if (responseJSON.tickets) {
@@ -105,12 +117,12 @@ declare const cityssm: cityssmGlobal
           }
 
           if (responseJSON.successCount === 0) {
-            cityssm.alertModal(
-              'Results',
-              responseJSON.message ?? 'No tickets were added to the batch.',
-              'OK',
-              'warning'
-            )
+            bulmaJS.alert({
+              title: 'Results',
+              message:
+                responseJSON.message ?? 'No tickets were added to the batch.',
+              contextualColorName: 'warning'
+            })
           }
         }
       )
@@ -118,8 +130,8 @@ declare const cityssm: cityssmGlobal
 
     cityssm.openHtmlModal('loading', {
       onshow() {
-        document.querySelector(
-          '#is-loading-modal-message'
+        ;(
+          document.querySelector('#is-loading-modal-message') as HTMLElement
         ).textContent = `Adding ${displayedTicketIds.length.toString()}
           ticket${displayedTicketIds.length === 1 ? '' : 's'}...`
       },
@@ -205,7 +217,7 @@ declare const cityssm: cityssmGlobal
 
       trElement
         .querySelector('button')
-        ?.addEventListener('click', addTicketToBatchByIndexFunction)
+        ?.addEventListener('click', addTicketToBatchByIndex)
 
       tbodyElement.append(trElement)
     }
@@ -276,10 +288,19 @@ declare const cityssm: cityssmGlobal
         batchId: currentBatch.batchId,
         ticketId
       },
-      (resultJSON: { success: boolean; tickets?: ParkingTicket[] }) => {
+      (rawResponseJSON) => {
+        const resultJSON = rawResponseJSON as
+          | {
+              success: true
+              tickets: ParkingTicket[]
+            }
+          | {
+              success: false
+            }
+
         if (resultJSON.success) {
           currentBatch.batchEntries.splice(index, 1)
-          renderCurrentBatchFunction()
+          renderCurrentBatch()
 
           convictableTickets = resultJSON.tickets
           renderConvictableTicketsFunction()
@@ -299,12 +320,14 @@ declare const cityssm: cityssmGlobal
         {
           batchId: currentBatch.batchId
         },
-        (responseJSON: {
-          success: boolean
-          message?: string
-          batch?: ParkingTicketConvictionBatch
-          tickets?: ParkingTicket[]
-        }) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+            message?: string
+            batch?: ParkingTicketConvictionBatch
+            tickets?: ParkingTicket[]
+          }
+
           if (!responseJSON.success) {
             cityssm.alertModal(
               'Batch Not Cleared',
@@ -316,7 +339,7 @@ declare const cityssm: cityssmGlobal
 
           if (responseJSON.batch) {
             currentBatch = responseJSON.batch
-            renderCurrentBatchFunction()
+            renderCurrentBatch()
           }
 
           if (responseJSON.tickets) {
@@ -327,137 +350,164 @@ declare const cityssm: cityssmGlobal
       )
     }
 
-    cityssm.confirmModal(
-      'Clear Batch',
-      'Are you sure you want to remove all the parking tickets from the batch?',
-      'Yes, Clear the Batch',
-      'warning',
-      doClear
+    bulmaJS.confirm({
+      title: 'Clear Batch',
+      message:
+        'Are you sure you want to remove all the parking tickets from the batch?',
+      contextualColorName: 'warning',
+      okButton: {
+        text: 'Yes, Clear the Batch',
+        callbackFunction: doClear
+      }
+    })
+  }
+
+  function doLock(): void {
+    cityssm.postJSON(
+      '/tickets/doLockConvictionBatch',
+      {
+        batchId: currentBatch.batchId
+      },
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as
+          | {
+              success: true
+              lockDate: number
+              lockDateString: string
+            }
+          | {
+              success: false
+            }
+
+        if (responseJSON.success) {
+          currentBatch.lockDate = responseJSON.lockDate
+          currentBatch.lockDateString = responseJSON.lockDateString
+
+          renderCurrentBatch()
+          renderConvictableTicketsFunction()
+        }
+      }
     )
   }
 
-  function lockBatchFunction(clickEvent: Event): void {
+  function lockBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    function lockFunction(): void {
-      cityssm.postJSON(
-        '/tickets/doLockConvictionBatch',
-        {
-          batchId: currentBatch.batchId
-        },
-        (responseJSON: {
-          success: boolean
-          lockDate?: number
-          lockDateString?: string
-        }) => {
-          if (responseJSON.success) {
-            currentBatch.lockDate = responseJSON.lockDate
-            currentBatch.lockDateString = responseJSON.lockDateString
+    bulmaJS.confirm({
+      title: 'Lock Batch',
+      message: `<strong>Are you sure you want to lock this batch?</strong><br />
+        Once locked, no further changes to the batch will be allowed.
+        The option to download the batch will become available.`,
+      messageIsHtml: true,
+      contextualColorName: 'warning',
+      okButton: {
+        text: 'Yes, Lock the Batch',
+        callbackFunction: doLock
+      }
+    })
+  }
 
-            renderCurrentBatchFunction()
-            renderConvictableTicketsFunction()
-          }
+  function doUnlock(): void {
+    cityssm.postJSON(
+      '/tickets/doUnlockConvictionBatch',
+      {
+        batchId: currentBatch.batchId
+      },
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as { success: boolean }
+
+        if (responseJSON.success) {
+          currentBatch.lockDate = undefined
+          currentBatch.lockDateString = undefined
+
+          renderCurrentBatch()
+          renderConvictableTicketsFunction()
         }
-      )
-    }
-
-    cityssm.confirmModal(
-      'Lock Batch?',
-      '<strong>Are you sure you want to lock this batch?</strong><br />' +
-        'Once locked, no further changes to the batch will be allowed.' +
-        ' The option to download the batch will become available.',
-      'Yes, Lock the Batch',
-      'warning',
-      lockFunction
+      }
     )
   }
 
-  function unlockBatchFunction(clickEvent: Event): void {
+  function unlockBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    function lockFunction(): void {
-      cityssm.postJSON(
-        '/tickets/doUnlockConvictionBatch',
-        {
-          batchId: currentBatch.batchId
-        },
-        (responseJSON: { success: boolean }) => {
-          if (responseJSON.success) {
-            currentBatch.lockDate = undefined
-            currentBatch.lockDateString = undefined
-
-            renderCurrentBatchFunction()
-            renderConvictableTicketsFunction()
-          }
-        }
-      )
-    }
-
-    cityssm.confirmModal(
-      'Lock Batch?',
-      '<strong>Are you sure you want to unlock this batch?</strong><br />' +
+    bulmaJS.confirm({
+      title: 'Unlock Batch',
+      message:
+        '<strong>Are you sure you want to unlock this batch?</strong><br />' +
         'Once unlocked, changes to the batch will be allowed.',
-      'Yes, Unlock the Batch',
-      'warning',
-      lockFunction
-    )
+      messageIsHtml: true,
+      contextualColorName: 'warning',
+      okButton: {
+        text: 'Yes, Unlock the Batch',
+        callbackFunction: doUnlock
+      }
+    })
   }
 
-  function downloadBatchFunction(clickEvent: Event): void {
+  function downloadBatch(clickEvent: Event): void {
     clickEvent.preventDefault()
 
-    function downloadFunction(): void {
+    function doDownload(): void {
       window.open(`/tickets/convict/${currentBatch.batchId.toString()}/print`)
     }
 
-    if (!currentBatch.sentDate) {
-      cityssm.confirmModal(
-        'Download Batch',
-        '<strong>You are about to download the batch for the first time.</strong><br />' +
-          'Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.',
-        'Yes, Download the Batch',
-        'warning',
-        () => {
-          cityssm.postJSON(
-            '/tickets/doMarkConvictionBatchSent',
-            {
-              batchId: currentBatch.batchId
-            },
-            (rawResponseJSON) => {
-              const responseJSON = rawResponseJSON as {
-                success: boolean
-                batch: ParkingTicketConvictionBatch
-              }
+    function doMarkAsSent(): void {
+      cityssm.postJSON(
+        '/tickets/doMarkConvictionBatchSent',
+        {
+          batchId: currentBatch.batchId
+        },
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+            batch: ParkingTicketConvictionBatch
+          }
 
-              currentBatch = responseJSON.batch
+          currentBatch = responseJSON.batch
 
-              renderCurrentBatchFunction()
-            }
-          )
-
-          downloadFunction()
+          renderCurrentBatch()
         }
       )
+
+      doDownload()
+    }
+
+    if ((currentBatch.sentDate ?? -1) === -1) {
+      bulmaJS.confirm({
+        title: 'Download Batch',
+        message: `<strong>You are about to download the batch for the first time.</strong><br />
+          Once downloaded, the date will be tracked, and the batch will no longer be able to be unlocked.`,
+        messageIsHtml: true,
+        contextualColorName: 'warning',
+        okButton: {
+          text: 'Yes, Download the Batch',
+          callbackFunction: doMarkAsSent
+        }
+      })
     } else {
-      downloadFunction()
+      doDownload()
     }
   }
 
-  function renderCurrentBatchFunction(): void {
-    document.querySelector('#batchSelector--batchId').textContent =
-      'Batch #' + currentBatch.batchId.toString()
-
-    document.querySelector('#batchSelector--batchDetails').innerHTML =
-      '<span class="has-tooltip-left" data-tooltip="Batch Date">' +
-      '<span class="icon"><i class="fas fa-star" aria-hidden="true"></i></span> ' +
-      currentBatch.batchDateString +
-      '</span>' +
-      (currentBatch.lockDate
-        ? '<br /><span class="has-tooltip-left" data-tooltip="Lock Date">' +
-          '<span class="icon"><i class="fas fa-lock" aria-hidden="true"></i></span> ' +
-          currentBatch.lockDateString +
-          '</span>'
-        : '')
+  function renderCurrentBatch(): void {
+    ;(
+      document.querySelector('#batchSelector--batchId') as HTMLElement
+    ).textContent = `Batch #${currentBatch.batchId.toString()}`
+    ;(
+      document.querySelector('#batchSelector--batchDetails') as HTMLElement
+    ).innerHTML = `<span class="has-tooltip-left" data-tooltip="Batch Date">
+        <span class="icon"><i class="fas fa-star" aria-hidden="true"></i></span>
+        ${currentBatch.batchDateString}
+      </span>
+      ${
+        (currentBatch.lockDate ?? -1) === -1
+          ? ''
+          : `<br />
+            <span class="has-tooltip-left" data-tooltip="Lock Date">
+              <span class="icon"><i class="fas fa-lock" aria-hidden="true"></i></span>
+              ${currentBatch.lockDateString}
+            </span>`
+      }`
 
     cityssm.clearElement(batchEntriesContainerElement)
 
@@ -479,30 +529,27 @@ declare const cityssm: cityssmGlobal
     ).entries()) {
       const trElement = document.createElement('tr')
 
-      trElement.innerHTML =
-        '<td>' +
-        '<a href="/tickets/' +
-        batchEntry.ticketId.toString() +
-        '" target="_blank">' +
-        batchEntry.ticketNumber +
-        '</a>' +
-        '</td>' +
-        '<td>' +
-        batchEntry.issueDateString +
-        '</td>' +
-        ('<td>' +
-          '<span class="licence-plate-number is-size-6">' +
-          cityssm.escapeHTML(batchEntry.licencePlateNumber) +
-          '</span>' +
-          '</td>') +
-        (canRemove
-          ? `<td class="has-text-right">
+      trElement.innerHTML = `<td>
+          <a href="/tickets/${batchEntry.ticketId.toString()}" target="_blank">
+            ${batchEntry.ticketNumber}
+          </a>
+        </td>
+        <td>${batchEntry.issueDateString}</td>
+        <td>
+          <span class="licence-plate-number is-size-6">
+            ${cityssm.escapeHTML(batchEntry.licencePlateNumber)}
+          </span>
+        </td>
+        ${
+          canRemove
+            ? `<td class="has-text-right">
               <button class="button is-small" data-index="${index.toString()}" type="button">
               <span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>
               <span>Remove</span>
               </button>
               </td>`
-          : '')
+            : ''
+        }`
 
       if (canRemove) {
         trElement
@@ -537,7 +584,7 @@ declare const cityssm: cityssmGlobal
         </span>
         <span>Lock Batch</span>`
 
-      lockButtonElement.addEventListener('click', lockBatchFunction)
+      lockButtonElement.addEventListener('click', lockBatch)
 
       batchEntriesContainerElement.prepend(lockButtonElement)
 
@@ -563,7 +610,7 @@ declare const cityssm: cityssmGlobal
       unlockButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-unlock" aria-hidden="true"></i></span>
         <span>Unlock Batch</span>`
 
-      unlockButtonElement.addEventListener('click', unlockBatchFunction)
+      unlockButtonElement.addEventListener('click', unlockBatch)
 
       batchEntriesContainerElement.prepend(unlockButtonElement)
     }
@@ -578,7 +625,7 @@ declare const cityssm: cityssmGlobal
         </span>
         <span>Download Report for Provincial Offences</span>`
 
-      downloadButtonElement.addEventListener('click', downloadBatchFunction)
+      downloadButtonElement.addEventListener('click', downloadBatch)
 
       tableElement.before(downloadButtonElement)
     }
@@ -589,26 +636,30 @@ declare const cityssm: cityssmGlobal
       cityssm.postJSON(
         '/tickets/doCreateConvictionBatch',
         {},
-        (responseJSON: {
-          success: boolean
-          batch: ParkingTicketConvictionBatch
-        }) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+            batch: ParkingTicketConvictionBatch
+          }
+
           if (responseJSON.success) {
             currentBatch = responseJSON.batch
-            renderCurrentBatchFunction()
+            renderCurrentBatch()
             renderConvictableTicketsFunction()
           }
         }
       )
     }
 
-    cityssm.confirmModal(
-      'Create a New Batch',
-      'Are you sure you want to create a new conviction batch?',
-      'Yes, Create Batch',
-      'info',
-      doCreate
-    )
+    bulmaJS.confirm({
+      title: 'Create a New Batch',
+      message: 'Are you sure you want to create a new conviction batch?',
+      contextualColorName: 'info',
+      okButton: {
+        text: 'Yes, Create Batch',
+        callbackFunction: doCreate
+      }
+    })
   }
 
   document
@@ -618,7 +669,7 @@ declare const cityssm: cityssmGlobal
 
       let selectBatchCloseModalFunction: () => void
 
-      function selectFunction(clickEvent: Event): void {
+      function doSelectBatch(clickEvent: Event): void {
         clickEvent.preventDefault()
 
         const batchId = (clickEvent.currentTarget as HTMLAnchorElement).dataset
@@ -629,10 +680,13 @@ declare const cityssm: cityssmGlobal
           {
             batchId
           },
-          (batchObject: ParkingTicketConvictionBatch) => {
+          (rawResponseJSON) => {
+            const batchObject =
+              rawResponseJSON as unknown as ParkingTicketConvictionBatch
+
             currentBatch = batchObject
 
-            renderCurrentBatchFunction()
+            renderCurrentBatch()
             renderConvictableTicketsFunction()
           }
         )
@@ -662,7 +716,10 @@ declare const cityssm: cityssmGlobal
           cityssm.postJSON(
             '/tickets/doGetRecentConvictionBatches',
             {},
-            (batchList: ParkingTicketConvictionBatch[]) => {
+            (rawResponseJSON) => {
+              const batchList =
+                rawResponseJSON as unknown as ParkingTicketConvictionBatch[]
+
               const resultsContainerElement = modalElement.querySelector(
                 '.is-results-container'
               ) as HTMLDivElement
@@ -686,26 +743,24 @@ declare const cityssm: cityssmGlobal
                 batchListItemElement.dataset.batchId = batch.batchId.toString()
                 batchListItemElement.href = '#'
 
-                batchListItemElement.innerHTML =
-                  '<div class="columns">' +
-                  '<div class="column is-narrow">#' +
-                  batch.batchId.toString() +
-                  '</div>' +
-                  '<div class="column has-text-right">' +
-                  batch.batchDateString +
-                  (batch.lockDate
-                    ? `<br />
-                      <div class="tags justify-flex-end">
-                        <span class="tag">
-                          <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
-                          <span>Locked</span>
-                        </span>
-                      </div>`
-                    : '') +
-                  '</div>' +
-                  '</div>'
+                batchListItemElement.innerHTML = `<div class="columns">
+                  <div class="column is-narrow">#${batch.batchId.toString()}</div>
+                  <div class="column has-text-right">
+                  ${batch.batchDateString}
+                  ${
+                    batch.lockDate
+                      ? `<br />
+                        <div class="tags justify-flex-end">
+                          <span class="tag">
+                            <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+                            <span>Locked</span>
+                          </span>
+                        </div>`
+                      : ''
+                  }</div>
+                </div>`
 
-                batchListItemElement.addEventListener('click', selectFunction)
+                batchListItemElement.addEventListener('click', doSelectBatch)
 
                 resultsContainerElement.append(batchListItemElement)
               }
@@ -723,7 +778,7 @@ declare const cityssm: cityssmGlobal
    */
 
   if (currentBatch) {
-    renderCurrentBatchFunction()
+    renderCurrentBatch()
   }
 
   renderConvictableTicketsFunction()
