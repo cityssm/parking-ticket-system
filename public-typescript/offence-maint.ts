@@ -1,27 +1,41 @@
-/* eslint-disable unicorn/filename-case, unicorn/prefer-module */
+/* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable no-extra-semi */
 
-import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types'
-import type { BulmaJS } from '@cityssm/bulma-js/types'
-import type { ptsGlobal } from '../types/publicTypes'
-import type * as recordTypes from '../types/recordTypes'
+// eslint-disable-next-line n/no-missing-import
+import type { BulmaJS } from '@cityssm/bulma-js/types.js'
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
+
+import type { ptsGlobal } from '../types/publicTypes.js'
+import type {
+  ParkingBylaw,
+  ParkingLocation,
+  ParkingOffence
+} from '../types/recordTypes.js'
 
 declare const cityssm: cityssmGlobal
 declare const bulmaJS: BulmaJS
 declare const pts: ptsGlobal
 
-interface UpdateOffenceResponseJSON {
-  success: boolean
-  message?: string
-  offences?: recordTypes.ParkingOffence[]
-}
+type UpdateOffenceResponseJSON =
+  | {
+      success: true
+      offences: ParkingOffence[]
+      message?: string
+    }
+  | {
+      success: false
+      message?: string
+    }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 ;(() => {
-  const offenceMap = new Map<string, recordTypes.ParkingOffence>()
+  const offenceMap = new Map<string, ParkingOffence>()
 
   const offenceAccountNumberPatternString = exports.accountNumberPattern
   delete exports.accountNumberPattern
 
-  const locationMap = new Map<string, recordTypes.ParkingLocation>()
+  const locationMap = new Map<string, ParkingLocation>()
   const limitResultsCheckboxElement = document.querySelector(
     '#offenceFilter--limitResults'
   ) as HTMLInputElement
@@ -39,7 +53,7 @@ interface UpdateOffenceResponseJSON {
   let locationKeyFilterIsSet = false
   let locationKeyFilter = ''
 
-  const bylawMap = new Map<string, recordTypes.ParkingBylaw>()
+  const bylawMap = new Map<string, ParkingBylaw>()
 
   const bylawInputElement = document.querySelector(
     '#offenceFilter--bylaw'
@@ -51,20 +65,15 @@ interface UpdateOffenceResponseJSON {
   let bylawNumberFilterIsSet = false
   let bylawNumberFilter = ''
 
-  const getOffenceMapKeyFunction = (
-    bylawNumber: string,
-    locationKey: string
-  ) => {
+  function getOffenceMapKey(bylawNumber: string, locationKey: string): string {
     return bylawNumber + '::::' + locationKey
   }
 
-  const loadOffenceMapFunction = (
-    offenceList: recordTypes.ParkingOffence[]
-  ) => {
+  function loadOffenceMap(offenceList: ParkingOffence[]): void {
     offenceMap.clear()
 
     for (const offence of offenceList) {
-      const offenceMapKey = getOffenceMapKeyFunction(
+      const offenceMapKey = getOffenceMapKey(
         offence.bylawNumber,
         offence.locationKey
       )
@@ -72,62 +81,67 @@ interface UpdateOffenceResponseJSON {
     }
   }
 
-  const openEditOffenceModalFunction = (clickEvent: Event) => {
+  function openEditOffenceModal(clickEvent: Event): void {
     clickEvent.preventDefault()
 
     const buttonElement = clickEvent.currentTarget as HTMLButtonElement
 
-    const offenceMapKey = getOffenceMapKeyFunction(
-      buttonElement.dataset.bylawNumber,
-      buttonElement.dataset.locationKey
+    const offenceMapKey = getOffenceMapKey(
+      buttonElement.dataset.bylawNumber ?? '',
+      buttonElement.dataset.locationKey ?? ''
     )
 
-    const offence = offenceMap.get(offenceMapKey)
-    const location = locationMap.get(offence.locationKey)
-    const bylaw = bylawMap.get(offence.bylawNumber)
+    const offence = offenceMap.get(offenceMapKey) as ParkingOffence
+    const location = locationMap.get(offence.locationKey) as ParkingLocation
+    const bylaw = bylawMap.get(offence.bylawNumber) as ParkingBylaw
 
     let editOffenceModalCloseFunction: () => void
 
-    const deleteFunction = () => {
+    function doDelete(): void {
       cityssm.postJSON(
         '/admin/doDeleteOffence',
         {
           bylawNumber: offence.bylawNumber,
           locationKey: offence.locationKey
         },
-        (responseJSON: UpdateOffenceResponseJSON) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as UpdateOffenceResponseJSON
+
           if (responseJSON.success) {
-            loadOffenceMapFunction(responseJSON.offences)
+            loadOffenceMap(responseJSON.offences)
             editOffenceModalCloseFunction()
-            renderOffencesFunction()
+            renderOffences()
           }
         }
       )
     }
 
-    const confirmDeleteFunction = (deleteClickEvent: Event) => {
+    function confirmDelete(deleteClickEvent: Event): void {
       deleteClickEvent.preventDefault()
 
-      cityssm.confirmModal(
-        'Remove Offence?',
-        'Are you sure you want to remove this offence?',
-        'Yes, Remove Offence',
-        'warning',
-        deleteFunction
-      )
+      bulmaJS.confirm({
+        title: 'Remove Offence',
+        message: 'Are you sure you want to remove this offence?',
+        contextualColorName: 'warning',
+        okButton: {
+          text: 'Yes, Remove Offence',
+          callbackFunction: doDelete
+        }
+      })
     }
 
-    const submitFunction = (formEvent: Event) => {
+    function doSubmit(formEvent: Event): void {
       formEvent.preventDefault()
 
       cityssm.postJSON(
         '/admin/doUpdateOffence',
         formEvent.currentTarget,
-        (responseJSON: UpdateOffenceResponseJSON) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as UpdateOffenceResponseJSON
           if (responseJSON.success) {
-            loadOffenceMapFunction(responseJSON.offences)
+            loadOffenceMap(responseJSON.offences)
             editOffenceModalCloseFunction()
-            renderOffencesFunction()
+            renderOffences()
           }
         }
       )
@@ -145,13 +159,11 @@ interface UpdateOffenceResponseJSON {
             '#offenceEdit--bylawNumber'
           ) as HTMLInputElement
         ).value = offence.bylawNumber
-
         ;(
           document.querySelector(
             '#offenceEdit--locationName'
           ) as HTMLSpanElement
         ).textContent = location.locationName
-
         ;(
           document.querySelector(
             '#offenceEdit--locationClass'
@@ -161,29 +173,25 @@ interface UpdateOffenceResponseJSON {
         ).locationClass
 
         document.querySelector('#offenceEdit--bylawNumberSpan').textContent =
-          bylaw.bylawNumber
+          bylaw?.bylawNumber ?? ''
 
         document.querySelector('#offenceEdit--bylawDescription').textContent =
-          bylaw.bylawDescription
-
+          bylaw?.bylawDescription ?? ''
         ;(
           document.querySelector(
             '#offenceEdit--parkingOffence'
           ) as HTMLInputElement
         ).value = offence.parkingOffence
-
         ;(
           document.querySelector(
             '#offenceEdit--offenceAmount'
           ) as HTMLInputElement
         ).value = offence.offenceAmount.toFixed(2)
-
         ;(
           document.querySelector(
             '#offenceEdit--discountOffenceAmount'
           ) as HTMLInputElement
         ).value = offence.discountOffenceAmount.toFixed(2)
-
         ;(
           document.querySelector(
             '#offenceEdit--discountDays'
@@ -206,11 +214,11 @@ interface UpdateOffenceResponseJSON {
 
         document
           .querySelector('#form--offenceEdit')
-          .addEventListener('submit', submitFunction)
+          ?.addEventListener('submit', doSubmit)
 
         modalElement
           .querySelector('.is-delete-button')
-          .addEventListener('click', confirmDeleteFunction)
+          ?.addEventListener('click', confirmDelete)
       },
       onhidden() {
         bulmaJS.toggleHtmlClipped()
@@ -218,12 +226,12 @@ interface UpdateOffenceResponseJSON {
     })
   }
 
-  const addOffenceFunction = (
+  function addOffence(
     bylawNumber: string,
     locationKey: string,
     returnAndRenderOffences: boolean,
-    callbackFunction: (responseJSON: UpdateOffenceResponseJSON) => void
-  ) => {
+    callbackFunction?: (responseJSON: UpdateOffenceResponseJSON) => void
+  ): void {
     cityssm.postJSON(
       '/admin/doAddOffence',
       {
@@ -231,35 +239,33 @@ interface UpdateOffenceResponseJSON {
         locationKey,
         returnOffences: returnAndRenderOffences
       },
-      (responseJSON: UpdateOffenceResponseJSON) => {
-        if (
-          responseJSON.success &&
-          responseJSON.offences &&
-          returnAndRenderOffences
-        ) {
-          loadOffenceMapFunction(responseJSON.offences)
-          renderOffencesFunction()
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as UpdateOffenceResponseJSON
+
+        if (responseJSON.success && returnAndRenderOffences) {
+          loadOffenceMap(responseJSON.offences)
+          renderOffences()
         }
 
-        if (callbackFunction) {
+        if (callbackFunction !== undefined) {
           callbackFunction(responseJSON)
         }
       }
     )
   }
 
-  const openAddOffenceFromListModalFunction = () => {
+  function openAddOffenceFromListModal(): void {
     let doRefreshOnClose = false
 
-    const addFunction = (clickEvent: Event) => {
+    function addFunction(clickEvent: Event): void {
       clickEvent.preventDefault()
 
       const linkElement = clickEvent.currentTarget as HTMLAnchorElement
 
-      const bylawNumber = linkElement.dataset.bylawNumber
-      const locationKey = linkElement.dataset.locationKey
+      const bylawNumber = linkElement.dataset.bylawNumber ?? ''
+      const locationKey = linkElement.dataset.locationKey ?? ''
 
-      addOffenceFunction(bylawNumber, locationKey, false, (responseJSON) => {
+      addOffence(bylawNumber, locationKey, false, (responseJSON) => {
         if (responseJSON.success) {
           linkElement.remove()
           doRefreshOnClose = true
@@ -275,29 +281,26 @@ interface UpdateOffenceResponseJSON {
         if (locationKeyFilterIsSet) {
           titleHTML = 'Select By-Laws'
 
-          const location = locationMap.get(locationKeyFilter)
+          const location = locationMap.get(locationKeyFilter) as ParkingLocation
           const locationClass = pts.getLocationClass(location.locationClassKey)
 
-          selectedHTML =
-            cityssm.escapeHTML(location.locationName) +
-            '<br />' +
-            '<span class="is-size-7">' +
-            cityssm.escapeHTML(locationClass.locationClass) +
-            '</span>'
+          selectedHTML = `${cityssm.escapeHTML(location.locationName)}<br />
+            <span class="is-size-7">
+            ${cityssm.escapeHTML(locationClass.locationClass)}
+            </span>`
         } else {
           titleHTML = 'Select Locations'
 
           const bylaw = bylawMap.get(bylawNumberFilter)
 
-          selectedHTML =
-            cityssm.escapeHTML(bylaw.bylawNumber) +
-            '<br />' +
-            '<span class="is-size-7">' +
-            bylaw.bylawDescription +
-            '</span>'
+          selectedHTML = `${cityssm.escapeHTML(bylaw.bylawNumber)}<br />
+            <span class="is-size-7">
+            ${bylaw.bylawDescription}
+            </span>`
         }
 
         modalElement.querySelector('.modal-card-title').innerHTML = titleHTML
+
         document.querySelector('#addContainer--selected').innerHTML =
           selectedHTML
       },
@@ -309,7 +312,7 @@ interface UpdateOffenceResponseJSON {
 
         if (locationKeyFilterIsSet) {
           for (const bylaw of bylawMap.values()) {
-            const offenceMapKey = getOffenceMapKeyFunction(
+            const offenceMapKey = getOffenceMapKey(
               bylaw.bylawNumber,
               locationKeyFilter
             )
@@ -325,12 +328,12 @@ interface UpdateOffenceResponseJSON {
             linkElement.dataset.bylawNumber = bylaw.bylawNumber
             linkElement.dataset.locationKey = locationKeyFilter
 
-            linkElement.innerHTML =
-              cityssm.escapeHTML(bylaw.bylawNumber) +
-              '<br />' +
-              '<span class="is-size-7">' +
-              cityssm.escapeHTML(bylaw.bylawDescription) +
-              '</span>'
+            linkElement.innerHTML = `${cityssm.escapeHTML(
+              bylaw.bylawNumber
+            )}<br />
+              <span class="is-size-7">
+              ${cityssm.escapeHTML(bylaw.bylawDescription)}
+              </span>`
 
             linkElement.addEventListener('click', addFunction)
 
@@ -338,7 +341,7 @@ interface UpdateOffenceResponseJSON {
           }
         } else {
           for (const location of locationMap.values()) {
-            const offenceMapKey = getOffenceMapKeyFunction(
+            const offenceMapKey = getOffenceMapKey(
               bylawNumberFilter,
               location.locationKey
             )
@@ -354,14 +357,14 @@ interface UpdateOffenceResponseJSON {
             linkElement.dataset.bylawNumber = bylawNumberFilter
             linkElement.dataset.locationKey = location.locationKey
 
-            linkElement.innerHTML =
-              cityssm.escapeHTML(location.locationName) +
-              '<br />' +
-              '<span class="is-size-7">' +
-              cityssm.escapeHTML(
+            linkElement.innerHTML = `${cityssm.escapeHTML(
+              location.locationName
+            )}<br />
+              <span class="is-size-7">
+              ${cityssm.escapeHTML(
                 pts.getLocationClass(location.locationClassKey).locationClass
-              ) +
-              '</span>'
+              )}
+              </span>`
 
             linkElement.addEventListener('click', addFunction)
 
@@ -375,10 +378,9 @@ interface UpdateOffenceResponseJSON {
         cityssm.clearElement(addResultsElement)
 
         if (displayCount === 0) {
-          addResultsElement.innerHTML =
-            '<div class="message is-info">' +
-            '<div class="message-body">There are no offence records available for creation.</div>' +
-            '</div>'
+          addResultsElement.innerHTML = `<div class="message is-info">
+            <div class="message-body">There are no offence records available for creation.</div>
+            </div>`
         } else {
           addResultsElement.append(listElement)
         }
@@ -388,9 +390,10 @@ interface UpdateOffenceResponseJSON {
           cityssm.postJSON(
             '/offences/doGetAllOffences',
             {},
-            (offenceList: recordTypes.ParkingOffence[]) => {
-              loadOffenceMapFunction(offenceList)
-              renderOffencesFunction()
+            (rawResponseJSON) => {
+              const offenceList = rawResponseJSON as unknown as ParkingOffence[]
+              loadOffenceMap(offenceList)
+              renderOffences()
             }
           )
         }
@@ -398,7 +401,7 @@ interface UpdateOffenceResponseJSON {
     })
   }
 
-  const renderOffencesFunction = () => {
+  function renderOffences(): void {
     const tbodyElement = document.createElement('tbody')
 
     let matchCount = 0
@@ -413,7 +416,6 @@ interface UpdateOffenceResponseJSON {
       }
 
       // Ensure offence matches filters
-
       if (
         (locationKeyFilterIsSet && locationKeyFilter !== offence.locationKey) ||
         (bylawNumberFilterIsSet && bylawNumberFilter !== offence.bylawNumber)
@@ -422,7 +424,6 @@ interface UpdateOffenceResponseJSON {
       }
 
       // Ensure location record exists
-
       const location = locationMap.get(offence.locationKey)
 
       if (!location) {
@@ -430,7 +431,6 @@ interface UpdateOffenceResponseJSON {
       }
 
       // Ensure by-law record exists
-
       const bylaw = bylawMap.get(offence.bylawNumber)
 
       if (!bylaw) {
@@ -445,64 +445,51 @@ interface UpdateOffenceResponseJSON {
 
       const trElement = document.createElement('tr')
 
-      trElement.innerHTML =
-        '<td class="has-border-right-width-2">' +
-        cityssm.escapeHTML(location.locationName) +
-        '<br />' +
-        '<span class="is-size-7">' +
-        cityssm.escapeHTML(
-          pts.getLocationClass(location.locationClassKey).locationClass
-        ) +
-        '</span>' +
-        '</td>' +
-        ('<td class="has-border-right-width-2">' +
-          '<strong>' +
-          cityssm.escapeHTML(bylaw.bylawNumber) +
-          '</strong><br />' +
-          '<span class="is-size-7">' +
-          cityssm.escapeHTML(bylaw.bylawDescription) +
-          '</span>' +
-          '</td>') +
-        ('<td class="has-text-right has-tooltip-bottom" data-tooltip="Set Rate">' +
-          '$' +
-          offence.offenceAmount.toFixed(2) +
-          '<br />' +
-          '<span class="is-size-7">' +
-          offence.accountNumber +
-          '</span>' +
-          '</td>') +
-        ('<td class="has-text-right has-tooltip-bottom" data-tooltip="Discount Rate">' +
-          '$' +
-          offence.discountOffenceAmount.toFixed(2) +
-          '<br />' +
-          '<span class="is-size-7">' +
-          offence.discountDays.toString() +
-          ' day' +
-          (offence.discountDays === 1 ? '' : 's') +
-          '</span>' +
-          '</td>') +
-        ('<td class="has-border-right-width-2">' +
-          '<div class="is-size-7">' +
-          cityssm.escapeHTML(offence.parkingOffence) +
-          '</div>' +
-          '</td>') +
-        ('<td class="has-text-right">' +
-          '<button class="button is-small"' +
-          ' data-bylaw-number="' +
-          offence.bylawNumber +
-          '"' +
-          ' data-location-key="' +
-          offence.locationKey +
-          '"' +
-          ' type="button">' +
-          '<span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>' +
-          '<span>Edit</span>' +
-          '</button>' +
-          '</td>')
+      trElement.innerHTML = `<td class="has-border-right-width-2">
+          ${cityssm.escapeHTML(location.locationName)}<br />
+          <span class="is-size-7">
+            ${cityssm.escapeHTML(
+              pts.getLocationClass(location.locationClassKey).locationClass
+            )}
+          </span>
+        </td>
+        <td class="has-border-right-width-2">
+          <strong>${cityssm.escapeHTML(bylaw.bylawNumber)}</strong><br />
+          <span class="is-size-7">
+            ${cityssm.escapeHTML(bylaw.bylawDescription)}
+          </span>
+        </td>
+        <td class="has-text-right has-tooltip-bottom" data-tooltip="Set Rate">
+          $${offence.offenceAmount.toFixed(2)}<br />
+          <span class="is-size-7">
+            ${offence.accountNumber}
+          </span>
+        </td>
+      <td class="has-text-right has-tooltip-bottom" data-tooltip="Discount Rate">
+        $${offence.discountOffenceAmount.toFixed(2)}<br />
+        <span class="is-size-7">
+        ${offence.discountDays.toString()} day${
+        offence.discountDays === 1 ? '' : 's'
+      }
+        </span>
+      </td>
+      <td class="has-border-right-width-2">
+        <div class="is-size-7">
+          ${cityssm.escapeHTML(offence.parkingOffence)}
+        </div>
+      </td>
+      <td class="has-text-right">
+        <button class="button is-small"
+          data-bylaw-number="${offence.bylawNumber}"
+          data-location-key="${offence.locationKey}" type="button">
+          <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
+          <span>Edit</span>
+        </button>
+      </td>`
 
       trElement
         .querySelector('button')
-        .addEventListener('click', openEditOffenceModalFunction)
+        ?.addEventListener('click', openEditOffenceModal)
 
       tbodyElement.append(trElement)
     }
@@ -510,77 +497,70 @@ interface UpdateOffenceResponseJSON {
     cityssm.clearElement(resultsElement)
 
     if (matchCount === 0) {
-      resultsElement.innerHTML =
-        '<div class="message is-info">' +
-        '<div class="message-body">' +
-        '<p>There are no offences that match the given criteria.</p>' +
-        '</div>' +
-        '</div>'
+      resultsElement.innerHTML = `<div class="message is-info">
+        <div class="message-body">
+        <p>There are no offences that match the given criteria.</p>
+        </div>
+        </div>`
 
       return
     }
 
-    resultsElement.innerHTML =
-      '<table class="table is-striped is-hoverable is-fullwidth">' +
-      '<thead>' +
-      '<tr>' +
-      '<th class="has-border-right-width-2">Location</th>' +
-      '<th class="has-border-right-width-2">By-Law</th>' +
-      '<th class="has-border-right-width-2" colspan="3">Offence</th>' +
-      '<th class="has-width-50"></th>' +
-      '</tr>' +
-      '</thead>' +
-      '</table>'
+    resultsElement.innerHTML = `<table class="table is-striped is-hoverable is-fullwidth">
+      <thead><tr>
+        <th class="has-border-right-width-2">Location</th>
+        <th class="has-border-right-width-2">By-Law</th>
+        <th class="has-border-right-width-2" colspan="3">Offence</th>
+        <th class="has-width-50"></th>
+      </tr></thead>
+      </table>`
 
-    resultsElement.querySelector('table').append(tbodyElement)
+    resultsElement.querySelector('table')?.append(tbodyElement)
 
     if (matchCount > displayLimit) {
       resultsElement.insertAdjacentHTML(
         'afterbegin',
-        '<div class="message is-warning">' +
-          '<div class="message-body has-text-centered">Limit Reached</div>' +
-          '</div>'
+        `<div class="message is-warning">
+          <div class="message-body has-text-centered">Limit Reached</div>
+          </div>`
       )
     }
   }
 
   document
     .querySelector('#is-add-offence-button')
-    .addEventListener('click', (clickEvent) => {
+    ?.addEventListener('click', (clickEvent) => {
       clickEvent.preventDefault()
 
       if (locationKeyFilterIsSet && bylawNumberFilterIsSet) {
-        const bylaw = bylawMap.get(bylawNumberFilter)
-        const location = locationMap.get(locationKeyFilter)
+        const bylaw = bylawMap.get(bylawNumberFilter) as ParkingBylaw
+        const location = locationMap.get(locationKeyFilter) as ParkingLocation
 
         bulmaJS.confirm({
           title: 'Create Offence?',
-          message:
-            '<p class="has-text-centered">Are you sure you want to create the offence record below?</p>' +
-            '<div class="columns my-4">' +
-            ('<div class="column has-text-centered">' +
-              cityssm.escapeHTML(location.locationName) +
-              '<br />' +
-              '<span class="is-size-7">' +
-              cityssm.escapeHTML(
+          message: `<p class="has-text-centered">Are you sure you want to create the offence record below?</p>
+            <div class="columns my-4">
+            <div class="column has-text-centered">
+              ${cityssm.escapeHTML(location.locationName)}<br />
+              <span class="is-size-7">
+              ${cityssm.escapeHTML(
                 pts.getLocationClass(location.locationClassKey).locationClass
-              ) +
-              '</span>' +
-              '</div>') +
-            ('<div class="column has-text-centered">' +
-              cityssm.escapeHTML(bylaw.bylawNumber) +
-              '<br />' +
-              '<span class="is-size-7">' +
-              cityssm.escapeHTML(bylaw.bylawDescription) +
-              '</span>' +
-              '</div>') +
-            '</div>',
+              )}
+              </span>
+            </div>
+            <div class="column has-text-centered">
+              ${cityssm.escapeHTML(bylaw.bylawNumber)}<br />
+              <span class="is-size-7">
+                ${cityssm.escapeHTML(bylaw.bylawDescription)}
+              </span>
+            </div>
+            </div>`,
           messageIsHtml: true,
           contextualColorName: 'info',
           okButton: {
             text: 'Yes, Create Offence',
             callbackFunction: () => {
-              addOffenceFunction(
+              addOffence(
                 bylawNumberFilter,
                 locationKeyFilter,
                 true,
@@ -588,13 +568,13 @@ interface UpdateOffenceResponseJSON {
                   if (!responseJSON.success) {
                     bulmaJS.alert({
                       title: 'Offence Not Added',
-                      message: responseJSON.message,
+                      message: responseJSON.message ?? '',
                       contextualColorName: 'danger'
                     })
-                  } else if (responseJSON.message) {
+                  } else if ((responseJSON.message ?? '') !== '') {
                     bulmaJS.alert({
                       title: 'Offence Added Successfully',
-                      message: responseJSON.message,
+                      message: responseJSON.message ?? '',
                       contextualColorName: 'warning'
                     })
                   }
@@ -604,7 +584,7 @@ interface UpdateOffenceResponseJSON {
           }
         })
       } else if (locationKeyFilterIsSet || bylawNumberFilterIsSet) {
-        openAddOffenceFromListModalFunction()
+        openAddOffenceFromListModal()
       } else {
         bulmaJS.alert({
           title: 'How to Create a New Offence',
@@ -617,7 +597,7 @@ interface UpdateOffenceResponseJSON {
 
   // Location filter setup
 
-  const clearLocationFilterFunction = () => {
+  function clearLocationFilter(): void {
     locationInputElement.value = ''
     cityssm.clearElement(locationTextElement)
 
@@ -625,15 +605,16 @@ interface UpdateOffenceResponseJSON {
     locationKeyFilterIsSet = false
   }
 
-  const openSelectLocationFilterModalFunction = () => {
+  function openSelectLocationFilterModal(): void {
     let selectLocationCloseModalFunction: () => void
 
-    const selectFunction = (clickEvent: Event) => {
+    function doSelect(clickEvent: Event): void {
       clickEvent.preventDefault()
 
       const location = locationMap.get(
-        (clickEvent.currentTarget as HTMLAnchorElement).dataset.locationKey
-      )
+        (clickEvent.currentTarget as HTMLAnchorElement).dataset.locationKey ??
+          ''
+      ) as ParkingLocation
 
       locationKeyFilterIsSet = true
       locationKeyFilter = location.locationKey
@@ -642,7 +623,7 @@ interface UpdateOffenceResponseJSON {
 
       selectLocationCloseModalFunction()
 
-      renderOffencesFunction()
+      renderOffences()
     }
 
     cityssm.openHtmlModal('location-select', {
@@ -657,19 +638,18 @@ interface UpdateOffenceResponseJSON {
           linkElement.dataset.locationKey = location.locationKey
           linkElement.setAttribute('href', '#')
 
-          linkElement.innerHTML =
-            '<div class="level">' +
-            ('<div class="level-left">' +
-              cityssm.escapeHTML(location.locationName) +
-              '</div>') +
-            '<div class="level-right">' +
-            cityssm.escapeHTML(
-              pts.getLocationClass(location.locationClassKey).locationClass
-            ) +
-            '</div>' +
-            '</div>'
+          linkElement.innerHTML = `<div class="level">
+            <div class="level-left">
+              ${cityssm.escapeHTML(location.locationName)}
+            </div>
+            <div class="level-right">
+              ${cityssm.escapeHTML(
+                pts.getLocationClass(location.locationClassKey).locationClass
+              )}
+            </div>
+            </div>`
 
-          linkElement.addEventListener('click', selectFunction)
+          linkElement.addEventListener('click', doSelect)
 
           listElement.append(linkElement)
         }
@@ -688,27 +668,27 @@ interface UpdateOffenceResponseJSON {
 
   locationInputElement.addEventListener(
     'dblclick',
-    openSelectLocationFilterModalFunction
+    openSelectLocationFilterModal
   )
 
   document
     .querySelector('#is-select-location-filter-button')
-    .addEventListener('click', openSelectLocationFilterModalFunction)
+    ?.addEventListener('click', openSelectLocationFilterModal)
 
   document
     .querySelector('#is-clear-location-filter-button')
-    .addEventListener('click', () => {
-      clearLocationFilterFunction()
-      renderOffencesFunction()
+    ?.addEventListener('click', () => {
+      clearLocationFilter()
+      renderOffences()
     })
 
   if (!locationKeyFilterIsSet) {
-    clearLocationFilterFunction()
+    clearLocationFilter()
   }
 
   // By-law filter setup
 
-  const clearBylawFilterFunction = () => {
+  function clearBylawFilter(): void {
     bylawInputElement.value = ''
     cityssm.clearElement(bylawTextElement)
 
@@ -716,15 +696,16 @@ interface UpdateOffenceResponseJSON {
     bylawNumberFilterIsSet = false
   }
 
-  const openSelectBylawFilterModalFunction = () => {
+  function openSelectBylawFilterModal(): void {
     let selectBylawCloseModalFunction: () => void
 
-    const selectFunction = (clickEvent: Event) => {
+    function doSelect(clickEvent: Event): void {
       clickEvent.preventDefault()
 
       const bylaw = bylawMap.get(
-        (clickEvent.currentTarget as HTMLAnchorElement).dataset.bylawNumber
-      )
+        (clickEvent.currentTarget as HTMLAnchorElement).dataset.bylawNumber ??
+          ''
+      ) as ParkingBylaw
 
       bylawNumberFilterIsSet = true
       bylawNumberFilter = bylaw.bylawNumber
@@ -734,7 +715,7 @@ interface UpdateOffenceResponseJSON {
 
       selectBylawCloseModalFunction()
 
-      renderOffencesFunction()
+      renderOffences()
     }
 
     cityssm.openHtmlModal('bylaw-select', {
@@ -749,14 +730,14 @@ interface UpdateOffenceResponseJSON {
           linkElement.dataset.bylawNumber = bylaw.bylawNumber
           linkElement.setAttribute('href', '#')
 
-          linkElement.innerHTML =
-            cityssm.escapeHTML(bylaw.bylawNumber) +
-            '<br />' +
-            '<span class="is-size-7">' +
-            cityssm.escapeHTML(bylaw.bylawDescription) +
-            '</span>'
+          linkElement.innerHTML = `${cityssm.escapeHTML(
+            bylaw.bylawNumber
+          )}<br />
+            <span class="is-size-7">
+            ${cityssm.escapeHTML(bylaw.bylawDescription)}
+            </span>`
 
-          linkElement.addEventListener('click', selectFunction)
+          linkElement.addEventListener('click', doSelect)
 
           listElement.append(linkElement)
         }
@@ -773,29 +754,26 @@ interface UpdateOffenceResponseJSON {
     })
   }
 
-  bylawInputElement.addEventListener(
-    'dblclick',
-    openSelectBylawFilterModalFunction
-  )
+  bylawInputElement.addEventListener('dblclick', openSelectBylawFilterModal)
 
   document
     .querySelector('#is-select-bylaw-filter-button')
-    .addEventListener('click', openSelectBylawFilterModalFunction)
+    ?.addEventListener('click', openSelectBylawFilterModal)
 
   document
     .querySelector('#is-clear-bylaw-filter-button')
-    .addEventListener('click', () => {
-      clearBylawFilterFunction()
-      renderOffencesFunction()
+    ?.addEventListener('click', () => {
+      clearBylawFilter()
+      renderOffences()
     })
 
   if (!bylawNumberFilterIsSet) {
-    clearBylawFilterFunction()
+    clearBylawFilter()
   }
 
   // Limit checkbox setup
 
-  limitResultsCheckboxElement.addEventListener('change', renderOffencesFunction)
+  limitResultsCheckboxElement.addEventListener('change', renderOffences)
 
   // Load locationMap
 
@@ -815,10 +793,10 @@ interface UpdateOffenceResponseJSON {
 
   // Load offenceList
 
-  loadOffenceMapFunction(exports.offences)
+  loadOffenceMap(exports.offences)
   delete exports.offences
 
   // Load locationClasses
 
-  pts.getDefaultConfigProperty('locationClasses', renderOffencesFunction)
+  pts.getDefaultConfigProperty('locationClasses', renderOffences)
 })()

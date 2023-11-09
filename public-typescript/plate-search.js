@@ -15,37 +15,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
             : encodeURIComponent(plateObject.licencePlateProvince)}/${plateObject.licencePlateNumber === ''
             ? '_'
             : encodeURIComponent(plateObject.licencePlateNumber)}`;
-        trElement.innerHTML =
-            '<td>' +
-                '<a href="' +
-                url +
-                '" data-tooltip="View Licence Plate">' +
-                (plateObject.licencePlateNumber === ''
-                    ? '(Blank)'
-                    : `<span class="licence-plate-number">${plateObject.licencePlateNumber}</span>`) +
-                '</a>' +
-                '</td>' +
-                ('<td class="is-vcentered">' +
-                    (plateObject.licencePlateProvince === ''
-                        ? '<span class="has-text-grey">(Blank)</span>'
-                        : plateObject.licencePlateProvince) +
-                    '</td>') +
-                ('<td class="is-vcentered">' +
-                    (plateObject.licencePlateCountry === ''
-                        ? '<span class="has-text-grey">(Blank)</span>'
-                        : plateObject.licencePlateCountry) +
-                    '</td>') +
-                ('<td class="has-text-right is-vcentered">' +
-                    (plateObject.hasOwnerRecord
-                        ? `<span data-tooltip="Has Ownership Record">
-            <i class="fas fa-check" aria-hidden="true"></i>
-            </span>
-            <span class="sr-only">Has Ownership Record</span>`
-                        : '') +
-                    '</td>') +
-                ('<td class="has-text-right is-vcentered">' +
-                    ((_a = plateObject.unresolvedTicketCount) !== null && _a !== void 0 ? _a : -1).toString() +
-                    '</td>');
+        trElement.innerHTML = `<td>
+      <a href="${url}" data-tooltip="View Licence Plate">
+      ${plateObject.licencePlateNumber === ''
+            ? '(Blank)'
+            : `<span class="licence-plate-number">${plateObject.licencePlateNumber}</span>`}
+      </a>
+      </td>
+      <td class="is-vcentered">
+      ${plateObject.licencePlateProvince === ''
+            ? '<span class="has-text-grey">(Blank)</span>'
+            : plateObject.licencePlateProvince}
+      </td>
+      <td class="is-vcentered">
+      ${plateObject.licencePlateCountry === ''
+            ? '<span class="has-text-grey">(Blank)</span>'
+            : plateObject.licencePlateCountry}
+      </td>
+      <td class="has-text-right is-vcentered">
+      ${plateObject.hasOwnerRecord
+            ? `<span data-tooltip="Has Ownership Record">
+              <i class="fas fa-check" aria-hidden="true"></i>
+              </span>
+              <span class="sr-only">Has Ownership Record</span>`
+            : ''}
+      </td>
+      <td class="has-text-right is-vcentered">
+        ${((_a = plateObject.unresolvedTicketCount) !== null && _a !== void 0 ? _a : -1).toString()}
+      </td>`;
         return trElement;
     }
     function processPlateResultsFunction(licencePlateResults) {
