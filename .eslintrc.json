@@ -8,11 +8,12 @@
   },
   "extends": ["eslint-config-cityssm"],
   "rules": {
+    "jsdoc/require-jsdoc": "off",
     "unicorn/filename-case": [
       "error",
       {
         "case": "camelCase",
-        "ignore": ["DB", "ID", "MTO"]
+        "ignore": ["MTO"]
       }
     ]
   }
