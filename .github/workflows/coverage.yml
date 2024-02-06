@@ -35,7 +35,7 @@ jobs:
         run: cp ./data/configTesting.js ./data/config.js
         
       - name: Code Climate (Before)
-        if: ${{ github.event_name != 'pull_request' && env.CC_TEST_REPORTER_ID != '' && matrix.node == 18 }}
+        if: ${{ github.event_name != 'pull_request' && env.CC_TEST_REPORTER_ID != '' && matrix.node == 20 }}
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./codeclimate-test-reporter
           chmod +x codeclimate-test-reporter
@@ -50,19 +50,19 @@ jobs:
         run: c8 --reporter=lcov --reporter=text --reporter=text-summary mocha --timeout 30000 --exit
 
       - name: Code Climate (After)
-        if: ${{ ! cancelled() && github.event_name != 'pull_request' && env.CC_TEST_REPORTER_ID != '' && matrix.node == 18 }}
+        if: ${{ github.event_name != 'pull_request' && env.CC_TEST_REPORTER_ID != '' && matrix.node == 20 }}
         run: |
           ./codeclimate-test-reporter after-build -t lcov --exit-code $?
 
       - name: Codecov
-        if: ${{ ! cancelled() && github.event_name != 'pull_request' && env.CODECOV_TOKEN != '' && matrix.node == 18 }}
+        if: ${{ github.event_name != 'pull_request' && env.CODECOV_TOKEN != '' && matrix.node == 20 }}
         run: |
           curl -Os https://uploader.codecov.io/latest/linux/codecov
           chmod +x codecov
           ./codecov -t ${CODECOV_TOKEN}
 
       - name: DeepSource
-        if: ${{ ! cancelled() && github.event_name != 'pull_request' && env.DEEPSOURCE_DSN != '' && matrix.node == 18 }}
+        if: ${{ github.event_name != 'pull_request' && env.DEEPSOURCE_DSN != '' && matrix.node == 20 }}
         run: |
           # Install deepsource CLI
           curl https://deepsource.io/cli | sh
