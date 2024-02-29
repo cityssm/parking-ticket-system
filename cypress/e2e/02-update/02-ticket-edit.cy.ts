@@ -2,7 +2,7 @@
 /* eslint-disable promise/always-return, promise/catch-or-return */
 
 import { testUpdate } from '../../../test/_globals.js'
-import { logout, login } from '../../support/index.js'
+import { login, logout } from '../../support/index.js'
 
 function saveTicket(): void {
   cy.get("button[type='submit']").contains('Update').click()

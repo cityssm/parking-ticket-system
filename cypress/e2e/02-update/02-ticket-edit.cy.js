@@ -1,5 +1,5 @@
 import { testUpdate } from '../../../test/_globals.js';
-import { logout, login } from '../../support/index.js';
+import { login, logout } from '../../support/index.js';
 function saveTicket() {
     cy.get("button[type='submit']").contains('Update').click();
     cy.get('.tag').should('contain.text', 'Saved Successfully').should('exist');

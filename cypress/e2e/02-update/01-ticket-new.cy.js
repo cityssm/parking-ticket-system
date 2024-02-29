@@ -1,6 +1,6 @@
 import * as configFunctions from '../../../helpers/functions.config.js';
 import { testUpdate } from '../../../test/_globals.js';
-import { logout, login } from '../../support/index.js';
+import { login, logout } from '../../support/index.js';
 describe('Create a New Ticket', () => {
     beforeEach(() => {
         logout();
