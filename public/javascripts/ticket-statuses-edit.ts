@@ -257,8 +257,17 @@ declare const pts: ptsGlobal
 
         modalElement.querySelector('form')?.addEventListener('submit', doSubmit)
       },
-      onshown(_modalElement, closeModalFunction) {
+      onshown(modalElement, closeModalFunction) {
+        bulmaJS.toggleHtmlClipped()
         editStatusCloseModalFunction = closeModalFunction
+        ;(
+          modalElement.querySelector(
+            '#editStatus--statusKey'
+          ) as HTMLSelectElement
+        ).focus()
+      },
+      onremoved() {
+        bulmaJS.toggleHtmlClipped()
       }
     })
   }
@@ -518,14 +527,12 @@ declare const pts: ptsGlobal
 
           pts.getDefaultConfigProperty(
             'parkingTicketStatuses',
-            (
-              parkingTicketStatuses: configTypes.ConfigParkingTicketStatus[]
-            ) => {
+            (parkingTicketStatuses) => {
               const statusKeyElement = document.querySelector(
                 '#addStatus--statusKey'
               ) as HTMLSelectElement
 
-              for (const statusObject of parkingTicketStatuses) {
+              for (const statusObject of parkingTicketStatuses as ConfigParkingTicketStatus[]) {
                 if (statusObject.isUserSettable) {
                   statusKeyElement.insertAdjacentHTML(
                     'beforeend',
@@ -545,8 +552,20 @@ declare const pts: ptsGlobal
             .querySelector('form')
             ?.addEventListener('submit', submitFunction)
         },
-        onshown(_modalElement, closeModalFunction) {
+        onshown(modalElement, closeModalFunction) {
+          bulmaJS.toggleHtmlClipped()
           addStatusCloseModalFunction = closeModalFunction
+          ;(
+            modalElement.querySelector(
+              '#addStatus--statusKey'
+            ) as HTMLSelectElement
+          ).focus()
+        },
+        onremoved() {
+          bulmaJS.toggleHtmlClipped()
+          ;(
+            document.querySelector('#is-add-status-button') as HTMLButtonElement
+          ).focus()
         }
       })
     })
@@ -637,8 +656,17 @@ declare const pts: ptsGlobal
             .querySelector('form')
             ?.addEventListener('submit', submitFunction)
         },
-        onshown(_modalElement, closeModalFunction) {
+        onshown(modalElement, closeModalFunction) {
+          bulmaJS.toggleHtmlClipped()
           addPaidStatusCloseModalFunction = closeModalFunction
+          ;(
+            modalElement.querySelector(
+              '#addPaidStatus--statusField2'
+            ) as HTMLInputElement
+          ).focus()
+        },
+        onremoved() {
+          bulmaJS.toggleHtmlClipped()
         }
       })
     })

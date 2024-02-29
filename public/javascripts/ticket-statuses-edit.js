@@ -145,8 +145,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 });
                 modalElement.querySelector('form')?.addEventListener('submit', doSubmit);
             },
-            onshown(_modalElement, closeModalFunction) {
+            onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 editStatusCloseModalFunction = closeModalFunction;
+                modalElement.querySelector('#editStatus--statusKey').focus();
+            },
+            onremoved() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     }
@@ -336,8 +341,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     .querySelector('form')
                     ?.addEventListener('submit', submitFunction);
             },
-            onshown(_modalElement, closeModalFunction) {
+            onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 addStatusCloseModalFunction = closeModalFunction;
+                modalElement.querySelector('#addStatus--statusKey').focus();
+            },
+            onremoved() {
+                bulmaJS.toggleHtmlClipped();
+                document.querySelector('#is-add-status-button').focus();
             }
         });
     });
@@ -385,8 +396,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     .querySelector('form')
                     ?.addEventListener('submit', submitFunction);
             },
-            onshown(_modalElement, closeModalFunction) {
+            onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 addPaidStatusCloseModalFunction = closeModalFunction;
+                modalElement.querySelector('#addPaidStatus--statusField2').focus();
+            },
+            onremoved() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     });

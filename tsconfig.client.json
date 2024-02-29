@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
-    "module": "CommonJS",
+    "target": "es2021",
+    "module": "None",
     "isolatedModules": false,
     "declaration": true,
     "noImplicitAny": false,

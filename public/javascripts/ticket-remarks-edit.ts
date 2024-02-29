@@ -148,8 +148,10 @@ declare const cityssm: cityssmGlobal
 
       panelBlockElement.innerHTML = `<div class="columns">
           <div class="column">
-            <p class="has-newline-chars">
-              ${cityssm.escapeHTML(remarkObject.remark).replaceAll('\n', '<br />')}
+            <p>
+              ${cityssm
+                .escapeHTML(remarkObject.remark)
+                .replaceAll('\n', '<br />')}
             </p>
             <p class="is-size-7">
             ${
@@ -263,6 +265,9 @@ declare const cityssm: cityssmGlobal
         },
         onremoved() {
           bulmaJS.toggleHtmlClipped()
+          ;(
+            document.querySelector('#is-add-remark-button') as HTMLButtonElement
+          ).focus()
         }
       })
     })

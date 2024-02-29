@@ -83,8 +83,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             panelBlockElement.className = 'panel-block is-block';
             panelBlockElement.innerHTML = `<div class="columns">
           <div class="column">
-            <p class="has-newline-chars">
-              ${cityssm.escapeHTML(remarkObject.remark).replaceAll('\n', '<br />')}
+            <p>
+              ${cityssm
+                .escapeHTML(remarkObject.remark)
+                .replaceAll('\n', '<br />')}
             </p>
             <p class="is-size-7">
             ${remarkObject.recordCreate_timeMillis ===
@@ -167,6 +169,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
+                document.querySelector('#is-add-remark-button').focus();
             }
         });
     });
