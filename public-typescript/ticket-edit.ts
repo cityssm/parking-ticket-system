@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-extra-semi */
+/* eslint-disable no-labels */
 
 // eslint-disable-next-line n/no-missing-import
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
@@ -162,6 +162,7 @@ declare const pts: ptsGlobal
 
   pts.getDefaultConfigProperty('locationClasses', () => {
     let locationLookupCloseModalFunction: () => void
+    let locationFilterElement: HTMLInputElement
 
     let locationList: ParkingLocation[] = []
 
@@ -201,6 +202,60 @@ declare const pts: ptsGlobal
       locationList = []
     }
 
+    function renderLocationsFunction(): void {
+      const listElement = document.createElement('div')
+      listElement.className = 'panel mb-4'
+
+      const filterPieces = locationFilterElement.value
+        .trim()
+        .toLowerCase()
+        .split(' ')
+
+      locationLoop: for (const [
+        index,
+        locationObject
+      ] of locationList.entries()) {
+        for (const filterPiece of filterPieces) {
+          if (
+            !locationObject.locationName.toLowerCase().includes(filterPiece)
+          ) {
+            continue locationLoop
+          }
+        }
+
+        const locationClassObject = pts.getLocationClass(
+          locationObject.locationClassKey
+        )
+
+        const linkElement = document.createElement('a')
+        linkElement.className = 'panel-block is-block'
+        linkElement.dataset.index = index.toString()
+        linkElement.setAttribute('href', '#')
+        linkElement.addEventListener('click', setLocationFunction)
+        linkElement.innerHTML =
+          '<div class="level">' +
+          '<div class="level-left">' +
+          cityssm.escapeHTML(locationObject.locationName) +
+          '</div>' +
+          (locationClassObject?.locationClass
+            ? '<div class="level-right">' +
+              '<span class="tag is-primary">' +
+              cityssm.escapeHTML(locationClassObject.locationClass) +
+              '</span>' +
+              '</div>'
+            : '') +
+          '</div>'
+
+        listElement.append(linkElement)
+      }
+
+      const containerElement = document.querySelector(
+        '#container--parkingLocations'
+      ) as HTMLElement
+      cityssm.clearElement(containerElement)
+      containerElement.append(listElement)
+    }
+
     function populateLocationsFunction(): void {
       cityssm.postJSON('/offences/doGetAllLocations', {}, (rawResponseJSON) => {
         const locationListResponse =
@@ -208,41 +263,7 @@ declare const pts: ptsGlobal
 
         locationList = locationListResponse
 
-        const listElement = document.createElement('div')
-        listElement.className = 'panel mb-4'
-
-        for (const [index, locationObject] of locationList.entries()) {
-          const locationClassObject = pts.getLocationClass(
-            locationObject.locationClassKey
-          )
-
-          const linkElement = document.createElement('a')
-          linkElement.className = 'panel-block is-block'
-          linkElement.dataset.index = index.toString()
-          linkElement.setAttribute('href', '#')
-          linkElement.addEventListener('click', setLocationFunction)
-          linkElement.innerHTML =
-            '<div class="level">' +
-            '<div class="level-left">' +
-            cityssm.escapeHTML(locationObject.locationName) +
-            '</div>' +
-            (locationClassObject?.locationClass
-              ? '<div class="level-right">' +
-                '<span class="tag is-primary">' +
-                cityssm.escapeHTML(locationClassObject.locationClass) +
-                '</span>' +
-                '</div>'
-              : '') +
-            '</div>'
-
-          listElement.append(linkElement)
-        }
-
-        const containerElement = document.querySelector(
-          '#container--parkingLocations'
-        ) as HTMLElement
-        cityssm.clearElement(containerElement)
-        containerElement.append(listElement)
+        renderLocationsFunction()
       })
     }
 
@@ -250,11 +271,28 @@ declare const pts: ptsGlobal
       clickEvent.preventDefault()
 
       cityssm.openHtmlModal('ticket-setLocation', {
-        onshown(_modalElement, closeModalFunction) {
-          locationLookupCloseModalFunction = closeModalFunction
-          populateLocationsFunction()
+        onshown(modalElement, closeModalFunction) {
+          bulmaJS.toggleHtmlClipped()
 
-          document
+          locationLookupCloseModalFunction = closeModalFunction
+
+          if (locationList.length === 0) {
+            populateLocationsFunction()
+          } else {
+            renderLocationsFunction()
+          }
+
+          locationFilterElement = modalElement.querySelector(
+            '#filter--parkingLocations'
+          ) as HTMLInputElement
+
+          locationFilterElement.focus()
+          locationFilterElement.addEventListener(
+            'keyup',
+            renderLocationsFunction
+          )
+
+          modalElement
             .querySelector('#is-clear-location-button')
             ?.addEventListener('click', clearLocationFunction)
         },
@@ -264,6 +302,8 @@ declare const pts: ptsGlobal
               '#is-location-lookup-button'
             ) as HTMLButtonElement
           ).focus()
+
+          bulmaJS.toggleHtmlClipped()
         }
       })
     }
@@ -485,22 +525,25 @@ declare const pts: ptsGlobal
     clickEvent.preventDefault()
 
     cityssm.openHtmlModal('ticket-setBylawOffence', {
-      onshown(_modalElement, closeModalFunction) {
+      onshown(modalElement, closeModalFunction) {
+        bulmaJS.toggleHtmlClipped()
+
         bylawLookupCloseModalFunction = closeModalFunction
         populateBylawsFunction()
 
-        const searchStringElement = document.querySelector(
+        const searchStringElement = modalElement.querySelector(
           '#bylawLookup--searchStr'
         ) as HTMLInputElement
 
         searchStringElement.focus()
         searchStringElement.addEventListener('keyup', filterBylawsFunction)
 
-        document
+        modalElement
           .querySelector('#is-clear-bylaw-button')
           ?.addEventListener('click', clearBylawOffenceFunction)
       },
       onremoved() {
+        bulmaJS.toggleHtmlClipped()
         ;(
           document.querySelector('#is-bylaw-lookup-button') as HTMLButtonElement
         ).focus()

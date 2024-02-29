@@ -78,6 +78,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     pts.getDefaultConfigProperty('locationClasses', () => {
         var _a, _b;
         let locationLookupCloseModalFunction;
+        let locationFilterElement;
         let locationList = [];
         function clearLocationFunction(clickEvent) {
             clickEvent.preventDefault();
@@ -95,52 +96,74 @@ Object.defineProperty(exports, "__esModule", { value: true });
             locationLookupCloseModalFunction();
             locationList = [];
         }
+        function renderLocationsFunction() {
+            const listElement = document.createElement('div');
+            listElement.className = 'panel mb-4';
+            const filterPieces = locationFilterElement.value
+                .trim()
+                .toLowerCase()
+                .split(' ');
+            locationLoop: for (const [index, locationObject] of locationList.entries()) {
+                for (const filterPiece of filterPieces) {
+                    if (!locationObject.locationName.toLowerCase().includes(filterPiece)) {
+                        continue locationLoop;
+                    }
+                }
+                const locationClassObject = pts.getLocationClass(locationObject.locationClassKey);
+                const linkElement = document.createElement('a');
+                linkElement.className = 'panel-block is-block';
+                linkElement.dataset.index = index.toString();
+                linkElement.setAttribute('href', '#');
+                linkElement.addEventListener('click', setLocationFunction);
+                linkElement.innerHTML =
+                    '<div class="level">' +
+                        '<div class="level-left">' +
+                        cityssm.escapeHTML(locationObject.locationName) +
+                        '</div>' +
+                        ((locationClassObject === null || locationClassObject === void 0 ? void 0 : locationClassObject.locationClass)
+                            ? '<div class="level-right">' +
+                                '<span class="tag is-primary">' +
+                                cityssm.escapeHTML(locationClassObject.locationClass) +
+                                '</span>' +
+                                '</div>'
+                            : '') +
+                        '</div>';
+                listElement.append(linkElement);
+            }
+            const containerElement = document.querySelector('#container--parkingLocations');
+            cityssm.clearElement(containerElement);
+            containerElement.append(listElement);
+        }
         function populateLocationsFunction() {
             cityssm.postJSON('/offences/doGetAllLocations', {}, (rawResponseJSON) => {
                 const locationListResponse = rawResponseJSON;
                 locationList = locationListResponse;
-                const listElement = document.createElement('div');
-                listElement.className = 'panel mb-4';
-                for (const [index, locationObject] of locationList.entries()) {
-                    const locationClassObject = pts.getLocationClass(locationObject.locationClassKey);
-                    const linkElement = document.createElement('a');
-                    linkElement.className = 'panel-block is-block';
-                    linkElement.dataset.index = index.toString();
-                    linkElement.setAttribute('href', '#');
-                    linkElement.addEventListener('click', setLocationFunction);
-                    linkElement.innerHTML =
-                        '<div class="level">' +
-                            '<div class="level-left">' +
-                            cityssm.escapeHTML(locationObject.locationName) +
-                            '</div>' +
-                            ((locationClassObject === null || locationClassObject === void 0 ? void 0 : locationClassObject.locationClass)
-                                ? '<div class="level-right">' +
-                                    '<span class="tag is-primary">' +
-                                    cityssm.escapeHTML(locationClassObject.locationClass) +
-                                    '</span>' +
-                                    '</div>'
-                                : '') +
-                            '</div>';
-                    listElement.append(linkElement);
-                }
-                const containerElement = document.querySelector('#container--parkingLocations');
-                cityssm.clearElement(containerElement);
-                containerElement.append(listElement);
+                renderLocationsFunction();
             });
         }
         function openLocationLookupModalFunction(clickEvent) {
             clickEvent.preventDefault();
             cityssm.openHtmlModal('ticket-setLocation', {
-                onshown(_modalElement, closeModalFunction) {
+                onshown(modalElement, closeModalFunction) {
                     var _a;
+                    bulmaJS.toggleHtmlClipped();
                     locationLookupCloseModalFunction = closeModalFunction;
-                    populateLocationsFunction();
-                    (_a = document
+                    if (locationList.length === 0) {
+                        populateLocationsFunction();
+                    }
+                    else {
+                        renderLocationsFunction();
+                    }
+                    locationFilterElement = modalElement.querySelector('#filter--parkingLocations');
+                    locationFilterElement.focus();
+                    locationFilterElement.addEventListener('keyup', renderLocationsFunction);
+                    (_a = modalElement
                         .querySelector('#is-clear-location-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', clearLocationFunction);
                 },
                 onremoved() {
                     ;
                     document.querySelector('#is-location-lookup-button').focus();
+                    bulmaJS.toggleHtmlClipped();
                 }
             });
         }
@@ -267,18 +290,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function openBylawLookupModalFunction(clickEvent) {
         clickEvent.preventDefault();
         cityssm.openHtmlModal('ticket-setBylawOffence', {
-            onshown(_modalElement, closeModalFunction) {
+            onshown(modalElement, closeModalFunction) {
                 var _a;
+                bulmaJS.toggleHtmlClipped();
                 bylawLookupCloseModalFunction = closeModalFunction;
                 populateBylawsFunction();
-                const searchStringElement = document.querySelector('#bylawLookup--searchStr');
+                const searchStringElement = modalElement.querySelector('#bylawLookup--searchStr');
                 searchStringElement.focus();
                 searchStringElement.addEventListener('keyup', filterBylawsFunction);
-                (_a = document
+                (_a = modalElement
                     .querySelector('#is-clear-bylaw-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', clearBylawOffenceFunction);
             },
             onremoved() {
-                ;
+                bulmaJS.toggleHtmlClipped();
                 document.querySelector('#is-bylaw-lookup-button').focus();
             }
         });
