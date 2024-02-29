@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2021",
     "module": "CommonJS",
     "isolatedModules": false,
     "declaration": true,
@@ -13,7 +13,7 @@
   },
   "compileOnSave": true,
   "buildOnSave": true,
-  "include": ["public-typescript/*"],
+  "include": ["public/javascripts/*"],
   "exclude": [
     "bin/*",
     "cypress/*",
