@@ -281,7 +281,9 @@ declare const pts: ptsGlobal
 
     // Loop through statuses
     for (const statusObject of statusList) {
-      const statusDefinitionObject = pts.getTicketStatus(statusObject.statusKey)
+      const statusDefinitionObject = pts.getTicketStatus(
+        statusObject.statusKey ?? ''
+      )
 
       const panelBlockElement = document.createElement('div')
       panelBlockElement.className = 'panel-block is-block'
@@ -303,24 +305,22 @@ declare const pts: ptsGlobal
             '</div>') +
           (!statusObject.statusField || statusObject.statusField === ''
             ? ''
-            : '<p class="is-size-7">' +
-              '<strong>' +
-              (statusDefinitionObject?.statusField
-                ? statusDefinitionObject.statusField.fieldLabel
-                : '') +
-              ':</strong> ' +
-              statusObject.statusField +
-              '</p>') +
+            : `<p class="is-size-7">
+                <strong>${
+                  statusDefinitionObject?.statusField
+                    ? statusDefinitionObject.statusField.fieldLabel
+                    : ''
+                }:</strong> ${statusObject.statusField}</p>`) +
           (!statusObject.statusField2 || statusObject.statusField2 === ''
             ? ''
-            : '<p class="is-size-7">' +
-              '<strong>' +
-              (statusDefinitionObject?.statusField2
-                ? statusDefinitionObject.statusField2.fieldLabel
-                : '') +
-              ':</strong> ' +
-              statusObject.statusField2 +
-              '</p>') +
+            : `<p class="is-size-7">
+                <strong>
+                ${
+                  statusDefinitionObject?.statusField2
+                    ? statusDefinitionObject.statusField2.fieldLabel
+                    : ''
+                }:</strong> ${statusObject.statusField2}
+                </p>`) +
           '<p class="has-newline-chars is-size-7">' +
           statusObject.statusNote +
           '</p>' +

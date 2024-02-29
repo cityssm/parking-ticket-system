@@ -38,7 +38,7 @@ export const getLicencePlateExpiryDateFromPieces = (
       0
     )
 
-    licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObject)
+    licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObject) as number
   }
 
   return {

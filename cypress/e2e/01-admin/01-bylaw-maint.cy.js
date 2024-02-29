@@ -1,5 +1,5 @@
 import { testAdmin } from '../../../test/_globals.js';
-import { logout, login } from '../../support/index.js';
+import { login, logout } from '../../support/index.js';
 import { randomString } from '../../support/utilities.js';
 describe('Admin - Parking By-Laws', () => {
     beforeEach(() => {

@@ -17,7 +17,9 @@ export function getLastTenConvictionBatches() {
     database.close();
     for (const batch of batches) {
         batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
-        batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
+        batch.lockDateString = dateTimeFns.isValidDateInteger(batch.lockDate)
+            ? dateTimeFns.dateIntegerToString(batch.lockDate)
+            : '';
         batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
     }
     return batches;

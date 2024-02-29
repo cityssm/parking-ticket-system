@@ -25,7 +25,9 @@ export function getConvictionBatch(batchId_or_negOne) {
         return undefined;
     }
     batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
-    batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
+    batch.lockDateString = dateTimeFns.isValidDateInteger(batch.lockDate)
+        ? dateTimeFns.dateIntegerToString(batch.lockDate)
+        : '';
     batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
     batch.batchEntries = database
         .prepare(`select s.statusIndex,

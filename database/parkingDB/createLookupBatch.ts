@@ -41,7 +41,7 @@ export const createLookupBatch = (
         batch: {
           recordType: 'batch',
           batchId: info.lastInsertRowid as number,
-          batchDate: dateTimeFns.dateToInteger(rightNow),
+          batchDate: dateTimeFns.dateToInteger(rightNow) as number,
           batchDateString: dateTimeFns.dateToString(rightNow),
           lockDate: undefined,
           lockDateString: '',

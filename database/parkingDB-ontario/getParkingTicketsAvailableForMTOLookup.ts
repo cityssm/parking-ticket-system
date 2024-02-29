@@ -22,7 +22,7 @@ export function getParkingTicketsAvailableForMTOLookup(
   if (issueDaysAgo !== -1) {
     const issueDate = new Date()
     issueDate.setDate(issueDate.getDate() - issueDaysAgo)
-    issueDateNumber = dateTimeFns.dateToInteger(issueDate)
+    issueDateNumber = dateTimeFns.dateToInteger(issueDate) as number
   }
 
   const tickets = database

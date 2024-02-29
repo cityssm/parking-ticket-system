@@ -19,7 +19,7 @@ const authenticateViaActiveDirectory = async (userName, password) => {
     });
 };
 export const authenticate = async (userName, password) => {
-    if (!userName || userName === '' || !password || password === '') {
+    if ((userName ?? '') === '' || (password ?? '') === '') {
         return false;
     }
     return await authenticateViaActiveDirectory(userName, password);

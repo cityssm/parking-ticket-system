@@ -1,3 +1,5 @@
+/* eslint-disable eslint-comments/disable-enable-pair, unicorn/filename-case */
+
 import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 

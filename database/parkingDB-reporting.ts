@@ -1,3 +1,5 @@
+/* eslint-disable eslint-comments/disable-enable-pair, unicorn/filename-case */
+
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'

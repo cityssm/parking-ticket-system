@@ -25,7 +25,12 @@ export function getLastTenConvictionBatches(): ParkingTicketConvictionBatch[] {
 
   for (const batch of batches) {
     batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate)
-    batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate)
+
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    batch.lockDateString = dateTimeFns.isValidDateInteger(batch.lockDate)
+      ? dateTimeFns.dateIntegerToString(batch.lockDate)
+      : ''
+
     batch.sentDateString = dateTimeFns.dateIntegerToString(
       batch.sentDate as number
     )

@@ -18,7 +18,7 @@ let currentYearPrefix: number
 
 function resetCurrentDate(): void {
   currentDate = new Date()
-  currentDateNumber = dateTimeFns.dateToInteger(currentDate)
+  currentDateNumber = dateTimeFns.dateToInteger(currentDate) as number
 
   currentYearPrefix = Math.floor(currentDate.getFullYear() / 100) * 100
   currentDatePrefix = currentYearPrefix * 10_000
@@ -252,7 +252,7 @@ export const parsePKRD = (rowData: string): false | PKRDResult => {
     )
     expiryDate.setDate(expiryDate.getDate() - 1)
 
-    record.licencePlateExpiryDate = dateTimeFns.dateToInteger(expiryDate)
+    record.licencePlateExpiryDate = dateTimeFns.dateToInteger(expiryDate) as number
 
     if (record.errorCode !== '') {
       record.vehicleYear = 0

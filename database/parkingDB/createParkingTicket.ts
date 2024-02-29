@@ -46,7 +46,10 @@ export function createParkingTicket(
 
   const nowMillis = Date.now()
 
-  const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+  const issueDate = dateTimeFns.dateStringToInteger(
+    requestBody.issueDateString
+  ) as number
 
   if (
     getConfigProperty('parkingTickets.ticketNumber.isUnique') &&

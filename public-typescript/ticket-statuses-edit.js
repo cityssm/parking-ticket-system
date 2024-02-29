@@ -153,7 +153,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function populateStatusesPanelFunction() {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         clearStatusPanelFunction();
         if (statusList.length === 0) {
             statusPanelElement.insertAdjacentHTML('beforeend', `<div class="panel-block is-block">
@@ -164,7 +164,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             return;
         }
         for (const statusObject of statusList) {
-            const statusDefinitionObject = pts.getTicketStatus(statusObject.statusKey);
+            const statusDefinitionObject = pts.getTicketStatus((_a = statusObject.statusKey) !== null && _a !== void 0 ? _a : '');
             const panelBlockElement = document.createElement('div');
             panelBlockElement.className = 'panel-block is-block';
             panelBlockElement.innerHTML =
@@ -184,24 +184,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             '</div>') +
                         (!statusObject.statusField || statusObject.statusField === ''
                             ? ''
-                            : '<p class="is-size-7">' +
-                                '<strong>' +
-                                ((statusDefinitionObject === null || statusDefinitionObject === void 0 ? void 0 : statusDefinitionObject.statusField)
-                                    ? statusDefinitionObject.statusField.fieldLabel
-                                    : '') +
-                                ':</strong> ' +
-                                statusObject.statusField +
-                                '</p>') +
+                            : `<p class="is-size-7">
+                <strong>${(statusDefinitionObject === null || statusDefinitionObject === void 0 ? void 0 : statusDefinitionObject.statusField)
+                                ? statusDefinitionObject.statusField.fieldLabel
+                                : ''}:</strong> ${statusObject.statusField}</p>`) +
                         (!statusObject.statusField2 || statusObject.statusField2 === ''
                             ? ''
-                            : '<p class="is-size-7">' +
-                                '<strong>' +
-                                ((statusDefinitionObject === null || statusDefinitionObject === void 0 ? void 0 : statusDefinitionObject.statusField2)
-                                    ? statusDefinitionObject.statusField2.fieldLabel
-                                    : '') +
-                                ':</strong> ' +
-                                statusObject.statusField2 +
-                                '</p>') +
+                            : `<p class="is-size-7">
+                <strong>
+                ${(statusDefinitionObject === null || statusDefinitionObject === void 0 ? void 0 : statusDefinitionObject.statusField2)
+                                ? statusDefinitionObject.statusField2.fieldLabel
+                                : ''}:</strong> ${statusObject.statusField2}
+                </p>`) +
                         '<p class="has-newline-chars is-size-7">' +
                         statusObject.statusNote +
                         '</p>' +
@@ -211,8 +205,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const firstStatusObject = statusList[0];
         if (firstStatusObject.canUpdate) {
-            const firstStatusColumnsElement = (_a = statusPanelElement
-                .querySelector('.panel-block')) === null || _a === void 0 ? void 0 : _a.querySelector('.columns');
+            const firstStatusColumnsElement = (_b = statusPanelElement
+                .querySelector('.panel-block')) === null || _b === void 0 ? void 0 : _b.querySelector('.columns');
             firstStatusColumnsElement.insertAdjacentHTML('beforeend', `<div class="column is-narrow">
           <div class="buttons is-right has-addons">
             <button class="button is-small is-edit-status-button" data-tooltip="Edit Status" data-index="0" type="button">
@@ -225,10 +219,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </button>
           </div>
           </div>`);
-            (_b = firstStatusColumnsElement
-                .querySelector('.is-edit-status-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', openEditStatusModal);
             (_c = firstStatusColumnsElement
-                .querySelector('.is-delete-status-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', confirmDeleteStatusFunction);
+                .querySelector('.is-edit-status-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', openEditStatusModal);
+            (_d = firstStatusColumnsElement
+                .querySelector('.is-delete-status-button')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', confirmDeleteStatusFunction);
         }
         const firstStatusDefinitionObject = pts.getTicketStatus(firstStatusObject.statusKey);
         if (firstStatusDefinitionObject === null || firstStatusDefinitionObject === void 0 ? void 0 : firstStatusDefinitionObject.isFinalStatus) {
@@ -249,8 +243,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
           </div>
         </div>
         </div>`;
-            (_d = finalizePanelBlockElement
-                .querySelector('button')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', confirmResolveTicketFunction);
+            (_e = finalizePanelBlockElement
+                .querySelector('button')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', confirmResolveTicketFunction);
             statusPanelElement.prepend(finalizePanelBlockElement);
         }
     }

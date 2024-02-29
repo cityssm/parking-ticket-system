@@ -2,7 +2,7 @@
 /* eslint-disable promise/always-return, promise/catch-or-return */
 
 import { testAdmin } from '../../../test/_globals.js'
-import { logout, login } from '../../support/index.js'
+import { login, logout } from '../../support/index.js'
 import { randomString } from '../../support/utilities.js'
 
 describe('Admin - Parking By-Laws', () => {
@@ -27,7 +27,7 @@ describe('Admin - Parking By-Laws', () => {
         const bylawNumber = bylawData.bylawNumberPrefix + bylawNumberSuffix
         cy.get(".modal input[name='bylawNumber']").type(bylawNumber)
         cy.get(".modal input[name='bylawDescription']").type(
-          bylawData.bylawDescription
+          bylawData.bylawDescription as string
         )
         cy.get('.modal form').submit()
       })

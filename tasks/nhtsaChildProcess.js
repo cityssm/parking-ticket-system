@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
+import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async';
 import * as parkingDB from '../database/parkingDB.js';
 import { getConfigProperty } from '../helpers/functions.config.js';
 import * as vehicleFunctions from '../helpers/functions.vehicle.js';

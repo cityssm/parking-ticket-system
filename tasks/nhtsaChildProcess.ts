@@ -2,9 +2,9 @@ import * as dateTimeFns from '@cityssm/utils-datetime'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
 import {
-  setIntervalAsync,
+  type SetIntervalAsyncTimer,
   clearIntervalAsync,
-  type SetIntervalAsyncTimer
+  setIntervalAsync
 } from 'set-interval-async'
 
 import * as parkingDB from '../database/parkingDB.js'
@@ -16,7 +16,7 @@ const debug = Debug('parking-ticket-system:task:nhtsaChildProcess')
 const initDate = new Date()
 initDate.setMonth(initDate.getMonth() - 1)
 
-let cutoffDate = dateTimeFns.dateToInteger(initDate)
+let cutoffDate = dateTimeFns.dateToInteger(initDate) as number
 
 let terminateTask = false
 

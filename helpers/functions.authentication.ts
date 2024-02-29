@@ -4,7 +4,8 @@ import * as configFunctions from './functions.config.js'
 
 const userDomain = configFunctions.getConfigProperty('application.userDomain')
 
-const activeDirectoryConfig = configFunctions.getConfigProperty('activeDirectory')
+const activeDirectoryConfig =
+  configFunctions.getConfigProperty('activeDirectory')
 
 const authenticateViaActiveDirectory = async (
   userName: string,
@@ -35,7 +36,7 @@ export const authenticate = async (
   userName: string,
   password: string
 ): Promise<boolean> => {
-  if (!userName || userName === '' || !password || password === '') {
+  if ((userName ?? '') === '' || (password ?? '') === '') {
     return false
   }
 

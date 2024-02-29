@@ -17,7 +17,7 @@ export function lockConvictionBatch(
 
   const rightNow = new Date()
 
-  const lockDate = dateToInteger(rightNow)
+  const lockDate = dateToInteger(rightNow) as number
 
   const info = database
     .prepare(
