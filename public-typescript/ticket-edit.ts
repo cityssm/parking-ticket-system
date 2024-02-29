@@ -568,27 +568,16 @@ declare const pts: ptsGlobal
       '#ticket--licencePlateIsMissing'
     ) as HTMLInputElement
 
+    const licencePlateInputSelectors = [
+      '#ticket--licencePlateCountry',
+      '#ticket--licencePlateProvince',
+      '#ticket--licencePlateNumber'
+    ]
+
     licencePlateIsMissingCheckboxElement.addEventListener('change', () => {
-      if (licencePlateIsMissingCheckboxElement.checked) {
-        document
-          .querySelector('#ticket--licencePlateCountry')
-          ?.removeAttribute('required')
-        document
-          .querySelector('#ticket--licencePlateProvince')
-          ?.removeAttribute('required')
-        document
-          .querySelector('#ticket--licencePlateNumber')
-          ?.removeAttribute('required')
-      } else {
-        document
-          .querySelector('#ticket--licencePlateCountry')
-          ?.setAttribute('required', 'required')
-        document
-          .querySelector('#ticket--licencePlateProvince')
-          ?.setAttribute('required', 'required')
-        document
-          .querySelector('#ticket--licencePlateNumber')
-          ?.setAttribute('required', 'required')
+      for (const inputSelector of licencePlateInputSelectors) {
+        ;(document.querySelector(inputSelector) as HTMLInputElement).required =
+          !licencePlateIsMissingCheckboxElement.checked
       }
     })
   }

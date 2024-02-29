@@ -313,23 +313,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
         .querySelector('#ticket--bylawNumber')) === null || _d === void 0 ? void 0 : _d.addEventListener('dblclick', openBylawLookupModalFunction);
     {
         const licencePlateIsMissingCheckboxElement = document.querySelector('#ticket--licencePlateIsMissing');
+        const licencePlateInputSelectors = [
+            '#ticket--licencePlateCountry',
+            '#ticket--licencePlateProvince',
+            '#ticket--licencePlateNumber'
+        ];
         licencePlateIsMissingCheckboxElement.addEventListener('change', () => {
-            var _a, _b, _c, _d, _e, _f;
-            if (licencePlateIsMissingCheckboxElement.checked) {
-                (_a = document
-                    .querySelector('#ticket--licencePlateCountry')) === null || _a === void 0 ? void 0 : _a.removeAttribute('required');
-                (_b = document
-                    .querySelector('#ticket--licencePlateProvince')) === null || _b === void 0 ? void 0 : _b.removeAttribute('required');
-                (_c = document
-                    .querySelector('#ticket--licencePlateNumber')) === null || _c === void 0 ? void 0 : _c.removeAttribute('required');
-            }
-            else {
-                (_d = document
-                    .querySelector('#ticket--licencePlateCountry')) === null || _d === void 0 ? void 0 : _d.setAttribute('required', 'required');
-                (_e = document
-                    .querySelector('#ticket--licencePlateProvince')) === null || _e === void 0 ? void 0 : _e.setAttribute('required', 'required');
-                (_f = document
-                    .querySelector('#ticket--licencePlateNumber')) === null || _f === void 0 ? void 0 : _f.setAttribute('required', 'required');
+            for (const inputSelector of licencePlateInputSelectors) {
+                ;
+                document.querySelector(inputSelector).required =
+                    !licencePlateIsMissingCheckboxElement.checked;
             }
         });
     }
