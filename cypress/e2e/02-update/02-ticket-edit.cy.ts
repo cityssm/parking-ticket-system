@@ -60,15 +60,19 @@ describe('Ticket Edit - Update User', () => {
     cy.get("textarea[name='locationDescription']")
       .clear()
       .type(
-        'Updated Location Description - ' +
-          Cypress._.random(10_000, 99_999).toString()
+        `Updated Location Description - ${Cypress._.random(
+          10_000,
+          99_999
+        ).toString()}`
       )
 
     cy.get("textarea[name='parkingOffence']")
       .clear()
       .type(
-        'Updated Offence Description - ' +
-          Cypress._.random(10_000, 99_999).toString()
+        `Updated Offence Description - ${Cypress._.random(
+          10_000,
+          99_999
+        ).toString()}`
       )
 
     cy.wait(200)
@@ -83,7 +87,7 @@ describe('Ticket Edit - Update User', () => {
 
     cy.get("button[data-cy='add-remark']").click()
 
-    let remark = 'New Remark - ' + Cypress._.random(10_000, 99_999).toString()
+    let remark = `New Remark - ${Cypress._.random(10_000, 99_999).toString()}`
 
     cy.get('.modal')
       .should('be.visible')
@@ -102,7 +106,7 @@ describe('Ticket Edit - Update User', () => {
 
     cy.get("button[data-cy='edit-remark']").first().click()
 
-    remark = 'Updated Remark - ' + Cypress._.random(10_000, 99_999).toString()
+    remark = `Updated Remark - ${Cypress._.random(10_000, 99_999).toString()}`
 
     cy.get('.modal')
       .should('be.visible')

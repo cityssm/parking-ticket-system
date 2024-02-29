@@ -22,7 +22,7 @@ describe('Create a New Ticket', () => {
     cy.fixture('ticket.json').then((ticketJSON) => {
       const ticketNumber =
         ticketJSON.ticketNumberPrefix +
-        ('0000' + Cypress._.random(1, 99_999).toString()).slice(-5)
+        Cypress._.random(100_000, 199_999).toString().slice(-5)
 
       const issueDate = new Date(
         Date.now() - ticketJSON.issueDateOffsetDays * 86_400 * 1000

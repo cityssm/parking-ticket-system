@@ -101,15 +101,14 @@ declare const pts: ptsGlobal
     ${
       ticketObject.resolvedDateString === ''
         ? 'Unresolved'
-        : '<span class="sr-only">Resolved</span>' +
-          '<i class="fas fa-check" aria-hidden="true"></i> ' +
-          ticketObject.resolvedDateString
+        : `<span class="sr-only">Resolved</span>
+            <i class="fas fa-check" aria-hidden="true"></i>
+            ${ticketObject.resolvedDateString}`
     }
     ${
       ticketObject.latestStatus_statusKey
-        ? '<br /><span class="tag is-light is-primary">' +
-          ticketStatusObject.status +
-          '</span>'
+        ? `<br />
+            <span class="tag is-light is-primary">${ticketStatusObject.status}</span>`
         : ''
     }
     </td>`
@@ -117,12 +116,14 @@ declare const pts: ptsGlobal
     return trElement
   }
 
-  function processTicketResults(ticketResults: {
-    count: number
-    limit: number
-    offset: number
-    tickets: ParkingTicket[]
-  }): void {
+  function processTicketResults(rawTicketResults: unknown): void {
+    const ticketResults = rawTicketResults as {
+      count: number
+      limit: number
+      offset: number
+      tickets: ParkingTicket[]
+    }
+
     const ticketList = ticketResults.tickets
 
     if (ticketList.length === 0) {

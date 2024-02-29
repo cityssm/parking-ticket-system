@@ -57,18 +57,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
     <td>
     ${ticketObject.resolvedDateString === ''
             ? 'Unresolved'
-            : '<span class="sr-only">Resolved</span>' +
-                '<i class="fas fa-check" aria-hidden="true"></i> ' +
-                ticketObject.resolvedDateString}
+            : `<span class="sr-only">Resolved</span>
+            <i class="fas fa-check" aria-hidden="true"></i>
+            ${ticketObject.resolvedDateString}`}
     ${ticketObject.latestStatus_statusKey
-            ? '<br /><span class="tag is-light is-primary">' +
-                ticketStatusObject.status +
-                '</span>'
+            ? `<br />
+            <span class="tag is-light is-primary">${ticketStatusObject.status}</span>`
             : ''}
     </td>`;
         return trElement;
     }
-    function processTicketResults(ticketResults) {
+    function processTicketResults(rawTicketResults) {
+        const ticketResults = rawTicketResults;
         const ticketList = ticketResults.tickets;
         if (ticketList.length === 0) {
             searchResultsElement.innerHTML = `<div class="message is-info">
