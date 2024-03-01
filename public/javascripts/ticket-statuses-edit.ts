@@ -235,8 +235,9 @@ declare const pts: ptsGlobal
                       .querySelector('#editStatus--statusField2')
                       ?.closest('.field') as HTMLElement
 
-                    ;(fieldElement.querySelector('label') as HTMLLabelElement).textContent =
-                      statusKeyObject.statusField2.fieldLabel
+                    ;(
+                      fieldElement.querySelector('label') as HTMLLabelElement
+                    ).textContent = statusKeyObject.statusField2.fieldLabel
                     fieldElement.classList.remove('is-hidden')
                   }
                 }
@@ -298,30 +299,34 @@ declare const pts: ptsGlobal
       const panelBlockElement = document.createElement('div')
       panelBlockElement.className = 'panel-block is-block'
 
-      panelBlockElement.innerHTML =
-        '<div class="columns">' +
-        ('<div class="column">' +
-          ('<div class="level mb-1">' +
-            '<div class="level-left">' +
-            '<strong>' +
-            (statusDefinitionObject
+      panelBlockElement.innerHTML = `<div class="columns">
+        <div class="column">
+        <div class="level mb-1">
+          <div class="level-left">
+          <strong>
+          ${
+            statusDefinitionObject
               ? statusDefinitionObject.status
-              : statusObject.statusKey) +
-            '</strong>' +
-            '</div>' +
-            '<div class="level-right">' +
-            statusObject.statusDateString +
-            '</div>' +
-            '</div>') +
-          (!statusObject.statusField || statusObject.statusField === ''
+              : statusObject.statusKey
+          }
+          </strong>
+          </div>
+          <div class="level-right">
+            ${statusObject.statusDateString}
+          </div>
+        </div>
+        ${
+          !statusObject.statusField || statusObject.statusField === ''
             ? ''
             : `<p class="is-size-7">
                 <strong>${
                   statusDefinitionObject?.statusField
                     ? statusDefinitionObject.statusField.fieldLabel
                     : ''
-                }:</strong> ${statusObject.statusField}</p>`) +
-          (!statusObject.statusField2 || statusObject.statusField2 === ''
+                }:</strong> ${statusObject.statusField}</p>`
+        }
+        ${
+          !statusObject.statusField2 || statusObject.statusField2 === ''
             ? ''
             : `<p class="is-size-7">
                 <strong>
@@ -330,12 +335,13 @@ declare const pts: ptsGlobal
                     ? statusDefinitionObject.statusField2.fieldLabel
                     : ''
                 }:</strong> ${statusObject.statusField2}
-                </p>`) +
-          '<p class="has-newline-chars is-size-7">' +
-          statusObject.statusNote +
-          '</p>' +
-          '</div>') +
-        '</div>'
+                </p>`
+        }
+        <p class="has-newline-chars is-size-7">
+          ${statusObject.statusNote}
+        </p>
+        </div>
+        </div>`
 
       statusPanelElement.append(panelBlockElement)
     }

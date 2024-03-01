@@ -198,7 +198,9 @@ declare const pts: ptsGlobal
       const trElement = document.createElement('tr')
 
       trElement.innerHTML = `<td>
-          <a data-tooltip="View Ticket (Opens in New Window)" href="${pts.urlPrefix}/tickets/${ticket.ticketId.toString()}" target="_blank">
+          <a data-tooltip="View Ticket (Opens in New Window)" href="${
+            pts.urlPrefix
+          }/tickets/${ticket.ticketId.toString()}" target="_blank">
           ${cityssm.escapeHTML(ticket.ticketNumber)}
           </a>
         </td>
@@ -435,9 +437,8 @@ declare const pts: ptsGlobal
 
     bulmaJS.confirm({
       title: 'Unlock Batch',
-      message:
-        '<strong>Are you sure you want to unlock this batch?</strong><br />' +
-        'Once unlocked, changes to the batch will be allowed.',
+      message: `<strong>Are you sure you want to unlock this batch?</strong><br />
+        Once unlocked, changes to the batch will be allowed.`,
       messageIsHtml: true,
       contextualColorName: 'warning',
       okButton: {
@@ -515,10 +516,9 @@ declare const pts: ptsGlobal
     cityssm.clearElement(batchEntriesContainerElement)
 
     if (currentBatch.batchEntries.length === 0) {
-      batchEntriesContainerElement.innerHTML =
-        '<div class="message is-info">' +
-        '<div class="message-body">There are no parking tickets in this batch.</div>' +
-        '</div>'
+      batchEntriesContainerElement.innerHTML = `<div class="message is-info">
+        <div class="message-body">There are no parking tickets in this batch.</div>
+        </div>`
 
       return
     }
@@ -533,7 +533,9 @@ declare const pts: ptsGlobal
       const trElement = document.createElement('tr')
 
       trElement.innerHTML = `<td>
-          <a href="${pts.urlPrefix}/tickets/${batchEntry.ticketId.toString()}" target="_blank">
+          <a href="${
+            pts.urlPrefix
+          }/tickets/${batchEntry.ticketId.toString()}" target="_blank">
             ${batchEntry.ticketNumber}
           </a>
         </td>

@@ -261,8 +261,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         bulmaJS.confirm({
             title: 'Unlock Batch',
-            message: '<strong>Are you sure you want to unlock this batch?</strong><br />' +
-                'Once unlocked, changes to the batch will be allowed.',
+            message: `<strong>Are you sure you want to unlock this batch?</strong><br />
+        Once unlocked, changes to the batch will be allowed.`,
             messageIsHtml: true,
             contextualColorName: 'warning',
             okButton: {
@@ -319,10 +319,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </span>`}`;
         cityssm.clearElement(batchEntriesContainerElement);
         if (currentBatch.batchEntries.length === 0) {
-            batchEntriesContainerElement.innerHTML =
-                '<div class="message is-info">' +
-                    '<div class="message-body">There are no parking tickets in this batch.</div>' +
-                    '</div>';
+            batchEntriesContainerElement.innerHTML = `<div class="message is-info">
+        <div class="message-body">There are no parking tickets in this batch.</div>
+        </div>`;
             return;
         }
         const tbodyElement = document.createElement('tbody');

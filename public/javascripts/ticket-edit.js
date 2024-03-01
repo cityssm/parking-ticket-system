@@ -117,19 +117,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 linkElement.dataset.index = index.toString();
                 linkElement.setAttribute('href', '#');
                 linkElement.addEventListener('click', setLocationFunction);
-                linkElement.innerHTML =
-                    '<div class="level">' +
-                        '<div class="level-left">' +
-                        cityssm.escapeHTML(locationObject.locationName) +
-                        '</div>' +
-                        (locationClassObject?.locationClass
-                            ? '<div class="level-right">' +
-                                '<span class="tag is-primary">' +
-                                cityssm.escapeHTML(locationClassObject.locationClass) +
-                                '</span>' +
-                                '</div>'
-                            : '') +
-                        '</div>';
+                linkElement.innerHTML = `<div class="level">
+          <div class="level-left">
+          ${cityssm.escapeHTML(locationObject.locationName)}
+          </div>
+          ${locationClassObject?.locationClass
+                    ? `<div class="level-right">
+                  <span class="tag is-primary">
+                  ${cityssm.escapeHTML(locationClassObject.locationClass)}
+                  </span>
+                  </div>`
+                    : ''}</div>`;
                 listElement.append(linkElement);
             }
             const containerElement = document.querySelector('#container--parkingLocations');

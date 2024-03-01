@@ -129,8 +129,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                     const fieldElement = document
                                         .querySelector('#editStatus--statusField2')
                                         ?.closest('.field');
-                                    fieldElement.querySelector('label').textContent =
-                                        statusKeyObject.statusField2.fieldLabel;
+                                    fieldElement.querySelector('label').textContent = statusKeyObject.statusField2.fieldLabel;
                                     fieldElement.classList.remove('is-hidden');
                                 }
                             }
@@ -168,40 +167,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const statusDefinitionObject = pts.getTicketStatus(statusObject.statusKey ?? '');
             const panelBlockElement = document.createElement('div');
             panelBlockElement.className = 'panel-block is-block';
-            panelBlockElement.innerHTML =
-                '<div class="columns">' +
-                    ('<div class="column">' +
-                        ('<div class="level mb-1">' +
-                            '<div class="level-left">' +
-                            '<strong>' +
-                            (statusDefinitionObject
-                                ? statusDefinitionObject.status
-                                : statusObject.statusKey) +
-                            '</strong>' +
-                            '</div>' +
-                            '<div class="level-right">' +
-                            statusObject.statusDateString +
-                            '</div>' +
-                            '</div>') +
-                        (!statusObject.statusField || statusObject.statusField === ''
-                            ? ''
-                            : `<p class="is-size-7">
+            panelBlockElement.innerHTML = `<div class="columns">
+        <div class="column">
+        <div class="level mb-1">
+          <div class="level-left">
+          <strong>
+          ${statusDefinitionObject
+                ? statusDefinitionObject.status
+                : statusObject.statusKey}
+          </strong>
+          </div>
+          <div class="level-right">
+            ${statusObject.statusDateString}
+          </div>
+        </div>
+        ${!statusObject.statusField || statusObject.statusField === ''
+                ? ''
+                : `<p class="is-size-7">
                 <strong>${statusDefinitionObject?.statusField
-                                ? statusDefinitionObject.statusField.fieldLabel
-                                : ''}:</strong> ${statusObject.statusField}</p>`) +
-                        (!statusObject.statusField2 || statusObject.statusField2 === ''
-                            ? ''
-                            : `<p class="is-size-7">
+                    ? statusDefinitionObject.statusField.fieldLabel
+                    : ''}:</strong> ${statusObject.statusField}</p>`}
+        ${!statusObject.statusField2 || statusObject.statusField2 === ''
+                ? ''
+                : `<p class="is-size-7">
                 <strong>
                 ${statusDefinitionObject?.statusField2
-                                ? statusDefinitionObject.statusField2.fieldLabel
-                                : ''}:</strong> ${statusObject.statusField2}
-                </p>`) +
-                        '<p class="has-newline-chars is-size-7">' +
-                        statusObject.statusNote +
-                        '</p>' +
-                        '</div>') +
-                    '</div>';
+                    ? statusDefinitionObject.statusField2.fieldLabel
+                    : ''}:</strong> ${statusObject.statusField2}
+                </p>`}
+        <p class="has-newline-chars is-size-7">
+          ${statusObject.statusNote}
+        </p>
+        </div>
+        </div>`;
             statusPanelElement.append(panelBlockElement);
         }
         const firstStatusObject = statusList[0];

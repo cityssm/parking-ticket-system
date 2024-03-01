@@ -66,7 +66,7 @@ type UpdateOffenceResponseJSON =
   let bylawNumberFilter = ''
 
   function getOffenceMapKey(bylawNumber: string, locationKey: string): string {
-    return bylawNumber + '::::' + locationKey
+    return `${bylawNumber}::::${locationKey}`
   }
 
   function loadOffenceMap(offenceList: ParkingOffence[]): void {

@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     let bylawNumberFilterIsSet = false;
     let bylawNumberFilter = '';
     function getOffenceMapKey(bylawNumber, locationKey) {
-        return bylawNumber + '::::' + locationKey;
+        return `${bylawNumber}::::${locationKey}`;
     }
     function loadOffenceMap(offenceList) {
         offenceMap.clear();
