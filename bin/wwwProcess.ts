@@ -50,10 +50,10 @@ const onListening = (server: http.Server): void => {
 
   const bind =
     typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + (addr?.port.toString() ?? '')
+      ? `pipe ${addr}`
+      : `port ${addr?.port.toString() ?? ''}`
 
-  debug('Listening on ' + bind)
+  debug(`Listening on ${bind}`)
 }
 
 /**

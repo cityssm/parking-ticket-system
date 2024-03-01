@@ -31,9 +31,9 @@ const onError = (error) => {
 const onListening = (server) => {
     const addr = server.address();
     const bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + (addr?.port.toString() ?? '');
-    debug('Listening on ' + bind);
+        ? `pipe ${addr}`
+        : `port ${addr?.port.toString() ?? ''}`;
+    debug(`Listening on ${bind}`);
 };
 process.title = `${getConfigProperty('application.applicationName')} (Worker)`;
 const httpPort = getConfigProperty('application.httpPort');
