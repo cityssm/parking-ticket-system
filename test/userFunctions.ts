@@ -3,8 +3,8 @@ import assert from 'node:assert'
 import * as userFunctions from '../helpers/functions.user.js'
 
 import {
-  fakeViewOnlyRequest,
-  fakeAdminRequest
+  fakeAdminRequest,
+  fakeViewOnlyRequest
 } from './_globals.js'
 
 const fakeRequest = {}

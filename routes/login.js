@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import { Router } from 'express';
 import { useTestDatabases } from '../data/databasePaths.js';
-import * as authenticationFunctions from '../helpers/functions.authentication.js';
+import { authenticate, getSafeRedirectURL } from '../helpers/functions.authentication.js';
 import { getConfigProperty } from '../helpers/functions.config.js';
 const debug = Debug('parking-ticket-system:login');
 export const router = Router();
@@ -9,7 +9,7 @@ async function postHandler(request, response) {
     const userName = request.body.userName;
     const passwordPlain = request.body.password;
     const unsafeRedirectURL = request.body.redirect;
-    const redirectURL = authenticationFunctions.getSafeRedirectURL(typeof unsafeRedirectURL === 'string' ? unsafeRedirectURL : '');
+    const redirectURL = getSafeRedirectURL(typeof unsafeRedirectURL === 'string' ? unsafeRedirectURL : '');
     let isAuthenticated = false;
     if (userName.startsWith('*')) {
         if (useTestDatabases && userName === passwordPlain) {
@@ -20,7 +20,7 @@ async function postHandler(request, response) {
         }
     }
     else {
-        isAuthenticated = await authenticationFunctions.authenticate(userName, passwordPlain);
+        isAuthenticated = await authenticate(userName, passwordPlain);
     }
     let userObject;
     if (isAuthenticated) {
@@ -63,7 +63,7 @@ function getHandler(request, response) {
     const sessionCookieName = getConfigProperty('session.cookieName');
     if (request.session.user !== undefined &&
         request.cookies[sessionCookieName] !== undefined) {
-        const redirectURL = authenticationFunctions.getSafeRedirectURL((request.query.redirect ?? ''));
+        const redirectURL = getSafeRedirectURL((request.query.redirect ?? ''));
         response.redirect(redirectURL);
     }
     else {

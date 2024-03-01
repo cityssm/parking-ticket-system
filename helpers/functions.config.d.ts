@@ -23,4 +23,10 @@ interface LicencePlateLocationProperties {
     };
 }
 export declare function getLicencePlateLocationProperties(originalLicencePlateCountry: string, originalLicencePlateProvince: string): LicencePlateLocationProperties;
-export {};
+declare const _default: {
+    getConfigProperty: typeof getConfigProperty;
+    keepAliveMillis: number;
+    getParkingTicketStatus: typeof getParkingTicketStatus;
+    getLicencePlateLocationProperties: typeof getLicencePlateLocationProperties;
+};
+export default _default;

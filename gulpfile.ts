@@ -13,12 +13,7 @@ const publicSCSSDestination = 'public/stylesheets'
 function publicSCSSFunction(): NodeJS.ReadWriteStream {
   return gulp
     .src('public-scss/*.scss')
-    .pipe(
-      sass({ outputStyle: 'compressed', includePaths: ['node_modules'] }).on(
-        'error',
-        sass.logError
-      )
-    )
+    .pipe(sass({ outputStyle: 'compressed', includePaths: ['node_modules'] }))
     .pipe(gulp.dest(publicSCSSDestination))
 }
 

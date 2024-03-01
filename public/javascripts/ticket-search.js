@@ -39,9 +39,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
       </div>
       </td>
       <td>
-      ${ticketObject.locationDescription
-            ? `${ticketObject.locationDescription}<br />`
-            : ''}
+      ${ticketObject.locationDescription === ''
+            ? ''
+            : `${ticketObject.locationDescription}<br />`}
       ${ticketObject.locationKey &&
             ticketObject.locationKey !== '' &&
             ticketObject.locationName

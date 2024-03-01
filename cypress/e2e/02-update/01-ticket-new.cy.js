@@ -1,4 +1,4 @@
-import * as configFunctions from '../../../helpers/functions.config.js';
+import { getConfigProperty } from '../../../helpers/functions.config.js';
 import { testUpdate } from '../../../test/_globals.js';
 import { login, logout } from '../../support/index.js';
 describe('Create a New Ticket', () => {
@@ -44,9 +44,9 @@ describe('Create a New Ticket', () => {
         cy.get("input[name='offenceAmount']").should('not.have.value', '');
         cy.get("input[name='discountOffenceAmount']").should('not.have.value', '');
         cy.get("input[name='discountDays']").should('not.have.value', '');
-        const expectedLicencePlateCountry = configFunctions.getConfigProperty('defaults.country');
+        const expectedLicencePlateCountry = getConfigProperty('defaults.country');
         cy.get("input[name='licencePlateCountry']").should('contain.value', expectedLicencePlateCountry);
-        const expectedLicencePlateProvince = configFunctions.getConfigProperty('defaults.province');
+        const expectedLicencePlateProvince = getConfigProperty('defaults.province');
         cy.get("input[name='licencePlateProvince']").should('contain.value', expectedLicencePlateProvince);
         cy.fixture('ticket.json').then((ticketJSON) => {
             cy.get("input[name='licencePlateNumber']")

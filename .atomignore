@@ -1,7 +1,0 @@
-*.db-journal
-app.js
-gulpfile.js
-routes/*.js
-tasks/*.js
-
--helpers/*.js

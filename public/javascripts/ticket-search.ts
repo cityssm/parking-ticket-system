@@ -49,7 +49,9 @@ declare const pts: ptsGlobal
 
     // Output row
     trElement.innerHTML = `<td>
-        <a href="${pts.urlPrefix}/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
+        <a href="${
+          pts.urlPrefix
+        }/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
         ${ticketObject.ticketNumber}
         </a>
       </td>
@@ -79,9 +81,9 @@ declare const pts: ptsGlobal
       </td>
       <td>
       ${
-        ticketObject.locationDescription
-          ? `${ticketObject.locationDescription}<br />`
-          : ''
+        ticketObject.locationDescription === ''
+          ? ''
+          : `${ticketObject.locationDescription}<br />`
       }
       ${
         ticketObject.locationKey &&

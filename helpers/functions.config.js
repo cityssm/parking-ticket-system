@@ -97,3 +97,9 @@ export function getLicencePlateLocationProperties(originalLicencePlateCountry, o
         licencePlateProvince
     };
 }
+export default {
+    getConfigProperty,
+    keepAliveMillis,
+    getParkingTicketStatus,
+    getLicencePlateLocationProperties
+};

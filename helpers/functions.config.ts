@@ -285,3 +285,10 @@ export function getLicencePlateLocationProperties(
     licencePlateProvince
   }
 }
+
+export default {
+  getConfigProperty,
+  keepAliveMillis,
+  getParkingTicketStatus,
+  getLicencePlateLocationProperties
+}

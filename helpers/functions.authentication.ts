@@ -1,11 +1,10 @@
 import ActiveDirectory from 'activedirectory2'
 
-import * as configFunctions from './functions.config.js'
+import { getConfigProperty } from './functions.config.js'
 
-const userDomain = configFunctions.getConfigProperty('application.userDomain')
+const userDomain = getConfigProperty('application.userDomain')
 
-const activeDirectoryConfig =
-  configFunctions.getConfigProperty('activeDirectory')
+const activeDirectoryConfig = getConfigProperty('activeDirectory')
 
 const authenticateViaActiveDirectory = async (
   userName: string,
@@ -59,7 +58,7 @@ const safeRedirects = new Set([
 ])
 
 export function getSafeRedirectURL(possibleRedirectURL = ''): string {
-  const urlPrefix = configFunctions.getConfigProperty('reverseProxy.urlPrefix')
+  const urlPrefix = getConfigProperty('reverseProxy.urlPrefix')
 
   if (typeof possibleRedirectURL === 'string') {
     const urlToCheck = possibleRedirectURL.startsWith(urlPrefix)

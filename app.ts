@@ -14,8 +14,11 @@ import createError from 'http-errors'
 import FileStore from 'session-file-store'
 
 import { useTestDatabases } from './data/databasePaths.js'
-import { getSafeRedirectURL } from './helpers/functions.authentication.js'
 import * as configFunctions from './helpers/functions.config.js'
+import {
+  hasActiveSession,
+  sessionHandler
+} from './helpers/functions.session.js'
 import * as vehicleFunctions from './helpers/functions.vehicle.js'
 import routerAdmin from './routes/admin.js'
 import routerDashboard from './routes/dashboard.js'
@@ -144,27 +147,6 @@ app.use((request, response, next) => {
   next()
 })
 
-// Redirect logged in users
-const sessionChecker = (
-  request: express.Request,
-  response: express.Response,
-  next: express.NextFunction
-): void => {
-  if (
-    Object.hasOwn(request.session, 'user') &&
-    Object.hasOwn(request.cookies as object, sessionCookieName)
-  ) {
-    next()
-    return
-  }
-
-  const redirectUrl = getSafeRedirectURL(request.originalUrl)
-
-  response.redirect(
-    `${urlPrefix}/login?redirect=${encodeURIComponent(redirectUrl)}`
-  )
-}
-
 /*
  * ROUTES
  */
@@ -189,22 +171,22 @@ app.use((request, response, next) => {
   next()
 })
 
-app.get(`${urlPrefix}/`, sessionChecker, (_request, response) => {
+app.get(`${urlPrefix}/`, sessionHandler, (_request, response) => {
   response.redirect(`${urlPrefix}/dashboard`)
 })
 
-app.use(`${urlPrefix}/dashboard`, sessionChecker, routerDashboard)
-app.use(`${urlPrefix}/tickets`, sessionChecker, routerTickets)
-app.use(`${urlPrefix}/plates`, sessionChecker, routerPlates)
-app.use(`${urlPrefix}/offences`, sessionChecker, routerOffences)
-app.use(`${urlPrefix}/reports`, sessionChecker, routerReports)
+app.use(`${urlPrefix}/dashboard`, sessionHandler, routerDashboard)
+app.use(`${urlPrefix}/tickets`, sessionHandler, routerTickets)
+app.use(`${urlPrefix}/plates`, sessionHandler, routerPlates)
+app.use(`${urlPrefix}/offences`, sessionHandler, routerOffences)
+app.use(`${urlPrefix}/reports`, sessionHandler, routerReports)
 
 if (configFunctions.getConfigProperty('application.feature_mtoExportImport')) {
-  app.use(`${urlPrefix}/plates-ontario`, sessionChecker, routePlatesOntario)
-  app.use(`${urlPrefix}/tickets-ontario`, sessionChecker, routeTicketsOntario)
+  app.use(`${urlPrefix}/plates-ontario`, sessionHandler, routePlatesOntario)
+  app.use(`${urlPrefix}/tickets-ontario`, sessionHandler, routeTicketsOntario)
 }
 
-app.use(`${urlPrefix}/admin`, sessionChecker, routerAdmin)
+app.use(`${urlPrefix}/admin`, sessionHandler, routerAdmin)
 
 if (configFunctions.getConfigProperty('session.doKeepAlive')) {
   app.all(`${urlPrefix}/keepAlive`, (_request, response) => {
@@ -215,7 +197,7 @@ if (configFunctions.getConfigProperty('session.doKeepAlive')) {
 app.use(`${urlPrefix}/login`, routerLogin)
 
 app.get(`${urlPrefix}/logout`, (request, response) => {
-  if (request.session.user && request.cookies[sessionCookieName]) {
+  if (hasActiveSession(request)) {
     request.session.destroy(() => {
       response.clearCookie(sessionCookieName)
       response.redirect(`${urlPrefix}/`)

@@ -10,7 +10,10 @@ import {
 } from 'express'
 
 import { useTestDatabases } from '../data/databasePaths.js'
-import * as authenticationFunctions from '../helpers/functions.authentication.js'
+import {
+  authenticate,
+  getSafeRedirectURL
+} from '../helpers/functions.authentication.js'
 import { getConfigProperty } from '../helpers/functions.config.js'
 
 const debug = Debug('parking-ticket-system:login')
@@ -26,7 +29,7 @@ async function postHandler(
 
   const unsafeRedirectURL = request.body.redirect
 
-  const redirectURL = authenticationFunctions.getSafeRedirectURL(
+  const redirectURL = getSafeRedirectURL(
     typeof unsafeRedirectURL === 'string' ? unsafeRedirectURL : ''
   )
 
@@ -41,10 +44,7 @@ async function postHandler(
       }
     }
   } else {
-    isAuthenticated = await authenticationFunctions.authenticate(
-      userName,
-      passwordPlain
-    )
+    isAuthenticated = await authenticate(userName, passwordPlain)
   }
 
   let userObject: PTSUser | undefined
@@ -107,7 +107,7 @@ function getHandler(request: Request, response: Response): void {
     request.session.user !== undefined &&
     request.cookies[sessionCookieName] !== undefined
   ) {
-    const redirectURL = authenticationFunctions.getSafeRedirectURL(
+    const redirectURL = getSafeRedirectURL(
       (request.query.redirect ?? '') as string
     )
 

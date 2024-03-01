@@ -15,6 +15,7 @@ function runCypress(browser: 'chrome' | 'firefox', done: () => void): void {
     cypresssCommand += ` --tag "${browser},${process.version}" --record`
   }
 
+  // eslint-disable-next-line security/detect-child-process
   const childProcess = exec(cypresssCommand)
 
   childProcess.stdout?.on('data', (data) => {

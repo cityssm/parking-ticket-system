@@ -6,7 +6,7 @@ const publicSCSSDestination = 'public/stylesheets';
 function publicSCSSFunction() {
     return gulp
         .src('public-scss/*.scss')
-        .pipe(sass({ outputStyle: 'compressed', includePaths: ['node_modules'] }).on('error', sass.logError))
+        .pipe(sass({ outputStyle: 'compressed', includePaths: ['node_modules'] }))
         .pipe(gulp.dest(publicSCSSDestination));
 }
 gulp.task('public-scss', publicSCSSFunction);
