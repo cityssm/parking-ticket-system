@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const remarkIndex = clickEvent.currentTarget.dataset
             .remarkIndex;
         function doDelete() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doDeleteRemark', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doDeleteRemark`, {
                 ticketId,
                 remarkIndex
             }, (rawResponseJSON) => {
@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const remarkObject = remarkList[index];
         function doSubmit(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doUpdateRemark', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doUpdateRemark`, formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     editRemarkCloseModalFunction();
@@ -131,7 +131,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         <em>Loading remarks...</em>
         </p>
         </div>`);
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doGetRemarks', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doGetRemarks`, {
             ticketId
         }, (rawResponseJSON) => {
             const responseRemarkList = rawResponseJSON;
@@ -146,7 +146,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let addRemarkCloseModalFunction;
         function doSubmit(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doAddRemark', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doAddRemark`, formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addRemarkCloseModalFunction();

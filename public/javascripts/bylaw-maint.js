@@ -122,7 +122,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             let hasOffences = false;
             if (bylaw.offenceAmountMin) {
                 hasOffences = true;
-                offenceAmountRange = '$' + bylaw.offenceAmountMin.toFixed(2);
+                offenceAmountRange = `$${bylaw.offenceAmountMin.toFixed(2)}`;
                 if (bylaw.offenceAmountMin !== bylaw.offenceAmountMax) {
                     offenceAmountRange += ` to $${(bylaw.offenceAmountMax ?? 0).toFixed(2)}`;
                 }

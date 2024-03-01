@@ -269,7 +269,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         let loadingCloseModalFunction;
         function doReconcile() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doQuickReconcileMatches', {}, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doQuickReconcileMatches`, {}, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 loadingCloseModalFunction();
                 if (responseJSON.success) {

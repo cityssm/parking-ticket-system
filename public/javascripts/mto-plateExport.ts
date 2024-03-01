@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-extra-semi */
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
@@ -53,7 +54,7 @@ declare const pts: ptsGlobal
     ) as HTMLElement
 
     cityssm.postJSON(
-      pts.urlPrefix + '/plates/doAddLicencePlateToLookupBatch',
+      `${pts.urlPrefix}/plates/doAddLicencePlateToLookupBatch`,
       {
         batchId,
         licencePlateCountry: 'CA',
@@ -97,7 +98,7 @@ declare const pts: ptsGlobal
     ) as HTMLElement
 
     cityssm.postJSON(
-      pts.urlPrefix + '/plates/doRemoveLicencePlateFromLookupBatch',
+      `${pts.urlPrefix}/plates/doRemoveLicencePlateFromLookupBatch`,
       {
         batchId,
         ticketId: batchEntry.ticketId,
@@ -152,7 +153,9 @@ declare const pts: ptsGlobal
     clickEvent.preventDefault()
 
     function downloadFunction(): void {
-      window.open(`/plates-ontario/mtoExport/${batchId.toString()}`)
+      window.open(
+        `${pts.urlPrefix}/plates-ontario/mtoExport/${batchId.toString()}`
+      )
       batchIsSent = true
     }
 
@@ -163,8 +166,8 @@ declare const pts: ptsGlobal
 
     cityssm.confirmModal(
       'Download Batch?',
-      '<strong>You are about to download this batch for the first time.</strong><br />' +
-        'The date of this download will be tracked as part of the batch record.',
+      `<strong>You are about to download this batch for the first time.</strong><br />
+        The date of this download will be tracked as part of the batch record.`,
       'OK, Download the File',
       'warning',
       downloadFunction
@@ -182,7 +185,7 @@ declare const pts: ptsGlobal
       .trim()
       .split(' ')
 
-    const includedTicketIds = []
+    const includedTicketIds: number[] = []
 
     for (const [recordIndex, ticketRecord] of availableTicketsList.entries()) {
       // Tombstone record
@@ -210,39 +213,35 @@ declare const pts: ptsGlobal
       const resultElement = document.createElement('div')
       resultElement.className = 'panel-block is-block is-ticket-container'
 
-      resultElement.innerHTML =
-        '<div class="level is-marginless">' +
-        ('<div class="level-left">' +
-          '<div class="licence-plate">' +
-          '<div class="licence-plate-number">' +
-          cityssm.escapeHTML(ticketRecord.licencePlateNumber) +
-          '</div>' +
-          '</div>' +
-          '</div>') +
-        ('<div class="level-right">' +
-          '<button class="button is-small" data-index="' +
-          recordIndex.toString() +
-          '"' +
-          ' data-cy="add-ticket"' +
-          ' data-tooltip="Add to Batch" type="button">' +
-          '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
-          '<span>Add</span>' +
-          '</button>' +
-          '</div>') +
-        '</div>' +
-        '<div class="level">' +
-        '<div class="level-left"><div class="tags">' +
-        '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-        ` href="${pts.urlPrefix}/tickets/` +
-        encodeURIComponent(ticketRecord.ticketId) +
-        '" target="_blank">' +
-        cityssm.escapeHTML(ticketRecord.ticketNumber) +
-        '</a>' +
-        '</div></div>' +
-        '<div class="level-right is-size-7">' +
-        ticketRecord.issueDateString +
-        '</div>' +
-        '</div>'
+      resultElement.innerHTML = `<div class="level is-marginless">
+        <div class="level-left">
+          <div class="licence-plate">
+            <div class="licence-plate-number">
+            ${cityssm.escapeHTML(ticketRecord.licencePlateNumber)}
+            </div>
+          </div>
+        </div>
+        <div class="level-right">
+          <button class="button is-small" data-index="${recordIndex.toString()}" data-cy="add-ticket" data-tooltip="Add to Batch" type="button">
+            <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+            <span>Add</span
+          </button>
+        </div>
+        </div>
+        <div class="level">
+        <div class="level-left">
+          <div class="tags">
+            <a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"
+              href="${pts.urlPrefix}/tickets/${ticketRecord.ticketId}"
+              target="_blank">
+              ${cityssm.escapeHTML(ticketRecord.ticketNumber)}
+            </a>
+          </div>
+        </div>
+        <div class="level-right is-size-7">
+          ${ticketRecord.issueDateString}
+        </div>
+        </div>`
 
       resultElement
         .querySelector('button')
@@ -256,34 +255,38 @@ declare const pts: ptsGlobal
       addAllButtonElement.className = 'button is-fullwidth mb-3'
       addAllButtonElement.dataset.cy = 'add-tickets'
 
-      addAllButtonElement.innerHTML =
-        '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
-        ('<span>' +
-          'Add ' +
-          includedTicketIds.length.toString() +
-          ' Parking Ticket' +
-          (includedTicketIds.length === 1 ? '' : 's') +
-          '</span>')
+      addAllButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+        <span>
+          Add
+          ${includedTicketIds.length.toString()}
+          Parking Ticket${includedTicketIds.length === 1 ? '' : 's'}
+        </span>`
 
       addAllButtonElement.addEventListener('click', () => {
         cityssm.openHtmlModal('loading', {
           onshown(_modalElement, closeModalFunction) {
-            document.querySelector(
-              '#is-loading-modal-message'
+            ;(
+              document.querySelector('#is-loading-modal-message') as HTMLElement
             ).textContent = `Adding
               ${includedTicketIds.length.toString()}
               Parking Ticket${includedTicketIds.length === 1 ? '' : 's'}...`
 
             cityssm.postJSON(
-              pts.urlPrefix + '/plates/doAddAllParkingTicketsToLookupBatch',
+              `${pts.urlPrefix}/plates/doAddAllParkingTicketsToLookupBatch`,
               {
                 batchId,
                 ticketIds: includedTicketIds
               },
-              (resultJSON: {
-                success: boolean
-                batch?: LicencePlateLookupBatch
-              }) => {
+              (rawResultJSON) => {
+                const resultJSON = rawResultJSON as
+                  | {
+                      success: false
+                    }
+                  | {
+                      success: true
+                      batch: LicencePlateLookupBatch
+                    }
+
                 closeModalFunction()
 
                 if (resultJSON.success) {
@@ -321,7 +324,7 @@ declare const pts: ptsGlobal
       </p>`
 
     cityssm.postJSON(
-      pts.urlPrefix + '/plates-ontario/doGetParkingTicketsAvailableForMTOLookup',
+      `${pts.urlPrefix}/plates-ontario/doGetParkingTicketsAvailableForMTOLookup`,
       {
         batchId,
         issueDaysAgo: availableIssueDaysAgoElement.value
@@ -378,26 +381,26 @@ declare const pts: ptsGlobal
       }
     }
 
-    document.querySelector('#batchSelector--batchId').innerHTML =
-      'Batch #' +
-      batch.batchId.toString() +
-      '<br />' +
-      (batchIncludesLabels
-        ? '<span class="tag is-light">' +
-          '<span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>' +
-          ' <span>Include Labels</span>' +
-          '</span>'
-        : '') +
-      ' ' +
-      (batchIsLocked
+    ;(
+      document.querySelector('#batchSelector--batchId') as HTMLElement
+    ).innerHTML = `Batch #${batch.batchId.toString()}<br />
+      ${
+        batchIncludesLabels
+          ? `<span class="tag is-light">
+            <span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>
+            <span>Include Labels</span>
+            </span>`
+          : ''
+      } ${
+      batchIsLocked
         ? `<span class="tag is-light">
           <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
           <span>${batch.lockDateString}</span>
           </span>`
-        : '')
-
-    document.querySelector(
-      '#batchSelector--batchDetails'
+        : ''
+    }`
+    ;(
+      document.querySelector('#batchSelector--batchDetails') as HTMLElement
     ).innerHTML = `<span class="icon is-small"><i class="fas fa-calendar" aria-hidden="true"></i></span>
       <span>${batch.batchDateString}</span>`
 
@@ -420,32 +423,31 @@ declare const pts: ptsGlobal
       const panelBlockElement = document.createElement('div')
       panelBlockElement.className = 'panel-block is-block is-entry-container'
 
-      panelBlockElement.innerHTML =
-        '<div class="level mb-0">' +
-        ('<div class="level-left">' +
-          '<div class="licence-plate">' +
-          '<div class="licence-plate-number">' +
-          cityssm.escapeHTML(batchEntry.licencePlateNumber) +
-          '</div>' +
-          '</div>' +
-          '</div>') +
-        (batchIsLocked
-          ? ''
-          : '<div class="level-right">' +
-            '<button class="button is-small" data-index="' +
-            index.toString() +
-            '" data-cy="remove-ticket" type="button">' +
-            '<span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>' +
-            '<span>Remove</span>' +
-            '</button>' +
-            '</div>') +
-        '</div>' +
-        '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-        ` href="${pts.urlPrefix}/tickets/` +
-        encodeURIComponent(batchEntry.ticketId) +
-        '" target="_blank">' +
-        cityssm.escapeHTML(batchEntry.ticketNumber) +
-        '</a>'
+      panelBlockElement.innerHTML = `<div class="level mb-0">
+          <div class="level-left">
+            <div class="licence-plate">
+              <div class="licence-plate-number">
+              ${cityssm.escapeHTML(batchEntry.licencePlateNumber)}
+              </div>
+            </div>
+          </div>
+          ${
+            batchIsLocked
+              ? ''
+              : `<div class="level-right">
+                  <button class="button is-small" data-index="${index.toString()}" data-cy="remove-ticket" type="button">
+                    <span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>
+                    <span>Remove</span>
+                  </button>
+                  </div>`
+          }
+          </div>
+          <a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"
+            href="${pts.urlPrefix}/tickets/${
+        batchEntry.ticketId
+      }" target="_blank">
+            ${cityssm.escapeHTML(batchEntry.ticketNumber)}
+          </a>`
 
       if (!batchIsLocked) {
         panelBlockElement
@@ -490,7 +492,7 @@ declare const pts: ptsGlobal
 
   function refreshBatch(): void {
     cityssm.postJSON(
-      pts.urlPrefix + '/plates/doGetLookupBatch',
+      `${pts.urlPrefix}/plates/doGetLookupBatch`,
       {
         batchId
       },
@@ -511,7 +513,7 @@ declare const pts: ptsGlobal
         .dataset.includeLabels
 
       cityssm.postJSON(
-        pts.urlPrefix + '/plates/doCreateLookupBatch',
+        `${pts.urlPrefix}/plates/doCreateLookupBatch`,
         {
           mto_includeLabels
         },
@@ -565,7 +567,7 @@ declare const pts: ptsGlobal
 
     function loadBatches(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/plates/doGetUnreceivedLicencePlateLookupBatches',
+        `${pts.urlPrefix}/plates/doGetUnreceivedLicencePlateLookupBatches`,
         {},
         (batchList: LicencePlateLookupBatch[]) => {
           if (batchList.length === 0) {
@@ -584,36 +586,40 @@ declare const pts: ptsGlobal
             linkElement.setAttribute('href', '#')
             linkElement.dataset.batchId = batch.batchId.toString()
 
-            linkElement.innerHTML =
-              '<div class="columns">' +
-              '<div class="column is-narrow">#' +
-              batch.batchId.toString() +
-              '</div>' +
-              '<div class="column has-text-right">' +
-              batch.batchDateString +
-              '<br />' +
-              ('<div class="tags justify-flex-end">' +
-                (batch.mto_includeLabels
-                  ? '<span class="tag">' +
-                    '<span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>' +
-                    '<span>Includes Labels</span>' +
-                    '</span>'
-                  : '') +
-                (batch.lockDate
-                  ? '<span class="tag">' +
-                    '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
-                    '<span>Locked</span>' +
-                    '</span>'
-                  : '') +
-                (batch.sentDate
-                  ? '<span class="tag">' +
-                    '<span class="icon is-small"><i class="fas fa-share" aria-hidden="true"></i></span>' +
-                    '<span>Sent to MTO</span>' +
-                    '</span>'
-                  : '') +
-                '</div>') +
-              '</div>' +
-              '</div>'
+            linkElement.innerHTML = `<div class="columns">
+              <div class="column is-narrow">
+                #${batch.batchId.toString()}
+              </div>
+              <div class="column has-text-right">
+                ${batch.batchDateString}<br />
+                <div class="tags justify-flex-end">
+                ${
+                  batch.mto_includeLabels
+                    ? `<span class="tag">
+                        <span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>
+                        <span>Includes Labels</span>
+                        </span>`
+                    : ''
+                }
+                ${
+                  batch.lockDate
+                    ? `<span class="tag">
+                        <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+                        <span>Locked</span>
+                        </span>`
+                    : ''
+                }
+                ${
+                  batch.sentDate
+                    ? `<span class="tag">
+                        <span class="icon is-small"><i class="fas fa-share" aria-hidden="true"></i></span>
+                        <span>Sent to MTO</span>
+                        </span>`
+                    : ''
+                }
+                </div>
+              </div>
+              </div>`
 
             linkElement.addEventListener('click', selectBatch)
 
@@ -665,7 +671,7 @@ declare const pts: ptsGlobal
 
       function lockFunction(): void {
         cityssm.postJSON(
-          pts.urlPrefix + '/plates/doLockLookupBatch',
+          `${pts.urlPrefix}/plates/doLockLookupBatch`,
           {
             batchId
           },
@@ -682,9 +688,9 @@ declare const pts: ptsGlobal
 
       cityssm.confirmModal(
         'Lock Batch?',
-        '<strong>Are you sure you want to lock the batch?</strong><br />' +
-          'Once the batch is locked, no licence plates can be added or deleted from the batch.' +
-          ' All tickets related to the licence plates in the batch will be updated with a "Pending Lookup" status.',
+        `<strong>Are you sure you want to lock the batch?</strong><br />
+          Once the batch is locked, no licence plates can be added or deleted from the batch.
+          All tickets related to the licence plates in the batch will be updated with a "Pending Lookup" status.`,
         'Yes, Lock the Batch',
         'info',
         lockFunction

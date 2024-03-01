@@ -18,7 +18,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const recordIndex = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const ticketRecord = availableTicketsList[recordIndex];
         const ticketContainerElement = buttonElement.closest('.is-ticket-container');
-        cityssm.postJSON(pts.urlPrefix + '/plates/doAddLicencePlateToLookupBatch', {
+        cityssm.postJSON(`${pts.urlPrefix}/plates/doAddLicencePlateToLookupBatch`, {
             batchId,
             licencePlateCountry: 'CA',
             licencePlateProvince: 'ON',
@@ -43,7 +43,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const recordIndex = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const batchEntry = batchEntriesList[recordIndex];
         const entryContainerElement = buttonElement.closest('.is-entry-container');
-        cityssm.postJSON(pts.urlPrefix + '/plates/doRemoveLicencePlateFromLookupBatch', {
+        cityssm.postJSON(`${pts.urlPrefix}/plates/doRemoveLicencePlateFromLookupBatch`, {
             batchId,
             ticketId: batchEntry.ticketId,
             licencePlateCountry: 'CA',
@@ -76,15 +76,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function downloadBatch(clickEvent) {
         clickEvent.preventDefault();
         function downloadFunction() {
-            window.open(`/plates-ontario/mtoExport/${batchId.toString()}`);
+            window.open(`${pts.urlPrefix}/plates-ontario/mtoExport/${batchId.toString()}`);
             batchIsSent = true;
         }
         if (batchIsSent) {
             downloadFunction();
             return;
         }
-        cityssm.confirmModal('Download Batch?', '<strong>You are about to download this batch for the first time.</strong><br />' +
-            'The date of this download will be tracked as part of the batch record.', 'OK, Download the File', 'warning', downloadFunction);
+        cityssm.confirmModal('Download Batch?', `<strong>You are about to download this batch for the first time.</strong><br />
+        The date of this download will be tracked as part of the batch record.`, 'OK, Download the File', 'warning', downloadFunction);
     }
     function populateAvailableTicketsView() {
         cityssm.clearElement(availableTicketsContainerElement);
@@ -113,39 +113,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
             includedTicketIds.push(ticketRecord.ticketId);
             const resultElement = document.createElement('div');
             resultElement.className = 'panel-block is-block is-ticket-container';
-            resultElement.innerHTML =
-                '<div class="level is-marginless">' +
-                    ('<div class="level-left">' +
-                        '<div class="licence-plate">' +
-                        '<div class="licence-plate-number">' +
-                        cityssm.escapeHTML(ticketRecord.licencePlateNumber) +
-                        '</div>' +
-                        '</div>' +
-                        '</div>') +
-                    ('<div class="level-right">' +
-                        '<button class="button is-small" data-index="' +
-                        recordIndex.toString() +
-                        '"' +
-                        ' data-cy="add-ticket"' +
-                        ' data-tooltip="Add to Batch" type="button">' +
-                        '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
-                        '<span>Add</span>' +
-                        '</button>' +
-                        '</div>') +
-                    '</div>' +
-                    '<div class="level">' +
-                    '<div class="level-left"><div class="tags">' +
-                    '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-                    ` href="${pts.urlPrefix}/tickets/` +
-                    encodeURIComponent(ticketRecord.ticketId) +
-                    '" target="_blank">' +
-                    cityssm.escapeHTML(ticketRecord.ticketNumber) +
-                    '</a>' +
-                    '</div></div>' +
-                    '<div class="level-right is-size-7">' +
-                    ticketRecord.issueDateString +
-                    '</div>' +
-                    '</div>';
+            resultElement.innerHTML = `<div class="level is-marginless">
+        <div class="level-left">
+          <div class="licence-plate">
+            <div class="licence-plate-number">
+            ${cityssm.escapeHTML(ticketRecord.licencePlateNumber)}
+            </div>
+          </div>
+        </div>
+        <div class="level-right">
+          <button class="button is-small" data-index="${recordIndex.toString()}" data-cy="add-ticket" data-tooltip="Add to Batch" type="button">
+            <span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+            <span>Add</span
+          </button>
+        </div>
+        </div>
+        <div class="level">
+        <div class="level-left">
+          <div class="tags">
+            <a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"
+              href="${pts.urlPrefix}/tickets/${ticketRecord.ticketId}"
+              target="_blank">
+              ${cityssm.escapeHTML(ticketRecord.ticketNumber)}
+            </a>
+          </div>
+        </div>
+        <div class="level-right is-size-7">
+          ${ticketRecord.issueDateString}
+        </div>
+        </div>`;
             resultElement
                 .querySelector('button')
                 ?.addEventListener('click', addParkingTicketToBatch);
@@ -155,24 +151,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const addAllButtonElement = document.createElement('button');
             addAllButtonElement.className = 'button is-fullwidth mb-3';
             addAllButtonElement.dataset.cy = 'add-tickets';
-            addAllButtonElement.innerHTML =
-                '<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>' +
-                    ('<span>' +
-                        'Add ' +
-                        includedTicketIds.length.toString() +
-                        ' Parking Ticket' +
-                        (includedTicketIds.length === 1 ? '' : 's') +
-                        '</span>');
+            addAllButtonElement.innerHTML = `<span class="icon is-small"><i class="fas fa-plus" aria-hidden="true"></i></span>
+        <span>
+          Add
+          ${includedTicketIds.length.toString()}
+          Parking Ticket${includedTicketIds.length === 1 ? '' : 's'}
+        </span>`;
             addAllButtonElement.addEventListener('click', () => {
                 cityssm.openHtmlModal('loading', {
                     onshown(_modalElement, closeModalFunction) {
+                        ;
                         document.querySelector('#is-loading-modal-message').textContent = `Adding
               ${includedTicketIds.length.toString()}
               Parking Ticket${includedTicketIds.length === 1 ? '' : 's'}...`;
-                        cityssm.postJSON(pts.urlPrefix + '/plates/doAddAllParkingTicketsToLookupBatch', {
+                        cityssm.postJSON(`${pts.urlPrefix}/plates/doAddAllParkingTicketsToLookupBatch`, {
                             batchId,
                             ticketIds: includedTicketIds
-                        }, (resultJSON) => {
+                        }, (rawResultJSON) => {
+                            const resultJSON = rawResultJSON;
                             closeModalFunction();
                             if (resultJSON.success) {
                                 populateBatchView(resultJSON.batch);
@@ -202,7 +198,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
       <em>Loading parking tickets...</em>
       </p>`;
-        cityssm.postJSON(pts.urlPrefix + '/plates-ontario/doGetParkingTicketsAvailableForMTOLookup', {
+        cityssm.postJSON(`${pts.urlPrefix}/plates-ontario/doGetParkingTicketsAvailableForMTOLookup`, {
             batchId,
             issueDaysAgo: availableIssueDaysAgoElement.value
         }, (responseJSON) => {
@@ -236,23 +232,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 lockBatchButtonElement.removeAttribute('disabled');
             }
         }
-        document.querySelector('#batchSelector--batchId').innerHTML =
-            'Batch #' +
-                batch.batchId.toString() +
-                '<br />' +
-                (batchIncludesLabels
-                    ? '<span class="tag is-light">' +
-                        '<span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>' +
-                        ' <span>Include Labels</span>' +
-                        '</span>'
-                    : '') +
-                ' ' +
-                (batchIsLocked
-                    ? `<span class="tag is-light">
+        ;
+        document.querySelector('#batchSelector--batchId').innerHTML = `Batch #${batch.batchId.toString()}<br />
+      ${batchIncludesLabels
+            ? `<span class="tag is-light">
+            <span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>
+            <span>Include Labels</span>
+            </span>`
+            : ''} ${batchIsLocked
+            ? `<span class="tag is-light">
           <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
           <span>${batch.lockDateString}</span>
           </span>`
-                    : '');
+            : ''}`;
         document.querySelector('#batchSelector--batchDetails').innerHTML = `<span class="icon is-small"><i class="fas fa-calendar" aria-hidden="true"></i></span>
       <span>${batch.batchDateString}</span>`;
         cityssm.clearElement(batchEntriesContainerElement);
@@ -268,32 +260,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
         for (const [index, batchEntry] of batchEntriesList.entries()) {
             const panelBlockElement = document.createElement('div');
             panelBlockElement.className = 'panel-block is-block is-entry-container';
-            panelBlockElement.innerHTML =
-                '<div class="level mb-0">' +
-                    ('<div class="level-left">' +
-                        '<div class="licence-plate">' +
-                        '<div class="licence-plate-number">' +
-                        cityssm.escapeHTML(batchEntry.licencePlateNumber) +
-                        '</div>' +
-                        '</div>' +
-                        '</div>') +
-                    (batchIsLocked
-                        ? ''
-                        : '<div class="level-right">' +
-                            '<button class="button is-small" data-index="' +
-                            index.toString() +
-                            '" data-cy="remove-ticket" type="button">' +
-                            '<span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>' +
-                            '<span>Remove</span>' +
-                            '</button>' +
-                            '</div>') +
-                    '</div>' +
-                    '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-                    ` href="${pts.urlPrefix}/tickets/` +
-                    encodeURIComponent(batchEntry.ticketId) +
-                    '" target="_blank">' +
-                    cityssm.escapeHTML(batchEntry.ticketNumber) +
-                    '</a>';
+            panelBlockElement.innerHTML = `<div class="level mb-0">
+          <div class="level-left">
+            <div class="licence-plate">
+              <div class="licence-plate-number">
+              ${cityssm.escapeHTML(batchEntry.licencePlateNumber)}
+              </div>
+            </div>
+          </div>
+          ${batchIsLocked
+                ? ''
+                : `<div class="level-right">
+                  <button class="button is-small" data-index="${index.toString()}" data-cy="remove-ticket" type="button">
+                    <span class="icon is-small"><i class="fas fa-minus" aria-hidden="true"></i></span>
+                    <span>Remove</span>
+                  </button>
+                  </div>`}
+          </div>
+          <a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"
+            href="${pts.urlPrefix}/tickets/${batchEntry.ticketId}" target="_blank">
+            ${cityssm.escapeHTML(batchEntry.ticketNumber)}
+          </a>`;
             if (!batchIsLocked) {
                 panelBlockElement
                     .querySelector('button')
@@ -325,7 +312,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         batchEntriesContainerElement.append(panelElement);
     }
     function refreshBatch() {
-        cityssm.postJSON(pts.urlPrefix + '/plates/doGetLookupBatch', {
+        cityssm.postJSON(`${pts.urlPrefix}/plates/doGetLookupBatch`, {
             batchId
         }, (batch) => {
             populateBatchView(batch);
@@ -338,7 +325,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             const mto_includeLabels = clickEvent.currentTarget
                 .dataset.includeLabels;
-            cityssm.postJSON(pts.urlPrefix + '/plates/doCreateLookupBatch', {
+            cityssm.postJSON(`${pts.urlPrefix}/plates/doCreateLookupBatch`, {
                 mto_includeLabels
             }, (responseJSON) => {
                 if (responseJSON.success) {
@@ -372,7 +359,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             refreshBatch();
         }
         function loadBatches() {
-            cityssm.postJSON(pts.urlPrefix + '/plates/doGetUnreceivedLicencePlateLookupBatches', {}, (batchList) => {
+            cityssm.postJSON(`${pts.urlPrefix}/plates/doGetUnreceivedLicencePlateLookupBatches`, {}, (batchList) => {
                 if (batchList.length === 0) {
                     resultsContainerElement.innerHTML = `<div class="message is-info">
               <p class="message-body">There are no unsent batches available.</p>
@@ -386,36 +373,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     linkElement.className = 'panel-block is-block';
                     linkElement.setAttribute('href', '#');
                     linkElement.dataset.batchId = batch.batchId.toString();
-                    linkElement.innerHTML =
-                        '<div class="columns">' +
-                            '<div class="column is-narrow">#' +
-                            batch.batchId.toString() +
-                            '</div>' +
-                            '<div class="column has-text-right">' +
-                            batch.batchDateString +
-                            '<br />' +
-                            ('<div class="tags justify-flex-end">' +
-                                (batch.mto_includeLabels
-                                    ? '<span class="tag">' +
-                                        '<span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>' +
-                                        '<span>Includes Labels</span>' +
-                                        '</span>'
-                                    : '') +
-                                (batch.lockDate
-                                    ? '<span class="tag">' +
-                                        '<span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>' +
-                                        '<span>Locked</span>' +
-                                        '</span>'
-                                    : '') +
-                                (batch.sentDate
-                                    ? '<span class="tag">' +
-                                        '<span class="icon is-small"><i class="fas fa-share" aria-hidden="true"></i></span>' +
-                                        '<span>Sent to MTO</span>' +
-                                        '</span>'
-                                    : '') +
-                                '</div>') +
-                            '</div>' +
-                            '</div>';
+                    linkElement.innerHTML = `<div class="columns">
+              <div class="column is-narrow">
+                #${batch.batchId.toString()}
+              </div>
+              <div class="column has-text-right">
+                ${batch.batchDateString}<br />
+                <div class="tags justify-flex-end">
+                ${batch.mto_includeLabels
+                        ? `<span class="tag">
+                        <span class="icon is-small"><i class="fas fa-tag" aria-hidden="true"></i></span>
+                        <span>Includes Labels</span>
+                        </span>`
+                        : ''}
+                ${batch.lockDate
+                        ? `<span class="tag">
+                        <span class="icon is-small"><i class="fas fa-lock" aria-hidden="true"></i></span>
+                        <span>Locked</span>
+                        </span>`
+                        : ''}
+                ${batch.sentDate
+                        ? `<span class="tag">
+                        <span class="icon is-small"><i class="fas fa-share" aria-hidden="true"></i></span>
+                        <span>Sent to MTO</span>
+                        </span>`
+                        : ''}
+                </div>
+              </div>
+              </div>`;
                     linkElement.addEventListener('click', selectBatch);
                     listElement.append(linkElement);
                 }
@@ -450,7 +435,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 return;
             }
             function lockFunction() {
-                cityssm.postJSON(pts.urlPrefix + '/plates/doLockLookupBatch', {
+                cityssm.postJSON(`${pts.urlPrefix}/plates/doLockLookupBatch`, {
                     batchId
                 }, (responseJSON) => {
                     if (responseJSON.success) {
@@ -458,9 +443,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     }
                 });
             }
-            cityssm.confirmModal('Lock Batch?', '<strong>Are you sure you want to lock the batch?</strong><br />' +
-                'Once the batch is locked, no licence plates can be added or deleted from the batch.' +
-                ' All tickets related to the licence plates in the batch will be updated with a "Pending Lookup" status.', 'Yes, Lock the Batch', 'info', lockFunction);
+            cityssm.confirmModal('Lock Batch?', `<strong>Are you sure you want to lock the batch?</strong><br />
+          Once the batch is locked, no licence plates can be added or deleted from the batch.
+          All tickets related to the licence plates in the batch will be updated with a "Pending Lookup" status.`, 'Yes, Lock the Batch', 'info', lockFunction);
         });
     }
     if (exports.plateExportBatch) {

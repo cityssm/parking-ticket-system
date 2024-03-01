@@ -383,7 +383,7 @@ declare const pts: ptsGlobal
 
       function doReconcile(): void {
         cityssm.postJSON(
-          pts.urlPrefix + '/tickets/doQuickReconcileMatches',
+          `${pts.urlPrefix}/tickets/doQuickReconcileMatches`,
           {},
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as {
