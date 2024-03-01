@@ -122,8 +122,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                                     const fieldElement = document
                                         .querySelector('#editStatus--statusField')
                                         ?.closest('.field');
-                                    fieldElement.querySelector('label').textContent =
-                                        statusKeyObject.statusField.fieldLabel;
+                                    fieldElement.querySelector('label').textContent = statusKeyObject.statusField.fieldLabel;
                                     fieldElement.classList.remove('is-hidden');
                                 }
                                 if (statusKeyObject.statusField2) {
@@ -262,7 +261,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
           <em>Loading statuses...</em>
         </p>
         </div>`);
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doGetStatuses', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doGetStatuses`, {
             ticketId
         }, (rawResponseJSON) => {
             const responseStatusList = rawResponseJSON;
@@ -278,7 +277,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         function submitFunction(formEvent) {
             formEvent.preventDefault();
             const resolveTicket = document.querySelector('#addStatus--resolveTicket').checked;
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doAddStatus', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doAddStatus`, formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addStatusCloseModalFunction();
@@ -360,7 +359,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         function submitFunction(formEvent) {
             formEvent.preventDefault();
             const resolveTicket = document.querySelector('#addPaidStatus--resolveTicket').checked;
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doAddStatus', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doAddStatus`, formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addPaidStatusCloseModalFunction();

@@ -31,7 +31,7 @@ const pts = {
             callbackFunction();
             return;
         }
-        cityssm.postJSON(pts.urlPrefix + '/dashboard/doGetDefaultConfigProperties', {}, (rawResponseJSON) => {
+        cityssm.postJSON(`${pts.urlPrefix}/dashboard/doGetDefaultConfigProperties`, {}, (rawResponseJSON) => {
             const defaultConfigPropertiesResult = rawResponseJSON;
             defaultConfigProperties = defaultConfigPropertiesResult;
             defaultConfigPropertiesIsLoaded = true;

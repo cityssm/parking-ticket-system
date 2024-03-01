@@ -171,7 +171,7 @@ declare const pts: ptsGlobal
         ).value = ticketId
         ;(
           document.querySelector('#editStatus--statusIndex') as HTMLInputElement
-        ).value = statusObject.statusIndex.toString()
+        ).value = (statusObject.statusIndex as number).toString()
         ;(
           document.querySelector('#editStatus--statusField') as HTMLInputElement
         ).value = statusObject.statusField ?? ''
@@ -224,8 +224,9 @@ declare const pts: ptsGlobal
                       .querySelector('#editStatus--statusField')
                       ?.closest('.field') as HTMLElement
 
-                    fieldElement.querySelector('label').textContent =
-                      statusKeyObject.statusField.fieldLabel
+                    ;(
+                      fieldElement.querySelector('label') as HTMLLabelElement
+                    ).textContent = statusKeyObject.statusField.fieldLabel
                     fieldElement.classList.remove('is-hidden')
                   }
 
@@ -234,7 +235,7 @@ declare const pts: ptsGlobal
                       .querySelector('#editStatus--statusField2')
                       ?.closest('.field') as HTMLElement
 
-                    fieldElement.querySelector('label').textContent =
+                    ;(fieldElement.querySelector('label') as HTMLLabelElement).textContent =
                       statusKeyObject.statusField2.fieldLabel
                     fieldElement.classList.remove('is-hidden')
                   }
@@ -419,7 +420,7 @@ declare const pts: ptsGlobal
     )
 
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets/doGetStatuses',
+      `${pts.urlPrefix}/tickets/doGetStatuses`,
       {
         ticketId
       },
@@ -449,7 +450,7 @@ declare const pts: ptsGlobal
         ).checked
 
         cityssm.postJSON(
-          pts.urlPrefix + '/tickets/doAddStatus',
+          `${pts.urlPrefix}/tickets/doAddStatus`,
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as { success: boolean }
@@ -587,7 +588,7 @@ declare const pts: ptsGlobal
         ).checked
 
         cityssm.postJSON(
-          pts.urlPrefix + '/tickets/doAddStatus',
+          `${pts.urlPrefix}/tickets/doAddStatus`,
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as { success: boolean }

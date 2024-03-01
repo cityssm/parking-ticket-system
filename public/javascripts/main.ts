@@ -63,7 +63,7 @@ interface DefaultConfigProperties {
     }
 
     cityssm.postJSON(
-      pts.urlPrefix + '/dashboard/doGetDefaultConfigProperties',
+      `${pts.urlPrefix}/dashboard/doGetDefaultConfigProperties`,
       {},
       (rawResponseJSON) => {
         const defaultConfigPropertiesResult =

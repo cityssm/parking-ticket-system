@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const trElement = document.createElement('tr');
         const locationProperties = pts.getLicencePlateLocationProperties(ticketObject.licencePlateCountry, ticketObject.licencePlateProvince);
         let locationClass = '';
-        if (ticketObject.locationClassKey) {
+        if (ticketObject.locationClassKey !== '') {
             locationClass = pts.getLocationClass(ticketObject.locationClassKey).locationClass;
         }
         const ticketStatusObject = pts.getTicketStatus(ticketObject.latestStatus_statusKey);

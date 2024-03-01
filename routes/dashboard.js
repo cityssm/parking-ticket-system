@@ -1,19 +1,10 @@
 import { Router } from 'express';
-import { getConfigProperty } from '../helpers/functions.config.js';
+import handler_doGetDefaultConfigProperties from '../handlers/dashboard-post/doGetDefaultConfigProperties.js';
 export const router = Router();
 router.get('/', (_request, response) => {
     response.render('dashboard', {
         headTitle: 'Dashboard'
     });
 });
-router.all('/doGetDefaultConfigProperties', (_request, response) => {
-    response.json({
-        locationClasses: getConfigProperty('locationClasses'),
-        ticketNumber_fieldLabel: getConfigProperty('parkingTickets.ticketNumber.fieldLabel'),
-        parkingTicketStatuses: getConfigProperty('parkingTicketStatuses'),
-        licencePlateCountryAliases: getConfigProperty('licencePlateCountryAliases'),
-        licencePlateProvinceAliases: getConfigProperty('licencePlateProvinceAliases'),
-        licencePlateProvinces: getConfigProperty('licencePlateProvinces')
-    });
-});
+router.post('/doGetDefaultConfigProperties', handler_doGetDefaultConfigProperties);
 export default router;

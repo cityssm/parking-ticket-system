@@ -1,3 +1,6 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable security/detect-object-injection */
+
 import Debug from 'debug'
 import {
   type Request,
@@ -97,26 +100,31 @@ async function postHandler(
   }
 }
 
+function getHandler(request: Request, response: Response): void {
+  const sessionCookieName = getConfigProperty('session.cookieName')
+
+  if (
+    request.session.user !== undefined &&
+    request.cookies[sessionCookieName] !== undefined
+  ) {
+    const redirectURL = authenticationFunctions.getSafeRedirectURL(
+      (request.query.redirect ?? '') as string
+    )
+
+    response.redirect(redirectURL)
+  } else {
+    response.render('login', {
+      userName: '',
+      message: '',
+      redirect: request.query.redirect,
+      useTestDatabases
+    })
+  }
+}
+
 router
   .route('/')
-  .get((request, response) => {
-    const sessionCookieName = getConfigProperty('session.cookieName')
-
-    if (request.session.user && request.cookies[sessionCookieName]) {
-      const redirectURL = authenticationFunctions.getSafeRedirectURL(
-        (request.query.redirect ?? '') as string
-      )
-
-      response.redirect(redirectURL)
-    } else {
-      response.render('login', {
-        userName: '',
-        message: '',
-        redirect: request.query.redirect,
-        useTestDatabases
-      })
-    }
-  })
+  .get(getHandler)
   .post(postHandler as RequestHandler)
 
 export default router

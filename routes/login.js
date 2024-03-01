@@ -59,11 +59,10 @@ async function postHandler(request, response) {
         });
     }
 }
-router
-    .route('/')
-    .get((request, response) => {
+function getHandler(request, response) {
     const sessionCookieName = getConfigProperty('session.cookieName');
-    if (request.session.user && request.cookies[sessionCookieName]) {
+    if (request.session.user !== undefined &&
+        request.cookies[sessionCookieName] !== undefined) {
         const redirectURL = authenticationFunctions.getSafeRedirectURL((request.query.redirect ?? ''));
         response.redirect(redirectURL);
     }
@@ -75,6 +74,9 @@ router
             useTestDatabases
         });
     }
-})
+}
+router
+    .route('/')
+    .get(getHandler)
     .post(postHandler);
 export default router;

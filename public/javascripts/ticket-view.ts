@@ -26,7 +26,7 @@ interface SuccessResponse {
 
       function doUnresolve(): void {
         cityssm.postJSON(
-          pts.urlPrefix + '/tickets/doUnresolveTicket',
+          `${pts.urlPrefix}/tickets/doUnresolveTicket`,
           {
             ticketId
           },
@@ -61,7 +61,7 @@ interface SuccessResponse {
 
       function doRestore(): void {
         cityssm.postJSON(
-          pts.urlPrefix + '/tickets/doRestoreTicket',
+          `${pts.urlPrefix}/tickets/doRestoreTicket`,
           {
             ticketId
           },

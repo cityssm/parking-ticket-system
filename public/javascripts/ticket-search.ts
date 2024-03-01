@@ -36,7 +36,7 @@ declare const pts: ptsGlobal
     // Location classes
     let locationClass = ''
 
-    if (ticketObject.locationClassKey) {
+    if (ticketObject.locationClassKey !== '') {
       locationClass = pts.getLocationClass(
         ticketObject.locationClassKey
       ).locationClass
