@@ -10,18 +10,18 @@
     <%= headTitle %>: <%= configFunctions.getConfigProperty("application.applicationName") %>
   </title>
 
-  <link rel="icon" href="/images/favicon.png" />
+  <link rel="icon" href="<%= urlPrefix %>/images/favicon.png" />
 
-  <link rel="stylesheet" href="/stylesheets/style.min.css" />
-  <link rel="stylesheet" href="/fa/css/all.min.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/stylesheets/style.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/fa/css/all.min.css" />
 </head>
 
 <body>
   <nav class="navbar is-light is-fixed-top is-static-print" id="cityssm-theme--navbar" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item" href="/dashboard">
-          <img class="mr-2" src="<%= configFunctions.getConfigProperty("application.logoURL") %>" alt="" height="28" width="28" />
+        <a class="navbar-item" href="<%= urlPrefix %>/dashboard">
+          <img class="mr-2" src="<%= urlPrefix + configFunctions.getConfigProperty("application.logoURL") %>" alt="" height="28" width="28" />
           <strong><%= configFunctions.getConfigProperty("application.applicationName") %></strong>
         </a>
 
@@ -35,14 +35,14 @@
       <div class="navbar-menu">
         <div class="navbar-start">
 
-          <a class="navbar-item" href="/tickets">
+          <a class="navbar-item" href="<%= urlPrefix %>/tickets">
             <span class="icon mr-1">
               <i class="fas fa-fw fa-file-invoice" aria-hidden="true"></i>
             </span>
             <span>Tickets</span>
           </a>
 
-          <a class="navbar-item" href="/plates">
+          <a class="navbar-item" href="<%= urlPrefix %>/plates">
             <span class="icon mr-1">
               <i class="fas fa-fw fa-car" aria-hidden="true"></i>
             </span>
@@ -59,7 +59,7 @@
             </a>
             <div class="navbar-dropdown">
 
-              <a class="navbar-item" href="/reports">
+              <a class="navbar-item" href="<%= urlPrefix %>/reports">
                 <span class="icon mr-1">
                   <i class="fas fa-fw fa-file" aria-hidden="true"></i>
                 </span>
@@ -68,19 +68,19 @@
               <hr class="navbar-divider" />
 
               <% if (user.isAdmin) { %>
-                <a class="navbar-item" href="/admin/offences">
+                <a class="navbar-item" href="<%= urlPrefix %>/admin/offences">
                   <span class="icon mr-1">
                     <i class="fas fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
                   </span>
                   <span>Parking Offences</span>
                 </a>
-                <a class="navbar-item" href="/admin/locations">
+                <a class="navbar-item" href="<%= urlPrefix %>/admin/locations">
                   <span class="icon mr-1">
                     <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i>
                   </span>
                   <span>Parking Locations</span>
                 </a>
-                <a class="navbar-item" href="/admin/bylaws">
+                <a class="navbar-item" href="<%= urlPrefix %>/admin/bylaws">
                   <span class="icon mr-1">
                     <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
                   </span>
@@ -114,6 +114,7 @@
   <main class="container pt-2 px-3 mx-auto has-min-page-height"
     data-url-prefix="<%= configFunctions.getConfigProperty("reverseProxy.urlPrefix") %>"
     data-session-keep-alive-millis="<%= configFunctions.keepAliveMillis %>"
+    data-url-prefix="<%= urlPrefix %>"
     data-can-update="<%= user.canUpdate %>"
     data-is-admin="<%= user.isAdmin %>"
     data-is-operator="<%= user.isOperator %>">

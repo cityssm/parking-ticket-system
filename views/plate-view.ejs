@@ -5,8 +5,8 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
-        <li><a href="/plates">Licence Plates</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/plates">Licence Plates</a></li>
         <li class="is-active"><a href="#" aria-current="page">
           <%= (licencePlateNumber === "" ? "(Blank)" : licencePlateNumber) %>
         </a></li>
@@ -144,7 +144,7 @@
             %>
               <tr>
                 <td>
-                  <a href="/tickets/<%= ticketObj.ticketId %>">
+                  <a href="<%= urlPrefix %>/tickets/<%= ticketObj.ticketId %>">
                     <%= ticketObj.ticketNumber %>
                   </a>
                 </td>
@@ -188,6 +188,6 @@
 
 <%- include('_footerA'); -%>
 
-<!-- <script src="/javascripts/plate-view.js"></script> -->
+<!-- <script src="<%= urlPrefix %>/javascripts/plate-view.js"></script> -->
 
 <%- include('_footerB'); -%>

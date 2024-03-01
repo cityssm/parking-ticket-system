@@ -1,7 +1,10 @@
 /* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
+import type { ptsGlobal } from '../../types/publicTypes.js'
+
 declare const cityssm: cityssmGlobal
+declare const pts: ptsGlobal
 
 document
   .querySelector('#mtoImport--importFile')
@@ -59,7 +62,7 @@ document
     document.querySelector('#step--update')?.classList.remove('is-hidden')
 
     cityssm.postJSON(
-      '/plates-ontario/doMTOImportUpload',
+      pts.urlPrefix + '/plates-ontario/doMTOImportUpload',
       formElement,
       (responseJSON: { success: boolean; message?: string }) => {
         updateStepItemElement.classList.add('is-completed')

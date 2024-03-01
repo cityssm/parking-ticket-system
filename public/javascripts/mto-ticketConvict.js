@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         buttonElement.setAttribute('disabled', 'disabled');
         const index = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const ticketId = convictableTickets[index].ticketId;
-        cityssm.postJSON('/tickets/doAddTicketToConvictionBatch', {
+        cityssm.postJSON(pts.urlPrefix + '/tickets/doAddTicketToConvictionBatch', {
             batchId: currentBatch.batchId,
             ticketId
         }, (rawResponseJSON) => {
@@ -40,7 +40,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         let loadingCloseModalFunction;
         function addFunction() {
-            cityssm.postJSON('/tickets-ontario/doAddAllTicketsToConvictionBatch', {
+            cityssm.postJSON(pts.urlPrefix + '/tickets-ontario/doAddAllTicketsToConvictionBatch', {
                 batchId: currentBatch.batchId,
                 ticketIds: displayedTicketIds
             }, (rawResponseJSON) => {
@@ -112,7 +112,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             displayedTicketIds.push(ticket.ticketId);
             const trElement = document.createElement('tr');
             trElement.innerHTML = `<td>
-          <a data-tooltip="View Ticket (Opens in New Window)" href="/tickets/${ticket.ticketId.toString()}" target="_blank">
+          <a data-tooltip="View Ticket (Opens in New Window)" href="${pts.urlPrefix}/tickets/${ticket.ticketId.toString()}" target="_blank">
           ${cityssm.escapeHTML(ticket.ticketNumber)}
           </a>
         </td>
@@ -170,7 +170,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         buttonElement.setAttribute('disabled', 'disabled');
         const index = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const ticketId = currentBatch.batchEntries[index].ticketId;
-        cityssm.postJSON('/tickets-ontario/doRemoveTicketFromConvictionBatch', {
+        cityssm.postJSON(pts.urlPrefix + '/tickets-ontario/doRemoveTicketFromConvictionBatch', {
             batchId: currentBatch.batchId,
             ticketId
         }, (rawResponseJSON) => {
@@ -189,7 +189,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function clearBatch(clickEvent) {
         clickEvent.preventDefault();
         function doClear() {
-            cityssm.postJSON('/tickets-ontario/doClearConvictionBatch', {
+            cityssm.postJSON(pts.urlPrefix + '/tickets-ontario/doClearConvictionBatch', {
                 batchId: currentBatch.batchId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -217,7 +217,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function doLock() {
-        cityssm.postJSON('/tickets/doLockConvictionBatch', {
+        cityssm.postJSON(pts.urlPrefix + '/tickets/doLockConvictionBatch', {
             batchId: currentBatch.batchId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
@@ -245,7 +245,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function doUnlock() {
-        cityssm.postJSON('/tickets/doUnlockConvictionBatch', {
+        cityssm.postJSON(pts.urlPrefix + '/tickets/doUnlockConvictionBatch', {
             batchId: currentBatch.batchId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
@@ -277,7 +277,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             window.open(`/tickets/convict/${currentBatch.batchId.toString()}/print`);
         }
         function doMarkAsSent() {
-            cityssm.postJSON('/tickets/doMarkConvictionBatchSent', {
+            cityssm.postJSON(pts.urlPrefix + '/tickets/doMarkConvictionBatchSent', {
                 batchId: currentBatch.batchId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -330,7 +330,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         for (const [index, batchEntry] of (currentBatch.batchEntries ?? []).entries()) {
             const trElement = document.createElement('tr');
             trElement.innerHTML = `<td>
-          <a href="/tickets/${batchEntry.ticketId.toString()}" target="_blank">
+          <a href="${pts.urlPrefix}/tickets/${batchEntry.ticketId.toString()}" target="_blank">
             ${batchEntry.ticketNumber}
           </a>
         </td>
@@ -404,7 +404,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function confirmCreateBatch() {
         function doCreate() {
-            cityssm.postJSON('/tickets/doCreateConvictionBatch', {}, (rawResponseJSON) => {
+            cityssm.postJSON(pts.urlPrefix + '/tickets/doCreateConvictionBatch', {}, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     currentBatch = responseJSON.batch;
@@ -432,7 +432,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             const batchId = clickEvent.currentTarget.dataset
                 .batchId;
-            cityssm.postJSON('/tickets/doGetConvictionBatch', {
+            cityssm.postJSON(pts.urlPrefix + '/tickets/doGetConvictionBatch', {
                 batchId
             }, (rawResponseJSON) => {
                 const batchObject = rawResponseJSON;
@@ -453,7 +453,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         confirmCreateBatch();
                     });
                 }
-                cityssm.postJSON('/tickets/doGetRecentConvictionBatches', {}, (rawResponseJSON) => {
+                cityssm.postJSON(pts.urlPrefix + '/tickets/doGetRecentConvictionBatches', {}, (rawResponseJSON) => {
                     const batchList = rawResponseJSON;
                     const resultsContainerElement = modalElement.querySelector('.is-results-container');
                     cityssm.clearElement(resultsContainerElement);

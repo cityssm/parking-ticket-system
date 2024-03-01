@@ -15,7 +15,7 @@
             </div>
             <div class="media-content has-text-black">
               <h2 class="title is-4 is-marginless">
-                <a href="/tickets">Parking Tickets</a>
+                <a href="<%= urlPrefix %>/tickets">Parking Tickets</a>
               </h2>
               <p>
                 Track parking tickets.
@@ -27,14 +27,14 @@
           </div>
         </div>
         <div class="card-footer">
-          <a class="card-footer-item" href="/tickets">
+          <a class="card-footer-item" href="<%= urlPrefix %>/tickets">
             <span class="icon">
               <i class="fas fa-search" aria-hidden="true"></i>
             </span>
             Find Tickets
           </a>
           <% if (user.canUpdate) { %>
-            <a class="card-footer-item" href="/tickets/new">
+            <a class="card-footer-item" href="<%= urlPrefix %>/tickets/new">
               <span class="icon">
                 <i class="fas fa-plus" aria-hidden="true"></i>
               </span>
@@ -53,7 +53,7 @@
             </div>
             <div class="media-content has-text-black">
               <h2 class="title is-4 is-marginless">
-                <a href="/plates">Licence Plate Lookup</a>
+                <a href="<%= urlPrefix %>/plates">Licence Plate Lookup</a>
               </h2>
               <p>
                 Look up licence plate owners.
@@ -65,7 +65,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <a class="card-footer-item" href="/plates">
+          <a class="card-footer-item" href="<%= urlPrefix %>/plates">
             <span class="icon">
               <i class="fas fa-search" aria-hidden="true"></i>
             </span>
@@ -86,14 +86,14 @@
             </div>
             <div class="media-content has-text-black">
               <h2 class="title is-4 is-marginless">
-                <a href="/reports">Report Library</a>
+                <a href="<%= urlPrefix %>/reports">Report Library</a>
               </h2>
               <p>Produce reports and export data.</p>
             </div>
           </div>
         </div>
         <div class="card-footer">
-          <a class="card-footer-item" href="/reports">
+          <a class="card-footer-item" href="<%= urlPrefix %>/reports">
             <span class="icon">
               <i class="fas fa-search" aria-hidden="true"></i>
             </span>
@@ -148,14 +148,14 @@
               </div>
               <div class="media-content has-text-black">
                 <h2 class="title is-4 is-marginless">
-                  <a href="/admin/cleanup">Database Cleanup</a>
+                  <a href="<%= urlPrefix %>/admin/cleanup">Database Cleanup</a>
                 </h2>
                 <p>Purge deleted records.</p>
               </div>
             </div>
           </div>
           <div class="card-footer">
-            <a class="card-footer-item" href="/admin/cleanup">
+            <a class="card-footer-item" href="<%= urlPrefix %>/admin/cleanup">
               <span class="icon">
                 <i class="fas fa-bomb" aria-hidden="true"></i>
               </span>
@@ -173,26 +173,26 @@
               </div>
               <div class="media-content has-text-black">
                 <h2 class="title is-4 is-marginless">
-                  <a href="/admin/offences">Parking Offences</a>
+                  <a href="<%= urlPrefix %>/admin/offences">Parking Offences</a>
                 </h2>
                 <p>Configure parking offences, their related locations and by-laws.</p>
               </div>
             </div>
           </div>
           <div class="card-footer">
-            <a class="card-footer-item" href="/admin/offences">
+            <a class="card-footer-item" href="<%= urlPrefix %>/admin/offences">
               <span class="icon">
                 <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
               </span>
               Offences
             </a>
-            <a class="card-footer-item" href="/admin/locations">
+            <a class="card-footer-item" href="<%= urlPrefix %>/admin/locations">
               <span class="icon">
                 <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
               </span>
               Locations
             </a>
-            <a class="card-footer-item" href="/admin/bylaws">
+            <a class="card-footer-item" href="<%= urlPrefix %>/admin/bylaws">
               <span class="icon">
                 <i class="fas fa-gavel" aria-hidden="true"></i>
               </span>

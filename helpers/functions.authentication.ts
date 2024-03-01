@@ -42,3 +42,36 @@ export const authenticate = async (
 
   return await authenticateViaActiveDirectory(userName, password)
 }
+
+const safeRedirects = new Set([
+  '/tickets',
+  '/tickets/new',
+  '/tickets/reconcile',
+  '/tickets-ontario/convict',
+  '/plates',
+  '/plates-ontario/mtoExport',
+  '/plates-ontario/mtoImport',
+  '/reports',
+  '/admin/cleanup',
+  '/admin/offences',
+  '/admin/locations',
+  '/admin/bylaws'
+])
+
+export function getSafeRedirectURL(possibleRedirectURL = ''): string {
+  const urlPrefix = configFunctions.getConfigProperty('reverseProxy.urlPrefix')
+
+  if (typeof possibleRedirectURL === 'string') {
+    const urlToCheck = possibleRedirectURL.startsWith(urlPrefix)
+      ? possibleRedirectURL.slice(urlPrefix.length)
+      : possibleRedirectURL
+
+    const urlToCheckLowerCase = urlToCheck.toLowerCase()
+
+    if (safeRedirects.has(urlToCheckLowerCase)) {
+      return urlPrefix + urlToCheck
+    }
+  }
+
+  return `${urlPrefix}/dashboard/`
+}

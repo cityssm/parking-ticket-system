@@ -5,7 +5,7 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
         <li class="is-active"><a href="#" aria-current="page">Licence Plates</a></li>
       </ul>
     </nav>
@@ -74,6 +74,6 @@
 
 <%- include('_footerA'); -%>
 
-<script src="/javascripts/plate-search.js"></script>
+<script src="<%= urlPrefix %>/javascripts/plate-search.js"></script>
 
 <%- include('_footerB'); -%>

@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const ticketId = clickEvent.currentTarget.dataset
             .ticketId;
         function doUnresolve() {
-            cityssm.postJSON('/tickets/doUnresolveTicket', {
+            cityssm.postJSON(pts.urlPrefix + '/tickets/doUnresolveTicket', {
                 ticketId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const ticketId = clickEvent.currentTarget.dataset
             .ticketId;
         function doRestore() {
-            cityssm.postJSON('/tickets/doRestoreTicket', {
+            cityssm.postJSON(pts.urlPrefix + '/tickets/doRestoreTicket', {
                 ticketId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;

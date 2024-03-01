@@ -8,7 +8,10 @@ import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 import type { ptsGlobal } from '../../types/publicTypes.js'
 // eslint-disable-next-line import/namespace
-import type { ParkingLocation, ParkingOffence } from '../../types/recordTypes.js'
+import type {
+  ParkingLocation,
+  ParkingOffence
+} from '../../types/recordTypes.js'
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
@@ -73,7 +76,9 @@ declare const pts: ptsGlobal
         </span>`
 
       cityssm.postJSON(
-        isCreate ? '/tickets/doCreateTicket' : '/tickets/doUpdateTicket',
+        isCreate
+          ? pts.urlPrefix + '/tickets/doCreateTicket'
+          : pts.urlPrefix + '/tickets/doUpdateTicket',
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as FormResponseJSON
@@ -108,14 +113,14 @@ declare const pts: ptsGlobal
                   .querySelector('#createSuccess--editTicketButton')
                   ?.setAttribute(
                     'href',
-                    `/tickets/${responseJSON.ticketId.toString()}/edit`
+                    `${pts.urlPrefix}/tickets/${responseJSON.ticketId.toString()}/edit`
                   )
 
                 document
                   .querySelector('#createSuccess--newTicketButton')
                   ?.setAttribute(
                     'href',
-                    `/tickets/new/${responseJSON.nextTicketNumber}`
+                    `${pts.urlPrefix}/tickets/new/${responseJSON.nextTicketNumber}`
                   )
               }
             })
@@ -126,7 +131,7 @@ declare const pts: ptsGlobal
 
   function doDelete(): void {
     cityssm.postJSON(
-      '/tickets/doDeleteTicket',
+      pts.urlPrefix + '/tickets/doDeleteTicket',
       {
         ticketId
       },
@@ -134,7 +139,7 @@ declare const pts: ptsGlobal
         const responseJSON = rawResponseJSON as { success: boolean }
 
         if (responseJSON.success) {
-          window.location.href = '/tickets'
+          window.location.href = `${pts.urlPrefix}/tickets`
         }
       }
     )
@@ -257,14 +262,18 @@ declare const pts: ptsGlobal
     }
 
     function populateLocationsFunction(): void {
-      cityssm.postJSON('/offences/doGetAllLocations', {}, (rawResponseJSON) => {
-        const locationListResponse =
-          rawResponseJSON as unknown as ParkingLocation[]
+      cityssm.postJSON(
+        pts.urlPrefix + '/offences/doGetAllLocations',
+        {},
+        (rawResponseJSON) => {
+          const locationListResponse =
+            rawResponseJSON as unknown as ParkingLocation[]
 
-        locationList = locationListResponse
+          locationList = locationListResponse
 
-        renderLocationsFunction()
-      })
+          renderLocationsFunction()
+        }
+      )
     }
 
     function openLocationLookupModalFunction(clickEvent: Event): void {
@@ -446,7 +455,7 @@ declare const pts: ptsGlobal
     ).value
     // const locationName = document.getElementById("ticket--locationName").value;
     cityssm.postJSON(
-      '/offences/doGetOffencesByLocation',
+      pts.urlPrefix + '/offences/doGetOffencesByLocation',
       {
         locationKey
       },

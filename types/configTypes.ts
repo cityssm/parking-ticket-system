@@ -2,9 +2,9 @@ export interface Config {
   application?: ConfigApplicationConfig
   session?: ConfigSessionConfig
   reverseProxy?: {
-    disableCompression: boolean
-    disableEtag: boolean
-    urlPrefix: string
+    disableCompression?: boolean
+    disableEtag?: boolean
+    urlPrefix?: '' | `/${string}`
   }
   activeDirectory?: ConfigActiveDirectory
   users?: {

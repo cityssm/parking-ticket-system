@@ -5,8 +5,8 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
-        <li><a href="/tickets">Parking Tickets</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/tickets">Parking Tickets</a></li>
         <li class="is-active"><a href="#" aria-current="page">Ticket <%= ticket.ticketNumber %></a></li>
       </ul>
     </nav>
@@ -18,7 +18,7 @@
         </h1>
       </div>
       <div class="column is-narrow has-text-right">
-        <a class="button is-link" href="/tickets/<%= ticket.ticketId %>/print" target="_blank">
+        <a class="button is-link" href="<%= urlPrefix %>/tickets/<%= ticket.ticketId %>/print" target="_blank">
           <span class="icon"><i class="fas fa-print" aria-hidden="true"></i></span>
           <span>Print</span>
         </a>
@@ -55,7 +55,7 @@
 
     <% if (ticket.canUpdate && !ticket.resolvedDate && !ticket.recordDelete_timeMillis) { %>
       <div class="fixed-container is-fixed-bottom-right mb-4 mr-4 has-text-right is-hidden-print">
-        <a class="button is-circle is-primary has-tooltip-left" data-tooltip="Edit this Ticket" href="/tickets/<%=ticket.ticketId %>/edit">
+        <a class="button is-circle is-primary has-tooltip-left" data-tooltip="Edit this Ticket" href="<%= urlPrefix %>/tickets/<%=ticket.ticketId %>/edit">
           <i class="fas fa-pencil-alt" aria-hidden="true"></i>
           <span class="sr-only">Edit this Ticket</span>
         </a>
@@ -253,7 +253,7 @@
                 <h2 class="has-text-weight-bold">Remarks</h2>
               </div>
               <div class="level-right">
-                <a class="button is-small" href="/reports/remarks-byTicketId/?ticketId=<%= ticket.ticketId %>" download>
+                <a class="button is-small" href="<%= urlPrefix %>/reports/remarks-byTicketId/?ticketId=<%= ticket.ticketId %>" download>
                   <span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>
                   <span>Export</span>
                 </a>
@@ -305,7 +305,7 @@
                     Open
                   </span>
                 <% } %>
-                <a class="button is-small ml-3" href="/reports/statuses-byTicketId/?ticketId=<%= ticket.ticketId %>" download>
+                <a class="button is-small ml-3" href="<%= urlPrefix %>/reports/statuses-byTicketId/?ticketId=<%= ticket.ticketId %>" download>
                   <span class="icon is-small"><i class="fas fa-download" aria-hidden="true"></i></span>
                   <span>Export</span>
                 </a>
@@ -352,7 +352,7 @@
 <%- include('_footerA'); -%>
 
 <% if (user.canUpdate || user.isAdmin) { %>
-  <script src="/javascripts/ticket-view.js"></script>
+  <script src="<%= urlPrefix %>/javascripts/ticket-view.js"></script>
 <% } %>
 
 <%- include('_footerB'); -%>

@@ -12,6 +12,7 @@ import session from 'express-session';
 import createError from 'http-errors';
 import FileStore from 'session-file-store';
 import { useTestDatabases } from './data/databasePaths.js';
+import { getSafeRedirectURL } from './helpers/functions.authentication.js';
 import * as configFunctions from './helpers/functions.config.js';
 import * as vehicleFunctions from './helpers/functions.vehicle.js';
 import routerAdmin from './routes/admin.js';
@@ -46,11 +47,15 @@ if (!useTestDatabases) {
     });
     app.use(limiter);
 }
-app.use(express.static(path.join('public')));
-app.use('/fa', express.static(path.join('node_modules', '@fortawesome', 'fontawesome-free')));
-app.use('/fontsource-pt-mono', express.static(path.join('node_modules', '@fontsource', 'pt-mono', 'files')));
-app.use('/cityssm-bulma-webapp-js', express.static(path.join('node_modules', '@cityssm', 'bulma-webapp-js')));
-app.use('/bulma-js', express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist')));
+const urlPrefix = configFunctions.getConfigProperty('reverseProxy.urlPrefix');
+if (urlPrefix !== '') {
+    debug(`urlPrefix = ${urlPrefix}`);
+}
+app.use(urlPrefix, express.static(path.join('public')));
+app.use(`${urlPrefix}/fa`, express.static(path.join('node_modules', '@fortawesome', 'fontawesome-free')));
+app.use(`${urlPrefix}/stylesheets/fontsource-pt-mono`, express.static(path.join('node_modules', '@fontsource', 'pt-mono', 'files')));
+app.use(`${urlPrefix}/cityssm-bulma-webapp-js`, express.static(path.join('node_modules', '@cityssm', 'bulma-webapp-js')));
+app.use(`${urlPrefix}/bulma-js`, express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist')));
 const sessionCookieName = configFunctions.getConfigProperty('session.cookieName');
 const FileStoreSession = FileStore(session);
 app.use(session({
@@ -70,17 +75,20 @@ app.use(session({
     }
 }));
 app.use((request, response, next) => {
-    if (request.cookies[sessionCookieName] && !request.session.user) {
+    if (Object.hasOwn(request.cookies, sessionCookieName) &&
+        !Object.hasOwn(request.session, 'user')) {
         response.clearCookie(sessionCookieName);
     }
     next();
 });
 const sessionChecker = (request, response, next) => {
-    if (request.session.user && request.cookies[sessionCookieName]) {
+    if (Object.hasOwn(request.session, 'user') &&
+        Object.hasOwn(request.cookies, sessionCookieName)) {
         next();
         return;
     }
-    response.redirect('/login?redirect=' + request.originalUrl);
+    const redirectUrl = getSafeRedirectURL(request.originalUrl);
+    response.redirect(`${urlPrefix}/login?redirect=${encodeURIComponent(redirectUrl)}`);
 };
 app.use((request, response, next) => {
     response.locals.buildNumber = version;
@@ -91,38 +99,41 @@ app.use((request, response, next) => {
     response.locals.stringFns = stringFns;
     response.locals.htmlFns = htmlFns;
     response.locals.vehicleFunctions = vehicleFunctions;
+    response.locals.urlPrefix = configFunctions.getConfigProperty('reverseProxy.urlPrefix');
     next();
 });
-app.get('/', sessionChecker, (_request, response) => {
-    response.redirect('/dashboard');
+app.get(`${urlPrefix}/`, sessionChecker, (_request, response) => {
+    response.redirect(`${urlPrefix}/dashboard`);
 });
-app.use('/dashboard', sessionChecker, routerDashboard);
-app.use('/tickets', sessionChecker, routerTickets);
-app.use('/plates', sessionChecker, routerPlates);
-app.use('/offences', sessionChecker, routerOffences);
-app.use('/reports', sessionChecker, routerReports);
+app.use(`${urlPrefix}/dashboard`, sessionChecker, routerDashboard);
+app.use(`${urlPrefix}/tickets`, sessionChecker, routerTickets);
+app.use(`${urlPrefix}/plates`, sessionChecker, routerPlates);
+app.use(`${urlPrefix}/offences`, sessionChecker, routerOffences);
+app.use(`${urlPrefix}/reports`, sessionChecker, routerReports);
 if (configFunctions.getConfigProperty('application.feature_mtoExportImport')) {
-    app.use('/plates-ontario', sessionChecker, routePlatesOntario);
-    app.use('/tickets-ontario', sessionChecker, routeTicketsOntario);
+    app.use(`${urlPrefix}/plates-ontario`, sessionChecker, routePlatesOntario);
+    app.use(`${urlPrefix}/tickets-ontario`, sessionChecker, routeTicketsOntario);
 }
-app.use('/admin', sessionChecker, routerAdmin);
-app.all('/keepAlive', (_request, response) => {
-    response.json(true);
-});
-app.use('/login', routerLogin);
-app.get('/logout', (request, response) => {
+app.use(`${urlPrefix}/admin`, sessionChecker, routerAdmin);
+if (configFunctions.getConfigProperty('session.doKeepAlive')) {
+    app.all(`${urlPrefix}/keepAlive`, (_request, response) => {
+        response.json(true);
+    });
+}
+app.use(`${urlPrefix}/login`, routerLogin);
+app.get(`${urlPrefix}/logout`, (request, response) => {
     if (request.session.user && request.cookies[sessionCookieName]) {
         request.session.destroy(() => {
             response.clearCookie(sessionCookieName);
-            response.redirect('/');
+            response.redirect(`${urlPrefix}/`);
         });
     }
     else {
-        response.redirect('/login');
+        response.redirect(`${urlPrefix}/login`);
     }
 });
-app.use((_request, _response, next) => {
-    next(createError(404));
+app.use((request, _response, next) => {
+    next(createError(404, `File not found: ${request.url}`));
 });
 app.use((error, request, response) => {
     response.locals.message = error.message;

@@ -18,7 +18,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const recordIndex = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const ticketRecord = availableTicketsList[recordIndex];
         const ticketContainerElement = buttonElement.closest('.is-ticket-container');
-        cityssm.postJSON('/plates/doAddLicencePlateToLookupBatch', {
+        cityssm.postJSON(pts.urlPrefix + '/plates/doAddLicencePlateToLookupBatch', {
             batchId,
             licencePlateCountry: 'CA',
             licencePlateProvince: 'ON',
@@ -43,7 +43,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const recordIndex = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const batchEntry = batchEntriesList[recordIndex];
         const entryContainerElement = buttonElement.closest('.is-entry-container');
-        cityssm.postJSON('/plates/doRemoveLicencePlateFromLookupBatch', {
+        cityssm.postJSON(pts.urlPrefix + '/plates/doRemoveLicencePlateFromLookupBatch', {
             batchId,
             ticketId: batchEntry.ticketId,
             licencePlateCountry: 'CA',
@@ -62,7 +62,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function clearBatch(clickEvent) {
         clickEvent.preventDefault();
         function clearFunction() {
-            cityssm.postJSON('/plates/doClearLookupBatch', {
+            cityssm.postJSON(pts.urlPrefix + '/plates/doClearLookupBatch', {
                 batchId
             }, (responseJSON) => {
                 if (responseJSON.success) {
@@ -136,7 +136,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     '<div class="level">' +
                     '<div class="level-left"><div class="tags">' +
                     '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-                    ' href="/tickets/' +
+                    ` href="${pts.urlPrefix}/tickets/` +
                     encodeURIComponent(ticketRecord.ticketId) +
                     '" target="_blank">' +
                     cityssm.escapeHTML(ticketRecord.ticketNumber) +
@@ -169,7 +169,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         document.querySelector('#is-loading-modal-message').textContent = `Adding
               ${includedTicketIds.length.toString()}
               Parking Ticket${includedTicketIds.length === 1 ? '' : 's'}...`;
-                        cityssm.postJSON('/plates/doAddAllParkingTicketsToLookupBatch', {
+                        cityssm.postJSON(pts.urlPrefix + '/plates/doAddAllParkingTicketsToLookupBatch', {
                             batchId,
                             ticketIds: includedTicketIds
                         }, (resultJSON) => {
@@ -202,7 +202,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
       <em>Loading parking tickets...</em>
       </p>`;
-        cityssm.postJSON('/plates-ontario/doGetParkingTicketsAvailableForMTOLookup', {
+        cityssm.postJSON(pts.urlPrefix + '/plates-ontario/doGetParkingTicketsAvailableForMTOLookup', {
             batchId,
             issueDaysAgo: availableIssueDaysAgoElement.value
         }, (responseJSON) => {
@@ -289,7 +289,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             '</div>') +
                     '</div>' +
                     '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-                    ' href="/tickets/' +
+                    ` href="${pts.urlPrefix}/tickets/` +
                     encodeURIComponent(batchEntry.ticketId) +
                     '" target="_blank">' +
                     cityssm.escapeHTML(batchEntry.ticketNumber) +
@@ -325,7 +325,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         batchEntriesContainerElement.append(panelElement);
     }
     function refreshBatch() {
-        cityssm.postJSON('/plates/doGetLookupBatch', {
+        cityssm.postJSON(pts.urlPrefix + '/plates/doGetLookupBatch', {
             batchId
         }, (batch) => {
             populateBatchView(batch);
@@ -338,7 +338,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             const mto_includeLabels = clickEvent.currentTarget
                 .dataset.includeLabels;
-            cityssm.postJSON('/plates/doCreateLookupBatch', {
+            cityssm.postJSON(pts.urlPrefix + '/plates/doCreateLookupBatch', {
                 mto_includeLabels
             }, (responseJSON) => {
                 if (responseJSON.success) {
@@ -372,7 +372,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             refreshBatch();
         }
         function loadBatches() {
-            cityssm.postJSON('/plates/doGetUnreceivedLicencePlateLookupBatches', {}, (batchList) => {
+            cityssm.postJSON(pts.urlPrefix + '/plates/doGetUnreceivedLicencePlateLookupBatches', {}, (batchList) => {
                 if (batchList.length === 0) {
                     resultsContainerElement.innerHTML = `<div class="message is-info">
               <p class="message-body">There are no unsent batches available.</p>
@@ -450,7 +450,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 return;
             }
             function lockFunction() {
-                cityssm.postJSON('/plates/doLockLookupBatch', {
+                cityssm.postJSON(pts.urlPrefix + '/plates/doLockLookupBatch', {
                     batchId
                 }, (responseJSON) => {
                     if (responseJSON.success) {

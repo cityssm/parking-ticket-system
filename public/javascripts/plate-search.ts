@@ -26,7 +26,7 @@ declare const pts: ptsGlobal
     const trElement = document.createElement('tr')
 
     // Output row
-    const url = `/plates/${
+    const url = `${pts.urlPrefix}/plates/${
       plateObject.licencePlateCountry === ''
         ? '_'
         : encodeURIComponent(plateObject.licencePlateCountry)
@@ -193,7 +193,7 @@ declare const pts: ptsGlobal
       </p>`
 
     cityssm.postJSON(
-      '/plates/doGetLicencePlates',
+      pts.urlPrefix + '/plates/doGetLicencePlates',
       formElement,
       processPlateResultsFunction
     )

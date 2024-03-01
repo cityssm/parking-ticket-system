@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const ticketStatusObject = pts.getTicketStatus(ticketObject.latestStatus_statusKey);
         trElement.innerHTML = `<td>
-        <a href="/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
+        <a href="${pts.urlPrefix}/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
         ${ticketObject.ticketNumber}
         </a>
       </td>
@@ -148,7 +148,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
       <em>Loading tickets...</em>
       </p>`;
-        cityssm.postJSON('/tickets/doGetTickets', formElement, processTicketResults);
+        cityssm.postJSON(pts.urlPrefix + '/tickets/doGetTickets', formElement, processTicketResults);
     }
     function resetOffsetAndGetTicketsFunction() {
         offsetElement.value = '0';

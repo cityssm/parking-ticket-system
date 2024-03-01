@@ -1,9 +1,9 @@
 import Debug from 'debug'
 import {
-  Router,
   type Request,
+  type RequestHandler,
   type Response,
-  type RequestHandler
+  Router
 } from 'express'
 
 import { useTestDatabases } from '../data/databasePaths.js'
@@ -14,27 +14,6 @@ const debug = Debug('parking-ticket-system:login')
 
 export const router = Router()
 
-function getSafeRedirectURL(possibleRedirectURL = ''): string {
-  switch (possibleRedirectURL) {
-    case '/tickets':
-    case '/tickets/new':
-    case '/tickets/reconcile':
-    case '/tickets-ontario/convict':
-    case '/plates':
-    case '/plates-ontario/mtoExport':
-    case '/plates-ontario/mtoImport':
-    case '/reports':
-    case '/admin/cleanup':
-    case '/admin/offences':
-    case '/admin/locations':
-    case '/admin/bylaws': {
-      return possibleRedirectURL
-    }
-  }
-
-  return '/dashboard'
-}
-
 async function postHandler(
   request: Request,
   response: Response
@@ -42,7 +21,11 @@ async function postHandler(
   const userName = request.body.userName as string
   const passwordPlain = request.body.password as string
 
-  const redirectURL = getSafeRedirectURL(request.body.redirect)
+  const unsafeRedirectURL = request.body.redirect
+
+  const redirectURL = authenticationFunctions.getSafeRedirectURL(
+    typeof unsafeRedirectURL === 'string' ? unsafeRedirectURL : ''
+  )
 
   let isAuthenticated = false
 
@@ -120,7 +103,7 @@ router
     const sessionCookieName = getConfigProperty('session.cookieName')
 
     if (request.session.user && request.cookies[sessionCookieName]) {
-      const redirectURL = getSafeRedirectURL(
+      const redirectURL = authenticationFunctions.getSafeRedirectURL(
         (request.query.redirect ?? '') as string
       )
 

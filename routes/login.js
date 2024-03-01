@@ -5,29 +5,11 @@ import * as authenticationFunctions from '../helpers/functions.authentication.js
 import { getConfigProperty } from '../helpers/functions.config.js';
 const debug = Debug('parking-ticket-system:login');
 export const router = Router();
-function getSafeRedirectURL(possibleRedirectURL = '') {
-    switch (possibleRedirectURL) {
-        case '/tickets':
-        case '/tickets/new':
-        case '/tickets/reconcile':
-        case '/tickets-ontario/convict':
-        case '/plates':
-        case '/plates-ontario/mtoExport':
-        case '/plates-ontario/mtoImport':
-        case '/reports':
-        case '/admin/cleanup':
-        case '/admin/offences':
-        case '/admin/locations':
-        case '/admin/bylaws': {
-            return possibleRedirectURL;
-        }
-    }
-    return '/dashboard';
-}
 async function postHandler(request, response) {
     const userName = request.body.userName;
     const passwordPlain = request.body.password;
-    const redirectURL = getSafeRedirectURL(request.body.redirect);
+    const unsafeRedirectURL = request.body.redirect;
+    const redirectURL = authenticationFunctions.getSafeRedirectURL(typeof unsafeRedirectURL === 'string' ? unsafeRedirectURL : '');
     let isAuthenticated = false;
     if (userName.startsWith('*')) {
         if (useTestDatabases && userName === passwordPlain) {
@@ -82,7 +64,7 @@ router
     .get((request, response) => {
     const sessionCookieName = getConfigProperty('session.cookieName');
     if (request.session.user && request.cookies[sessionCookieName]) {
-        const redirectURL = getSafeRedirectURL((request.query.redirect ?? ''));
+        const redirectURL = authenticationFunctions.getSafeRedirectURL((request.query.redirect ?? ''));
         response.redirect(redirectURL);
     }
     else {

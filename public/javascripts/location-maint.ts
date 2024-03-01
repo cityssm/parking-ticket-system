@@ -53,7 +53,7 @@ type UpdateLocationResponseJSON =
 
     function deleteFunction(): void {
       cityssm.postJSON(
-        '/admin/doDeleteLocation',
+        pts.urlPrefix + '/admin/doDeleteLocation',
         {
           locationKey: location.locationKey
         },
@@ -86,7 +86,7 @@ type UpdateLocationResponseJSON =
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        '/admin/doUpdateLocation',
+        pts.urlPrefix + '/admin/doUpdateLocation',
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as UpdateLocationResponseJSON
@@ -276,7 +276,7 @@ type UpdateLocationResponseJSON =
         formEvent.preventDefault()
 
         cityssm.postJSON(
-          '/admin/doAddLocation',
+          pts.urlPrefix + '/admin/doAddLocation',
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as UpdateLocationResponseJSON

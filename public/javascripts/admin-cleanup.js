@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         buttonElement.setAttribute('disabled', 'disabled');
         const table = buttonElement.dataset.table;
         function purgeFunction() {
-            cityssm.postJSON('/admin/doCleanupTable', {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doCleanupTable', {
                 table,
                 recordDelete_timeMillis
             }, (rawResponseJSON) => {

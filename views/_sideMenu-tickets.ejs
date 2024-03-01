@@ -5,7 +5,7 @@
     </p>
     <ul class="menu-list">
       <li>
-        <a class="<%= (headTitle === "Parking Tickets" ? "is-active" : "") %>" href="/tickets">
+        <a class="<%= (headTitle === "Parking Tickets" ? "is-active" : "") %>" href="<%= urlPrefix %>/tickets">
           <span class="icon">
             <i class="fas fa-fw fa-file-invoice" aria-hidden="true"></i>
           </span>
@@ -14,7 +14,7 @@
       </li>
       <% if (user.canUpdate) { %>
         <li>
-          <a class="<%= (headTitle === "New Ticket" ? "is-active" : "") %>" href="/tickets/new">
+          <a class="<%= (headTitle === "New Ticket" ? "is-active" : "") %>" href="<%= urlPrefix %>/tickets/new">
             <span class="icon">
               <i class="fas fa-fw fa-plus" aria-hidden="true"></i>
             </span>
@@ -29,7 +29,7 @@
       </p>
       <ul class="menu-list">
         <li>
-          <a class="<%= (headTitle === "Ownership Reconciliation" ? "is-active" : "") %>" href="/tickets/reconcile">
+          <a class="<%= (headTitle === "Ownership Reconciliation" ? "is-active" : "") %>" href="<%= urlPrefix %>/tickets/reconcile">
             <span class="icon">
               <i class="fas fa-fw fa-people-arrows" aria-hidden="true"></i>
             </span>
@@ -44,7 +44,7 @@
       </p>
       <ul class="menu-list">
         <li>
-          <a class="<%= (headTitle === "Convict Parking Tickets" ? "is-active" : "") %>" href="/tickets-ontario/convict">
+          <a class="<%= (headTitle === "Convict Parking Tickets" ? "is-active" : "") %>" href="<%= urlPrefix %>/tickets-ontario/convict">
             <span class="icon">
               <i class="fas fa-fw fa-gavel" aria-hidden="true"></i>
             </span>

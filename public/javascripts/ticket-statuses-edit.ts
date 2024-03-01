@@ -35,14 +35,14 @@ declare const pts: ptsGlobal
 
   function doResolve(): void {
     cityssm.postJSON(
-      '/tickets/doResolveTicket',
+      pts.urlPrefix + '/tickets/doResolveTicket',
       {
         ticketId
       },
       (rawResponseJSON) => {
         const responseJSON = rawResponseJSON as { success: boolean }
         if (responseJSON.success) {
-          window.location.href = `/tickets/${ticketId}`
+          window.location.href = `${pts.urlPrefix}/tickets/${ticketId}`
         }
       }
     )
@@ -69,7 +69,7 @@ declare const pts: ptsGlobal
 
     function doDeleteStatus(): void {
       cityssm.postJSON(
-        '/tickets/doDeleteStatus',
+        pts.urlPrefix + '/tickets/doDeleteStatus',
         {
           ticketId,
           statusIndex
@@ -110,7 +110,7 @@ declare const pts: ptsGlobal
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        '/tickets/doUpdateStatus',
+        pts.urlPrefix + '/tickets/doUpdateStatus',
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as { success: boolean }
@@ -419,7 +419,7 @@ declare const pts: ptsGlobal
     )
 
     cityssm.postJSON(
-      '/tickets/doGetStatuses',
+      pts.urlPrefix + '/tickets/doGetStatuses',
       {
         ticketId
       },
@@ -449,7 +449,7 @@ declare const pts: ptsGlobal
         ).checked
 
         cityssm.postJSON(
-          '/tickets/doAddStatus',
+          pts.urlPrefix + '/tickets/doAddStatus',
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as { success: boolean }
@@ -457,7 +457,7 @@ declare const pts: ptsGlobal
               addStatusCloseModalFunction()
 
               if (resolveTicket) {
-                window.location.href = `/tickets/${ticketId}`
+                window.location.href = `${pts.urlPrefix}/tickets/${ticketId}`
               } else {
                 getStatusesFunction()
               }
@@ -587,7 +587,7 @@ declare const pts: ptsGlobal
         ).checked
 
         cityssm.postJSON(
-          '/tickets/doAddStatus',
+          pts.urlPrefix + '/tickets/doAddStatus',
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as { success: boolean }
@@ -595,7 +595,7 @@ declare const pts: ptsGlobal
               addPaidStatusCloseModalFunction()
 
               if (resolveTicket) {
-                window.location.href = `/tickets/${ticketId}`
+                window.location.href = `${pts.urlPrefix}/tickets/${ticketId}`
               } else {
                 getStatusesFunction()
               }

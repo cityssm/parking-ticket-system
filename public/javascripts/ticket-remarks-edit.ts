@@ -5,10 +5,12 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { ptsGlobal } from '../../types/publicTypes.js'
 import type { ParkingTicketRemark } from '../../types/recordTypes.js'
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
+declare const pts: ptsGlobal
 ;(() => {
   const ticketId = (
     document.querySelector('#ticket--ticketId') as HTMLInputElement
@@ -36,7 +38,7 @@ declare const cityssm: cityssmGlobal
 
     function doDelete(): void {
       cityssm.postJSON(
-        '/tickets/doDeleteRemark',
+        pts.urlPrefix + '/tickets/doDeleteRemark',
         {
           ticketId,
           remarkIndex
@@ -77,7 +79,7 @@ declare const cityssm: cityssmGlobal
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        '/tickets/doUpdateRemark',
+        pts.urlPrefix + '/tickets/doUpdateRemark',
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as { success: boolean }
@@ -210,7 +212,7 @@ declare const cityssm: cityssmGlobal
     )
 
     cityssm.postJSON(
-      '/tickets/doGetRemarks',
+      pts.urlPrefix + '/tickets/doGetRemarks',
       {
         ticketId
       },
@@ -234,7 +236,7 @@ declare const cityssm: cityssmGlobal
         formEvent.preventDefault()
 
         cityssm.postJSON(
-          '/tickets/doAddRemark',
+          pts.urlPrefix + '/tickets/doAddRemark',
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as { success: boolean }

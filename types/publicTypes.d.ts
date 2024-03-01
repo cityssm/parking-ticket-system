@@ -1,6 +1,7 @@
 import type { ConfigLocationClass, ConfigParkingTicketStatus } from './configTypes.js';
 type GetDefaultConfigProperty_PropertyNames = 'locationClasses' | 'parkingTicketStatuses' | 'ticketNumber_fieldLabel';
 export interface ptsGlobal {
+    urlPrefix: string;
     loadDefaultConfigProperties: (callbackFunction: () => void) => void;
     getDefaultConfigProperty: (propertyName: GetDefaultConfigProperty_PropertyNames, propertyValueCallbackFunction: (propertyValue: unknown) => void) => void;
     getLicencePlateCountryProperties: (originalLicencePlateCountry: string) => {

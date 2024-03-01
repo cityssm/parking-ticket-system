@@ -7,10 +7,12 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { ptsGlobal } from '../../types/publicTypes.js'
 import type { ParkingBylaw } from '../../types/recordTypes.js'
 
 declare const cityssm: cityssmGlobal
 declare const bulmaJS: BulmaJS
+declare const pts: ptsGlobal
 
 type UpdateBylawResponseJSON =
   | {
@@ -49,7 +51,7 @@ type UpdateBylawResponseJSON =
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        '/admin/doUpdateOffencesByBylaw',
+        pts.urlPrefix + '/admin/doUpdateOffencesByBylaw',
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as UpdateBylawResponseJSON
@@ -117,7 +119,7 @@ type UpdateBylawResponseJSON =
 
     function deleteFunction(): void {
       cityssm.postJSON(
-        '/admin/doDeleteBylaw',
+        pts.urlPrefix + '/admin/doDeleteBylaw',
         {
           bylawNumber: bylaw.bylawNumber
         },
@@ -148,7 +150,7 @@ type UpdateBylawResponseJSON =
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        '/admin/doUpdateBylaw',
+        pts.urlPrefix + '/admin/doUpdateBylaw',
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as UpdateBylawResponseJSON
@@ -315,7 +317,7 @@ type UpdateBylawResponseJSON =
         formEvent.preventDefault()
 
         cityssm.postJSON(
-          '/admin/doAddBylaw',
+          pts.urlPrefix + '/admin/doAddBylaw',
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as UpdateBylawResponseJSON

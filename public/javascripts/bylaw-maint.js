@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let updateOffencesCloseModalFunction;
         function updateFunction(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON('/admin/doUpdateOffencesByBylaw', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doUpdateOffencesByBylaw', formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     updateOffencesCloseModalFunction();
@@ -48,7 +48,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const bylaw = bylawList[listIndex];
         let editBylawCloseModalFunction;
         function deleteFunction() {
-            cityssm.postJSON('/admin/doDeleteBylaw', {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doDeleteBylaw', {
                 bylawNumber: bylaw.bylawNumber
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -65,7 +65,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         function editFunction(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON('/admin/doUpdateBylaw', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doUpdateBylaw', formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     editBylawCloseModalFunction();
@@ -183,7 +183,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let addBylawCloseModalFunction;
         function addFunction(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON('/admin/doAddBylaw', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doAddBylaw', formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addBylawCloseModalFunction();

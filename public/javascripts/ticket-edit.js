@@ -24,7 +24,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         <span>Saving ticket... </span>
         <span class="icon"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i></span>
         </span>`;
-        cityssm.postJSON(isCreate ? '/tickets/doCreateTicket' : '/tickets/doUpdateTicket', formEvent.currentTarget, (rawResponseJSON) => {
+        cityssm.postJSON(isCreate
+            ? pts.urlPrefix + '/tickets/doCreateTicket'
+            : pts.urlPrefix + '/tickets/doUpdateTicket', formEvent.currentTarget, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
             if (responseJSON.success) {
                 cityssm.disableNavBlocker();
@@ -44,22 +46,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         document.querySelector('#createSuccess--ticketNumber').textContent = ticketNumber;
                         document
                             .querySelector('#createSuccess--editTicketButton')
-                            ?.setAttribute('href', `/tickets/${responseJSON.ticketId.toString()}/edit`);
+                            ?.setAttribute('href', `${pts.urlPrefix}/tickets/${responseJSON.ticketId.toString()}/edit`);
                         document
                             .querySelector('#createSuccess--newTicketButton')
-                            ?.setAttribute('href', `/tickets/new/${responseJSON.nextTicketNumber}`);
+                            ?.setAttribute('href', `${pts.urlPrefix}/tickets/new/${responseJSON.nextTicketNumber}`);
                     }
                 });
             }
         });
     });
     function doDelete() {
-        cityssm.postJSON('/tickets/doDeleteTicket', {
+        cityssm.postJSON(pts.urlPrefix + '/tickets/doDeleteTicket', {
             ticketId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
             if (responseJSON.success) {
-                window.location.href = '/tickets';
+                window.location.href = `${pts.urlPrefix}/tickets`;
             }
         });
     }
@@ -135,7 +137,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             containerElement.append(listElement);
         }
         function populateLocationsFunction() {
-            cityssm.postJSON('/offences/doGetAllLocations', {}, (rawResponseJSON) => {
+            cityssm.postJSON(pts.urlPrefix + '/offences/doGetAllLocations', {}, (rawResponseJSON) => {
                 const locationListResponse = rawResponseJSON;
                 locationList = locationListResponse;
                 renderLocationsFunction();
@@ -243,7 +245,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function populateBylawsFunction() {
         const locationKey = document.querySelector('#ticket--locationKey').value;
-        cityssm.postJSON('/offences/doGetOffencesByLocation', {
+        cityssm.postJSON(pts.urlPrefix + '/offences/doGetOffencesByLocation', {
             locationKey
         }, (rawResponseJSON) => {
             const offenceListResponse = rawResponseJSON;

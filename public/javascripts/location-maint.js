@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const location = locationList[listIndex];
         let editLocationCloseModalFunction;
         function deleteFunction() {
-            cityssm.postJSON('/admin/doDeleteLocation', {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doDeleteLocation', {
                 locationKey: location.locationKey
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -30,7 +30,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         function editFunction(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON('/admin/doUpdateLocation', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doUpdateLocation', formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     editLocationCloseModalFunction();
@@ -143,7 +143,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let addLocationCloseModalFunction;
         function addFunction(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON('/admin/doAddLocation', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(pts.urlPrefix + '/admin/doAddLocation', formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addLocationCloseModalFunction();

@@ -12,6 +12,8 @@ type GetDefaultConfigProperty_PropertyNames =
   | 'ticketNumber_fieldLabel'
 
 export interface ptsGlobal {
+  urlPrefix: string
+
   loadDefaultConfigProperties: (callbackFunction: () => void) => void
 
   getDefaultConfigProperty: (

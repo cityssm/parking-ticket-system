@@ -10,17 +10,13 @@
   src:
     local('PT Mono'),
     local('PTMono-Regular'),
-    url('/fontsource-pt-mono/pt-mono-latin-400-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('/fontsource-pt-mono/pt-mono-latin-400-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('fontsource-pt-mono/pt-mono-latin-400-normal.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+    url('fontsource-pt-mono/pt-mono-latin-400-normal.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 
   font-display: swap;
 }
 
 // HTML
-
-html {
-  font-family: 'Inter', system-ui, sans-serif;
-}
 
 .has-opacity-2 {
   opacity: 0.2;
@@ -78,7 +74,6 @@ html {
 
 #is-login-page {
   overflow: auto;
-  background-image: url('/images/login.jpg');
   background-position: bottom right;
   background-size: cover;
 

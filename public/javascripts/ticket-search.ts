@@ -49,7 +49,7 @@ declare const pts: ptsGlobal
 
     // Output row
     trElement.innerHTML = `<td>
-        <a href="/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
+        <a href="${pts.urlPrefix}/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
         ${ticketObject.ticketNumber}
         </a>
       </td>
@@ -237,7 +237,11 @@ declare const pts: ptsGlobal
       <em>Loading tickets...</em>
       </p>`
 
-    cityssm.postJSON('/tickets/doGetTickets', formElement, processTicketResults)
+    cityssm.postJSON(
+      pts.urlPrefix + '/tickets/doGetTickets',
+      formElement,
+      processTicketResults
+    )
   }
 
   function resetOffsetAndGetTicketsFunction(): void {

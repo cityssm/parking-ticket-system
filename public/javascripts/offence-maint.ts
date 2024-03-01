@@ -99,7 +99,7 @@ type UpdateOffenceResponseJSON =
 
     function doDelete(): void {
       cityssm.postJSON(
-        '/admin/doDeleteOffence',
+        pts.urlPrefix + '/admin/doDeleteOffence',
         {
           bylawNumber: offence.bylawNumber,
           locationKey: offence.locationKey
@@ -134,7 +134,7 @@ type UpdateOffenceResponseJSON =
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        '/admin/doUpdateOffence',
+        pts.urlPrefix + '/admin/doUpdateOffence',
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as UpdateOffenceResponseJSON
@@ -233,7 +233,7 @@ type UpdateOffenceResponseJSON =
     callbackFunction?: (responseJSON: UpdateOffenceResponseJSON) => void
   ): void {
     cityssm.postJSON(
-      '/admin/doAddOffence',
+      pts.urlPrefix + '/admin/doAddOffence',
       {
         bylawNumber,
         locationKey,
@@ -388,7 +388,7 @@ type UpdateOffenceResponseJSON =
       onremoved() {
         if (doRefreshOnClose) {
           cityssm.postJSON(
-            '/offences/doGetAllOffences',
+            pts.urlPrefix + '/offences/doGetAllOffences',
             {},
             (rawResponseJSON) => {
               const offenceList = rawResponseJSON as unknown as ParkingOffence[]

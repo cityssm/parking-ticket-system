@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const searchResultsElement = document.querySelector('#container--searchResults');
     function buildPlateTrElementFunction(plateObject) {
         const trElement = document.createElement('tr');
-        const url = `/plates/${plateObject.licencePlateCountry === ''
+        const url = `${pts.urlPrefix}/plates/${plateObject.licencePlateCountry === ''
             ? '_'
             : encodeURIComponent(plateObject.licencePlateCountry)}/${plateObject.licencePlateProvince === ''
             ? '_'
@@ -119,7 +119,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
       <em>Loading licence plates...</em>
       </p>`;
-        cityssm.postJSON('/plates/doGetLicencePlates', formElement, processPlateResultsFunction);
+        cityssm.postJSON(pts.urlPrefix + '/plates/doGetLicencePlates', formElement, processPlateResultsFunction);
     }
     function resetOffsetAndGetLicencePlatesFunction() {
         offsetElement.value = '0';

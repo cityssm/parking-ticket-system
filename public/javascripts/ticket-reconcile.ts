@@ -28,7 +28,7 @@ declare const pts: ptsGlobal
     const logIndex = buttonElement.dataset.logIndex
 
     cityssm.postJSON(
-      '/tickets/doAcknowledgeLookupError',
+      pts.urlPrefix + '/tickets/doAcknowledgeLookupError',
       {
         batchId,
         logIndex
@@ -73,7 +73,7 @@ declare const pts: ptsGlobal
 
     function doClear(): void {
       cityssm.postJSON(
-        '/tickets/doDeleteStatus',
+        pts.urlPrefix + '/tickets/doDeleteStatus',
         {
           ticketId: trElement.dataset.ticketId,
           statusIndex: anchorElement.dataset.statusIndex
@@ -137,7 +137,7 @@ declare const pts: ptsGlobal
       const recordDate = trElement.dataset.recordDate
 
       cityssm.postJSON(
-        '/tickets/doReconcileAsMatch',
+        pts.urlPrefix + '/tickets/doReconcileAsMatch',
         {
           licencePlateCountry,
           licencePlateProvince,
@@ -257,7 +257,7 @@ declare const pts: ptsGlobal
       const recordDate = trElement.dataset.recordDate
 
       cityssm.postJSON(
-        '/tickets/doReconcileAsError',
+        pts.urlPrefix + '/tickets/doReconcileAsError',
         {
           licencePlateCountry,
           licencePlateProvince,
@@ -383,7 +383,7 @@ declare const pts: ptsGlobal
 
       function doReconcile(): void {
         cityssm.postJSON(
-          '/tickets/doQuickReconcileMatches',
+          pts.urlPrefix + '/tickets/doQuickReconcileMatches',
           {},
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as {

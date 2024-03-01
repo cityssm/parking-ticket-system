@@ -27,6 +27,10 @@ configFallbackValues.set('application.feature_mtoExportImport', false)
 configFallbackValues.set('application.task_nhtsa.runTask', false)
 configFallbackValues.set('application.task_nhtsa.executeHour', 2)
 
+configFallbackValues.set('reverseProxy.disableCompression', false)
+configFallbackValues.set('reverseProxy.disableEtag', false)
+configFallbackValues.set('reverseProxy.urlPrefix', '')
+
 configFallbackValues.set('session.cookieName', 'parking-ticket-system-user-sid')
 configFallbackValues.set('session.secret', 'cityssm/parking-ticket-system')
 configFallbackValues.set('session.maxAgeMillis', 60 * 60 * 1000)
@@ -101,6 +105,7 @@ export function getConfigProperty(
     | 'application.applicationName'
     | 'application.logoURL'
     | 'application.userDomain'
+    | 'reverseProxy.urlPrefix'
     | 'session.cookieName'
     | 'session.secret'
     | 'defaults.country'

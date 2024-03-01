@@ -5,7 +5,7 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
         <li class="is-active">
           <a href="#" aria-current="page">
             <span class="icon is-small"><i class="fas fa-cog" aria-hidden="true"></i></span>
@@ -53,7 +53,7 @@
             <% if (counts.parkingTickets === 0) { %>
               <span class="has-text-grey-dark">(No Action Necessary)</span>
             <% } else { %>
-              <a class="button is-primary" href="/reports/cleanup-parkingTickets?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+              <a class="button is-primary" href="<%= urlPrefix %>/reports/cleanup-parkingTickets?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
                 Export
               </a>
               <button class="button is-warning is-purge-button" data-cy="purge" type="button" data-table="parkingTickets">
@@ -74,7 +74,7 @@
             <% if (counts.parkingTicketRemarks === 0) { %>
               <span class="has-text-grey-dark">(No Action Necessary)</span>
             <% } else { %>
-              <a class="button is-primary" href="/reports/cleanup-parkingTicketRemarks?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+              <a class="button is-primary" href="<%= urlPrefix %>/reports/cleanup-parkingTicketRemarks?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
                 Export
               </a>
               <button class="button is-warning is-purge-button" data-cy="purge" type="button" data-table="parkingTicketRemarks">
@@ -95,7 +95,7 @@
             <% if (counts.parkingTicketStatusLog === 0) { %>
               <span class="has-text-grey-dark">(No Action Necessary)</span>
             <% } else { %>
-              <a class="button is-primary" href="/reports/cleanup-parkingTicketStatusLog?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+              <a class="button is-primary" href="<%= urlPrefix %>/reports/cleanup-parkingTicketStatusLog?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
                 Export
               </a>
               <button class="button is-warning is-purge-button" data-cy="purge" type="button" data-table="parkingTicketStatusLog">
@@ -116,7 +116,7 @@
             <% if (counts.licencePlateOwners === 0) { %>
               <span class="has-text-grey-dark">(No Action Necessary)</span>
             <% } else { %>
-              <a class="button is-primary" href="/reports/cleanup-licencePlateOwners?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
+              <a class="button is-primary" href="<%= urlPrefix %>/reports/cleanup-licencePlateOwners?recordDelete_timeMillis=<%= counts.recordDelete_timeMillis %>" download>
                 Export
               </a>
               <button class="button is-warning is-purge-button" data-cy="purge" type="button" data-table="licencePlateOwners">
@@ -156,7 +156,7 @@
             <% if (counts.parkingOffences === 0) { %>
               <span class="has-text-grey-dark">(No Action Necessary)</span>
             <% } else { %>
-              <a class="button is-primary" href="/reports/cleanup-parkingOffences" download>
+              <a class="button is-primary" href="<%= urlPrefix %>/reports/cleanup-parkingOffences" download>
                 Export
               </a>
               <button class="button is-warning is-purge-button" data-cy="purge" type="button" data-table="parkingOffences">
@@ -177,7 +177,7 @@
             <% if (counts.parkingLocations === 0) { %>
               <span class="has-text-grey-dark">(No Action Necessary)</span>
             <% } else { %>
-              <a class="button is-primary" href="/reports/cleanup-parkingLocations" download>
+              <a class="button is-primary" href="<%= urlPrefix %>/reports/cleanup-parkingLocations" download>
                 Export
               </a>
               <button class="button is-warning is-purge-button" data-cy="purge" type="button" data-table="parkingLocations">
@@ -198,7 +198,7 @@
             <% if (counts.parkingBylaws === 0) { %>
               <span class="has-text-grey-dark">(No Action Necessary)</span>
             <% } else { %>
-              <a class="button is-primary" href="/reports/cleanup-parkingBylaws" download>
+              <a class="button is-primary" href="<%= urlPrefix %>/reports/cleanup-parkingBylaws" download>
                 Export
               </a>
               <button class="button is-warning is-purge-button" data-cy="purge" type="button" data-table="parkingBylaws">
@@ -218,6 +218,6 @@
 <script>
   exports.recordDelete_timeMillis = <%= counts.recordDelete_timeMillis %>;
 </script>
-<script src="/javascripts/admin-cleanup.js"></script>
+<script src="<%= urlPrefix %>/javascripts/admin-cleanup.js"></script>
 
 <%- include('_footerB'); -%>

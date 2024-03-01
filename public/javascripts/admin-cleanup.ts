@@ -5,8 +5,11 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { ptsGlobal } from '../../types/publicTypes.js'
+
 declare const cityssm: cityssmGlobal
 declare const bulmaJS: BulmaJS
+declare const pts: ptsGlobal
 ;(() => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const recordDelete_timeMillis: number = exports.recordDelete_timeMillis
@@ -22,7 +25,7 @@ declare const bulmaJS: BulmaJS
 
     function purgeFunction(): void {
       cityssm.postJSON(
-        '/admin/doCleanupTable',
+        pts.urlPrefix + '/admin/doCleanupTable',
         {
           table,
           recordDelete_timeMillis

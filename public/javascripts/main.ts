@@ -4,11 +4,17 @@
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-import type { ConfigLicencePlateCountry, ConfigLocationClass, ConfigParkingTicketStatus } from '../../types/configTypes.js'
+import type {
+  ConfigLicencePlateCountry,
+  ConfigLocationClass,
+  ConfigParkingTicketStatus
+} from '../../types/configTypes.js'
 import type { ptsGlobal } from '../../types/publicTypes.js'
 
 declare const cityssm: cityssmGlobal
-const pts: Partial<ptsGlobal> = {}
+const pts: Partial<ptsGlobal> = {
+  urlPrefix: document.querySelector('main')?.dataset.urlPrefix
+}
 
 // CONFIG DEFAULTS
 
@@ -57,7 +63,7 @@ interface DefaultConfigProperties {
     }
 
     cityssm.postJSON(
-      '/dashboard/doGetDefaultConfigProperties',
+      pts.urlPrefix + '/dashboard/doGetDefaultConfigProperties',
       {},
       (rawResponseJSON) => {
         const defaultConfigPropertiesResult =
@@ -197,10 +203,7 @@ interface DefaultConfigProperties {
     }
   }
 
-  const ticketStatusKeyToObject = new Map<
-    string,
-    ConfigParkingTicketStatus
-  >()
+  const ticketStatusKeyToObject = new Map<string, ConfigParkingTicketStatus>()
   let ticketStatusKeyToObjectIsLoaded = false
 
   pts.getTicketStatus = (statusKey) => {
@@ -232,10 +235,7 @@ interface DefaultConfigProperties {
       : noResult
   }
 
-  const locationClassKeyToObject = new Map<
-    string,
-    ConfigLocationClass
-  >()
+  const locationClassKeyToObject = new Map<string, ConfigLocationClass>()
   let locationClassKeyToObjectIsLoaded = false
 
   pts.getLocationClass = (locationClassKey) => {

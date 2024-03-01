@@ -6,6 +6,7 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { ptsGlobal } from '../../types/publicTypes.js'
 import type {
   ParkingTicket,
   ParkingTicketConvictionBatch
@@ -13,6 +14,7 @@ import type {
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
+declare const pts: ptsGlobal
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ;(() => {
@@ -50,7 +52,7 @@ declare const cityssm: cityssmGlobal
     const ticketId = convictableTickets[index].ticketId
 
     cityssm.postJSON(
-      '/tickets/doAddTicketToConvictionBatch',
+      pts.urlPrefix + '/tickets/doAddTicketToConvictionBatch',
       {
         batchId: currentBatch.batchId,
         ticketId
@@ -92,7 +94,7 @@ declare const cityssm: cityssmGlobal
 
     function addFunction(): void {
       cityssm.postJSON(
-        '/tickets-ontario/doAddAllTicketsToConvictionBatch',
+        pts.urlPrefix + '/tickets-ontario/doAddAllTicketsToConvictionBatch',
         {
           batchId: currentBatch.batchId,
           ticketIds: displayedTicketIds
@@ -196,7 +198,7 @@ declare const cityssm: cityssmGlobal
       const trElement = document.createElement('tr')
 
       trElement.innerHTML = `<td>
-          <a data-tooltip="View Ticket (Opens in New Window)" href="/tickets/${ticket.ticketId.toString()}" target="_blank">
+          <a data-tooltip="View Ticket (Opens in New Window)" href="${pts.urlPrefix}/tickets/${ticket.ticketId.toString()}" target="_blank">
           ${cityssm.escapeHTML(ticket.ticketNumber)}
           </a>
         </td>
@@ -284,7 +286,7 @@ declare const cityssm: cityssmGlobal
     const ticketId = currentBatch.batchEntries[index].ticketId
 
     cityssm.postJSON(
-      '/tickets-ontario/doRemoveTicketFromConvictionBatch',
+      pts.urlPrefix + '/tickets-ontario/doRemoveTicketFromConvictionBatch',
       {
         batchId: currentBatch.batchId,
         ticketId
@@ -317,7 +319,7 @@ declare const cityssm: cityssmGlobal
 
     function doClear(): void {
       cityssm.postJSON(
-        '/tickets-ontario/doClearConvictionBatch',
+        pts.urlPrefix + '/tickets-ontario/doClearConvictionBatch',
         {
           batchId: currentBatch.batchId
         },
@@ -365,7 +367,7 @@ declare const cityssm: cityssmGlobal
 
   function doLock(): void {
     cityssm.postJSON(
-      '/tickets/doLockConvictionBatch',
+      pts.urlPrefix + '/tickets/doLockConvictionBatch',
       {
         batchId: currentBatch.batchId
       },
@@ -410,7 +412,7 @@ declare const cityssm: cityssmGlobal
 
   function doUnlock(): void {
     cityssm.postJSON(
-      '/tickets/doUnlockConvictionBatch',
+      pts.urlPrefix + '/tickets/doUnlockConvictionBatch',
       {
         batchId: currentBatch.batchId
       },
@@ -454,7 +456,7 @@ declare const cityssm: cityssmGlobal
 
     function doMarkAsSent(): void {
       cityssm.postJSON(
-        '/tickets/doMarkConvictionBatchSent',
+        pts.urlPrefix + '/tickets/doMarkConvictionBatchSent',
         {
           batchId: currentBatch.batchId
         },
@@ -531,7 +533,7 @@ declare const cityssm: cityssmGlobal
       const trElement = document.createElement('tr')
 
       trElement.innerHTML = `<td>
-          <a href="/tickets/${batchEntry.ticketId.toString()}" target="_blank">
+          <a href="${pts.urlPrefix}/tickets/${batchEntry.ticketId.toString()}" target="_blank">
             ${batchEntry.ticketNumber}
           </a>
         </td>
@@ -635,7 +637,7 @@ declare const cityssm: cityssmGlobal
   function confirmCreateBatch(): void {
     function doCreate(): void {
       cityssm.postJSON(
-        '/tickets/doCreateConvictionBatch',
+        pts.urlPrefix + '/tickets/doCreateConvictionBatch',
         {},
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as {
@@ -677,7 +679,7 @@ declare const cityssm: cityssmGlobal
           .batchId
 
         cityssm.postJSON(
-          '/tickets/doGetConvictionBatch',
+          pts.urlPrefix + '/tickets/doGetConvictionBatch',
           {
             batchId
           },
@@ -715,7 +717,7 @@ declare const cityssm: cityssmGlobal
           }
 
           cityssm.postJSON(
-            '/tickets/doGetRecentConvictionBatches',
+            pts.urlPrefix + '/tickets/doGetRecentConvictionBatches',
             {},
             (rawResponseJSON) => {
               const batchList =

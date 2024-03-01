@@ -5,8 +5,8 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
-        <li><a href="/tickets">Parking Tickets</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/tickets">Parking Tickets</a></li>
         <li class="is-active"><a href="#" aria-current="page">Convict Parking Tickets</a></li>
       </ul>
     </nav>
@@ -80,6 +80,6 @@
     exports.currentBatch = <%- JSON.stringify(batch) %>;
   <% } %>
 </script>
-<script src="/javascripts/mto-ticketConvict.js"></script>
+<script src="<%= urlPrefix %>/javascripts/mto-ticketConvict.js"></script>
 
 <%- include('_footerB'); -%>

@@ -5,8 +5,8 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
-        <li><a href="/tickets">Parking Tickets</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/tickets">Parking Tickets</a></li>
         <li class="is-active"><a href="#" aria-current="page">Ownership Reconciliation</a></li>
       </ul>
     </nav>
@@ -52,7 +52,7 @@
                     <%= logEntry.licencePlateNumber %>
                   </td>
                   <td>
-                    <a href="/tickets/<%= logEntry.ticketId %>" target="_blank">
+                    <a href="<%= urlPrefix %>/tickets/<%= logEntry.ticketId %>" target="_blank">
                       <%= logEntry.ticketNumber %>
                     </a>
                   </td>
@@ -166,7 +166,7 @@
                   </td>
 
                   <td>
-                    <a href="/tickets/<%= record.ticket_ticketId %>" target="_blank">
+                    <a href="<%= urlPrefix %>/tickets/<%= record.ticket_ticketId %>" target="_blank">
                       <%= record.ticket_ticketNumber %>
                     </a><br />
                     <small class="has-cursor-help has-tooltip-right" data-tooltip="Ticket Issue Date" aria-label="Ticket Issue Date"><%= record.ticket_issueDateString %></small>
@@ -240,6 +240,6 @@
 
 <%- include('_footerA'); -%>
 
-<script src="/javascripts/ticket-reconcile.js"></script>
+<script src="<%= urlPrefix %>/javascripts/ticket-reconcile.js"></script>
 
 <%- include('_footerB'); -%>

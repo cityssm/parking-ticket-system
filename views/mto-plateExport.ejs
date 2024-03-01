@@ -5,8 +5,8 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
-        <li><a href="/plates">Licence Plates</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/plates">Licence Plates</a></li>
         <li class="is-active"><a href="#" aria-current="page">MTO Licence Plate Export</a></li>
       </ul>
     </nav>
@@ -117,6 +117,6 @@
   </script>
 <% } %>
 
-<script src="/javascripts/mto-plateExport.js"></script>
+<script src="<%= urlPrefix %>/javascripts/mto-plateExport.js"></script>
 
 <%- include('_footerB'); -%>

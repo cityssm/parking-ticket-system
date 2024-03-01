@@ -3,6 +3,7 @@
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { ptsGlobal } from '../../types/publicTypes.js'
 import type {
   LicencePlateLookupBatch,
   LicencePlateLookupBatchEntry,
@@ -10,6 +11,7 @@ import type {
 } from '../../types/recordTypes.js'
 
 declare const cityssm: cityssmGlobal
+declare const pts: ptsGlobal
 ;(() => {
   const canUpdate = document.querySelector('main')?.dataset.canUpdate === 'true'
 
@@ -51,7 +53,7 @@ declare const cityssm: cityssmGlobal
     ) as HTMLElement
 
     cityssm.postJSON(
-      '/plates/doAddLicencePlateToLookupBatch',
+      pts.urlPrefix + '/plates/doAddLicencePlateToLookupBatch',
       {
         batchId,
         licencePlateCountry: 'CA',
@@ -95,7 +97,7 @@ declare const cityssm: cityssmGlobal
     ) as HTMLElement
 
     cityssm.postJSON(
-      '/plates/doRemoveLicencePlateFromLookupBatch',
+      pts.urlPrefix + '/plates/doRemoveLicencePlateFromLookupBatch',
       {
         batchId,
         ticketId: batchEntry.ticketId,
@@ -121,7 +123,7 @@ declare const cityssm: cityssmGlobal
 
     function clearFunction(): void {
       cityssm.postJSON(
-        '/plates/doClearLookupBatch',
+        pts.urlPrefix + '/plates/doClearLookupBatch',
         {
           batchId
         },
@@ -231,7 +233,7 @@ declare const cityssm: cityssmGlobal
         '<div class="level">' +
         '<div class="level-left"><div class="tags">' +
         '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-        ' href="/tickets/' +
+        ` href="${pts.urlPrefix}/tickets/` +
         encodeURIComponent(ticketRecord.ticketId) +
         '" target="_blank">' +
         cityssm.escapeHTML(ticketRecord.ticketNumber) +
@@ -273,7 +275,7 @@ declare const cityssm: cityssmGlobal
               Parking Ticket${includedTicketIds.length === 1 ? '' : 's'}...`
 
             cityssm.postJSON(
-              '/plates/doAddAllParkingTicketsToLookupBatch',
+              pts.urlPrefix + '/plates/doAddAllParkingTicketsToLookupBatch',
               {
                 batchId,
                 ticketIds: includedTicketIds
@@ -319,7 +321,7 @@ declare const cityssm: cityssmGlobal
       </p>`
 
     cityssm.postJSON(
-      '/plates-ontario/doGetParkingTicketsAvailableForMTOLookup',
+      pts.urlPrefix + '/plates-ontario/doGetParkingTicketsAvailableForMTOLookup',
       {
         batchId,
         issueDaysAgo: availableIssueDaysAgoElement.value
@@ -439,7 +441,7 @@ declare const cityssm: cityssmGlobal
             '</div>') +
         '</div>' +
         '<a class="tag has-tooltip-bottom" data-tooltip="View Ticket (Opens in New Window)"' +
-        ' href="/tickets/' +
+        ` href="${pts.urlPrefix}/tickets/` +
         encodeURIComponent(batchEntry.ticketId) +
         '" target="_blank">' +
         cityssm.escapeHTML(batchEntry.ticketNumber) +
@@ -488,7 +490,7 @@ declare const cityssm: cityssmGlobal
 
   function refreshBatch(): void {
     cityssm.postJSON(
-      '/plates/doGetLookupBatch',
+      pts.urlPrefix + '/plates/doGetLookupBatch',
       {
         batchId
       },
@@ -509,7 +511,7 @@ declare const cityssm: cityssmGlobal
         .dataset.includeLabels
 
       cityssm.postJSON(
-        '/plates/doCreateLookupBatch',
+        pts.urlPrefix + '/plates/doCreateLookupBatch',
         {
           mto_includeLabels
         },
@@ -563,7 +565,7 @@ declare const cityssm: cityssmGlobal
 
     function loadBatches(): void {
       cityssm.postJSON(
-        '/plates/doGetUnreceivedLicencePlateLookupBatches',
+        pts.urlPrefix + '/plates/doGetUnreceivedLicencePlateLookupBatches',
         {},
         (batchList: LicencePlateLookupBatch[]) => {
           if (batchList.length === 0) {
@@ -663,7 +665,7 @@ declare const cityssm: cityssmGlobal
 
       function lockFunction(): void {
         cityssm.postJSON(
-          '/plates/doLockLookupBatch',
+          pts.urlPrefix + '/plates/doLockLookupBatch',
           {
             batchId
           },

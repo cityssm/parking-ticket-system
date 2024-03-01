@@ -5,8 +5,8 @@
   <div class="column">
     <nav class="breadcrumb">
       <ul>
-        <li><a href="/dashboard">Home</a></li>
-        <li><a href="/plates">Licence Plates</a></li>
+        <li><a href="<%= urlPrefix %>/dashboard">Home</a></li>
+        <li><a href="<%= urlPrefix %>/plates">Licence Plates</a></li>
         <li class="is-active"><a href="#" aria-current="page">MTO Licence Plate Ownership Import</a></li>
       </ul>
     </nav>
@@ -103,7 +103,7 @@
       <div class="card-content has-text-centered is-hidden" id="step--results">
         <div class="message" id="mtoImport--message"></div>
         <div class="has-text-right mt-3">
-          <a class="button is-link" href="/plates-ontario/mtoImport">
+          <a class="button is-link" href="<%= urlPrefix %>/plates-ontario/mtoImport">
             Upload Another File
           </a>
         </div>
@@ -115,6 +115,6 @@
 
 <%- include('_footerA'); -%>
 
-<script src="/javascripts/mto-plateImport.js"></script>
+<script src="<%= urlPrefix %>/javascripts/mto-plateImport.js"></script>
 
 <%- include('_footerB'); -%>

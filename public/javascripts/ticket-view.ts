@@ -4,8 +4,11 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { ptsGlobal } from '../../types/publicTypes.js'
+
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
+declare const pts: ptsGlobal
 
 interface SuccessResponse {
   success: boolean
@@ -23,7 +26,7 @@ interface SuccessResponse {
 
       function doUnresolve(): void {
         cityssm.postJSON(
-          '/tickets/doUnresolveTicket',
+          pts.urlPrefix + '/tickets/doUnresolveTicket',
           {
             ticketId
           },
@@ -58,7 +61,7 @@ interface SuccessResponse {
 
       function doRestore(): void {
         cityssm.postJSON(
-          '/tickets/doRestoreTicket',
+          pts.urlPrefix + '/tickets/doRestoreTicket',
           {
             ticketId
           },

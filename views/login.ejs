@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="has-background-grey" id="is-login-page" lang="en">
+<html class="has-background-grey" id="is-login-page" lang="en" style="background-image:url('<%= urlPrefix %>/images/login.jpg')">
 
 <head>
   <title>
@@ -9,9 +9,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="icon" href="/images/favicon.png" />
-  <link rel="stylesheet" href="/stylesheets/style.min.css" />
-  <link rel="stylesheet" href="/fa/css/all.min.css" />
+  <link rel="icon" href="<%= urlPrefix %>/images/favicon.png" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/stylesheets/style.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/fa/css/all.min.css" />
 </head>
 
 <body>
@@ -20,13 +20,13 @@
       <main class="box m-4">
         <div class="columns">
           <div class="column has-text-centered">
-            <img src="<%= configFunctions.getConfigProperty("application.logoURL") %>" alt="" style="max-height:250px" />
+            <img src="<%= urlPrefix + configFunctions.getConfigProperty("application.logoURL") %>" alt="" style="max-height:250px" />
           </div>
           <div class="column">
             <h1 class="title is-3 has-text-centered">
               <%= configFunctions.getConfigProperty("application.applicationName") %>
             </h1>
-            <form id="form--login" method="post" action="/login">
+            <form id="form--login" method="post" action="<%= urlPrefix %>/login">
               <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
               <input name="redirect" type="hidden" value="<%= redirect %>" />
               <div class="field has-addons">

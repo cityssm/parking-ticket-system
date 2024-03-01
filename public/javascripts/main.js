@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const pts = {};
+const pts = {
+    urlPrefix: document.querySelector('main')?.dataset.urlPrefix
+};
 ;
 (() => {
     let defaultConfigProperties = {};
@@ -29,7 +31,7 @@ const pts = {};
             callbackFunction();
             return;
         }
-        cityssm.postJSON('/dashboard/doGetDefaultConfigProperties', {}, (rawResponseJSON) => {
+        cityssm.postJSON(pts.urlPrefix + '/dashboard/doGetDefaultConfigProperties', {}, (rawResponseJSON) => {
             const defaultConfigPropertiesResult = rawResponseJSON;
             defaultConfigProperties = defaultConfigPropertiesResult;
             defaultConfigPropertiesIsLoaded = true;
