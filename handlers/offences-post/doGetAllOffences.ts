@@ -1,9 +1,7 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { getParkingOffences } from '../../database/parkingDB/getParkingOffences.js'
 
-export const handler: RequestHandler = (_request, response) => {
+export default function handler(_request: Request, response: Response): void {
   response.json(getParkingOffences())
 }
-
-export default handler

@@ -1,11 +1,11 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import * as mtoFunctions from '../../helpers/functions.mto.js'
+import { exportLicencePlateBatch } from '../../helpers/functions.mto.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const batchId = Number.parseInt(request.params.batchId, 10)
 
-  const output = mtoFunctions.exportLicencePlateBatch(
+  const output = exportLicencePlateBatch(
     batchId,
     request.session.user as PTSUser
   )
@@ -18,5 +18,3 @@ export const handler: RequestHandler = (request, response) => {
 
   response.send(output)
 }
-
-export default handler

@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getParkingOffences = () => {
+export function getParkingOffences() {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -18,7 +18,7 @@ export const getParkingOffences = () => {
         .all();
     database.close();
     return rows;
-};
+}
 export const getParkingOffencesByLocationKey = (locationKey) => {
     const database = sqlite(databasePath, {
         readonly: true

@@ -5,7 +5,7 @@ import * as dateTimeFns from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'
-import { getLookupBatch } from '../database/parkingDB/getLookupBatch.js'
+import getLookupBatch from '../database/parkingDB/getLookupBatch.js'
 import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js'
 import type { LicencePlateLookupBatch } from '../types/recordTypes.js'
 
@@ -252,7 +252,9 @@ export const parsePKRD = (rowData: string): false | PKRDResult => {
     )
     expiryDate.setDate(expiryDate.getDate() - 1)
 
-    record.licencePlateExpiryDate = dateTimeFns.dateToInteger(expiryDate) as number
+    record.licencePlateExpiryDate = dateTimeFns.dateToInteger(
+      expiryDate
+    ) as number
 
     if (record.errorCode !== '') {
       record.vehicleYear = 0

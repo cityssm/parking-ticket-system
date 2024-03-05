@@ -178,12 +178,12 @@ export const getParkingTickets = (
   }
 }
 
-export const getParkingTicketsByLicencePlate = (
+export function getParkingTicketsByLicencePlate(
   licencePlateCountry: string,
   licencePlateProvince: string,
   licencePlateNumber: string,
   sessionUser: PTSUser
-): ParkingTicket[] => {
+): ParkingTicket[] {
   const database = sqlite(databasePath, {
     readonly: true
   })

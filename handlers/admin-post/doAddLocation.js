@@ -1,10 +1,9 @@
 import { addParkingLocation } from '../../database/parkingDB/addParkingLocation.js';
 import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js';
-export const handler = (request, response) => {
+export default function handler(request, response) {
     const results = addParkingLocation(request.body);
     if (results.success) {
         results.locations = getParkingLocations();
     }
-    return response.json(results);
-};
-export default handler;
+    response.json(results);
+}

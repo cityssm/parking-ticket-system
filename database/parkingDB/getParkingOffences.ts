@@ -9,7 +9,7 @@ export interface AddUpdateParkingOffenceReturn {
   offences?: ParkingOffence[]
 }
 
-export const getParkingOffences = (): ParkingOffence[] => {
+export function getParkingOffences(): ParkingOffence[] {
   const database = sqlite(databasePath, {
     readonly: true
   })

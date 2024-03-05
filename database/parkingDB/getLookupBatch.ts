@@ -16,9 +16,9 @@ export interface LookupBatchReturn {
   batch?: LicencePlateLookupBatch
 }
 
-export const getLookupBatch = (
+export default function getLookupBatch(
   batchId_or_negOne: number
-): LicencePlateLookupBatch | undefined => {
+): LicencePlateLookupBatch | undefined {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -74,5 +74,3 @@ export const getLookupBatch = (
 
   return batch
 }
-
-export default getLookupBatch

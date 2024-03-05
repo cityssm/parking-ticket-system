@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express'
 
-import { getLookupBatch } from '../../database/parkingDB/getLookupBatch.js'
+import getLookupBatch from '../../database/parkingDB/getLookupBatch.js'
 import { lockLookupBatch } from '../../database/parkingDB/lockLookupBatch.js'
 
 export const handler: RequestHandler = (request, response) => {

@@ -4,7 +4,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
 
-export function getParkingTicketsAvailableForMTOLookup(
+export default function getParkingTicketsAvailableForMTOLookup(
   currentBatchId: number,
   issueDaysAgo: number
 ): ParkingTicket[] {
@@ -64,5 +64,3 @@ export function getParkingTicketsAvailableForMTOLookup(
 
   return tickets
 }
-
-export default getParkingTicketsAvailableForMTOLookup

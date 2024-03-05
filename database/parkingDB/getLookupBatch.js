@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getLookupBatch = (batchId_or_negOne) => {
+export default function getLookupBatch(batchId_or_negOne) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -38,5 +38,4 @@ export const getLookupBatch = (batchId_or_negOne) => {
         .all(batch.batchId);
     database.close();
     return batch;
-};
-export default getLookupBatch;
+}

@@ -1,7 +1,7 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-import { getLookupBatch } from './getLookupBatch.js';
-export const addLicencePlateToLookupBatch = (requestBody, sessionUser) => {
+import getLookupBatch from './getLookupBatch.js';
+export function addLicencePlateToLookupBatch(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const canUpdateBatch = database
         .prepare(`update LicencePlateLookupBatches
@@ -34,8 +34,8 @@ export const addLicencePlateToLookupBatch = (requestBody, sessionUser) => {
             success: false,
             message: 'Licence plate not added to the batch.  It may be already part of the batch.'
         };
-};
-export const addAllParkingTicketsToLookupBatch = (requestBody, sessionUser) => {
+}
+export function addAllParkingTicketsToLookupBatch(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const canUpdateBatch = database
         .prepare(`update LicencePlateLookupBatches
@@ -71,5 +71,5 @@ export const addAllParkingTicketsToLookupBatch = (requestBody, sessionUser) => {
         success: true,
         batch: getLookupBatch(requestBody.batchId)
     };
-};
+}
 export default addLicencePlateToLookupBatch;

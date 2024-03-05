@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function getUnreceivedLookupBatches(includeUnlocked) {
+export default function getUnreceivedLookupBatches(includeUnlocked) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -24,4 +24,3 @@ export function getUnreceivedLookupBatches(includeUnlocked) {
     }
     return batches;
 }
-export default getUnreceivedLookupBatches;

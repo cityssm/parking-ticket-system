@@ -4,5 +4,4 @@ export interface LookupBatchReturn {
     message?: string;
     batch?: LicencePlateLookupBatch;
 }
-export declare const getLookupBatch: (batchId_or_negOne: number) => LicencePlateLookupBatch | undefined;
-export default getLookupBatch;
+export default function getLookupBatch(batchId_or_negOne: number): LicencePlateLookupBatch | undefined;

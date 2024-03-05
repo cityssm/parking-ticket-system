@@ -1,8 +1,8 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { getUnreceivedLookupBatches } from '../../database/parkingDB/getUnreceivedLookupBatches.js'
+import getUnreceivedLookupBatches from '../../database/parkingDB/getUnreceivedLookupBatches.js'
 
-export const handler: RequestHandler = (_request, response) => {
+export default function handler(_request: Request, response: Response): void {
   const unreceivedBatches = getUnreceivedLookupBatches(false)
 
   response.render('mto-plateImport', {
@@ -10,5 +10,3 @@ export const handler: RequestHandler = (_request, response) => {
     batches: unreceivedBatches
   })
 }
-
-export default handler

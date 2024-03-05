@@ -1,8 +1,8 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { getDatabaseCleanupCounts } from '../../database/parkingDB/getDatabaseCleanupCounts.js'
 
-export const handler: RequestHandler = (_request, response) => {
+export default function handler(_request: Request, response: Response): void {
   const counts = getDatabaseCleanupCounts()
 
   response.render('admin-cleanup', {
@@ -10,5 +10,3 @@ export const handler: RequestHandler = (_request, response) => {
     counts
   })
 }
-
-export default handler

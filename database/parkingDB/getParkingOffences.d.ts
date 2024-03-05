@@ -4,6 +4,6 @@ export interface AddUpdateParkingOffenceReturn {
     message?: string;
     offences?: ParkingOffence[];
 }
-export declare const getParkingOffences: () => ParkingOffence[];
+export declare function getParkingOffences(): ParkingOffence[];
 export declare const getParkingOffencesByLocationKey: (locationKey: string) => ParkingOffence[];
 export default getParkingOffences;

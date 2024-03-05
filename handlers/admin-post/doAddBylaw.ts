@@ -1,16 +1,15 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { addParkingBylaw } from '../../database/parkingDB/addParkingBylaw.js'
 import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
+import type { ParkingBylaw } from '../../types/recordTypes.js'
 
-export const handler: RequestHandler = (request, response) => {
-  const results = addParkingBylaw(request.body)
+export default function handler(request: Request, response: Response): void {
+  const results = addParkingBylaw(request.body as ParkingBylaw)
 
   if (results.success) {
     results.bylaws = getParkingBylawsWithOffenceStats()
   }
 
-  return response.json(results)
+  response.json(results)
 }
-
-export default handler

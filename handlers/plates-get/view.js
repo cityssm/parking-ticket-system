@@ -1,6 +1,6 @@
 import { getAllLicencePlateOwners } from '../../database/parkingDB/getAllLicencePlateOwners.js';
 import { getParkingTicketsByLicencePlate } from '../../database/parkingDB/getParkingTickets.js';
-export async function handler(request, response) {
+export default async function handler(request, response) {
     let licencePlateCountry = request.params.licencePlateCountry;
     if (licencePlateCountry === '_') {
         licencePlateCountry = '';
@@ -24,4 +24,3 @@ export async function handler(request, response) {
         tickets
     });
 }
-export default handler;

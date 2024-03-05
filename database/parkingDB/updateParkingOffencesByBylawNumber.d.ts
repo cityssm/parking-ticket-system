@@ -1,10 +1,11 @@
 import type { ParkingBylaw } from '../../types/recordTypes.js';
-export declare const updateParkingOffencesByBylawNumber: (requestBody: {
+export interface UpdateParkingOffencesByBylawNumberForm {
     bylawNumber: string;
     offenceAmount: string;
     discountDays: string;
     discountOffenceAmount: string;
-}) => {
+}
+export declare function updateParkingOffencesByBylawNumber(requestBody: UpdateParkingOffencesByBylawNumberForm): {
     success: boolean;
     bylaws?: ParkingBylaw[];
 };

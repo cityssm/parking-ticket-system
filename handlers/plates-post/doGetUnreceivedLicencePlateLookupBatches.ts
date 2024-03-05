@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express'
 
-import { getUnreceivedLookupBatches } from '../../database/parkingDB/getUnreceivedLookupBatches.js'
+import getUnreceivedLookupBatches from '../../database/parkingDB/getUnreceivedLookupBatches.js'
 
 export const handler: RequestHandler = (request, response) => {
   const batches = getUnreceivedLookupBatches(

@@ -104,6 +104,7 @@ declare const pts: ptsGlobal
       10
     )
 
+    // eslint-disable-next-line security/detect-object-injection
     const statusObject = statusList[index]
 
     function doSubmit(formEvent: Event): void {

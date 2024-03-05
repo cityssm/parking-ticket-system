@@ -1,4 +1,4 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { cleanupLicencePlateOwnersTable } from '../../database/parkingDB/cleanupLicencePlateOwnersTable.js'
 import { cleanupParkingBylawsTable } from '../../database/parkingDB/cleanupParkingBylawsTable.js'
@@ -9,11 +9,11 @@ import { cleanupParkingTicketStatusLog } from '../../database/parkingDB/cleanupP
 import { cleanupParkingTicketsTable } from '../../database/parkingDB/cleanupParkingTicketsTable.js'
 import { getConfigProperty } from '../../helpers/functions.config.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const table = request.body.table
 
   const recordDeleteTimeMillis = Math.min(
-    Number.parseInt(request.body.recordDelete_timeMillis, 10),
+    request.body.recordDelete_timeMillis as number,
     Date.now() - getConfigProperty('databaseCleanup.windowDays') * 86_400 * 1000
   )
 
@@ -56,7 +56,5 @@ export const handler: RequestHandler = (request, response) => {
     }
   }
 
-  return response.json({ success })
+  response.json({ success })
 }
-
-export default handler

@@ -1,5 +1,5 @@
 import { getConfigProperty } from '../../helpers/functions.config.js';
-export const handler = (_request, response) => {
+export default function handler(_request, response) {
     response.json({
         locationClasses: getConfigProperty('locationClasses'),
         ticketNumber_fieldLabel: getConfigProperty('parkingTickets.ticketNumber.fieldLabel'),
@@ -8,5 +8,4 @@ export const handler = (_request, response) => {
         licencePlateProvinceAliases: getConfigProperty('licencePlateProvinceAliases'),
         licencePlateProvinces: getConfigProperty('licencePlateProvinces')
     });
-};
-export default handler;
+}

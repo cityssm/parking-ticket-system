@@ -1,8 +1,8 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
 
-export const handler: RequestHandler = (_request, response) => {
+export default function handler(_request: Request, response: Response): void {
   const bylaws = getParkingBylawsWithOffenceStats()
 
   response.render('bylaw-maint', {
@@ -10,5 +10,3 @@ export const handler: RequestHandler = (_request, response) => {
     bylaws
   })
 }
-
-export default handler

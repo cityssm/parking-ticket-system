@@ -17,5 +17,5 @@ interface GetParkingTicketsReturn {
     tickets: ParkingTicket[];
 }
 export declare const getParkingTickets: (sessionUser: PTSUser, queryOptions: GetParkingTicketsQueryOptions) => GetParkingTicketsReturn;
-export declare const getParkingTicketsByLicencePlate: (licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, sessionUser: PTSUser) => ParkingTicket[];
+export declare function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, sessionUser: PTSUser): ParkingTicket[];
 export default getParkingTickets;

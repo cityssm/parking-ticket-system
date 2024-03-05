@@ -6,9 +6,9 @@ import { cleanupParkingTicketRemarksTable } from '../../database/parkingDB/clean
 import { cleanupParkingTicketStatusLog } from '../../database/parkingDB/cleanupParkingTicketStatusLog.js';
 import { cleanupParkingTicketsTable } from '../../database/parkingDB/cleanupParkingTicketsTable.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
-export const handler = (request, response) => {
+export default function handler(request, response) {
     const table = request.body.table;
-    const recordDeleteTimeMillis = Math.min(Number.parseInt(request.body.recordDelete_timeMillis, 10), Date.now() - getConfigProperty('databaseCleanup.windowDays') * 86400 * 1000);
+    const recordDeleteTimeMillis = Math.min(request.body.recordDelete_timeMillis, Date.now() - getConfigProperty('databaseCleanup.windowDays') * 86400 * 1000);
     let success = false;
     switch (table) {
         case 'parkingTickets': {
@@ -40,6 +40,5 @@ export const handler = (request, response) => {
             break;
         }
     }
-    return response.json({ success });
-};
-export default handler;
+    response.json({ success });
+}

@@ -102,7 +102,7 @@ export const getParkingTickets = (sessionUser, queryOptions) => {
         tickets: rows
     };
 };
-export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlateProvince, licencePlateNumber, sessionUser) => {
+export function getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, sessionUser) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -129,5 +129,5 @@ export const getParkingTicketsByLicencePlate = (licencePlateCountry, licencePlat
         addCalculatedFields(ticket, sessionUser);
     }
     return rows;
-};
+}
 export default getParkingTickets;

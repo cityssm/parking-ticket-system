@@ -6,7 +6,7 @@ import type {
   LicencePlateLookupBatchEntry
 } from '../../types/recordTypes.js'
 
-import { getLookupBatch } from './getLookupBatch.js'
+import getLookupBatch from './getLookupBatch.js'
 
 interface AddLicencePlateToLookupBatchReturn {
   success: boolean
@@ -14,14 +14,13 @@ interface AddLicencePlateToLookupBatchReturn {
   batch?: LicencePlateLookupBatch
 }
 
-export const addLicencePlateToLookupBatch = (
+export function addLicencePlateToLookupBatch(
   requestBody: LicencePlateLookupBatchEntry,
   sessionUser: PTSUser
-): AddLicencePlateToLookupBatchReturn => {
+): AddLicencePlateToLookupBatchReturn {
   const database = sqlite(databasePath)
 
   // Ensure batch is not locked
-
   const canUpdateBatch = database
     .prepare(
       `update LicencePlateLookupBatches
@@ -76,14 +75,13 @@ export interface AddAllParkingTicketsToLookupBatchBody {
   ticketIds: string[]
 }
 
-export const addAllParkingTicketsToLookupBatch = (
+export function addAllParkingTicketsToLookupBatch(
   requestBody: AddAllParkingTicketsToLookupBatchBody,
   sessionUser: PTSUser
-): AddLicencePlateToLookupBatchReturn => {
+): AddLicencePlateToLookupBatchReturn {
   const database = sqlite(databasePath)
 
   // Ensure batch is not locked
-
   const canUpdateBatch = database
     .prepare(
       `update LicencePlateLookupBatches

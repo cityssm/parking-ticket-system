@@ -1,16 +1,14 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { getParkingTicketsAvailableForMTOLookup } from '../../database/parkingDB-ontario/getParkingTicketsAvailableForMTOLookup.js'
+import getParkingTicketsAvailableForMTOLookup from '../../database/parkingDB-ontario/getParkingTicketsAvailableForMTOLookup.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const batchId = Number.parseInt(request.body.batchId as string, 10)
   const issueDaysAgo = Number.parseInt(request.body.issueDaysAgo as string, 10)
 
   const tickets = getParkingTicketsAvailableForMTOLookup(batchId, issueDaysAgo)
 
-  return response.json({
+  response.json({
     tickets
   })
 }
-
-export default handler

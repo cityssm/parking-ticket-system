@@ -4,7 +4,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LicencePlateLookupBatch } from '../../types/recordTypes.js'
 
-export function getUnreceivedLookupBatches(
+export default function getUnreceivedLookupBatches(
   includeUnlocked: boolean
 ): LicencePlateLookupBatch[] {
   const database = sqlite(databasePath, {
@@ -39,5 +39,3 @@ export function getUnreceivedLookupBatches(
 
   return batches
 }
-
-export default getUnreceivedLookupBatches

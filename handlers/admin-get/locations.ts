@@ -1,8 +1,8 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { getParkingLocations } from '../../database/parkingDB/getParkingLocations.js'
 
-export const handler: RequestHandler = (_request, response) => {
+export default function handler(_request: Request, response: Response): void {
   const locations = getParkingLocations()
 
   response.render('location-maint', {
@@ -10,5 +10,3 @@ export const handler: RequestHandler = (_request, response) => {
     locations
   })
 }
-
-export default handler

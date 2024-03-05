@@ -3,16 +3,19 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingBylaw } from '../../types/recordTypes.js'
 
-export const updateParkingOffencesByBylawNumber = (requestBody: {
+export interface UpdateParkingOffencesByBylawNumberForm {
   bylawNumber: string
   offenceAmount: string
   discountDays: string
   discountOffenceAmount: string
-}): { success: boolean; bylaws?: ParkingBylaw[] } => {
+}
+
+export function updateParkingOffencesByBylawNumber(
+  requestBody: UpdateParkingOffencesByBylawNumberForm
+): { success: boolean; bylaws?: ParkingBylaw[] } {
   const database = sqlite(databasePath)
 
   // Do update
-
   const info = database
     .prepare(
       `update ParkingOffences

@@ -32,7 +32,8 @@ type UpdateOffenceResponseJSON =
 ;(() => {
   const offenceMap = new Map<string, ParkingOffence>()
 
-  const offenceAccountNumberPatternString = exports.accountNumberPattern as string
+  const offenceAccountNumberPatternString =
+    exports.accountNumberPattern as string
   delete exports.accountNumberPattern
 
   const locationMap = new Map<string, ParkingLocation>()
@@ -171,12 +172,14 @@ type UpdateOffenceResponseJSON =
         ).textContent = pts.getLocationClass(
           location.locationClassKey
         ).locationClass
-
-        document.querySelector('#offenceEdit--bylawNumberSpan').textContent =
-          bylaw?.bylawNumber ?? ''
-
-        document.querySelector('#offenceEdit--bylawDescription').textContent =
-          bylaw?.bylawDescription ?? ''
+        ;(
+          document.querySelector('#offenceEdit--bylawNumberSpan') as HTMLElement
+        ).textContent = bylaw?.bylawNumber ?? ''
+        ;(
+          document.querySelector(
+            '#offenceEdit--bylawDescription'
+          ) as HTMLElement
+        ).textContent = bylaw?.bylawDescription ?? ''
         ;(
           document.querySelector(
             '#offenceEdit--parkingOffence'
@@ -299,10 +302,12 @@ type UpdateOffenceResponseJSON =
             </span>`
         }
 
-        modalElement.querySelector('.modal-card-title').innerHTML = titleHTML
-
-        document.querySelector('#addContainer--selected').innerHTML =
-          selectedHTML
+        ;(
+          modalElement.querySelector('.modal-card-title') as HTMLElement
+        ).innerHTML = titleHTML
+        ;(
+          document.querySelector('#addContainer--selected') as HTMLElement
+        ).innerHTML = selectedHTML
       },
       onshown() {
         const listElement = document.createElement('div')

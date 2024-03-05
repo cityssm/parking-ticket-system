@@ -77,10 +77,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.querySelector('#offenceEdit--bylawNumber').value = offence.bylawNumber;
                 document.querySelector('#offenceEdit--locationName').textContent = location.locationName;
                 document.querySelector('#offenceEdit--locationClass').textContent = pts.getLocationClass(location.locationClassKey).locationClass;
-                document.querySelector('#offenceEdit--bylawNumberSpan').textContent =
-                    bylaw?.bylawNumber ?? '';
-                document.querySelector('#offenceEdit--bylawDescription').textContent =
-                    bylaw?.bylawDescription ?? '';
+                document.querySelector('#offenceEdit--bylawNumberSpan').textContent = bylaw?.bylawNumber ?? '';
+                document.querySelector('#offenceEdit--bylawDescription').textContent = bylaw?.bylawDescription ?? '';
                 document.querySelector('#offenceEdit--parkingOffence').value = offence.parkingOffence;
                 document.querySelector('#offenceEdit--offenceAmount').value = offence.offenceAmount.toFixed(2);
                 document.querySelector('#offenceEdit--discountOffenceAmount').value = offence.discountOffenceAmount.toFixed(2);
@@ -155,9 +153,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ${bylaw.bylawDescription}
             </span>`;
                 }
+                ;
                 modalElement.querySelector('.modal-card-title').innerHTML = titleHTML;
-                document.querySelector('#addContainer--selected').innerHTML =
-                    selectedHTML;
+                document.querySelector('#addContainer--selected').innerHTML = selectedHTML;
             },
             onshown() {
                 const listElement = document.createElement('div');
