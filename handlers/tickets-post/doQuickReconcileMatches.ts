@@ -1,11 +1,14 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
 import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js'
 import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js'
 
-export const handler: RequestHandler = (request, response) => {
-  const records = getOwnershipReconciliationRecords()
+export async function handler(
+  request: Request,
+  response: Response
+): Promise<void> {
+  const records = await getOwnershipReconciliationRecords()
 
   const statusRecords: Array<{ ticketId: number; statusIndex: number }> = []
 
@@ -36,7 +39,7 @@ export const handler: RequestHandler = (request, response) => {
     }
   }
 
-  return response.json({
+  response.json({
     success: true,
     statusRecords
   })

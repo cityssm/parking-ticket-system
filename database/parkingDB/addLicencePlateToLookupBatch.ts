@@ -71,7 +71,7 @@ export const addLicencePlateToLookupBatch = (
       }
 }
 
-interface AddAllParkingTicketsToLookupBatchBody {
+export interface AddAllParkingTicketsToLookupBatchBody {
   batchId: number
   ticketIds: string[]
 }

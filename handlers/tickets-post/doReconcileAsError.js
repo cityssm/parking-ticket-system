@@ -1,12 +1,13 @@
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js';
-export const handler = (request, response) => {
-    const ownerRecord = getLicencePlateOwner(request.body.licencePlateCountry, request.body.licencePlateProvince, request.body.licencePlateNumber, request.body.recordDate);
+export async function handler(request, response) {
+    const ownerRecord = await getLicencePlateOwner(request.body.licencePlateCountry, request.body.licencePlateProvince, request.body.licencePlateNumber, Number.parseInt(request.body.recordDate, 10));
     if (ownerRecord === undefined) {
-        return response.json({
+        response.json({
             success: false,
             message: 'Ownership record not found.'
         });
+        return;
     }
     const statusResponse = createParkingTicketStatus({
         recordType: 'status',
@@ -15,6 +16,6 @@ export const handler = (request, response) => {
         statusField: ownerRecord.vehicleNCIC,
         statusNote: ''
     }, request.session.user, false);
-    return response.json(statusResponse);
-};
+    response.json(statusResponse);
+}
 export default handler;

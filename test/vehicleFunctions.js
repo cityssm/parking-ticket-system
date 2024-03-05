@@ -18,11 +18,11 @@ describe('helpers/vehicleFunctions', () => {
         }).timeout(60000);
     });
     describe('#isNCICExclusivelyTrailer', () => {
-        it('should return true for "USCA" (U.S. Cargo Inc.)', () => {
-            assert.strictEqual(vehicleFunctions.isNCICExclusivelyTrailer('USCA'), true);
+        it('should return true for "USCA" (U.S. Cargo Inc.)', async () => {
+            assert.strictEqual(await vehicleFunctions.isNCICExclusivelyTrailer('USCA'), true);
         });
-        it('should return false for "BOMB" (Bombardier)', () => {
-            assert.strictEqual(vehicleFunctions.isNCICExclusivelyTrailer('BOMB'), false);
+        it('should return false for "BOMB" (Bombardier)', async () => {
+            assert.strictEqual(await vehicleFunctions.isNCICExclusivelyTrailer('BOMB'), false);
         });
     });
 });

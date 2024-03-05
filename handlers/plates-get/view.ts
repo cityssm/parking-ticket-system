@@ -1,9 +1,9 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { getAllLicencePlateOwners } from '../../database/parkingDB/getAllLicencePlateOwners.js'
 import { getParkingTicketsByLicencePlate } from '../../database/parkingDB/getParkingTickets.js'
 
-export const handler: RequestHandler = (request, response) => {
+export async function handler(request: Request, response: Response): Promise<void> {
   let licencePlateCountry = request.params.licencePlateCountry
 
   if (licencePlateCountry === '_') {
@@ -22,7 +22,7 @@ export const handler: RequestHandler = (request, response) => {
     licencePlateNumber = ''
   }
 
-  const owners = getAllLicencePlateOwners(
+  const owners = await getAllLicencePlateOwners(
     licencePlateCountry,
     licencePlateProvince,
     licencePlateNumber

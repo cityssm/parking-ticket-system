@@ -6,7 +6,7 @@ import { getLicencePlateOwner } from './getLicencePlateOwner.js';
 import { getParkingLocation } from './getParkingLocation.js';
 import { getParkingTicketRemarks } from './getParkingTicketRemarks.js';
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js';
-export const getParkingTicket = (ticketId, sessionUser) => {
+export async function getParkingTicket(ticketId, sessionUser) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -41,7 +41,7 @@ export const getParkingTicket = (ticketId, sessionUser) => {
     ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
     ticket.canUpdate = canUpdateObject(ticket, sessionUser);
     if (ticket.ownerLookup_statusKey === 'ownerLookupMatch') {
-        ticket.licencePlateOwner = getLicencePlateOwner(ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, Number.parseInt(ticket.ownerLookup_statusField, 10), database);
+        ticket.licencePlateOwner = await getLicencePlateOwner(ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, Number.parseInt(ticket.ownerLookup_statusField, 10), database);
     }
     ticket.location = getParkingLocation(ticket.locationKey, database);
     ticket.statusLog = getParkingTicketStatuses(ticketId, sessionUser, database);
@@ -58,5 +58,5 @@ export const getParkingTicket = (ticketId, sessionUser) => {
     }
     database.close();
     return ticket;
-};
+}
 export default getParkingTicket;

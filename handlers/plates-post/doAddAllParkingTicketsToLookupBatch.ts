@@ -1,10 +1,13 @@
 import type { RequestHandler } from 'express'
 
-import { addAllParkingTicketsToLookupBatch } from '../../database/parkingDB/addLicencePlateToLookupBatch.js'
+import {
+  type AddAllParkingTicketsToLookupBatchBody,
+  addAllParkingTicketsToLookupBatch
+} from '../../database/parkingDB/addLicencePlateToLookupBatch.js'
 
 export const handler: RequestHandler = (request, response) => {
   const result = addAllParkingTicketsToLookupBatch(
-    request.body,
+    request.body as AddAllParkingTicketsToLookupBatchBody,
     request.session.user as PTSUser
   )
 

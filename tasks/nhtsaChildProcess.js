@@ -17,7 +17,7 @@ async function doTask() {
             break;
         }
         cutoffDate = ncicRecord.recordDateMax;
-        const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
+        const vehicleMake = await vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
         debug(`Processing ${vehicleMake}`);
         await vehicleFunctions.getModelsByMake(vehicleMake);
     }

@@ -1,8 +1,8 @@
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js';
 import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js';
-export const handler = (request, response) => {
-    const records = getOwnershipReconciliationRecords();
+export async function handler(request, response) {
+    const records = await getOwnershipReconciliationRecords();
     const statusRecords = [];
     for (const record of records) {
         if (!record.isVehicleMakeMatch || !record.isLicencePlateExpiryDateMatch) {
@@ -23,9 +23,9 @@ export const handler = (request, response) => {
             });
         }
     }
-    return response.json({
+    response.json({
         success: true,
         statusRecords
     });
-};
+}
 export default handler;

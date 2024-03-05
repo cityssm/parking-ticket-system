@@ -1,192 +1,29 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
+import { Configurator } from '@cityssm/configurator'
+
 import config from '../data/config.js'
-import type {
-  ConfigActiveDirectory,
-  ConfigLicencePlateCountry,
-  ConfigLocationClass,
-  ConfigParkingTicketStatus
-} from '../types/configTypes.js'
+import { configDefaultValues } from '../data/configDefaultValues.js'
+import type { ConfigParkingTicketStatus } from '../types/configTypes.js'
 
-/*
- * SET UP FALLBACK VALUES
- */
-
-const configFallbackValues = new Map<string, unknown>()
-
-configFallbackValues.set('application.applicationName', 'Parking Ticket System')
-configFallbackValues.set('application.logoURL', '/images/noParking.svg')
-configFallbackValues.set('application.httpPort', 4000)
-configFallbackValues.set('application.userDomain', '')
-configFallbackValues.set('application.useTestDatabases', false)
-configFallbackValues.set('application.maximumProcesses', 4)
-
-configFallbackValues.set('application.feature_mtoExportImport', false)
-
-configFallbackValues.set('application.task_nhtsa.runTask', false)
-configFallbackValues.set('application.task_nhtsa.executeHour', 2)
-
-configFallbackValues.set('reverseProxy.disableCompression', false)
-configFallbackValues.set('reverseProxy.disableEtag', false)
-configFallbackValues.set('reverseProxy.urlPrefix', '')
-
-configFallbackValues.set('session.cookieName', 'parking-ticket-system-user-sid')
-configFallbackValues.set('session.secret', 'cityssm/parking-ticket-system')
-configFallbackValues.set('session.maxAgeMillis', 60 * 60 * 1000)
-configFallbackValues.set('session.doKeepAlive', false)
-
-configFallbackValues.set('users.testing', [])
-configFallbackValues.set('users.canLogin', [])
-configFallbackValues.set('users.canUpdate', [])
-configFallbackValues.set('users.isAdmin', [])
-configFallbackValues.set('users.isOperator', [])
-
-configFallbackValues.set('defaults.country', '')
-configFallbackValues.set('defaults.province', '')
-
-configFallbackValues.set(
-  'parkingTickets.ticketNumber.fieldLabel',
-  'Ticket Number'
+const configurator = new Configurator(
+  configDefaultValues,
+  config as unknown as Record<string, unknown>
 )
-configFallbackValues.set(
-  'parkingTickets.ticketNumber.pattern',
-  /^[\w -]{1,10}$/
-)
-configFallbackValues.set('parkingTickets.ticketNumber.isUnique', true)
-configFallbackValues.set(
-  'parkingTickets.ticketNumber.nextTicketNumberFn',
-  () => {
-    return ''
-  }
-)
-configFallbackValues.set('parkingTickets.updateWindowMillis', 3 * 86_400 * 1000)
-
-configFallbackValues.set(
-  'parkingTickets.licencePlateExpiryDate.includeDay',
-  false
-)
-
-configFallbackValues.set('parkingTicketStatuses', [])
-
-configFallbackValues.set(
-  'parkingOffences.accountNumber.pattern',
-  /^[\w -]{1,20}$/
-)
-
-configFallbackValues.set('locationClasses', [])
-
-configFallbackValues.set(
-  'licencePlateCountryAliases',
-  Object.freeze({
-    CA: 'Canada',
-    US: 'USA'
-  })
-)
-
-configFallbackValues.set('licencePlateProvinceAliases', {})
-
-configFallbackValues.set('licencePlateProvinces', {})
-
-configFallbackValues.set('mtoExportImport.authorizedUser', '')
-
-configFallbackValues.set('databaseCleanup.windowDays', 30)
 
 /*
  * Set up getConfigProperty()
  */
 
-export function getConfigProperty(
-  propertyName: 'activeDirectory'
-): ConfigActiveDirectory
-
-export function getConfigProperty(
-  propertyName:
-    | 'application.applicationName'
-    | 'application.logoURL'
-    | 'application.userDomain'
-    | 'reverseProxy.urlPrefix'
-    | 'session.cookieName'
-    | 'session.secret'
-    | 'defaults.country'
-    | 'defaults.province'
-    | 'parkingTickets.ticketNumber.fieldLabel'
-    | 'mtoExportImport.authorizedUser'
-): string
-
-export function getConfigProperty(
-  propertyName:
-    | 'application.httpPort'
-    | 'application.maximumProcesses'
-    | 'application.task_nhtsa.executeHour'
-    | 'session.maxAgeMillis'
-    | 'databaseCleanup.windowDays'
-    | 'parkingTickets.updateWindowMillis'
-): number
-
-export function getConfigProperty(
-  propertyName:
-    | 'application.useTestDatabases'
-    | 'application.feature_mtoExportImport'
-    | 'application.task_nhtsa.runTask'
-    | 'session.doKeepAlive'
-    | 'parkingTickets.licencePlateExpiryDate.includeDay'
-    | 'parkingTickets.ticketNumber.isUnique'
-): boolean
-
-export function getConfigProperty(
-  propertyName:
-    | 'parkingOffences.accountNumber.pattern'
-    | 'parkingTickets.ticketNumber.pattern'
-): RegExp
-
-export function getConfigProperty(
-  propertyName: 'locationClasses'
-): ConfigLocationClass[]
-
-export function getConfigProperty(
-  propertyName: 'licencePlateCountryAliases'
-): Record<string, string>
-
-export function getConfigProperty(
-  propertyName: 'licencePlateProvinceAliases'
-): Record<string, Record<string, string>>
-
-export function getConfigProperty(
-  propertyName: 'licencePlateProvinces'
-): Record<string, ConfigLicencePlateCountry>
-
-export function getConfigProperty(
-  propertyName: 'parkingTickets.ticketNumber.nextTicketNumberFn'
-): (currentTicketNumber: string) => string
-
-export function getConfigProperty(
-  propertyName: 'parkingTicketStatuses'
-): ConfigParkingTicketStatus[]
-
-export function getConfigProperty(
-  propertyName:
-    | 'users.testing'
-    | 'users.canLogin'
-    | 'users.canUpdate'
-    | 'users.isAdmin'
-    | 'users.isOperator'
-): string[]
-
-export function getConfigProperty(propertyName: string): unknown {
-  const propertyNameSplit = propertyName.split('.')
-
-  let currentObject = config
-
-  for (const propertyNamePiece of propertyNameSplit) {
-    if (Object.hasOwn(currentObject, propertyNamePiece)) {
-      currentObject = currentObject[propertyNamePiece]
-    } else {
-      return configFallbackValues.get(propertyName)
-    }
-  }
-
-  return currentObject
+export function getConfigProperty<K extends keyof typeof configDefaultValues>(
+  propertyName: K,
+  fallbackValue?: (typeof configDefaultValues)[K]
+): (typeof configDefaultValues)[K] {
+  return configurator.getConfigProperty(
+    propertyName,
+    fallbackValue
+  ) as (typeof configDefaultValues)[K]
 }
 
 export const keepAliveMillis = getConfigProperty('session.doKeepAlive')

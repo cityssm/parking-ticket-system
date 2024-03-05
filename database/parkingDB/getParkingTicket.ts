@@ -10,10 +10,8 @@ import { getParkingLocation } from './getParkingLocation.js'
 import { getParkingTicketRemarks } from './getParkingTicketRemarks.js'
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js'
 
-export const getParkingTicket = (
-  ticketId: number,
-  sessionUser: PTSUser
-): ParkingTicket | undefined => {
+export async function getParkingTicket(ticketId: number,
+  sessionUser: PTSUser): Promise<ParkingTicket | undefined> {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -67,9 +65,8 @@ export const getParkingTicket = (
   ticket.canUpdate = canUpdateObject(ticket, sessionUser)
 
   // Owner
-
   if (ticket.ownerLookup_statusKey === 'ownerLookupMatch') {
-    ticket.licencePlateOwner = getLicencePlateOwner(
+    ticket.licencePlateOwner = await getLicencePlateOwner(
       ticket.licencePlateCountry,
       ticket.licencePlateProvince,
       ticket.licencePlateNumber,
@@ -79,11 +76,9 @@ export const getParkingTicket = (
   }
 
   // Location
-
   ticket.location = getParkingLocation(ticket.locationKey, database)
 
   // Status Log
-
   ticket.statusLog = getParkingTicketStatuses(ticketId, sessionUser, database)
 
   if (!ticket.canUpdate) {
@@ -93,7 +88,6 @@ export const getParkingTicket = (
   }
 
   // Remarks
-
   ticket.remarks = getParkingTicketRemarks(ticketId, sessionUser, database)
 
   if (!ticket.canUpdate) {

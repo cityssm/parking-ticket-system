@@ -6,7 +6,7 @@ export const uploadHandler = upload.single('importFile');
 export const handler = (request, response) => {
     const batchId = request.body.batchId;
     const ownershipData = request.file?.buffer.toString() ?? '';
-    const results = mtoFunctions.importLicencePlateOwnership(batchId, ownershipData, request.session.user);
+    const results = mtoFunctions.importLicencePlateOwnership(Number.parseInt(batchId, 10), ownershipData, request.session.user);
     return response.json(results);
 };
 export default handler;

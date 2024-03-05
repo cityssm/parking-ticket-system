@@ -116,8 +116,8 @@ describe('database/parkingDB', () => {
                 offset: 0
             }));
         });
-        it('should execute getLicencePlateOwner()', () => {
-            assert.strictEqual(parkingDB_getLicencePlateOwner('CA', 'ON', '~~FAKE PLATE NUMBER~~', 0), undefined);
+        it('should execute getLicencePlateOwner()', async () => {
+            assert.strictEqual(await parkingDB_getLicencePlateOwner('CA', 'ON', '~~FAKE PLATE NUMBER~~', 0), undefined);
         });
     });
     describe('conviction batch queries', () => {

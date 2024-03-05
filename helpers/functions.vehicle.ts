@@ -1,9 +1,8 @@
+import { getFieldValueDescription, vmaHelpers } from '@cityssm/ncic-lookup'
 import { GetModelsForMake } from '@shaggytools/nhtsa-api-wrapper'
 import sqlite from 'better-sqlite3'
 
 import { nhtsaDB as databasePath } from '../data/databasePaths.js'
-import { trailerNCIC } from '../data/ncicCodes/trailer.js'
-import * as ncic from '../data/ncicCodes.js'
 import type { NHTSAMakeModel } from '../types/recordTypes.js'
 
 /*
@@ -143,13 +142,15 @@ export async function getModelsByMake(
   return queryCloseCallbackFunction()
 }
 
-export const getMakeFromNCIC = (vehicleNCIC: string): string => {
-  return ncic.allNCIC[vehicleNCIC] || vehicleNCIC
+export async function getMakeFromNCIC(vehicleNCIC: string): Promise<string> {
+  return (await getFieldValueDescription('VMA', vehicleNCIC)) ?? vehicleNCIC
 }
 
-export const isNCICExclusivelyTrailer = (vehicleNCIC: string): boolean => {
-  return Boolean(
-    Object.hasOwn(trailerNCIC, vehicleNCIC) &&
-      !Object.hasOwn(ncic.vehicleNCIC, vehicleNCIC)
+export async function isNCICExclusivelyTrailer(
+  vehicleNCIC: string
+): Promise<boolean> {
+  return await vmaHelpers.isFieldValueExclusiveToVmaCodeType(
+    'Trailers',
+    vehicleNCIC
   )
 }

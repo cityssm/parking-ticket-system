@@ -25,5 +25,5 @@ export interface ReconciliationRecord extends LicencePlate {
     isVehicleMakeMatch: boolean;
     isLicencePlateExpiryDateMatch: boolean;
 }
-export declare const getOwnershipReconciliationRecords: () => ReconciliationRecord[];
+export declare function getOwnershipReconciliationRecords(): Promise<ReconciliationRecord[]>;
 export default getOwnershipReconciliationRecords;

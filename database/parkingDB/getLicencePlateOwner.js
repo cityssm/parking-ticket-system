@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
-export function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore, connectedDatabase) {
+export async function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath, { readonly: true });
     const licencePlateCountryAlias = getConfigProperty('licencePlateCountryAliases')[licencePlateCountry] ??
         licencePlateCountry;
@@ -24,7 +24,7 @@ export function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, 
             possibleOwnerObject.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObject.recordDate);
             possibleOwnerObject.licencePlateExpiryDateString =
                 dateTimeFns.dateIntegerToString(possibleOwnerObject.licencePlateExpiryDate);
-            possibleOwnerObject.vehicleMake = vehicleFunctions.getMakeFromNCIC(possibleOwnerObject.vehicleNCIC);
+            possibleOwnerObject.vehicleMake = await vehicleFunctions.getMakeFromNCIC(possibleOwnerObject.vehicleNCIC);
             return possibleOwnerObject;
         }
     }

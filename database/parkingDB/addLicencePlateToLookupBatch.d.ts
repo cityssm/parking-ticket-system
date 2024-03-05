@@ -5,7 +5,7 @@ interface AddLicencePlateToLookupBatchReturn {
     batch?: LicencePlateLookupBatch;
 }
 export declare const addLicencePlateToLookupBatch: (requestBody: LicencePlateLookupBatchEntry, sessionUser: PTSUser) => AddLicencePlateToLookupBatchReturn;
-interface AddAllParkingTicketsToLookupBatchBody {
+export interface AddAllParkingTicketsToLookupBatchBody {
     batchId: number;
     ticketIds: string[];
 }

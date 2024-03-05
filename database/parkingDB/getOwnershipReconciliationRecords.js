@@ -2,7 +2,7 @@ import * as dateTimeFns from '@cityssm/expressjs-server-js/dateTimeFns.js';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
-export const getOwnershipReconciliationRecords = () => {
+export async function getOwnershipReconciliationRecords() {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -55,7 +55,7 @@ export const getOwnershipReconciliationRecords = () => {
             dateTimeFns.dateIntegerToString(record.ticket_licencePlateExpiryDate);
         record.owner_recordDateString = dateTimeFns.dateIntegerToString(record.owner_recordDate);
         record.owner_licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(record.owner_licencePlateExpiryDate);
-        record.owner_vehicleMake = vehicleFunctions.getMakeFromNCIC(record.owner_vehicleNCIC);
+        record.owner_vehicleMake = await vehicleFunctions.getMakeFromNCIC(record.owner_vehicleNCIC);
         record.dateDifference = dateTimeFns.dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
         record.isVehicleMakeMatch =
             record.ticket_vehicleMakeModel.toLowerCase() ===
@@ -67,5 +67,5 @@ export const getOwnershipReconciliationRecords = () => {
                 record.owner_licencePlateExpiryDate;
     }
     return records;
-};
+}
 export default getOwnershipReconciliationRecords;

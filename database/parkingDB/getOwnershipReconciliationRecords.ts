@@ -39,7 +39,7 @@ export interface ReconciliationRecord extends LicencePlate {
   isLicencePlateExpiryDateMatch: boolean
 }
 
-export const getOwnershipReconciliationRecords = (): ReconciliationRecord[] => {
+export async function getOwnershipReconciliationRecords(): Promise<ReconciliationRecord[]> {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -47,45 +47,45 @@ export const getOwnershipReconciliationRecords = (): ReconciliationRecord[] => {
   const records = database
     .prepare(
       'select t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber,' +
-        ' t.ticketId as ticket_ticketId,' +
-        ' t.ticketNumber as ticket_ticketNumber,' +
-        ' t.issueDate as ticket_issueDate,' +
-        ' t.vehicleMakeModel as ticket_vehicleMakeModel,' +
-        ' t.licencePlateExpiryDate as ticket_licencePlateExpiryDate,' +
-        ' o.recordDate as owner_recordDate,' +
-        ' o.vehicleNCIC as owner_vehicleNCIC,' +
-        ' o.vehicleYear as owner_vehicleYear,' +
-        ' o.vehicleColor as owner_vehicleColor,' +
-        ' o.licencePlateExpiryDate as owner_licencePlateExpiryDate,' +
-        ' o.ownerName1 as owner_ownerName1,' +
-        ' o.ownerName2 as owner_ownerName2,' +
-        ' o.ownerAddress as owner_ownerAddress,' +
-        ' o.ownerCity as owner_ownerCity,' +
-        ' o.ownerProvince as owner_ownerProvince,' +
-        ' o.ownerPostalCode as owner_ownerPostalCode' +
-        ' from ParkingTickets t' +
-        (' inner join LicencePlateOwners o' +
-          ' on t.licencePlateCountry = o.licencePlateCountry' +
-          ' and t.licencePlateProvince = o.licencePlateProvince' +
-          ' and t.licencePlateNumber = o.licencePlateNumber' +
-          ' and o.recordDelete_timeMillis is null' +
-          " and o.vehicleNCIC <> ''" +
-          (' and o.recordDate = (' +
-            'select o2.recordDate from LicencePlateOwners o2' +
-            ' where t.licencePlateCountry = o2.licencePlateCountry' +
-            ' and t.licencePlateProvince = o2.licencePlateProvince' +
-            ' and t.licencePlateNumber = o2.licencePlateNumber' +
-            ' and o2.recordDelete_timeMillis is null' +
-            ' and t.issueDate <= o2.recordDate' +
-            ' order by o2.recordDate' +
-            ' limit 1)')) +
-        ' where t.recordDelete_timeMillis is null' +
-        ' and t.resolvedDate is null' +
-        (' and not exists (' +
-          'select 1 from ParkingTicketStatusLog s ' +
-          ' where t.ticketId = s.ticketId ' +
-          " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
-          ' and s.recordDelete_timeMillis is null)')
+      ' t.ticketId as ticket_ticketId,' +
+      ' t.ticketNumber as ticket_ticketNumber,' +
+      ' t.issueDate as ticket_issueDate,' +
+      ' t.vehicleMakeModel as ticket_vehicleMakeModel,' +
+      ' t.licencePlateExpiryDate as ticket_licencePlateExpiryDate,' +
+      ' o.recordDate as owner_recordDate,' +
+      ' o.vehicleNCIC as owner_vehicleNCIC,' +
+      ' o.vehicleYear as owner_vehicleYear,' +
+      ' o.vehicleColor as owner_vehicleColor,' +
+      ' o.licencePlateExpiryDate as owner_licencePlateExpiryDate,' +
+      ' o.ownerName1 as owner_ownerName1,' +
+      ' o.ownerName2 as owner_ownerName2,' +
+      ' o.ownerAddress as owner_ownerAddress,' +
+      ' o.ownerCity as owner_ownerCity,' +
+      ' o.ownerProvince as owner_ownerProvince,' +
+      ' o.ownerPostalCode as owner_ownerPostalCode' +
+      ' from ParkingTickets t' +
+      (' inner join LicencePlateOwners o' +
+        ' on t.licencePlateCountry = o.licencePlateCountry' +
+        ' and t.licencePlateProvince = o.licencePlateProvince' +
+        ' and t.licencePlateNumber = o.licencePlateNumber' +
+        ' and o.recordDelete_timeMillis is null' +
+        " and o.vehicleNCIC <> ''" +
+        (' and o.recordDate = (' +
+          'select o2.recordDate from LicencePlateOwners o2' +
+          ' where t.licencePlateCountry = o2.licencePlateCountry' +
+          ' and t.licencePlateProvince = o2.licencePlateProvince' +
+          ' and t.licencePlateNumber = o2.licencePlateNumber' +
+          ' and o2.recordDelete_timeMillis is null' +
+          ' and t.issueDate <= o2.recordDate' +
+          ' order by o2.recordDate' +
+          ' limit 1)')) +
+      ' where t.recordDelete_timeMillis is null' +
+      ' and t.resolvedDate is null' +
+      (' and not exists (' +
+        'select 1 from ParkingTicketStatusLog s ' +
+        ' where t.ticketId = s.ticketId ' +
+        " and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')" +
+        ' and s.recordDelete_timeMillis is null)')
     )
     .all() as ReconciliationRecord[]
 
@@ -106,7 +106,7 @@ export const getOwnershipReconciliationRecords = (): ReconciliationRecord[] => {
       record.owner_licencePlateExpiryDate
     )
 
-    record.owner_vehicleMake = vehicleFunctions.getMakeFromNCIC(
+    record.owner_vehicleMake = await vehicleFunctions.getMakeFromNCIC(
       record.owner_vehicleNCIC
     )
 
@@ -117,9 +117,9 @@ export const getOwnershipReconciliationRecords = (): ReconciliationRecord[] => {
 
     record.isVehicleMakeMatch =
       record.ticket_vehicleMakeModel.toLowerCase() ===
-        record.owner_vehicleMake.toLowerCase() ||
+      record.owner_vehicleMake.toLowerCase() ||
       record.ticket_vehicleMakeModel.toLowerCase() ===
-        record.owner_vehicleNCIC.toLowerCase()
+      record.owner_vehicleNCIC.toLowerCase()
 
     record.isLicencePlateExpiryDateMatch =
       record.ticket_licencePlateExpiryDate ===

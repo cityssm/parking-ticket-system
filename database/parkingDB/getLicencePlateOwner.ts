@@ -6,13 +6,13 @@ import { getConfigProperty } from '../../helpers/functions.config.js'
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
 import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
-export function getLicencePlateOwner(
+export async function getLicencePlateOwner(
   licencePlateCountry: string,
   licencePlateProvince: string,
   licencePlateNumber: string,
   recordDateOrBefore: number,
   connectedDatabase?: sqlite.Database
-): LicencePlateOwner | undefined {
+): Promise<LicencePlateOwner | undefined> {
   const database = connectedDatabase ?? sqlite(databasePath, { readonly: true })
 
   const licencePlateCountryAlias =
@@ -59,7 +59,7 @@ export function getLicencePlateOwner(
           possibleOwnerObject.licencePlateExpiryDate
         )
 
-      possibleOwnerObject.vehicleMake = vehicleFunctions.getMakeFromNCIC(
+      possibleOwnerObject.vehicleMake = await vehicleFunctions.getMakeFromNCIC(
         possibleOwnerObject.vehicleNCIC
       )
 

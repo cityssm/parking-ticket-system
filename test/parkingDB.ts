@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
+
 import assert from 'node:assert'
 
 import parkingDB_cleanupLicencePlateOwnersTable from '../database/parkingDB/cleanupLicencePlateOwnersTable.js'
@@ -166,9 +168,14 @@ describe('database/parkingDB', () => {
       )
     })
 
-    it('should execute getLicencePlateOwner()', () => {
+    it('should execute getLicencePlateOwner()', async () => {
       assert.strictEqual(
-        parkingDB_getLicencePlateOwner('CA', 'ON', '~~FAKE PLATE NUMBER~~', 0),
+        await parkingDB_getLicencePlateOwner(
+          'CA',
+          'ON',
+          '~~FAKE PLATE NUMBER~~',
+          0
+        ),
         undefined
       )
     })

@@ -31,7 +31,7 @@ async function doTask(): Promise<void> {
 
     cutoffDate = ncicRecord.recordDateMax
 
-    const vehicleMake = vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC)
+    const vehicleMake = await vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC)
 
     debug(`Processing ${vehicleMake}`)
 

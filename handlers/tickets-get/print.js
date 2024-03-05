@@ -1,7 +1,7 @@
 import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js';
-export const handler = (request, response) => {
+export async function handler(request, response) {
     const ticketId = Number.parseInt(request.params.ticketId, 10);
-    const ticket = getParkingTicket(ticketId, request.session.user);
+    const ticket = await getParkingTicket(ticketId, request.session.user);
     if (!ticket) {
         response.redirect('/tickets/?error=ticketNotFound');
         return;
@@ -14,5 +14,5 @@ export const handler = (request, response) => {
         headTitle: `Ticket ${ticket.ticketNumber}`,
         ticket
     });
-};
+}
 export default handler;

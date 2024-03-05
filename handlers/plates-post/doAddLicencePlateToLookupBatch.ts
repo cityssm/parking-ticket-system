@@ -2,12 +2,18 @@ import type { RequestHandler } from 'express'
 
 import { addLicencePlateToLookupBatch } from '../../database/parkingDB/addLicencePlateToLookupBatch.js'
 import { getLookupBatch } from '../../database/parkingDB/getLookupBatch.js'
+import type { LicencePlateLookupBatchEntry } from '../../types/recordTypes.js'
 
 export const handler: RequestHandler = (request, response) => {
-  const result = addLicencePlateToLookupBatch(request.body, request.session.user as PTSUser)
+  const result = addLicencePlateToLookupBatch(
+    request.body as LicencePlateLookupBatchEntry,
+    request.session.user as PTSUser
+  )
 
   if (result.success) {
-    result.batch = getLookupBatch(request.body.batchId)
+    result.batch = getLookupBatch(
+      Number.parseInt(request.body.batchId as string, 10)
+    )
   }
 
   return response.json(result)

@@ -4,7 +4,7 @@ import { unresolveParkingTicket } from '../../database/parkingDB/unresolveParkin
 
 export const handler: RequestHandler = (request, response) => {
   const result = unresolveParkingTicket(
-    request.body.ticketId,
+    Number.parseInt(request.body.ticketId as string, 10),
     request.session.user as PTSUser
   )
 

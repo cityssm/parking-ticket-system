@@ -5,11 +5,11 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
 import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
-export function getAllLicencePlateOwners(
+export async function getAllLicencePlateOwners(
   licencePlateCountry: string,
   licencePlateProvince: string,
   licencePlateNumber: string
-): LicencePlateOwner[] {
+): Promise<LicencePlateOwner[]> {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -33,7 +33,7 @@ export function getAllLicencePlateOwners(
 
   for (const owner of owners) {
     owner.recordDateString = dateTimeFns.dateIntegerToString(owner.recordDate)
-    owner.vehicleMake = vehicleFunctions.getMakeFromNCIC(owner.vehicleNCIC)
+    owner.vehicleMake = await vehicleFunctions.getMakeFromNCIC(owner.vehicleNCIC)
   }
 
   return owners

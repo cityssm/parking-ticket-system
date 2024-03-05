@@ -1,6 +1,6 @@
 import { getAllLicencePlateOwners } from '../../database/parkingDB/getAllLicencePlateOwners.js';
 import { getParkingTicketsByLicencePlate } from '../../database/parkingDB/getParkingTickets.js';
-export const handler = (request, response) => {
+export async function handler(request, response) {
     let licencePlateCountry = request.params.licencePlateCountry;
     if (licencePlateCountry === '_') {
         licencePlateCountry = '';
@@ -13,7 +13,7 @@ export const handler = (request, response) => {
     if (licencePlateNumber === '_') {
         licencePlateNumber = '';
     }
-    const owners = getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
+    const owners = await getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
     const tickets = getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, request.session.user);
     response.render('plate-view', {
         headTitle: 'Licence Plate ' + licencePlateNumber,
@@ -23,5 +23,5 @@ export const handler = (request, response) => {
         owners,
         tickets
     });
-};
+}
 export default handler;
