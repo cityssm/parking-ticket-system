@@ -1,8 +1,8 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { getParkingTicketId } from '../../database/parkingDB/getParkingTicketId.js'
+import getParkingTicketId from '../../database/parkingDB/getParkingTicketId.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const ticketNumber = request.params.ticketNumber
 
   const ticketId = getParkingTicketId(ticketNumber)
@@ -13,5 +13,3 @@ export const handler: RequestHandler = (request, response) => {
     response.redirect(`/tickets/${ticketId.toString()}`)
   }
 }
-
-export default handler

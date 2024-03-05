@@ -2,10 +2,10 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const canParkingTicketBeAddedToConvictionBatch = (
+export default function canParkingTicketBeAddedToConvictionBatch(
   ticketId: number,
   connectedDatabase?: sqlite.Database
-): boolean => {
+): boolean {
   const database = connectedDatabase ?? sqlite(databasePath)
 
   const resolvedDate = database
@@ -23,5 +23,3 @@ export const canParkingTicketBeAddedToConvictionBatch = (
 
   return (resolvedDate ?? undefined) === undefined
 }
-
-export default canParkingTicketBeAddedToConvictionBatch

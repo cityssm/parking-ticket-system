@@ -1,7 +1,7 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToString } from '@cityssm/utils-datetime';
 import { getRecentParkingTicketVehicleMakeModelValues } from '../../database/parkingDB.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
-export const handler = (request, response) => {
+export default function handler(request, response) {
     const ticketNumber = request.params.ticketNumber;
     const vehicleMakeModelDatalist = getRecentParkingTicketVehicleMakeModelValues();
     response.render('ticket-edit', {
@@ -12,8 +12,7 @@ export const handler = (request, response) => {
             licencePlateCountry: getConfigProperty('defaults.country'),
             licencePlateProvince: getConfigProperty('defaults.province')
         },
-        issueDateMaxString: dateTimeFns.dateToString(new Date()),
+        issueDateMaxString: dateToString(new Date()),
         vehicleMakeModelDatalist
     });
-};
-export default handler;
+}

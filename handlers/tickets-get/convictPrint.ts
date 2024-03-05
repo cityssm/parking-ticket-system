@@ -1,9 +1,9 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js'
-import { markConvictionBatchAsSent } from '../../database/parkingDB/markConvictionBatchAsSent.js'
+import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js'
+import markConvictionBatchAsSent from '../../database/parkingDB/markConvictionBatchAsSent.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const batchId = Number.parseInt(request.params.batchId, 10)
 
   const batch = getConvictionBatch(batchId)
@@ -17,5 +17,3 @@ export const handler: RequestHandler = (request, response) => {
     batch
   })
 }
-
-export default handler

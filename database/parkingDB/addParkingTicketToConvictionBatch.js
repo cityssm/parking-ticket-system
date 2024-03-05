@@ -1,7 +1,7 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-import { canParkingTicketBeAddedToConvictionBatch } from './canParkingTicketBeAddedToConvictionBatch.js';
-import { createParkingTicketStatus } from './createParkingTicketStatus.js';
+import canParkingTicketBeAddedToConvictionBatch from './canParkingTicketBeAddedToConvictionBatch.js';
+import createParkingTicketStatus from './createParkingTicketStatus.js';
 import { isConvictionBatchUpdatable } from './isConvictionBatchUpdatable.js';
 import { isParkingTicketConvicted } from './isParkingTicketConvicted.js';
 import { isParkingTicketInConvictionBatchWithDB } from './isParkingTicketInConvictionBatch.js';
@@ -74,7 +74,7 @@ export function addParkingTicketToConvictionBatch(batchId, ticketId, sessionUser
         database.close();
     }
 }
-export const addAllParkingTicketsToConvictionBatch = (batchId, ticketIds, sessionUser) => {
+export function addAllParkingTicketsToConvictionBatch(batchId, ticketIds, sessionUser) {
     const database = sqlite(databasePath);
     try {
         const batchIsAvailable = isConvictionBatchUpdatable(batchId, database);
@@ -100,5 +100,5 @@ export const addAllParkingTicketsToConvictionBatch = (batchId, ticketIds, sessio
     finally {
         database.close();
     }
-};
+}
 export default addParkingTicketToConvictionBatch;

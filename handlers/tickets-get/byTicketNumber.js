@@ -1,5 +1,5 @@
-import { getParkingTicketId } from '../../database/parkingDB/getParkingTicketId.js';
-export const handler = (request, response) => {
+import getParkingTicketId from '../../database/parkingDB/getParkingTicketId.js';
+export default function handler(request, response) {
     const ticketNumber = request.params.ticketNumber;
     const ticketId = getParkingTicketId(ticketNumber);
     if (ticketId === undefined) {
@@ -8,5 +8,4 @@ export const handler = (request, response) => {
     else {
         response.redirect(`/tickets/${ticketId.toString()}`);
     }
-};
-export default handler;
+}

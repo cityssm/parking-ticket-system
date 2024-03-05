@@ -13,7 +13,7 @@ import { getParkingLocation } from './getParkingLocation.js'
 import { getParkingTicketRemarks } from './getParkingTicketRemarks.js'
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js'
 
-export async function getParkingTicket(
+export default async function getParkingTicket(
   ticketId: number,
   sessionUser: PTSUser
 ): Promise<ParkingTicket | undefined> {
@@ -103,5 +103,3 @@ export async function getParkingTicket(
 
   return ticket
 }
-
-export default getParkingTicket

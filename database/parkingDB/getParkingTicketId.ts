@@ -2,9 +2,9 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const getParkingTicketId = (
+export default function getParkingTicketId(
   ticketNumber: string
-): number | undefined => {
+): number | undefined {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -27,5 +27,3 @@ export const getParkingTicketId = (
 
   return ticketId ?? undefined
 }
-
-export default getParkingTicketId

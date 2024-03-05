@@ -4,14 +4,14 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LicencePlateLookupBatch } from '../../types/recordTypes.js'
 
-interface CreateLookupBatchForm {
+export interface CreateLookupBatchForm {
   mto_includeLabels?: '1' | '0'
 }
 
-export const createLookupBatch = (
+export default function createLookupBatch(
   requestBody: CreateLookupBatchForm,
   sessionUser: PTSUser
-): { success: boolean; batch?: LicencePlateLookupBatch } => {
+): { success: boolean; batch?: LicencePlateLookupBatch } {
   const database = sqlite(databasePath)
 
   const rightNow = new Date()
@@ -50,5 +50,3 @@ export const createLookupBatch = (
       }
     : { success: false }
 }
-
-export default createLookupBatch

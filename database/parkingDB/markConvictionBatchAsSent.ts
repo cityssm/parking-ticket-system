@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export function markConvictionBatchAsSent(
+export default function markConvictionBatchAsSent(
   batchId: number,
   sessionUser: PTSUser
 ): boolean {
@@ -53,5 +53,3 @@ export function markConvictionBatchAsSent(
 
   return info.changes > 0
 }
-
-export default markConvictionBatchAsSent

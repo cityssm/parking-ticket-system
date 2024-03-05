@@ -6,7 +6,7 @@ import { getLicencePlateOwner } from './getLicencePlateOwner.js';
 import { getParkingLocation } from './getParkingLocation.js';
 import { getParkingTicketRemarks } from './getParkingTicketRemarks.js';
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js';
-export async function getParkingTicket(ticketId, sessionUser) {
+export default async function getParkingTicket(ticketId, sessionUser) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -59,4 +59,3 @@ export async function getParkingTicket(ticketId, sessionUser) {
     database.close();
     return ticket;
 }
-export default getParkingTicket;

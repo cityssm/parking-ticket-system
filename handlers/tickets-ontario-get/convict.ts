@@ -1,11 +1,10 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js'
-import * as parkingDB_ontario from '../../database/parkingDB-ontario.js'
+import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js'
+import { getParkingTicketsAvailableForMTOConvictionBatch } from '../../database/parkingDB-ontario.js'
 
-export const handler: RequestHandler = (_request, response) => {
-  const tickets =
-    parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch()
+export default function handler(_request: Request, response: Response): void {
+  const tickets = getParkingTicketsAvailableForMTOConvictionBatch()
 
   const batch = getConvictionBatch(-1)
 
@@ -15,5 +14,3 @@ export const handler: RequestHandler = (_request, response) => {
     batch
   })
 }
-
-export default handler

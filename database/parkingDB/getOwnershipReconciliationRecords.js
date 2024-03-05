@@ -3,7 +3,7 @@ import { dateIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
-export async function getOwnershipReconciliationRecords() {
+export default async function getOwnershipReconciliationRecords() {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -45,8 +45,7 @@ export async function getOwnershipReconciliationRecords() {
     database.close();
     for (const record of records) {
         record.ticket_issueDateString = dateIntegerToString(record.ticket_issueDate);
-        record.ticket_licencePlateExpiryDateString =
-            dateIntegerToString(record.ticket_licencePlateExpiryDate);
+        record.ticket_licencePlateExpiryDateString = dateIntegerToString(record.ticket_licencePlateExpiryDate);
         record.owner_recordDateString = dateIntegerToString(record.owner_recordDate);
         record.owner_licencePlateExpiryDateString = dateIntegerToString(record.owner_licencePlateExpiryDate);
         record.owner_vehicleMake = await vehicleFunctions.getMakeFromNCIC(record.owner_vehicleNCIC);
@@ -62,4 +61,3 @@ export async function getOwnershipReconciliationRecords() {
     }
     return records;
 }
-export default getOwnershipReconciliationRecords;

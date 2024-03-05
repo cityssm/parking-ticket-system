@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getParkingTicketId = (ticketNumber) => {
+export default function getParkingTicketId(ticketNumber) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -16,5 +16,4 @@ export const getParkingTicketId = (ticketNumber) => {
     database.close();
     console.log(ticketId);
     return ticketId ?? undefined;
-};
-export default getParkingTicketId;
+}

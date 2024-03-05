@@ -1,5 +1,5 @@
-import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js';
-export async function handler(request, response) {
+import getParkingTicket from '../../database/parkingDB/getParkingTicket.js';
+export default async function handler(request, response) {
     const ticketId = Number.parseInt(request.params.ticketId, 10);
     const ticket = await getParkingTicket(ticketId, request.session.user);
     if (!ticket) {
@@ -16,4 +16,3 @@ export async function handler(request, response) {
         ticket
     });
 }
-export default handler;

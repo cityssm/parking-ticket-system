@@ -1,5 +1,5 @@
 import { addParkingTicketToConvictionBatch } from '../../database/parkingDB/addParkingTicketToConvictionBatch.js';
-import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js';
+import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js';
 export const handler = (request, response) => {
     const batchId = request.body.batchId;
     const ticketId = request.body.ticketId;

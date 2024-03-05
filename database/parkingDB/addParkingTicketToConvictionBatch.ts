@@ -5,8 +5,8 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-import { canParkingTicketBeAddedToConvictionBatch } from './canParkingTicketBeAddedToConvictionBatch.js'
-import { createParkingTicketStatus } from './createParkingTicketStatus.js'
+import canParkingTicketBeAddedToConvictionBatch from './canParkingTicketBeAddedToConvictionBatch.js'
+import createParkingTicketStatus from './createParkingTicketStatus.js'
 import { isConvictionBatchUpdatable } from './isConvictionBatchUpdatable.js'
 import { isParkingTicketConvicted } from './isParkingTicketConvicted.js'
 import { isParkingTicketInConvictionBatchWithDB } from './isParkingTicketInConvictionBatch.js'
@@ -162,16 +162,15 @@ export function addParkingTicketToConvictionBatch(
   }
 }
 
-export const addAllParkingTicketsToConvictionBatch = (
+export function addAllParkingTicketsToConvictionBatch(
   batchId: number,
   ticketIds: number[],
   sessionUser: PTSUser
-): { success: boolean; successCount: number; message?: string } => {
+): { success: boolean; successCount: number; message?: string } {
   const database = sqlite(databasePath)
 
   try {
     // Ensure batch is not locked
-
     const batchIsAvailable = isConvictionBatchUpdatable(batchId, database)
 
     if (!batchIsAvailable) {
@@ -183,7 +182,6 @@ export const addAllParkingTicketsToConvictionBatch = (
     }
 
     // Loop through ticketIds
-
     let successCount = 0
 
     for (const ticketId of ticketIds) {

@@ -1,8 +1,8 @@
 import type { RequestHandler } from 'express'
 
 import { acknowledgeLookupErrorLogEntry } from '../../database/parkingDB/acknowledgeLookupErrorLogEntry.js'
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
-import { getUnacknowledgedLookupErrorLog } from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js'
+import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js'
+import getUnacknowledgedLookupErrorLog from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js'
 
 export const handler: RequestHandler = (request, response) => {
   // Get log entry

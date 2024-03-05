@@ -1,6 +1,5 @@
 import getLookupBatch from '../../database/parkingDB/getLookupBatch.js';
-export const handler = (request, response) => {
-    const batch = getLookupBatch(request.body.batchId);
+export default function handler(request, response) {
+    const batch = getLookupBatch(Number.parseInt(request.body.batchId, 10));
     response.json(batch);
-};
-export default handler;
+}

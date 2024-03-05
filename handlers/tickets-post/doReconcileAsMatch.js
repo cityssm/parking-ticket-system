@@ -1,4 +1,4 @@
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
+import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js';
 import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js';
 export async function handler(request, response) {

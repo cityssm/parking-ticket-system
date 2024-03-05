@@ -1,7 +1,7 @@
 import { dateToInteger, dateToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const createLookupBatch = (requestBody, sessionUser) => {
+export default function createLookupBatch(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const rightNow = new Date();
     const info = database
@@ -26,5 +26,4 @@ export const createLookupBatch = (requestBody, sessionUser) => {
             }
         }
         : { success: false };
-};
-export default createLookupBatch;
+}

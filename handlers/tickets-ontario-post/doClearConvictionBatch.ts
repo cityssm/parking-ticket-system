@@ -1,14 +1,14 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { clearConvictionBatch } from '../../database/parkingDB/clearConvictionBatch.js'
-import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js'
+import clearConvictionBatch from '../../database/parkingDB/clearConvictionBatch.js'
+import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js'
 import * as parkingDB_ontario from '../../database/parkingDB-ontario.js'
 import type {
   ParkingTicket,
   ParkingTicketConvictionBatch
 } from '../../types/recordTypes.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const batchId = request.body.batchId
 
   const result: {
@@ -24,7 +24,5 @@ export const handler: RequestHandler = (request, response) => {
       parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch()
   }
 
-  return response.json(result)
+  response.json(result)
 }
-
-export default handler

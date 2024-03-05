@@ -43,7 +43,7 @@ export interface ReconciliationRecord extends LicencePlate {
   isLicencePlateExpiryDateMatch: boolean
 }
 
-export async function getOwnershipReconciliationRecords(): Promise<
+export default async function getOwnershipReconciliationRecords(): Promise<
   ReconciliationRecord[]
 > {
   const database = sqlite(databasePath, {
@@ -91,16 +91,13 @@ export async function getOwnershipReconciliationRecords(): Promise<
   database.close()
 
   for (const record of records) {
-    record.ticket_issueDateString = dateIntegerToString(
-      record.ticket_issueDate
+    record.ticket_issueDateString = dateIntegerToString(record.ticket_issueDate)
+
+    record.ticket_licencePlateExpiryDateString = dateIntegerToString(
+      record.ticket_licencePlateExpiryDate
     )
 
-    record.ticket_licencePlateExpiryDateString =
-      dateIntegerToString(record.ticket_licencePlateExpiryDate)
-
-    record.owner_recordDateString = dateIntegerToString(
-      record.owner_recordDate
-    )
+    record.owner_recordDateString = dateIntegerToString(record.owner_recordDate)
     record.owner_licencePlateExpiryDateString = dateIntegerToString(
       record.owner_licencePlateExpiryDate
     )
@@ -127,5 +124,3 @@ export async function getOwnershipReconciliationRecords(): Promise<
 
   return records
 }
-
-export default getOwnershipReconciliationRecords

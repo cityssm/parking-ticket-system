@@ -1,11 +1,17 @@
 import type { Request, Response } from 'express'
 
-import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js'
+import getParkingTicket from '../../database/parkingDB/getParkingTicket.js'
 
-export async function handler(request: Request, response: Response): Promise<void> {
+export default async function handler(
+  request: Request,
+  response: Response
+): Promise<void> {
   const ticketId = Number.parseInt(request.params.ticketId, 10)
 
-  const ticket = await getParkingTicket(ticketId, request.session.user as PTSUser)
+  const ticket = await getParkingTicket(
+    ticketId,
+    request.session.user as PTSUser
+  )
 
   if (!ticket) {
     response.redirect('/tickets/?error=ticketNotFound')
@@ -20,5 +26,3 @@ export async function handler(request: Request, response: Response): Promise<voi
     ticket
   })
 }
-
-export default handler

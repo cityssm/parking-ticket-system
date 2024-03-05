@@ -1,4 +1,4 @@
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
+import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js';
 export async function handler(request, response) {
     const ownerRecord = await getLicencePlateOwner(request.body.licencePlateCountry, request.body.licencePlateProvince, request.body.licencePlateNumber, Number.parseInt(request.body.recordDate, 10));

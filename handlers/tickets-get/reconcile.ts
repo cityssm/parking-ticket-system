@@ -1,9 +1,9 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js'
-import { getUnacknowledgedLookupErrorLog } from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js'
+import getOwnershipReconciliationRecords from '../../database/parkingDB/getOwnershipReconciliationRecords.js'
+import getUnacknowledgedLookupErrorLog from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js'
 
-export const handler: RequestHandler = (_request, response) => {
+export default function handler(_request: Request, response: Response): void {
   const reconciliationRecords = getOwnershipReconciliationRecords()
 
   const lookupErrors = getUnacknowledgedLookupErrorLog(-1, -1)
@@ -14,5 +14,3 @@ export const handler: RequestHandler = (_request, response) => {
     errorLog: lookupErrors
   })
 }
-
-export default handler

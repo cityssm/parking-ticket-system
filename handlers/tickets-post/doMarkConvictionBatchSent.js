@@ -1,5 +1,5 @@
-import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js';
-import { markConvictionBatchAsSent } from '../../database/parkingDB/markConvictionBatchAsSent.js';
+import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js';
+import markConvictionBatchAsSent from '../../database/parkingDB/markConvictionBatchAsSent.js';
 export const handler = (request, response) => {
     const batchId = request.body.batchId;
     const success = markConvictionBatchAsSent(batchId, request.session.user);

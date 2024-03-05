@@ -1,6 +1,6 @@
 import { acknowledgeLookupErrorLogEntry } from '../../database/parkingDB/acknowledgeLookupErrorLogEntry.js';
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
-import { getUnacknowledgedLookupErrorLog } from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js';
+import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js';
+import getUnacknowledgedLookupErrorLog from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js';
 export const handler = (request, response) => {
     const logEntries = getUnacknowledgedLookupErrorLog(request.body.batchId, request.body.logIndex);
     if (logEntries.length === 0) {

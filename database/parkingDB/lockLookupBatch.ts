@@ -5,7 +5,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 import type { LookupBatchReturn } from './getLookupBatch.js'
 
-export function lockLookupBatch(
+export default function lockLookupBatch(
   batchId: number,
   sessionUser: PTSUser
 ): LookupBatchReturn {
@@ -80,5 +80,3 @@ export function lockLookupBatch(
     success: info.changes > 0
   }
 }
-
-export default lockLookupBatch

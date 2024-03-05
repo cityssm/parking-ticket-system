@@ -1,12 +1,12 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import * as parkingDB_getLicencePlates from '../../database/parkingDB/getLicencePlates.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const queryOptions: parkingDB_getLicencePlates.GetLicencePlatesQueryOptions =
     {
-      limit: Number.parseInt(request.body.limit, 10),
-      offset: Number.parseInt(request.body.offset, 10),
+      limit: Number.parseInt(request.body.limit as string, 10),
+      offset: Number.parseInt(request.body.offset as string, 10),
       licencePlateNumber: request.body.licencePlateNumber
     }
 
@@ -21,5 +21,3 @@ export const handler: RequestHandler = (request, response) => {
 
   response.json(parkingDB_getLicencePlates.getLicencePlates(queryOptions))
 }
-
-export default handler

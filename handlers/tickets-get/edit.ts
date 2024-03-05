@@ -1,10 +1,10 @@
 import { dateToString } from '@cityssm/utils-datetime'
 import type { Request, Response } from 'express'
 
-import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js'
+import getParkingTicket from '../../database/parkingDB/getParkingTicket.js'
 import { getRecentParkingTicketVehicleMakeModelValues } from '../../database/parkingDB.js'
 
-export async function handler(
+export default async function handler(
   request: Request,
   response: Response
 ): Promise<void> {
@@ -38,5 +38,3 @@ export async function handler(
     vehicleMakeModelDatalist
   })
 }
-
-export default handler

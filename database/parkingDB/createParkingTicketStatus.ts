@@ -19,7 +19,7 @@ type CreateParkingTicketStatusReturn =
       success: false
     }
 
-export function createParkingTicketStatus(
+export default function createParkingTicketStatus(
   requestBodyOrObject: Partial<ParkingTicketStatusLog>,
   sessionUser: PTSUser,
   resolveTicket: boolean,
@@ -78,5 +78,3 @@ export function createParkingTicketStatus(
     statusIndex: statusIndexNew
   }
 }
-
-export default createParkingTicketStatus

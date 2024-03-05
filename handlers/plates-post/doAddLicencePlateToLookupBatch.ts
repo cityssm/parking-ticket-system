@@ -1,10 +1,10 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { addLicencePlateToLookupBatch } from '../../database/parkingDB/addLicencePlateToLookupBatch.js'
 import getLookupBatch from '../../database/parkingDB/getLookupBatch.js'
 import type { LicencePlateLookupBatchEntry } from '../../types/recordTypes.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const result = addLicencePlateToLookupBatch(
     request.body as LicencePlateLookupBatchEntry,
     request.session.user as PTSUser
@@ -16,7 +16,5 @@ export const handler: RequestHandler = (request, response) => {
     )
   }
 
-  return response.json(result)
+  response.json(result)
 }
-
-export default handler

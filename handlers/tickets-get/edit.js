@@ -1,7 +1,7 @@
 import { dateToString } from '@cityssm/utils-datetime';
-import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js';
+import getParkingTicket from '../../database/parkingDB/getParkingTicket.js';
 import { getRecentParkingTicketVehicleMakeModelValues } from '../../database/parkingDB.js';
-export async function handler(request, response) {
+export default async function handler(request, response) {
     const ticketId = Number.parseInt(request.params.ticketId, 10);
     const ticket = await getParkingTicket(ticketId, request.session.user);
     if (!ticket) {
@@ -23,4 +23,3 @@ export async function handler(request, response) {
         vehicleMakeModelDatalist
     });
 }
-export default handler;

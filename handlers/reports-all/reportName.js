@@ -1,8 +1,8 @@
 import papaparse from 'papaparse';
-import * as parkingDB_reporting from '../../database/parkingDB-reporting.js';
-export const handler = (request, response) => {
+import { getReportData } from '../../database/parkingDB-reporting.js';
+export default function handler(request, response) {
     const reportName = request.params.reportName;
-    const rows = parkingDB_reporting.getReportData(reportName, request.query);
+    const rows = getReportData(reportName, request.query);
     if (!rows) {
         response.redirect('/reports/?error=reportNotAvailable');
         return;
@@ -11,5 +11,4 @@ export const handler = (request, response) => {
     response.setHeader('Content-Disposition', `attachment; filename=${reportName}-${Date.now().toString()}.csv`);
     response.setHeader('Content-Type', 'text/csv');
     response.send(csv);
-};
-export default handler;
+}

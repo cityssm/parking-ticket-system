@@ -1,9 +1,12 @@
 import type { Request, Response } from 'express'
 
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
+import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js'
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js'
 
-export async function handler(request: Request, response: Response): Promise<void> {
+export async function handler(
+  request: Request,
+  response: Response
+): Promise<void> {
   const ownerRecord = await getLicencePlateOwner(
     request.body.licencePlateCountry as string,
     request.body.licencePlateProvince as string,

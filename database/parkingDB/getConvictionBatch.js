@@ -1,7 +1,7 @@
 import { dateIntegerToString, isValidDateInteger, timeIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function getConvictionBatch(batchId_or_negOne) {
+export default function getConvictionBatch(batchId_or_negOne) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -51,4 +51,3 @@ export function getConvictionBatch(batchId_or_negOne) {
     database.close();
     return batch;
 }
-export default getConvictionBatch;

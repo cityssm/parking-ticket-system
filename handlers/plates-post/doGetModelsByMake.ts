@@ -1,12 +1,11 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
+import { getModelsByMakeFromCache } from '../../helpers/functions.vehicle.js'
 
-export const handler: RequestHandler = (request, response) => {
-  const makeModelList = vehicleFunctions.getModelsByMakeFromCache(
-    request.body.vehicleMake
+export default function handler(request: Request, response: Response): void {
+  const makeModelList = getModelsByMakeFromCache(
+    request.body.vehicleMake as string
   )
+
   response.json(makeModelList)
 }
-
-export default handler

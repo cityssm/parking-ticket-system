@@ -1,6 +1,5 @@
-import { createLookupBatch } from '../../database/parkingDB/createLookupBatch.js';
-export const handler = (request, response) => {
+import createLookupBatch from '../../database/parkingDB/createLookupBatch.js';
+export default function handler(request, response) {
     const createBatchResponse = createLookupBatch(request.body, request.session.user);
-    return response.json(createBatchResponse);
-};
-export default handler;
+    response.json(createBatchResponse);
+}

@@ -21,7 +21,7 @@ interface LookupErrorLogEntry extends LicencePlate {
   vehicleMakeModel: string
 }
 
-export function getUnacknowledgedLookupErrorLog(
+export default function getUnacknowledgedLookupErrorLog(
   batchId_or_negOne: number,
   logIndex_or_negOne: number
 ): LookupErrorLogEntry[] {
@@ -76,5 +76,3 @@ export function getUnacknowledgedLookupErrorLog(
 
   return logEntries
 }
-
-export default getUnacknowledgedLookupErrorLog

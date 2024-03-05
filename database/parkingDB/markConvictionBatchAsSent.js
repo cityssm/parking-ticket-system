@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function markConvictionBatchAsSent(batchId, sessionUser) {
+export default function markConvictionBatchAsSent(batchId, sessionUser) {
     const database = sqlite(databasePath);
     const rightNow = new Date();
     const info = database
@@ -29,4 +29,3 @@ export function markConvictionBatchAsSent(batchId, sessionUser) {
     database.close();
     return info.changes > 0;
 }
-export default markConvictionBatchAsSent;

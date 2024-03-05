@@ -1,6 +1,6 @@
-import { getConvictionBatch } from '../../database/parkingDB/getConvictionBatch.js';
-import { markConvictionBatchAsSent } from '../../database/parkingDB/markConvictionBatchAsSent.js';
-export const handler = (request, response) => {
+import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js';
+import markConvictionBatchAsSent from '../../database/parkingDB/markConvictionBatchAsSent.js';
+export default function handler(request, response) {
     const batchId = Number.parseInt(request.params.batchId, 10);
     const batch = getConvictionBatch(batchId);
     if (batch !== undefined && batch.sentDate === undefined) {
@@ -10,5 +10,4 @@ export const handler = (request, response) => {
         headTitle: 'Parking Tickets Conviction Batch',
         batch
     });
-};
-export default handler;
+}

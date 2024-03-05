@@ -1,12 +1,12 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 import papaparse from 'papaparse'
 
-import * as parkingDB_reporting from '../../database/parkingDB-reporting.js'
+import { getReportData } from '../../database/parkingDB-reporting.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const reportName = request.params.reportName
 
-  const rows = parkingDB_reporting.getReportData(
+  const rows = getReportData(
     reportName,
     request.query as Record<string, string>
   )
@@ -27,5 +27,3 @@ export const handler: RequestHandler = (request, response) => {
 
   response.send(csv)
 }
-
-export default handler

@@ -1,2 +1,1 @@
-export declare function markConvictionBatchAsSent(batchId: number, sessionUser: PTSUser): boolean;
-export default markConvictionBatchAsSent;
+export default function markConvictionBatchAsSent(batchId: number, sessionUser: PTSUser): boolean;

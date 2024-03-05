@@ -3,7 +3,7 @@ import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getNextParkingTicketStatusIndex } from './getNextParkingTicketStatusIndex.js';
 import { resolveParkingTicket } from './resolveParkingTicket.js';
-export function createParkingTicketStatus(requestBodyOrObject, sessionUser, resolveTicket, connectedDatabase) {
+export default function createParkingTicketStatus(requestBodyOrObject, sessionUser, resolveTicket, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath);
     const statusIndexNew = getNextParkingTicketStatusIndex(requestBodyOrObject.ticketId, database);
     const rightNow = new Date();
@@ -27,4 +27,3 @@ export function createParkingTicketStatus(requestBodyOrObject, sessionUser, reso
         statusIndex: statusIndexNew
     };
 }
-export default createParkingTicketStatus;

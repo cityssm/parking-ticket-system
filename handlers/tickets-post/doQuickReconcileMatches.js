@@ -1,5 +1,5 @@
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
-import { getOwnershipReconciliationRecords } from '../../database/parkingDB/getOwnershipReconciliationRecords.js';
+import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js';
+import getOwnershipReconciliationRecords from '../../database/parkingDB/getOwnershipReconciliationRecords.js';
 import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js';
 export async function handler(request, response) {
     const records = await getOwnershipReconciliationRecords();

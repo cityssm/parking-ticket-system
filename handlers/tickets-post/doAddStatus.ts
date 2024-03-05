@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express'
 
-import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
+import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js'
 
 export const handler: RequestHandler = (request, response) => {
   const result = createParkingTicketStatus(

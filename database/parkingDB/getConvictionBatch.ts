@@ -1,4 +1,8 @@
-import { dateIntegerToString, isValidDateInteger, timeIntegerToString } from '@cityssm/utils-datetime'
+import {
+  dateIntegerToString,
+  isValidDateInteger,
+  timeIntegerToString
+} from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -7,7 +11,7 @@ import type {
   ParkingTicketStatusLog
 } from '../../types/recordTypes.js'
 
-export function getConvictionBatch(
+export default function getConvictionBatch(
   // eslint-disable-next-line @typescript-eslint/naming-convention
   batchId_or_negOne: number
 ): ParkingTicketConvictionBatch | undefined {
@@ -47,9 +51,7 @@ export function getConvictionBatch(
     ? dateIntegerToString(batch.lockDate)
     : ''
 
-  batch.sentDateString = dateIntegerToString(
-    batch.sentDate as number
-  )
+  batch.sentDateString = dateIntegerToString(batch.sentDate as number)
 
   batch.batchEntries = database
     .prepare(
@@ -84,5 +86,3 @@ export function getConvictionBatch(
 
   return batch
 }
-
-export default getConvictionBatch

@@ -2,7 +2,7 @@ export declare function addParkingTicketToConvictionBatch(batchId: number, ticke
     success: boolean;
     message?: string;
 };
-export declare const addAllParkingTicketsToConvictionBatch: (batchId: number, ticketIds: number[], sessionUser: PTSUser) => {
+export declare function addAllParkingTicketsToConvictionBatch(batchId: number, ticketIds: number[], sessionUser: PTSUser): {
     success: boolean;
     successCount: number;
     message?: string;
