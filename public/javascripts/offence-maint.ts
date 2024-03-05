@@ -32,7 +32,7 @@ type UpdateOffenceResponseJSON =
 ;(() => {
   const offenceMap = new Map<string, ParkingOffence>()
 
-  const offenceAccountNumberPatternString = exports.accountNumberPattern
+  const offenceAccountNumberPatternString = exports.accountNumberPattern as string
   delete exports.accountNumberPattern
 
   const locationMap = new Map<string, ParkingLocation>()
@@ -99,7 +99,7 @@ type UpdateOffenceResponseJSON =
 
     function doDelete(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/admin/doDeleteOffence',
+        `${pts.urlPrefix}/admin/doDeleteOffence`,
         {
           bylawNumber: offence.bylawNumber,
           locationKey: offence.locationKey
@@ -134,7 +134,7 @@ type UpdateOffenceResponseJSON =
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        pts.urlPrefix + '/admin/doUpdateOffence',
+        `${pts.urlPrefix}/admin/doUpdateOffence`,
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as UpdateOffenceResponseJSON
@@ -233,7 +233,7 @@ type UpdateOffenceResponseJSON =
     callbackFunction?: (responseJSON: UpdateOffenceResponseJSON) => void
   ): void {
     cityssm.postJSON(
-      pts.urlPrefix + '/admin/doAddOffence',
+      `${pts.urlPrefix}/admin/doAddOffence`,
       {
         bylawNumber,
         locationKey,
@@ -388,7 +388,7 @@ type UpdateOffenceResponseJSON =
       onremoved() {
         if (doRefreshOnClose) {
           cityssm.postJSON(
-            pts.urlPrefix + '/offences/doGetAllOffences',
+            `${pts.urlPrefix}/offences/doGetAllOffences`,
             {},
             (rawResponseJSON) => {
               const offenceList = rawResponseJSON as unknown as ParkingOffence[]

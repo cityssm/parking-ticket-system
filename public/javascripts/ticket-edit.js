@@ -25,8 +25,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         <span class="icon"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i></span>
         </span>`;
         cityssm.postJSON(isCreate
-            ? pts.urlPrefix + '/tickets/doCreateTicket'
-            : pts.urlPrefix + '/tickets/doUpdateTicket', formEvent.currentTarget, (rawResponseJSON) => {
+            ? `${pts.urlPrefix}/tickets/doCreateTicket`
+            : `${pts.urlPrefix}/tickets/doUpdateTicket`, formEvent.currentTarget, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
             if (responseJSON.success) {
                 cityssm.disableNavBlocker();
@@ -56,7 +56,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     });
     function doDelete() {
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doDeleteTicket', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doDeleteTicket`, {
             ticketId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
@@ -135,7 +135,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             containerElement.append(listElement);
         }
         function populateLocationsFunction() {
-            cityssm.postJSON(pts.urlPrefix + '/offences/doGetAllLocations', {}, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/offences/doGetAllLocations`, {}, (rawResponseJSON) => {
                 const locationListResponse = rawResponseJSON;
                 locationList = locationListResponse;
                 renderLocationsFunction();
@@ -243,7 +243,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function populateBylawsFunction() {
         const locationKey = document.querySelector('#ticket--locationKey').value;
-        cityssm.postJSON(pts.urlPrefix + '/offences/doGetOffencesByLocation', {
+        cityssm.postJSON(`${pts.urlPrefix}/offences/doGetOffencesByLocation`, {
             locationKey
         }, (rawResponseJSON) => {
             const offenceListResponse = rawResponseJSON;

@@ -16,7 +16,7 @@ export async function handler(request, response) {
     const owners = await getAllLicencePlateOwners(licencePlateCountry, licencePlateProvince, licencePlateNumber);
     const tickets = getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, request.session.user);
     response.render('plate-view', {
-        headTitle: 'Licence Plate ' + licencePlateNumber,
+        headTitle: `Licence Plate ${licencePlateNumber}`,
         licencePlateNumber,
         licencePlateProvince,
         licencePlateCountry,

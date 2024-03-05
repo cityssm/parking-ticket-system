@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         buttonElement.setAttribute('disabled', 'disabled');
         const index = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const ticketId = convictableTickets[index].ticketId;
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doAddTicketToConvictionBatch', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doAddTicketToConvictionBatch`, {
             batchId: currentBatch.batchId,
             ticketId
         }, (rawResponseJSON) => {
@@ -40,7 +40,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         let loadingCloseModalFunction;
         function addFunction() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets-ontario/doAddAllTicketsToConvictionBatch', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets-ontario/doAddAllTicketsToConvictionBatch`, {
                 batchId: currentBatch.batchId,
                 ticketIds: displayedTicketIds
             }, (rawResponseJSON) => {
@@ -170,7 +170,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         buttonElement.setAttribute('disabled', 'disabled');
         const index = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
         const ticketId = currentBatch.batchEntries[index].ticketId;
-        cityssm.postJSON(pts.urlPrefix + '/tickets-ontario/doRemoveTicketFromConvictionBatch', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets-ontario/doRemoveTicketFromConvictionBatch`, {
             batchId: currentBatch.batchId,
             ticketId
         }, (rawResponseJSON) => {
@@ -189,7 +189,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function clearBatch(clickEvent) {
         clickEvent.preventDefault();
         function doClear() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets-ontario/doClearConvictionBatch', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets-ontario/doClearConvictionBatch`, {
                 batchId: currentBatch.batchId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -245,7 +245,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function doUnlock() {
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doUnlockConvictionBatch', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doUnlockConvictionBatch`, {
             batchId: currentBatch.batchId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
@@ -277,7 +277,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             window.open(`/tickets/convict/${currentBatch.batchId.toString()}/print`);
         }
         function doMarkAsSent() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doMarkConvictionBatchSent', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doMarkConvictionBatchSent`, {
                 batchId: currentBatch.batchId
             }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
@@ -403,7 +403,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function confirmCreateBatch() {
         function doCreate() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doCreateConvictionBatch', {}, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doCreateConvictionBatch`, {}, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     currentBatch = responseJSON.batch;
@@ -431,7 +431,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             const batchId = clickEvent.currentTarget.dataset
                 .batchId;
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doGetConvictionBatch', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doGetConvictionBatch`, {
                 batchId
             }, (rawResponseJSON) => {
                 const batchObject = rawResponseJSON;
@@ -452,7 +452,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         confirmCreateBatch();
                     });
                 }
-                cityssm.postJSON(pts.urlPrefix + '/tickets/doGetRecentConvictionBatches', {}, (rawResponseJSON) => {
+                cityssm.postJSON(`${pts.urlPrefix}/tickets/doGetRecentConvictionBatches`, {}, (rawResponseJSON) => {
                     const batchList = rawResponseJSON;
                     const resultsContainerElement = modalElement.querySelector('.is-results-container');
                     cityssm.clearElement(resultsContainerElement);

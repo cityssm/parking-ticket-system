@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const bylaw = bylawMap.get(offence.bylawNumber);
         let editOffenceModalCloseFunction;
         function doDelete() {
-            cityssm.postJSON(pts.urlPrefix + '/admin/doDeleteOffence', {
+            cityssm.postJSON(`${pts.urlPrefix}/admin/doDeleteOffence`, {
                 bylawNumber: offence.bylawNumber,
                 locationKey: offence.locationKey
             }, (rawResponseJSON) => {
@@ -61,7 +61,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         function doSubmit(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON(pts.urlPrefix + '/admin/doUpdateOffence', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/admin/doUpdateOffence`, formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     loadOffenceMap(responseJSON.offences);
@@ -105,7 +105,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function addOffence(bylawNumber, locationKey, returnAndRenderOffences, callbackFunction) {
-        cityssm.postJSON(pts.urlPrefix + '/admin/doAddOffence', {
+        cityssm.postJSON(`${pts.urlPrefix}/admin/doAddOffence`, {
             bylawNumber,
             locationKey,
             returnOffences: returnAndRenderOffences
@@ -214,7 +214,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             },
             onremoved() {
                 if (doRefreshOnClose) {
-                    cityssm.postJSON(pts.urlPrefix + '/offences/doGetAllOffences', {}, (rawResponseJSON) => {
+                    cityssm.postJSON(`${pts.urlPrefix}/offences/doGetAllOffences`, {}, (rawResponseJSON) => {
                         const offenceList = rawResponseJSON;
                         loadOffenceMap(offenceList);
                         renderOffences();

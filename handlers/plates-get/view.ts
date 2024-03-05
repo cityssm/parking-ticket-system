@@ -36,7 +36,7 @@ export async function handler(request: Request, response: Response): Promise<voi
   )
 
   response.render('plate-view', {
-    headTitle: 'Licence Plate ' + licencePlateNumber,
+    headTitle: `Licence Plate ${licencePlateNumber}`,
 
     licencePlateNumber,
     licencePlateProvince,

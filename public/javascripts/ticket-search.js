@@ -148,7 +148,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
       <em>Loading tickets...</em>
       </p>`;
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doGetTickets', formElement, processTicketResults);
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doGetTickets`, formElement, processTicketResults);
     }
     function resetOffsetAndGetTicketsFunction() {
         offsetElement.value = '0';

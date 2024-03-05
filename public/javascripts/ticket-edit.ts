@@ -77,8 +77,8 @@ declare const pts: ptsGlobal
 
       cityssm.postJSON(
         isCreate
-          ? pts.urlPrefix + '/tickets/doCreateTicket'
-          : pts.urlPrefix + '/tickets/doUpdateTicket',
+          ? `${pts.urlPrefix}/tickets/doCreateTicket`
+          : `${pts.urlPrefix}/tickets/doUpdateTicket`,
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as FormResponseJSON
@@ -133,7 +133,7 @@ declare const pts: ptsGlobal
 
   function doDelete(): void {
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets/doDeleteTicket',
+      `${pts.urlPrefix}/tickets/doDeleteTicket`,
       {
         ticketId
       },
@@ -265,7 +265,7 @@ declare const pts: ptsGlobal
 
     function populateLocationsFunction(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/offences/doGetAllLocations',
+        `${pts.urlPrefix}/offences/doGetAllLocations`,
         {},
         (rawResponseJSON) => {
           const locationListResponse =
@@ -457,7 +457,7 @@ declare const pts: ptsGlobal
     ).value
     // const locationName = document.getElementById("ticket--locationName").value;
     cityssm.postJSON(
-      pts.urlPrefix + '/offences/doGetOffencesByLocation',
+      `${pts.urlPrefix}/offences/doGetOffencesByLocation`,
       {
         locationKey
       },

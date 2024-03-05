@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     function doResolve() {
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doResolveTicket', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doResolveTicket`, {
             ticketId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
@@ -37,7 +37,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const statusIndex = clickEvent.currentTarget.dataset
             .statusIndex;
         function doDeleteStatus() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doDeleteStatus', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doDeleteStatus`, {
                 ticketId,
                 statusIndex
             }, (rawResponseJSON) => {
@@ -64,7 +64,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const statusObject = statusList[index];
         function doSubmit(formEvent) {
             formEvent.preventDefault();
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doUpdateStatus', formEvent.currentTarget, (rawResponseJSON) => {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doUpdateStatus`, formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     editStatusCloseModalFunction();

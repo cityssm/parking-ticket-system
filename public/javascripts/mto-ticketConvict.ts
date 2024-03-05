@@ -52,7 +52,7 @@ declare const pts: ptsGlobal
     const ticketId = convictableTickets[index].ticketId
 
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets/doAddTicketToConvictionBatch',
+      `${pts.urlPrefix}/tickets/doAddTicketToConvictionBatch`,
       {
         batchId: currentBatch.batchId,
         ticketId
@@ -94,7 +94,7 @@ declare const pts: ptsGlobal
 
     function addFunction(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/tickets-ontario/doAddAllTicketsToConvictionBatch',
+        `${pts.urlPrefix}/tickets-ontario/doAddAllTicketsToConvictionBatch`,
         {
           batchId: currentBatch.batchId,
           ticketIds: displayedTicketIds
@@ -288,7 +288,7 @@ declare const pts: ptsGlobal
     const ticketId = currentBatch.batchEntries[index].ticketId
 
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets-ontario/doRemoveTicketFromConvictionBatch',
+      `${pts.urlPrefix}/tickets-ontario/doRemoveTicketFromConvictionBatch`,
       {
         batchId: currentBatch.batchId,
         ticketId
@@ -321,7 +321,7 @@ declare const pts: ptsGlobal
 
     function doClear(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/tickets-ontario/doClearConvictionBatch',
+        `${pts.urlPrefix}/tickets-ontario/doClearConvictionBatch`,
         {
           batchId: currentBatch.batchId
         },
@@ -414,7 +414,7 @@ declare const pts: ptsGlobal
 
   function doUnlock(): void {
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets/doUnlockConvictionBatch',
+      `${pts.urlPrefix}/tickets/doUnlockConvictionBatch`,
       {
         batchId: currentBatch.batchId
       },
@@ -457,7 +457,7 @@ declare const pts: ptsGlobal
 
     function doMarkAsSent(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/tickets/doMarkConvictionBatchSent',
+        `${pts.urlPrefix}/tickets/doMarkConvictionBatchSent`,
         {
           batchId: currentBatch.batchId
         },
@@ -639,7 +639,7 @@ declare const pts: ptsGlobal
   function confirmCreateBatch(): void {
     function doCreate(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/tickets/doCreateConvictionBatch',
+        `${pts.urlPrefix}/tickets/doCreateConvictionBatch`,
         {},
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as {
@@ -681,7 +681,7 @@ declare const pts: ptsGlobal
           .batchId
 
         cityssm.postJSON(
-          pts.urlPrefix + '/tickets/doGetConvictionBatch',
+          `${pts.urlPrefix}/tickets/doGetConvictionBatch`,
           {
             batchId
           },
@@ -719,7 +719,7 @@ declare const pts: ptsGlobal
           }
 
           cityssm.postJSON(
-            pts.urlPrefix + '/tickets/doGetRecentConvictionBatches',
+            `${pts.urlPrefix}/tickets/doGetRecentConvictionBatches`,
             {},
             (rawResponseJSON) => {
               const batchList =

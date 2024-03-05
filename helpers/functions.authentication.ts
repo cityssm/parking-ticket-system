@@ -15,7 +15,7 @@ const authenticateViaActiveDirectory = async (
       const ad = new ActiveDirectory(activeDirectoryConfig)
 
       ad.authenticate(
-        userDomain + '\\' + userName,
+        `${userDomain}\\${userName}`,
         password,
         async (error, auth) => {
           if (error) {

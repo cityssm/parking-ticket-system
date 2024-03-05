@@ -240,7 +240,7 @@ declare const pts: ptsGlobal
       </p>`
 
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets/doGetTickets',
+      `${pts.urlPrefix}/tickets/doGetTickets`,
       formElement,
       processTicketResults
     )

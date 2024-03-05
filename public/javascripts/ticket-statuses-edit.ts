@@ -35,7 +35,7 @@ declare const pts: ptsGlobal
 
   function doResolve(): void {
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets/doResolveTicket',
+      `${pts.urlPrefix}/tickets/doResolveTicket`,
       {
         ticketId
       },
@@ -69,7 +69,7 @@ declare const pts: ptsGlobal
 
     function doDeleteStatus(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/tickets/doDeleteStatus',
+        `${pts.urlPrefix}/tickets/doDeleteStatus`,
         {
           ticketId,
           statusIndex
@@ -110,7 +110,7 @@ declare const pts: ptsGlobal
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        pts.urlPrefix + '/tickets/doUpdateStatus',
+        `${pts.urlPrefix}/tickets/doUpdateStatus`,
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as { success: boolean }
