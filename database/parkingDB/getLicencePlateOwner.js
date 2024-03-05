@@ -1,8 +1,8 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
+import { getMakeFromNCIC } from '../../helpers/functions.vehicle.js';
 export async function getLicencePlateOwner(licencePlateCountry, licencePlateProvince, licencePlateNumber, recordDateOrBefore, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath, { readonly: true });
     const licencePlateCountryAlias = getConfigProperty('licencePlateCountryAliases')[licencePlateCountry] ??
@@ -21,10 +21,9 @@ export async function getLicencePlateOwner(licencePlateCountry, licencePlateProv
             possibleOwnerObject.licencePlateProvince;
         if (licencePlateCountryAlias === ownerPlateCountryAlias &&
             licencePlateProvinceAlias === ownerPlateProvinceAlias) {
-            possibleOwnerObject.recordDateString = dateTimeFns.dateIntegerToString(possibleOwnerObject.recordDate);
-            possibleOwnerObject.licencePlateExpiryDateString =
-                dateTimeFns.dateIntegerToString(possibleOwnerObject.licencePlateExpiryDate);
-            possibleOwnerObject.vehicleMake = await vehicleFunctions.getMakeFromNCIC(possibleOwnerObject.vehicleNCIC);
+            possibleOwnerObject.recordDateString = dateIntegerToString(possibleOwnerObject.recordDate);
+            possibleOwnerObject.licencePlateExpiryDateString = dateIntegerToString(possibleOwnerObject.licencePlateExpiryDate);
+            possibleOwnerObject.vehicleMake = await getMakeFromNCIC(possibleOwnerObject.vehicleNCIC);
             return possibleOwnerObject;
         }
     }

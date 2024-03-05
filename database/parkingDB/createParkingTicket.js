@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateStringToInteger, timeStringToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
@@ -20,7 +20,7 @@ function hasDuplicateTicket(ticketNumber, issueDate, connectedDatabase) {
 export function createParkingTicket(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const nowMillis = Date.now();
-    const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
+    const issueDate = dateStringToInteger(requestBody.issueDateString);
     if (getConfigProperty('parkingTickets.ticketNumber.isUnique') &&
         hasDuplicateTicket(requestBody.ticketNumber, issueDate, database)) {
         database.close();
@@ -29,7 +29,7 @@ export function createParkingTicket(requestBody, sessionUser) {
             message: 'A ticket with the same ticket number was seen in the last two years.'
         };
     }
-    let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(requestBody.licencePlateExpiryDateString ?? '');
+    let licencePlateExpiryDate = dateStringToInteger(requestBody.licencePlateExpiryDateString ?? '');
     if (!getConfigProperty('parkingTickets.licencePlateExpiryDate.includeDay')) {
         const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(requestBody);
         if (licencePlateExpiryDateReturn.success) {
@@ -56,7 +56,7 @@ export function createParkingTicket(requestBody, sessionUser) {
         recordCreate_userName, recordCreate_timeMillis,
         recordUpdate_userName, recordUpdate_timeMillis)
         values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, sessionUser.userName, nowMillis);
+        .run(requestBody.ticketNumber, issueDate, timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, sessionUser.userName, nowMillis);
     database.close();
     return {
         success: true,

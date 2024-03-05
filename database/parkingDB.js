@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
 import { getConfigProperty } from '../helpers/functions.config.js';
@@ -33,7 +33,7 @@ export const getRecentParkingTicketVehicleMakeModelValues = () => {
     });
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    const issueDate = dateTimeFns.dateToInteger(sixMonthsAgo);
+    const issueDate = dateToInteger(sixMonthsAgo);
     const rows = database
         .prepare(`select vehicleMakeModel
         from ParkingTickets

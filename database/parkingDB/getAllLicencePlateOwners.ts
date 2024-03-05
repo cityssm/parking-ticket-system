@@ -1,8 +1,8 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateIntegerToString } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
+import { getMakeFromNCIC } from '../../helpers/functions.vehicle.js'
 import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
 export async function getAllLicencePlateOwners(
@@ -32,8 +32,8 @@ export async function getAllLicencePlateOwners(
   database.close()
 
   for (const owner of owners) {
-    owner.recordDateString = dateTimeFns.dateIntegerToString(owner.recordDate)
-    owner.vehicleMake = await vehicleFunctions.getMakeFromNCIC(owner.vehicleNCIC)
+    owner.recordDateString = dateIntegerToString(owner.recordDate)
+    owner.vehicleMake = await getMakeFromNCIC(owner.vehicleNCIC)
   }
 
   return owners

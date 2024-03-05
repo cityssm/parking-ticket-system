@@ -1,6 +1,6 @@
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js';
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js';
-import * as ownerFunctions from '../../helpers/functions.owner.js';
+import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js';
 export async function handler(request, response) {
     const ownerRecord = await getLicencePlateOwner(request.body.licencePlateCountry, request.body.licencePlateProvince, request.body.licencePlateNumber, Number.parseInt(request.body.recordDate, 10));
     if (ownerRecord === undefined) {
@@ -10,7 +10,7 @@ export async function handler(request, response) {
         });
         return;
     }
-    const ownerAddress = ownerFunctions.getFormattedOwnerAddress(ownerRecord);
+    const ownerAddress = getFormattedOwnerAddress(ownerRecord);
     const statusResponse = createParkingTicketStatus({
         recordType: 'status',
         ticketId: Number.parseInt(request.body.ticketId, 10),

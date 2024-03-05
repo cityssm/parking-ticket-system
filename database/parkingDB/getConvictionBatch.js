@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateIntegerToString, isValidDateInteger, timeIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export function getConvictionBatch(batchId_or_negOne) {
@@ -24,11 +24,11 @@ export function getConvictionBatch(batchId_or_negOne) {
         database.close();
         return undefined;
     }
-    batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
-    batch.lockDateString = dateTimeFns.isValidDateInteger(batch.lockDate)
-        ? dateTimeFns.dateIntegerToString(batch.lockDate)
+    batch.batchDateString = dateIntegerToString(batch.batchDate);
+    batch.lockDateString = isValidDateInteger(batch.lockDate)
+        ? dateIntegerToString(batch.lockDate)
         : '';
-    batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
+    batch.sentDateString = dateIntegerToString(batch.sentDate);
     batch.batchEntries = database
         .prepare(`select s.statusIndex,
         s.statusDate, s.statusTime,
@@ -44,9 +44,9 @@ export function getConvictionBatch(batchId_or_negOne) {
         order by t.licencePlateCountry, t.licencePlateProvince, t.licencePlateNumber`)
         .all(batch.batchId.toString());
     for (const batchEntry of batch.batchEntries) {
-        batchEntry.statusDateString = dateTimeFns.dateIntegerToString(batchEntry.statusDate);
-        batchEntry.statusTimeString = dateTimeFns.timeIntegerToString(batchEntry.statusTime);
-        batchEntry.issueDateString = dateTimeFns.dateIntegerToString(batchEntry.issueDate);
+        batchEntry.statusDateString = dateIntegerToString(batchEntry.statusDate);
+        batchEntry.statusTimeString = timeIntegerToString(batchEntry.statusTime);
+        batchEntry.issueDateString = dateIntegerToString(batchEntry.issueDate);
     }
     database.close();
     return batch;

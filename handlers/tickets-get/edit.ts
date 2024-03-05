@@ -1,8 +1,8 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateToString } from '@cityssm/utils-datetime'
 import type { Request, Response } from 'express'
 
 import { getParkingTicket } from '../../database/parkingDB/getParkingTicket.js'
-import * as parkingDB from '../../database/parkingDB.js'
+import { getRecentParkingTicketVehicleMakeModelValues } from '../../database/parkingDB.js'
 
 export async function handler(
   request: Request,
@@ -28,13 +28,13 @@ export async function handler(
   }
 
   const vehicleMakeModelDatalist =
-    parkingDB.getRecentParkingTicketVehicleMakeModelValues()
+    getRecentParkingTicketVehicleMakeModelValues()
 
   response.render('ticket-edit', {
     headTitle: `Ticket ${ticket.ticketNumber}`,
     isCreate: false,
     ticket,
-    issueDateMaxString: dateTimeFns.dateToString(new Date()),
+    issueDateMaxString: dateToString(new Date()),
     vehicleMakeModelDatalist
   })
 }

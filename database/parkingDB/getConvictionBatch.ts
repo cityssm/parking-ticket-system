@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateIntegerToString, isValidDateInteger, timeIntegerToString } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -40,14 +40,14 @@ export function getConvictionBatch(
     return undefined
   }
 
-  batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate)
+  batch.batchDateString = dateIntegerToString(batch.batchDate)
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  batch.lockDateString = dateTimeFns.isValidDateInteger(batch.lockDate)
-    ? dateTimeFns.dateIntegerToString(batch.lockDate)
+  batch.lockDateString = isValidDateInteger(batch.lockDate)
+    ? dateIntegerToString(batch.lockDate)
     : ''
 
-  batch.sentDateString = dateTimeFns.dateIntegerToString(
+  batch.sentDateString = dateIntegerToString(
     batch.sentDate as number
   )
 
@@ -69,13 +69,13 @@ export function getConvictionBatch(
     .all(batch.batchId.toString()) as ParkingTicketStatusLog[]
 
   for (const batchEntry of batch.batchEntries) {
-    batchEntry.statusDateString = dateTimeFns.dateIntegerToString(
+    batchEntry.statusDateString = dateIntegerToString(
       batchEntry.statusDate as number
     )
-    batchEntry.statusTimeString = dateTimeFns.timeIntegerToString(
+    batchEntry.statusTimeString = timeIntegerToString(
       batchEntry.statusTime as number
     )
-    batchEntry.issueDateString = dateTimeFns.dateIntegerToString(
+    batchEntry.issueDateString = dateIntegerToString(
       batchEntry.issueDate as number
     )
   }

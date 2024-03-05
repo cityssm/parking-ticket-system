@@ -2,24 +2,24 @@ import * as dateTimeFns from '@cityssm/utils-datetime';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
 import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async';
-import * as parkingDB from '../database/parkingDB.js';
+import { getDistinctLicencePlateOwnerVehicleNCICs } from '../database/parkingDB.js';
 import { getConfigProperty } from '../helpers/functions.config.js';
-import * as vehicleFunctions from '../helpers/functions.vehicle.js';
+import { getMakeFromNCIC, getModelsByMake } from '../helpers/functions.vehicle.js';
 const debug = Debug('parking-ticket-system:task:nhtsaChildProcess');
 const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
 let cutoffDate = dateTimeFns.dateToInteger(initDate);
 let terminateTask = false;
 async function doTask() {
-    const vehicleNCICs = parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
+    const vehicleNCICs = getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);
     for (const ncicRecord of vehicleNCICs) {
         if (terminateTask) {
             break;
         }
         cutoffDate = ncicRecord.recordDateMax;
-        const vehicleMake = await vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC);
+        const vehicleMake = await getMakeFromNCIC(ncicRecord.vehicleNCIC);
         debug(`Processing ${vehicleMake}`);
-        await vehicleFunctions.getModelsByMake(vehicleMake);
+        await getModelsByMake(vehicleMake);
     }
 }
 let timeoutId;

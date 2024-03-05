@@ -1,4 +1,7 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import {
+  dateIntegerToString,
+  timeIntegerToString
+} from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -10,8 +13,10 @@ import { getParkingLocation } from './getParkingLocation.js'
 import { getParkingTicketRemarks } from './getParkingTicketRemarks.js'
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js'
 
-export async function getParkingTicket(ticketId: number,
-  sessionUser: PTSUser): Promise<ParkingTicket | undefined> {
+export async function getParkingTicket(
+  ticketId: number,
+  sessionUser: PTSUser
+): Promise<ParkingTicket | undefined> {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -41,10 +46,10 @@ export async function getParkingTicket(ticketId: number,
   }
 
   ticket.recordType = 'ticket'
-  ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate)
-  ticket.issueTimeString = dateTimeFns.timeIntegerToString(ticket.issueTime)
+  ticket.issueDateString = dateIntegerToString(ticket.issueDate)
+  ticket.issueTimeString = timeIntegerToString(ticket.issueTime)
 
-  ticket.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(
+  ticket.licencePlateExpiryDateString = dateIntegerToString(
     ticket.licencePlateExpiryDate
   )
 
@@ -59,9 +64,7 @@ export async function getParkingTicket(ticketId: number,
     )
   }
 
-  ticket.resolvedDateString = dateTimeFns.dateIntegerToString(
-    ticket.resolvedDate
-  )
+  ticket.resolvedDateString = dateIntegerToString(ticket.resolvedDate)
   ticket.canUpdate = canUpdateObject(ticket, sessionUser)
 
   // Owner

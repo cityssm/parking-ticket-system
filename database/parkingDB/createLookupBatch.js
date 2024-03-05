@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger, dateToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export const createLookupBatch = (requestBody, sessionUser) => {
@@ -10,7 +10,7 @@ export const createLookupBatch = (requestBody, sessionUser) => {
         recordCreate_userName, recordCreate_timeMillis,
         recordUpdate_userName, recordUpdate_timeMillis)
         values (?, ?, ?, ?, ?, ?)`)
-        .run(dateTimeFns.dateToInteger(rightNow), (requestBody.mto_includeLabels ?? '0') === '1' ? 1 : 0, sessionUser.userName, rightNow.getTime(), sessionUser.userName, rightNow.getTime());
+        .run(dateToInteger(rightNow), (requestBody.mto_includeLabels ?? '0') === '1' ? 1 : 0, sessionUser.userName, rightNow.getTime(), sessionUser.userName, rightNow.getTime());
     database.close();
     return info.changes > 0
         ? {
@@ -18,8 +18,8 @@ export const createLookupBatch = (requestBody, sessionUser) => {
             batch: {
                 recordType: 'batch',
                 batchId: info.lastInsertRowid,
-                batchDate: dateTimeFns.dateToInteger(rightNow),
-                batchDateString: dateTimeFns.dateToString(rightNow),
+                batchDate: dateToInteger(rightNow),
+                batchDateString: dateToString(rightNow),
                 lockDate: undefined,
                 lockDateString: '',
                 batchEntries: []

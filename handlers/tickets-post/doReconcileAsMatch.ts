@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 
 import { createParkingTicketStatus } from '../../database/parkingDB/createParkingTicketStatus.js'
 import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js'
-import * as ownerFunctions from '../../helpers/functions.owner.js'
+import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js'
 
 export async function handler(
   request: Request,
@@ -23,7 +23,7 @@ export async function handler(
     return
   }
 
-  const ownerAddress = ownerFunctions.getFormattedOwnerAddress(ownerRecord)
+  const ownerAddress = getFormattedOwnerAddress(ownerRecord)
 
   const statusResponse = createParkingTicketStatus(
     {

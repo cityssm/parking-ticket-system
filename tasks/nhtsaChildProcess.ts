@@ -7,9 +7,9 @@ import {
   setIntervalAsync
 } from 'set-interval-async'
 
-import * as parkingDB from '../database/parkingDB.js'
+import { getDistinctLicencePlateOwnerVehicleNCICs } from '../database/parkingDB.js'
 import { getConfigProperty } from '../helpers/functions.config.js'
-import * as vehicleFunctions from '../helpers/functions.vehicle.js'
+import { getMakeFromNCIC, getModelsByMake } from '../helpers/functions.vehicle.js'
 
 const debug = Debug('parking-ticket-system:task:nhtsaChildProcess')
 
@@ -22,7 +22,7 @@ let terminateTask = false
 
 async function doTask(): Promise<void> {
   const vehicleNCICs =
-    parkingDB.getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate)
+    getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate)
 
   for (const ncicRecord of vehicleNCICs) {
     if (terminateTask) {
@@ -31,11 +31,11 @@ async function doTask(): Promise<void> {
 
     cutoffDate = ncicRecord.recordDateMax
 
-    const vehicleMake = await vehicleFunctions.getMakeFromNCIC(ncicRecord.vehicleNCIC)
+    const vehicleMake = await getMakeFromNCIC(ncicRecord.vehicleNCIC)
 
     debug(`Processing ${vehicleMake}`)
 
-    await vehicleFunctions.getModelsByMake(vehicleMake)
+    await getModelsByMake(vehicleMake)
   }
 }
 

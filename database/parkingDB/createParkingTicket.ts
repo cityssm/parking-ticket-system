@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateStringToInteger, timeStringToInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -47,7 +47,7 @@ export function createParkingTicket(
   const nowMillis = Date.now()
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  const issueDate = dateTimeFns.dateStringToInteger(
+  const issueDate = dateStringToInteger(
     requestBody.issueDateString
   ) as number
 
@@ -64,7 +64,7 @@ export function createParkingTicket(
     }
   }
 
-  let licencePlateExpiryDate = dateTimeFns.dateStringToInteger(
+  let licencePlateExpiryDate = dateStringToInteger(
     requestBody.licencePlateExpiryDateString ?? ''
   )
 
@@ -102,7 +102,7 @@ export function createParkingTicket(
     .run(
       requestBody.ticketNumber,
       issueDate,
-      dateTimeFns.timeStringToInteger(requestBody.issueTimeString),
+      timeStringToInteger(requestBody.issueTimeString),
       requestBody.issuingOfficer,
       requestBody.locationKey,
       requestBody.locationDescription,

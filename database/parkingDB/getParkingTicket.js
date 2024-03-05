@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateIntegerToString, timeIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { canUpdateObject } from '../parkingDB.js';
@@ -31,14 +31,14 @@ export async function getParkingTicket(ticketId, sessionUser) {
         return undefined;
     }
     ticket.recordType = 'ticket';
-    ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
-    ticket.issueTimeString = dateTimeFns.timeIntegerToString(ticket.issueTime);
-    ticket.licencePlateExpiryDateString = dateTimeFns.dateIntegerToString(ticket.licencePlateExpiryDate);
+    ticket.issueDateString = dateIntegerToString(ticket.issueDate);
+    ticket.issueTimeString = timeIntegerToString(ticket.issueTime);
+    ticket.licencePlateExpiryDateString = dateIntegerToString(ticket.licencePlateExpiryDate);
     if (ticket.licencePlateExpiryDateString !== '') {
         ticket.licencePlateExpiryYear = Number.parseInt(ticket.licencePlateExpiryDateString.slice(0, 4), 10);
         ticket.licencePlateExpiryMonth = Number.parseInt(ticket.licencePlateExpiryDateString.slice(5, 7), 10);
     }
-    ticket.resolvedDateString = dateTimeFns.dateIntegerToString(ticket.resolvedDate);
+    ticket.resolvedDateString = dateIntegerToString(ticket.resolvedDate);
     ticket.canUpdate = canUpdateObject(ticket, sessionUser);
     if (ticket.ownerLookup_statusKey === 'ownerLookupMatch') {
         ticket.licencePlateOwner = await getLicencePlateOwner(ticket.licencePlateCountry, ticket.licencePlateProvince, ticket.licencePlateNumber, Number.parseInt(ticket.ownerLookup_statusField, 10), database);
