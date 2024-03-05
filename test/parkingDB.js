@@ -96,8 +96,8 @@ describe('database/parkingDB', () => {
                 }));
             });
         });
-        it('should execute getParkingTicket(-1)', () => {
-            assert.strictEqual(parkingDB_getParkingTicket(-1, fakeViewOnlySession.user), undefined);
+        it('should execute getParkingTicket(-1)', async () => {
+            assert.strictEqual(await parkingDB_getParkingTicket(-1, fakeViewOnlySession.user), undefined);
         });
         it('should execute getParkingTicketId()', () => {
             assert.strictEqual(parkingDB_getParkingTicketId('~~FAKE TICKET NUMBER~~'), undefined);

@@ -2,8 +2,8 @@ import assert from 'node:assert';
 import * as vehicleFunctions from '../helpers/functions.vehicle.js';
 describe('helpers/vehicleFunctions', () => {
     describe('#getMakeFromNCIC', () => {
-        it('should convert "CHEV" to "Chevrolet"', () => {
-            assert.strictEqual(vehicleFunctions.getMakeFromNCIC('CHEV'), 'Chevrolet');
+        it('should convert "CHEV" to "Chevrolet"', async () => {
+            assert.strictEqual(await vehicleFunctions.getMakeFromNCIC('CHEV'), 'Chevrolet');
         });
     });
     describe('#getModelsByMakeFromCache', () => {

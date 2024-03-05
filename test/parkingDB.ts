@@ -129,9 +129,9 @@ describe('database/parkingDB', () => {
       })
     })
 
-    it('should execute getParkingTicket(-1)', () => {
+    it('should execute getParkingTicket(-1)', async () => {
       assert.strictEqual(
-        parkingDB_getParkingTicket(-1, fakeViewOnlySession.user),
+        await parkingDB_getParkingTicket(-1, fakeViewOnlySession.user),
         undefined
       )
     })
