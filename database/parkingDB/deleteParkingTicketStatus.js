@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function deleteParkingTicketStatus(ticketId, statusIndex, sessionUser) {
+export default function deleteParkingTicketStatus(ticketId, statusIndex, sessionUser) {
     const database = sqlite(databasePath);
     const info = database
         .prepare(`update ParkingTicketStatusLog
@@ -15,4 +15,3 @@ export function deleteParkingTicketStatus(ticketId, statusIndex, sessionUser) {
         success: info.changes > 0
     };
 }
-export default deleteParkingTicketStatus;

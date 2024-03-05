@@ -4,7 +4,7 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketConvictionBatch } from '../../types/recordTypes.js'
 
-export function getLastTenConvictionBatches(): ParkingTicketConvictionBatch[] {
+export default function getLastTenConvictionBatches(): ParkingTicketConvictionBatch[] {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -38,5 +38,3 @@ export function getLastTenConvictionBatches(): ParkingTicketConvictionBatch[] {
 
   return batches
 }
-
-export default getLastTenConvictionBatches

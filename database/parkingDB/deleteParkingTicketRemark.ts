@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export function deleteParkingTicketRemark(
+export default function deleteParkingTicketRemark(
   ticketId: number,
   remarkIndex: number,
   sessionUser: PTSUser
@@ -26,5 +26,3 @@ export function deleteParkingTicketRemark(
     success: info.changes > 0
   }
 }
-
-export default deleteParkingTicketRemark

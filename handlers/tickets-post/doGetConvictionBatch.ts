@@ -1,11 +1,11 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js'
 
-export const handler: RequestHandler = (request, response) => {
-  const batch = getConvictionBatch(request.body.batchId)
+export default function handler(request: Request, response: Response): void {
+  const batch = getConvictionBatch(
+    Number.parseInt(request.body.batchId as string, 10)
+  )
 
-  return response.json(batch)
+  response.json(batch)
 }
-
-export default handler

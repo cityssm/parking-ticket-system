@@ -1,14 +1,12 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { deleteParkingTicket } from '../../database/parkingDB/deleteParkingTicket.js'
+import deleteParkingTicket from '../../database/parkingDB/deleteParkingTicket.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const result = deleteParkingTicket(
-    request.body.ticketId,
+    Number.parseInt(request.body.ticketId as string, 10),
     request.session.user as PTSUser
   )
 
-  return response.json(result)
+  response.json(result)
 }
-
-export default handler

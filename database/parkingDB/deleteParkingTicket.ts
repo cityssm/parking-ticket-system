@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export function deleteParkingTicket(
+export default function deleteParkingTicket(
   ticketId: number,
   sessionUser: PTSUser
 ): { success: boolean } {
@@ -24,5 +24,3 @@ export function deleteParkingTicket(
     success: info.changes > 0
   }
 }
-
-export default deleteParkingTicket

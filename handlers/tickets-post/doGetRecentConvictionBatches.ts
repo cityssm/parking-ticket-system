@@ -1,11 +1,9 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { getLastTenConvictionBatches } from '../../database/parkingDB/getLastTenConvictionBatches.js'
+import getLastTenConvictionBatches from '../../database/parkingDB/getLastTenConvictionBatches.js'
 
-export const handler: RequestHandler = (_request, response) => {
+export default function handler(_request: Request, response: Response): void {
   const batches = getLastTenConvictionBatches()
 
-  return response.json(batches)
+  response.json(batches)
 }
-
-export default handler
