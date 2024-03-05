@@ -2,14 +2,14 @@ import type { Request, Response } from 'express'
 
 import clearConvictionBatch from '../../database/parkingDB/clearConvictionBatch.js'
 import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js'
-import * as parkingDB_ontario from '../../database/parkingDB-ontario.js'
+import { getParkingTicketsAvailableForMTOConvictionBatch } from '../../database/parkingDB-ontario.js'
 import type {
   ParkingTicket,
   ParkingTicketConvictionBatch
 } from '../../types/recordTypes.js'
 
 export default function handler(request: Request, response: Response): void {
-  const batchId = request.body.batchId
+  const batchId = Number.parseInt(request.body.batchId as string, 10)
 
   const result: {
     success: boolean
@@ -20,8 +20,7 @@ export default function handler(request: Request, response: Response): void {
 
   if (result.success) {
     result.batch = getConvictionBatch(batchId)
-    result.tickets =
-      parkingDB_ontario.getParkingTicketsAvailableForMTOConvictionBatch()
+    result.tickets = getParkingTicketsAvailableForMTOConvictionBatch()
   }
 
   response.json(result)

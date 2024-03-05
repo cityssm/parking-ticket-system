@@ -1,12 +1,12 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import { addParkingTicketToConvictionBatch } from '../../database/parkingDB/addParkingTicketToConvictionBatch.js'
 import getConvictionBatch from '../../database/parkingDB/getConvictionBatch.js'
 import type { ParkingTicketConvictionBatch } from '../../types/recordTypes.js'
 
-export const handler: RequestHandler = (request, response) => {
-  const batchId = request.body.batchId
-  const ticketId = request.body.ticketId
+export default function handler(request: Request, response: Response): void {
+  const batchId = Number.parseInt(request.body.batchId as string, 10)
+  const ticketId = Number.parseInt(request.body.ticketId as string, 10)
 
   const result: {
     success: boolean
@@ -22,7 +22,5 @@ export const handler: RequestHandler = (request, response) => {
     result.batch = getConvictionBatch(batchId)
   }
 
-  return response.json(result)
+  response.json(result)
 }
-
-export default handler

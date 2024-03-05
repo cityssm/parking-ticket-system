@@ -4,9 +4,10 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LicencePlateLookupBatch } from '../../types/recordTypes.js'
 
-export const createConvictionBatch = (
-  sessionUser: PTSUser
-): { success: boolean; batch?: LicencePlateLookupBatch } => {
+export default function createConvictionBatch(sessionUser: PTSUser): {
+  success: boolean
+  batch?: LicencePlateLookupBatch
+} {
   const database = sqlite(databasePath)
 
   const rightNow = new Date()
@@ -43,5 +44,3 @@ export const createConvictionBatch = (
       }
     : { success: false }
 }
-
-export default createConvictionBatch

@@ -9,7 +9,7 @@ import type {
 } from '../../types/recordTypes.js'
 
 export default function handler(request: Request, response: Response): void {
-  const batchId = request.body.batchId
+  const batchId = Number.parseInt(request.body.batchId as string, 10)
   const ticketIds: number[] = request.body.ticketIds
 
   const result = addAllParkingTicketsToConvictionBatch(
@@ -29,5 +29,5 @@ export default function handler(request: Request, response: Response): void {
     result.tickets = getParkingTicketsAvailableForMTOConvictionBatch()
   }
 
-  return response.json(result)
+  response.json(result)
 }

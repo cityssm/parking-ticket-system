@@ -1,26 +1,25 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { acknowledgeLookupErrorLogEntry } from '../../database/parkingDB/acknowledgeLookupErrorLogEntry.js'
+import acknowledgeLookupErrorLogEntry from '../../database/parkingDB/acknowledgeLookupErrorLogEntry.js'
 import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js'
 import getUnacknowledgedLookupErrorLog from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js'
 
-export const handler: RequestHandler = (request, response) => {
-  // Get log entry
+export default function handler(request: Request, response: Response): void {
+  const batchId = Number.parseInt(request.body.batchId as string, 10)
+  const logIndex = Number.parseInt(request.body.logIndex as string, 10)
 
-  const logEntries = getUnacknowledgedLookupErrorLog(
-    request.body.batchId,
-    request.body.logIndex
-  )
+  // Get log entry
+  const logEntries = getUnacknowledgedLookupErrorLog(batchId, logIndex)
 
   if (logEntries.length === 0) {
-    return response.json({
+    response.json({
       success: false,
       message: 'Log entry not found.  It may have already been acknowledged.'
     })
+    return
   }
 
   // Set status on parking ticket
-
   const statusResponse = createParkingTicketStatus(
     {
       recordType: 'status',
@@ -34,24 +33,22 @@ export const handler: RequestHandler = (request, response) => {
   )
 
   if (!statusResponse.success) {
-    return response.json({
+    response.json({
       success: false,
       message:
         'Unable to update the status on the parking ticket.  It may have been resolved.'
     })
+    return
   }
 
   // Mark log entry as acknowledged
-
   const success = acknowledgeLookupErrorLogEntry(
-    request.body.batchId,
-    request.body.logIndex,
+    batchId,
+    logIndex,
     request.session.user as PTSUser
   )
 
-  return response.json({
+  response.json({
     success
   })
 }
-
-export default handler

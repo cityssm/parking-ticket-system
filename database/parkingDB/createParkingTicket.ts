@@ -1,4 +1,7 @@
-import { dateStringToInteger, timeStringToInteger } from '@cityssm/utils-datetime'
+import {
+  dateStringToInteger,
+  timeStringToInteger
+} from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -38,7 +41,7 @@ interface CreateParkingTicketReturn {
   nextTicketNumber?: string
 }
 
-export function createParkingTicket(
+export default function createParkingTicket(
   requestBody: ParkingTicket,
   sessionUser: PTSUser
 ): CreateParkingTicketReturn {
@@ -47,9 +50,7 @@ export function createParkingTicket(
   const nowMillis = Date.now()
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  const issueDate = dateStringToInteger(
-    requestBody.issueDateString
-  ) as number
+  const issueDate = dateStringToInteger(requestBody.issueDateString) as number
 
   if (
     getConfigProperty('parkingTickets.ticketNumber.isUnique') &&
@@ -132,5 +133,3 @@ export function createParkingTicket(
     nextTicketNumber: undefined // populated in handler
   }
 }
-
-export default createParkingTicket

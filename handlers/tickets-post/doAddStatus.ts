@@ -1,15 +1,14 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
 import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js'
+import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const result = createParkingTicketStatus(
-    request.body,
+    request.body as Partial<ParkingTicketStatusLog>,
     request.session.user as PTSUser,
     request.body.resolveTicket === '1'
   )
 
-  return response.json(result)
+  response.json(result)
 }
-
-export default handler

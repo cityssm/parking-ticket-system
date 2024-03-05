@@ -5,5 +5,5 @@ interface CreateParkingTicketReturn {
     ticketId?: number;
     nextTicketNumber?: string;
 }
-export declare function createParkingTicket(requestBody: ParkingTicket, sessionUser: PTSUser): CreateParkingTicketReturn;
-export default createParkingTicket;
+export default function createParkingTicket(requestBody: ParkingTicket, sessionUser: PTSUser): CreateParkingTicketReturn;
+export {};

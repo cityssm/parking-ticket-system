@@ -1,13 +1,16 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import {
+  dateStringToInteger,
+  timeStringToInteger
+} from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketRemark } from '../../types/recordTypes.js'
 
-export const updateParkingTicketRemark = (
+export default function updateParkingTicketRemark(
   requestBody: ParkingTicketRemark,
   sessionUser: PTSUser
-): { success: boolean } => {
+): { success: boolean } {
   const database = sqlite(databasePath)
 
   const info = database
@@ -23,8 +26,8 @@ export const updateParkingTicketRemark = (
         and recordDelete_timeMillis is null`
     )
     .run(
-      dateTimeFns.dateStringToInteger(requestBody.remarkDateString),
-      dateTimeFns.timeStringToInteger(requestBody.remarkTimeString),
+      dateStringToInteger(requestBody.remarkDateString),
+      timeStringToInteger(requestBody.remarkTimeString),
       requestBody.remark,
       sessionUser.userName,
       Date.now(),
@@ -38,5 +41,3 @@ export const updateParkingTicketRemark = (
     success: info.changes > 0
   }
 }
-
-export default updateParkingTicketRemark

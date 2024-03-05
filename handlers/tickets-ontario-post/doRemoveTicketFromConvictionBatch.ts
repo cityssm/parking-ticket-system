@@ -5,8 +5,8 @@ import { getParkingTicketsAvailableForMTOConvictionBatch } from '../../database/
 import type { ParkingTicket } from '../../types/recordTypes.js'
 
 export default function handler(request: Request, response: Response): void {
-  const batchId = request.body.batchId
-  const ticketId = request.body.ticketId
+  const batchId = Number.parseInt(request.body.batchId as string, 10)
+  const ticketId = Number.parseInt(request.body.ticketId as string, 10)
 
   const result: {
     success: boolean

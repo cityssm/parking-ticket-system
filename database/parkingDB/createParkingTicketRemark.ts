@@ -6,21 +6,19 @@ import type { ParkingTicketRemark } from '../../types/recordTypes.js'
 
 import { getNextParkingTicketRemarkIndex } from './getNextParkingTicketRemarkIndex.js'
 
-export const createParkingTicketRemark = (
+export default function createParkingTicketRemark(
   requestBody: ParkingTicketRemark,
   sessionUser: PTSUser
-): { success: boolean } => {
+): { success: boolean } {
   const database = sqlite(databasePath)
 
   // Get new remark index
-
   const remarkIndexNew = getNextParkingTicketRemarkIndex(
     requestBody.ticketId,
     database
   )
 
   // Create the record
-
   const rightNow = new Date()
 
   const info = database
@@ -51,5 +49,3 @@ export const createParkingTicketRemark = (
     success: info.changes > 0
   }
 }
-
-export default createParkingTicketRemark

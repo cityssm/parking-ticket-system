@@ -1,2 +1,1 @@
-export declare function acknowledgeLookupErrorLogEntry(batchId: number, logIndex: number, sessionUser: PTSUser): boolean;
-export default acknowledgeLookupErrorLogEntry;
+export default function acknowledgeLookupErrorLogEntry(batchId: number, logIndex: number, sessionUser: PTSUser): boolean;

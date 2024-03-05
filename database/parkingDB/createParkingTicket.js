@@ -17,7 +17,7 @@ function hasDuplicateTicket(ticketNumber, issueDate, connectedDatabase) {
     }
     return (duplicateTicketId ?? undefined) !== undefined;
 }
-export function createParkingTicket(requestBody, sessionUser) {
+export default function createParkingTicket(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const nowMillis = Date.now();
     const issueDate = dateStringToInteger(requestBody.issueDateString);
@@ -64,4 +64,3 @@ export function createParkingTicket(requestBody, sessionUser) {
         nextTicketNumber: undefined
     };
 }
-export default createParkingTicket;
