@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export function cleanupParkingTicketStatusLog(
+export default function cleanupParkingTicketStatusLog(
   // eslint-disable-next-line @typescript-eslint/naming-convention
   recordDelete_timeMillis: number
 ): boolean {
@@ -20,5 +20,3 @@ export function cleanupParkingTicketStatusLog(
 
   return true
 }
-
-export default cleanupParkingTicketStatusLog

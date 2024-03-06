@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 
-import { deleteParkingBylaw } from '../../database/parkingDB/deleteParkingBylaw.js'
+import deleteParkingBylaw from '../../database/parkingDB/deleteParkingBylaw.js'
 import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
 
 export default function handler(request: Request, response: Response): void {

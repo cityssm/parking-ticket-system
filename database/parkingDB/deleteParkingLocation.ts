@@ -4,7 +4,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 import type { AddUpdateParkingLocationReturn } from './getParkingLocations.js'
 
-export function deleteParkingLocation(
+export default function deleteParkingLocation(
   locationKey: string
 ): AddUpdateParkingLocationReturn {
   const database = sqlite(databasePath)
@@ -25,5 +25,3 @@ export function deleteParkingLocation(
     success: info.changes > 0
   }
 }
-
-export default deleteParkingLocation

@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const getParkingLocation = (locationKey, connectedDatabase) => {
+export default function getParkingLocation(locationKey, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath, { readonly: true });
     const location = database
         .prepare(`select locationKey, locationName, locationClassKey, isActive
@@ -11,4 +11,4 @@ export const getParkingLocation = (locationKey, connectedDatabase) => {
         database.close();
     }
     return location;
-};
+}

@@ -1,2 +1,1 @@
-export declare function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number): boolean;
-export default cleanupParkingTicketRemarksTable;
+export default function cleanupParkingTicketRemarksTable(recordDelete_timeMillis: number): boolean;

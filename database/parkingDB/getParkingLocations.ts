@@ -9,7 +9,7 @@ export interface AddUpdateParkingLocationReturn {
   locations?: ParkingLocation[]
 }
 
-export const getParkingLocations = (): ParkingLocation[] => {
+export default function getParkingLocations(): ParkingLocation[] {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -27,5 +27,3 @@ export const getParkingLocations = (): ParkingLocation[] => {
 
   return rows
 }
-
-export default getParkingLocations

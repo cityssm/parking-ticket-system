@@ -1,7 +1,11 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import {
+  dateStringToInteger,
+  dateToInteger,
+  timeStringToInteger
+} from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -38,7 +42,7 @@ export function getLicencePlateExpiryDateFromPieces(
       0
     )
 
-    licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObject) as number
+    licencePlateExpiryDate = dateToInteger(dateObject) as number
   }
 
   return {
@@ -55,7 +59,7 @@ export default function updateParkingTicket(
 
   const nowMillis = Date.now()
 
-  const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString)
+  const issueDate = dateStringToInteger(requestBody.issueDateString)
 
   if (getConfigProperty('parkingTickets.ticketNumber.isUnique')) {
     // Ensure ticket number has not been used in the last two years
@@ -86,7 +90,7 @@ export default function updateParkingTicket(
     licencePlateExpiryDate =
       requestBody.licencePlateExpiryDateString === ''
         ? undefined
-        : dateTimeFns.dateStringToInteger(
+        : dateStringToInteger(
             requestBody.licencePlateExpiryDateString as string
           )
   } else {
@@ -136,7 +140,7 @@ export default function updateParkingTicket(
     .run(
       requestBody.ticketNumber,
       issueDate,
-      dateTimeFns.timeStringToInteger(requestBody.issueTimeString),
+      timeStringToInteger(requestBody.issueTimeString),
       requestBody.issuingOfficer,
       requestBody.locationKey,
       requestBody.locationDescription,

@@ -2,8 +2,8 @@ import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import canParkingTicketBeAddedToConvictionBatch from './canParkingTicketBeAddedToConvictionBatch.js';
 import createParkingTicketStatus from './createParkingTicketStatus.js';
-import { isConvictionBatchUpdatable } from './isConvictionBatchUpdatable.js';
-import { isParkingTicketConvicted } from './isParkingTicketConvicted.js';
+import isConvictionBatchUpdatable from './isConvictionBatchUpdatable.js';
+import isParkingTicketConvicted from './isParkingTicketConvicted.js';
 import { isParkingTicketInConvictionBatchWithDB } from './isParkingTicketInConvictionBatch.js';
 function createStatus(batchId, ticketId, statusKey, sessionUser, connectedDatabase) {
     createParkingTicketStatus({

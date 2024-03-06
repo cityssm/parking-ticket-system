@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateIntegerToString } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -66,12 +66,8 @@ export default function getUnacknowledgedLookupErrorLog(
   database.close()
 
   for (const logEntry of logEntries) {
-    logEntry.recordDateString = dateTimeFns.dateIntegerToString(
-      logEntry.recordDate
-    )
-    logEntry.issueDateString = dateTimeFns.dateIntegerToString(
-      logEntry.issueDate
-    )
+    logEntry.recordDateString = dateIntegerToString(logEntry.recordDate)
+    logEntry.issueDateString = dateIntegerToString(logEntry.issueDate)
   }
 
   return logEntries

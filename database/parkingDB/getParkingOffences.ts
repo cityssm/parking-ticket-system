@@ -9,7 +9,7 @@ export interface AddUpdateParkingOffenceReturn {
   offences?: ParkingOffence[]
 }
 
-export function getParkingOffences(): ParkingOffence[] {
+export default function getParkingOffences(): ParkingOffence[] {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -34,9 +34,9 @@ export function getParkingOffences(): ParkingOffence[] {
   return rows
 }
 
-export const getParkingOffencesByLocationKey = (
+export function getParkingOffencesByLocationKey(
   locationKey: string
-): ParkingOffence[] => {
+): ParkingOffence[] {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -59,5 +59,3 @@ export const getParkingOffencesByLocationKey = (
 
   return rows
 }
-
-export default getParkingOffences

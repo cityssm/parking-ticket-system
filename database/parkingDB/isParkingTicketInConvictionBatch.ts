@@ -33,7 +33,7 @@ export function isParkingTicketInConvictionBatchWithDB(
   }
 }
 
-export function isParkingTicketInConvictionBatch(
+export default function isParkingTicketInConvictionBatch(
   ticketId: number
 ): IsParkingTicketConvictedReturn {
   const database = sqlite(databasePath, {
@@ -46,5 +46,3 @@ export function isParkingTicketInConvictionBatch(
 
   return result
 }
-
-export default isParkingTicketInConvictionBatch

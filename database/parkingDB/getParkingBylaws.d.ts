@@ -4,6 +4,5 @@ export interface AddUpdateParkingBylawReturn {
     message?: string;
     bylaws?: ParkingBylaw[];
 }
-export declare const getParkingBylaws: () => ParkingBylaw[];
-export declare const getParkingBylawsWithOffenceStats: () => ParkingBylaw[];
-export default getParkingBylaws;
+export default function getParkingBylaws(): ParkingBylaw[];
+export declare function getParkingBylawsWithOffenceStats(): ParkingBylaw[];

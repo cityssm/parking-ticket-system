@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateStringToInteger, dateToInteger, timeStringToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
@@ -17,7 +17,7 @@ export function getLicencePlateExpiryDateFromPieces(requestBody) {
     }
     else {
         const dateObject = new Date(licencePlateExpiryYear, licencePlateExpiryMonth - 1 + 1, 1 - 1, 0, 0, 0, 0);
-        licencePlateExpiryDate = dateTimeFns.dateToInteger(dateObject);
+        licencePlateExpiryDate = dateToInteger(dateObject);
     }
     return {
         success: true,
@@ -27,7 +27,7 @@ export function getLicencePlateExpiryDateFromPieces(requestBody) {
 export default function updateParkingTicket(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const nowMillis = Date.now();
-    const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
+    const issueDate = dateStringToInteger(requestBody.issueDateString);
     if (getConfigProperty('parkingTickets.ticketNumber.isUnique')) {
         const duplicateTicket = database
             .prepare(`select ticketId from ParkingTickets
@@ -49,7 +49,7 @@ export default function updateParkingTicket(requestBody, sessionUser) {
         licencePlateExpiryDate =
             requestBody.licencePlateExpiryDateString === ''
                 ? undefined
-                : dateTimeFns.dateStringToInteger(requestBody.licencePlateExpiryDateString);
+                : dateStringToInteger(requestBody.licencePlateExpiryDateString);
     }
     else {
         const licencePlateExpiryDateReturn = getLicencePlateExpiryDateFromPieces(requestBody);
@@ -90,7 +90,7 @@ export default function updateParkingTicket(requestBody, sessionUser) {
         where ticketId = ?
         and resolvedDate is null
         and recordDelete_timeMillis is null`)
-        .run(requestBody.ticketNumber, issueDate, dateTimeFns.timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, requestBody.ticketId);
+        .run(requestBody.ticketNumber, issueDate, timeStringToInteger(requestBody.issueTimeString), requestBody.issuingOfficer, requestBody.locationKey, requestBody.locationDescription, requestBody.bylawNumber, requestBody.parkingOffence, requestBody.offenceAmount, requestBody.discountOffenceAmount, requestBody.discountDays, requestBody.licencePlateCountry, requestBody.licencePlateProvince, requestBody.licencePlateNumber, requestBody.licencePlateIsMissing ? 1 : 0, licencePlateExpiryDate, requestBody.vehicleMakeModel, requestBody.vehicleVIN, sessionUser.userName, nowMillis, requestBody.ticketId);
     database.close();
     return info.changes > 0
         ? {

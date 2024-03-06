@@ -4,5 +4,5 @@ interface IsParkingTicketConvictedReturn {
     batchIdString?: string;
 }
 export declare function isParkingTicketInConvictionBatchWithDB(database: sqlite.Database, ticketId: number): IsParkingTicketConvictedReturn;
-export declare function isParkingTicketInConvictionBatch(ticketId: number): IsParkingTicketConvictedReturn;
-export default isParkingTicketInConvictionBatch;
+export default function isParkingTicketInConvictionBatch(ticketId: number): IsParkingTicketConvictedReturn;
+export {};

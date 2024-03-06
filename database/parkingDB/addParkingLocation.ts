@@ -5,7 +5,7 @@ import type { ParkingLocation } from '../../types/recordTypes.js'
 
 import type { AddUpdateParkingLocationReturn } from './getParkingLocations.js'
 
-export function addParkingLocation(
+export default function addParkingLocation(
   requestBody: ParkingLocation
 ): AddUpdateParkingLocationReturn {
   const database = sqlite(databasePath)
@@ -53,5 +53,3 @@ export function addParkingLocation(
     success: info.changes > 0
   }
 }
-
-export default addParkingLocation

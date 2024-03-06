@@ -1,2 +1,1 @@
-export declare const cleanupParkingBylawsTable: () => boolean;
-export default cleanupParkingBylawsTable;
+export default function cleanupParkingBylawsTable(): boolean;

@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express'
 
-import { cleanupLicencePlateOwnersTable } from '../../database/parkingDB/cleanupLicencePlateOwnersTable.js'
-import { cleanupParkingBylawsTable } from '../../database/parkingDB/cleanupParkingBylawsTable.js'
-import { cleanupParkingLocationsTable } from '../../database/parkingDB/cleanupParkingLocationsTable.js'
-import { cleanupParkingOffencesTable } from '../../database/parkingDB/cleanupParkingOffencesTable.js'
-import { cleanupParkingTicketRemarksTable } from '../../database/parkingDB/cleanupParkingTicketRemarksTable.js'
-import { cleanupParkingTicketStatusLog } from '../../database/parkingDB/cleanupParkingTicketStatusLog.js'
-import { cleanupParkingTicketsTable } from '../../database/parkingDB/cleanupParkingTicketsTable.js'
+import cleanupLicencePlateOwnersTable from '../../database/parkingDB/cleanupLicencePlateOwnersTable.js'
+import cleanupParkingBylawsTable from '../../database/parkingDB/cleanupParkingBylawsTable.js'
+import cleanupParkingLocationsTable from '../../database/parkingDB/cleanupParkingLocationsTable.js'
+import cleanupParkingOffencesTable from '../../database/parkingDB/cleanupParkingOffencesTable.js'
+import cleanupParkingTicketRemarksTable from '../../database/parkingDB/cleanupParkingTicketRemarksTable.js'
+import cleanupParkingTicketStatusLog from '../../database/parkingDB/cleanupParkingTicketStatusLog.js'
+import cleanupParkingTicketsTable from '../../database/parkingDB/cleanupParkingTicketsTable.js'
 import { getConfigProperty } from '../../helpers/functions.config.js'
 
 export default function handler(request: Request, response: Response): void {

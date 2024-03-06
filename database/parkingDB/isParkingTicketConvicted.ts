@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export function isParkingTicketConvicted(
+export default function isParkingTicketConvicted(
   ticketId: number,
   connectedDatabase?: sqlite.Database
 ): boolean {
@@ -25,5 +25,3 @@ export function isParkingTicketConvicted(
 
   return statusIndex !== undefined
 }
-
-export default isParkingTicketConvicted

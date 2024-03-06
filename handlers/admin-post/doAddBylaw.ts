@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 
-import { addParkingBylaw } from '../../database/parkingDB/addParkingBylaw.js'
+import addParkingBylaw from '../../database/parkingDB/addParkingBylaw.js'
 import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
 import type { ParkingBylaw } from '../../types/recordTypes.js'
 

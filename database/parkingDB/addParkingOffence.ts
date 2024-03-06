@@ -5,13 +5,12 @@ import type { ParkingOffence } from '../../types/recordTypes.js'
 
 import type { AddUpdateParkingOffenceReturn } from './getParkingOffences.js'
 
-export const addParkingOffence = (
+export default function addParkingOffence(
   requestBody: ParkingOffence
-): AddUpdateParkingOffenceReturn => {
+): AddUpdateParkingOffenceReturn {
   const database = sqlite(databasePath)
 
   // Check if offence already exists
-
   const existingOffenceRecord = database
     .prepare(
       `select isActive
@@ -54,7 +53,6 @@ export const addParkingOffence = (
 
   // Check if another offence exists for the same by-law
   // If so, use the same offenceAmount
-
   let offenceAmount = 0
   let discountOffenceAmount = 0
   let discountDays = 0
@@ -88,7 +86,6 @@ export const addParkingOffence = (
   }
 
   // Insert record
-
   const info = database
     .prepare(
       `insert into ParkingOffences (
@@ -113,5 +110,3 @@ export const addParkingOffence = (
     success: info.changes > 0
   }
 }
-
-export default addParkingOffence

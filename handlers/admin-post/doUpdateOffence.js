@@ -1,4 +1,4 @@
-import { getParkingOffences } from '../../database/parkingDB/getParkingOffences.js';
+import getParkingOffences from '../../database/parkingDB/getParkingOffences.js';
 import updateParkingOffence from '../../database/parkingDB/updateParkingOffence.js';
 export default function handler(request, response) {
     const results = updateParkingOffence(request.body);

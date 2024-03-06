@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function addParkingBylaw(requestBody) {
+export default function addParkingBylaw(requestBody) {
     const database = sqlite(databasePath);
     const bylawRecord = database
         .prepare(`select bylawDescription, isActive
@@ -38,4 +38,3 @@ export function addParkingBylaw(requestBody) {
         success: info.changes > 0
     };
 }
-export default addParkingBylaw;

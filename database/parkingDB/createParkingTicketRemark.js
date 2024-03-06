@@ -1,7 +1,7 @@
 import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-import { getNextParkingTicketRemarkIndex } from './getNextParkingTicketRemarkIndex.js';
+import getNextParkingTicketRemarkIndex from './getNextParkingTicketRemarkIndex.js';
 export default function createParkingTicketRemark(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const remarkIndexNew = getNextParkingTicketRemarkIndex(requestBody.ticketId, database);

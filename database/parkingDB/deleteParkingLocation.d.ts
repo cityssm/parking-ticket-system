@@ -1,3 +1,2 @@
 import type { AddUpdateParkingLocationReturn } from './getParkingLocations.js';
-export declare function deleteParkingLocation(locationKey: string): AddUpdateParkingLocationReturn;
-export default deleteParkingLocation;
+export default function deleteParkingLocation(locationKey: string): AddUpdateParkingLocationReturn;

@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateIntegerToString, timeIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { canUpdateObject } from '../parkingDB.js';
@@ -12,8 +12,8 @@ export default function getParkingTicketStatuses(ticketId, sessionUser, connecte
         .all(ticketId);
     for (const status of statusRows) {
         status.recordType = 'status';
-        status.statusDateString = dateTimeFns.dateIntegerToString(status.statusDate);
-        status.statusTimeString = dateTimeFns.timeIntegerToString(status.statusTime);
+        status.statusDateString = dateIntegerToString(status.statusDate);
+        status.statusTimeString = timeIntegerToString(status.statusTime);
         status.canUpdate = canUpdateObject(status, sessionUser);
     }
     if (connectedDatabase === undefined) {

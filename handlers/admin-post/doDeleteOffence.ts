@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 
-import { deleteParkingOffence } from '../../database/parkingDB/deleteParkingOffence.js'
-import { getParkingOffences } from '../../database/parkingDB/getParkingOffences.js'
+import deleteParkingOffence from '../../database/parkingDB/deleteParkingOffence.js'
+import getParkingOffences from '../../database/parkingDB/getParkingOffences.js'
 
 export default function handler(request: Request, response: Response): void {
   const results = deleteParkingOffence(

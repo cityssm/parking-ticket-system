@@ -4,5 +4,4 @@ export interface AddUpdateParkingLocationReturn {
     message?: string;
     locations?: ParkingLocation[];
 }
-export declare const getParkingLocations: () => ParkingLocation[];
-export default getParkingLocations;
+export default function getParkingLocations(): ParkingLocation[];

@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const cleanupParkingLocationsTable = (): boolean => {
+export default function cleanupParkingLocationsTable(): boolean {
   const database = sqlite(databasePath)
 
   const recordsToDelete = database
@@ -29,5 +29,3 @@ export const cleanupParkingLocationsTable = (): boolean => {
 
   return true
 }
-
-export default cleanupParkingLocationsTable

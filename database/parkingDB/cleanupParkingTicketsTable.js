@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function cleanupParkingTicketsTable(recordDelete_timeMillis) {
+export default function cleanupParkingTicketsTable(recordDelete_timeMillis) {
     const database = sqlite(databasePath);
     const recordsToDelete = database
         .prepare(`select ticketId from ParkingTickets t
@@ -25,4 +25,3 @@ export function cleanupParkingTicketsTable(recordDelete_timeMillis) {
     database.close();
     return true;
 }
-export default cleanupParkingTicketsTable;

@@ -5,7 +5,7 @@ import type { ParkingBylaw } from '../../types/recordTypes.js'
 
 import type { AddUpdateParkingBylawReturn } from './getParkingBylaws.js'
 
-export function addParkingBylaw(
+export default function addParkingBylaw(
   requestBody: ParkingBylaw
 ): AddUpdateParkingBylawReturn {
   const database = sqlite(databasePath)
@@ -66,5 +66,3 @@ export function addParkingBylaw(
     success: info.changes > 0
   }
 }
-
-export default addParkingBylaw

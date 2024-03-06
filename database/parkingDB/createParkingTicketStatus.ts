@@ -1,13 +1,13 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateToInteger, dateToTimeInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
 
-import { getNextParkingTicketStatusIndex } from './getNextParkingTicketStatusIndex.js'
+import getNextParkingTicketStatusIndex from './getNextParkingTicketStatusIndex.js'
 import resolveParkingTicket from './resolveParkingTicket.js'
 
 type CreateParkingTicketStatusReturn =
@@ -49,8 +49,8 @@ export default function createParkingTicketStatus(
     .run(
       requestBodyOrObject.ticketId,
       statusIndexNew,
-      dateTimeFns.dateToInteger(rightNow),
-      dateTimeFns.dateToTimeInteger(rightNow),
+      dateToInteger(rightNow),
+      dateToTimeInteger(rightNow),
       requestBodyOrObject.statusKey,
       requestBodyOrObject.statusField,
       requestBodyOrObject.statusField2,

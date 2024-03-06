@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export default function resolveParkingTicket(ticketId, sessionUser, connectedDatabase) {
@@ -12,7 +12,7 @@ export default function resolveParkingTicket(ticketId, sessionUser, connectedDat
         where ticketId = ?
         and resolvedDate is null
         and recordDelete_timeMillis is null`)
-        .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), ticketId);
+        .run(dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), ticketId);
     if (connectedDatabase === undefined) {
         database.close();
     }

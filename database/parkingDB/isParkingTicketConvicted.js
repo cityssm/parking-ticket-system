@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function isParkingTicketConvicted(ticketId, connectedDatabase) {
+export default function isParkingTicketConvicted(ticketId, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath);
     const statusIndex = database
         .prepare(`select statusIndex
@@ -15,4 +15,3 @@ export function isParkingTicketConvicted(ticketId, connectedDatabase) {
     }
     return statusIndex !== undefined;
 }
-export default isParkingTicketConvicted;

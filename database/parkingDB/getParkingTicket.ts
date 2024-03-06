@@ -9,7 +9,7 @@ import type { ParkingTicket } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
 import getLicencePlateOwner from './getLicencePlateOwner.js'
-import { getParkingLocation } from './getParkingLocation.js'
+import getParkingLocation from './getParkingLocation.js'
 import getParkingTicketRemarks from './getParkingTicketRemarks.js'
 import getParkingTicketStatuses from './getParkingTicketStatuses.js'
 

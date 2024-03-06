@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export default function getLookupBatch(batchId_or_negOne) {
@@ -24,10 +24,10 @@ export default function getLookupBatch(batchId_or_negOne) {
         database.close();
         return undefined;
     }
-    batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate);
-    batch.lockDateString = dateTimeFns.dateIntegerToString(batch.lockDate);
-    batch.sentDateString = dateTimeFns.dateIntegerToString(batch.sentDate);
-    batch.receivedDateString = dateTimeFns.dateIntegerToString(batch.receivedDate);
+    batch.batchDateString = dateIntegerToString(batch.batchDate);
+    batch.lockDateString = dateIntegerToString(batch.lockDate);
+    batch.sentDateString = dateIntegerToString(batch.sentDate);
+    batch.receivedDateString = dateIntegerToString(batch.receivedDate);
     batch.batchEntries = database
         .prepare(`select e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber,
         e.ticketId, t.ticketNumber, t.issueDate

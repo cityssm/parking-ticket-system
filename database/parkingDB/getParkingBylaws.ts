@@ -9,7 +9,7 @@ export interface AddUpdateParkingBylawReturn {
   bylaws?: ParkingBylaw[]
 }
 
-export const getParkingBylaws = (): ParkingBylaw[] => {
+export default function getParkingBylaws(): ParkingBylaw[] {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -28,7 +28,7 @@ export const getParkingBylaws = (): ParkingBylaw[] => {
   return rows
 }
 
-export const getParkingBylawsWithOffenceStats = (): ParkingBylaw[] => {
+export function getParkingBylawsWithOffenceStats(): ParkingBylaw[] {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -55,5 +55,3 @@ export const getParkingBylawsWithOffenceStats = (): ParkingBylaw[] => {
 
   return rows
 }
-
-export default getParkingBylaws

@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export function isConvictionBatchUpdatable(
+export default function isConvictionBatchUpdatable(
   batchId: number,
   connectedDatabase?: sqlite.Database
 ): boolean {
@@ -24,5 +24,3 @@ export function isConvictionBatchUpdatable(
 
   return lockDate === null
 }
-
-export default isConvictionBatchUpdatable

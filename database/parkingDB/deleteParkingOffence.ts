@@ -4,7 +4,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 import type { AddUpdateParkingOffenceReturn } from './getParkingOffences.js'
 
-export function deleteParkingOffence(
+export default function deleteParkingOffence(
   bylawNumber: string,
   locationKey: string
 ): AddUpdateParkingOffenceReturn {
@@ -27,5 +27,3 @@ export function deleteParkingOffence(
     success: info.changes > 0
   }
 }
-
-export default deleteParkingOffence

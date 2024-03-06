@@ -1,4 +1,4 @@
-import { addParkingBylaw } from '../../database/parkingDB/addParkingBylaw.js';
+import addParkingBylaw from '../../database/parkingDB/addParkingBylaw.js';
 import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js';
 export default function handler(request, response) {
     const results = addParkingBylaw(request.body);

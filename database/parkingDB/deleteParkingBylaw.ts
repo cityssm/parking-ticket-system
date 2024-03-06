@@ -4,13 +4,12 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 import type { AddUpdateParkingBylawReturn } from './getParkingBylaws.js'
 
-export const deleteParkingBylaw = (
+export default function deleteParkingBylaw(
   bylawNumber: string
-): AddUpdateParkingBylawReturn => {
+): AddUpdateParkingBylawReturn {
   const database = sqlite(databasePath)
 
   // Do update
-
   const info = database
     .prepare(
       `update ParkingBylaws
@@ -26,5 +25,3 @@ export const deleteParkingBylaw = (
     success: info.changes > 0
   }
 }
-
-export default deleteParkingBylaw

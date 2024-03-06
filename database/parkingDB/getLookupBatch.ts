@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateIntegerToString } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -48,14 +48,14 @@ export default function getLookupBatch(
     return undefined
   }
 
-  batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate)
-  batch.lockDateString = dateTimeFns.dateIntegerToString(
+  batch.batchDateString = dateIntegerToString(batch.batchDate)
+  batch.lockDateString = dateIntegerToString(
     batch.lockDate as number
   )
-  batch.sentDateString = dateTimeFns.dateIntegerToString(
+  batch.sentDateString = dateIntegerToString(
     batch.sentDate as number
   )
-  batch.receivedDateString = dateTimeFns.dateIntegerToString(
+  batch.receivedDateString = dateIntegerToString(
     batch.receivedDate as number
   )
 

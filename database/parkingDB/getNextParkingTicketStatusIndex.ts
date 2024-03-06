@@ -1,9 +1,9 @@
 import type sqlite from 'better-sqlite3'
 
-export const getNextParkingTicketStatusIndex = (
+export default function getNextParkingTicketStatusIndex(
   ticketId: number | string,
   database: sqlite.Database
-): number => {
+): number {
   return (
     (database
       .prepare(
@@ -15,5 +15,3 @@ export const getNextParkingTicketStatusIndex = (
       .get(ticketId) as number) + 1
   )
 }
-
-export default getNextParkingTicketStatusIndex
