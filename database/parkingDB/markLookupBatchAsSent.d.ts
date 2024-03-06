@@ -1,2 +1,1 @@
-export declare const markLookupBatchAsSent: (batchId: number, sessionUser: PTSUser) => boolean;
-export default markLookupBatchAsSent;
+export default function markLookupBatchAsSent(batchId: number, sessionUser: PTSUser): boolean;

@@ -200,10 +200,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         cityssm.openHtmlModal('bylaw-add', {
             onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 addBylawCloseModalFunction = closeModalFunction;
+                modalElement.querySelector('#addBylaw--bylawNumber').focus();
                 modalElement
                     .querySelector('form')
                     ?.addEventListener('submit', addFunction);
+            },
+            onremoved() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     });

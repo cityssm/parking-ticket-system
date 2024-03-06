@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export default function markConvictionBatchAsSent(batchId, sessionUser) {
@@ -13,7 +13,7 @@ export default function markConvictionBatchAsSent(batchId, sessionUser) {
         and recordDelete_timeMillis is null
         and lockDate is not null
         and sentDate is null`)
-        .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), batchId);
+        .run(dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), batchId);
     database
         .prepare(`update ParkingTickets
         set resolvedDate = ?,
@@ -25,7 +25,7 @@ export default function markConvictionBatchAsSent(batchId, sessionUser) {
           where ParkingTickets.ticketId = s.ticketId
           and s.recordDelete_timeMillis is null
           and s.statusField = ?)`)
-        .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), batchId.toString());
+        .run(dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), batchId.toString());
     database.close();
     return info.changes > 0;
 }

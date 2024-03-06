@@ -666,7 +666,11 @@ type UpdateOffenceResponseJSON =
         listContainerElement.append(listElement)
       },
       onshown(_modalElement, closeModalFunction) {
+        bulmaJS.toggleHtmlClipped()
         selectLocationCloseModalFunction = closeModalFunction
+      },
+      onremoved() {
+        bulmaJS.toggleHtmlClipped()
       }
     })
   }
@@ -754,7 +758,11 @@ type UpdateOffenceResponseJSON =
         listContainerElement.append(listElement)
       },
       onshown(_modalElement, closeModalFunction) {
+        bulmaJS.toggleHtmlClipped()
         selectBylawCloseModalFunction = closeModalFunction
+      },
+      onremoved() {
+        bulmaJS.toggleHtmlClipped()
       }
     })
   }

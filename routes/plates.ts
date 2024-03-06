@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { type RequestHandler, Router } from 'express'
 
 import * as permissionHandlers from '../handlers/permissions.js'
 import handler_view from '../handlers/plates-get/view.js'
@@ -79,7 +79,7 @@ router.post('/doGetModelsByMake', handler_doGetModelsByMake)
 
 router.get(
   '/:licencePlateCountry/:licencePlateProvince/:licencePlateNumber',
-  handler_view
+  handler_view as RequestHandler
 )
 
 export default router

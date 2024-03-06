@@ -1,12 +1,10 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateToInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const markLookupBatchAsSent = (
-  batchId: number,
-  sessionUser: PTSUser
-): boolean => {
+export default function markLookupBatchAsSent(batchId: number,
+  sessionUser: PTSUser): boolean {
   const database = sqlite(databasePath)
 
   const rightNow = new Date()
@@ -23,7 +21,7 @@ export const markLookupBatchAsSent = (
         and sentDate is null`
     )
     .run(
-      dateTimeFns.dateToInteger(rightNow),
+      dateToInteger(rightNow),
       sessionUser.userName,
       rightNow.getTime(),
       batchId
@@ -33,5 +31,3 @@ export const markLookupBatchAsSent = (
 
   return info.changes > 0
 }
-
-export default markLookupBatchAsSent

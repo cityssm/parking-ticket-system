@@ -1,4 +1,7 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import {
+  dateIntegerToString,
+  isValidDateInteger
+} from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -24,16 +27,13 @@ export default function getLastTenConvictionBatches(): ParkingTicketConvictionBa
   database.close()
 
   for (const batch of batches) {
-    batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate)
+    batch.batchDateString = dateIntegerToString(batch.batchDate)
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    batch.lockDateString = dateTimeFns.isValidDateInteger(batch.lockDate)
-      ? dateTimeFns.dateIntegerToString(batch.lockDate)
+    batch.lockDateString = isValidDateInteger(batch.lockDate)
+      ? dateIntegerToString(batch.lockDate)
       : ''
 
-    batch.sentDateString = dateTimeFns.dateIntegerToString(
-      batch.sentDate as number
-    )
+    batch.sentDateString = dateIntegerToString(batch.sentDate as number)
   }
 
   return batches

@@ -1,4 +1,7 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import {
+  dateStringToInteger,
+  timeStringToInteger
+} from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -26,8 +29,8 @@ export default function updateParkingTicketStatus(
         and recordDelete_timeMillis is null`
     )
     .run(
-      dateTimeFns.dateStringToInteger(requestBody.statusDateString as string),
-      dateTimeFns.timeStringToInteger(requestBody.statusTimeString as string),
+      dateStringToInteger(requestBody.statusDateString as string),
+      timeStringToInteger(requestBody.statusTimeString as string),
       requestBody.statusKey,
       requestBody.statusField,
       requestBody.statusField2,

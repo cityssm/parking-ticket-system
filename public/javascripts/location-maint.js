@@ -156,14 +156,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         }
         cityssm.openHtmlModal('location-add', {
-            onshown(_modalElement, closeModalFunction) {
-                addLocationCloseModalFunction = closeModalFunction;
-                document
+            onshow(modalElement) {
+                modalElement
                     .querySelector('#addLocation--locationClassKey')
                     ?.insertAdjacentHTML('beforeend', locationClassKeyOptionsHTML);
-                document
-                    .querySelector('#form--addLocation')
+            },
+            onshown(modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
+                addLocationCloseModalFunction = closeModalFunction;
+                modalElement.querySelector('#addLocation--locationKey').focus();
+                modalElement
+                    .querySelector('form')
                     ?.addEventListener('submit', addFunction);
+            },
+            onremoved() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     });

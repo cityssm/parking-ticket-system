@@ -6,7 +6,7 @@ import { dateIntegerToString } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js'
+import { getMakeFromNCIC } from '../../helpers/functions.vehicle.js'
 import type { LicencePlate } from '../../types/recordTypes.js'
 
 export interface ReconciliationRecord extends LicencePlate {
@@ -102,9 +102,7 @@ export default async function getOwnershipReconciliationRecords(): Promise<
       record.owner_licencePlateExpiryDate
     )
 
-    record.owner_vehicleMake = await vehicleFunctions.getMakeFromNCIC(
-      record.owner_vehicleNCIC
-    )
+    record.owner_vehicleMake = await getMakeFromNCIC(record.owner_vehicleNCIC)
 
     record.dateDifference = dateStringDifferenceInDays(
       record.ticket_issueDateString,

@@ -417,7 +417,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 listContainerElement.append(listElement);
             },
             onshown(_modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 selectLocationCloseModalFunction = closeModalFunction;
+            },
+            onremoved() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     }
@@ -474,7 +478,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 listContainerElement.append(listElement);
             },
             onshown(_modalElement, closeModalFunction) {
+                bulmaJS.toggleHtmlClipped();
                 selectBylawCloseModalFunction = closeModalFunction;
+            },
+            onremoved() {
+                bulmaJS.toggleHtmlClipped();
             }
         });
     }

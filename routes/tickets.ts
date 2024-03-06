@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { type RequestHandler, Router } from 'express'
 
 import * as permissionHandlers from '../handlers/permissions.js'
 import handler_byTicketNumber from '../handlers/tickets-get/byTicketNumber.js'
@@ -64,19 +64,19 @@ router.post(
 router.post(
   '/doReconcileAsMatch',
   permissionHandlers.updatePostHandler,
-  handler_doReconcileAsMatch
+  handler_doReconcileAsMatch as RequestHandler
 )
 
 router.post(
   '/doReconcileAsError',
   permissionHandlers.updatePostHandler,
-  handler_doReconcileAsError
+  handler_doReconcileAsError as RequestHandler
 )
 
 router.post(
   '/doQuickReconcileMatches',
   permissionHandlers.updatePostHandler,
-  handler_doQuickReconcileMatches
+  handler_doQuickReconcileMatches as RequestHandler
 )
 
 /*
@@ -217,9 +217,9 @@ router.post(
  * Ticket View
  */
 
-router.get('/:ticketId', handler_view)
+router.get('/:ticketId', handler_view as RequestHandler)
 
-router.get('/:ticketId/print', handler_print)
+router.get('/:ticketId/print', handler_print as RequestHandler)
 
 router.get('/byTicketNumber/:ticketNumber', handler_byTicketNumber)
 
@@ -227,7 +227,7 @@ router.get('/byTicketNumber/:ticketNumber', handler_byTicketNumber)
  * Ticket Edit
  */
 
-router.get('/:ticketId/edit', permissionHandlers.updateGetHandler, handler_edit)
+router.get('/:ticketId/edit', permissionHandlers.updateGetHandler, handler_edit as RequestHandler)
 
 /*
  * Ticket Convict

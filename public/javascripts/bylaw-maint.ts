@@ -349,11 +349,21 @@ type UpdateBylawResponseJSON =
       }
 
       cityssm.openHtmlModal('bylaw-add', {
-        onshown(modalElement, closeModalFunction): void {
+        onshown(modalElement, closeModalFunction) {
+          bulmaJS.toggleHtmlClipped()
           addBylawCloseModalFunction = closeModalFunction
+          ;(
+            modalElement.querySelector(
+              '#addBylaw--bylawNumber'
+            ) as HTMLInputElement
+          ).focus()
+
           modalElement
             .querySelector('form')
             ?.addEventListener('submit', addFunction)
+        },
+        onremoved() {
+          bulmaJS.toggleHtmlClipped()
         }
       })
     })

@@ -1,4 +1,5 @@
 .nyc_output/
+bin/daemon/
 coverage/
 cypress/downloads
 cypress/screenshots
@@ -6,16 +7,12 @@ cypress/videos
 data/sessions/
 node_modules/
 
-app.min.js
-bin/daemon/
 data/*.db
 data/*.db-journal
-data/*.min.js
 data/config.js
 data/config.d.ts
 data/config.ts
-helpers/*.min.js
-tasks/*.min.js
+
 public/images-custom/*
-routes/*.min.js
+
 *.pem

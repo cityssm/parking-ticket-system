@@ -298,16 +298,26 @@ type UpdateLocationResponseJSON =
       }
 
       cityssm.openHtmlModal('location-add', {
-        onshown(_modalElement, closeModalFunction): void {
-          addLocationCloseModalFunction = closeModalFunction
-
-          document
+        onshow(modalElement) {
+          modalElement
             .querySelector('#addLocation--locationClassKey')
             ?.insertAdjacentHTML('beforeend', locationClassKeyOptionsHTML)
+        },
+        onshown(modalElement, closeModalFunction) {
+          bulmaJS.toggleHtmlClipped()
+          addLocationCloseModalFunction = closeModalFunction
+          ;(
+            modalElement.querySelector(
+              '#addLocation--locationKey'
+            ) as HTMLInputElement
+          ).focus()
 
-          document
-            .querySelector('#form--addLocation')
+          modalElement
+            .querySelector('form')
             ?.addEventListener('submit', addFunction)
+        },
+        onremoved() {
+          bulmaJS.toggleHtmlClipped()
         }
       })
     })

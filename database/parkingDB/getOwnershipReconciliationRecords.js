@@ -2,7 +2,7 @@ import { dateStringDifferenceInDays } from '@cityssm/expressjs-server-js/dateTim
 import { dateIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-import * as vehicleFunctions from '../../helpers/functions.vehicle.js';
+import { getMakeFromNCIC } from '../../helpers/functions.vehicle.js';
 export default async function getOwnershipReconciliationRecords() {
     const database = sqlite(databasePath, {
         readonly: true
@@ -48,7 +48,7 @@ export default async function getOwnershipReconciliationRecords() {
         record.ticket_licencePlateExpiryDateString = dateIntegerToString(record.ticket_licencePlateExpiryDate);
         record.owner_recordDateString = dateIntegerToString(record.owner_recordDate);
         record.owner_licencePlateExpiryDateString = dateIntegerToString(record.owner_licencePlateExpiryDate);
-        record.owner_vehicleMake = await vehicleFunctions.getMakeFromNCIC(record.owner_vehicleNCIC);
+        record.owner_vehicleMake = await getMakeFromNCIC(record.owner_vehicleNCIC);
         record.dateDifference = dateStringDifferenceInDays(record.ticket_issueDateString, record.owner_recordDateString);
         record.isVehicleMakeMatch =
             record.ticket_vehicleMakeModel.toLowerCase() ===

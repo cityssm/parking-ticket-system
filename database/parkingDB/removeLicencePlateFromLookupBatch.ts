@@ -3,14 +3,13 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { LicencePlateLookupBatchEntry } from '../../types/recordTypes.js'
 
-export const removeLicencePlateFromLookupBatch = (
+export default function removeLicencePlateFromLookupBatch(
   requestBody: LicencePlateLookupBatchEntry,
   sessionUser: PTSUser
-): { success: boolean; message?: string } => {
+): { success: boolean; message?: string } {
   const database = sqlite(databasePath)
 
   // Ensure batch is not locked
-
   const canUpdateBatch = database
     .prepare(
       `update LicencePlateLookupBatches
@@ -59,5 +58,3 @@ export const removeLicencePlateFromLookupBatch = (
         message: 'Licence plate not removed from the batch.'
       }
 }
-
-export default removeLicencePlateFromLookupBatch

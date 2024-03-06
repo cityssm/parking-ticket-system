@@ -1,12 +1,12 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateToInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../data/databasePaths.js'
 import getLookupBatch from '../database/parkingDB/getLookupBatch.js'
-import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js'
+import markLookupBatchAsSent from '../database/parkingDB/markLookupBatchAsSent.js'
 import type { LicencePlateLookupBatch } from '../types/recordTypes.js'
 
 import { getConfigProperty } from './functions.config.js'
@@ -18,7 +18,7 @@ let currentYearPrefix: number
 
 function resetCurrentDate(): void {
   currentDate = new Date()
-  currentDateNumber = dateTimeFns.dateToInteger(currentDate) as number
+  currentDateNumber = dateToInteger(currentDate) as number
 
   currentYearPrefix = Math.floor(currentDate.getFullYear() / 100) * 100
   currentDatePrefix = currentYearPrefix * 10_000
@@ -252,9 +252,7 @@ export const parsePKRD = (rowData: string): false | PKRDResult => {
     )
     expiryDate.setDate(expiryDate.getDate() - 1)
 
-    record.licencePlateExpiryDate = dateTimeFns.dateToInteger(
-      expiryDate
-    ) as number
+    record.licencePlateExpiryDate = dateToInteger(expiryDate) as number
 
     if (record.errorCode !== '') {
       record.vehicleYear = 0

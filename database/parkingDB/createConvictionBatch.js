@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger, dateToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export default function createConvictionBatch(sessionUser) {
@@ -9,7 +9,7 @@ export default function createConvictionBatch(sessionUser) {
         batchDate, recordCreate_userName,
         recordCreate_timeMillis, recordUpdate_userName, recordUpdate_timeMillis)
         values (?, ?, ?, ?, ?)`)
-        .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), sessionUser.userName, rightNow.getTime());
+        .run(dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), sessionUser.userName, rightNow.getTime());
     database.close();
     return info.changes > 0
         ? {
@@ -17,8 +17,8 @@ export default function createConvictionBatch(sessionUser) {
             batch: {
                 recordType: 'batch',
                 batchId: info.lastInsertRowid,
-                batchDate: dateTimeFns.dateToInteger(rightNow),
-                batchDateString: dateTimeFns.dateToString(rightNow),
+                batchDate: dateToInteger(rightNow),
+                batchDateString: dateToString(rightNow),
                 lockDate: undefined,
                 lockDateString: '',
                 batchEntries: []

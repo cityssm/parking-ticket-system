@@ -1,8 +1,8 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
 import getLookupBatch from '../database/parkingDB/getLookupBatch.js';
-import { markLookupBatchAsSent } from '../database/parkingDB/markLookupBatchAsSent.js';
+import markLookupBatchAsSent from '../database/parkingDB/markLookupBatchAsSent.js';
 import { getConfigProperty } from './functions.config.js';
 let currentDate;
 let currentDateNumber;
@@ -10,7 +10,7 @@ let currentDatePrefix;
 let currentYearPrefix;
 function resetCurrentDate() {
     currentDate = new Date();
-    currentDateNumber = dateTimeFns.dateToInteger(currentDate);
+    currentDateNumber = dateToInteger(currentDate);
     currentYearPrefix = Math.floor(currentDate.getFullYear() / 100) * 100;
     currentDatePrefix = currentYearPrefix * 10000;
 }
@@ -110,7 +110,7 @@ export const parsePKRD = (rowData) => {
         const expiryYear = twoDigitYearToFourDigit(Number.parseInt(rowData.slice(204, 206), 10));
         const expiryDate = new Date(expiryYear, Number.parseInt(rowData.slice(206, 208), 10) - 1 + 1, 1);
         expiryDate.setDate(expiryDate.getDate() - 1);
-        record.licencePlateExpiryDate = dateTimeFns.dateToInteger(expiryDate);
+        record.licencePlateExpiryDate = dateToInteger(expiryDate);
         if (record.errorCode !== '') {
             record.vehicleYear = 0;
             record.licencePlateExpiryDate = 0;
