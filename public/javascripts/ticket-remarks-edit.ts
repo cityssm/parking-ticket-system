@@ -5,6 +5,7 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { DoAddRemarkReturn } from '../../handlers/tickets-post/doAddRemark.js'
 import type { ptsGlobal } from '../../types/publicTypes.js'
 import type { ParkingTicketRemark } from '../../types/recordTypes.js'
 
@@ -239,11 +240,11 @@ declare const pts: ptsGlobal
           `${pts.urlPrefix}/tickets/doAddRemark`,
           formEvent.currentTarget,
           (rawResponseJSON) => {
-            const responseJSON = rawResponseJSON as { success: boolean }
-            if (responseJSON.success) {
-              addRemarkCloseModalFunction()
-              getRemarks()
-            }
+            const responseJSON = rawResponseJSON as unknown as DoAddRemarkReturn
+            remarkList = responseJSON.remarks
+
+            addRemarkCloseModalFunction()
+            populateRemarksPanel()
           }
         )
       }

@@ -9,7 +9,7 @@ import { getNextParkingTicketRemarkIndex } from './getNextParkingTicketRemarkInd
 export default function createParkingTicketRemark(
   requestBody: ParkingTicketRemark,
   sessionUser: PTSUser
-): { success: boolean } {
+): number {
   const database = sqlite(databasePath)
 
   // Get new remark index
@@ -21,7 +21,7 @@ export default function createParkingTicketRemark(
   // Create the record
   const rightNow = new Date()
 
-  const info = database
+  database
     .prepare(
       `insert into ParkingTicketRemarks (
         ticketId, remarkIndex,
@@ -45,7 +45,5 @@ export default function createParkingTicketRemark(
 
   database.close()
 
-  return {
-    success: info.changes > 0
-  }
+  return remarkIndexNew
 }

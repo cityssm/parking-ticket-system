@@ -5,7 +5,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketRemark } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
-export function getParkingTicketRemarks(
+export default function getParkingTicketRemarks(
   ticketId: number,
   sessionUser: PTSUser,
   connectedDatabase?: sqlite.Database
@@ -36,5 +36,3 @@ export function getParkingTicketRemarks(
 
   return remarkRows
 }
-
-export default getParkingTicketRemarks

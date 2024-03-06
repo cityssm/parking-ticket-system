@@ -10,7 +10,7 @@ import { canUpdateObject } from '../parkingDB.js'
 
 import { getLicencePlateOwner } from './getLicencePlateOwner.js'
 import { getParkingLocation } from './getParkingLocation.js'
-import { getParkingTicketRemarks } from './getParkingTicketRemarks.js'
+import getParkingTicketRemarks from './getParkingTicketRemarks.js'
 import { getParkingTicketStatuses } from './getParkingTicketStatuses.js'
 
 export default async function getParkingTicket(

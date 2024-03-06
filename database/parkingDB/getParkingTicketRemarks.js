@@ -2,7 +2,7 @@ import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { canUpdateObject } from '../parkingDB.js';
-export function getParkingTicketRemarks(ticketId, sessionUser, connectedDatabase) {
+export default function getParkingTicketRemarks(ticketId, sessionUser, connectedDatabase) {
     const database = connectedDatabase ?? sqlite(databasePath, { readonly: true });
     const remarkRows = database
         .prepare(`select * from ParkingTicketRemarks
@@ -21,4 +21,3 @@ export function getParkingTicketRemarks(ticketId, sessionUser, connectedDatabase
     }
     return remarkRows;
 }
-export default getParkingTicketRemarks;

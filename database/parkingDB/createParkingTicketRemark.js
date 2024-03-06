@@ -6,7 +6,7 @@ export default function createParkingTicketRemark(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const remarkIndexNew = getNextParkingTicketRemarkIndex(requestBody.ticketId, database);
     const rightNow = new Date();
-    const info = database
+    database
         .prepare(`insert into ParkingTicketRemarks (
         ticketId, remarkIndex,
         remarkDate, remarkTime,
@@ -16,7 +16,5 @@ export default function createParkingTicketRemark(requestBody, sessionUser) {
         values (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
         .run(requestBody.ticketId, remarkIndexNew, dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), requestBody.remark, sessionUser.userName, rightNow.getTime(), sessionUser.userName, rightNow.getTime());
     database.close();
-    return {
-        success: info.changes > 0
-    };
+    return remarkIndexNew;
 }

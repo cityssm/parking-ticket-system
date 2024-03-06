@@ -148,10 +148,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             formEvent.preventDefault();
             cityssm.postJSON(`${pts.urlPrefix}/tickets/doAddRemark`, formEvent.currentTarget, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
-                if (responseJSON.success) {
-                    addRemarkCloseModalFunction();
-                    getRemarks();
-                }
+                remarkList = responseJSON.remarks;
+                addRemarkCloseModalFunction();
+                populateRemarksPanel();
             });
         }
         cityssm.openHtmlModal('ticket-addRemark', {
