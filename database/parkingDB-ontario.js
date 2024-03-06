@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateIntegerToString, dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
 export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
@@ -7,7 +7,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
     });
     const issueDate = new Date();
     issueDate.setDate(issueDate.getDate() - 60);
-    const issueDateNumber = dateTimeFns.dateToInteger(issueDate);
+    const issueDateNumber = dateToInteger(issueDate);
     const parkingTickets = database
         .prepare('select t.ticketId, t.ticketNumber, t.issueDate, t.licencePlateNumber,' +
         ' o.ownerName1 as licencePlateOwner_ownerName1' +
@@ -45,7 +45,7 @@ export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
         .all(issueDateNumber);
     database.close();
     for (const ticket of parkingTickets) {
-        ticket.issueDateString = dateTimeFns.dateIntegerToString(ticket.issueDate);
+        ticket.issueDateString = dateIntegerToString(ticket.issueDate);
     }
     return parkingTickets;
 };
