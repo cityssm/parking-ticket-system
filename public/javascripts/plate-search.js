@@ -119,7 +119,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
       <em>Loading licence plates...</em>
       </p>`;
-        cityssm.postJSON(pts.urlPrefix + '/plates/doGetLicencePlates', formElement, processPlateResultsFunction);
+        cityssm.postJSON(`${pts.urlPrefix}/plates/doGetLicencePlates`, formElement, processPlateResultsFunction);
     }
     function resetOffsetAndGetLicencePlatesFunction() {
         offsetElement.value = '0';

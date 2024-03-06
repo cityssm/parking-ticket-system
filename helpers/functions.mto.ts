@@ -432,11 +432,11 @@ export const importLicencePlateOwnership = (
 
   database
     .prepare(
-      'update LicencePlateLookupBatches' +
-        ' set receivedDate = ?,' +
-        ' recordUpdate_userName = ?,' +
-        ' recordUpdate_timeMillis = ?' +
-        ' where batchId = ?'
+      `update LicencePlateLookupBatches
+        set receivedDate = ?,
+        recordUpdate_userName = ?,
+        recordUpdate_timeMillis = ?
+        where batchId = ?`
     )
     .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchId)
 

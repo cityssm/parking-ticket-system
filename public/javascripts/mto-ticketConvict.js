@@ -217,7 +217,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function doLock() {
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doLockConvictionBatch', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doLockConvictionBatch`, {
             batchId: currentBatch.batchId
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;

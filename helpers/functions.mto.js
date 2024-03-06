@@ -199,11 +199,11 @@ export const importLicencePlateOwnership = (batchId, ownershipData, sessionUser)
         }
     }
     database
-        .prepare('update LicencePlateLookupBatches' +
-        ' set receivedDate = ?,' +
-        ' recordUpdate_userName = ?,' +
-        ' recordUpdate_timeMillis = ?' +
-        ' where batchId = ?')
+        .prepare(`update LicencePlateLookupBatches
+        set receivedDate = ?,
+        recordUpdate_userName = ?,
+        recordUpdate_timeMillis = ?
+        where batchId = ?`)
         .run(headerRow.recordDate, sessionUser.userName, rightNowMillis, batchId);
     database.close();
     return {

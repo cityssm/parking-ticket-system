@@ -51,7 +51,7 @@ type UpdateBylawResponseJSON =
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        pts.urlPrefix + '/admin/doUpdateOffencesByBylaw',
+        `${pts.urlPrefix}/admin/doUpdateOffencesByBylaw`,
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as UpdateBylawResponseJSON
@@ -119,7 +119,7 @@ type UpdateBylawResponseJSON =
 
     function deleteFunction(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/admin/doDeleteBylaw',
+        `${pts.urlPrefix}/admin/doDeleteBylaw`,
         {
           bylawNumber: bylaw.bylawNumber
         },
@@ -150,7 +150,7 @@ type UpdateBylawResponseJSON =
       formEvent.preventDefault()
 
       cityssm.postJSON(
-        pts.urlPrefix + '/admin/doUpdateBylaw',
+        `${pts.urlPrefix}/admin/doUpdateBylaw`,
         formEvent.currentTarget,
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as UpdateBylawResponseJSON
@@ -317,7 +317,7 @@ type UpdateBylawResponseJSON =
         formEvent.preventDefault()
 
         cityssm.postJSON(
-          pts.urlPrefix + '/admin/doAddBylaw',
+          `${pts.urlPrefix}/admin/doAddBylaw`,
           formEvent.currentTarget,
           (rawResponseJSON) => {
             const responseJSON = rawResponseJSON as UpdateBylawResponseJSON

@@ -369,7 +369,7 @@ declare const pts: ptsGlobal
 
   function doLock(): void {
     cityssm.postJSON(
-      pts.urlPrefix + '/tickets/doLockConvictionBatch',
+      `${pts.urlPrefix}/tickets/doLockConvictionBatch`,
       {
         batchId: currentBatch.batchId
       },

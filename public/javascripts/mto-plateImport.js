@@ -38,7 +38,7 @@ document
       </span>`;
     document.querySelector('#step--upload')?.classList.add('is-hidden');
     document.querySelector('#step--update')?.classList.remove('is-hidden');
-    cityssm.postJSON(pts.urlPrefix + '/plates-ontario/doMTOImportUpload', formElement, (responseJSON) => {
+    cityssm.postJSON(`${pts.urlPrefix}/plates-ontario/doMTOImportUpload`, formElement, (responseJSON) => {
         updateStepItemElement.classList.add('is-completed');
         updateStepItemElement.classList.remove('is-active');
         const resultsMessageElement = document.querySelector('#mtoImport--message');

@@ -25,7 +25,7 @@ declare const pts: ptsGlobal
 
     function purgeFunction(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/admin/doCleanupTable',
+        `${pts.urlPrefix}/admin/doCleanupTable`,
         {
           table,
           recordDelete_timeMillis

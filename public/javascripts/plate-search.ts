@@ -193,7 +193,7 @@ declare const pts: ptsGlobal
       </p>`
 
     cityssm.postJSON(
-      pts.urlPrefix + '/plates/doGetLicencePlates',
+      `${pts.urlPrefix}/plates/doGetLicencePlates`,
       formElement,
       processPlateResultsFunction
     )
