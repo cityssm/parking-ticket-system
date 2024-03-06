@@ -1,14 +1,13 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { updateParkingTicket } from '../../database/parkingDB/updateParkingTicket.js'
+import updateParkingTicket from '../../database/parkingDB/updateParkingTicket.js'
+import type { ParkingTicket } from '../../types/recordTypes.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const result = updateParkingTicket(
-    request.body,
+    request.body as ParkingTicket,
     request.session.user as PTSUser
   )
 
-  return response.json(result)
+  response.json(result)
 }
-
-export default handler

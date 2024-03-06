@@ -1,6 +1,5 @@
-import { restoreParkingTicket } from '../../database/parkingDB/restoreParkingTicket.js';
-export const handler = (request, response) => {
-    const result = restoreParkingTicket(request.body.ticketId, request.session.user);
-    return response.json(result);
-};
-export default handler;
+import restoreParkingTicket from '../../database/parkingDB/restoreParkingTicket.js';
+export default function handler(request, response) {
+    const result = restoreParkingTicket(Number.parseInt(request.body.ticketId, 10), request.session.user);
+    response.json(result);
+}

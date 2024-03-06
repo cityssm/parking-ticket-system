@@ -6,7 +6,7 @@ import { getConfigProperty } from '../../helpers/functions.config.js'
 import { getMakeFromNCIC } from '../../helpers/functions.vehicle.js'
 import type { LicencePlateOwner } from '../../types/recordTypes.js'
 
-export async function getLicencePlateOwner(
+export default async function getLicencePlateOwner(
   licencePlateCountry: string,
   licencePlateProvince: string,
   licencePlateNumber: string,
@@ -72,5 +72,3 @@ export async function getLicencePlateOwner(
 
   return undefined
 }
-
-export default getLicencePlateOwner

@@ -9,7 +9,7 @@ interface LockConvictionBatchReturn {
   lockDateString: string
 }
 
-export function lockConvictionBatch(
+export default function lockConvictionBatch(
   batchId: number,
   sessionUser: PTSUser
 ): LockConvictionBatchReturn {
@@ -39,5 +39,3 @@ export function lockConvictionBatch(
     lockDateString: dateIntegerToString(lockDate)
   }
 }
-
-export default lockConvictionBatch

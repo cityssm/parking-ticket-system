@@ -1,5 +1,5 @@
-import * as parkingDB_getParkingTickets from '../../database/parkingDB/getParkingTickets.js';
-export const handler = (request, response) => {
+import getParkingTickets from '../../database/parkingDB/getParkingTickets.js';
+export default function handler(request, response) {
     const queryOptions = {
         limit: Number.parseInt(request.body.limit, 10),
         offset: Number.parseInt(request.body.offset, 10),
@@ -10,6 +10,5 @@ export const handler = (request, response) => {
     if (request.body.isResolved !== '') {
         queryOptions.isResolved = request.body.isResolved === '1';
     }
-    response.json(parkingDB_getParkingTickets.getParkingTickets(request.session.user, queryOptions));
-};
-export default handler;
+    response.json(getParkingTickets(request.session.user, queryOptions));
+}

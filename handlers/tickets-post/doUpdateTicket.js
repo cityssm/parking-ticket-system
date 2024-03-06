@@ -1,6 +1,5 @@
-import { updateParkingTicket } from '../../database/parkingDB/updateParkingTicket.js';
-export const handler = (request, response) => {
+import updateParkingTicket from '../../database/parkingDB/updateParkingTicket.js';
+export default function handler(request, response) {
     const result = updateParkingTicket(request.body, request.session.user);
-    return response.json(result);
-};
-export default handler;
+    response.json(result);
+}

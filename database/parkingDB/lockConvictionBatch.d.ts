@@ -3,5 +3,5 @@ interface LockConvictionBatchReturn {
     lockDate: number;
     lockDateString: string;
 }
-export declare function lockConvictionBatch(batchId: number, sessionUser: PTSUser): LockConvictionBatchReturn;
-export default lockConvictionBatch;
+export default function lockConvictionBatch(batchId: number, sessionUser: PTSUser): LockConvictionBatchReturn;
+export {};

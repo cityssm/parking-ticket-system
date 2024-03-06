@@ -6,14 +6,13 @@ import sqlite from 'better-sqlite3'
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import { getConfigProperty } from '../../helpers/functions.config.js'
 
-export const unresolveParkingTicket = (
+export default function unresolveParkingTicket(
   ticketId: number,
   sessionUser: PTSUser
-): { success: boolean; message?: string } => {
+): { success: boolean; message?: string } {
   const database = sqlite(databasePath)
 
   // Check if the ticket is in the window
-
   const ticketObject = database
     .prepare(
       `select recordUpdate_timeMillis from ParkingTickets
@@ -67,5 +66,3 @@ export const unresolveParkingTicket = (
     success: info.changes > 0
   }
 }
-
-export default unresolveParkingTicket

@@ -8,7 +8,7 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
 
 import { getNextParkingTicketStatusIndex } from './getNextParkingTicketStatusIndex.js'
-import { resolveParkingTicket } from './resolveParkingTicket.js'
+import resolveParkingTicket from './resolveParkingTicket.js'
 
 type CreateParkingTicketStatusReturn =
   | {

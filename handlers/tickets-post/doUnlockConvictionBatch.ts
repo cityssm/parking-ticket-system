@@ -1,13 +1,14 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { unlockConvictionBatch } from '../../database/parkingDB/unlockConvictionBatch.js'
+import unlockConvictionBatch from '../../database/parkingDB/unlockConvictionBatch.js'
 
-export const handler: RequestHandler = (request, response) => {
-  const batchId = request.body.batchId
+export default function handler(request: Request, response: Response): void {
+  const batchId = Number.parseInt(request.body.batchId as string, 10)
 
-  const success = unlockConvictionBatch(batchId, request.session.user as PTSUser)
+  const success = unlockConvictionBatch(
+    batchId,
+    request.session.user as PTSUser
+  )
 
-  return response.json({ success })
+  response.json({ success })
 }
-
-export default handler

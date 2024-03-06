@@ -8,10 +8,10 @@ interface RequestWithSessionUser {
   }
 }
 
-const getPermission = (
+function getPermission(
   request: Partial<Request> | RequestWithSessionUser,
   permissionName: PermissionName
-): boolean => {
+): boolean {
   const user = request.session?.user
 
   if (user === undefined) {
@@ -21,25 +21,25 @@ const getPermission = (
   return user[permissionName] ?? false
 }
 
-export const userIsAdmin = (
+export function userIsAdmin(
   request: Partial<Request> | RequestWithSessionUser
-): boolean => {
+): boolean {
   return getPermission(request, 'isAdmin')
 }
 
-export const userCanUpdate = (
+export function userCanUpdate(
   request: Partial<Request> | RequestWithSessionUser
-): boolean => {
+): boolean {
   return getPermission(request, 'canUpdate')
 }
 
-export const userIsOperator = (
+export function userIsOperator(
   request: Partial<Request> | RequestWithSessionUser
-): boolean => {
+): boolean {
   return getPermission(request, 'isOperator')
 }
 
-export const forbiddenJSON = (response: Response): Response => {
+export function forbiddenJSON(response: Response): Response {
   return response.status(403).json({
     success: false,
     message: 'Forbidden'

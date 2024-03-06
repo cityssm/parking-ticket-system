@@ -1,7 +1,7 @@
 import { dateIntegerToString, dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export function lockConvictionBatch(batchId, sessionUser) {
+export default function lockConvictionBatch(batchId, sessionUser) {
     const database = sqlite(databasePath);
     const rightNow = new Date();
     const lockDate = dateToInteger(rightNow);
@@ -21,4 +21,3 @@ export function lockConvictionBatch(batchId, sessionUser) {
         lockDateString: dateIntegerToString(lockDate)
     };
 }
-export default lockConvictionBatch;

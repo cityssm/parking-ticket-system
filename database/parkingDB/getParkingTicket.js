@@ -2,10 +2,10 @@ import { dateIntegerToString, timeIntegerToString } from '@cityssm/utils-datetim
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { canUpdateObject } from '../parkingDB.js';
-import { getLicencePlateOwner } from './getLicencePlateOwner.js';
+import getLicencePlateOwner from './getLicencePlateOwner.js';
 import { getParkingLocation } from './getParkingLocation.js';
 import getParkingTicketRemarks from './getParkingTicketRemarks.js';
-import { getParkingTicketStatuses } from './getParkingTicketStatuses.js';
+import getParkingTicketStatuses from './getParkingTicketStatuses.js';
 export default async function getParkingTicket(ticketId, sessionUser) {
     const database = sqlite(databasePath, {
         readonly: true

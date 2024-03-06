@@ -1,7 +1,7 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
-export const unresolveParkingTicket = (ticketId, sessionUser) => {
+export default function unresolveParkingTicket(ticketId, sessionUser) {
     const database = sqlite(databasePath);
     const ticketObject = database
         .prepare(`select recordUpdate_timeMillis from ParkingTickets
@@ -38,5 +38,4 @@ export const unresolveParkingTicket = (ticketId, sessionUser) => {
     return {
         success: info.changes > 0
     };
-};
-export default unresolveParkingTicket;
+}

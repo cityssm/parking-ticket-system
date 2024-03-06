@@ -5,13 +5,10 @@ import type { ParkingOffence } from '../../types/recordTypes.js'
 
 import type { AddUpdateParkingOffenceReturn } from './getParkingOffences.js'
 
-export const updateParkingOffence = (
-  requestBody: ParkingOffence
-): AddUpdateParkingOffenceReturn => {
+export default function updateParkingOffence(requestBody: ParkingOffence): AddUpdateParkingOffenceReturn {
   const database = sqlite(databasePath)
 
   // Do update
-
   const info = database
     .prepare(
       `update ParkingOffences
@@ -40,5 +37,3 @@ export const updateParkingOffence = (
     success: info.changes > 0
   }
 }
-
-export default updateParkingOffence

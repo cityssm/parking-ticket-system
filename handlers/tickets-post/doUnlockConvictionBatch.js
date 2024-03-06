@@ -1,7 +1,6 @@
-import { unlockConvictionBatch } from '../../database/parkingDB/unlockConvictionBatch.js';
-export const handler = (request, response) => {
-    const batchId = request.body.batchId;
+import unlockConvictionBatch from '../../database/parkingDB/unlockConvictionBatch.js';
+export default function handler(request, response) {
+    const batchId = Number.parseInt(request.body.batchId, 10);
     const success = unlockConvictionBatch(batchId, request.session.user);
-    return response.json({ success });
-};
-export default handler;
+    response.json({ success });
+}

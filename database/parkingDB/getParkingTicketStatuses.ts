@@ -5,11 +5,11 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import type { ParkingTicketStatusLog } from '../../types/recordTypes.js'
 import { canUpdateObject } from '../parkingDB.js'
 
-export const getParkingTicketStatuses = (
+export default function getParkingTicketStatuses(
   ticketId: number,
   sessionUser: PTSUser,
   connectedDatabase?: sqlite.Database
-): ParkingTicketStatusLog[] => {
+): ParkingTicketStatusLog[] {
   const database = connectedDatabase ?? sqlite(databasePath, { readonly: true })
 
   const statusRows = database
@@ -40,5 +40,3 @@ export const getParkingTicketStatuses = (
 
   return statusRows
 }
-
-export default getParkingTicketStatuses

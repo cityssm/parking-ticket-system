@@ -1,2 +1,1 @@
-export declare const unlockConvictionBatch: (batchId: number, sessionUser: PTSUser) => boolean;
-export default unlockConvictionBatch;
+export default function unlockConvictionBatch(batchId: number, sessionUser: PTSUser): boolean;

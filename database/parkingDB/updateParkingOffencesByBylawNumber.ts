@@ -10,7 +10,7 @@ export interface UpdateParkingOffencesByBylawNumberForm {
   discountOffenceAmount: string
 }
 
-export function updateParkingOffencesByBylawNumber(
+export default function updateParkingOffencesByBylawNumber(
   requestBody: UpdateParkingOffencesByBylawNumberForm
 ): { success: boolean; bylaws?: ParkingBylaw[] } {
   const database = sqlite(databasePath)
@@ -38,5 +38,3 @@ export function updateParkingOffencesByBylawNumber(
     success: info.changes > 0
   }
 }
-
-export default updateParkingOffencesByBylawNumber

@@ -1,7 +1,7 @@
 import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js';
 import getOwnershipReconciliationRecords from '../../database/parkingDB/getOwnershipReconciliationRecords.js';
 import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js';
-export async function handler(request, response) {
+export default async function handler(request, response) {
     const records = await getOwnershipReconciliationRecords();
     const statusRecords = [];
     for (const record of records) {
@@ -28,4 +28,3 @@ export async function handler(request, response) {
         statusRecords
     });
 }
-export default handler;

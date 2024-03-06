@@ -4,7 +4,7 @@ import createParkingTicketStatus from '../../database/parkingDB/createParkingTic
 import getOwnershipReconciliationRecords from '../../database/parkingDB/getOwnershipReconciliationRecords.js'
 import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js'
 
-export async function handler(
+export default async function handler(
   request: Request,
   response: Response
 ): Promise<void> {
@@ -44,5 +44,3 @@ export async function handler(
     statusRecords
   })
 }
-
-export default handler

@@ -2,7 +2,7 @@ import * as dateTimeFns from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getConfigProperty } from '../../helpers/functions.config.js';
-export const getLicencePlateExpiryDateFromPieces = (requestBody) => {
+export function getLicencePlateExpiryDateFromPieces(requestBody) {
     let licencePlateExpiryDate = 0;
     const licencePlateExpiryYear = Number.parseInt(requestBody.licencePlateExpiryYear, 10) ?? 0;
     const licencePlateExpiryMonth = Number.parseInt(requestBody.licencePlateExpiryMonth, 10) ?? 0;
@@ -23,8 +23,8 @@ export const getLicencePlateExpiryDateFromPieces = (requestBody) => {
         success: true,
         licencePlateExpiryDate
     };
-};
-export const updateParkingTicket = (requestBody, sessionUser) => {
+}
+export default function updateParkingTicket(requestBody, sessionUser) {
     const database = sqlite(databasePath);
     const nowMillis = Date.now();
     const issueDate = dateTimeFns.dateStringToInteger(requestBody.issueDateString);
@@ -100,5 +100,4 @@ export const updateParkingTicket = (requestBody, sessionUser) => {
             success: false,
             message: 'An error occurred saving this ticket.  Please try again.'
         };
-};
-export default updateParkingTicket;
+}

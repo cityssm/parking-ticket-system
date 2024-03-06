@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express'
 
 import createParkingTicketStatus from '../../database/parkingDB/createParkingTicketStatus.js'
-import { getLicencePlateOwner } from '../../database/parkingDB/getLicencePlateOwner.js'
+import getLicencePlateOwner from '../../database/parkingDB/getLicencePlateOwner.js'
 import { getFormattedOwnerAddress } from '../../helpers/functions.owner.js'
 
-export async function handler(
+export default async function handler(
   request: Request,
   response: Response
 ): Promise<void> {
@@ -39,5 +39,3 @@ export async function handler(
 
   response.json(statusResponse)
 }
-
-export default handler

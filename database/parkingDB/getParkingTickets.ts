@@ -110,20 +110,18 @@ interface GetParkingTicketsReturn {
   tickets: ParkingTicket[]
 }
 
-export const getParkingTickets = (
+export default function getParkingTickets(
   sessionUser: PTSUser,
   queryOptions: GetParkingTicketsQueryOptions
-): GetParkingTicketsReturn => {
+): GetParkingTicketsReturn {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
   // build where clause
-
   const sqlWhereClause = buildWhereClause(queryOptions)
 
   // get the count
-
   const count = database
     .prepare(
       `select ifnull(count(*), 0) as cnt
@@ -135,7 +133,6 @@ export const getParkingTickets = (
     .get(sqlWhereClause.sqlParameters) as number
 
   // do query
-
   const rows = database
     .prepare(
       `select t.ticketId, t.ticketNumber, t.issueDate,
@@ -218,5 +215,3 @@ export function getParkingTicketsByLicencePlate(
 
   return rows
 }
-
-export default getParkingTickets

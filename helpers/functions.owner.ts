@@ -1,9 +1,9 @@
 import type { ReconciliationRecord } from '../database/parkingDB/getOwnershipReconciliationRecords.js'
 import type { LicencePlateOwner } from '../types/recordTypes.js'
 
-export const getFormattedOwnerAddress = (
+export function getFormattedOwnerAddress(
   owner: LicencePlateOwner | ReconciliationRecord
-): string => {
+): string {
   const fieldPrefix = 'ownerName1' in owner ? '' : 'owner_'
 
   return `${owner[fieldPrefix + 'ownerName1'] as string}\n

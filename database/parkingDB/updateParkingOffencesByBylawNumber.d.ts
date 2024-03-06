@@ -5,8 +5,7 @@ export interface UpdateParkingOffencesByBylawNumberForm {
     discountDays: string;
     discountOffenceAmount: string;
 }
-export declare function updateParkingOffencesByBylawNumber(requestBody: UpdateParkingOffencesByBylawNumberForm): {
+export default function updateParkingOffencesByBylawNumber(requestBody: UpdateParkingOffencesByBylawNumberForm): {
     success: boolean;
     bylaws?: ParkingBylaw[];
 };
-export default updateParkingOffencesByBylawNumber;

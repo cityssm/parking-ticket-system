@@ -8,9 +8,9 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 import { getConfigProperty } from '../../helpers/functions.config.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
 
-export const getLicencePlateExpiryDateFromPieces = (
+export function getLicencePlateExpiryDateFromPieces(
   requestBody: ParkingTicket
-): { success: boolean; message?: string; licencePlateExpiryDate?: number } => {
+): { success: boolean; message?: string; licencePlateExpiryDate?: number } {
   let licencePlateExpiryDate = 0
 
   const licencePlateExpiryYear =
@@ -47,10 +47,10 @@ export const getLicencePlateExpiryDateFromPieces = (
   }
 }
 
-export const updateParkingTicket = (
+export default function updateParkingTicket(
   requestBody: ParkingTicket,
   sessionUser: PTSUser
-): { success: boolean; message?: string } => {
+): { success: boolean; message?: string } {
   const database = sqlite(databasePath)
 
   const nowMillis = Date.now()
@@ -59,7 +59,6 @@ export const updateParkingTicket = (
 
   if (getConfigProperty('parkingTickets.ticketNumber.isUnique')) {
     // Ensure ticket number has not been used in the last two years
-
     const duplicateTicket = database
       .prepare(
         `select ticketId from ParkingTickets
@@ -169,5 +168,3 @@ export const updateParkingTicket = (
         message: 'An error occurred saving this ticket.  Please try again.'
       }
 }
-
-export default updateParkingTicket

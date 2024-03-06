@@ -54,7 +54,7 @@ function buildWhereClause(queryOptions) {
         sqlParameters
     };
 }
-export const getParkingTickets = (sessionUser, queryOptions) => {
+export default function getParkingTickets(sessionUser, queryOptions) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -101,7 +101,7 @@ export const getParkingTickets = (sessionUser, queryOptions) => {
         offset: queryOptions.offset,
         tickets: rows
     };
-};
+}
 export function getParkingTicketsByLicencePlate(licencePlateCountry, licencePlateProvince, licencePlateNumber, sessionUser) {
     const database = sqlite(databasePath, {
         readonly: true
@@ -130,4 +130,3 @@ export function getParkingTicketsByLicencePlate(licencePlateCountry, licencePlat
     }
     return rows;
 }
-export default getParkingTickets;

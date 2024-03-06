@@ -1,14 +1,12 @@
-import type { RequestHandler } from 'express'
+import type { Request, Response } from 'express'
 
-import { unresolveParkingTicket } from '../../database/parkingDB/unresolveParkingTicket.js'
+import unresolveParkingTicket from '../../database/parkingDB/unresolveParkingTicket.js'
 
-export const handler: RequestHandler = (request, response) => {
+export default function handler(request: Request, response: Response): void {
   const result = unresolveParkingTicket(
     Number.parseInt(request.body.ticketId as string, 10),
     request.session.user as PTSUser
   )
 
-  return response.json(result)
+  response.json(result)
 }
-
-export default handler

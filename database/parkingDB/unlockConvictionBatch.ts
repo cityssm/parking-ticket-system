@@ -2,10 +2,10 @@ import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
-export const unlockConvictionBatch = (
+export default function unlockConvictionBatch(
   batchId: number,
   sessionUser: PTSUser
-): boolean => {
+): boolean {
   const database = sqlite(databasePath)
 
   const rightNowMillis = Date.now()
@@ -27,5 +27,3 @@ export const unlockConvictionBatch = (
 
   return info.changes > 0
 }
-
-export default unlockConvictionBatch

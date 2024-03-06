@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const updateParkingBylaw = (requestBody) => {
+export default function updateParkingBylaw(requestBody) {
     const database = sqlite(databasePath);
     const info = database
         .prepare(`update ParkingBylaws
@@ -12,5 +12,4 @@ export const updateParkingBylaw = (requestBody) => {
     return {
         success: info.changes > 0
     };
-};
-export default updateParkingBylaw;
+}

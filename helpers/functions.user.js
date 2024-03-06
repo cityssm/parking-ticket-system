@@ -1,22 +1,22 @@
-const getPermission = (request, permissionName) => {
+function getPermission(request, permissionName) {
     const user = request.session?.user;
     if (user === undefined) {
         return false;
     }
     return user[permissionName] ?? false;
-};
-export const userIsAdmin = (request) => {
+}
+export function userIsAdmin(request) {
     return getPermission(request, 'isAdmin');
-};
-export const userCanUpdate = (request) => {
+}
+export function userCanUpdate(request) {
     return getPermission(request, 'canUpdate');
-};
-export const userIsOperator = (request) => {
+}
+export function userIsOperator(request) {
     return getPermission(request, 'isOperator');
-};
-export const forbiddenJSON = (response) => {
+}
+export function forbiddenJSON(response) {
     return response.status(403).json({
         success: false,
         message: 'Forbidden'
     });
-};
+}

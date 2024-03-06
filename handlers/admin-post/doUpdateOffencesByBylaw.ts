@@ -1,9 +1,8 @@
 import type { Request, Response } from 'express'
 
 import { getParkingBylawsWithOffenceStats } from '../../database/parkingDB/getParkingBylaws.js'
-import {
-  type UpdateParkingOffencesByBylawNumberForm,
-  updateParkingOffencesByBylawNumber
+import updateParkingOffencesByBylawNumber, {
+  type UpdateParkingOffencesByBylawNumberForm
 } from '../../database/parkingDB/updateParkingOffencesByBylawNumber.js'
 
 export default function handler(request: Request, response: Response): void {
