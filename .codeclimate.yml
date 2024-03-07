@@ -12,3 +12,4 @@ checks:
 exclude_patterns:
 - "cypress/"  
 - "test/"
+- "**/*.d.ts"
