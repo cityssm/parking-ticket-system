@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3';
 import Debug from 'debug';
 import { nhtsaDB as nhtsaDatabasePath } from '../../data/databasePaths.js';
 const debug = Debug('parking-ticket-system:nhtsaDB:initializeDatabase');
-export const initNHTSADB = () => {
+export function initNHTSADB() {
     const nhtsaDB = sqlite(nhtsaDatabasePath);
     let doCreate = false;
     const row = nhtsaDB
@@ -31,4 +31,4 @@ export const initNHTSADB = () => {
     }
     nhtsaDB.close();
     return doCreate;
-};
+}

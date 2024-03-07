@@ -184,7 +184,7 @@ reportDefinitions.set('cleanup-parkingLocations', {
       and not exists (select 1 from ParkingTickets t where l.locationKey = t.locationKey)
       and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)`
 });
-export const getReportData = (reportName, requestQuery) => {
+export function getReportData(reportName, requestQuery) {
     let reportDefinition;
     let sql;
     let sqlParameters = [];
@@ -218,4 +218,4 @@ export const getReportData = (reportName, requestQuery) => {
     const rows = database.prepare(sql).all(sqlParameters);
     database.close();
     return rows;
-};
+}

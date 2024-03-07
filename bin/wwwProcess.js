@@ -4,7 +4,7 @@ import exitHook from 'exit-hook';
 import { app } from '../app.js';
 import { getConfigProperty } from '../helpers/functions.config.js';
 const debug = Debug(`parking-ticket-system:wwwProcess:${process.pid}`);
-const onError = (error) => {
+function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;
     }
@@ -27,14 +27,14 @@ const onError = (error) => {
     if (doProcessExit) {
         process.exit(1);
     }
-};
-const onListening = (server) => {
+}
+function onListening(server) {
     const addr = server.address();
     const bind = typeof addr === 'string'
         ? `pipe ${addr}`
         : `port ${addr?.port.toString() ?? ''}`;
     debug(`Listening on ${bind}`);
-};
+}
 process.title = `${getConfigProperty('application.applicationName')} (Worker)`;
 const httpPort = getConfigProperty('application.httpPort');
 const httpServer = http.createServer(app);

@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
-export const clearLookupBatch = (batchId, sessionUser) => {
+export default function clearLookupBatch(batchId, sessionUser) {
     const database = sqlite(databasePath);
     const canUpdateBatch = database
         .prepare(`update LicencePlateLookupBatches
@@ -24,5 +24,4 @@ export const clearLookupBatch = (batchId, sessionUser) => {
     return {
         success: true
     };
-};
-export default clearLookupBatch;
+}

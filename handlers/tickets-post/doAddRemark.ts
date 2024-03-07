@@ -15,7 +15,10 @@ export default function handler(request: Request, response: Response): void {
     request.session.user as PTSUser
   )
 
-  const remarks = getParkingTicketRemarks(Number.parseInt(request.body.ticketId as string, 10), request.session.user as PTSUser)
+  const remarks = getParkingTicketRemarks(
+    Number.parseInt(request.body.ticketId as string, 10),
+    request.session.user as PTSUser
+  )
 
   const json: DoAddRemarkReturn = {
     remarkIndex,

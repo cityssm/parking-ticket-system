@@ -2,7 +2,7 @@ import { dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
 import { getConfigProperty } from '../helpers/functions.config.js';
-export const canUpdateObject = (object, sessionUser) => {
+export function canUpdateObject(object, sessionUser) {
     let canUpdate = false;
     if ((sessionUser ?? undefined) === undefined) {
         canUpdate = false;
@@ -26,8 +26,8 @@ export const canUpdateObject = (object, sessionUser) => {
         }
     }
     return canUpdate;
-};
-export const getRecentParkingTicketVehicleMakeModelValues = () => {
+}
+export function getRecentParkingTicketVehicleMakeModelValues() {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -49,8 +49,8 @@ export const getRecentParkingTicketVehicleMakeModelValues = () => {
         vehicleMakeModelList.push(row.vehicleMakeModel);
     }
     return vehicleMakeModelList;
-};
-export const getSplitWhereClauseFilter = (columnName, searchString) => {
+}
+export function getSplitWhereClauseFilter(columnName, searchString) {
     let sqlWhereClause = '';
     const sqlParameters = [];
     const ticketNumberPieces = searchString.toLowerCase().split(' ');
@@ -62,8 +62,8 @@ export const getSplitWhereClauseFilter = (columnName, searchString) => {
         sqlWhereClause,
         sqlParams: sqlParameters
     };
-};
-export const getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate) => {
+}
+export function getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -76,4 +76,4 @@ export const getDistinctLicencePlateOwnerVehicleNCICs = (cutoffDate) => {
         .all(cutoffDate);
     database.close();
     return rows;
-};
+}

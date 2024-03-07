@@ -1,1 +1,1 @@
-export declare const getReportData: (reportName: string, requestQuery: Record<string, string>) => unknown[];
+export declare function getReportData(reportName: string, requestQuery: Record<string, string>): unknown[];

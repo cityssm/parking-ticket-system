@@ -13,7 +13,7 @@ interface ServerError extends Error {
   code: string
 }
 
-const onError = (error: ServerError): void => {
+function onError(error: ServerError): void {
   if (error.syscall !== 'listen') {
     throw error
   }
@@ -45,13 +45,12 @@ const onError = (error: ServerError): void => {
   }
 }
 
-const onListening = (server: http.Server): void => {
+function onListening(server: http.Server): void {
   const addr = server.address()
 
-  const bind =
-    typeof addr === 'string'
-      ? `pipe ${addr}`
-      : `port ${addr?.port.toString() ?? ''}`
+  const bind = typeof addr === 'string'
+    ? `pipe ${addr}`
+    : `port ${addr?.port.toString() ?? ''}`
 
   debug(`Listening on ${bind}`)
 }

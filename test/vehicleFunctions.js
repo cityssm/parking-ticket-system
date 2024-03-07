@@ -18,12 +18,4 @@ describe('helpers/vehicleFunctions', () => {
             assert.notEqual(makeModelResults.length, 0);
         }).timeout(60000);
     });
-    describe('#isNCICExclusivelyTrailer', () => {
-        it('should return true for "JACK" (JACK\'S TRAILER MFG.)', async () => {
-            assert.strictEqual(await vehicleFunctions.isNCICExclusivelyTrailer('JACK'), true);
-        });
-        it('should return false for "BOMB" (Bombardier)', async () => {
-            assert.strictEqual(await vehicleFunctions.isNCICExclusivelyTrailer('BOMB'), false);
-        });
-    });
 });

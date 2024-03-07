@@ -7,12 +7,8 @@ import { parkingDB as databasePath } from '../data/databasePaths.js'
 import { getConfigProperty } from '../helpers/functions.config.js'
 import type { ParkingTicket, Record } from '../types/recordTypes.js'
 
-export const canUpdateObject = (
-  object: Record,
-  sessionUser: PTSUser
-): boolean => {
+export function canUpdateObject(object: Record, sessionUser: PTSUser): boolean {
   // check user permissions
-
   let canUpdate = false
 
   if ((sessionUser ?? undefined) === undefined) {
@@ -43,7 +39,7 @@ export const canUpdateObject = (
   return canUpdate
 }
 
-export const getRecentParkingTicketVehicleMakeModelValues = (): string[] => {
+export function getRecentParkingTicketVehicleMakeModelValues(): string[] {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -81,10 +77,10 @@ interface GetSplitWhereClauseFilterReturn {
   sqlParams: string[]
 }
 
-export const getSplitWhereClauseFilter = (
+export function getSplitWhereClauseFilter(
   columnName: string,
   searchString: string
-): GetSplitWhereClauseFilterReturn => {
+): GetSplitWhereClauseFilterReturn {
   let sqlWhereClause = ''
   const sqlParameters: string[] = []
 
@@ -108,9 +104,9 @@ interface GetDistinctLicencePlateOwnerVehicleNCICsReturn {
   recordDateMax: number
 }
 
-export const getDistinctLicencePlateOwnerVehicleNCICs = (
+export function getDistinctLicencePlateOwnerVehicleNCICs(
   cutoffDate: number
-): GetDistinctLicencePlateOwnerVehicleNCICsReturn[] => {
+): GetDistinctLicencePlateOwnerVehicleNCICsReturn[] {
   const database = sqlite(databasePath, {
     readonly: true
   })

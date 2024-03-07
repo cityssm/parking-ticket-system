@@ -5,7 +5,7 @@ import { nhtsaDB as nhtsaDatabasePath } from '../../data/databasePaths.js'
 
 const debug = Debug('parking-ticket-system:nhtsaDB:initializeDatabase')
 
-export const initNHTSADB = (): boolean => {
+export function initNHTSADB(): boolean {
   const nhtsaDB = sqlite(nhtsaDatabasePath)
 
   let doCreate = false

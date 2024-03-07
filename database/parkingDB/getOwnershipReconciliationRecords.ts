@@ -82,7 +82,7 @@ export default async function getOwnershipReconciliationRecords(): Promise<
           and t.resolvedDate is null
           and not exists (
             select 1 from ParkingTicketStatusLog s
-            where t.ticketId = s.ticketId ' +
+            where t.ticketId = s.ticketId
             and s.statusKey in ('ownerLookupMatch', 'ownerLookupError')
             and s.recordDelete_timeMillis is null)`
     )

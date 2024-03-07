@@ -1,7 +1,7 @@
 import getOwnershipReconciliationRecords from '../../database/parkingDB/getOwnershipReconciliationRecords.js';
 import getUnacknowledgedLookupErrorLog from '../../database/parkingDB/getUnacknowledgedLookupErrorLog.js';
-export default function handler(_request, response) {
-    const reconciliationRecords = getOwnershipReconciliationRecords();
+export default async function handler(_request, response) {
+    const reconciliationRecords = await getOwnershipReconciliationRecords();
     const lookupErrors = getUnacknowledgedLookupErrorLog(-1, -1);
     response.render('ticket-reconcile', {
         headTitle: 'Ownership Reconciliation',

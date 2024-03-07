@@ -229,10 +229,10 @@ reportDefinitions.set('cleanup-parkingLocations', {
       and not exists (select 1 from ParkingOffences o where l.locationKey = o.locationKey)`
 })
 
-export const getReportData = (
+export function getReportData(
   reportName: string,
   requestQuery: Record<string, string>
-): unknown[] => {
+): unknown[] {
   let reportDefinition: ReportDefinition
   let sql: string
   let sqlParameters: unknown[] = []

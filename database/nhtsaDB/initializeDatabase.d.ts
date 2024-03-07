@@ -1,1 +1,1 @@
-export declare const initNHTSADB: () => boolean;
+export declare function initNHTSADB(): boolean;

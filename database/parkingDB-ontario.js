@@ -1,7 +1,7 @@
 import { dateIntegerToString, dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
-export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
+export function getParkingTicketsAvailableForMTOConvictionBatch() {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -48,4 +48,4 @@ export const getParkingTicketsAvailableForMTOConvictionBatch = () => {
         ticket.issueDateString = dateIntegerToString(ticket.issueDate);
     }
     return parkingTickets;
-};
+}

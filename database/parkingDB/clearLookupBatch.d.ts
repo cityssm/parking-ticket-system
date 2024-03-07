@@ -1,3 +1,2 @@
 import type { LookupBatchReturn } from './getLookupBatch.js';
-export declare const clearLookupBatch: (batchId: number, sessionUser: PTSUser) => LookupBatchReturn;
-export default clearLookupBatch;
+export default function clearLookupBatch(batchId: number, sessionUser: PTSUser): LookupBatchReturn;

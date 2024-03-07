@@ -4,14 +4,13 @@ import { parkingDB as databasePath } from '../../data/databasePaths.js'
 
 import type { LookupBatchReturn } from './getLookupBatch.js'
 
-export const clearLookupBatch = (
+export default function clearLookupBatch(
   batchId: number,
   sessionUser: PTSUser
-): LookupBatchReturn => {
+): LookupBatchReturn {
   const database = sqlite(databasePath)
 
   // Ensure batch is not locked
-
   const canUpdateBatch = database
     .prepare(
       `update LicencePlateLookupBatches
@@ -42,5 +41,3 @@ export const clearLookupBatch = (
     success: true
   }
 }
-
-export default clearLookupBatch

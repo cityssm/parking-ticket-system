@@ -1,2 +1,2 @@
 import type { ParkingTicket } from '../types/recordTypes.js';
-export declare const getParkingTicketsAvailableForMTOConvictionBatch: () => ParkingTicket[];
+export declare function getParkingTicketsAvailableForMTOConvictionBatch(): ParkingTicket[];

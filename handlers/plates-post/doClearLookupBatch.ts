@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 
-import { clearLookupBatch } from '../../database/parkingDB/clearLookupBatch.js'
+import clearLookupBatch from '../../database/parkingDB/clearLookupBatch.js'
 import getLookupBatch from '../../database/parkingDB/getLookupBatch.js'
 
 export default function handler(request: Request, response: Response): void {

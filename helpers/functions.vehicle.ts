@@ -1,4 +1,4 @@
-import { getFieldValueDescription, vmaHelpers } from '@cityssm/ncic-lookup'
+import { getNhtsaCompatibleMake } from '@cityssm/ncic-lookup/helpers/vma.js'
 import { GetModelsForMake } from '@shaggytools/nhtsa-api-wrapper'
 import sqlite from 'better-sqlite3'
 
@@ -143,14 +143,5 @@ export async function getModelsByMake(
 }
 
 export async function getMakeFromNCIC(vehicleNCIC: string): Promise<string> {
-  return (await getFieldValueDescription('VMA', vehicleNCIC)) ?? vehicleNCIC
-}
-
-export async function isNCICExclusivelyTrailer(
-  vehicleNCIC: string
-): Promise<boolean> {
-  return await vmaHelpers.isFieldValueExclusiveToVmaCodeType(
-    'Trailers',
-    vehicleNCIC
-  )
+  return (await getNhtsaCompatibleMake(vehicleNCIC)) ?? vehicleNCIC
 }
