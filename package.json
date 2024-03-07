@@ -30,7 +30,7 @@
     "@cityssm/bulma-webapp-js": "^1.5.0",
     "@cityssm/configurator": "^0.1.0",
     "@cityssm/expressjs-server-js": "^2.3.2",
-    "@cityssm/ncic-lookup": "^0.1.2",
+    "@cityssm/ncic-lookup": "^0.3.0",
     "@cityssm/utils-datetime": "^1.1.2",
     "@fontsource/pt-mono": "^5.0.12",
     "@fortawesome/fontawesome-free": "^5.15.4",
