@@ -6,11 +6,10 @@ export interface GetLicencePlatesQueryOptions {
     limit: number;
     offset: number;
 }
-interface GetLicencePlatesReturn {
+export interface GetLicencePlatesReturn {
     count: number;
     limit: number;
     offset: number;
     licencePlates: LicencePlate[];
 }
-export declare function getLicencePlates(queryOptions: GetLicencePlatesQueryOptions): GetLicencePlatesReturn;
-export default getLicencePlates;
+export default function getLicencePlates(queryOptions: GetLicencePlatesQueryOptions): GetLicencePlatesReturn;

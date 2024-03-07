@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         buttonElement.setAttribute('disabled', 'disabled');
         const batchId = buttonElement.dataset.batchId;
         const logIndex = buttonElement.dataset.logIndex;
-        cityssm.postJSON(pts.urlPrefix + '/tickets/doAcknowledgeLookupError', {
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doAcknowledgeLookupError`, {
             batchId,
             logIndex
         }, (rawResponseJSON) => {
@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const optionsTdElement = anchorElement.closest('td');
         const trElement = optionsTdElement.closest('tr');
         function doClear() {
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doDeleteStatus', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doDeleteStatus`, {
                 ticketId: trElement.dataset.ticketId,
                 statusIndex: anchorElement.dataset.statusIndex
             }, (rawResponseJSON) => {
@@ -83,7 +83,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const licencePlateNumber = trElement.dataset.licencePlateNumber;
             const ticketId = trElement.dataset.ticketId;
             const recordDate = trElement.dataset.recordDate;
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doReconcileAsMatch', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doReconcileAsMatch`, {
                 licencePlateCountry,
                 licencePlateProvince,
                 licencePlateNumber,
@@ -175,7 +175,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const licencePlateNumber = trElement.dataset.licencePlateNumber;
             const ticketId = trElement.dataset.ticketId;
             const recordDate = trElement.dataset.recordDate;
-            cityssm.postJSON(pts.urlPrefix + '/tickets/doReconcileAsError', {
+            cityssm.postJSON(`${pts.urlPrefix}/tickets/doReconcileAsError`, {
                 licencePlateCountry,
                 licencePlateProvince,
                 licencePlateNumber,

@@ -12,14 +12,14 @@ export interface GetLicencePlatesQueryOptions {
   offset: number
 }
 
-interface GetLicencePlatesReturn {
+export interface GetLicencePlatesReturn {
   count: number
   limit: number
   offset: number
   licencePlates: LicencePlate[]
 }
 
-export function getLicencePlates(
+export default function getLicencePlates(
   queryOptions: GetLicencePlatesQueryOptions
 ): GetLicencePlatesReturn {
   const database = sqlite(databasePath, {
@@ -108,5 +108,3 @@ export function getLicencePlates(
     licencePlates: rows
   }
 }
-
-export default getLicencePlates

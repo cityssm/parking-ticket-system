@@ -75,7 +75,7 @@ declare const pts: ptsGlobal
           // Set tombstone in available plates list
           availableTicketsList[recordIndex] = undefined
 
-          populateBatchView(responseJSON.batch)
+          populateBatchView(responseJSON.batch as LicencePlateLookupBatch)
         } else {
           buttonElement.removeAttribute('disabled')
         }
@@ -106,7 +106,8 @@ declare const pts: ptsGlobal
         licencePlateProvince: 'ON',
         licencePlateNumber: batchEntry.licencePlateNumber
       },
-      (responseJSON: { success: boolean }) => {
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as { success: boolean }
         if (responseJSON.success) {
           // Remove element from list
           entryContainerElement.remove()
@@ -124,14 +125,20 @@ declare const pts: ptsGlobal
 
     function clearFunction(): void {
       cityssm.postJSON(
-        pts.urlPrefix + '/plates/doClearLookupBatch',
+        `${pts.urlPrefix}/plates/doClearLookupBatch`,
         {
           batchId
         },
-        (responseJSON: {
-          success: boolean
-          batch?: LicencePlateLookupBatch
-        }) => {
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as
+            | {
+                success: true
+                batch: LicencePlateLookupBatch
+              }
+            | {
+                success: false
+              }
+
           if (responseJSON.success) {
             populateBatchView(responseJSON.batch)
             refreshAvailableTickets()

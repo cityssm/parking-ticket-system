@@ -13,9 +13,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             locationClass = pts.getLocationClass(ticketObject.locationClassKey).locationClass;
         }
         const ticketStatusObject = pts.getTicketStatus(ticketObject.latestStatus_statusKey);
+        const ticketUrl = `${pts.urlPrefix}/tickets/${ticketObject.ticketId.toString()}`;
         trElement.innerHTML = `<td>
-        <a href="${pts.urlPrefix}/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
-        ${ticketObject.ticketNumber}
+        <a href="${ticketUrl}" data-tooltip="View Parking Ticket">
+        ${cityssm.escapeHTML(ticketObject.ticketNumber)}
         </a>
       </td>
       <td class="is-nowrap">
@@ -67,8 +68,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     </td>`;
         return trElement;
     }
-    function processTicketResults(rawTicketResults) {
-        const ticketResults = rawTicketResults;
+    function processTicketResults(ticketResults) {
         const ticketList = ticketResults.tickets;
         if (ticketList.length === 0) {
             searchResultsElement.innerHTML = `<div class="message is-info">
@@ -148,7 +148,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <i class="fas fa-3x fa-circle-notch fa-spin" aria-hidden="true"></i><br />
       <em>Loading tickets...</em>
       </p>`;
-        cityssm.postJSON(`${pts.urlPrefix}/tickets/doGetTickets`, formElement, processTicketResults);
+        cityssm.postJSON(`${pts.urlPrefix}/tickets/doGetTickets`, formElement, (rawResponseJSON) => {
+            processTicketResults(rawResponseJSON);
+        });
     }
     function resetOffsetAndGetTicketsFunction() {
         offsetElement.value = '0';

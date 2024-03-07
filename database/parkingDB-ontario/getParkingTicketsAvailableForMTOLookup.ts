@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateIntegerToString, dateToInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -12,17 +12,14 @@ export default function getParkingTicketsAvailableForMTOLookup(
     readonly: true
   })
 
-  database.function(
-    'userFn_dateIntegerToString',
-    dateTimeFns.dateIntegerToString
-  )
+  database.function('userFn_dateIntegerToString', dateIntegerToString)
 
   let issueDateNumber = 1e8 // 10000_00_00 (a number bigger than any possible date)
 
   if (issueDaysAgo !== -1) {
     const issueDate = new Date()
     issueDate.setDate(issueDate.getDate() - issueDaysAgo)
-    issueDateNumber = dateTimeFns.dateToInteger(issueDate) as number
+    issueDateNumber = dateToInteger(issueDate) as number
   }
 
   const tickets = database

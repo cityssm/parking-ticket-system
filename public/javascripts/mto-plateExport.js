@@ -49,7 +49,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             licencePlateCountry: 'CA',
             licencePlateProvince: 'ON',
             licencePlateNumber: batchEntry.licencePlateNumber
-        }, (responseJSON) => {
+        }, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
             if (responseJSON.success) {
                 entryContainerElement.remove();
                 refreshAvailableTickets();
@@ -62,9 +63,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function clearBatch(clickEvent) {
         clickEvent.preventDefault();
         function clearFunction() {
-            cityssm.postJSON(pts.urlPrefix + '/plates/doClearLookupBatch', {
+            cityssm.postJSON(`${pts.urlPrefix}/plates/doClearLookupBatch`, {
                 batchId
-            }, (responseJSON) => {
+            }, (rawResponseJSON) => {
+                const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     populateBatchView(responseJSON.batch);
                     refreshAvailableTickets();

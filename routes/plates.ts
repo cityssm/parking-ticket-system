@@ -1,6 +1,9 @@
 import { type RequestHandler, Router } from 'express'
 
-import * as permissionHandlers from '../handlers/permissions.js'
+import {
+  updateOrOperatorPostHandler,
+  updatePostHandler
+} from '../handlers/permissions.js'
 import handler_view from '../handlers/plates-get/view.js'
 import handler_doAddAllParkingTicketsToLookupBatch from '../handlers/plates-post/doAddAllParkingTicketsToLookupBatch.js'
 import handler_doAddLicencePlateToLookupBatch from '../handlers/plates-post/doAddLicencePlateToLookupBatch.js'
@@ -27,51 +30,47 @@ router.post('/doGetLicencePlates', handler_doGetLicencePlates)
 
 router.post(
   '/doGetUnreceivedLicencePlateLookupBatches',
-  permissionHandlers.updateOrOperatorPostHandler,
+  updateOrOperatorPostHandler,
   handler_doGetUnreceivedLicencePlateLookupBatches
 )
 
 router.post(
   '/doCreateLookupBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doCreateLookupBatch
 )
 
 router.post(
   '/doGetLookupBatch',
-  permissionHandlers.updateOrOperatorPostHandler,
+  updateOrOperatorPostHandler,
   handler_doGetLookupBatch
 )
 
 router.post(
   '/doAddLicencePlateToLookupBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doAddLicencePlateToLookupBatch
 )
 
 router.post(
   '/doAddAllParkingTicketsToLookupBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doAddAllParkingTicketsToLookupBatch
 )
 
 router.post(
   '/doRemoveLicencePlateFromLookupBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doRemoveLicencePlateFromLookupBatch
 )
 
 router.post(
   '/doClearLookupBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doClearLookupBatch
 )
 
-router.post(
-  '/doLockLookupBatch',
-  permissionHandlers.updatePostHandler,
-  handler_doLockLookupBatch
-)
+router.post('/doLockLookupBatch', updatePostHandler, handler_doLockLookupBatch)
 
 router.post('/doGetModelsByMake', handler_doGetModelsByMake)
 

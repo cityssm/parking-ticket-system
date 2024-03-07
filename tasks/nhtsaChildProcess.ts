@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateToInteger } from '@cityssm/utils-datetime'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
 import {
@@ -9,20 +9,22 @@ import {
 
 import { getDistinctLicencePlateOwnerVehicleNCICs } from '../database/parkingDB.js'
 import { getConfigProperty } from '../helpers/functions.config.js'
-import { getMakeFromNCIC, getModelsByMake } from '../helpers/functions.vehicle.js'
+import {
+  getMakeFromNCIC,
+  getModelsByMake
+} from '../helpers/functions.vehicle.js'
 
 const debug = Debug('parking-ticket-system:task:nhtsaChildProcess')
 
 const initDate = new Date()
 initDate.setMonth(initDate.getMonth() - 1)
 
-let cutoffDate = dateTimeFns.dateToInteger(initDate) as number
+let cutoffDate = dateToInteger(initDate) as number
 
 let terminateTask = false
 
 async function doTask(): Promise<void> {
-  const vehicleNCICs =
-    getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate)
+  const vehicleNCICs = getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate)
 
   for (const ncicRecord of vehicleNCICs) {
     if (terminateTask) {

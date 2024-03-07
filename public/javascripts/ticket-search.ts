@@ -2,6 +2,7 @@
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { DoGetTicketsResponse } from '../../handlers/tickets-post/doGetTickets.js'
 import type { ptsGlobal } from '../../types/publicTypes.js'
 import type { ParkingTicket } from '../../types/recordTypes.js'
 
@@ -47,12 +48,14 @@ declare const pts: ptsGlobal
       ticketObject.latestStatus_statusKey
     )
 
+    const ticketUrl = `${
+      pts.urlPrefix
+    }/tickets/${ticketObject.ticketId.toString()}`
+
     // Output row
     trElement.innerHTML = `<td>
-        <a href="${
-          pts.urlPrefix
-        }/tickets/${ticketObject.ticketId.toString()}" data-tooltip="View Parking Ticket">
-        ${ticketObject.ticketNumber}
+        <a href="${ticketUrl}" data-tooltip="View Parking Ticket">
+        ${cityssm.escapeHTML(ticketObject.ticketNumber)}
         </a>
       </td>
       <td class="is-nowrap">
@@ -118,14 +121,7 @@ declare const pts: ptsGlobal
     return trElement
   }
 
-  function processTicketResults(rawTicketResults: unknown): void {
-    const ticketResults = rawTicketResults as {
-      count: number
-      limit: number
-      offset: number
-      tickets: ParkingTicket[]
-    }
-
+  function processTicketResults(ticketResults: DoGetTicketsResponse): void {
     const ticketList = ticketResults.tickets
 
     if (ticketList.length === 0) {
@@ -242,7 +238,9 @@ declare const pts: ptsGlobal
     cityssm.postJSON(
       `${pts.urlPrefix}/tickets/doGetTickets`,
       formElement,
-      processTicketResults
+      (rawResponseJSON) => {
+        processTicketResults(rawResponseJSON as unknown as DoGetTicketsResponse)
+      }
     )
   }
 

@@ -1,6 +1,11 @@
 import { type RequestHandler, Router } from 'express'
 
-import * as permissionHandlers from '../handlers/permissions.js'
+import {
+  updateGetHandler,
+  updateOrOperatorGetHandler,
+  updateOrOperatorPostHandler,
+  updatePostHandler
+} from '../handlers/permissions.js'
 import handler_byTicketNumber from '../handlers/tickets-get/byTicketNumber.js'
 import handler_convictPrint from '../handlers/tickets-get/convictPrint.js'
 import handler_edit from '../handlers/tickets-get/edit.js'
@@ -53,29 +58,29 @@ router.post('/doGetTickets', handler_doGetTickets)
  * Ownership Reconciliation
  */
 
-router.get('/reconcile', permissionHandlers.updateGetHandler, handler_reconcile)
+router.get('/reconcile', updateGetHandler, handler_reconcile as RequestHandler)
 
 router.post(
   '/doAcknowledgeLookupError',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doAcknowledgeLookupError
 )
 
 router.post(
   '/doReconcileAsMatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doReconcileAsMatch as RequestHandler
 )
 
 router.post(
   '/doReconcileAsError',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doReconcileAsError as RequestHandler
 )
 
 router.post(
   '/doQuickReconcileMatches',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doQuickReconcileMatches as RequestHandler
 )
 
@@ -85,37 +90,37 @@ router.post(
 
 router.post(
   '/doGetRecentConvictionBatches',
-  permissionHandlers.updateOrOperatorPostHandler,
+  updateOrOperatorPostHandler,
   handler_doGetRecentConvictionBatches
 )
 
 router.post(
   '/doGetConvictionBatch',
-  permissionHandlers.updateOrOperatorPostHandler,
+  updateOrOperatorPostHandler,
   handler_doGetConvictionBatch
 )
 
 router.post(
   '/doCreateConvictionBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doCreateConvictionBatch
 )
 
 router.post(
   '/doAddTicketToConvictionBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doAddTicketToConvictionBatch
 )
 
 router.post(
   '/doLockConvictionBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doLockConvictionBatch
 )
 
 router.post(
   '/doUnlockConvictionBatch',
-  permissionHandlers.updatePostHandler,
+  updatePostHandler,
   handler_doUnlockConvictionBatch
 )
 
@@ -123,47 +128,19 @@ router.post(
  * New Ticket
  */
 
-router.get(
-  ['/new', '/new/:ticketNumber'],
-  permissionHandlers.updateGetHandler,
-  handler_new
-)
+router.get(['/new', '/new/:ticketNumber'], updateGetHandler, handler_new)
 
-router.post(
-  '/doCreateTicket',
-  permissionHandlers.updatePostHandler,
-  handler_doCreateTicket
-)
+router.post('/doCreateTicket', updatePostHandler, handler_doCreateTicket)
 
-router.post(
-  '/doUpdateTicket',
-  permissionHandlers.updatePostHandler,
-  handler_doUpdateTicket
-)
+router.post('/doUpdateTicket', updatePostHandler, handler_doUpdateTicket)
 
-router.post(
-  '/doDeleteTicket',
-  permissionHandlers.updatePostHandler,
-  handler_doDeleteTicket
-)
+router.post('/doDeleteTicket', updatePostHandler, handler_doDeleteTicket)
 
-router.post(
-  '/doResolveTicket',
-  permissionHandlers.updatePostHandler,
-  handler_doResolveTicket
-)
+router.post('/doResolveTicket', updatePostHandler, handler_doResolveTicket)
 
-router.post(
-  '/doUnresolveTicket',
-  permissionHandlers.updatePostHandler,
-  handler_doUnresolveTicket
-)
+router.post('/doUnresolveTicket', updatePostHandler, handler_doUnresolveTicket)
 
-router.post(
-  '/doRestoreTicket',
-  permissionHandlers.updatePostHandler,
-  handler_doRestoreTicket
-)
+router.post('/doRestoreTicket', updatePostHandler, handler_doRestoreTicket)
 
 /*
  * Ticket Remarks
@@ -171,23 +148,11 @@ router.post(
 
 router.post('/doGetRemarks', handler_doGetRemarks)
 
-router.post(
-  '/doAddRemark',
-  permissionHandlers.updatePostHandler,
-  handler_doAddRemark
-)
+router.post('/doAddRemark', updatePostHandler, handler_doAddRemark)
 
-router.post(
-  '/doUpdateRemark',
-  permissionHandlers.updatePostHandler,
-  handler_doUpdateRemark
-)
+router.post('/doUpdateRemark', updatePostHandler, handler_doUpdateRemark)
 
-router.post(
-  '/doDeleteRemark',
-  permissionHandlers.updatePostHandler,
-  handler_doDeleteRemark
-)
+router.post('/doDeleteRemark', updatePostHandler, handler_doDeleteRemark)
 
 /*
  * Ticket Statuses
@@ -195,23 +160,11 @@ router.post(
 
 router.post('/doGetStatuses', handler_doGetStatuses)
 
-router.post(
-  '/doAddStatus',
-  permissionHandlers.updatePostHandler,
-  handler_doAddStatus
-)
+router.post('/doAddStatus', updatePostHandler, handler_doAddStatus)
 
-router.post(
-  '/doUpdateStatus',
-  permissionHandlers.updatePostHandler,
-  handler_doUpdateStatus
-)
+router.post('/doUpdateStatus', updatePostHandler, handler_doUpdateStatus)
 
-router.post(
-  '/doDeleteStatus',
-  permissionHandlers.updatePostHandler,
-  handler_doDeleteStatus
-)
+router.post('/doDeleteStatus', updatePostHandler, handler_doDeleteStatus)
 
 /*
  * Ticket View
@@ -227,7 +180,7 @@ router.get('/byTicketNumber/:ticketNumber', handler_byTicketNumber)
  * Ticket Edit
  */
 
-router.get('/:ticketId/edit', permissionHandlers.updateGetHandler, handler_edit as RequestHandler)
+router.get('/:ticketId/edit', updateGetHandler, handler_edit as RequestHandler)
 
 /*
  * Ticket Convict
@@ -235,13 +188,13 @@ router.get('/:ticketId/edit', permissionHandlers.updateGetHandler, handler_edit 
 
 router.get(
   '/convict/:batchId/print',
-  permissionHandlers.updateOrOperatorGetHandler,
+  updateOrOperatorGetHandler,
   handler_convictPrint
 )
 
 router.post(
   '/doMarkConvictionBatchSent',
-  permissionHandlers.updateOrOperatorGetHandler,
+  updateOrOperatorGetHandler,
   handler_doMarkConvictionBatchSent
 )
 

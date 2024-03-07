@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger } from '@cityssm/utils-datetime';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
 import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async';
@@ -8,7 +8,7 @@ import { getMakeFromNCIC, getModelsByMake } from '../helpers/functions.vehicle.j
 const debug = Debug('parking-ticket-system:task:nhtsaChildProcess');
 const initDate = new Date();
 initDate.setMonth(initDate.getMonth() - 1);
-let cutoffDate = dateTimeFns.dateToInteger(initDate);
+let cutoffDate = dateToInteger(initDate);
 let terminateTask = false;
 async function doTask() {
     const vehicleNCICs = getDistinctLicencePlateOwnerVehicleNCICs(cutoffDate);

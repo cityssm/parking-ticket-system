@@ -1,7 +1,7 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 import { getSplitWhereClauseFilter } from '../parkingDB.js';
-export function getLicencePlates(queryOptions) {
+export default function getLicencePlates(queryOptions) {
     const database = sqlite(databasePath, {
         readonly: true
     });
@@ -61,4 +61,3 @@ export function getLicencePlates(queryOptions) {
         licencePlates: rows
     };
 }
-export default getLicencePlates;

@@ -10,7 +10,7 @@ export interface GetParkingTicketsQueryOptions {
     limit: number;
     offset: number;
 }
-interface GetParkingTicketsReturn {
+export interface GetParkingTicketsReturn {
     count: number;
     limit: number;
     offset: number;
@@ -18,4 +18,3 @@ interface GetParkingTicketsReturn {
 }
 export default function getParkingTickets(sessionUser: PTSUser, queryOptions: GetParkingTicketsQueryOptions): GetParkingTicketsReturn;
 export declare function getParkingTicketsByLicencePlate(licencePlateCountry: string, licencePlateProvince: string, licencePlateNumber: string, sessionUser: PTSUser): ParkingTicket[];
-export {};

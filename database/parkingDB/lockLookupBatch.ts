@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateToInteger, dateToTimeInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -24,7 +24,7 @@ export default function lockLookupBatch(
         and lockDate is null`
     )
     .run(
-      dateTimeFns.dateToInteger(rightNow),
+      dateToInteger(rightNow),
       sessionUser.userName,
       rightNow.getTime(),
       batchId
@@ -64,8 +64,8 @@ export default function lockLookupBatch(
           having max(case when s.statusKey in ('ownerLookupPending', 'ownerLookupMatch', 'ownerLookupError') and s.recordDelete_timeMillis is null then 1 else 0 end) = 0`
       )
       .run(
-        dateTimeFns.dateToInteger(rightNow),
-        dateTimeFns.dateToTimeInteger(rightNow),
+        dateToInteger(rightNow),
+        dateToTimeInteger(rightNow),
         sessionUser.userName,
         rightNow.getTime(),
         sessionUser.userName,

@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime'
+import { dateIntegerToString } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
@@ -28,13 +28,9 @@ export default function getUnreceivedLookupBatches(
   database.close()
 
   for (const batch of batches) {
-    batch.batchDateString = dateTimeFns.dateIntegerToString(batch.batchDate)
-    batch.lockDateString = dateTimeFns.dateIntegerToString(
-      batch.lockDate as number
-    )
-    batch.sentDateString = dateTimeFns.dateIntegerToString(
-      batch.sentDate as number
-    )
+    batch.batchDateString = dateIntegerToString(batch.batchDate)
+    batch.lockDateString = dateIntegerToString(batch.lockDate as number)
+    batch.sentDateString = dateIntegerToString(batch.sentDate as number)
   }
 
   return batches

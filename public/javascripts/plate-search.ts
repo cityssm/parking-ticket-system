@@ -2,6 +2,7 @@
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
+import type { DoGetLicencePlatesResponse } from '../../handlers/plates-post/doGetLicencePlates.js'
 import type { ptsGlobal } from '../../types/publicTypes.js'
 import type { LicencePlate } from '../../types/recordTypes.js'
 
@@ -65,7 +66,7 @@ declare const pts: ptsGlobal
       </td>
       <td class="has-text-right is-vcentered">
       ${
-        plateObject.hasOwnerRecord
+        (plateObject.hasOwnerRecord as boolean)
           ? `<span data-tooltip="Has Ownership Record">
               <i class="fas fa-check" aria-hidden="true"></i>
               </span>
@@ -80,12 +81,9 @@ declare const pts: ptsGlobal
     return trElement
   }
 
-  function processPlateResultsFunction(licencePlateResults: {
-    count: number
-    limit: number
-    offset: number
-    licencePlates: LicencePlate[]
-  }): void {
+  function processPlateResultsFunction(
+    licencePlateResults: DoGetLicencePlatesResponse
+  ): void {
     const plateList = licencePlateResults.licencePlates
 
     if (plateList.length === 0) {
@@ -195,7 +193,11 @@ declare const pts: ptsGlobal
     cityssm.postJSON(
       `${pts.urlPrefix}/plates/doGetLicencePlates`,
       formElement,
-      processPlateResultsFunction
+      (rawResponseJSON) => {
+        processPlateResultsFunction(
+          rawResponseJSON as unknown as DoGetLicencePlatesResponse
+        )
+      }
     )
   }
 

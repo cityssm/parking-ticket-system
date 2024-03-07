@@ -1,4 +1,4 @@
-import * as dateTimeFns from '@cityssm/utils-datetime';
+import { dateToInteger, dateToTimeInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
 export default function lockLookupBatch(batchId, sessionUser) {
@@ -12,7 +12,7 @@ export default function lockLookupBatch(batchId, sessionUser) {
         where batchId = ?
         and recordDelete_timeMillis is null
         and lockDate is null`)
-        .run(dateTimeFns.dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), batchId);
+        .run(dateToInteger(rightNow), sessionUser.userName, rightNow.getTime(), batchId);
     if (info.changes > 0) {
         database
             .prepare(`insert into ParkingTicketStatusLog (
@@ -44,7 +44,7 @@ export default function lockLookupBatch(batchId, sessionUser) {
             or (t.recordDelete_timeMillis is null and t.resolvedDate is null))
           group by t.ticketId, e.licencePlateCountry, e.licencePlateProvince, e.licencePlateNumber, e.batchId
           having max(case when s.statusKey in ('ownerLookupPending', 'ownerLookupMatch', 'ownerLookupError') and s.recordDelete_timeMillis is null then 1 else 0 end) = 0`)
-            .run(dateTimeFns.dateToInteger(rightNow), dateTimeFns.dateToTimeInteger(rightNow), sessionUser.userName, rightNow.getTime(), sessionUser.userName, rightNow.getTime(), batchId);
+            .run(dateToInteger(rightNow), dateToTimeInteger(rightNow), sessionUser.userName, rightNow.getTime(), sessionUser.userName, rightNow.getTime(), batchId);
     }
     database.close();
     return {

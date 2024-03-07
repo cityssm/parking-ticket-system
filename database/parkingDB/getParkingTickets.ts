@@ -103,7 +103,7 @@ function buildWhereClause(
   }
 }
 
-interface GetParkingTicketsReturn {
+export interface GetParkingTicketsReturn {
   count: number
   limit: number
   offset: number

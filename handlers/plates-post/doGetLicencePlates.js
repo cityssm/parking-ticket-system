@@ -1,4 +1,4 @@
-import * as parkingDB_getLicencePlates from '../../database/parkingDB/getLicencePlates.js';
+import getLicencePlates from '../../database/parkingDB/getLicencePlates.js';
 export default function handler(request, response) {
     const queryOptions = {
         limit: Number.parseInt(request.body.limit, 10),
@@ -12,5 +12,5 @@ export default function handler(request, response) {
         queryOptions.hasUnresolvedTickets =
             request.body.hasUnresolvedTickets === '1';
     }
-    response.json(parkingDB_getLicencePlates.getLicencePlates(queryOptions));
+    response.json(getLicencePlates(queryOptions));
 }
