@@ -7,12 +7,20 @@ import {
   updatePostHandler
 } from '../handlers/permissions.js'
 import handler_byTicketNumber from '../handlers/tickets-get/byTicketNumber.js'
-import handler_convictPrint from '../handlers/tickets-get/convictPrint.js'
-import handler_edit from '../handlers/tickets-get/edit.js'
+import handler_convictPrint, {
+  type TicketsConvictPrintParameters
+} from '../handlers/tickets-get/convictPrint.js'
+import handler_edit, {
+  type TicketsEditParameters
+} from '../handlers/tickets-get/edit.js'
 import handler_new from '../handlers/tickets-get/new.js'
-import handler_print from '../handlers/tickets-get/print.js'
+import handler_print, {
+  type TicketsPrintParameters
+} from '../handlers/tickets-get/print.js'
 import handler_reconcile from '../handlers/tickets-get/reconcile.js'
-import handler_view from '../handlers/tickets-get/view.js'
+import handler_view, {
+  type TicketsViewParameters
+} from '../handlers/tickets-get/view.js'
 import handler_doAcknowledgeLookupError from '../handlers/tickets-post/doAcknowledgeLookupError.js'
 import handler_doAddRemark from '../handlers/tickets-post/doAddRemark.js'
 import handler_doAddStatus from '../handlers/tickets-post/doAddStatus.js'
@@ -46,156 +54,146 @@ export const router = Router()
  * Ticket Search
  */
 
-router.get('/', (_request, response) => {
-  response.render('ticket-search', {
-    headTitle: 'Parking Tickets'
+router
+  .get('/', (_request, response) => {
+    response.render('ticket-search', {
+      headTitle: 'Parking Tickets'
+    })
   })
-})
-
-router.post('/doGetTickets', handler_doGetTickets)
+  .post('/doGetTickets', handler_doGetTickets)
 
 /*
  * Ownership Reconciliation
  */
 
-router.get('/reconcile', updateGetHandler, handler_reconcile as RequestHandler)
-
-router.post(
-  '/doAcknowledgeLookupError',
-  updatePostHandler,
-  handler_doAcknowledgeLookupError
-)
-
-router.post(
-  '/doReconcileAsMatch',
-  updatePostHandler,
-  handler_doReconcileAsMatch as RequestHandler
-)
-
-router.post(
-  '/doReconcileAsError',
-  updatePostHandler,
-  handler_doReconcileAsError as RequestHandler
-)
-
-router.post(
-  '/doQuickReconcileMatches',
-  updatePostHandler,
-  handler_doQuickReconcileMatches as RequestHandler
-)
+router
+  .get('/reconcile', updateGetHandler, handler_reconcile as RequestHandler)
+  .post(
+    '/doAcknowledgeLookupError',
+    updatePostHandler,
+    handler_doAcknowledgeLookupError
+  )
+  .post(
+    '/doReconcileAsMatch',
+    updatePostHandler,
+    handler_doReconcileAsMatch as RequestHandler
+  )
+  .post(
+    '/doReconcileAsError',
+    updatePostHandler,
+    handler_doReconcileAsError as RequestHandler
+  )
+  .post(
+    '/doQuickReconcileMatches',
+    updatePostHandler,
+    handler_doQuickReconcileMatches as RequestHandler
+  )
 
 /*
  * Ticket Convictions
  */
 
-router.post(
-  '/doGetRecentConvictionBatches',
-  updateOrOperatorPostHandler,
-  handler_doGetRecentConvictionBatches
-)
-
-router.post(
-  '/doGetConvictionBatch',
-  updateOrOperatorPostHandler,
-  handler_doGetConvictionBatch
-)
-
-router.post(
-  '/doCreateConvictionBatch',
-  updatePostHandler,
-  handler_doCreateConvictionBatch
-)
-
-router.post(
-  '/doAddTicketToConvictionBatch',
-  updatePostHandler,
-  handler_doAddTicketToConvictionBatch
-)
-
-router.post(
-  '/doLockConvictionBatch',
-  updatePostHandler,
-  handler_doLockConvictionBatch
-)
-
-router.post(
-  '/doUnlockConvictionBatch',
-  updatePostHandler,
-  handler_doUnlockConvictionBatch
-)
+router
+  .post(
+    '/doGetRecentConvictionBatches',
+    updateOrOperatorPostHandler,
+    handler_doGetRecentConvictionBatches
+  )
+  .post(
+    '/doGetConvictionBatch',
+    updateOrOperatorPostHandler,
+    handler_doGetConvictionBatch
+  )
+  .post(
+    '/doCreateConvictionBatch',
+    updatePostHandler,
+    handler_doCreateConvictionBatch
+  )
+  .post(
+    '/doAddTicketToConvictionBatch',
+    updatePostHandler,
+    handler_doAddTicketToConvictionBatch
+  )
+  .post(
+    '/doLockConvictionBatch',
+    updatePostHandler,
+    handler_doLockConvictionBatch
+  )
+  .post(
+    '/doUnlockConvictionBatch',
+    updatePostHandler,
+    handler_doUnlockConvictionBatch
+  )
 
 /*
  * New Ticket
  */
 
-router.get(['/new', '/new/:ticketNumber'], updateGetHandler, handler_new)
-
-router.post('/doCreateTicket', updatePostHandler, handler_doCreateTicket)
-
-router.post('/doUpdateTicket', updatePostHandler, handler_doUpdateTicket)
-
-router.post('/doDeleteTicket', updatePostHandler, handler_doDeleteTicket)
-
-router.post('/doResolveTicket', updatePostHandler, handler_doResolveTicket)
-
-router.post('/doUnresolveTicket', updatePostHandler, handler_doUnresolveTicket)
-
-router.post('/doRestoreTicket', updatePostHandler, handler_doRestoreTicket)
+router
+  .get(['/new', '/new/:ticketNumber'], updateGetHandler, handler_new)
+  .post('/doCreateTicket', updatePostHandler, handler_doCreateTicket)
+  .post('/doUpdateTicket', updatePostHandler, handler_doUpdateTicket)
+  .post('/doDeleteTicket', updatePostHandler, handler_doDeleteTicket)
+  .post('/doResolveTicket', updatePostHandler, handler_doResolveTicket)
+  .post('/doUnresolveTicket', updatePostHandler, handler_doUnresolveTicket)
+  .post('/doRestoreTicket', updatePostHandler, handler_doRestoreTicket)
 
 /*
  * Ticket Remarks
  */
 
-router.post('/doGetRemarks', handler_doGetRemarks)
-
-router.post('/doAddRemark', updatePostHandler, handler_doAddRemark)
-
-router.post('/doUpdateRemark', updatePostHandler, handler_doUpdateRemark)
-
-router.post('/doDeleteRemark', updatePostHandler, handler_doDeleteRemark)
+router
+  .post('/doGetRemarks', handler_doGetRemarks)
+  .post('/doAddRemark', updatePostHandler, handler_doAddRemark)
+  .post('/doUpdateRemark', updatePostHandler, handler_doUpdateRemark)
+  .post('/doDeleteRemark', updatePostHandler, handler_doDeleteRemark)
 
 /*
  * Ticket Statuses
  */
 
-router.post('/doGetStatuses', handler_doGetStatuses)
-
-router.post('/doAddStatus', updatePostHandler, handler_doAddStatus)
-
-router.post('/doUpdateStatus', updatePostHandler, handler_doUpdateStatus)
-
-router.post('/doDeleteStatus', updatePostHandler, handler_doDeleteStatus)
+router
+  .post('/doGetStatuses', handler_doGetStatuses)
+  .post('/doAddStatus', updatePostHandler, handler_doAddStatus)
+  .post('/doUpdateStatus', updatePostHandler, handler_doUpdateStatus)
+  .post('/doDeleteStatus', updatePostHandler, handler_doDeleteStatus)
 
 /*
  * Ticket View
  */
 
-router.get('/:ticketId', handler_view as RequestHandler)
-
-router.get('/:ticketId/print', handler_print as RequestHandler)
-
-router.get('/byTicketNumber/:ticketNumber', handler_byTicketNumber)
+router
+  .get('/:ticketId', handler_view as RequestHandler<TicketsViewParameters>)
+  .get(
+    '/:ticketId/print',
+    handler_print as RequestHandler<TicketsPrintParameters>
+  )
+  .get('/byTicketNumber/:ticketNumber', handler_byTicketNumber)
 
 /*
  * Ticket Edit
  */
 
-router.get('/:ticketId/edit', updateGetHandler, handler_edit as RequestHandler)
+router.get(
+  '/:ticketId/edit',
+  updateGetHandler as unknown as RequestHandler<TicketsEditParameters>,
+  handler_edit as RequestHandler<TicketsEditParameters>
+)
 
 /*
  * Ticket Convict
  */
 
-router.get(
-  '/convict/:batchId/print',
-  updateOrOperatorGetHandler,
-  handler_convictPrint
-)
-
-router.post(
-  '/doMarkConvictionBatchSent',
-  updateOrOperatorGetHandler,
-  handler_doMarkConvictionBatchSent
-)
+router
+  .get(
+    '/convict/:batchId/print',
+    updateOrOperatorGetHandler as unknown as RequestHandler<TicketsConvictPrintParameters>,
+    handler_convictPrint as RequestHandler<TicketsConvictPrintParameters>
+  )
+  .post(
+    '/doMarkConvictionBatchSent',
+    updateOrOperatorGetHandler,
+    handler_doMarkConvictionBatchSent
+  )
 
 export default router

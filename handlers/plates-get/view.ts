@@ -3,8 +3,14 @@ import type { Request, Response } from 'express'
 import { getAllLicencePlateOwners } from '../../database/parkingDB/getAllLicencePlateOwners.js'
 import { getParkingTicketsByLicencePlate } from '../../database/parkingDB/getParkingTickets.js'
 
+export interface PlatesViewParameters {
+  licencePlateCountry: '_' | string
+  licencePlateProvince: '_' | string
+  licencePlateNumber: '_' | string
+}
+
 export default async function handler(
-  request: Request,
+  request: Request<PlatesViewParameters>,
   response: Response
 ): Promise<void> {
   let licencePlateCountry = request.params.licencePlateCountry

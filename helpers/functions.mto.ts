@@ -1,6 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/indent */
 
+import { fixSaultSteMarie } from '@cityssm/is-sault-ste-marie'
 import { dateToInteger } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
@@ -223,9 +224,7 @@ export const parsePKRD = (rowData: string): false | PKRDResult => {
         Math.max(0, lastCommaIndex)
       )
 
-      if (record.ownerCity === 'S STE MARIE') {
-        record.ownerCity = 'SAULT STE. MARIE'
-      }
+      record.ownerCity = fixSaultSteMarie(record.ownerCity, 'SAULT STE. MARIE')
     }
 
     record.ownerPostalCode = rowData.slice(144, 150).trim()

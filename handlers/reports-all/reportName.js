@@ -1,10 +1,11 @@
 import papaparse from 'papaparse';
 import { getReportData } from '../../database/parkingDB-reporting.js';
+import { getConfigProperty } from '../../helpers/functions.config.js';
 export default function handler(request, response) {
     const reportName = request.params.reportName;
     const rows = getReportData(reportName, request.query);
     if (!rows) {
-        response.redirect('/reports/?error=reportNotAvailable');
+        response.redirect(`${getConfigProperty('reverseProxy.urlPrefix')}/reports/?error=reportNotAvailable`);
         return;
     }
     const csv = papaparse.unparse(rows);

@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import papaparse from 'papaparse'
 
 import { getReportData } from '../../database/parkingDB-reporting.js'
+import { getConfigProperty } from '../../helpers/functions.config.js'
 
 export default function handler(request: Request, response: Response): void {
   const reportName = request.params.reportName
@@ -12,7 +13,11 @@ export default function handler(request: Request, response: Response): void {
   )
 
   if (!rows) {
-    response.redirect('/reports/?error=reportNotAvailable')
+    response.redirect(
+      `${getConfigProperty(
+        'reverseProxy.urlPrefix'
+      )}/reports/?error=reportNotAvailable`
+    )
     return
   }
 

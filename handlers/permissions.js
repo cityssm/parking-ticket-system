@@ -1,5 +1,6 @@
+import { getConfigProperty } from '../helpers/functions.config.js';
 import * as userFunctions from '../helpers/functions.user.js';
-const dashboardRedirectUrl = '/dashboard';
+const dashboardRedirectUrl = `${getConfigProperty('reverseProxy.urlPrefix')}/dashboard`;
 export const adminGetHandler = (request, response, next) => {
     if (userFunctions.userIsAdmin(request)) {
         next();

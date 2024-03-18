@@ -1,3 +1,4 @@
+import { fixSaultSteMarie } from '@cityssm/is-sault-ste-marie';
 import { dateToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../data/databasePaths.js';
@@ -97,9 +98,7 @@ export const parsePKRD = (rowData) => {
             const lastCommaIndex = record.ownerAddress.lastIndexOf(',');
             record.ownerCity = record.ownerAddress.slice(Math.max(0, lastCommaIndex + 1));
             record.ownerAddress = record.ownerAddress.slice(0, Math.max(0, lastCommaIndex));
-            if (record.ownerCity === 'S STE MARIE') {
-                record.ownerCity = 'SAULT STE. MARIE';
-            }
+            record.ownerCity = fixSaultSteMarie(record.ownerCity, 'SAULT STE. MARIE');
         }
         record.ownerPostalCode = rowData.slice(144, 150).trim();
         record.vehicleNCIC = rowData.slice(150, 154).trim();

@@ -10,28 +10,26 @@ import handler_doRemoveTicketFromConvictionBatch from '../handlers/tickets-ontar
 
 export const router = Router()
 
-router.get(
-  '/convict',
-  permissionHandlers.updateOrOperatorGetHandler,
-  handler_convict
-)
-
-router.post(
-  '/doAddAllTicketsToConvictionBatch',
-  permissionHandlers.updatePostHandler,
-  handler_doAddAllTicketsToConvictionBatch
-)
-
-router.post(
-  '/doClearConvictionBatch',
-  permissionHandlers.updatePostHandler,
-  handler_doClearConvictionBatch
-)
-
-router.post(
-  '/doRemoveTicketFromConvictionBatch',
-  permissionHandlers.updatePostHandler,
-  handler_doRemoveTicketFromConvictionBatch
-)
+router
+  .get(
+    '/convict',
+    permissionHandlers.updateOrOperatorGetHandler,
+    handler_convict
+  )
+  .post(
+    '/doAddAllTicketsToConvictionBatch',
+    permissionHandlers.updatePostHandler,
+    handler_doAddAllTicketsToConvictionBatch
+  )
+  .post(
+    '/doClearConvictionBatch',
+    permissionHandlers.updatePostHandler,
+    handler_doClearConvictionBatch
+  )
+  .post(
+    '/doRemoveTicketFromConvictionBatch',
+    permissionHandlers.updatePostHandler,
+    handler_doRemoveTicketFromConvictionBatch
+  )
 
 export default router

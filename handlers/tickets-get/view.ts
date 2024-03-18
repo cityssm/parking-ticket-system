@@ -1,9 +1,16 @@
 import type { Request, Response } from 'express'
 
 import getParkingTicket from '../../database/parkingDB/getParkingTicket.js'
+import { getConfigProperty } from '../../helpers/functions.config.js'
+
+const urlPrefix = getConfigProperty('reverseProxy.urlPrefix')
+
+export interface TicketsViewParameters {
+  ticketId: `${number}`
+}
 
 export default async function handler(
-  request: Request,
+  request: Request<TicketsViewParameters>,
   response: Response
 ): Promise<void> {
   const ticketId = Number.parseInt(request.params.ticketId, 10)
@@ -14,13 +21,13 @@ export default async function handler(
   )
 
   if (!ticket) {
-    response.redirect('/tickets/?error=ticketNotFound')
+    response.redirect(`${urlPrefix}/tickets/?error=ticketNotFound`)
     return
   } else if (
     ticket.recordDelete_timeMillis &&
     !((request.session.user as PTSUser).isAdmin ?? false)
   ) {
-    response.redirect('/tickets/?error=accessDenied')
+    response.redirect(`${urlPrefix}/tickets/?error=accessDenied`)
     return
   }
 

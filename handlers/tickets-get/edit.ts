@@ -3,9 +3,16 @@ import type { Request, Response } from 'express'
 
 import getParkingTicket from '../../database/parkingDB/getParkingTicket.js'
 import { getRecentParkingTicketVehicleMakeModelValues } from '../../database/parkingDB.js'
+import { getConfigProperty } from '../../helpers/functions.config.js'
+
+const urlPrefix = getConfigProperty('reverseProxy.urlPrefix')
+
+export interface TicketsEditParameters {
+  ticketId: `${number}`
+}
 
 export default async function handler(
-  request: Request,
+  request: Request<TicketsEditParameters>,
   response: Response
 ): Promise<void> {
   const ticketId = Number.parseInt(request.params.ticketId, 10)
@@ -16,14 +23,16 @@ export default async function handler(
   )
 
   if (!ticket) {
-    response.redirect('/tickets/?error=ticketNotFound')
+    response.redirect(`${urlPrefix}/tickets/?error=ticketNotFound`)
     return
   } else if (
     !ticket.canUpdate ||
     ticket.resolvedDate ||
     ticket.recordDelete_timeMillis
   ) {
-    response.redirect(`/tickets/${ticketId.toString()}/?error=accessDenied`)
+    response.redirect(
+      `${urlPrefix}/tickets/${ticketId.toString()}/?error=accessDenied`
+    )
     return
   }
 

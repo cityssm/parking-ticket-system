@@ -34,42 +34,50 @@ import handler_doUpdateRemark from '../handlers/tickets-post/doUpdateRemark.js';
 import handler_doUpdateStatus from '../handlers/tickets-post/doUpdateStatus.js';
 import handler_doUpdateTicket from '../handlers/tickets-post/doUpdateTicket.js';
 export const router = Router();
-router.get('/', (_request, response) => {
+router
+    .get('/', (_request, response) => {
     response.render('ticket-search', {
         headTitle: 'Parking Tickets'
     });
-});
-router.post('/doGetTickets', handler_doGetTickets);
-router.get('/reconcile', updateGetHandler, handler_reconcile);
-router.post('/doAcknowledgeLookupError', updatePostHandler, handler_doAcknowledgeLookupError);
-router.post('/doReconcileAsMatch', updatePostHandler, handler_doReconcileAsMatch);
-router.post('/doReconcileAsError', updatePostHandler, handler_doReconcileAsError);
-router.post('/doQuickReconcileMatches', updatePostHandler, handler_doQuickReconcileMatches);
-router.post('/doGetRecentConvictionBatches', updateOrOperatorPostHandler, handler_doGetRecentConvictionBatches);
-router.post('/doGetConvictionBatch', updateOrOperatorPostHandler, handler_doGetConvictionBatch);
-router.post('/doCreateConvictionBatch', updatePostHandler, handler_doCreateConvictionBatch);
-router.post('/doAddTicketToConvictionBatch', updatePostHandler, handler_doAddTicketToConvictionBatch);
-router.post('/doLockConvictionBatch', updatePostHandler, handler_doLockConvictionBatch);
-router.post('/doUnlockConvictionBatch', updatePostHandler, handler_doUnlockConvictionBatch);
-router.get(['/new', '/new/:ticketNumber'], updateGetHandler, handler_new);
-router.post('/doCreateTicket', updatePostHandler, handler_doCreateTicket);
-router.post('/doUpdateTicket', updatePostHandler, handler_doUpdateTicket);
-router.post('/doDeleteTicket', updatePostHandler, handler_doDeleteTicket);
-router.post('/doResolveTicket', updatePostHandler, handler_doResolveTicket);
-router.post('/doUnresolveTicket', updatePostHandler, handler_doUnresolveTicket);
-router.post('/doRestoreTicket', updatePostHandler, handler_doRestoreTicket);
-router.post('/doGetRemarks', handler_doGetRemarks);
-router.post('/doAddRemark', updatePostHandler, handler_doAddRemark);
-router.post('/doUpdateRemark', updatePostHandler, handler_doUpdateRemark);
-router.post('/doDeleteRemark', updatePostHandler, handler_doDeleteRemark);
-router.post('/doGetStatuses', handler_doGetStatuses);
-router.post('/doAddStatus', updatePostHandler, handler_doAddStatus);
-router.post('/doUpdateStatus', updatePostHandler, handler_doUpdateStatus);
-router.post('/doDeleteStatus', updatePostHandler, handler_doDeleteStatus);
-router.get('/:ticketId', handler_view);
-router.get('/:ticketId/print', handler_print);
-router.get('/byTicketNumber/:ticketNumber', handler_byTicketNumber);
+})
+    .post('/doGetTickets', handler_doGetTickets);
+router
+    .get('/reconcile', updateGetHandler, handler_reconcile)
+    .post('/doAcknowledgeLookupError', updatePostHandler, handler_doAcknowledgeLookupError)
+    .post('/doReconcileAsMatch', updatePostHandler, handler_doReconcileAsMatch)
+    .post('/doReconcileAsError', updatePostHandler, handler_doReconcileAsError)
+    .post('/doQuickReconcileMatches', updatePostHandler, handler_doQuickReconcileMatches);
+router
+    .post('/doGetRecentConvictionBatches', updateOrOperatorPostHandler, handler_doGetRecentConvictionBatches)
+    .post('/doGetConvictionBatch', updateOrOperatorPostHandler, handler_doGetConvictionBatch)
+    .post('/doCreateConvictionBatch', updatePostHandler, handler_doCreateConvictionBatch)
+    .post('/doAddTicketToConvictionBatch', updatePostHandler, handler_doAddTicketToConvictionBatch)
+    .post('/doLockConvictionBatch', updatePostHandler, handler_doLockConvictionBatch)
+    .post('/doUnlockConvictionBatch', updatePostHandler, handler_doUnlockConvictionBatch);
+router
+    .get(['/new', '/new/:ticketNumber'], updateGetHandler, handler_new)
+    .post('/doCreateTicket', updatePostHandler, handler_doCreateTicket)
+    .post('/doUpdateTicket', updatePostHandler, handler_doUpdateTicket)
+    .post('/doDeleteTicket', updatePostHandler, handler_doDeleteTicket)
+    .post('/doResolveTicket', updatePostHandler, handler_doResolveTicket)
+    .post('/doUnresolveTicket', updatePostHandler, handler_doUnresolveTicket)
+    .post('/doRestoreTicket', updatePostHandler, handler_doRestoreTicket);
+router
+    .post('/doGetRemarks', handler_doGetRemarks)
+    .post('/doAddRemark', updatePostHandler, handler_doAddRemark)
+    .post('/doUpdateRemark', updatePostHandler, handler_doUpdateRemark)
+    .post('/doDeleteRemark', updatePostHandler, handler_doDeleteRemark);
+router
+    .post('/doGetStatuses', handler_doGetStatuses)
+    .post('/doAddStatus', updatePostHandler, handler_doAddStatus)
+    .post('/doUpdateStatus', updatePostHandler, handler_doUpdateStatus)
+    .post('/doDeleteStatus', updatePostHandler, handler_doDeleteStatus);
+router
+    .get('/:ticketId', handler_view)
+    .get('/:ticketId/print', handler_print)
+    .get('/byTicketNumber/:ticketNumber', handler_byTicketNumber);
 router.get('/:ticketId/edit', updateGetHandler, handler_edit);
-router.get('/convict/:batchId/print', updateOrOperatorGetHandler, handler_convictPrint);
-router.post('/doMarkConvictionBatchSent', updateOrOperatorGetHandler, handler_doMarkConvictionBatchSent);
+router
+    .get('/convict/:batchId/print', updateOrOperatorGetHandler, handler_convictPrint)
+    .post('/doMarkConvictionBatchSent', updateOrOperatorGetHandler, handler_doMarkConvictionBatchSent);
 export default router;

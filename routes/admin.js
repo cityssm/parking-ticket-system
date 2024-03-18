@@ -16,19 +16,23 @@ import handler_doUpdateOffence from '../handlers/admin-post/doUpdateOffence.js';
 import handler_doUpdateOffencesByBylaw from '../handlers/admin-post/doUpdateOffencesByBylaw.js';
 import { adminGetHandler, adminPostHandler } from '../handlers/permissions.js';
 export const router = Router();
-router.get('/cleanup', adminGetHandler, handler_cleanup);
-router.post('/doCleanupTable', adminPostHandler, handler_doCleanupTable);
-router.get('/offences', adminGetHandler, handler_offences);
-router.post('/doAddOffence', adminPostHandler, handler_doAddOffence);
-router.post('/doUpdateOffence', adminPostHandler, handler_doUpdateOffence);
-router.post('/doDeleteOffence', adminPostHandler, handler_doDeleteOffence);
-router.get('/locations', adminGetHandler, handler_locations);
-router.post('/doAddLocation', adminPostHandler, handler_doAddLocation);
-router.post('/doUpdateLocation', adminPostHandler, handler_doUpdateLocation);
-router.post('/doDeleteLocation', adminPostHandler, handler_doDeleteLocation);
-router.get('/bylaws', adminGetHandler, handler_bylaws);
-router.post('/doAddBylaw', adminPostHandler, handler_doAddBylaw);
-router.post('/doUpdateBylaw', adminPostHandler, handler_doUpdateBylaw);
-router.post('/doUpdateOffencesByBylaw', adminPostHandler, handler_doUpdateOffencesByBylaw);
-router.post('/doDeleteBylaw', adminPostHandler, handler_doDeleteBylaw);
+router
+    .get('/cleanup', adminGetHandler, handler_cleanup)
+    .post('/doCleanupTable', adminPostHandler, handler_doCleanupTable);
+router
+    .get('/offences', adminGetHandler, handler_offences)
+    .post('/doAddOffence', adminPostHandler, handler_doAddOffence)
+    .post('/doUpdateOffence', adminPostHandler, handler_doUpdateOffence)
+    .post('/doDeleteOffence', adminPostHandler, handler_doDeleteOffence);
+router
+    .get('/locations', adminGetHandler, handler_locations)
+    .post('/doAddLocation', adminPostHandler, handler_doAddLocation)
+    .post('/doUpdateLocation', adminPostHandler, handler_doUpdateLocation)
+    .post('/doDeleteLocation', adminPostHandler, handler_doDeleteLocation);
+router
+    .get('/bylaws', adminGetHandler, handler_bylaws)
+    .post('/doAddBylaw', adminPostHandler, handler_doAddBylaw)
+    .post('/doUpdateBylaw', adminPostHandler, handler_doUpdateBylaw)
+    .post('/doUpdateOffencesByBylaw', adminPostHandler, handler_doUpdateOffencesByBylaw)
+    .post('/doDeleteBylaw', adminPostHandler, handler_doDeleteBylaw);
 export default router;
