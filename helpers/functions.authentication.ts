@@ -12,7 +12,10 @@ const userDomain = getConfigProperty('application.userDomain')
 
 const activeDirectoryConfig = getConfigProperty('activeDirectory')
 
-const adAuthenticator = new ActiveDirectoryAuthenticator(activeDirectoryConfig)
+const adAuthenticator =
+  activeDirectoryConfig === undefined
+    ? undefined
+    : new ActiveDirectoryAuthenticator(activeDirectoryConfig)
 
 let authenticator: BaseAuthenticator
 
@@ -26,12 +29,16 @@ if (useTestDatabases) {
   }
 
   authenticator = new PlainTextAuthenticator(testingUsers, adAuthenticator)
+} else if (adAuthenticator === undefined) {
+  throw new Error('No authenticator available.')
 } else {
   authenticator = adAuthenticator
 }
 
-export async function authenticate(userName: string,
-  password: string): Promise<boolean> {
+export async function authenticate(
+  userName: string,
+  password: string
+): Promise<boolean> {
   return await authenticator.authenticate(userName, password)
 }
 

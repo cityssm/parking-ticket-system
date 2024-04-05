@@ -3,7 +3,9 @@ import { useTestDatabases } from '../data/databasePaths.js';
 import { getConfigProperty } from './functions.config.js';
 const userDomain = getConfigProperty('application.userDomain');
 const activeDirectoryConfig = getConfigProperty('activeDirectory');
-const adAuthenticator = new ActiveDirectoryAuthenticator(activeDirectoryConfig);
+const adAuthenticator = activeDirectoryConfig === undefined
+    ? undefined
+    : new ActiveDirectoryAuthenticator(activeDirectoryConfig);
 let authenticator;
 if (useTestDatabases) {
     const testingUsersList = getConfigProperty('users.testing');
@@ -12,6 +14,9 @@ if (useTestDatabases) {
         testingUsers[`${userDomain}\\${user}`] = user;
     }
     authenticator = new PlainTextAuthenticator(testingUsers, adAuthenticator);
+}
+else if (adAuthenticator === undefined) {
+    throw new Error('No authenticator available.');
 }
 else {
     authenticator = adAuthenticator;
