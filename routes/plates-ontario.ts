@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/filename-case, eslint-comments/disable-enable-pair */
 
-import { Router } from 'express'
+import { type RequestHandler, Router } from 'express'
 
 import {
   updateOrOperatorGetHandler,
@@ -35,7 +35,7 @@ router
     '/doMTOImportUpload',
     updateOrOperatorPostHandler,
     handler_doMTOImportUpload.uploadHandler,
-    handler_doMTOImportUpload.handler
+    handler_doMTOImportUpload.handler as RequestHandler
   )
 
 export default router

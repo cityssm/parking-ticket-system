@@ -36,17 +36,17 @@ describe('Ticket Edit - Update User', () => {
         cy.log('Displays unsaved changes message');
         cy.get("textarea[name='locationDescription']")
             .clear()
-            .type(`Updated Location Description - ${Cypress._.random(10000, 99999).toString()}`);
+            .type(`Updated Location Description - ${Cypress._.random(10_000, 99_999).toString()}`);
         cy.get("textarea[name='parkingOffence']")
             .clear()
-            .type(`Updated Offence Description - ${Cypress._.random(10000, 99999).toString()}`);
+            .type(`Updated Offence Description - ${Cypress._.random(10_000, 99_999).toString()}`);
         cy.wait(200);
         cy.get('.tag').should('contain.text', 'Unsaved Changes').should('exist');
         cy.log('Can save ticket after changes');
         saveTicket();
         cy.log('Adds a remark');
         cy.get("button[data-cy='add-remark']").click();
-        let remark = `New Remark - ${Cypress._.random(10000, 99999).toString()}`;
+        let remark = `New Remark - ${Cypress._.random(10_000, 99_999).toString()}`;
         cy.get('.modal')
             .should('be.visible')
             .find("textarea[name='remark']")
@@ -58,7 +58,7 @@ describe('Ticket Edit - Update User', () => {
             .should('contain.text', remark);
         cy.log('Updates a remark');
         cy.get("button[data-cy='edit-remark']").first().click();
-        remark = `Updated Remark - ${Cypress._.random(10000, 99999).toString()}`;
+        remark = `Updated Remark - ${Cypress._.random(10_000, 99_999).toString()}`;
         cy.get('.modal')
             .should('be.visible')
             .find("textarea[name='remark']")

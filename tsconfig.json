@@ -28,7 +28,6 @@
     "routes/*",
     "tasks/*",
     "test/*",
-    "types/*",
-    "database/usersDB"
+    "types/*"
   ]
 }

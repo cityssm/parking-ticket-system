@@ -34,7 +34,7 @@ export async function scheduleRun() {
             return;
         }
         debug('NHTSA task starting');
-        intervalId = setIntervalAsync(doTask, 86400 * 1000);
+        intervalId = setIntervalAsync(doTask, 86_400 * 1000);
         void doTask();
     }, firstScheduleDate.getTime() - Date.now());
 }

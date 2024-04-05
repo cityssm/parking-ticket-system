@@ -1,7 +1,7 @@
 import { fork } from 'node:child_process';
 import cluster from 'node:cluster';
 import os from 'node:os';
-import { dirname } from 'node:path';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Debug from 'debug';
 import { initNHTSADB } from '../database/nhtsaDB/initializeDatabase.js';
@@ -15,7 +15,7 @@ initializeDatabase();
 initNHTSADB();
 const processCount = Math.min(getConfigProperty('application.maximumProcesses'), os.cpus().length);
 debug(`Launching ${processCount} processes`);
-const directoryName = dirname(fileURLToPath(import.meta.url));
+const directoryName = path.dirname(fileURLToPath(import.meta.url));
 const clusterSettings = {
     exec: `${directoryName}/wwwProcess.js`
 };
@@ -59,7 +59,7 @@ if (process.env.STARTUP_TEST === 'true') {
     setTimeout(() => {
         debug('Killing processes');
         process.exit(0);
-    }, 10000);
+    }, 10_000);
 }
 else {
     const lowPriority = 19;

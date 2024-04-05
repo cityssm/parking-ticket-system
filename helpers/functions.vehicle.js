@@ -2,7 +2,7 @@ import { getNhtsaCompatibleMake } from '@cityssm/ncic-lookup/helpers/vma.js';
 import { GetModelsForMake } from '@shaggytools/nhtsa-api-wrapper';
 import sqlite from 'better-sqlite3';
 import { nhtsaDB as databasePath } from '../data/databasePaths.js';
-const nhtsaSearchExpiryDurationMillis = 14 * 86400 * 1000;
+const nhtsaSearchExpiryDurationMillis = 14 * 86_400 * 1000;
 function getModelsByMakeFromDB(makeSearchString, database) {
     return database
         .prepare(`select makeId, makeName, modelId, modelName

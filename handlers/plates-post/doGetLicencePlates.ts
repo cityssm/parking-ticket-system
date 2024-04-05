@@ -5,12 +5,23 @@ import getLicencePlates, {
   type GetLicencePlatesReturn
 } from '../../database/parkingDB/getLicencePlates.js'
 
+export interface DoGetLicencePlatesBody {
+  hasOwnerRecord: '' | '0' | '1'
+  hasUnresolvedTickets: '' | '0' | '1'
+  licencePlateNumber: string
+  limit: `${number}`
+  offset: `${number}`
+}
+
 export type DoGetLicencePlatesResponse = GetLicencePlatesReturn
 
-export default function handler(request: Request, response: Response): void {
+export default function handler(
+  request: Request<unknown, unknown, DoGetLicencePlatesBody>,
+  response: Response<DoGetLicencePlatesResponse>
+): void {
   const queryOptions: GetLicencePlatesQueryOptions = {
-    limit: Number.parseInt(request.body.limit as string, 10),
-    offset: Number.parseInt(request.body.offset as string, 10),
+    limit: Number.parseInt(request.body.limit, 10),
+    offset: Number.parseInt(request.body.offset, 10),
     licencePlateNumber: request.body.licencePlateNumber
   }
 

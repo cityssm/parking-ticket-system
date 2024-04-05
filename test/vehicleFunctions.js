@@ -16,6 +16,6 @@ describe('helpers/vehicleFunctions', () => {
         it('should return results for "Chevrolet"', async () => {
             const makeModelResults = await vehicleFunctions.getModelsByMake('Chevrolet');
             assert.notEqual(makeModelResults.length, 0);
-        }).timeout(60000);
+        }).timeout(60_000);
     });
 });

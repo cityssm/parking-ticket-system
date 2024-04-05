@@ -8,7 +8,7 @@ import cleanupParkingTicketsTable from '../../database/parkingDB/cleanupParkingT
 import { getConfigProperty } from '../../helpers/functions.config.js';
 export default function handler(request, response) {
     const table = request.body.table;
-    const recordDeleteTimeMillis = Math.min(request.body.recordDelete_timeMillis, Date.now() - getConfigProperty('databaseCleanup.windowDays') * 86400 * 1000);
+    const recordDeleteTimeMillis = Math.min(request.body.recordDelete_timeMillis, Date.now() - getConfigProperty('databaseCleanup.windowDays') * 86_400 * 1000);
     let success = false;
     switch (table) {
         case 'parkingTickets': {

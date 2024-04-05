@@ -8,12 +8,12 @@ const upload = multer({ storage })
 
 export const uploadHandler = upload.single('importFile')
 
-export function handler(request: Request, response: Response): void {
+export async function handler(request: Request, response: Response): Promise<void> {
   const batchId = request.body.batchId as string
 
   const ownershipData = request.file?.buffer.toString() ?? ''
 
-  const results = importLicencePlateOwnership(
+  const results = await importLicencePlateOwnership(
     Number.parseInt(batchId, 10),
     ownershipData,
     request.session.user as PTSUser

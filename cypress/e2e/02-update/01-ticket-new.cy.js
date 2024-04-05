@@ -14,8 +14,8 @@ describe('Create a New Ticket', () => {
         cy.checkA11y();
         cy.fixture('ticket.json').then((ticketJSON) => {
             const ticketNumber = ticketJSON.ticketNumberPrefix +
-                Cypress._.random(100000, 199999).toString().slice(-5);
-            const issueDate = new Date(Date.now() - ticketJSON.issueDateOffsetDays * 86400 * 1000);
+                Cypress._.random(100_000, 199_999).toString().slice(-5);
+            const issueDate = new Date(Date.now() - ticketJSON.issueDateOffsetDays * 86_400 * 1000);
             cy.get("input[name='ticketNumber']").clear().type(ticketNumber);
             cy.get("input[name='issueDateString']")
                 .clear()

@@ -29,7 +29,7 @@ export const configDefaultValues = {
     'parkingTickets.ticketNumber.nextTicketNumberFn': (() => {
         return '';
     }),
-    'parkingTickets.updateWindowMillis': 3 * 86400 * 1000,
+    'parkingTickets.updateWindowMillis': 3 * 86_400 * 1000,
     'parkingTickets.licencePlateExpiryDate.includeDay': false,
     parkingTicketStatuses: [],
     'parkingOffences.accountNumber.pattern': /^[\w -]{1,20}$/,
