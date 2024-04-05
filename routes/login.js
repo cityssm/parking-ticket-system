@@ -1,27 +1,15 @@
-import Debug from 'debug';
 import { Router } from 'express';
 import { useTestDatabases } from '../data/databasePaths.js';
 import { authenticate, getSafeRedirectURL } from '../helpers/functions.authentication.js';
 import { getConfigProperty } from '../helpers/functions.config.js';
-const debug = Debug('parking-ticket-system:login');
 export const router = Router();
+const userDomain = getConfigProperty('application.userDomain');
 async function postHandler(request, response) {
     const userName = request.body.userName;
     const passwordPlain = request.body.password;
     const unsafeRedirectURL = request.body.redirect;
     const redirectURL = getSafeRedirectURL(typeof unsafeRedirectURL === 'string' ? unsafeRedirectURL : '');
-    let isAuthenticated = false;
-    if (userName.startsWith('*')) {
-        if (useTestDatabases && userName === passwordPlain) {
-            isAuthenticated = getConfigProperty('users.testing').includes(userName);
-            if (isAuthenticated) {
-                debug(`Authenticated testing user: ${userName}`);
-            }
-        }
-    }
-    else {
-        isAuthenticated = await authenticate(userName, passwordPlain);
-    }
+    const isAuthenticated = await authenticate(`${userDomain}\\${userName}`, passwordPlain);
     let userObject;
     if (isAuthenticated) {
         const userNameLowerCase = userName.toLowerCase();

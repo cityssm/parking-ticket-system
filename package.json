@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/cityssm/parking-ticket-system#readme",
   "dependencies": {
+    "@cityssm/authentication-helper": "^0.1.0",
     "@cityssm/bulma-js": "^0.4.0",
     "@cityssm/bulma-webapp-js": "^1.5.0",
     "@cityssm/configurator": "^0.1.0",
@@ -35,7 +36,6 @@
     "@fontsource/pt-mono": "^5.0.12",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@shaggytools/nhtsa-api-wrapper": "^3.0.4",
-    "activedirectory2": "^2.2.0",
     "better-sqlite3": "^9.4.5",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",

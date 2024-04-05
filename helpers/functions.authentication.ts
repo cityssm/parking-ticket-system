@@ -1,4 +1,10 @@
-import ActiveDirectory from 'activedirectory2'
+import {
+  ActiveDirectoryAuthenticator,
+  type BaseAuthenticator,
+  PlainTextAuthenticator
+} from '@cityssm/authentication-helper'
+
+import { useTestDatabases } from '../data/databasePaths.js'
 
 import { getConfigProperty } from './functions.config.js'
 
@@ -6,40 +12,27 @@ const userDomain = getConfigProperty('application.userDomain')
 
 const activeDirectoryConfig = getConfigProperty('activeDirectory')
 
-const authenticateViaActiveDirectory = async (
-  userName: string,
-  password: string
-): Promise<boolean> => {
-  return await new Promise((resolve) => {
-    try {
-      const ad = new ActiveDirectory(activeDirectoryConfig)
+const adAuthenticator = new ActiveDirectoryAuthenticator(activeDirectoryConfig)
 
-      ad.authenticate(
-        `${userDomain}\\${userName}`,
-        password,
-        async (error, auth) => {
-          if (error) {
-            resolve(false)
-          }
+let authenticator: BaseAuthenticator
 
-          resolve(auth)
-        }
-      )
-    } catch {
-      resolve(false)
-    }
-  })
-}
+if (useTestDatabases) {
+  const testingUsersList = getConfigProperty('users.testing')
 
-export const authenticate = async (
-  userName: string,
-  password: string
-): Promise<boolean> => {
-  if ((userName ?? '') === '' || (password ?? '') === '') {
-    return false
+  const testingUsers: Record<string, string> = {}
+
+  for (const user of testingUsersList) {
+    testingUsers[`${userDomain}\\${user}`] = user
   }
 
-  return await authenticateViaActiveDirectory(userName, password)
+  authenticator = new PlainTextAuthenticator(testingUsers, adAuthenticator)
+} else {
+  authenticator = adAuthenticator
+}
+
+export async function authenticate(userName: string,
+  password: string): Promise<boolean> {
+  return await authenticator.authenticate(userName, password)
 }
 
 const safeRedirects = new Set([

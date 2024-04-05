@@ -1,7 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable security/detect-object-injection */
 
-import Debug from 'debug'
 import {
   type Request,
   type RequestHandler,
@@ -16,9 +15,9 @@ import {
 } from '../helpers/functions.authentication.js'
 import { getConfigProperty } from '../helpers/functions.config.js'
 
-const debug = Debug('parking-ticket-system:login')
-
 export const router = Router()
+
+const userDomain = getConfigProperty('application.userDomain')
 
 async function postHandler(
   request: Request,
@@ -33,19 +32,10 @@ async function postHandler(
     typeof unsafeRedirectURL === 'string' ? unsafeRedirectURL : ''
   )
 
-  let isAuthenticated = false
-
-  if (userName.startsWith('*')) {
-    if (useTestDatabases && userName === passwordPlain) {
-      isAuthenticated = getConfigProperty('users.testing').includes(userName)
-
-      if (isAuthenticated) {
-        debug(`Authenticated testing user: ${userName}`)
-      }
-    }
-  } else {
-    isAuthenticated = await authenticate(userName, passwordPlain)
-  }
+  const isAuthenticated = await authenticate(
+    `${userDomain}\\${userName}`,
+    passwordPlain
+  )
 
   let userObject: PTSUser | undefined
 
