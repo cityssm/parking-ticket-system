@@ -86,7 +86,7 @@
     "bulma-tooltip": "^3.0.2",
     "cypress": "13.7.2",
     "cypress-axe": "^1.5.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "eslint-config-cityssm": "^1.6.0",
     "gulp": "^5.0.0",
     "gulp-sass": "^5.1.0",
