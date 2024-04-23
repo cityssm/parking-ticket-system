@@ -1,14 +1,19 @@
 import type { RequestHandler } from 'express'
 
 import { getConfigProperty } from '../helpers/functions.config.js'
-import * as userFunctions from '../helpers/functions.user.js'
+import {
+  forbiddenJSON,
+  userCanUpdate,
+  userIsAdmin,
+  userIsOperator
+} from '../helpers/functions.user.js'
 
 const dashboardRedirectUrl = `${getConfigProperty(
   'reverseProxy.urlPrefix'
 )}/dashboard`
 
 export const adminGetHandler: RequestHandler = (request, response, next) => {
-  if (userFunctions.userIsAdmin(request)) {
+  if (userIsAdmin(request)) {
     next()
     return
   }
@@ -17,16 +22,16 @@ export const adminGetHandler: RequestHandler = (request, response, next) => {
 }
 
 export const adminPostHandler: RequestHandler = (request, response, next) => {
-  if (userFunctions.userIsAdmin(request)) {
+  if (userIsAdmin(request)) {
     next()
     return
   }
 
-  response.json(userFunctions.forbiddenJSON)
+  response.json(forbiddenJSON(response))
 }
 
 export const updateGetHandler: RequestHandler = (request, response, next) => {
-  if (userFunctions.userCanUpdate(request)) {
+  if (userCanUpdate(request)) {
     next()
     return
   }
@@ -39,10 +44,7 @@ export const updateOrOperatorGetHandler: RequestHandler = (
   response,
   next
 ) => {
-  if (
-    userFunctions.userCanUpdate(request) ||
-    userFunctions.userIsOperator(request)
-  ) {
+  if (userCanUpdate(request) || userIsOperator(request)) {
     next()
     return
   }
@@ -51,12 +53,12 @@ export const updateOrOperatorGetHandler: RequestHandler = (
 }
 
 export const updatePostHandler: RequestHandler = (request, response, next) => {
-  if (userFunctions.userCanUpdate(request)) {
+  if (userCanUpdate(request)) {
     next()
     return
   }
 
-  response.json(userFunctions.forbiddenJSON)
+  response.json(forbiddenJSON(response))
 }
 
 export const updateOrOperatorPostHandler: RequestHandler = (
@@ -64,13 +66,10 @@ export const updateOrOperatorPostHandler: RequestHandler = (
   response,
   next
 ) => {
-  if (
-    userFunctions.userCanUpdate(request) ||
-    userFunctions.userIsOperator(request)
-  ) {
+  if (userCanUpdate(request) || userIsOperator(request)) {
     next()
     return
   }
 
-  response.json(userFunctions.forbiddenJSON)
+  response.json(forbiddenJSON(response))
 }

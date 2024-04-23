@@ -3,14 +3,14 @@
 
 import Debug from 'debug'
 
-import * as configFunctions from '../helpers/functions.config.js'
+import { getConfigProperty } from '../helpers/functions.config.js'
 
 const debug = Debug('parking-ticket-system:databasePaths')
 
 // Determine if test databases should be used
 
 export const useTestDatabases =
-  configFunctions.getConfigProperty('application.useTestDatabases') ||
+  getConfigProperty('application.useTestDatabases') ||
   process.env.TEST_DATABASES === 'true'
 
 if (useTestDatabases) {
