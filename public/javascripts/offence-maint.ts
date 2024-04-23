@@ -1,8 +1,6 @@
 /* eslint-disable unicorn/filename-case, unicorn/prefer-module, eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-extra-semi */
 
-// eslint-disable-next-line n/no-missing-import
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
@@ -47,6 +45,7 @@ type UpdateOffenceResponseJSON =
   const locationInputElement = document.querySelector(
     '#offenceFilter--location'
   ) as HTMLInputElement
+
   const locationTextElement = document.querySelector(
     '#offenceFilter--locationText'
   ) as HTMLElement
@@ -294,7 +293,7 @@ type UpdateOffenceResponseJSON =
         } else {
           titleHTML = 'Select Locations'
 
-          const bylaw = bylawMap.get(bylawNumberFilter)
+          const bylaw = bylawMap.get(bylawNumberFilter) as ParkingBylaw
 
           selectedHTML = `${cityssm.escapeHTML(bylaw.bylawNumber)}<br />
             <span class="is-size-7">
@@ -602,6 +601,10 @@ type UpdateOffenceResponseJSON =
 
   // Location filter setup
 
+  const selectLocationFilterButtonElement = document.querySelector(
+    '#is-select-location-filter-button'
+  ) as HTMLButtonElement
+
   function clearLocationFilter(): void {
     locationInputElement.value = ''
     cityssm.clearElement(locationTextElement)
@@ -668,9 +671,15 @@ type UpdateOffenceResponseJSON =
       onshown(_modalElement, closeModalFunction) {
         bulmaJS.toggleHtmlClipped()
         selectLocationCloseModalFunction = closeModalFunction
+        ;(
+          document.querySelector(
+            '#container--parkingLocations a'
+          ) as HTMLElement | null
+        )?.focus()
       },
       onremoved() {
         bulmaJS.toggleHtmlClipped()
+        selectLocationFilterButtonElement.focus()
       }
     })
   }
@@ -680,9 +689,10 @@ type UpdateOffenceResponseJSON =
     openSelectLocationFilterModal
   )
 
-  document
-    .querySelector('#is-select-location-filter-button')
-    ?.addEventListener('click', openSelectLocationFilterModal)
+  selectLocationFilterButtonElement.addEventListener(
+    'click',
+    openSelectLocationFilterModal
+  )
 
   document
     .querySelector('#is-clear-location-filter-button')
@@ -696,6 +706,10 @@ type UpdateOffenceResponseJSON =
   }
 
   // By-law filter setup
+
+  const selectBylawFilterButtoneElement = document.querySelector(
+    '#is-select-bylaw-filter-button'
+  ) as HTMLButtonElement
 
   function clearBylawFilter(): void {
     bylawInputElement.value = ''
@@ -760,18 +774,25 @@ type UpdateOffenceResponseJSON =
       onshown(_modalElement, closeModalFunction) {
         bulmaJS.toggleHtmlClipped()
         selectBylawCloseModalFunction = closeModalFunction
+        ;(
+          document.querySelector(
+            '#container--parkingBylaws a'
+          ) as HTMLElement | null
+        )?.focus()
       },
       onremoved() {
         bulmaJS.toggleHtmlClipped()
+        selectBylawFilterButtoneElement.focus()
       }
     })
   }
 
   bylawInputElement.addEventListener('dblclick', openSelectBylawFilterModal)
 
-  document
-    .querySelector('#is-select-bylaw-filter-button')
-    ?.addEventListener('click', openSelectBylawFilterModal)
+  selectBylawFilterButtoneElement.addEventListener(
+    'click',
+    openSelectBylawFilterModal
+  )
 
   document
     .querySelector('#is-clear-bylaw-filter-button')
@@ -790,7 +811,7 @@ type UpdateOffenceResponseJSON =
 
   // Load locationMap
 
-  for (const location of exports.locations) {
+  for (const location of exports.locations as ParkingLocation[]) {
     locationMap.set(location.locationKey, location)
   }
 
@@ -798,7 +819,7 @@ type UpdateOffenceResponseJSON =
 
   // Load bylawMap
 
-  for (const bylaw of exports.bylaws) {
+  for (const bylaw of exports.bylaws as ParkingBylaw[]) {
     bylawMap.set(bylaw.bylawNumber, bylaw)
   }
 
@@ -806,7 +827,7 @@ type UpdateOffenceResponseJSON =
 
   // Load offenceList
 
-  loadOffenceMap(exports.offences)
+  loadOffenceMap(exports.offences as ParkingOffence[])
   delete exports.offences
 
   // Load locationClasses

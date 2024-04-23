@@ -374,6 +374,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         }
     });
+    const selectLocationFilterButtonElement = document.querySelector('#is-select-location-filter-button');
     function clearLocationFilter() {
         locationInputElement.value = '';
         cityssm.clearElement(locationTextElement);
@@ -419,16 +420,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshown(_modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
                 selectLocationCloseModalFunction = closeModalFunction;
+                document.querySelector('#container--parkingLocations a')?.focus();
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
+                selectLocationFilterButtonElement.focus();
             }
         });
     }
     locationInputElement.addEventListener('dblclick', openSelectLocationFilterModal);
-    document
-        .querySelector('#is-select-location-filter-button')
-        ?.addEventListener('click', openSelectLocationFilterModal);
+    selectLocationFilterButtonElement.addEventListener('click', openSelectLocationFilterModal);
     document
         .querySelector('#is-clear-location-filter-button')
         ?.addEventListener('click', () => {
@@ -438,6 +439,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     if (!locationKeyFilterIsSet) {
         clearLocationFilter();
     }
+    const selectBylawFilterButtoneElement = document.querySelector('#is-select-bylaw-filter-button');
     function clearBylawFilter() {
         bylawInputElement.value = '';
         cityssm.clearElement(bylawTextElement);
@@ -480,16 +482,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onshown(_modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
                 selectBylawCloseModalFunction = closeModalFunction;
+                document.querySelector('#container--parkingBylaws a')?.focus();
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
+                selectBylawFilterButtoneElement.focus();
             }
         });
     }
     bylawInputElement.addEventListener('dblclick', openSelectBylawFilterModal);
-    document
-        .querySelector('#is-select-bylaw-filter-button')
-        ?.addEventListener('click', openSelectBylawFilterModal);
+    selectBylawFilterButtoneElement.addEventListener('click', openSelectBylawFilterModal);
     document
         .querySelector('#is-clear-bylaw-filter-button')
         ?.addEventListener('click', () => {
