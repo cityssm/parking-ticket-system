@@ -1,5 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
+import { clearCacheByTableName } from '../../helpers/functions.cache.js';
 export default function addParkingLocation(requestBody) {
     const database = sqlite(databasePath);
     const locationRecord = database
@@ -20,6 +21,7 @@ export default function addParkingLocation(requestBody) {
         values (?, ?, ?, 0, 1)`)
         .run(requestBody.locationKey, requestBody.locationName, requestBody.locationClassKey);
     database.close();
+    clearCacheByTableName('ParkingLocations');
     return {
         success: info.changes > 0
     };

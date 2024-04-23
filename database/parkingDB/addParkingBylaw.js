@@ -1,5 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { parkingDB as databasePath } from '../../data/databasePaths.js';
+import { clearCacheByTableName } from '../../helpers/functions.cache.js';
 export default function addParkingBylaw(requestBody) {
     const database = sqlite(databasePath);
     const bylawRecord = database
@@ -21,6 +22,7 @@ export default function addParkingBylaw(requestBody) {
           where bylawNumber = ?`)
             .run(requestBody.bylawNumber);
         database.close();
+        clearCacheByTableName('ParkingBylaws');
         return {
             success: info.changes > 0,
             message: `By-law number "${requestBody.bylawNumber}" is associated with a previously removed record.
@@ -34,6 +36,7 @@ export default function addParkingBylaw(requestBody) {
         values (?, ?, 0, 1)`)
         .run(requestBody.bylawNumber, requestBody.bylawDescription);
     database.close();
+    clearCacheByTableName('ParkingBylaws');
     return {
         success: info.changes > 0
     };

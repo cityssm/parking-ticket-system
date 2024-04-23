@@ -1,6 +1,7 @@
 import sqlite from 'better-sqlite3'
 
 import { parkingDB as databasePath } from '../../data/databasePaths.js'
+import { clearCacheByTableName } from '../../helpers/functions.cache.js'
 
 import type { AddUpdateParkingBylawReturn } from './getParkingBylaws.js'
 
@@ -20,6 +21,7 @@ export default function deleteParkingBylaw(
     .run(bylawNumber)
 
   database.close()
+  clearCacheByTableName('ParkingBylaws')
 
   return {
     success: info.changes > 0
