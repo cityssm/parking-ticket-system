@@ -1,6 +1,5 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-extra-semi */
 
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 

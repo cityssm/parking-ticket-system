@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a, _b, _c;
     const formElement = document.querySelector('#form--filters');
     const offsetElement = document.querySelector('#filter--offset');
     const searchResultsElement = document.querySelector('#container--searchResults');
     function buildPlateTrElementFunction(plateObject) {
+        var _a;
         const trElement = document.createElement('tr');
         const url = `${pts.urlPrefix}/plates/${plateObject.licencePlateCountry === ''
             ? '_'
@@ -39,11 +41,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             : ''}
       </td>
       <td class="has-text-right is-vcentered">
-        ${(plateObject.unresolvedTicketCount ?? -1).toString()}
+        ${((_a = plateObject.unresolvedTicketCount) !== null && _a !== void 0 ? _a : -1).toString()}
       </td>`;
         return trElement;
     }
     function processPlateResultsFunction(licencePlateResults) {
+        var _a;
         const plateList = licencePlateResults.licencePlates;
         if (plateList.length === 0) {
             searchResultsElement.innerHTML = `<div class="message is-info">
@@ -111,7 +114,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 });
                 paginationElement.append(nextElement);
             }
-            searchResultsElement.querySelector('.level')?.append(paginationElement);
+            (_a = searchResultsElement.querySelector('.level')) === null || _a === void 0 ? void 0 : _a.append(paginationElement);
         }
     }
     function getLicencePlatesFunction() {
@@ -130,14 +133,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     formElement.addEventListener('submit', (formEvent) => {
         formEvent.preventDefault();
     });
-    document
-        .querySelector('#filter--licencePlateNumber')
-        ?.addEventListener('change', resetOffsetAndGetLicencePlatesFunction);
-    document
-        .querySelector('#filter--hasOwnerRecord')
-        ?.addEventListener('change', resetOffsetAndGetLicencePlatesFunction);
-    document
-        .querySelector('#filter--hasUnresolvedTickets')
-        ?.addEventListener('change', resetOffsetAndGetLicencePlatesFunction);
+    (_a = document
+        .querySelector('#filter--licencePlateNumber')) === null || _a === void 0 ? void 0 : _a.addEventListener('change', resetOffsetAndGetLicencePlatesFunction);
+    (_b = document
+        .querySelector('#filter--hasOwnerRecord')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', resetOffsetAndGetLicencePlatesFunction);
+    (_c = document
+        .querySelector('#filter--hasUnresolvedTickets')) === null || _c === void 0 ? void 0 : _c.addEventListener('change', resetOffsetAndGetLicencePlatesFunction);
     pts.loadDefaultConfigProperties(resetOffsetAndGetLicencePlatesFunction);
 })();

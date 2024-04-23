@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a;
     const ticketId = document.querySelector('#ticket--ticketId').value;
     const remarkPanelElement = document.querySelector('#is-remark-panel');
     let remarkList = exports.ticketRemarks;
@@ -36,9 +37,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function openEditRemarkModal(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
         let editRemarkCloseModalFunction;
-        const index = Number.parseInt(clickEvent.currentTarget.dataset.index ?? '-1', 10);
+        const index = Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '-1', 10);
         const remarkObject = remarkList[index];
         function doSubmit(formEvent) {
             formEvent.preventDefault();
@@ -52,13 +54,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         cityssm.openHtmlModal('ticket-editRemark', {
             onshow(modalElement) {
+                var _a;
                 ;
                 document.querySelector('#editRemark--ticketId').value = ticketId;
                 document.querySelector('#editRemark--remarkIndex').value = remarkObject.remarkIndex.toString();
                 document.querySelector('#editRemark--remark').value = remarkObject.remark;
                 document.querySelector('#editRemark--remarkDateString').value = remarkObject.remarkDateString;
                 document.querySelector('#editRemark--remarkTimeString').value = remarkObject.remarkTimeString;
-                modalElement.querySelector('form')?.addEventListener('submit', doSubmit);
+                (_a = modalElement.querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', doSubmit);
             },
             onshown(modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
@@ -71,6 +74,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function populateRemarksPanel() {
+        var _a, _b, _c, _d;
         clearRemarkPanel();
         if (remarkList.length === 0) {
             remarkPanelElement.insertAdjacentHTML('beforeend', `<div class="panel-block is-block">
@@ -97,7 +101,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             - ${remarkObject.remarkDateString} ${remarkObject.remarkTimeString}
             </p>
           </div>
-          ${remarkObject.canUpdate ?? false
+          ${((_a = remarkObject.canUpdate) !== null && _a !== void 0 ? _a : false)
                 ? `<div class="column is-narrow">
                   <div class="buttons is-right has-addons">
                     <button class="button is-small is-edit-remark-button" data-cy="edit-remark" data-tooltip="Edit Remark" data-index="${index.toString()}" type="button">
@@ -112,13 +116,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                   </div>`
                 : ''}
         </div>`;
-            if (remarkObject.canUpdate ?? false) {
-                panelBlockElement
-                    .querySelector('.is-edit-remark-button')
-                    ?.addEventListener('click', openEditRemarkModal);
-                panelBlockElement
-                    .querySelector('.is-delete-remark-button')
-                    ?.addEventListener('click', confirmDeleteRemark);
+            if ((_b = remarkObject.canUpdate) !== null && _b !== void 0 ? _b : false) {
+                (_c = panelBlockElement
+                    .querySelector('.is-edit-remark-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', openEditRemarkModal);
+                (_d = panelBlockElement
+                    .querySelector('.is-delete-remark-button')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', confirmDeleteRemark);
             }
             remarkPanelElement.append(panelBlockElement);
         }
@@ -139,9 +141,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             populateRemarksPanel();
         });
     }
-    document
-        .querySelector('#is-add-remark-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_a = document
+        .querySelector('#is-add-remark-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let addRemarkCloseModalFunction;
         function doSubmit(formEvent) {
@@ -155,11 +156,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         cityssm.openHtmlModal('ticket-addRemark', {
             onshow(modalElement) {
+                var _a;
                 ;
                 document.querySelector('#addRemark--ticketId').value = ticketId;
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', doSubmit);
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', doSubmit);
             },
             onshown(_modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();

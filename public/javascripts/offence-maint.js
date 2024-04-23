@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a, _b, _c;
     const offenceMap = new Map();
     const offenceAccountNumberPatternString = exports.accountNumberPattern;
     delete exports.accountNumberPattern;
@@ -27,9 +28,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     function openEditOffenceModal(clickEvent) {
+        var _a, _b;
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
-        const offenceMapKey = getOffenceMapKey(buttonElement.dataset.bylawNumber ?? '', buttonElement.dataset.locationKey ?? '');
+        const offenceMapKey = getOffenceMapKey((_a = buttonElement.dataset.bylawNumber) !== null && _a !== void 0 ? _a : '', (_b = buttonElement.dataset.locationKey) !== null && _b !== void 0 ? _b : '');
         const offence = offenceMap.get(offenceMapKey);
         const location = locationMap.get(offence.locationKey);
         const bylaw = bylawMap.get(offence.bylawNumber);
@@ -72,13 +74,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         cityssm.openHtmlModal('offence-edit', {
             onshow() {
+                var _a, _b;
                 ;
                 document.querySelector('#offenceEdit--locationKey').value = offence.locationKey;
                 document.querySelector('#offenceEdit--bylawNumber').value = offence.bylawNumber;
                 document.querySelector('#offenceEdit--locationName').textContent = location.locationName;
                 document.querySelector('#offenceEdit--locationClass').textContent = pts.getLocationClass(location.locationClassKey).locationClass;
-                document.querySelector('#offenceEdit--bylawNumberSpan').textContent = bylaw?.bylawNumber ?? '';
-                document.querySelector('#offenceEdit--bylawDescription').textContent = bylaw?.bylawDescription ?? '';
+                document.querySelector('#offenceEdit--bylawNumberSpan').textContent = (_a = bylaw === null || bylaw === void 0 ? void 0 : bylaw.bylawNumber) !== null && _a !== void 0 ? _a : '';
+                document.querySelector('#offenceEdit--bylawDescription').textContent = (_b = bylaw === null || bylaw === void 0 ? void 0 : bylaw.bylawDescription) !== null && _b !== void 0 ? _b : '';
                 document.querySelector('#offenceEdit--parkingOffence').value = offence.parkingOffence;
                 document.querySelector('#offenceEdit--offenceAmount').value = offence.offenceAmount.toFixed(2);
                 document.querySelector('#offenceEdit--discountOffenceAmount').value = offence.discountOffenceAmount.toFixed(2);
@@ -88,14 +91,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 accountNumberElement.setAttribute('pattern', offenceAccountNumberPatternString);
             },
             onshown(modalElement, closeModalFunction) {
+                var _a, _b;
                 bulmaJS.toggleHtmlClipped();
                 editOffenceModalCloseFunction = closeModalFunction;
-                document
-                    .querySelector('#form--offenceEdit')
-                    ?.addEventListener('submit', doSubmit);
-                modalElement
-                    .querySelector('.is-delete-button')
-                    ?.addEventListener('click', confirmDelete);
+                (_a = document
+                    .querySelector('#form--offenceEdit')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', doSubmit);
+                (_b = modalElement
+                    .querySelector('.is-delete-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', confirmDelete);
             },
             onhidden() {
                 bulmaJS.toggleHtmlClipped();
@@ -121,10 +123,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function openAddOffenceFromListModal() {
         let doRefreshOnClose = false;
         function addFunction(clickEvent) {
+            var _a, _b;
             clickEvent.preventDefault();
             const linkElement = clickEvent.currentTarget;
-            const bylawNumber = linkElement.dataset.bylawNumber ?? '';
-            const locationKey = linkElement.dataset.locationKey ?? '';
+            const bylawNumber = (_a = linkElement.dataset.bylawNumber) !== null && _a !== void 0 ? _a : '';
+            const locationKey = (_b = linkElement.dataset.locationKey) !== null && _b !== void 0 ? _b : '';
             addOffence(bylawNumber, locationKey, false, (responseJSON) => {
                 if (responseJSON.success) {
                     linkElement.remove();
@@ -222,6 +225,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function renderOffences() {
+        var _a, _b;
         const tbodyElement = document.createElement('tbody');
         let matchCount = 0;
         const displayLimit = limitResultsCheckboxElement.checked
@@ -285,9 +289,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
           <span>Edit</span>
         </button>
       </td>`;
-            trElement
-                .querySelector('button')
-                ?.addEventListener('click', openEditOffenceModal);
+            (_a = trElement
+                .querySelector('button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', openEditOffenceModal);
             tbodyElement.append(trElement);
         }
         cityssm.clearElement(resultsElement);
@@ -307,16 +310,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
         <th class="has-width-50"></th>
       </tr></thead>
       </table>`;
-        resultsElement.querySelector('table')?.append(tbodyElement);
+        (_b = resultsElement.querySelector('table')) === null || _b === void 0 ? void 0 : _b.append(tbodyElement);
         if (matchCount > displayLimit) {
             resultsElement.insertAdjacentHTML('afterbegin', `<div class="message is-warning">
           <div class="message-body has-text-centered">Limit Reached</div>
           </div>`);
         }
     }
-    document
-        .querySelector('#is-add-offence-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_a = document
+        .querySelector('#is-add-offence-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         if (locationKeyFilterIsSet && bylawNumberFilterIsSet) {
             const bylaw = bylawMap.get(bylawNumberFilter);
@@ -344,17 +346,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     text: 'Yes, Create Offence',
                     callbackFunction: () => {
                         addOffence(bylawNumberFilter, locationKeyFilter, true, (responseJSON) => {
+                            var _a, _b, _c;
                             if (!responseJSON.success) {
                                 bulmaJS.alert({
                                     title: 'Offence Not Added',
-                                    message: responseJSON.message ?? '',
+                                    message: (_a = responseJSON.message) !== null && _a !== void 0 ? _a : '',
                                     contextualColorName: 'danger'
                                 });
                             }
-                            else if ((responseJSON.message ?? '') !== '') {
+                            else if (((_b = responseJSON.message) !== null && _b !== void 0 ? _b : '') !== '') {
                                 bulmaJS.alert({
                                     title: 'Offence Added Successfully',
-                                    message: responseJSON.message ?? '',
+                                    message: (_c = responseJSON.message) !== null && _c !== void 0 ? _c : '',
                                     contextualColorName: 'warning'
                                 });
                             }
@@ -384,9 +387,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function openSelectLocationFilterModal() {
         let selectLocationCloseModalFunction;
         function doSelect(clickEvent) {
+            var _a;
             clickEvent.preventDefault();
-            const location = locationMap.get(clickEvent.currentTarget.dataset.locationKey ??
-                '');
+            const location = locationMap.get((_a = clickEvent.currentTarget.dataset.locationKey) !== null && _a !== void 0 ? _a : '');
             locationKeyFilterIsSet = true;
             locationKeyFilter = location.locationKey;
             locationInputElement.value = location.locationName;
@@ -418,9 +421,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 listContainerElement.append(listElement);
             },
             onshown(_modalElement, closeModalFunction) {
+                var _a;
                 bulmaJS.toggleHtmlClipped();
                 selectLocationCloseModalFunction = closeModalFunction;
-                document.querySelector('#container--parkingLocations a')?.focus();
+                (_a = document.querySelector('#container--parkingLocations a')) === null || _a === void 0 ? void 0 : _a.focus();
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
@@ -430,9 +434,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     locationInputElement.addEventListener('dblclick', openSelectLocationFilterModal);
     selectLocationFilterButtonElement.addEventListener('click', openSelectLocationFilterModal);
-    document
-        .querySelector('#is-clear-location-filter-button')
-        ?.addEventListener('click', () => {
+    (_b = document
+        .querySelector('#is-clear-location-filter-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
         clearLocationFilter();
         renderOffences();
     });
@@ -449,9 +452,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function openSelectBylawFilterModal() {
         let selectBylawCloseModalFunction;
         function doSelect(clickEvent) {
+            var _a;
             clickEvent.preventDefault();
-            const bylaw = bylawMap.get(clickEvent.currentTarget.dataset.bylawNumber ??
-                '');
+            const bylaw = bylawMap.get((_a = clickEvent.currentTarget.dataset.bylawNumber) !== null && _a !== void 0 ? _a : '');
             bylawNumberFilterIsSet = true;
             bylawNumberFilter = bylaw.bylawNumber;
             bylawInputElement.value = bylaw.bylawNumber;
@@ -480,9 +483,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 listContainerElement.append(listElement);
             },
             onshown(_modalElement, closeModalFunction) {
+                var _a;
                 bulmaJS.toggleHtmlClipped();
                 selectBylawCloseModalFunction = closeModalFunction;
-                document.querySelector('#container--parkingBylaws a')?.focus();
+                (_a = document.querySelector('#container--parkingBylaws a')) === null || _a === void 0 ? void 0 : _a.focus();
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
@@ -492,9 +496,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     bylawInputElement.addEventListener('dblclick', openSelectBylawFilterModal);
     selectBylawFilterButtoneElement.addEventListener('click', openSelectBylawFilterModal);
-    document
-        .querySelector('#is-clear-bylaw-filter-button')
-        ?.addEventListener('click', () => {
+    (_c = document
+        .querySelector('#is-clear-bylaw-filter-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', () => {
         clearBylawFilter();
         renderOffences();
     });

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a, _b;
     const ticketId = cityssm.escapeHTML(document.querySelector('#ticket--ticketId').value);
     const statusPanelElement = document.querySelector('#is-status-panel');
     let statusList = exports.ticketStatusLog;
@@ -58,9 +59,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function openEditStatusModal(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
         let editStatusCloseModalFunction;
-        const index = Number.parseInt(clickEvent.currentTarget.dataset.index ?? '-1', 10);
+        const index = Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '-1', 10);
         const statusObject = statusList[index];
         function doSubmit(formEvent) {
             formEvent.preventDefault();
@@ -77,7 +79,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const statusFieldInputElement = document.querySelector('#editStatus--statusField');
             statusFieldInputElement.value = '';
             const statusFieldFieldElement = statusFieldInputElement.closest('.field');
-            if (statusKeyObject?.statusField) {
+            if (statusKeyObject === null || statusKeyObject === void 0 ? void 0 : statusKeyObject.statusField) {
                 ;
                 statusFieldFieldElement.querySelector('label').textContent = statusKeyObject.statusField.fieldLabel;
                 statusFieldFieldElement.classList.remove('is-hidden');
@@ -88,7 +90,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const statusField2InputElement = document.querySelector('#editStatus--statusField2');
             statusField2InputElement.value = '';
             const statusField2FieldElement = statusField2InputElement.closest('.field');
-            if (statusKeyObject?.statusField2) {
+            if (statusKeyObject === null || statusKeyObject === void 0 ? void 0 : statusKeyObject.statusField2) {
                 ;
                 statusField2FieldElement.querySelector('label').textContent = statusKeyObject.statusField2.fieldLabel;
                 statusField2FieldElement.classList.remove('is-hidden');
@@ -99,17 +101,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         cityssm.openHtmlModal('ticket-editStatus', {
             onshow(modalElement) {
+                var _a, _b, _c, _d, _e, _f;
                 ;
                 document.querySelector('#editStatus--ticketId').value = ticketId;
                 document.querySelector('#editStatus--statusIndex').value = statusObject.statusIndex.toString();
-                document.querySelector('#editStatus--statusField').value = statusObject.statusField ?? '';
-                document.querySelector('#editStatus--statusField2').value = statusObject.statusField2 ?? '';
-                document.querySelector('#editStatus--statusNote').value = statusObject.statusNote ?? '';
+                document.querySelector('#editStatus--statusField').value = (_a = statusObject.statusField) !== null && _a !== void 0 ? _a : '';
+                document.querySelector('#editStatus--statusField2').value = (_b = statusObject.statusField2) !== null && _b !== void 0 ? _b : '';
+                document.querySelector('#editStatus--statusNote').value = (_c = statusObject.statusNote) !== null && _c !== void 0 ? _c : '';
                 const statusDateElement = document.querySelector('#editStatus--statusDateString');
-                statusDateElement.value = statusObject.statusDateString ?? '';
+                statusDateElement.value = (_d = statusObject.statusDateString) !== null && _d !== void 0 ? _d : '';
                 statusDateElement.setAttribute('max', cityssm.dateToString(new Date()));
-                document.querySelector('#editStatus--statusTimeString').value = statusObject.statusTimeString ?? '';
+                document.querySelector('#editStatus--statusTimeString').value = (_e = statusObject.statusTimeString) !== null && _e !== void 0 ? _e : '';
                 pts.getDefaultConfigProperty('parkingTicketStatuses', (parkingTicketStatuses) => {
+                    var _a, _b, _c;
                     let statusKeyFound = false;
                     const statusKeyElement = document.querySelector('#editStatus--statusKey');
                     for (const statusKeyObject of parkingTicketStatuses) {
@@ -119,16 +123,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             if (statusKeyObject.statusKey === statusObject.statusKey) {
                                 statusKeyFound = true;
                                 if (statusKeyObject.statusField) {
-                                    const fieldElement = document
-                                        .querySelector('#editStatus--statusField')
-                                        ?.closest('.field');
+                                    const fieldElement = (_a = document
+                                        .querySelector('#editStatus--statusField')) === null || _a === void 0 ? void 0 : _a.closest('.field');
                                     fieldElement.querySelector('label').textContent = statusKeyObject.statusField.fieldLabel;
                                     fieldElement.classList.remove('is-hidden');
                                 }
                                 if (statusKeyObject.statusField2) {
-                                    const fieldElement = document
-                                        .querySelector('#editStatus--statusField2')
-                                        ?.closest('.field');
+                                    const fieldElement = (_b = document
+                                        .querySelector('#editStatus--statusField2')) === null || _b === void 0 ? void 0 : _b.closest('.field');
                                     fieldElement.querySelector('label').textContent = statusKeyObject.statusField2.fieldLabel;
                                     fieldElement.classList.remove('is-hidden');
                                 }
@@ -138,10 +140,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     if (!statusKeyFound) {
                         statusKeyElement.insertAdjacentHTML('beforeend', `<option value="${statusObject.statusKey}">${statusObject.statusKey}</option>`);
                     }
-                    statusKeyElement.value = statusObject.statusKey ?? '';
+                    statusKeyElement.value = (_c = statusObject.statusKey) !== null && _c !== void 0 ? _c : '';
                     statusKeyElement.addEventListener('change', statusKeyChangeFunction);
                 });
-                modalElement.querySelector('form')?.addEventListener('submit', doSubmit);
+                (_f = modalElement.querySelector('form')) === null || _f === void 0 ? void 0 : _f.addEventListener('submit', doSubmit);
             },
             onshown(modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
@@ -154,6 +156,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function populateStatusesPanelFunction() {
+        var _a, _b, _c, _d, _e;
         clearStatusPanelFunction();
         if (statusList.length === 0) {
             statusPanelElement.insertAdjacentHTML('beforeend', `<div class="panel-block is-block">
@@ -164,7 +167,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             return;
         }
         for (const statusObject of statusList) {
-            const statusDefinitionObject = pts.getTicketStatus(statusObject.statusKey ?? '');
+            const statusDefinitionObject = pts.getTicketStatus((_a = statusObject.statusKey) !== null && _a !== void 0 ? _a : '');
             const panelBlockElement = document.createElement('div');
             panelBlockElement.className = 'panel-block is-block';
             panelBlockElement.innerHTML = `<div class="columns">
@@ -184,14 +187,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
         ${!statusObject.statusField || statusObject.statusField === ''
                 ? ''
                 : `<p class="is-size-7">
-                <strong>${statusDefinitionObject?.statusField
+                <strong>${(statusDefinitionObject === null || statusDefinitionObject === void 0 ? void 0 : statusDefinitionObject.statusField)
                     ? statusDefinitionObject.statusField.fieldLabel
                     : ''}:</strong> ${statusObject.statusField}</p>`}
         ${!statusObject.statusField2 || statusObject.statusField2 === ''
                 ? ''
                 : `<p class="is-size-7">
                 <strong>
-                ${statusDefinitionObject?.statusField2
+                ${(statusDefinitionObject === null || statusDefinitionObject === void 0 ? void 0 : statusDefinitionObject.statusField2)
                     ? statusDefinitionObject.statusField2.fieldLabel
                     : ''}:</strong> ${statusObject.statusField2}
                 </p>`}
@@ -204,9 +207,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         const firstStatusObject = statusList[0];
         if (firstStatusObject.canUpdate) {
-            const firstStatusColumnsElement = statusPanelElement
-                .querySelector('.panel-block')
-                ?.querySelector('.columns');
+            const firstStatusColumnsElement = (_b = statusPanelElement
+                .querySelector('.panel-block')) === null || _b === void 0 ? void 0 : _b.querySelector('.columns');
             firstStatusColumnsElement.insertAdjacentHTML('beforeend', `<div class="column is-narrow">
           <div class="buttons is-right has-addons">
             <button class="button is-small is-edit-status-button" data-tooltip="Edit Status" data-index="0" type="button">
@@ -219,15 +221,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </button>
           </div>
           </div>`);
-            firstStatusColumnsElement
-                .querySelector('.is-edit-status-button')
-                ?.addEventListener('click', openEditStatusModal);
-            firstStatusColumnsElement
-                .querySelector('.is-delete-status-button')
-                ?.addEventListener('click', confirmDeleteStatusFunction);
+            (_c = firstStatusColumnsElement
+                .querySelector('.is-edit-status-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', openEditStatusModal);
+            (_d = firstStatusColumnsElement
+                .querySelector('.is-delete-status-button')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', confirmDeleteStatusFunction);
         }
         const firstStatusDefinitionObject = pts.getTicketStatus(firstStatusObject.statusKey);
-        if (firstStatusDefinitionObject?.isFinalStatus) {
+        if (firstStatusDefinitionObject === null || firstStatusDefinitionObject === void 0 ? void 0 : firstStatusDefinitionObject.isFinalStatus) {
             const finalizePanelBlockElement = document.createElement('div');
             finalizePanelBlockElement.className = 'panel-block is-block';
             finalizePanelBlockElement.innerHTML = `<div class="message is-info is-clearfix">
@@ -245,9 +245,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
           </div>
         </div>
         </div>`;
-            finalizePanelBlockElement
-                .querySelector('button')
-                ?.addEventListener('click', confirmResolveTicketFunction);
+            (_e = finalizePanelBlockElement
+                .querySelector('button')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', confirmResolveTicketFunction);
             statusPanelElement.prepend(finalizePanelBlockElement);
         }
     }
@@ -267,9 +266,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             populateStatusesPanelFunction();
         });
     }
-    document
-        .querySelector('#is-add-status-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_a = document
+        .querySelector('#is-add-status-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let addStatusCloseModalFunction;
         function submitFunction(formEvent) {
@@ -289,11 +287,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         }
         function statusKeyChangeFunction(changeEvent) {
+            var _a, _b;
             const statusObject = pts.getTicketStatus(changeEvent.currentTarget.value);
             const statusFieldInputElement = document.querySelector('#addStatus--statusField');
             statusFieldInputElement.value = '';
             const statusFieldFieldElement = statusFieldInputElement.closest('.field');
-            if (statusObject?.statusField) {
+            if (statusObject === null || statusObject === void 0 ? void 0 : statusObject.statusField) {
                 ;
                 statusFieldFieldElement.querySelector('label').textContent = statusObject.statusField.fieldLabel;
                 statusFieldFieldElement.classList.remove('is-hidden');
@@ -304,7 +303,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const statusField2InputElement = document.querySelector('#addStatus--statusField2');
             statusField2InputElement.value = '';
             const statusField2FieldElement = statusField2InputElement.closest('.field');
-            if (statusObject?.statusField2) {
+            if (statusObject === null || statusObject === void 0 ? void 0 : statusObject.statusField2) {
                 ;
                 statusField2FieldElement.querySelector('label').textContent = statusObject.statusField2.fieldLabel;
                 statusField2FieldElement.classList.remove('is-hidden');
@@ -314,15 +313,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             const resolveTicketElement = document.querySelector('#addStatus--resolveTicket');
             resolveTicketElement.checked = false;
-            if (statusObject?.isFinalStatus) {
-                resolveTicketElement.closest('.field')?.classList.remove('is-hidden');
+            if (statusObject === null || statusObject === void 0 ? void 0 : statusObject.isFinalStatus) {
+                (_a = resolveTicketElement.closest('.field')) === null || _a === void 0 ? void 0 : _a.classList.remove('is-hidden');
             }
             else {
-                resolveTicketElement.closest('.field')?.classList.add('is-hidden');
+                (_b = resolveTicketElement.closest('.field')) === null || _b === void 0 ? void 0 : _b.classList.add('is-hidden');
             }
         }
         cityssm.openHtmlModal('ticket-addStatus', {
             onshow(modalElement) {
+                var _a;
                 ;
                 document.querySelector('#addStatus--ticketId').value = ticketId;
                 pts.getDefaultConfigProperty('parkingTicketStatuses', (parkingTicketStatuses) => {
@@ -334,9 +334,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     }
                     statusKeyElement.addEventListener('change', statusKeyChangeFunction);
                 });
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', submitFunction);
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', submitFunction);
             },
             onshown(modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
@@ -349,9 +348,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-    document
-        .querySelector('#is-add-paid-status-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_b = document
+        .querySelector('#is-add-paid-status-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let addPaidStatusCloseModalFunction;
         function submitFunction(formEvent) {
@@ -372,6 +370,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         cityssm.openHtmlModal('ticket-addStatusPaid', {
             onshow(modalElement) {
+                var _a;
                 ;
                 document.querySelector('#addPaidStatus--ticketId').value = ticketId;
                 const statusFieldElement = document.querySelector('#addPaidStatus--statusField');
@@ -389,9 +388,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                             ? document.querySelector('#ticket--discountOffenceAmount').value
                             : offenceAmount;
                 }
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', submitFunction);
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', submitFunction);
             },
             onshown(modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();

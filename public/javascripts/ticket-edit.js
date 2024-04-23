@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a, _b, _c, _d, _e;
     const ticketId = document.querySelector('#ticket--ticketId').value;
     const isCreate = ticketId === '';
     const formMessageElement = document.querySelector('#container--form-message');
@@ -15,9 +16,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     for (const inputElement of inputElements) {
         inputElement.addEventListener('change', setUnsavedChangesFunction);
     }
-    document
-        .querySelector('#form--ticket')
-        ?.addEventListener('submit', (formEvent) => {
+    (_a = document
+        .querySelector('#form--ticket')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', (formEvent) => {
         formEvent.preventDefault();
         const ticketNumber = document.querySelector('#ticket--ticketNumber').value;
         formMessageElement.innerHTML = `<span class="tag is-light is-info is-medium">
@@ -42,14 +42,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             if (responseJSON.success && isCreate) {
                 cityssm.openHtmlModal('ticket-createSuccess', {
                     onshow() {
+                        var _a, _b;
                         ;
                         document.querySelector('#createSuccess--ticketNumber').textContent = ticketNumber;
-                        document
-                            .querySelector('#createSuccess--editTicketButton')
-                            ?.setAttribute('href', `${pts.urlPrefix}/tickets/${responseJSON.ticketId.toString()}/edit`);
-                        document
-                            .querySelector('#createSuccess--newTicketButton')
-                            ?.setAttribute('href', `${pts.urlPrefix}/tickets/new/${responseJSON.nextTicketNumber}`);
+                        (_a = document
+                            .querySelector('#createSuccess--editTicketButton')) === null || _a === void 0 ? void 0 : _a.setAttribute('href', `${pts.urlPrefix}/tickets/${responseJSON.ticketId.toString()}/edit`);
+                        (_b = document
+                            .querySelector('#createSuccess--newTicketButton')) === null || _b === void 0 ? void 0 : _b.setAttribute('href', `${pts.urlPrefix}/tickets/new/${responseJSON.nextTicketNumber}`);
                     }
                 });
             }
@@ -65,9 +64,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
-    document
-        .querySelector('#is-delete-ticket-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_b = document
+        .querySelector('#is-delete-ticket-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         bulmaJS.confirm({
             title: 'Delete Ticket',
@@ -80,6 +78,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     });
     pts.getDefaultConfigProperty('locationClasses', () => {
+        var _a, _b;
         let locationLookupCloseModalFunction;
         let locationFilterElement;
         let locationList = [];
@@ -91,8 +90,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             locationList = [];
         }
         function setLocationFunction(clickEvent) {
+            var _a;
             clickEvent.preventDefault();
-            const locationObject = locationList[Number.parseInt(clickEvent.currentTarget.dataset.index ?? '', 10)];
+            const locationObject = locationList[Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '', 10)];
             document.querySelector('#ticket--locationKey').value = locationObject.locationKey;
             document.querySelector('#ticket--locationName').value = locationObject.locationName;
             locationLookupCloseModalFunction();
@@ -121,7 +121,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
           <div class="level-left">
           ${cityssm.escapeHTML(locationObject.locationName)}
           </div>
-          ${locationClassObject?.locationClass
+          ${(locationClassObject === null || locationClassObject === void 0 ? void 0 : locationClassObject.locationClass)
                     ? `<div class="level-right">
                   <span class="tag is-primary">
                   ${cityssm.escapeHTML(locationClassObject.locationClass)}
@@ -145,6 +145,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             cityssm.openHtmlModal('ticket-setLocation', {
                 onshown(modalElement, closeModalFunction) {
+                    var _a;
                     bulmaJS.toggleHtmlClipped();
                     locationLookupCloseModalFunction = closeModalFunction;
                     if (locationList.length === 0) {
@@ -156,9 +157,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     locationFilterElement = modalElement.querySelector('#filter--parkingLocations');
                     locationFilterElement.focus();
                     locationFilterElement.addEventListener('keyup', renderLocationsFunction);
-                    modalElement
-                        .querySelector('#is-clear-location-button')
-                        ?.addEventListener('click', clearLocationFunction);
+                    (_a = modalElement
+                        .querySelector('#is-clear-location-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', clearLocationFunction);
                 },
                 onremoved() {
                     ;
@@ -167,75 +167,63 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         }
-        document
-            .querySelector('#is-location-lookup-button')
-            ?.addEventListener('click', openLocationLookupModalFunction);
-        document
-            .querySelector('#ticket--locationName')
-            ?.addEventListener('dblclick', openLocationLookupModalFunction);
+        (_a = document
+            .querySelector('#is-location-lookup-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', openLocationLookupModalFunction);
+        (_b = document
+            .querySelector('#ticket--locationName')) === null || _b === void 0 ? void 0 : _b.addEventListener('dblclick', openLocationLookupModalFunction);
     });
     let bylawLookupCloseModalFunction;
     let offenceList = [];
     let listItemElements = [];
     function clearBylawOffenceFunction(clickEvent) {
+        var _a, _b, _c, _d, _e, _f;
         clickEvent.preventDefault();
         document.querySelector('#ticket--bylawNumber').value = '';
         const offenceAmountElement = document.querySelector('#ticket--offenceAmount');
         offenceAmountElement.classList.add('is-readonly');
         offenceAmountElement.setAttribute('readonly', 'readonly');
-        offenceAmountElement
-            .closest('.field')
-            ?.querySelector('.is-unlock-field-button')
-            ?.removeAttribute('disabled');
+        (_b = (_a = offenceAmountElement
+            .closest('.field')) === null || _a === void 0 ? void 0 : _a.querySelector('.is-unlock-field-button')) === null || _b === void 0 ? void 0 : _b.removeAttribute('disabled');
         offenceAmountElement.value = '';
         const discountOffenceAmountElement = document.querySelector('#ticket--discountOffenceAmount');
         discountOffenceAmountElement.classList.add('is-readonly');
         discountOffenceAmountElement.setAttribute('readonly', 'readonly');
-        discountOffenceAmountElement
-            .closest('.field')
-            ?.querySelector('.is-unlock-field-button')
-            ?.removeAttribute('disabled');
+        (_d = (_c = discountOffenceAmountElement
+            .closest('.field')) === null || _c === void 0 ? void 0 : _c.querySelector('.is-unlock-field-button')) === null || _d === void 0 ? void 0 : _d.removeAttribute('disabled');
         discountOffenceAmountElement.value = '';
         const discountDaysElement = document.querySelector('#ticket--discountDays');
         discountDaysElement.classList.add('is-readonly');
         discountDaysElement.setAttribute('readonly', 'readonly');
-        discountDaysElement
-            .closest('.field')
-            ?.querySelector('.is-unlock-field-button')
-            ?.removeAttribute('disabled');
+        (_f = (_e = discountDaysElement
+            .closest('.field')) === null || _e === void 0 ? void 0 : _e.querySelector('.is-unlock-field-button')) === null || _f === void 0 ? void 0 : _f.removeAttribute('disabled');
         discountDaysElement.value = '';
         document.querySelector('#ticket--parkingOffence').value = '';
         bylawLookupCloseModalFunction();
         offenceList = [];
     }
     function setBylawOffenceFunction(clickEvent) {
+        var _a, _b, _c, _d, _e, _f, _g;
         clickEvent.preventDefault();
-        const offenceObject = offenceList[Number.parseInt(clickEvent.currentTarget.dataset.index ?? '', 10)];
+        const offenceObject = offenceList[Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '', 10)];
         document.querySelector('#ticket--bylawNumber').value = offenceObject.bylawNumber;
         const offenceAmountElement = document.querySelector('#ticket--offenceAmount');
         offenceAmountElement.classList.add('is-readonly');
         offenceAmountElement.setAttribute('readonly', 'readonly');
-        offenceAmountElement
-            .closest('.field')
-            ?.querySelector('.is-unlock-field-button')
-            ?.removeAttribute('disabled');
+        (_c = (_b = offenceAmountElement
+            .closest('.field')) === null || _b === void 0 ? void 0 : _b.querySelector('.is-unlock-field-button')) === null || _c === void 0 ? void 0 : _c.removeAttribute('disabled');
         offenceAmountElement.value = offenceObject.offenceAmount.toFixed(2);
         const discountOffenceAmountElement = document.querySelector('#ticket--discountOffenceAmount');
         discountOffenceAmountElement.classList.add('is-readonly');
         discountOffenceAmountElement.setAttribute('readonly', 'readonly');
-        discountOffenceAmountElement
-            .closest('.field')
-            ?.querySelector('.is-unlock-field-button')
-            ?.removeAttribute('disabled');
+        (_e = (_d = discountOffenceAmountElement
+            .closest('.field')) === null || _d === void 0 ? void 0 : _d.querySelector('.is-unlock-field-button')) === null || _e === void 0 ? void 0 : _e.removeAttribute('disabled');
         discountOffenceAmountElement.value =
             offenceObject.discountOffenceAmount.toFixed(2);
         const discountDaysElement = document.querySelector('#ticket--discountDays');
         discountDaysElement.classList.add('is-readonly');
         discountDaysElement.setAttribute('readonly', 'readonly');
-        discountDaysElement
-            .closest('.field')
-            ?.querySelector('.is-unlock-field-button')
-            ?.removeAttribute('disabled');
+        (_g = (_f = discountDaysElement
+            .closest('.field')) === null || _f === void 0 ? void 0 : _f.querySelector('.is-unlock-field-button')) === null || _g === void 0 ? void 0 : _g.removeAttribute('disabled');
         discountDaysElement.value = offenceObject.discountDays.toString();
         document.querySelector('#ticket--parkingOffence').value = offenceObject.bylawDescription;
         bylawLookupCloseModalFunction();
@@ -303,15 +291,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
         clickEvent.preventDefault();
         cityssm.openHtmlModal('ticket-setBylawOffence', {
             onshown(modalElement, closeModalFunction) {
+                var _a;
                 bulmaJS.toggleHtmlClipped();
                 bylawLookupCloseModalFunction = closeModalFunction;
                 populateBylawsFunction();
                 const searchStringElement = modalElement.querySelector('#bylawLookup--searchStr');
                 searchStringElement.focus();
                 searchStringElement.addEventListener('keyup', filterBylawsFunction);
-                modalElement
-                    .querySelector('#is-clear-bylaw-button')
-                    ?.addEventListener('click', clearBylawOffenceFunction);
+                (_a = modalElement
+                    .querySelector('#is-clear-bylaw-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', clearBylawOffenceFunction);
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
@@ -319,12 +307,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
-    document
-        .querySelector('#is-bylaw-lookup-button')
-        ?.addEventListener('click', openBylawLookupModalFunction);
-    document
-        .querySelector('#ticket--bylawNumber')
-        ?.addEventListener('dblclick', openBylawLookupModalFunction);
+    (_c = document
+        .querySelector('#is-bylaw-lookup-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', openBylawLookupModalFunction);
+    (_d = document
+        .querySelector('#ticket--bylawNumber')) === null || _d === void 0 ? void 0 : _d.addEventListener('dblclick', openBylawLookupModalFunction);
     {
         const licencePlateIsMissingCheckboxElement = document.querySelector('#ticket--licencePlateIsMissing');
         const licencePlateInputSelectors = [
@@ -345,7 +331,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.clearElement(datalistElement);
         const countryString = document.querySelector('#ticket--licencePlateCountry').value;
         const countryProperties = pts.getLicencePlateCountryProperties(countryString);
-        if (countryProperties?.provinces) {
+        if (countryProperties === null || countryProperties === void 0 ? void 0 : countryProperties.provinces) {
             const provincesList = Object.values(countryProperties.provinces);
             for (const province of provincesList) {
                 const optionElement = document.createElement('option');
@@ -354,17 +340,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         }
     }
-    document
-        .querySelector('#ticket--licencePlateCountry')
-        ?.addEventListener('change', populateLicencePlateProvinceDatalistFunction);
+    (_e = document
+        .querySelector('#ticket--licencePlateCountry')) === null || _e === void 0 ? void 0 : _e.addEventListener('change', populateLicencePlateProvinceDatalistFunction);
     pts.loadDefaultConfigProperties(populateLicencePlateProvinceDatalistFunction);
     function unlockFieldFunction(unlockButtonClickEvent) {
+        var _a, _b;
         unlockButtonClickEvent.preventDefault();
         const unlockButtonElement = unlockButtonClickEvent.currentTarget;
-        const inputTag = unlockButtonElement.dataset.unlock ?? '';
-        const readOnlyElement = unlockButtonElement
-            .closest('.field')
-            ?.querySelector(inputTag);
+        const inputTag = (_a = unlockButtonElement.dataset.unlock) !== null && _a !== void 0 ? _a : '';
+        const readOnlyElement = (_b = unlockButtonElement
+            .closest('.field')) === null || _b === void 0 ? void 0 : _b.querySelector(inputTag);
         readOnlyElement.removeAttribute('readonly');
         readOnlyElement.classList.remove('is-readonly');
         readOnlyElement.focus();

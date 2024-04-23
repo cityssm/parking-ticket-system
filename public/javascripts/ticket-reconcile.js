@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a;
     pts.initializeToggleHiddenLinks(document.querySelector('main'));
     function acknowledgeError(clickEvent) {
         clickEvent.preventDefault();
@@ -40,6 +41,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ticketId: trElement.dataset.ticketId,
                 statusIndex: anchorElement.dataset.statusIndex
             }, (rawResponseJSON) => {
+                var _a, _b;
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     cityssm.clearElement(optionsTdElement);
@@ -52,12 +54,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 <i class="fas fa-times" aria-hidden="true"></i>
                 <span class="sr-only">Error</span>
               </button>`;
-                    optionsTdElement
-                        .querySelector('.is-ownership-match-button')
-                        ?.addEventListener('click', markAsMatch);
-                    optionsTdElement
-                        .querySelector('.is-ownership-error-button')
-                        ?.addEventListener('click', markAsError);
+                    (_a = optionsTdElement
+                        .querySelector('.is-ownership-match-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', markAsMatch);
+                    (_b = optionsTdElement
+                        .querySelector('.is-ownership-error-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', markAsError);
                 }
             });
         }
@@ -72,6 +72,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function markAsMatch(clickEvent) {
+        var _a, _b, _c, _d, _e, _f;
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         const optionsTdElement = buttonElement.closest('td');
@@ -90,6 +91,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ticketId,
                 recordDate
             }, (rawResponseJSON) => {
+                var _a, _b;
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     cityssm.clearElement(optionsTdElement);
@@ -103,29 +105,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 <span class="sr-only">Remove Match</span>
               </a>
               </div>`;
-                    optionsTdElement
-                        .querySelector('a')
-                        ?.addEventListener('click', clearStatus);
+                    (_a = optionsTdElement
+                        .querySelector('a')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', clearStatus);
                 }
                 else {
                     buttonElement.removeAttribute('disabled');
                     bulmaJS.alert({
                         title: 'Record Not Updated',
-                        message: responseJSON.message ?? '',
+                        message: (_b = responseJSON.message) !== null && _b !== void 0 ? _b : '',
                         contextualColorName: 'danger'
                     });
                 }
             });
         }
-        if ((trElement.dataset.isVehicleMakeMatch ?? '') !== '' &&
-            (trElement.dataset.isLicencePlateExpiryDateMatch ?? '') !== '') {
+        if (((_a = trElement.dataset.isVehicleMakeMatch) !== null && _a !== void 0 ? _a : '') !== '' &&
+            ((_b = trElement.dataset.isLicencePlateExpiryDateMatch) !== null && _b !== void 0 ? _b : '') !== '') {
             doMatch();
         }
         else {
-            const ticketVehicle = trElement.dataset.ticketVehicle ?? '';
-            const ticketExpiryDate = trElement.dataset.ticketExpiryDate ?? '';
-            const ownerVehicle = trElement.dataset.ownerVehicle ?? '';
-            const ownerExpiryDate = trElement.dataset.ownerExpiryDate ?? '';
+            const ticketVehicle = (_c = trElement.dataset.ticketVehicle) !== null && _c !== void 0 ? _c : '';
+            const ticketExpiryDate = (_d = trElement.dataset.ticketExpiryDate) !== null && _d !== void 0 ? _d : '';
+            const ownerVehicle = (_e = trElement.dataset.ownerVehicle) !== null && _e !== void 0 ? _e : '';
+            const ownerExpiryDate = (_f = trElement.dataset.ownerExpiryDate) !== null && _f !== void 0 ? _f : '';
             const confirmHTML = `<p class="has-text-centered">
         Are you sure the details on the parking ticket match the details on the ownership record?
         </p>
@@ -164,6 +165,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     function markAsError(clickEvent) {
+        var _a, _b, _c, _d, _e, _f;
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         const optionsTdElement = buttonElement.closest('td');
@@ -182,6 +184,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ticketId,
                 recordDate
             }, (rawResponseJSON) => {
+                var _a, _b;
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     cityssm.clearElement(optionsTdElement);
@@ -195,26 +198,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 <span class="sr-only">Remove Match</span>
               </a>
               </div>`;
-                    optionsTdElement
-                        .querySelector('a')
-                        ?.addEventListener('click', clearStatus);
+                    (_a = optionsTdElement
+                        .querySelector('a')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', clearStatus);
                 }
                 else {
                     buttonElement.removeAttribute('disabled');
                     bulmaJS.alert({
                         title: 'Record Not Updated',
-                        message: responseJSON.message ?? '',
+                        message: (_b = responseJSON.message) !== null && _b !== void 0 ? _b : '',
                         contextualColorName: 'danger'
                     });
                 }
             });
         }
-        if ((trElement.dataset.isVehicleMakeMatch ?? '') !== '' ||
-            (trElement.dataset.isLicencePlateExpiryDateMatch ?? '') !== '') {
-            const ticketVehicle = trElement.dataset.ticketVehicle ?? '';
-            const ticketExpiryDate = trElement.dataset.ticketExpiryDate ?? '';
-            const ownerVehicle = trElement.dataset.ownerVehicle ?? '';
-            const ownerExpiryDate = trElement.dataset.ownerExpiryDate ?? '';
+        if (((_a = trElement.dataset.isVehicleMakeMatch) !== null && _a !== void 0 ? _a : '') !== '' ||
+            ((_b = trElement.dataset.isLicencePlateExpiryDateMatch) !== null && _b !== void 0 ? _b : '') !== '') {
+            const ticketVehicle = (_c = trElement.dataset.ticketVehicle) !== null && _c !== void 0 ? _c : '';
+            const ticketExpiryDate = (_d = trElement.dataset.ticketExpiryDate) !== null && _d !== void 0 ? _d : '';
+            const ownerVehicle = (_e = trElement.dataset.ownerVehicle) !== null && _e !== void 0 ? _e : '';
+            const ownerExpiryDate = (_f = trElement.dataset.ownerExpiryDate) !== null && _f !== void 0 ? _f : '';
             const confirmHTML = `<p class="has-text-centered">
         Are you sure you want to mark an error between the details on the parking ticket and the details on the ownership record?
         </p>
@@ -263,13 +265,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
     for (const errorButtonElement of errorButtonElements) {
         errorButtonElement.addEventListener('click', markAsError);
     }
-    document
-        .querySelector('#is-quick-reconcile-matches-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_a = document
+        .querySelector('#is-quick-reconcile-matches-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let loadingCloseModalFunction;
         function doReconcile() {
             cityssm.postJSON(`${pts.urlPrefix}/tickets/doQuickReconcileMatches`, {}, (rawResponseJSON) => {
+                var _a;
                 const responseJSON = rawResponseJSON;
                 loadingCloseModalFunction();
                 if (responseJSON.success) {
@@ -294,9 +296,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                       <span class="sr-only">Remove Match</span>
                     </a>
                     </div>`;
-                            optionsTdElement
-                                .querySelector('a')
-                                ?.addEventListener('click', clearStatus);
+                            (_a = optionsTdElement
+                                .querySelector('a')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', clearStatus);
                         }
                     }
                 }

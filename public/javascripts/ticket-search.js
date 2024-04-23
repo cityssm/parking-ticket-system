@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a, _b, _c, _d;
     let ticketNumberFieldLabel = '';
     const formElement = document.querySelector('#form--filters');
     const offsetElement = document.querySelector('#filter--offset');
@@ -159,18 +160,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
     formElement.addEventListener('submit', (formEvent) => {
         formEvent.preventDefault();
     });
-    document
-        .querySelector('#filter--ticketNumber')
-        ?.addEventListener('change', resetOffsetAndGetTicketsFunction);
-    document
-        .querySelector('#filter--licencePlateNumber')
-        ?.addEventListener('change', resetOffsetAndGetTicketsFunction);
-    document
-        .querySelector('#filter--location')
-        ?.addEventListener('change', resetOffsetAndGetTicketsFunction);
-    document
-        .querySelector('#filter--isResolved')
-        ?.addEventListener('change', resetOffsetAndGetTicketsFunction);
+    (_a = document
+        .querySelector('#filter--ticketNumber')) === null || _a === void 0 ? void 0 : _a.addEventListener('change', resetOffsetAndGetTicketsFunction);
+    (_b = document
+        .querySelector('#filter--licencePlateNumber')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', resetOffsetAndGetTicketsFunction);
+    (_c = document
+        .querySelector('#filter--location')) === null || _c === void 0 ? void 0 : _c.addEventListener('change', resetOffsetAndGetTicketsFunction);
+    (_d = document
+        .querySelector('#filter--isResolved')) === null || _d === void 0 ? void 0 : _d.addEventListener('change', resetOffsetAndGetTicketsFunction);
     pts.getDefaultConfigProperty('ticketNumber_fieldLabel', (fieldLabel) => {
         ticketNumberFieldLabel = fieldLabel;
         pts.getDefaultConfigProperty('locationClasses', getTicketsFunction);

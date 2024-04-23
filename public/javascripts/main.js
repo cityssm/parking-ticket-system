@@ -1,7 +1,8 @@
 "use strict";
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const pts = {
-    urlPrefix: document.querySelector('main')?.dataset.urlPrefix
+    urlPrefix: (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix
 };
 ;
 (() => {
@@ -16,7 +17,7 @@ const pts = {
                 return true;
             }
         }
-        catch {
+        catch (_a) {
             defaultConfigProperties = {};
             defaultConfigPropertiesIsLoaded = true;
         }
@@ -38,7 +39,7 @@ const pts = {
             try {
                 window.localStorage.setItem('defaultConfigProperties', JSON.stringify(defaultConfigProperties));
             }
-            catch {
+            catch (_a) {
             }
             callbackFunction();
         });
@@ -57,10 +58,11 @@ const pts = {
         });
     };
     pts.getLicencePlateCountryProperties = (originalLicencePlateCountry) => {
+        var _a;
         if (!defaultConfigPropertiesIsLoaded) {
             return {};
         }
-        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] ?? originalLicencePlateCountry;
+        const licencePlateCountryAlias = (_a = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()]) !== null && _a !== void 0 ? _a : originalLicencePlateCountry;
         if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinces, licencePlateCountryAlias)) {
             return defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias];
         }
@@ -102,6 +104,7 @@ const pts = {
     const ticketStatusKeyToObject = new Map();
     let ticketStatusKeyToObjectIsLoaded = false;
     pts.getTicketStatus = (statusKey) => {
+        var _a;
         const noResult = {
             statusKey,
             status: statusKey,
@@ -112,8 +115,7 @@ const pts = {
             return noResult;
         }
         if (!ticketStatusKeyToObjectIsLoaded) {
-            for (const ticketStatusObject of defaultConfigProperties.parkingTicketStatuses ??
-                []) {
+            for (const ticketStatusObject of (_a = defaultConfigProperties.parkingTicketStatuses) !== null && _a !== void 0 ? _a : []) {
                 ticketStatusKeyToObject.set(ticketStatusObject.statusKey, ticketStatusObject);
             }
             ticketStatusKeyToObjectIsLoaded = true;
@@ -125,6 +127,7 @@ const pts = {
     const locationClassKeyToObject = new Map();
     let locationClassKeyToObjectIsLoaded = false;
     pts.getLocationClass = (locationClassKey) => {
+        var _a;
         const noResult = {
             locationClassKey,
             locationClass: locationClassKey
@@ -133,8 +136,7 @@ const pts = {
             return noResult;
         }
         if (!locationClassKeyToObjectIsLoaded) {
-            for (const locationClassObject of defaultConfigProperties.locationClasses ??
-                []) {
+            for (const locationClassObject of (_a = defaultConfigProperties.locationClasses) !== null && _a !== void 0 ? _a : []) {
                 locationClassKeyToObject.set(locationClassObject.locationClassKey, locationClassObject);
             }
             locationClassKeyToObjectIsLoaded = true;
@@ -145,6 +147,7 @@ const pts = {
     };
 })();
 pts.initializeTabs = (tabsListElement, callbackFunctions) => {
+    var _a;
     if (!tabsListElement) {
         return;
     }
@@ -155,40 +158,42 @@ pts.initializeTabs = (tabsListElement, callbackFunctions) => {
         ? listItemElements
         : tabsListElement.querySelectorAll('a');
     function tabClickFunction(clickEvent) {
+        var _a, _b, _c;
         clickEvent.preventDefault();
         const selectedTabLinkElement = clickEvent.currentTarget;
-        const selectedTabContentElement = document.querySelector(selectedTabLinkElement.getAttribute('href') ?? '');
+        const selectedTabContentElement = document.querySelector((_a = selectedTabLinkElement.getAttribute('href')) !== null && _a !== void 0 ? _a : '');
         for (const [index, listItemElement] of listItemElements.entries()) {
             listItemElement.classList.remove('is-active');
             tabLinkElements[index].setAttribute('aria-selected', 'false');
         }
         ;
-        (isPanelOrMenuListTabs
+        (_b = (isPanelOrMenuListTabs
             ? selectedTabLinkElement
-            : selectedTabLinkElement.parentElement)?.classList.add('is-active');
+            : selectedTabLinkElement.parentElement)) === null || _b === void 0 ? void 0 : _b.classList.add('is-active');
         selectedTabLinkElement.setAttribute('aria-selected', 'true');
-        const tabContentElements = selectedTabContentElement.parentElement?.querySelectorAll('.tab-content');
-        for (const tabContentElement_ of tabContentElements ?? []) {
+        const tabContentElements = (_c = selectedTabContentElement.parentElement) === null || _c === void 0 ? void 0 : _c.querySelectorAll('.tab-content');
+        for (const tabContentElement_ of tabContentElements !== null && tabContentElements !== void 0 ? tabContentElements : []) {
             tabContentElement_.classList.remove('is-active');
         }
         selectedTabContentElement.classList.add('is-active');
-        if (callbackFunctions?.onshown) {
+        if (callbackFunctions === null || callbackFunctions === void 0 ? void 0 : callbackFunctions.onshown) {
             callbackFunctions.onshown(selectedTabContentElement);
         }
     }
     for (const listItemElement of listItemElements) {
         ;
-        (isPanelOrMenuListTabs
+        (_a = (isPanelOrMenuListTabs
             ? listItemElement
-            : listItemElement.querySelector('a'))?.addEventListener('click', tabClickFunction);
+            : listItemElement.querySelector('a'))) === null || _a === void 0 ? void 0 : _a.addEventListener('click', tabClickFunction);
     }
 };
 (() => {
     function toggleHiddenFunction(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
         const href = clickEvent.currentTarget.href;
         const divId = href.slice(Math.max(0, href.indexOf('#') + 1));
-        document.querySelector(`#${divId}`)?.classList.toggle('is-hidden');
+        (_a = document.querySelector(`#${divId}`)) === null || _a === void 0 ? void 0 : _a.classList.toggle('is-hidden');
     }
     pts.initializeToggleHiddenLinks = (searchContainerElement) => {
         const linkElements = searchContainerElement.querySelectorAll('.is-toggle-hidden-link');

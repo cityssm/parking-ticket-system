@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const canUpdate = document.querySelector('main')?.dataset.canUpdate === 'true';
+    var _a, _b, _c;
+    const canUpdate = ((_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.canUpdate) === 'true';
     let batchId = -1;
     let batchIsLocked = true;
     let batchIncludesLabels = false;
@@ -12,10 +13,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
     let availableTicketsList = [];
     let batchEntriesList = [];
     function addParkingTicketToBatch(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         buttonElement.setAttribute('disabled', 'disabled');
-        const recordIndex = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
+        const recordIndex = Number.parseInt((_a = buttonElement.dataset.index) !== null && _a !== void 0 ? _a : '-1', 10);
         const ticketRecord = availableTicketsList[recordIndex];
         const ticketContainerElement = buttonElement.closest('.is-ticket-container');
         cityssm.postJSON(`${pts.urlPrefix}/plates/doAddLicencePlateToLookupBatch`, {
@@ -37,10 +39,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function removeParkingTicketFromBatch(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
         const buttonElement = clickEvent.currentTarget;
         buttonElement.setAttribute('disabled', 'disabled');
-        const recordIndex = Number.parseInt(buttonElement.dataset.index ?? '-1', 10);
+        const recordIndex = Number.parseInt((_a = buttonElement.dataset.index) !== null && _a !== void 0 ? _a : '-1', 10);
         const batchEntry = batchEntriesList[recordIndex];
         const entryContainerElement = buttonElement.closest('.is-entry-container');
         cityssm.postJSON(`${pts.urlPrefix}/plates/doRemoveLicencePlateFromLookupBatch`, {
@@ -89,6 +92,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         The date of this download will be tracked as part of the batch record.`, 'OK, Download the File', 'warning', downloadFunction);
     }
     function populateAvailableTicketsView() {
+        var _a;
         cityssm.clearElement(availableTicketsContainerElement);
         const resultsPanelElement = document.createElement('div');
         resultsPanelElement.className = 'panel';
@@ -144,9 +148,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
           ${ticketRecord.issueDateString}
         </div>
         </div>`;
-            resultElement
-                .querySelector('button')
-                ?.addEventListener('click', addParkingTicketToBatch);
+            (_a = resultElement
+                .querySelector('button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', addParkingTicketToBatch);
             resultsPanelElement.append(resultElement);
         }
         if (includedTicketIds.length > 0) {
@@ -208,19 +211,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
             populateAvailableTicketsView();
         });
     }
-    document
-        .querySelector('#is-more-available-filters-toggle')
-        ?.addEventListener('click', (clickEvent) => {
+    (_b = document
+        .querySelector('#is-more-available-filters-toggle')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', (clickEvent) => {
+        var _a;
         clickEvent.preventDefault();
-        document
-            .querySelector('#is-more-available-filters')
-            ?.classList.toggle('is-hidden');
+        (_a = document
+            .querySelector('#is-more-available-filters')) === null || _a === void 0 ? void 0 : _a.classList.toggle('is-hidden');
     });
     licencePlateNumberFilterElement.addEventListener('keyup', populateAvailableTicketsView);
     availableIssueDaysAgoElement.addEventListener('change', refreshAvailableTickets);
     const lockBatchButtonElement = document.querySelector('#is-lock-batch-button');
     const batchEntriesContainerElement = document.querySelector('#is-batch-entries-container');
     function populateBatchView(batch) {
+        var _a;
         batchId = batch.batchId;
         batchEntriesList = batch.batchEntries;
         batchIsLocked = batch.lockDateString !== '';
@@ -284,9 +287,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ${cityssm.escapeHTML(batchEntry.ticketNumber)}
           </a>`;
             if (!batchIsLocked) {
-                panelBlockElement
-                    .querySelector('button')
-                    ?.addEventListener('click', removeParkingTicketFromBatch);
+                (_a = panelBlockElement
+                    .querySelector('button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', removeParkingTicketFromBatch);
             }
             panelElement.append(panelBlockElement);
         }
@@ -354,9 +356,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let selectBatchCloseModalFunction;
         let resultsContainerElement;
         function selectBatch(batchClickEvent) {
+            var _a;
             batchClickEvent.preventDefault();
-            batchId = Number.parseInt(batchClickEvent.currentTarget.dataset.batchId ??
-                '-1', 10);
+            batchId = Number.parseInt((_a = batchClickEvent.currentTarget.dataset.batchId) !== null && _a !== void 0 ? _a : '-1', 10);
             selectBatchCloseModalFunction();
             refreshBatch();
         }
@@ -428,11 +430,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
-    document
-        .querySelector('#is-select-batch-button')
-        ?.addEventListener('click', openSelectBatchModal);
+    (_c = document
+        .querySelector('#is-select-batch-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', openSelectBatchModal);
     if (canUpdate) {
-        lockBatchButtonElement?.addEventListener('click', () => {
+        lockBatchButtonElement === null || lockBatchButtonElement === void 0 ? void 0 : lockBatchButtonElement.addEventListener('click', () => {
             if (batchIsLocked) {
                 return;
             }

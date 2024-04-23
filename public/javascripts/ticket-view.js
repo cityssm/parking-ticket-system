@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ;
 (() => {
-    document
-        .querySelector('#is-unresolve-ticket-button')
-        ?.addEventListener('click', (clickEvent) => {
+    var _a, _b;
+    (_a = document
+        .querySelector('#is-unresolve-ticket-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         const ticketId = clickEvent.currentTarget.dataset
             .ticketId;
@@ -28,9 +28,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     });
-    document
-        .querySelector('#is-restore-ticket-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_b = document
+        .querySelector('#is-restore-ticket-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         const ticketId = clickEvent.currentTarget.dataset
             .ticketId;

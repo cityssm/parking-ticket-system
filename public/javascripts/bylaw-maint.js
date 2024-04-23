@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a;
     const bylawFilterElement = document.querySelector('#bylawFilter--bylaw');
     const bylawResultsElement = document.querySelector('#bylawResults');
     let bylawList = exports.bylaws;
     delete exports.bylaws;
     function openUpdateOffencesModal(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
-        const listIndex = Number.parseInt(clickEvent.currentTarget.dataset.index ?? '', 10);
+        const listIndex = Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '', 10);
         const bylaw = bylawList[listIndex];
         let updateOffencesCloseModalFunction;
         function updateFunction(formEvent) {
@@ -23,19 +25,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         cityssm.openHtmlModal('bylaw-updateOffences', {
             onshow() {
+                var _a, _b, _c;
                 ;
                 document.querySelector('#updateOffences--bylawNumber').value = bylaw.bylawNumber;
                 document.querySelector('#updateOffences--bylawDescription').value = bylaw.bylawDescription;
-                document.querySelector('#updateOffences--offenceAmount').value = (bylaw.offenceAmountMin ?? 0).toFixed(2);
-                document.querySelector('#updateOffences--discountDays').value = (bylaw.discountDaysMin ?? 0).toString();
-                document.querySelector('#updateOffences--discountOffenceAmount').value = (bylaw.discountOffenceAmountMin ?? 0).toFixed(2);
+                document.querySelector('#updateOffences--offenceAmount').value = ((_a = bylaw.offenceAmountMin) !== null && _a !== void 0 ? _a : 0).toFixed(2);
+                document.querySelector('#updateOffences--discountDays').value = ((_b = bylaw.discountDaysMin) !== null && _b !== void 0 ? _b : 0).toString();
+                document.querySelector('#updateOffences--discountOffenceAmount').value = ((_c = bylaw.discountOffenceAmountMin) !== null && _c !== void 0 ? _c : 0).toFixed(2);
             },
             onshown(modalElement, closeModalFunction) {
+                var _a;
                 bulmaJS.toggleHtmlClipped();
                 updateOffencesCloseModalFunction = closeModalFunction;
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', updateFunction);
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', updateFunction);
             },
             onhidden() {
                 bulmaJS.toggleHtmlClipped();
@@ -43,8 +46,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function openEditBylawModalFunction(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
-        const listIndex = Number.parseInt(clickEvent.currentTarget.dataset.index ?? '', 10);
+        const listIndex = Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '', 10);
         const bylaw = bylawList[listIndex];
         let editBylawCloseModalFunction;
         function deleteFunction() {
@@ -81,14 +85,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.querySelector('#editBylaw--bylawDescription').value = bylaw.bylawDescription;
             },
             onshown(modalElement, closeModalFunction) {
+                var _a, _b;
                 bulmaJS.toggleHtmlClipped();
                 editBylawCloseModalFunction = closeModalFunction;
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', editFunction);
-                modalElement
-                    .querySelector('.is-delete-button')
-                    ?.addEventListener('click', confirmDeleteFunction);
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', editFunction);
+                (_b = modalElement
+                    .querySelector('.is-delete-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', confirmDeleteFunction);
             },
             onhidden() {
                 bulmaJS.toggleHtmlClipped();
@@ -96,6 +99,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function renderBylawListFunction() {
+        var _a, _b;
         let displayCount = 0;
         const bylawFilterSplit = bylawFilterElement.value
             .trim()
@@ -124,7 +128,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 hasOffences = true;
                 offenceAmountRange = `$${bylaw.offenceAmountMin.toFixed(2)}`;
                 if (bylaw.offenceAmountMin !== bylaw.offenceAmountMax) {
-                    offenceAmountRange += ` to $${(bylaw.offenceAmountMax ?? 0).toFixed(2)}`;
+                    offenceAmountRange += ` to $${((_a = bylaw.offenceAmountMax) !== null && _a !== void 0 ? _a : 0).toFixed(2)}`;
                 }
                 offenceAmountRange = `<a class="has-tooltip-left" data-tooltip="Update Offence Amounts" data-index="${bylawIndex.toString()}" href="#">
           ${offenceAmountRange}
@@ -142,7 +146,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ${cityssm.escapeHTML(bylaw.bylawDescription)}
           </td>
           <td class="has-text-right">
-            ${(bylaw.offenceCount ?? 0).toString()}
+            ${((_b = bylaw.offenceCount) !== null && _b !== void 0 ? _b : 0).toString()}
           </td>
           <td class="has-text-right">
             ${offenceAmountRange}
@@ -176,14 +180,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     bylawFilterElement.addEventListener('keyup', renderBylawListFunction);
     renderBylawListFunction();
-    document
-        .querySelector('#is-add-bylaw-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_a = document
+        .querySelector('#is-add-bylaw-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let addBylawCloseModalFunction;
         function addFunction(formEvent) {
             formEvent.preventDefault();
             cityssm.postJSON(`${pts.urlPrefix}/admin/doAddBylaw`, formEvent.currentTarget, (rawResponseJSON) => {
+                var _a;
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addBylawCloseModalFunction();
@@ -194,18 +198,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     renderBylawListFunction();
                 }
                 else {
-                    cityssm.alertModal('By-Law Not Added', responseJSON.message ?? '', 'OK', 'danger');
+                    cityssm.alertModal('By-Law Not Added', (_a = responseJSON.message) !== null && _a !== void 0 ? _a : '', 'OK', 'danger');
                 }
             });
         }
         cityssm.openHtmlModal('bylaw-add', {
             onshown(modalElement, closeModalFunction) {
+                var _a;
                 bulmaJS.toggleHtmlClipped();
                 addBylawCloseModalFunction = closeModalFunction;
                 modalElement.querySelector('#addBylaw--bylawNumber').focus();
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', addFunction);
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', addFunction);
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();

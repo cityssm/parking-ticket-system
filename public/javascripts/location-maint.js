@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
+    var _a;
     let locationClassKeyOptionsHTML = '';
     const locationClassKeyFilterElement = document.querySelector('#locationFilter--locationClassKey');
     const locationNameFilterElement = document.querySelector('#locationFilter--locationName');
@@ -8,8 +9,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
     let locationList = exports.locations;
     delete exports.locations;
     function openEditLocationModalFunction(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
-        const listIndex = Number.parseInt(clickEvent.currentTarget.dataset.index ?? '-1', 10);
+        const listIndex = Number.parseInt((_a = clickEvent.currentTarget.dataset.index) !== null && _a !== void 0 ? _a : '-1', 10);
         const location = locationList[listIndex];
         let editLocationCloseModalFunction;
         function deleteFunction() {
@@ -55,14 +57,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.querySelector('#editLocation--locationName').value = location.locationName;
             },
             onshown(modalElement, closeModalFunction) {
+                var _a, _b;
                 bulmaJS.toggleHtmlClipped();
                 editLocationCloseModalFunction = closeModalFunction;
-                document
-                    .querySelector('#form--editLocation')
-                    ?.addEventListener('submit', editFunction);
-                modalElement
-                    .querySelector('.is-delete-button')
-                    ?.addEventListener('click', confirmDeleteFunction);
+                (_a = document
+                    .querySelector('#form--editLocation')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', editFunction);
+                (_b = modalElement
+                    .querySelector('.is-delete-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', confirmDeleteFunction);
             },
             onhidden() {
                 bulmaJS.toggleHtmlClipped();
@@ -70,6 +71,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function renderLocationListFunction() {
+        var _a, _b;
         let displayCount = 0;
         const locationClassKeyFilter = locationClassKeyFilterElement.value;
         const locationNameFilterSplit = locationNameFilterElement.value
@@ -103,9 +105,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         </td><td>
           ${cityssm.escapeHTML(locationClass)}
         </td>`;
-            trElement
-                .querySelector('a')
-                ?.addEventListener('click', openEditLocationModalFunction);
+            (_a = trElement
+                .querySelector('a')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', openEditLocationModalFunction);
             tbodyElement.append(trElement);
         }
         cityssm.clearElement(locationResultsElement);
@@ -121,7 +122,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
           <th>Class</th>
         </tr></thead>
         </table>`;
-        locationResultsElement.querySelector('table')?.append(tbodyElement);
+        (_b = locationResultsElement.querySelector('table')) === null || _b === void 0 ? void 0 : _b.append(tbodyElement);
     }
     locationClassKeyFilterElement.addEventListener('change', renderLocationListFunction);
     locationNameFilterElement.addEventListener('keyup', renderLocationListFunction);
@@ -136,14 +137,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
         locationClassKeyFilterElement.insertAdjacentHTML('beforeend', locationClassKeyOptionsHTML);
         renderLocationListFunction();
     });
-    document
-        .querySelector('#is-add-location-button')
-        ?.addEventListener('click', (clickEvent) => {
+    (_a = document
+        .querySelector('#is-add-location-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (clickEvent) => {
         clickEvent.preventDefault();
         let addLocationCloseModalFunction;
         function addFunction(formEvent) {
             formEvent.preventDefault();
             cityssm.postJSON(`${pts.urlPrefix}/admin/doAddLocation`, formEvent.currentTarget, (rawResponseJSON) => {
+                var _a;
                 const responseJSON = rawResponseJSON;
                 if (responseJSON.success) {
                     addLocationCloseModalFunction();
@@ -151,23 +152,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     renderLocationListFunction();
                 }
                 else {
-                    cityssm.alertModal('Location Not Added', responseJSON.message ?? '', 'OK', 'danger');
+                    cityssm.alertModal('Location Not Added', (_a = responseJSON.message) !== null && _a !== void 0 ? _a : '', 'OK', 'danger');
                 }
             });
         }
         cityssm.openHtmlModal('location-add', {
             onshow(modalElement) {
-                modalElement
-                    .querySelector('#addLocation--locationClassKey')
-                    ?.insertAdjacentHTML('beforeend', locationClassKeyOptionsHTML);
+                var _a;
+                (_a = modalElement
+                    .querySelector('#addLocation--locationClassKey')) === null || _a === void 0 ? void 0 : _a.insertAdjacentHTML('beforeend', locationClassKeyOptionsHTML);
             },
             onshown(modalElement, closeModalFunction) {
+                var _a;
                 bulmaJS.toggleHtmlClipped();
                 addLocationCloseModalFunction = closeModalFunction;
                 modalElement.querySelector('#addLocation--locationKey').focus();
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', addFunction);
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', addFunction);
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
