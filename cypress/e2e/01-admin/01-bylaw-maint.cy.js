@@ -13,7 +13,7 @@ describe('Admin - Parking By-Laws', () => {
         for (let index = 0; index < 10; index += 1) {
             cy.get("button[data-cy='add-bylaw']").click();
             cy.get('.modal').should('be.visible');
-            const bylawNumberSuffix = '-' + randomString();
+            const bylawNumberSuffix = `-${randomString()}`;
             cy.fixture('bylaw.json').then((bylawData) => {
                 const bylawNumber = bylawData.bylawNumberPrefix + bylawNumberSuffix;
                 cy.get(".modal input[name='bylawNumber']").type(bylawNumber);

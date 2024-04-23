@@ -13,7 +13,7 @@ describe('Admin - Locations', () => {
         for (let index = 0; index < 10; index += 1) {
             cy.get("button[data-cy='add-location']").click();
             cy.get('.modal').should('be.visible');
-            const locationSuffix = '-' + randomString();
+            const locationSuffix = `-${randomString()}`;
             cy.fixture('location.json').then((locationData) => {
                 const locationKey = locationData.locationKeyPrefix + locationSuffix;
                 const locationName = locationData.locationNamePrefix + locationSuffix;
@@ -33,7 +33,7 @@ describe('Admin - Locations', () => {
         cy.get("[data-cy='results'] a").first().click();
         cy.get('.modal').should('be.visible').should('have.length', 1);
         cy.get(".modal [name='locationClassKey']").select(2);
-        const newLocationName = 'New Location-' + randomString();
+        const newLocationName = `New Location-${randomString()}`;
         cy.get(".modal [name='locationName']").clear().type(newLocationName);
         cy.get('.modal form').submit();
         cy.get('.modal').should('not.exist');

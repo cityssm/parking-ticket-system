@@ -21,7 +21,7 @@ describe('Admin - Locations', () => {
 
       cy.get('.modal').should('be.visible')
 
-      const locationSuffix = '-' + randomString()
+      const locationSuffix = `-${randomString()}`
 
       cy.fixture('location.json').then((locationData) => {
         const locationKey = locationData.locationKeyPrefix + locationSuffix
@@ -51,7 +51,7 @@ describe('Admin - Locations', () => {
 
     cy.get(".modal [name='locationClassKey']").select(2)
 
-    const newLocationName = 'New Location-' + randomString()
+    const newLocationName = `New Location-${randomString()}`
 
     cy.get(".modal [name='locationName']").clear().type(newLocationName)
 

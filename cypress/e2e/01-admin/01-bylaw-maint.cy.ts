@@ -21,7 +21,7 @@ describe('Admin - Parking By-Laws', () => {
 
       cy.get('.modal').should('be.visible')
 
-      const bylawNumberSuffix = '-' + randomString()
+      const bylawNumberSuffix = `-${randomString()}`
 
       cy.fixture('bylaw.json').then((bylawData) => {
         const bylawNumber = bylawData.bylawNumberPrefix + bylawNumberSuffix
