@@ -99,7 +99,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function renderBylawListFunction() {
-        var _a, _b;
+        var _a, _b, _c;
         let displayCount = 0;
         const bylawFilterSplit = bylawFilterElement.value
             .trim()
@@ -129,9 +129,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             else {
                 hasOffences = true;
-                offenceAmountRange = `$${bylaw.offenceAmountMin.toFixed(2)}`;
+                offenceAmountRange = `$${((_a = bylaw.offenceAmountMin) !== null && _a !== void 0 ? _a : 0).toFixed(2)}`;
                 if (bylaw.offenceAmountMin !== bylaw.offenceAmountMax) {
-                    offenceAmountRange += ` to $${((_a = bylaw.offenceAmountMax) !== null && _a !== void 0 ? _a : 0).toFixed(2)}`;
+                    offenceAmountRange += ` to $${((_b = bylaw.offenceAmountMax) !== null && _b !== void 0 ? _b : 0).toFixed(2)}`;
                 }
                 offenceAmountRange = `<a class="has-tooltip-left" data-tooltip="Update Offence Amounts" data-index="${bylawIndex.toString()}" href="#">
           ${offenceAmountRange}
@@ -146,7 +146,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ${cityssm.escapeHTML(bylaw.bylawDescription)}
           </td>
           <td class="has-text-right">
-            ${((_b = bylaw.offenceCount) !== null && _b !== void 0 ? _b : 0).toString()}
+            ${((_c = bylaw.offenceCount) !== null && _c !== void 0 ? _c : 0).toString()}
           </td>
           <td class="has-text-right">
             ${offenceAmountRange}
