@@ -47,6 +47,7 @@ type UpdateLocationResponseJSON =
       (clickEvent.currentTarget as HTMLButtonElement).dataset.index ?? '-1',
       10
     )
+    // eslint-disable-next-line security/detect-object-injection
     const location = locationList[listIndex]
 
     let editLocationCloseModalFunction: () => void
@@ -111,6 +112,7 @@ type UpdateLocationResponseJSON =
           '#editLocation--locationClassKey'
         ) as HTMLSelectElement
 
+        // eslint-disable-next-line no-unsanitized/property
         locationClassKeyEditSelectElement.innerHTML =
           locationClassKeyOptionsHTML
 
@@ -247,13 +249,14 @@ type UpdateLocationResponseJSON =
         '<option value="">(All Location Classes)</option>'
 
       for (const locationClass of locationClassesList) {
-        locationClassKeyOptionsHTML += `<option value="${
+        locationClassKeyOptionsHTML += `<option value="${cityssm.escapeHTML(
           locationClass.locationClassKey
-        }">
+        )}">
           ${cityssm.escapeHTML(locationClass.locationClass)}
           </option>`
       }
 
+      // eslint-disable-next-line no-unsanitized/method
       locationClassKeyFilterElement.insertAdjacentHTML(
         'beforeend',
         locationClassKeyOptionsHTML

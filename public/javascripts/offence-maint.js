@@ -94,8 +94,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 var _a, _b;
                 bulmaJS.toggleHtmlClipped();
                 editOffenceModalCloseFunction = closeModalFunction;
-                (_a = document
-                    .querySelector('#form--offenceEdit')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', doSubmit);
+                modalElement.querySelector('#offenceEdit--accountNumber').focus();
+                (_a = modalElement.querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', doSubmit);
                 (_b = modalElement
                     .querySelector('.is-delete-button')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', confirmDelete);
             },
@@ -240,11 +240,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 continue;
             }
             const location = locationMap.get(offence.locationKey);
-            if (!location) {
+            if (location === undefined) {
                 continue;
             }
             const bylaw = bylawMap.get(offence.bylawNumber);
-            if (!bylaw) {
+            if (bylaw === undefined) {
                 continue;
             }
             matchCount += 1;
@@ -265,30 +265,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
           </span>
         </td>
         <td class="has-text-right has-tooltip-bottom" data-tooltip="Set Rate">
-          $${offence.offenceAmount.toFixed(2)}<br />
+          $${cityssm.escapeHTML(offence.offenceAmount.toFixed(2))}<br />
           <span class="is-size-7">
-            ${offence.accountNumber}
+            ${cityssm.escapeHTML(offence.accountNumber)}
           </span>
         </td>
-      <td class="has-text-right has-tooltip-bottom" data-tooltip="Discount Rate">
-        $${offence.discountOffenceAmount.toFixed(2)}<br />
-        <span class="is-size-7">
-        ${offence.discountDays.toString()} day${offence.discountDays === 1 ? '' : 's'}
-        </span>
-      </td>
-      <td class="has-border-right-width-2">
-        <div class="is-size-7">
-          ${cityssm.escapeHTML(offence.parkingOffence)}
-        </div>
-      </td>
-      <td class="has-text-right">
-        <button class="button is-small"
-          data-bylaw-number="${offence.bylawNumber}"
-          data-location-key="${offence.locationKey}" type="button">
-          <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
-          <span>Edit</span>
-        </button>
-      </td>`;
+        <td class="has-text-right has-tooltip-bottom" data-tooltip="Discount Rate">
+          $${cityssm.escapeHTML(offence.discountOffenceAmount.toFixed(2))}<br />
+          <span class="is-size-7">
+          ${cityssm.escapeHTML(offence.discountDays.toString())}
+          day${offence.discountDays === 1 ? '' : 's'}
+          </span>
+        </td>
+        <td class="has-border-right-width-2">
+          <div class="is-size-7">
+            ${cityssm.escapeHTML(offence.parkingOffence)}
+          </div>
+        </td>
+        <td class="has-text-right">
+          <button class="button is-small"
+            data-bylaw-number="${cityssm.escapeHTML(offence.bylawNumber)}"
+            data-location-key="${cityssm.escapeHTML(offence.locationKey)}" type="button">
+            <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
+            <span>Edit</span>
+          </button>
+        </td>`;
             (_a = trElement
                 .querySelector('button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', openEditOffenceModal);
             tbodyElement.append(trElement);

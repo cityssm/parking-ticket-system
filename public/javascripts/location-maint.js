@@ -130,7 +130,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         locationClassKeyFilterElement.innerHTML =
             '<option value="">(All Location Classes)</option>';
         for (const locationClass of locationClassesList) {
-            locationClassKeyOptionsHTML += `<option value="${locationClass.locationClassKey}">
+            locationClassKeyOptionsHTML += `<option value="${cityssm.escapeHTML(locationClass.locationClassKey)}">
           ${cityssm.escapeHTML(locationClass.locationClass)}
           </option>`;
         }

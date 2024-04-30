@@ -98,6 +98,7 @@ declare const pts: ptsGlobal
     ) as HTMLElement
 
     cityssm.postJSON(
+      // eslint-disable-next-line no-secrets/no-secrets
       `${pts.urlPrefix}/plates/doRemoveLicencePlateFromLookupBatch`,
       {
         batchId,

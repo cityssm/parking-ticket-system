@@ -124,7 +124,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const trElement = document.createElement('tr');
             let offenceAmountRange = '';
             let hasOffences = false;
-            if (bylaw.offenceAmountMin) {
+            if (bylaw.offenceAmountMin === undefined) {
+                offenceAmountRange = '(No Offences)';
+            }
+            else {
                 hasOffences = true;
                 offenceAmountRange = `$${bylaw.offenceAmountMin.toFixed(2)}`;
                 if (bylaw.offenceAmountMin !== bylaw.offenceAmountMax) {
@@ -133,9 +136,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 offenceAmountRange = `<a class="has-tooltip-left" data-tooltip="Update Offence Amounts" data-index="${bylawIndex.toString()}" href="#">
           ${offenceAmountRange}
           </a>`;
-            }
-            else {
-                offenceAmountRange = '(No Offences)';
             }
             trElement.innerHTML = `<td>
           <a data-index="${bylawIndex.toString()}" href="#">

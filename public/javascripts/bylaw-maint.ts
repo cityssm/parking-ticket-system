@@ -43,6 +43,7 @@ type UpdateBylawResponseJSON =
       (clickEvent.currentTarget as HTMLButtonElement).dataset.index ?? '',
       10
     )
+    // eslint-disable-next-line security/detect-object-injection
     const bylaw = bylawList[listIndex]
 
     let updateOffencesCloseModalFunction: () => void
@@ -113,6 +114,7 @@ type UpdateBylawResponseJSON =
       (clickEvent.currentTarget as HTMLButtonElement).dataset.index ?? '',
       10
     )
+    // eslint-disable-next-line security/detect-object-injection
     const bylaw = bylawList[listIndex]
 
     let editBylawCloseModalFunction: () => void
@@ -230,7 +232,9 @@ type UpdateBylawResponseJSON =
       let offenceAmountRange = ''
       let hasOffences = false
 
-      if (bylaw.offenceAmountMin) {
+      if (bylaw.offenceAmountMin === undefined) {
+        offenceAmountRange = '(No Offences)'
+      } else {
         hasOffences = true
 
         offenceAmountRange = `$${bylaw.offenceAmountMin.toFixed(2)}`
@@ -244,10 +248,9 @@ type UpdateBylawResponseJSON =
         offenceAmountRange = `<a class="has-tooltip-left" data-tooltip="Update Offence Amounts" data-index="${bylawIndex.toString()}" href="#">
           ${offenceAmountRange}
           </a>`
-      } else {
-        offenceAmountRange = '(No Offences)'
       }
 
+      // eslint-disable-next-line no-unsanitized/property
       trElement.innerHTML = `<td>
           <a data-index="${bylawIndex.toString()}" href="#">
             ${cityssm.escapeHTML(bylaw.bylawNumber)}

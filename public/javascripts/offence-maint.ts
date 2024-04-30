@@ -211,12 +211,14 @@ type UpdateOffenceResponseJSON =
       },
       onshown(modalElement, closeModalFunction) {
         bulmaJS.toggleHtmlClipped()
-
         editOffenceModalCloseFunction = closeModalFunction
+        ;(
+          modalElement.querySelector(
+            '#offenceEdit--accountNumber'
+          ) as HTMLInputElement
+        ).focus()
 
-        document
-          .querySelector('#form--offenceEdit')
-          ?.addEventListener('submit', doSubmit)
+        modalElement.querySelector('form')?.addEventListener('submit', doSubmit)
 
         modalElement
           .querySelector('.is-delete-button')
@@ -301,9 +303,12 @@ type UpdateOffenceResponseJSON =
             </span>`
         }
 
+        // eslint-disable-next-line no-unsanitized/property
         ;(
           modalElement.querySelector('.modal-card-title') as HTMLElement
         ).innerHTML = titleHTML
+
+        // eslint-disable-next-line no-unsanitized/property
         ;(
           document.querySelector('#addContainer--selected') as HTMLElement
         ).innerHTML = selectedHTML
@@ -430,14 +435,14 @@ type UpdateOffenceResponseJSON =
       // Ensure location record exists
       const location = locationMap.get(offence.locationKey)
 
-      if (!location) {
+      if (location === undefined) {
         continue
       }
 
       // Ensure by-law record exists
       const bylaw = bylawMap.get(offence.bylawNumber)
 
-      if (!bylaw) {
+      if (bylaw === undefined) {
         continue
       }
 
@@ -449,6 +454,7 @@ type UpdateOffenceResponseJSON =
 
       const trElement = document.createElement('tr')
 
+      // eslint-disable-next-line no-unsanitized/property
       trElement.innerHTML = `<td class="has-border-right-width-2">
           ${cityssm.escapeHTML(location.locationName)}<br />
           <span class="is-size-7">
@@ -464,32 +470,33 @@ type UpdateOffenceResponseJSON =
           </span>
         </td>
         <td class="has-text-right has-tooltip-bottom" data-tooltip="Set Rate">
-          $${offence.offenceAmount.toFixed(2)}<br />
+          $${cityssm.escapeHTML(offence.offenceAmount.toFixed(2))}<br />
           <span class="is-size-7">
-            ${offence.accountNumber}
+            ${cityssm.escapeHTML(offence.accountNumber)}
           </span>
         </td>
-      <td class="has-text-right has-tooltip-bottom" data-tooltip="Discount Rate">
-        $${offence.discountOffenceAmount.toFixed(2)}<br />
-        <span class="is-size-7">
-        ${offence.discountDays.toString()} day${
-        offence.discountDays === 1 ? '' : 's'
-      }
-        </span>
-      </td>
-      <td class="has-border-right-width-2">
-        <div class="is-size-7">
-          ${cityssm.escapeHTML(offence.parkingOffence)}
-        </div>
-      </td>
-      <td class="has-text-right">
-        <button class="button is-small"
-          data-bylaw-number="${offence.bylawNumber}"
-          data-location-key="${offence.locationKey}" type="button">
-          <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
-          <span>Edit</span>
-        </button>
-      </td>`
+        <td class="has-text-right has-tooltip-bottom" data-tooltip="Discount Rate">
+          $${cityssm.escapeHTML(offence.discountOffenceAmount.toFixed(2))}<br />
+          <span class="is-size-7">
+          ${cityssm.escapeHTML(offence.discountDays.toString())}
+          day${offence.discountDays === 1 ? '' : 's'}
+          </span>
+        </td>
+        <td class="has-border-right-width-2">
+          <div class="is-size-7">
+            ${cityssm.escapeHTML(offence.parkingOffence)}
+          </div>
+        </td>
+        <td class="has-text-right">
+          <button class="button is-small"
+            data-bylaw-number="${cityssm.escapeHTML(offence.bylawNumber)}"
+            data-location-key="${cityssm.escapeHTML(
+              offence.locationKey
+            )}" type="button">
+            <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
+            <span>Edit</span>
+          </button>
+        </td>`
 
       trElement
         .querySelector('button')
