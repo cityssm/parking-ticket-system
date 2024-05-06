@@ -90,7 +90,7 @@
     "gulp": "^5.0.0",
     "gulp-sass": "^5.1.0",
     "nodemon": "^3.1.0",
-    "sass": "^1.75.0"
+    "sass": "^1.76.0"
   },
   "private": true
 }
