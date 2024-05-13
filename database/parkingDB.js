@@ -23,6 +23,7 @@ export function canUpdateObject(object, sessionUser) {
                 }
                 break;
             }
+            default:
         }
     }
     return canUpdate;

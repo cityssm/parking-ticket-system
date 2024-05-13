@@ -33,6 +33,7 @@ export function canUpdateObject(object: Record, sessionUser: PTSUser): boolean {
         }
         break
       }
+      default:
     }
   }
 
