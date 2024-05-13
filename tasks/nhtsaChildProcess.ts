@@ -44,7 +44,7 @@ async function doTask(): Promise<void> {
 let timeoutId: NodeJS.Timeout
 let intervalId: SetIntervalAsyncTimer<[]>
 
-export async function scheduleRun(): Promise<void> {
+export function scheduleRun(): void {
   const firstScheduleDate = new Date()
 
   firstScheduleDate.setHours(
@@ -67,7 +67,7 @@ export async function scheduleRun(): Promise<void> {
   }, firstScheduleDate.getTime() - Date.now())
 }
 
-await scheduleRun()
+scheduleRun()
 
 exitHook(() => {
   terminateTask = true

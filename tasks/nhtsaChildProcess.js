@@ -24,7 +24,7 @@ async function doTask() {
 }
 let timeoutId;
 let intervalId;
-export async function scheduleRun() {
+export function scheduleRun() {
     const firstScheduleDate = new Date();
     firstScheduleDate.setHours(getConfigProperty('application.task_nhtsa.executeHour'));
     firstScheduleDate.setDate(firstScheduleDate.getDate() + 1);
@@ -38,7 +38,7 @@ export async function scheduleRun() {
         void doTask();
     }, firstScheduleDate.getTime() - Date.now());
 }
-await scheduleRun();
+scheduleRun();
 exitHook(() => {
     terminateTask = true;
     debug('Exit hook called');

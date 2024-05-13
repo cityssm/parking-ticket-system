@@ -1,1 +1,1 @@
-export declare function scheduleRun(): Promise<void>;
+export declare function scheduleRun(): void;
