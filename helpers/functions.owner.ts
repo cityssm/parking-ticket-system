@@ -13,7 +13,7 @@ export function getFormattedOwnerAddress(
       ${
         owner[`${fieldPrefix}ownerName2`] &&
         owner[`${fieldPrefix}ownerName2`] !== ''
-          ? (owner[`${fieldPrefix}ownerName2`] as string) + '\n'
+          ? `${owner[`${fieldPrefix}ownerName2`] as string}\n`
           : ''
       }${owner[`${fieldPrefix}ownerAddress`] as string}\n
       ${owner[`${fieldPrefix}ownerCity`] as string}, ${
