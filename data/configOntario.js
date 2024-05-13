@@ -1,4 +1,4 @@
-import * as base from './configBase.js';
+import { baseParkingTicketStatuses } from './configBase.js';
 export const config = {};
 config.application = {
     feature_mtoExportImport: true,
@@ -37,7 +37,7 @@ config.parkingTickets = {
         includeDay: false
     }
 };
-config.parkingTicketStatuses = base.baseParkingTicketStatuses;
+config.parkingTicketStatuses = baseParkingTicketStatuses;
 config.parkingOffences = {
     accountNumber: {}
 };

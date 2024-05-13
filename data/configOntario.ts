@@ -1,6 +1,6 @@
 import type { Config } from '../types/configTypes.js'
 
-import * as base from './configBase.js'
+import { baseParkingTicketStatuses } from './configBase.js'
 
 export const config: Config = {}
 
@@ -46,7 +46,7 @@ config.parkingTickets = {
   }
 }
 
-config.parkingTicketStatuses = base.baseParkingTicketStatuses
+config.parkingTicketStatuses = baseParkingTicketStatuses
 
 config.parkingOffences = {
   accountNumber: {}
