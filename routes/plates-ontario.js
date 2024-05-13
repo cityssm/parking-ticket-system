@@ -6,9 +6,7 @@ import handler_mtoImport from '../handlers/plates-ontario-get/mtoImport.js';
 import handler_doGetTicketsAvailableForMTOLookup from '../handlers/plates-ontario-post/doGetTicketsAvailableForMTOLookup.js';
 import * as handler_doMTOImportUpload from '../handlers/plates-ontario-post/doMTOImportUpload.js';
 export const router = Router();
-router
-    .get('/mtoExport', updateOrOperatorGetHandler, handler_mtoExport)
-    .post('/doGetParkingTicketsAvailableForMTOLookup', updatePostHandler, handler_doGetTicketsAvailableForMTOLookup);
+router.get('/mtoExport', updateOrOperatorGetHandler, handler_mtoExport).post('/doGetParkingTicketsAvailableForMTOLookup', updatePostHandler, handler_doGetTicketsAvailableForMTOLookup);
 router.get('/mtoExport/:batchId', updateOrOperatorGetHandler, handler_mtoExportDownload);
 router
     .get('/mtoImport', updateOrOperatorGetHandler, handler_mtoImport)

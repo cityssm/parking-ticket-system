@@ -15,13 +15,12 @@ import * as handler_doMTOImportUpload from '../handlers/plates-ontario-post/doMT
 
 export const router = Router()
 
-router
-  .get('/mtoExport', updateOrOperatorGetHandler, handler_mtoExport)
-  .post(
-    '/doGetParkingTicketsAvailableForMTOLookup',
-    updatePostHandler,
-    handler_doGetTicketsAvailableForMTOLookup
-  )
+router.get('/mtoExport', updateOrOperatorGetHandler, handler_mtoExport).post(
+  // eslint-disable-next-line no-secrets/no-secrets
+  '/doGetParkingTicketsAvailableForMTOLookup',
+  updatePostHandler,
+  handler_doGetTicketsAvailableForMTOLookup
+)
 
 router.get(
   '/mtoExport/:batchId',
