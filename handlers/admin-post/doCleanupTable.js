@@ -39,6 +39,7 @@ export default function handler(request, response) {
             success = cleanupParkingBylawsTable();
             break;
         }
+        default:
     }
     response.json({ success });
 }
