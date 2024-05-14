@@ -115,7 +115,7 @@ interface DefaultConfigProperties {
     }
 
     const licencePlateCountryAlias =
-      defaultConfigProperties.licencePlateCountryAliases[
+      defaultConfigProperties.licencePlateCountryAliases?.[
         originalLicencePlateCountry.toUpperCase()
       ] ?? originalLicencePlateCountry
 
@@ -125,7 +125,7 @@ interface DefaultConfigProperties {
         licencePlateCountryAlias
       )
     ) {
-      return defaultConfigProperties.licencePlateProvinces[
+      return defaultConfigProperties.licencePlateProvinces?.[
         licencePlateCountryAlias
       ]
     }
@@ -154,9 +154,9 @@ interface DefaultConfigProperties {
     // Get the country alias
 
     const licencePlateCountryAlias =
-      defaultConfigProperties.licencePlateCountryAliases[
+      defaultConfigProperties.licencePlateCountryAliases?.[
         originalLicencePlateCountry.toUpperCase()
-      ] || originalLicencePlateCountry
+      ] ?? originalLicencePlateCountry
 
     // Get the province alias
 
@@ -169,9 +169,7 @@ interface DefaultConfigProperties {
       )
     ) {
       const provinceAliases =
-        defaultConfigProperties.licencePlateProvinceAliases[
-          licencePlateCountryAlias
-        ]
+        defaultConfigProperties.licencePlateProvinceAliases?.[licencePlateCountryAlias] ?? {}
 
       licencePlateProvinceAlias =
         provinceAliases[originalLicencePlateProvince.toUpperCase()] ||
@@ -189,7 +187,7 @@ interface DefaultConfigProperties {
       )
     ) {
       licencePlateProvince =
-        defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias]
+        defaultConfigProperties.licencePlateProvinces?.[licencePlateCountryAlias]
           .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault
     }
 

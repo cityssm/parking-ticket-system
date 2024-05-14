@@ -58,17 +58,18 @@ const pts = {
         });
     };
     pts.getLicencePlateCountryProperties = (originalLicencePlateCountry) => {
-        var _a;
+        var _a, _b, _c;
         if (!defaultConfigPropertiesIsLoaded) {
             return {};
         }
-        const licencePlateCountryAlias = (_a = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()]) !== null && _a !== void 0 ? _a : originalLicencePlateCountry;
+        const licencePlateCountryAlias = (_b = (_a = defaultConfigProperties.licencePlateCountryAliases) === null || _a === void 0 ? void 0 : _a[originalLicencePlateCountry.toUpperCase()]) !== null && _b !== void 0 ? _b : originalLicencePlateCountry;
         if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinces, licencePlateCountryAlias)) {
-            return defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias];
+            return (_c = defaultConfigProperties.licencePlateProvinces) === null || _c === void 0 ? void 0 : _c[licencePlateCountryAlias];
         }
         return {};
     };
     pts.getLicencePlateLocationProperties = (originalLicencePlateCountry, originalLicencePlateProvince) => {
+        var _a, _b, _c, _d, _e;
         const licencePlateProvinceDefault = {
             provinceShortName: originalLicencePlateProvince,
             color: '#000',
@@ -81,10 +82,10 @@ const pts = {
                 licencePlateProvince: licencePlateProvinceDefault
             };
         }
-        const licencePlateCountryAlias = defaultConfigProperties.licencePlateCountryAliases[originalLicencePlateCountry.toUpperCase()] || originalLicencePlateCountry;
+        const licencePlateCountryAlias = (_b = (_a = defaultConfigProperties.licencePlateCountryAliases) === null || _a === void 0 ? void 0 : _a[originalLicencePlateCountry.toUpperCase()]) !== null && _b !== void 0 ? _b : originalLicencePlateCountry;
         let licencePlateProvinceAlias = originalLicencePlateProvince;
         if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinceAliases, licencePlateCountryAlias)) {
-            const provinceAliases = defaultConfigProperties.licencePlateProvinceAliases[licencePlateCountryAlias];
+            const provinceAliases = (_d = (_c = defaultConfigProperties.licencePlateProvinceAliases) === null || _c === void 0 ? void 0 : _c[licencePlateCountryAlias]) !== null && _d !== void 0 ? _d : {};
             licencePlateProvinceAlias =
                 provinceAliases[originalLicencePlateProvince.toUpperCase()] ||
                     originalLicencePlateProvince;
@@ -92,8 +93,7 @@ const pts = {
         let licencePlateProvince = licencePlateProvinceDefault;
         if (Object.prototype.hasOwnProperty.call(defaultConfigProperties.licencePlateProvinces, licencePlateCountryAlias)) {
             licencePlateProvince =
-                defaultConfigProperties.licencePlateProvinces[licencePlateCountryAlias]
-                    .provinces[licencePlateProvinceAlias] || licencePlateProvinceDefault;
+                ((_e = defaultConfigProperties.licencePlateProvinces) === null || _e === void 0 ? void 0 : _e[licencePlateCountryAlias].provinces[licencePlateProvinceAlias]) || licencePlateProvinceDefault;
         }
         return {
             licencePlateCountryAlias,
