@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@cityssm/bulma-a11y": "^0.4.0",
-    "@cityssm/bulma-sticky-table": "^2.1.0",
+    "@cityssm/bulma-sticky-table": "^3.0.0",
     "@cityssm/bulma-webapp-css": "^0.12.0",
     "@cityssm/simple-fa5-checkbox": "^0.2.1",
     "@types/activedirectory2": "^1.2.6",
