@@ -84,7 +84,7 @@
     "bulma-steps": "^2.2.1",
     "bulma-switch": "^2.0.4",
     "bulma-tooltip": "^3.0.2",
-    "cypress": "13.9.0",
+    "cypress": "13.12.0",
     "cypress-axe": "^1.5.0",
     "eslint-config-cityssm": "^2.0.1",
     "gulp": "^5.0.0",
